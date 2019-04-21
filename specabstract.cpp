@@ -120,6 +120,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_WATCOMLINKER,                 "",             "WinNT/RTL/dll",        "'MZ'80000100000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000900000000E1FBA0E00B409CD21B8014CCD21'this is a Windows NT (own RTL) dynamic link library\r\n'24"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_WATCOMLINKER,                 "",             "WinNT/RTLexe",         "'MZ'80000100000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000900000000E1FBA0E00B409CD21B8014CCD21'this is a Windows NT character-mode (own RTL) executable\r\n'24"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_WATCOMLINKER,                 "",             "WinNT/exe",            "'MZ'80000100000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000800000000E1FBA0E00B409CD21B8014CCD21'this is a Windows NT character-mode executable\r\n'24"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_STUB,             SpecAbstract::RECORD_NAME_VALVE,                        "",             "WinNT/exe",            "'MZ'............................................................................................................................'VLV'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
@@ -356,6 +357,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_SFX:                               sResult=tr("SFX");                              break;
         case RECORD_TYPE_SFXDATA:                           sResult=tr("SFX data");                         break;
         case RECORD_TYPE_SOURCECODE:                        sResult=tr("Source code");                      break;
+        case RECORD_TYPE_STUB:                              sResult=tr("Stub");                             break;
         case RECORD_TYPE_TOOL:                              sResult=tr("Tool");                             break;
     }
 
@@ -585,6 +587,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_UNOPIX:                            sResult=QString("Unopix");                                      break;
         case RECORD_NAME_UPX:                               sResult=QString("UPX");                                         break;
         case RECORD_NAME_UTF8:                              sResult=QString("UTF-8");                                       break;
+        case RECORD_NAME_VALVE:                             sResult=QString("Valve");                                       break;
         case RECORD_NAME_VBNET:                             sResult=QString("VB .NET");                                     break;
         case RECORD_NAME_VCL:                               sResult=QString("Visual Component Library");                    break;
         case RECORD_NAME_VCLPACKAGEINFO:                    sResult=QString("VCL PackageInfo");                             break;
@@ -610,6 +613,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_XCOMP:                             sResult=QString("XComp");                                       break;
         case RECORD_NAME_XML:                               sResult=QString("XML");                                         break;
         case RECORD_NAME_XPACK:                             sResult=QString("XPack");                                       break;
+        case RECORD_NAME_YANDEX:                            sResult=QString("Yandex");                                      break;
         case RECORD_NAME_YANO:                              sResult=QString("Yano");                                        break;
         case RECORD_NAME_YODASCRYPTER:                      sResult=QString("Yoda's Crypter");                              break;
         case RECORD_NAME_YZPACK:                            sResult=QString("YZPack");                                      break;
@@ -4762,6 +4766,13 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
+        // Valve
+        if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_VALVE))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_STUB,RECORD_NAME_VALVE,"","",0);
+            pPEInfo->mapResultTools.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
         // DMD32 D
         if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DMD32D))
         {
@@ -5603,6 +5614,14 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("Opera Installer"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_OPERA,"","",0);
+                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+
+                pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
+            if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("Yandex Installer"))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_YANDEX,"","",0);
                 ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
