@@ -472,6 +472,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_GOASM:                             sResult=QString("GoAsm");                                       break;
         case RECORD_NAME_GOLIATHNET:                        sResult=QString("Goliath .NET");                                break;
         case RECORD_NAME_GOLINK:                            sResult=QString("GoLink");                                      break;
+        case RECORD_NAME_GOOGLE:                            sResult=QString("Google");                                      break;
         case RECORD_NAME_GPINSTALL:                         sResult=QString("GP-Install");                                  break;
         case RECORD_NAME_GUARDIANSTEALTH:                   sResult=QString("Guardian Stealth");                            break;
         case RECORD_NAME_GZIP:                              sResult=QString("GZIP");                                        break;
@@ -3953,7 +3954,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             SpecAbstract::_SCANS_STRUCT _ssCompiler1={};
             SpecAbstract::_SCANS_STRUCT _ssCompiler2={};
 
-            for(int i=1; i<=5; i++)
+            for(int i=1; i<=6; i++)
             {
                 if(nRichSignaturesCount>=i)
                 {
@@ -5620,6 +5621,14 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             }
 
             if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("Yandex Installer"))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_YANDEX,"","",0);
+                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+
+                pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
+            if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("Google Update"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_YANDEX,"","",0);
                 ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
