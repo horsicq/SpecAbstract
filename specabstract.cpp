@@ -4874,6 +4874,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                     {
                     case 24:
                     case 25:
+                    case 26:
                     case 56:
                         bHeurGCC=true;
                         break;
