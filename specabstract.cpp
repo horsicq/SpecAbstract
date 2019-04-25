@@ -596,6 +596,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_VISE:                              sResult=QString("Vise");                                        break;
         case RECORD_NAME_VISUALBASIC:                       sResult=QString("Visual Basic");                                break;
         case RECORD_NAME_VISUALCCPP:                        sResult=QString("Visual C/C++");                                break;
+        case RECORD_NAME_VISUALOBJECTS:                     sResult=QString("Visual Objects");                              break;
         case RECORD_NAME_VMPROTECT:                         sResult=QString("VMProtect");                                   break;
         case RECORD_NAME_VPACKER:                           sResult=QString("VPacker");                                     break;
         case RECORD_NAME_WATCOMC:                           sResult=QString("Watcom C");                                    break;
@@ -4758,6 +4759,14 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
     if(pe.isValid())
     {
+        // Visual Objects
+        if(pe.compareSignature("'This Visual Objects application cannot be run in DOS mode'",0x312))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_COMPILER,RECORD_NAME_VISUALOBJECTS,"2.XX","",0);
+            ss.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
+            pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
         // FASM
         if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_FASM))
         {
