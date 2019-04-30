@@ -1106,6 +1106,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_Protection(pDevice,pOptions->bIsImage,&result);
         PE_handle_VMProtect(pDevice,pOptions->bIsImage,&result);
         PE_handle_Armadillo(pDevice,pOptions->bIsImage,&result);
+        PE_handle_StarForce(pDevice,pOptions->bIsImage,&result);
         PE_handle_Petite(pDevice,pOptions->bIsImage,&result);
         PE_handle_NETProtection(pDevice,pOptions->bIsImage,&result);
         PE_handle_PolyMorph(pDevice,pOptions->bIsImage,&result);
@@ -3427,6 +3428,43 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
                 pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
         }
+    }
+}
+
+void SpecAbstract::PE_handle_StarForce(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    bool bSF3=XPE::isSectionNamePresent(".sforce3",&(pPEInfo->listSectionHeaders));
+    bool bSF4=XPE::isSectionNamePresent(".ps4",&(pPEInfo->listSectionHeaders));
+
+    if(bSF3||bSF4)
+    {
+        QString sVersion;
+        QString sInfo;
+
+        if(bSF3)
+        {
+            sVersion="3.X";
+        }
+        if(bSF4)
+        {
+            sVersion="4.X-5.X";
+        }
+
+        int nImportCount=pPEInfo->listImports.count();
+
+        for(int i=0;i<nImportCount;i++)
+        {
+            if(pPEInfo->listImports.at(i).listPositions.count()==1)
+            {
+                if(pPEInfo->listImports.at(i).listPositions.at(0).sName=="")
+                {
+                    sInfo=pPEInfo->listImports.at(i).sName;
+                }
+            }
+        }
+
+        SpecAbstract::_SCANS_STRUCT recordSS=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_STARFORCE,sVersion,sInfo,0);
+        pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
     }
 }
 
