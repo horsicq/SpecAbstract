@@ -5233,7 +5233,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                         {
                             _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_PYTHON,"","",0);
 
-                            ss.sVersion=QString::number(dVersion,'f',1);
+                            ss.sVersion=QString::number(dVersion/10,'f',1);
                             pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                         }
                     }
