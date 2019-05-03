@@ -4113,6 +4113,15 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
         }
 
+        if(recordCompiler.name!=RECORD_NAME_VISUALCCPP)
+        {
+            if(pe.compareEntryPoint("E8......00E9$$$$$$$$6A..68........E8"))
+            {
+                recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
+                recordCompiler.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
+            }
+        }
+
         if((recordMFC.name==RECORD_NAME_MFC)&&(recordMFC.sVersion==""))
         {
             if((recordCompiler.name==RECORD_NAME_VISUALCCPP)&&(recordLinker.sVersion!=""))
@@ -4130,7 +4139,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
         if((recordMFC.name==RECORD_NAME_MFC)&&(recordLinker.sVersion=="")&&(pPEInfo->nMinorLinkerVersion!=10))
         {
             recordLinker.sVersion=recordMFC.sVersion;
-            //            recordLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);;
+            //            recordLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
         }
 
 
@@ -4366,6 +4375,11 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             else if(sCompilerMajorVersion=="19.15") // TODO
             {
                 recordTool.sVersion="2017";
+            }
+
+            if(recordTool.sVersion=="")
+            {
+                // TODO
             }
         }
         else if(recordCompiler.name==SpecAbstract::RECORD_NAME_MASM)
