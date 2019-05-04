@@ -2641,21 +2641,21 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                     switch(nBuildNumber)
                     {
-                    case 0x24:  ss.sVersion="0.24";         break;
-                    case 0x25:  ss.sVersion="0.25";         break;
-                    case 0x27:  ss.sVersion="0.27";         break;
-                    case 0x28:  ss.sVersion="0.28";         break;
-                    case 0x29:  ss.sVersion="0.29";         break;
-                    case 0x30:  ss.sVersion="0.30";         break;
-                    case 0x32:  ss.sVersion="0.32";         break;
-                    case 0x33:  ss.sVersion="0.33";         break;
-                    case 0x35:  ss.sVersion="0.35";         break;
-                    case 0x36:  ss.sVersion="0.36 beta";    break;
-                    case 0x37:  ss.sVersion="0.37 beta";    break;
-                    case 0x38:  ss.sVersion="0.38 beta";    break;
-                    case 0x39:  ss.sVersion="0.39 final";   break;
-                    case 0x3A:  ss.sVersion="0.399";        break;
-                    default:    ss.sVersion="";
+                        case 0x24:  ss.sVersion="0.24";         break;
+                        case 0x25:  ss.sVersion="0.25";         break;
+                        case 0x27:  ss.sVersion="0.27";         break;
+                        case 0x28:  ss.sVersion="0.28";         break;
+                        case 0x29:  ss.sVersion="0.29";         break;
+                        case 0x30:  ss.sVersion="0.30";         break;
+                        case 0x32:  ss.sVersion="0.32";         break;
+                        case 0x33:  ss.sVersion="0.33";         break;
+                        case 0x35:  ss.sVersion="0.35";         break;
+                        case 0x36:  ss.sVersion="0.36 beta";    break;
+                        case 0x37:  ss.sVersion="0.37 beta";    break;
+                        case 0x38:  ss.sVersion="0.38 beta";    break;
+                        case 0x39:  ss.sVersion="0.39 final";   break;
+                        case 0x3A:  ss.sVersion="0.399";        break;
+                        default:    ss.sVersion="";
                     }
 
                     pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
