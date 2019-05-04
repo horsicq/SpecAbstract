@@ -1073,7 +1073,6 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         //        memoryScan(&result.mapHeaderScanDetects,pDevice,0,qMin(result.basic_info.nSize,(qint64)1024),_headerscan_records,sizeof(_headerscan_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
 
-
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_PE_header_records,sizeof(_PE_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
         signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_PE_entrypoint_records,sizeof(_PE_entrypoint_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
         signatureScan(&result.mapOverlayDetects,result.sOverlaySignature,_binary_records,sizeof(_binary_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_BINARY);
@@ -3681,7 +3680,6 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DEEPSEA);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
-
 
             // cliSecure
             if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_CLISECURE))
@@ -9652,7 +9650,6 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::PE_getRichSignatureDescription(quint32
             case 0x086: // auto
             case 0x087: // auto
             case 0x088: // auto
-
             //
             case 0x0d0: // auto
             case 0x0d1: // auto
@@ -9661,7 +9658,6 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::PE_getRichSignatureDescription(quint32
             case 0x0d4: // auto
             case 0x0d5: // auto
             case 0x0d6: // auto
-
             //
             case 0x0e2: // auto
             case 0x0e3: // auto
@@ -9670,7 +9666,6 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::PE_getRichSignatureDescription(quint32
             case 0x0e6: // auto
             case 0x0e7: // auto
             case 0x0e8: // auto
-
             //
             case 0x0ac:
             case 0x0ad:
@@ -9679,7 +9674,6 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::PE_getRichSignatureDescription(quint32
             case 0x0b0:
             case 0x0b1:
             case 0x0b2:
-
             //
             case 0x106:
             case 0x107:
