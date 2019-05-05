@@ -299,19 +299,19 @@ QString SpecAbstract::recordFiletypeIdToString(RECORD_FILETYPE id)
 
     switch(id)
     {
-        case RECORD_FILETYPE_UNKNOWN:                       sResult=QString("Unknown");                     break;
-        case RECORD_FILETYPE_BINARY:                        sResult=QString("Binary");                      break;
-        case RECORD_FILETYPE_MSDOS:                         sResult=QString("MSDOS");                       break;
-        case RECORD_FILETYPE_PE:                            sResult=QString("PE");                          break;
-        case RECORD_FILETYPE_PE32:                          sResult=QString("PE 32");                       break;
-        case RECORD_FILETYPE_PE64:                          sResult=QString("PE 64");                       break;
-        case RECORD_FILETYPE_ELF:                           sResult=QString("ELF");                         break;
-        case RECORD_FILETYPE_ELF32:                         sResult=QString("ELF 32");                      break;
-        case RECORD_FILETYPE_ELF64:                         sResult=QString("ELF 64");                      break;
-        case RECORD_FILETYPE_MACH:                          sResult=QString("Mach-O");                      break;
-        case RECORD_FILETYPE_MACH32:                        sResult=QString("Mach-O 32");                   break;
-        case RECORD_FILETYPE_MACH64:                        sResult=QString("Mach-O 64");                   break;
-        case RECORD_FILETYPE_TEXT:                          sResult=QString("Text");                        break;
+        case RECORD_FILETYPE_UNKNOWN:                       sResult=QString("Unknown");                                     break;
+        case RECORD_FILETYPE_BINARY:                        sResult=QString("Binary");                                      break;
+        case RECORD_FILETYPE_MSDOS:                         sResult=QString("MSDOS");                                       break;
+        case RECORD_FILETYPE_PE:                            sResult=QString("PE");                                          break;
+        case RECORD_FILETYPE_PE32:                          sResult=QString("PE 32");                                       break;
+        case RECORD_FILETYPE_PE64:                          sResult=QString("PE 64");                                       break;
+        case RECORD_FILETYPE_ELF:                           sResult=QString("ELF");                                         break;
+        case RECORD_FILETYPE_ELF32:                         sResult=QString("ELF 32");                                      break;
+        case RECORD_FILETYPE_ELF64:                         sResult=QString("ELF 64");                                      break;
+        case RECORD_FILETYPE_MACH:                          sResult=QString("Mach-O");                                      break;
+        case RECORD_FILETYPE_MACH32:                        sResult=QString("Mach-O 32");                                   break;
+        case RECORD_FILETYPE_MACH64:                        sResult=QString("Mach-O 64");                                   break;
+        case RECORD_FILETYPE_TEXT:                          sResult=QString("Text");                                        break;
     }
 
     return sResult;
@@ -323,9 +323,9 @@ QString SpecAbstract::recordFilepartIdToString(SpecAbstract::RECORD_FILEPART id)
 
     switch(id)
     {
-        case RECORD_FILEPART_UNKNOWN:                       sResult=QString("Unknown");                     break;
-        case RECORD_FILEPART_HEADER:                        sResult=QString("Header");                      break;
-        case RECORD_FILEPART_OVERLAY:                       sResult=QString("Overlay");                     break;
+        case RECORD_FILEPART_UNKNOWN:                       sResult=QString("Unknown");                                     break;
+        case RECORD_FILEPART_HEADER:                        sResult=QString("Header");                                      break;
+        case RECORD_FILEPART_OVERLAY:                       sResult=QString("Overlay");                                     break;
     }
 
     return sResult;
@@ -337,30 +337,30 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
 
     switch(id)
     {
-        case RECORD_TYPE_UNKNOWN:                           sResult=tr("Unknown");                          break;
-        case RECORD_TYPE_ARCHIVE:                           sResult=tr("Archive");                          break;
-        case RECORD_TYPE_CERTIFICATE:                       sResult=tr("Certificate");                      break;
-        case RECORD_TYPE_COMPILER:                          sResult=tr("Compiler");                         break;
-        case RECORD_TYPE_CONVERTER:                         sResult=tr("Converter");                        break;
-        case RECORD_TYPE_DATABASE:                          sResult=tr("Database");                         break;
-        case RECORD_TYPE_DEBUGDATA:                         sResult=tr("Debug data");                       break;
-        case RECORD_TYPE_DONGLEPROTECTION:                  sResult=tr("Dongle protection");                break;
-        case RECORD_TYPE_FORMAT:                            sResult=tr("Format");                           break;
-        case RECORD_TYPE_GENERIC:                           sResult=tr("Generic");                          break;
-        case RECORD_TYPE_IMAGE:                             sResult=tr("Image");                            break;
-        case RECORD_TYPE_INSTALLER:                         sResult=tr("Installer");                        break;
-        case RECORD_TYPE_INSTALLERDATA:                     sResult=tr("Installer data");                   break;
-        case RECORD_TYPE_LIBRARY:                           sResult=tr("Library");                          break;
-        case RECORD_TYPE_LINKER:                            sResult=tr("Linker");                           break;
-        case RECORD_TYPE_NETOBFUSCATOR:                     sResult=tr(".NET obfuscator");                  break;
-        case RECORD_TYPE_PACKER:                            sResult=tr("Packer");                           break;
-        case RECORD_TYPE_PROTECTOR:                         sResult=tr("Protector");                        break;
-        case RECORD_TYPE_PROTECTORDATA:                     sResult=tr("Protector data");                   break;
-        case RECORD_TYPE_SFX:                               sResult=tr("SFX");                              break;
-        case RECORD_TYPE_SFXDATA:                           sResult=tr("SFX data");                         break;
-        case RECORD_TYPE_SOURCECODE:                        sResult=tr("Source code");                      break;
-        case RECORD_TYPE_STUB:                              sResult=tr("Stub");                             break;
-        case RECORD_TYPE_TOOL:                              sResult=tr("Tool");                             break;
+        case RECORD_TYPE_UNKNOWN:                           sResult=tr("Unknown");                                          break;
+        case RECORD_TYPE_ARCHIVE:                           sResult=tr("Archive");                                          break;
+        case RECORD_TYPE_CERTIFICATE:                       sResult=tr("Certificate");                                      break;
+        case RECORD_TYPE_COMPILER:                          sResult=tr("Compiler");                                         break;
+        case RECORD_TYPE_CONVERTER:                         sResult=tr("Converter");                                        break;
+        case RECORD_TYPE_DATABASE:                          sResult=tr("Database");                                         break;
+        case RECORD_TYPE_DEBUGDATA:                         sResult=tr("Debug data");                                       break;
+        case RECORD_TYPE_DONGLEPROTECTION:                  sResult=tr("Dongle protection");                                break;
+        case RECORD_TYPE_FORMAT:                            sResult=tr("Format");                                           break;
+        case RECORD_TYPE_GENERIC:                           sResult=tr("Generic");                                          break;
+        case RECORD_TYPE_IMAGE:                             sResult=tr("Image");                                            break;
+        case RECORD_TYPE_INSTALLER:                         sResult=tr("Installer");                                        break;
+        case RECORD_TYPE_INSTALLERDATA:                     sResult=tr("Installer data");                                   break;
+        case RECORD_TYPE_LIBRARY:                           sResult=tr("Library");                                          break;
+        case RECORD_TYPE_LINKER:                            sResult=tr("Linker");                                           break;
+        case RECORD_TYPE_NETOBFUSCATOR:                     sResult=tr(".NET obfuscator");                                  break;
+        case RECORD_TYPE_PACKER:                            sResult=tr("Packer");                                           break;
+        case RECORD_TYPE_PROTECTOR:                         sResult=tr("Protector");                                        break;
+        case RECORD_TYPE_PROTECTORDATA:                     sResult=tr("Protector data");                                   break;
+        case RECORD_TYPE_SFX:                               sResult=tr("SFX");                                              break;
+        case RECORD_TYPE_SFXDATA:                           sResult=tr("SFX data");                                         break;
+        case RECORD_TYPE_SOURCECODE:                        sResult=tr("Source code");                                      break;
+        case RECORD_TYPE_STUB:                              sResult=tr("Stub");                                             break;
+        case RECORD_TYPE_TOOL:                              sResult=tr("Tool");                                             break;
     }
 
     return sResult;
