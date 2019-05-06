@@ -718,6 +718,7 @@ public:
 
     static QByteArray serializeScanStruct(SCAN_STRUCT ssRecord,bool bIsHeader=false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData,bool *pbIsHeader=nullptr);
+
 protected:
     void _errorMessage(QString sMessage);
     void _infoMessage(QString sMessage);
