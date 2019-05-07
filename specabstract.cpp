@@ -359,6 +359,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_PROTECTORDATA:                     sResult=tr("Protector data");                                   break;
         case RECORD_TYPE_SFX:                               sResult=tr("SFX");                                              break;
         case RECORD_TYPE_SFXDATA:                           sResult=tr("SFX data");                                         break;
+        case RECORD_TYPE_SIGNTOOL:                          sResult=tr("Sign tool");                                        break;
         case RECORD_TYPE_SOURCECODE:                        sResult=tr("Source code");                                      break;
         case RECORD_TYPE_STUB:                              sResult=tr("Stub");                                             break;
         case RECORD_TYPE_TOOL:                              sResult=tr("Tool");                                             break;
@@ -1114,6 +1115,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_Microsoft(pDevice,pOptions->bIsImage,&result);
         PE_handle_Borland(pDevice,pOptions->bIsImage,&result);
         PE_handle_Tools(pDevice,pOptions->bIsImage,&result);
+        PE_handle_Signtools(pDevice,pOptions->bIsImage,&result);
         PE_handle_SFX(pDevice,pOptions->bIsImage,&result);
         PE_handle_Installers(pDevice,pOptions->bIsImage,&result);
         PE_handle_DongleProtection(pDevice,pOptions->bIsImage,&result);
@@ -1125,6 +1127,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
+        result.basic_info.listDetects.append(result.mapResultSigntools.values());
         result.basic_info.listDetects.append(result.mapResultProtectors.values());
         result.basic_info.listDetects.append(result.mapResultNETObfuscators.values());
         result.basic_info.listDetects.append(result.mapResultDongleProtection.values());
@@ -4948,6 +4951,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                     case 24:
                     case 25:
                     case 26:
+                    case 31:
                     case 56:
                         bHeurGCC=true;
                         break;
@@ -5347,10 +5351,29 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
     }
 }
 
+void SpecAbstract::PE_handle_Signtools(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
+    {
+        if(pe.isSignPresent())
+        {
+            // TODO image
+            S_IMAGE_DATA_DIRECTORY dd=pe.getOptionalHeader_DataDirectory(S_IMAGE_DIRECTORY_ENTRY_SECURITY);
+
+            if(pe.compareSignature("........00020200",dd.VirtualAddress))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_SIGNTOOL,RECORD_NAME_GENERIC,"2.0","PKCS #7",0);
+                pPEInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+        }
+    }
+}
+
 void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     XPE pe(pDevice,bIsImage);
-    //
 
     if(pe.isValid())
     {

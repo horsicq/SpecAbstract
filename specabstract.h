@@ -80,6 +80,7 @@ public:
         RECORD_TYPE_PROTECTORDATA,
         RECORD_TYPE_SFX,
         RECORD_TYPE_SFXDATA,
+        RECORD_TYPE_SIGNTOOL,
         RECORD_TYPE_SOURCECODE,
         RECORD_TYPE_STUB,
         RECORD_TYPE_TOOL
@@ -523,6 +524,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultSigntools;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultInstallers;
@@ -662,6 +664,7 @@ public:
     static void PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Borland(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Tools(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_Signtools(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Installers(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_SFX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_PolyMorph(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
