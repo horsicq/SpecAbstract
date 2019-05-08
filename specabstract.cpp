@@ -439,6 +439,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DOTFUSCATOR:                       sResult=QString("Dotfuscator");                                 break;
         case RECORD_NAME_DOTNET:                            sResult=QString(".NET");                                        break;
         case RECORD_NAME_DOTNETZ:                           sResult=QString(".NETZ");                                       break;
+        case RECORD_NAME_DROPBOX:                           sResult=QString("Dropbox");                                     break;
         case RECORD_NAME_DVCLAL:                            sResult=QString("DVCLAL");                                      break;
         case RECORD_NAME_DYAMAR:                            sResult=QString("DYAMAR");                                      break;
         case RECORD_NAME_EAZFUSCATOR:                       sResult=QString("Eazfuscator");                                 break;
@@ -5734,6 +5735,14 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("Google Update"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_GOOGLE,"","",0);
+                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+
+                pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
+            if(XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("Dropbox Update Setup"))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_DROPBOX,"","",0);
                 ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
