@@ -494,6 +494,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_INSTALLSHIELD:                     sResult=QString("InstallShield");                               break;
         case RECORD_NAME_IPBPROTECT:                        sResult=QString("iPB Protect");                                 break;
         case RECORD_NAME_JAR:                               sResult=QString("JAR");                                         break;
+        case RECORD_NAME_JAVA:                              sResult=QString("Java");                                        break;
         case RECORD_NAME_JPEG:                              sResult=QString("JPEG");                                        break;
         case RECORD_NAME_KKRUNCHY:                          sResult=QString("kkrunchy");                                    break;
         case RECORD_NAME_LAYHEYFORTRAN90:                   sResult=QString("Lahey Fortran 90");                            break;
@@ -4947,11 +4948,15 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                 switch(pPEInfo->nMajorLinkerVersion)
                 {
                 case 2:
-                    switch(pPEInfo->nMinorLinkerVersion)
+                    switch(pPEInfo->nMinorLinkerVersion) // TODO Check MinGW versions
                     {
                     case 24:
                     case 25:
                     case 26:
+                    case 27:
+                    case 28:
+                    case 29:
+                    case 30:
                     case 31:
                     case 56:
                         bHeurGCC=true;
@@ -5748,6 +5753,15 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
+            if(     XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Java")&&
+                    XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("Setup Launcher"))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_JAVA,"","",0);
+                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+
+                pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
             // Windows Installer
             for(int i=0;i<pPEInfo->listResources.count();i++)
             {
@@ -6045,6 +6059,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
             int nCount=listRecords.count();
             for(int i=0;i<nCount;i++)
             {
+                // TODO vsix
                 XArchive::RECORD record=listRecords.at(i);
 
                 if(record.sFileName=="docProps/app.xml")
