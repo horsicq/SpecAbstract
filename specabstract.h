@@ -630,7 +630,7 @@ public:
         QString sInfo;
     };
 
-    explicit SpecAbstract(QObject *parent = nullptr);
+    explicit SpecAbstract(QObject *parent=nullptr);
     static QString append(QString sResult,QString sString);
     static QString recordFiletypeIdToString(RECORD_FILETYPE id);
     static QString recordFilepartIdToString(RECORD_FILEPART id);

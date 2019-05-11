@@ -303,57 +303,19 @@ QString SpecAbstract::recordFiletypeIdToString(RECORD_FILETYPE id)
 
     switch(id)
     {
-        case RECORD_FILETYPE_UNKNOWN:
-            sResult=QString("Unknown");
-            break;
-
-        case RECORD_FILETYPE_BINARY:
-            sResult=QString("Binary");
-            break;
-
-        case RECORD_FILETYPE_MSDOS:
-            sResult=QString("MSDOS");
-            break;
-
-        case RECORD_FILETYPE_PE:
-            sResult=QString("PE");
-            break;
-
-        case RECORD_FILETYPE_PE32:
-            sResult=QString("PE 32");
-            break;
-
-        case RECORD_FILETYPE_PE64:
-            sResult=QString("PE 64");
-            break;
-
-        case RECORD_FILETYPE_ELF:
-            sResult=QString("ELF");
-            break;
-
-        case RECORD_FILETYPE_ELF32:
-            sResult=QString("ELF 32");
-            break;
-
-        case RECORD_FILETYPE_ELF64:
-            sResult=QString("ELF 64");
-            break;
-
-        case RECORD_FILETYPE_MACH:
-            sResult=QString("Mach-O");
-            break;
-
-        case RECORD_FILETYPE_MACH32:
-            sResult=QString("Mach-O 32");
-            break;
-
-        case RECORD_FILETYPE_MACH64:
-            sResult=QString("Mach-O 64");
-            break;
-
-        case RECORD_FILETYPE_TEXT:
-            sResult=QString("Text");
-            break;
+        case RECORD_FILETYPE_UNKNOWN:                       sResult=QString("Unknown");                                     break;
+        case RECORD_FILETYPE_BINARY:                        sResult=QString("Binary");                                      break;
+        case RECORD_FILETYPE_MSDOS:                         sResult=QString("MSDOS");                                       break;
+        case RECORD_FILETYPE_PE:                            sResult=QString("PE");                                          break;
+        case RECORD_FILETYPE_PE32:                          sResult=QString("PE 32");                                       break;
+        case RECORD_FILETYPE_PE64:                          sResult=QString("PE 64");                                       break;
+        case RECORD_FILETYPE_ELF:                           sResult=QString("ELF");                                         break;
+        case RECORD_FILETYPE_ELF32:                         sResult=QString("ELF 32");                                      break;
+        case RECORD_FILETYPE_ELF64:                         sResult=QString("ELF 64");                                      break;
+        case RECORD_FILETYPE_MACH:                          sResult=QString("Mach-O");                                      break;
+        case RECORD_FILETYPE_MACH32:                        sResult=QString("Mach-O 32");                                   break;
+        case RECORD_FILETYPE_MACH64:                        sResult=QString("Mach-O 64");                                   break;
+        case RECORD_FILETYPE_TEXT:                          sResult=QString("Text");                                        break;
     }
 
     return sResult;
@@ -365,17 +327,9 @@ QString SpecAbstract::recordFilepartIdToString(SpecAbstract::RECORD_FILEPART id)
 
     switch(id)
     {
-        case RECORD_FILEPART_UNKNOWN:
-            sResult=QString("Unknown");
-            break;
-
-        case RECORD_FILEPART_HEADER:
-            sResult=QString("Header");
-            break;
-
-        case RECORD_FILEPART_OVERLAY:
-            sResult=QString("Overlay");
-            break;
+        case RECORD_FILEPART_UNKNOWN:                       sResult=QString("Unknown");                                     break;
+        case RECORD_FILEPART_HEADER:                        sResult=QString("Header");                                      break;
+        case RECORD_FILEPART_OVERLAY:                       sResult=QString("Overlay");                                     break;
     }
 
     return sResult;
@@ -387,105 +341,31 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
 
     switch(id)
     {
-        case RECORD_TYPE_UNKNOWN:
-            sResult=tr("Unknown");
-            break;
-
-        case RECORD_TYPE_ARCHIVE:
-            sResult=tr("Archive");
-            break;
-
-        case RECORD_TYPE_CERTIFICATE:
-            sResult=tr("Certificate");
-            break;
-
-        case RECORD_TYPE_COMPILER:
-            sResult=tr("Compiler");
-            break;
-
-        case RECORD_TYPE_CONVERTER:
-            sResult=tr("Converter");
-            break;
-
-        case RECORD_TYPE_DATABASE:
-            sResult=tr("Database");
-            break;
-
-        case RECORD_TYPE_DEBUGDATA:
-            sResult=tr("Debug data");
-            break;
-
-        case RECORD_TYPE_DONGLEPROTECTION:
-            sResult=tr("Dongle protection");
-            break;
-
-        case RECORD_TYPE_FORMAT:
-            sResult=tr("Format");
-            break;
-
-        case RECORD_TYPE_GENERIC:
-            sResult=tr("Generic");
-            break;
-
-        case RECORD_TYPE_IMAGE:
-            sResult=tr("Image");
-            break;
-
-        case RECORD_TYPE_INSTALLER:
-            sResult=tr("Installer");
-            break;
-
-        case RECORD_TYPE_INSTALLERDATA:
-            sResult=tr("Installer data");
-            break;
-
-        case RECORD_TYPE_LIBRARY:
-            sResult=tr("Library");
-            break;
-
-        case RECORD_TYPE_LINKER:
-            sResult=tr("Linker");
-            break;
-
-        case RECORD_TYPE_NETOBFUSCATOR:
-            sResult=tr(".NET obfuscator");
-            break;
-
-        case RECORD_TYPE_PACKER:
-            sResult=tr("Packer");
-            break;
-
-        case RECORD_TYPE_PROTECTOR:
-            sResult=tr("Protector");
-            break;
-
-        case RECORD_TYPE_PROTECTORDATA:
-            sResult=tr("Protector data");
-            break;
-
-        case RECORD_TYPE_SFX:
-            sResult=tr("SFX");
-            break;
-
-        case RECORD_TYPE_SFXDATA:
-            sResult=tr("SFX data");
-            break;
-
-        case RECORD_TYPE_SIGNTOOL:
-            sResult=tr("Sign tool");
-            break;
-
-        case RECORD_TYPE_SOURCECODE:
-            sResult=tr("Source code");
-            break;
-
-        case RECORD_TYPE_STUB:
-            sResult=tr("Stub");
-            break;
-
-        case RECORD_TYPE_TOOL:
-            sResult=tr("Tool");
-            break;
+        case RECORD_TYPE_UNKNOWN:                           sResult=tr("Unknown");                                          break;
+        case RECORD_TYPE_ARCHIVE:                           sResult=tr("Archive");                                          break;
+        case RECORD_TYPE_CERTIFICATE:                       sResult=tr("Certificate");                                      break;
+        case RECORD_TYPE_COMPILER:                          sResult=tr("Compiler");                                         break;
+        case RECORD_TYPE_CONVERTER:                         sResult=tr("Converter");                                        break;
+        case RECORD_TYPE_DATABASE:                          sResult=tr("Database");                                         break;
+        case RECORD_TYPE_DEBUGDATA:                         sResult=tr("Debug data");                                       break;
+        case RECORD_TYPE_DONGLEPROTECTION:                  sResult=tr("Dongle protection");                                break;
+        case RECORD_TYPE_FORMAT:                            sResult=tr("Format");                                           break;
+        case RECORD_TYPE_GENERIC:                           sResult=tr("Generic");                                          break;
+        case RECORD_TYPE_IMAGE:                             sResult=tr("Image");                                            break;
+        case RECORD_TYPE_INSTALLER:                         sResult=tr("Installer");                                        break;
+        case RECORD_TYPE_INSTALLERDATA:                     sResult=tr("Installer data");                                   break;
+        case RECORD_TYPE_LIBRARY:                           sResult=tr("Library");                                          break;
+        case RECORD_TYPE_LINKER:                            sResult=tr("Linker");                                           break;
+        case RECORD_TYPE_NETOBFUSCATOR:                     sResult=tr(".NET obfuscator");                                  break;
+        case RECORD_TYPE_PACKER:                            sResult=tr("Packer");                                           break;
+        case RECORD_TYPE_PROTECTOR:                         sResult=tr("Protector");                                        break;
+        case RECORD_TYPE_PROTECTORDATA:                     sResult=tr("Protector data");                                   break;
+        case RECORD_TYPE_SFX:                               sResult=tr("SFX");                                              break;
+        case RECORD_TYPE_SFXDATA:                           sResult=tr("SFX data");                                         break;
+        case RECORD_TYPE_SIGNTOOL:                          sResult=tr("Sign tool");                                        break;
+        case RECORD_TYPE_SOURCECODE:                        sResult=tr("Source code");                                      break;
+        case RECORD_TYPE_STUB:                              sResult=tr("Stub");                                             break;
+        case RECORD_TYPE_TOOL:                              sResult=tr("Tool");                                             break;
     }
 
     return sResult;
@@ -497,1035 +377,264 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
 
     switch(id)
     {
-        case RECORD_NAME_UNKNOWN:
-            sResult=QString("Unknown");
-            break;
-
-        case RECORD_NAME_32LITE:
-            sResult=QString("32Lite");
-            break;
-
-        case RECORD_NAME_7Z:
-            sResult=QString("7-Zip");
-            break;
-
-        case RECORD_NAME_ABCCRYPTOR:
-            sResult=QString("ABC Cryptor");
-            break;
-
-        case RECORD_NAME_ACPROTECT:
-            sResult=QString("ACProtect");
-            break;
-
-        case RECORD_NAME_ACTUALINSTALLER:
-            sResult=QString("Actual Installer");
-            break;
-
-        case RECORD_NAME_ADVANCEDINSTALLER:
-            sResult=QString("Advanced Installer");
-            break;
-
-        case RECORD_NAME_AGILENET:
-            sResult=QString("Agile .NET");
-            break;
-
-        case RECORD_NAME_AHPACKER:
-            sResult=QString("AHPacker");
-            break;
-
-        case RECORD_NAME_AHTEAMEPPROTECTOR:
-            sResult=QString("AHTeam EP Protector");
-            break;
-
-        case RECORD_NAME_ALEXPROTECTOR:
-            sResult=QString("Alex Protector");
-            break;
-
-        case RECORD_NAME_ALLOY:
-            sResult=QString("Alloy");
-            break;
-
-        case RECORD_NAME_ANDPAKK2:
-            sResult=QString("ANDpakk2");
-            break;
-
-        case RECORD_NAME_ANTIDOTE:
-            sResult=QString("AntiDote");
-            break;
-
-        case RECORD_NAME_ARMADILLO:
-            sResult=QString("Armadillo");
-            break;
-
-        case RECORD_NAME_ARMPROTECTOR:
-            sResult=QString("ARM Protector");
-            break;
-
-        case RECORD_NAME_ASDPACK:
-            sResult=QString("ASDPack");
-            break;
-
-        case RECORD_NAME_ASM:
-            sResult=QString("Asm");
-            break;
-
-        case RECORD_NAME_ASPACK:
-            sResult=QString("ASPack");
-            break;
-
-        case RECORD_NAME_ASPROTECT:
-            sResult=QString("ASProtect");
-            break;
-
-        case RECORD_NAME_ASSEMBLYINVOKE:
-            sResult=QString("AssemblyInvoke");
-            break;
-
-        case RECORD_NAME_AUTOIT:
-            sResult=QString("AutoIt");
-            break;
-
-        case RECORD_NAME_AVASTANTIVIRUS:
-            sResult=QString("Avast Antivirus");
-            break;
-
-        case RECORD_NAME_AVERCRYPTOR:
-            sResult=QString("AverCryptor");
-            break;
-
-        case RECORD_NAME_BABELNET:
-            sResult=QString("Babel .NET");
-            break;
-
-        case RECORD_NAME_BEROEXEPACKER:
-            sResult=QString("BeRoEXEPacker");
-            break;
-
-        case RECORD_NAME_BITROCKINSTALLER:
-            sResult=QString("BitRock Installer");
-            break;
-
-        case RECORD_NAME_BITSHAPEPECRYPT:
-            sResult=QString("BitShape PE Crypt");
-            break;
-
-        case RECORD_NAME_BORLANDCPP:
-            sResult=QString("Borland C++");
-            break;
-
-        case RECORD_NAME_BORLANDCPPBUILDER:
-            sResult=QString("Borland C++ Builder");
-            break;
-
-        case RECORD_NAME_BORLANDDELPHI:
-            sResult=QString("Borland Delphi");
-            break;
-
-        case RECORD_NAME_BORLANDDELPHIDOTNET:
-            sResult=QString("Borland Delphi .NET");
-            break;
-
-        case RECORD_NAME_BORLANDOBJECTPASCAL:
-            sResult=QString("Borland Object Pascal");
-            break;
-
-        case RECORD_NAME_BREAKINTOPATTERN:
-            sResult=QString("Break Into Pattern");
-            break;
-
-        case RECORD_NAME_C:
-            sResult=QString("C");
-            break;
-
-        case RECORD_NAME_CAB:
-            sResult=QString("CAB");
-            break;
-
-        case RECORD_NAME_CCPP:
-            sResult=QString("C/C++");
-            break;
-
-        case RECORD_NAME_CEXE:
-            sResult=QString("CExe");
-            break;
-
-        case RECORD_NAME_CIL:
-            sResult=QString("cil");
-            break;
-
-        case RECORD_NAME_CLICKTEAM:
-            sResult=QString("ClickTeam");
-            break;
-
-        case RECORD_NAME_CLISECURE:
-            sResult=QString("CliSecure");
-            break;
-
-        case RECORD_NAME_CODEGEARCPP:
-            sResult=QString("CodeGear C++");
-            break;
-
-        case RECORD_NAME_CODEGEARCPPBUILDER:
-            sResult=QString("CodeGear C++ Builder");
-            break;
-
-        case RECORD_NAME_CODEGEARDELPHI:
-            sResult=QString("CodeGear Delphi");
-            break;
-
-        case RECORD_NAME_CODEGEAROBJECTPASCAL:
-            sResult=QString("Codegear Object Pascal");
-            break;
-
-        case RECORD_NAME_CODEVEIL:
-            sResult=QString("CodeVeil");
-            break;
-
-        case RECORD_NAME_CODEWALL:
-            sResult=QString("CodeWall");
-            break;
-
-        case RECORD_NAME_CONFUSER:
-            sResult=QString("Confuser");
-            break;
-
-        case RECORD_NAME_CONFUSEREX:
-            sResult=QString("ConfuserEx");
-            break;
-
-        case RECORD_NAME_CPP:
-            sResult=QString("C++");
-            break;
-
-        case RECORD_NAME_CREATEINSTALL:
-            sResult=QString("CreateInstall");
-            break;
-
-        case RECORD_NAME_CRINKLER:
-            sResult=QString("Crinkler");
-            break;
-
-        case RECORD_NAME_CRUNCH:
-            sResult=QString("Crunch");
-            break;
-
-        case RECORD_NAME_CRYPTER:
-            sResult=QString("Crypter");
-            break;
-
-        case RECORD_NAME_CRYPTOCRACKSPEPROTECTOR:
-            sResult=QString("CRYPToCRACks PE Protector");
-            break;
-
-        case RECORD_NAME_CRYPTOOBFUSCATORFORNET:
-            sResult=QString("Crypto Obfuscator For .Net");
-            break;
-
-        case RECORD_NAME_CYGWIN:
-            sResult=QString("Cygwin");
-            break;
-
-        case RECORD_NAME_DEB:
-            sResult=QString("DEB");
-            break;
-
-        case RECORD_NAME_DEEPSEA:
-            sResult=QString("DeepSea");
-            break;
-
-        case RECORD_NAME_DMD32D:
-            sResult=QString("DMD32 D");
-            break;
-
-        case RECORD_NAME_DNGUARD:
-            sResult=QString("DNGuard");
-            break;
-
-        case RECORD_NAME_DOTFIXNICEPROTECT:
-            sResult=QString("DotFix Nice Protect");
-            break;
-
-        case RECORD_NAME_DOTFUSCATOR:
-            sResult=QString("Dotfuscator");
-            break;
-
-        case RECORD_NAME_DOTNET:
-            sResult=QString(".NET");
-            break;
-
-        case RECORD_NAME_DOTNETZ:
-            sResult=QString(".NETZ");
-            break;
-
-        case RECORD_NAME_DROPBOX:
-            sResult=QString("Dropbox");
-            break;
-
-        case RECORD_NAME_DVCLAL:
-            sResult=QString("DVCLAL");
-            break;
-
-        case RECORD_NAME_DYAMAR:
-            sResult=QString("DYAMAR");
-            break;
-
-        case RECORD_NAME_EAZFUSCATOR:
-            sResult=QString("Eazfuscator");
-            break;
-
-        case RECORD_NAME_EMBARCADEROCPP:
-            sResult=QString("Embarcadero C++");
-            break;
-
-        case RECORD_NAME_EMBARCADEROCPPBUILDER:
-            sResult=QString("Embarcadero C++ Builder");
-            break;
-
-        case RECORD_NAME_EMBARCADERODELPHI:
-            sResult=QString("Embarcadero Delphi");
-            break;
-
-        case RECORD_NAME_EMBARCADERODELPHIDOTNET:
-            sResult=QString("Embarcadero Delphi .NET");
-            break;
-
-        case RECORD_NAME_EMBARCADEROOBJECTPASCAL:
-            sResult=QString("Embarcadero Object Pascal");
-            break;
-
-        case RECORD_NAME_EMPTYFILE:
-            sResult=QString("Empty File");
-            break;
-
-        case RECORD_NAME_ENIGMA:
-            sResult=QString("ENIGMA");
-            break;
-
-        case RECORD_NAME_EXE32PACK:
-            sResult=QString("exe32pack");
-            break;
-
-        case RECORD_NAME_EXECRYPT:
-            sResult=QString("EXECrypt");
-            break;
-
-        case RECORD_NAME_EXECRYPTOR:
-            sResult=QString("EXECryptor");
-            break;
-
-        case RECORD_NAME_EXEFOG:
-            sResult=QString("ExeFog");
-            break;
-
-        case RECORD_NAME_EXEMPLARINSTALLER:
-            sResult=QString("Exemplar Installer");
-            break;
-
-        case RECORD_NAME_EXEPACK:
-            sResult=QString("!EP(EXE Pack)");
-            break;
-
-        case RECORD_NAME_EXESAX:
-            sResult=QString("ExeSax");
-            break;
-
-        case RECORD_NAME_EXESHIELD:
-            sResult=QString("Exe Shield");
-            break;
-
-        case RECORD_NAME_EXPORT:
-            sResult=QString("Export");
-            break;
-
-        case RECORD_NAME_EZIP:
-            sResult=QString("EZIP");
-            break;
-
-        case RECORD_NAME_FAKESIGNATURE:
-            sResult=QString("Fake signature");
-            break;
-
-        case RECORD_NAME_FASM:
-            sResult=QString("FASM");
-            break;
-
-        case RECORD_NAME_FISHNET:
-            sResult=QString("FISH .NET");
-            break;
-
-        case RECORD_NAME_FISHPEPACKER:
-            sResult=QString("Fish PE Packer");
-            break;
-
-        case RECORD_NAME_FLEXLM:
-            sResult=QString("Flex License Manager");
-            break;
-
-        case RECORD_NAME_FLEXNET:
-            sResult=QString("FlexNet Licensing");
-            break;
-
-        case RECORD_NAME_FPC:
-            sResult=QString("Free Pascal");
-            break;
-
-        case RECORD_NAME_FREECRYPTOR:
-            sResult=QString("FreeCryptor");
-            break;
-
-        case RECORD_NAME_FSG:
-            sResult=QString("FSG");
-            break;
-
-        case RECORD_NAME_GCC:
-            sResult=QString("GCC");
-            break;
-
-        case RECORD_NAME_GENERIC:
-            sResult=QString("Generic");
-            break;
-
-        case RECORD_NAME_GENERICLINKER:
-            sResult=QString("Generic Linker");
-            break;
-
-        case RECORD_NAME_GENTEEINSTALLER:
-            sResult=QString("Gentee Installer");
-            break;
-
-        case RECORD_NAME_GHOSTINSTALLER:
-            sResult=QString("Ghost Installer");
-            break;
-
-        case RECORD_NAME_GNULINKER:
-            sResult=QString("GNU ld");
-            break;
-
-        case RECORD_NAME_GOASM:
-            sResult=QString("GoAsm");
-            break;
-
-        case RECORD_NAME_GOLIATHNET:
-            sResult=QString("Goliath .NET");
-            break;
-
-        case RECORD_NAME_GOLINK:
-            sResult=QString("GoLink");
-            break;
-
-        case RECORD_NAME_GOOGLE:
-            sResult=QString("Google");
-            break;
-
-        case RECORD_NAME_GPINSTALL:
-            sResult=QString("GP-Install");
-            break;
-
-        case RECORD_NAME_GUARDIANSTEALTH:
-            sResult=QString("Guardian Stealth");
-            break;
-
-        case RECORD_NAME_GZIP:
-            sResult=QString("GZIP");
-            break;
-
-        case RECORD_NAME_HIDEPE:
-            sResult=QString("HidePE");
-            break;
-
-        case RECORD_NAME_HMIMYSPACKER:
-            sResult=QString("Hmimys Packer");
-            break;
-
-        case RECORD_NAME_HMIMYSPROTECTOR:
-            sResult=QString("Hmimys's Protector");
-            break;
-
-        case RECORD_NAME_HTML:
-            sResult=QString("HTML");
-            break;
-
-        case RECORD_NAME_HXS:
-            sResult=QString("HXS");
-            break;
-
-        case RECORD_NAME_IBMPCPASCAL:
-            sResult=QString("IBM PC Pascal");
-            break;
-
-        case RECORD_NAME_IMPORT:
-            sResult=QString("Import");
-            break;
-
-        case RECORD_NAME_INNOSETUP:
-            sResult=QString("Inno Setup");
-            break;
-
-        case RECORD_NAME_INSTALLANYWHERE:
-            sResult=QString("InstallAnywhere");
-            break;
-
-        case RECORD_NAME_INSTALLSHIELD:
-            sResult=QString("InstallShield");
-            break;
-
-        case RECORD_NAME_IPBPROTECT:
-            sResult=QString("iPB Protect");
-            break;
-
-        case RECORD_NAME_JAR:
-            sResult=QString("JAR");
-            break;
-
-        case RECORD_NAME_JAVA:
-            sResult=QString("Java");
-            break;
-
-        case RECORD_NAME_JPEG:
-            sResult=QString("JPEG");
-            break;
-
-        case RECORD_NAME_KKRUNCHY:
-            sResult=QString("kkrunchy");
-            break;
-
-        case RECORD_NAME_LAYHEYFORTRAN90:
-            sResult=QString("Lahey Fortran 90");
-            break;
-
-        case RECORD_NAME_LAZARUS:
-            sResult=QString("Lazarus");
-            break;
-
-        case RECORD_NAME_LUACOMPILED:
-            sResult=QString("Lua compiled");
-            break;
-
-        case RECORD_NAME_MACROBJECT:
-            sResult=QString("Macrobject");
-            break;
-
-        case RECORD_NAME_MASKPE:
-            sResult=QString("MaskPE");
-            break;
-
-        case RECORD_NAME_MASM:
-            sResult=QString("MASM");
-            break;
-
-        case RECORD_NAME_MASM32:
-            sResult=QString("MASM32");
-            break;
-
-        case RECORD_NAME_MAXTOCODE:
-            sResult=QString("MaxtoCode");
-            break;
-
-        case RECORD_NAME_MEW11SE:
-            sResult=QString("MEW11 SE");
-            break;
-
-        case RECORD_NAME_MFC:
-            sResult=QString("MFC");
-            break;
-
-        case RECORD_NAME_MICROSOFTACCESS:
-            sResult=QString("Microsoft Access");
-            break;
-
-        case RECORD_NAME_MICROSOFTC:
-            sResult=QString("Microsoft C");
-            break;
-
-        case RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP:
-            sResult=QString("Microsoft Compiled HTML Help");
-            break;
-
-        case RECORD_NAME_MICROSOFTCPP:
-            sResult=QString("Microsoft C++");
-            break;
-
-        case RECORD_NAME_MICROSOFTEXCEL:
-            sResult=QString("Microsoft Excel");
-            break;
-
-        case RECORD_NAME_MICROSOFTLINKER:
-            sResult=QString("Microsoft linker");
-            break;
-
-        case RECORD_NAME_MICROSOFTLINKERDATABASE:
-            sResult=QString("Microsoft Linker Database");
-            break;
-
-        case RECORD_NAME_MICROSOFTOFFICE:
-            sResult=QString("Microsoft Office");
-            break;
-
-        case RECORD_NAME_MICROSOFTOFFICEWORD:
-            sResult=QString("Microsoft Office Word");
-            break;
-
-        case RECORD_NAME_MICROSOFTVISIO:
-            sResult=QString("Microsoft Visio");
-            break;
-
-        case RECORD_NAME_MICROSOFTVISUALSTUDIO:
-            sResult=QString("Microsoft Visual Studio");
-            break;
-
-        case RECORD_NAME_MINGW:
-            sResult=QString("MinGW");
-            break;
-
-        case RECORD_NAME_MKFPACK:
-            sResult=QString("MKFPack");
-            break;
-
-        case RECORD_NAME_MOLEBOX:
-            sResult=QString("MoleBox");
-            break;
-
-        case RECORD_NAME_MORPHNAH:
-            sResult=QString("Morphnah");
-            break;
-
-        case RECORD_NAME_MPRESS:
-            sResult=QString("MPRESS");
-            break;
-
-        case RECORD_NAME_MSYS:
-            sResult=QString("Msys");
-            break;
-
-        case RECORD_NAME_MSYS2:
-            sResult=QString("MSYS2");
-            break;
-
-        case RECORD_NAME_MZ0OPE:
-            sResult=QString("MZ0oPE");
-            break;
-
-        case RECORD_NAME_NAKEDPACKER:
-            sResult=QString("NakedPacker");
-            break;
-
-        case RECORD_NAME_NOOBYPROTECT:
-            sResult=QString("NoobyProtect");
-            break;
-
-        case RECORD_NAME_NORTHSTARPESHRINKER:
-            sResult=QString("North Star PE Shrinker");
-            break;
-
-        case RECORD_NAME_NOSTUBLINKER:
-            sResult=QString("NOSTUBLINKER");
-            break;
-
-        case RECORD_NAME_NPACK:
-            sResult=QString("nPack");
-            break;
-
-        case RECORD_NAME_NSIS:
-            sResult=QString("Nullsoft Scriptable Install System");
-            break;
-
-        case RECORD_NAME_NSPACK:
-            sResult=QString("NsPack");
-            break;
-
-        case RECORD_NAME_OBFUSCAR:
-            sResult=QString("Obfuscar");
-            break;
-
-        case RECORD_NAME_OBFUSCATORNET2009:
-            sResult=QString("Obfuscator.NET 2009");
-            break;
-
-        case RECORD_NAME_OBJECTPASCAL:
-            sResult=QString("Object Pascal");
-            break;
-
-        case RECORD_NAME_OBSIDIUM:
-            sResult=QString("Obsidium");
-            break;
-
-        case RECORD_NAME_OPENDOCUMENT:
-            sResult=QString("Open Document");
-            break;
-
-        case RECORD_NAME_OPERA:
-            sResult=QString("Opera");
-            break;
-
-        case RECORD_NAME_ORIEN:
-            sResult=QString("ORiEN");
-            break;
-
-        case RECORD_NAME_PACKMAN:
-            sResult=QString("Packman");
-            break;
-
-        case RECORD_NAME_PCGUARD:
-            sResult=QString("PC Guard");
-            break;
-
-        case RECORD_NAME_PDB:
-            sResult=QString("PDB");
-            break;
-
-        case RECORD_NAME_PDF:
-            sResult=QString("PDF");
-            break;
-
-        case RECORD_NAME_PEARMOR:
-            sResult=QString("PE-Armor");
-            break;
-
-        case RECORD_NAME_PEBUNDLE:
-            sResult=QString("PEBundle");
-            break;
-
-        case RECORD_NAME_PECOMPACT:
-            sResult=QString("PECompact");
-            break;
-
-        case RECORD_NAME_PEENCRYPT:
-            sResult=QString("PE Encrypt");
-            break;
-
-        case RECORD_NAME_PELOCK:
-            sResult=QString("PELock");
-            break;
-
-        case RECORD_NAME_PEPACK:
-            sResult=QString("PE-PACK");
-            break;
-
-        case RECORD_NAME_PEQUAKE:
-            sResult=QString("PE Quake");
-            break;
-
-        case RECORD_NAME_PESPIN:
-            sResult=QString("PESpin");
-            break;
-
-        case RECORD_NAME_PETITE:
-            sResult=QString("Petite");
-            break;
-
-        case RECORD_NAME_PEX:
-            sResult=QString("PeX");
-            break;
-
-        case RECORD_NAME_PHOENIXPROTECTOR:
-            sResult=QString("Phoenix Protector");
-            break;
-
-        case RECORD_NAME_PHP:
-            sResult=QString("PHP");
-            break;
-
-        case RECORD_NAME_PKLITE32:
-            sResult=QString("PKLITE32");
-            break;
-
-        case RECORD_NAME_PLAIN:
-            sResult=QString("Plain");
-            break;
-
-        case RECORD_NAME_PNG:
-            sResult=QString("PNG");
-            break;
-
-        case RECORD_NAME_POLYCRYPTPE:
-            sResult=QString("PolyCrypt PE");
-            break;
-
-        case RECORD_NAME_POWERBASIC:
-            sResult=QString("PowerBASIC");
-            break;
-
-        case RECORD_NAME_PRIVATEEXEPROTECTOR:
-            sResult=QString("Private EXE Protector");
-            break;
-
-        case RECORD_NAME_PYTHON:
-            sResult=QString("Python");
-            break;
-
-        case RECORD_NAME_QT:
-            sResult=QString("Qt");
-            break;
-
-        case RECORD_NAME_QTINSTALLER:
-            sResult=QString("Qt Installer");
-            break;
-
-        case RECORD_NAME_QUICKPACKNT:
-            sResult=QString("QuickPack NT");
-            break;
-
-        case RECORD_NAME_RAR:
-            sResult=QString("RAR");
-            break;
-
-        case RECORD_NAME_RCRYPTOR:
-            sResult=QString("RCryptor");
-            break;
-
-        case RECORD_NAME_RENETPACK:
-            sResult=QString("ReNET-pack");
-            break;
-
-        case RECORD_NAME_RESOURCE:
-            sResult=QString("Resource");
-            break;
-
-        case RECORD_NAME_REVPROT:
-            sResult=QString("REVProt");
-            break;
-
-        case RECORD_NAME_RLP:
-            sResult=QString("RLP");
-            break;
-
-        case RECORD_NAME_RLPACK:
-            sResult=QString("RLPack");
-            break;
-
-        case RECORD_NAME_RTF:
-            sResult=QString("Rich Text Format");
-            break;
-
-        case RECORD_NAME_SDPROTECTORPRO:
-            sResult=QString("SDProtector Pro");
-            break;
-
-        case RECORD_NAME_SETUPFACTORY:
-            sResult=QString("Setup Factory");
-            break;
-
-        case RECORD_NAME_SIMBIOZ:
-            sResult=QString("SimbiOZ");
-            break;
-
-        case RECORD_NAME_SIMPLEPACK:
-            sResult=QString("Simple Pack");
-            break;
-
-        case RECORD_NAME_SIXXPACK:
-            sResult=QString("Sixxpack");
-            break;
-
-        case RECORD_NAME_SKATER:
-            sResult=QString("Skater");
-            break;
-
-        case RECORD_NAME_SMARTASSEMBLY:
-            sResult=QString("Smart Assembly");
-            break;
-
-        case RECORD_NAME_SMARTINSTALLMAKER:
-            sResult=QString("Smart Install Maker");
-            break;
-
-        case RECORD_NAME_SOFTWARECOMPRESS:
-            sResult=QString("Software Compress");
-            break;
-
-        case RECORD_NAME_SOFTWAREZATOR:
-            sResult=QString("SoftwareZator");
-            break;
-
-        case RECORD_NAME_SPICESNET:
-            sResult=QString("Spices.Net");
-            break;
-
-        case RECORD_NAME_SQUEEZSFX:
-            sResult=QString("Squeez Self Extractor");
-            break;
-
-        case RECORD_NAME_STARFORCE:
-            sResult=QString("StarForce");
-            break;
-
-        case RECORD_NAME_SVKPROTECTOR:
-            sResult=QString("SVK Protector");
-            break;
-
-        case RECORD_NAME_TARMAINSTALLER:
-            sResult=QString("Tarma Installer");
-            break;
-
-        case RECORD_NAME_TELOCK:
-            sResult=QString("tElock");
-            break;
-
-        case RECORD_NAME_THEMIDAWINLICENSE:
-            sResult=QString("Themida/Winlicense");
-            break;
-
-        case RECORD_NAME_TURBOLINKER:
-            sResult=QString("Turbo linker");
-            break;
-
-        case RECORD_NAME_UNICODE:
-            sResult=QString("Unicode");
-            break;
-
-        case RECORD_NAME_UNKNOWNUPXLIKE:
-            sResult=QString("Unknown UPX-like");
-            break;
-
-        case RECORD_NAME_UNOPIX:
-            sResult=QString("Unopix");
-            break;
-
-        case RECORD_NAME_UPX:
-            sResult=QString("UPX");
-            break;
-
-        case RECORD_NAME_UTF8:
-            sResult=QString("UTF-8");
-            break;
-
-        case RECORD_NAME_VALVE:
-            sResult=QString("Valve");
-            break;
-
-        case RECORD_NAME_VBNET:
-            sResult=QString("VB .NET");
-            break;
-
-        case RECORD_NAME_VCL:
-            sResult=QString("Visual Component Library");
-            break;
-
-        case RECORD_NAME_VCLPACKAGEINFO:
-            sResult=QString("VCL PackageInfo");
-            break;
-
-        case RECORD_NAME_VIRTUALPASCAL:
-            sResult=QString("Virtual Pascal");
-            break;
-
-        case RECORD_NAME_VISE:
-            sResult=QString("Vise");
-            break;
-
-        case RECORD_NAME_VISUALBASIC:
-            sResult=QString("Visual Basic");
-            break;
-
-        case RECORD_NAME_VISUALCCPP:
-            sResult=QString("Visual C/C++");
-            break;
-
-        case RECORD_NAME_VISUALOBJECTS:
-            sResult=QString("Visual Objects");
-            break;
-
-        case RECORD_NAME_VMPROTECT:
-            sResult=QString("VMProtect");
-            break;
-
-        case RECORD_NAME_VPACKER:
-            sResult=QString("VPacker");
-            break;
-
-        case RECORD_NAME_WATCOMC:
-            sResult=QString("Watcom C");
-            break;
-
-        case RECORD_NAME_WATCOMCCPP:
-            sResult=QString("Watcom C/C++");
-            break;
-
-        case RECORD_NAME_WATCOMLINKER:
-            sResult=QString("Watcom linker");
-            break;
-
-        case RECORD_NAME_WINACE:
-            sResult=QString("WinACE");
-            break;
-
-        case RECORD_NAME_WINAUTH:
-            sResult=QString("Windows Authenticode");
-            break;
-
-        case RECORD_NAME_WINDOWSICON:
-            sResult=QString("Windows Icon");
-            break;
-
-        case RECORD_NAME_WINDOWSINSTALLER:
-            sResult=QString("Windows Installer");
-            break;
-
-        case RECORD_NAME_WINRAR:
-            sResult=QString("WinRAR");
-            break;
-
-        case RECORD_NAME_WINUPACK:
-            sResult=QString("(Win)Upack");
-            break;
-
-        case RECORD_NAME_WIXTOOLSET:
-            sResult=QString("WiX Toolset");
-            break;
-
-        case RECORD_NAME_WWPACK32:
-            sResult=QString("WWPack32");
-            break;
-
-        case RECORD_NAME_WXWIDGETS:
-            sResult=QString("wxWidgets");
-            break;
-
-        case RECORD_NAME_XENOCODEPOSTBUILD:
-            sResult=QString("Xenocode Postbuild");
-            break;
-
-        case RECORD_NAME_XCOMP:
-            sResult=QString("XComp");
-            break;
-
-        case RECORD_NAME_XML:
-            sResult=QString("XML");
-            break;
-
-        case RECORD_NAME_XPACK:
-            sResult=QString("XPack");
-            break;
-
-        case RECORD_NAME_YANDEX:
-            sResult=QString("Yandex");
-            break;
-
-        case RECORD_NAME_YANO:
-            sResult=QString("Yano");
-            break;
-
-        case RECORD_NAME_YODASCRYPTER:
-            sResult=QString("Yoda's Crypter");
-            break;
-
-        case RECORD_NAME_YZPACK:
-            sResult=QString("YZPack");
-            break;
-
-        case RECORD_NAME_ZIP:
-            sResult=QString("ZIP");
-            break;
-
-        case RECORD_NAME_ZLIB:
-            sResult=QString("zlib");
-            break;
-
-        case RECORD_NAME_ZPROTECT:
-            sResult=QString("ZProtect");
-            break;
+        case RECORD_NAME_UNKNOWN:                           sResult=QString("Unknown");                                     break;
+        case RECORD_NAME_32LITE:                            sResult=QString("32Lite");                                      break;
+        case RECORD_NAME_7Z:                                sResult=QString("7-Zip");                                       break;
+        case RECORD_NAME_ABCCRYPTOR:                        sResult=QString("ABC Cryptor");                                 break;
+        case RECORD_NAME_ACPROTECT:                         sResult=QString("ACProtect");                                   break;
+        case RECORD_NAME_ACTUALINSTALLER:                   sResult=QString("Actual Installer");                            break;
+        case RECORD_NAME_ADVANCEDINSTALLER:                 sResult=QString("Advanced Installer");                          break;
+        case RECORD_NAME_AGILENET:                          sResult=QString("Agile .NET");                                  break;
+        case RECORD_NAME_AHPACKER:                          sResult=QString("AHPacker");                                    break;
+        case RECORD_NAME_AHTEAMEPPROTECTOR:                 sResult=QString("AHTeam EP Protector");                         break;
+        case RECORD_NAME_ALEXPROTECTOR:                     sResult=QString("Alex Protector");                              break;
+        case RECORD_NAME_ALLOY:                             sResult=QString("Alloy");                                       break;
+        case RECORD_NAME_ANDPAKK2:                          sResult=QString("ANDpakk2");                                    break;
+        case RECORD_NAME_ANTIDOTE:                          sResult=QString("AntiDote");                                    break;
+        case RECORD_NAME_ARMADILLO:                         sResult=QString("Armadillo");                                   break;
+        case RECORD_NAME_ARMPROTECTOR:                      sResult=QString("ARM Protector");                               break;
+        case RECORD_NAME_ASDPACK:                           sResult=QString("ASDPack");                                     break;
+        case RECORD_NAME_ASM:                               sResult=QString("Asm");                                         break;
+        case RECORD_NAME_ASPACK:                            sResult=QString("ASPack");                                      break;
+        case RECORD_NAME_ASPROTECT:                         sResult=QString("ASProtect");                                   break;
+        case RECORD_NAME_ASSEMBLYINVOKE:                    sResult=QString("AssemblyInvoke");                              break;
+        case RECORD_NAME_AUTOIT:                            sResult=QString("AutoIt");                                      break;
+        case RECORD_NAME_AVASTANTIVIRUS:                    sResult=QString("Avast Antivirus");                             break;
+        case RECORD_NAME_AVERCRYPTOR:                       sResult=QString("AverCryptor");                                 break;
+        case RECORD_NAME_BABELNET:                          sResult=QString("Babel .NET");                                  break;
+        case RECORD_NAME_BEROEXEPACKER:                     sResult=QString("BeRoEXEPacker");                               break;
+        case RECORD_NAME_BITROCKINSTALLER:                  sResult=QString("BitRock Installer");                           break;
+        case RECORD_NAME_BITSHAPEPECRYPT:                   sResult=QString("BitShape PE Crypt");                           break;
+        case RECORD_NAME_BORLANDCPP:                        sResult=QString("Borland C++");                                 break;
+        case RECORD_NAME_BORLANDCPPBUILDER:                 sResult=QString("Borland C++ Builder");                         break;
+        case RECORD_NAME_BORLANDDELPHI:                     sResult=QString("Borland Delphi");                              break;
+        case RECORD_NAME_BORLANDDELPHIDOTNET:               sResult=QString("Borland Delphi .NET");                         break;
+        case RECORD_NAME_BORLANDOBJECTPASCAL:               sResult=QString("Borland Object Pascal");                       break;
+        case RECORD_NAME_BREAKINTOPATTERN:                  sResult=QString("Break Into Pattern");                          break;
+        case RECORD_NAME_C:                                 sResult=QString("C");                                           break;
+        case RECORD_NAME_CAB:                               sResult=QString("CAB");                                         break;
+        case RECORD_NAME_CCPP:                              sResult=QString("C/C++");                                       break;
+        case RECORD_NAME_CEXE:                              sResult=QString("CExe");                                        break;
+        case RECORD_NAME_CIL:                               sResult=QString("cil");                                         break;
+        case RECORD_NAME_CLICKTEAM:                         sResult=QString("ClickTeam");                                   break;
+        case RECORD_NAME_CLISECURE:                         sResult=QString("CliSecure");                                   break;
+        case RECORD_NAME_CODEGEARCPP:                       sResult=QString("CodeGear C++");                                break;
+        case RECORD_NAME_CODEGEARCPPBUILDER:                sResult=QString("CodeGear C++ Builder");                        break;
+        case RECORD_NAME_CODEGEARDELPHI:                    sResult=QString("CodeGear Delphi");                             break;
+        case RECORD_NAME_CODEGEAROBJECTPASCAL:              sResult=QString("Codegear Object Pascal");                      break;
+        case RECORD_NAME_CODEVEIL:                          sResult=QString("CodeVeil");                                    break;
+        case RECORD_NAME_CODEWALL:                          sResult=QString("CodeWall");                                    break;
+        case RECORD_NAME_CONFUSER:                          sResult=QString("Confuser");                                    break;
+        case RECORD_NAME_CONFUSEREX:                        sResult=QString("ConfuserEx");                                  break;
+        case RECORD_NAME_CPP:                               sResult=QString("C++");                                         break;
+        case RECORD_NAME_CREATEINSTALL:                     sResult=QString("CreateInstall");                               break;
+        case RECORD_NAME_CRINKLER:                          sResult=QString("Crinkler");                                    break;
+        case RECORD_NAME_CRUNCH:                            sResult=QString("Crunch");                                      break;
+        case RECORD_NAME_CRYPTER:                           sResult=QString("Crypter");                                     break;
+        case RECORD_NAME_CRYPTOCRACKSPEPROTECTOR:           sResult=QString("CRYPToCRACks PE Protector");                   break;
+        case RECORD_NAME_CRYPTOOBFUSCATORFORNET:            sResult=QString("Crypto Obfuscator For .Net");                  break;
+        case RECORD_NAME_CYGWIN:                            sResult=QString("Cygwin");                                      break;
+        case RECORD_NAME_DEB:                               sResult=QString("DEB");                                         break;
+        case RECORD_NAME_DEEPSEA:                           sResult=QString("DeepSea");                                     break;
+        case RECORD_NAME_DMD32D:                            sResult=QString("DMD32 D");                                     break;
+        case RECORD_NAME_DNGUARD:                           sResult=QString("DNGuard");                                     break;
+        case RECORD_NAME_DOTFIXNICEPROTECT:                 sResult=QString("DotFix Nice Protect");                         break;
+        case RECORD_NAME_DOTFUSCATOR:                       sResult=QString("Dotfuscator");                                 break;
+        case RECORD_NAME_DOTNET:                            sResult=QString(".NET");                                        break;
+        case RECORD_NAME_DOTNETZ:                           sResult=QString(".NETZ");                                       break;
+        case RECORD_NAME_DROPBOX:                           sResult=QString("Dropbox");                                     break;
+        case RECORD_NAME_DVCLAL:                            sResult=QString("DVCLAL");                                      break;
+        case RECORD_NAME_DYAMAR:                            sResult=QString("DYAMAR");                                      break;
+        case RECORD_NAME_EAZFUSCATOR:                       sResult=QString("Eazfuscator");                                 break;
+        case RECORD_NAME_EMBARCADEROCPP:                    sResult=QString("Embarcadero C++");                             break;
+        case RECORD_NAME_EMBARCADEROCPPBUILDER:             sResult=QString("Embarcadero C++ Builder");                     break;
+        case RECORD_NAME_EMBARCADERODELPHI:                 sResult=QString("Embarcadero Delphi");                          break;
+        case RECORD_NAME_EMBARCADERODELPHIDOTNET:           sResult=QString("Embarcadero Delphi .NET");                     break;
+        case RECORD_NAME_EMBARCADEROOBJECTPASCAL:           sResult=QString("Embarcadero Object Pascal");                   break;
+        case RECORD_NAME_EMPTYFILE:                         sResult=QString("Empty File");                                  break;
+        case RECORD_NAME_ENIGMA:                            sResult=QString("ENIGMA");                                      break;
+        case RECORD_NAME_EXE32PACK:                         sResult=QString("exe32pack");                                   break;
+        case RECORD_NAME_EXECRYPT:                          sResult=QString("EXECrypt");                                    break;
+        case RECORD_NAME_EXECRYPTOR:                        sResult=QString("EXECryptor");                                  break;
+        case RECORD_NAME_EXEFOG:                            sResult=QString("ExeFog");                                      break;
+        case RECORD_NAME_EXEMPLARINSTALLER:                 sResult=QString("Exemplar Installer");                          break;
+        case RECORD_NAME_EXEPACK:                           sResult=QString("!EP(EXE Pack)");                               break;
+        case RECORD_NAME_EXESAX:                            sResult=QString("ExeSax");                                      break;
+        case RECORD_NAME_EXESHIELD:                         sResult=QString("Exe Shield");                                  break;
+        case RECORD_NAME_EXPORT:                            sResult=QString("Export");                                      break;
+        case RECORD_NAME_EZIP:                              sResult=QString("EZIP");                                        break;
+        case RECORD_NAME_FAKESIGNATURE:                     sResult=QString("Fake signature");                              break;
+        case RECORD_NAME_FASM:                              sResult=QString("FASM");                                        break;
+        case RECORD_NAME_FISHNET:                           sResult=QString("FISH .NET");                                   break;
+        case RECORD_NAME_FISHPEPACKER:                      sResult=QString("Fish PE Packer");                              break;
+        case RECORD_NAME_FLEXLM:                            sResult=QString("Flex License Manager");                        break;
+        case RECORD_NAME_FLEXNET:                           sResult=QString("FlexNet Licensing");                           break;
+        case RECORD_NAME_FPC:                               sResult=QString("Free Pascal");                                 break;
+        case RECORD_NAME_FREECRYPTOR:                       sResult=QString("FreeCryptor");                                 break;
+        case RECORD_NAME_FSG:                               sResult=QString("FSG");                                         break;
+        case RECORD_NAME_GCC:                               sResult=QString("GCC");                                         break;
+        case RECORD_NAME_GENERIC:                           sResult=QString("Generic");                                     break;
+        case RECORD_NAME_GENERICLINKER:                     sResult=QString("Generic Linker");                              break;
+        case RECORD_NAME_GENTEEINSTALLER:                   sResult=QString("Gentee Installer");                            break;
+        case RECORD_NAME_GHOSTINSTALLER:                    sResult=QString("Ghost Installer");                             break;
+        case RECORD_NAME_GNULINKER:                         sResult=QString("GNU ld");                                      break;
+        case RECORD_NAME_GOASM:                             sResult=QString("GoAsm");                                       break;
+        case RECORD_NAME_GOLIATHNET:                        sResult=QString("Goliath .NET");                                break;
+        case RECORD_NAME_GOLINK:                            sResult=QString("GoLink");                                      break;
+        case RECORD_NAME_GOOGLE:                            sResult=QString("Google");                                      break;
+        case RECORD_NAME_GPINSTALL:                         sResult=QString("GP-Install");                                  break;
+        case RECORD_NAME_GUARDIANSTEALTH:                   sResult=QString("Guardian Stealth");                            break;
+        case RECORD_NAME_GZIP:                              sResult=QString("GZIP");                                        break;
+        case RECORD_NAME_HIDEPE:                            sResult=QString("HidePE");                                      break;
+        case RECORD_NAME_HMIMYSPACKER:                      sResult=QString("Hmimys Packer");                               break;
+        case RECORD_NAME_HMIMYSPROTECTOR:                   sResult=QString("Hmimys's Protector");                          break;
+        case RECORD_NAME_HTML:                              sResult=QString("HTML");                                        break;
+        case RECORD_NAME_HXS:                               sResult=QString("HXS");                                         break;
+        case RECORD_NAME_IBMPCPASCAL:                       sResult=QString("IBM PC Pascal");                               break;
+        case RECORD_NAME_IMPORT:                            sResult=QString("Import");                                      break;
+        case RECORD_NAME_INNOSETUP:                         sResult=QString("Inno Setup");                                  break;
+        case RECORD_NAME_INSTALLANYWHERE:                   sResult=QString("InstallAnywhere");                             break;
+        case RECORD_NAME_INSTALLSHIELD:                     sResult=QString("InstallShield");                               break;
+        case RECORD_NAME_IPBPROTECT:                        sResult=QString("iPB Protect");                                 break;
+        case RECORD_NAME_JAR:                               sResult=QString("JAR");                                         break;
+        case RECORD_NAME_JAVA:                              sResult=QString("Java");                                        break;
+        case RECORD_NAME_JPEG:                              sResult=QString("JPEG");                                        break;
+        case RECORD_NAME_KKRUNCHY:                          sResult=QString("kkrunchy");                                    break;
+        case RECORD_NAME_LAYHEYFORTRAN90:                   sResult=QString("Lahey Fortran 90");                            break;
+        case RECORD_NAME_LAZARUS:                           sResult=QString("Lazarus");                                     break;
+        case RECORD_NAME_LUACOMPILED:                       sResult=QString("Lua compiled");                                break;
+        case RECORD_NAME_MACROBJECT:                        sResult=QString("Macrobject");                                  break;
+        case RECORD_NAME_MASKPE:                            sResult=QString("MaskPE");                                      break;
+        case RECORD_NAME_MASM:                              sResult=QString("MASM");                                        break;
+        case RECORD_NAME_MASM32:                            sResult=QString("MASM32");                                      break;
+        case RECORD_NAME_MAXTOCODE:                         sResult=QString("MaxtoCode");                                   break;
+        case RECORD_NAME_MEW11SE:                           sResult=QString("MEW11 SE");                                    break;
+        case RECORD_NAME_MFC:                               sResult=QString("MFC");                                         break;
+        case RECORD_NAME_MICROSOFTACCESS:                   sResult=QString("Microsoft Access");                            break;
+        case RECORD_NAME_MICROSOFTC:                        sResult=QString("Microsoft C");                                 break;
+        case RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP:         sResult=QString("Microsoft Compiled HTML Help");                break;
+        case RECORD_NAME_MICROSOFTCPP:                      sResult=QString("Microsoft C++");                               break;
+        case RECORD_NAME_MICROSOFTEXCEL:                    sResult=QString("Microsoft Excel");                             break;
+        case RECORD_NAME_MICROSOFTLINKER:                   sResult=QString("Microsoft linker");                            break;
+        case RECORD_NAME_MICROSOFTLINKERDATABASE:           sResult=QString("Microsoft Linker Database");                   break;
+        case RECORD_NAME_MICROSOFTOFFICE:                   sResult=QString("Microsoft Office");                            break;
+        case RECORD_NAME_MICROSOFTOFFICEWORD:               sResult=QString("Microsoft Office Word");                       break;
+        case RECORD_NAME_MICROSOFTVISIO:                    sResult=QString("Microsoft Visio");                             break;
+        case RECORD_NAME_MICROSOFTVISUALSTUDIO:             sResult=QString("Microsoft Visual Studio");                     break;
+        case RECORD_NAME_MINGW:                             sResult=QString("MinGW");                                       break;
+        case RECORD_NAME_MKFPACK:                           sResult=QString("MKFPack");                                     break;
+        case RECORD_NAME_MOLEBOX:                           sResult=QString("MoleBox");                                     break;
+        case RECORD_NAME_MORPHNAH:                          sResult=QString("Morphnah");                                    break;
+        case RECORD_NAME_MPRESS:                            sResult=QString("MPRESS");                                      break;
+        case RECORD_NAME_MSYS:                              sResult=QString("Msys");                                        break;
+        case RECORD_NAME_MSYS2:                             sResult=QString("MSYS2");                                       break;
+        case RECORD_NAME_MZ0OPE:                            sResult=QString("MZ0oPE");                                      break;
+        case RECORD_NAME_NAKEDPACKER:                       sResult=QString("NakedPacker");                                 break;
+        case RECORD_NAME_NOOBYPROTECT:                      sResult=QString("NoobyProtect");                                break;
+        case RECORD_NAME_NORTHSTARPESHRINKER:               sResult=QString("North Star PE Shrinker");                      break;
+        case RECORD_NAME_NOSTUBLINKER:                      sResult=QString("NOSTUBLINKER");                                break;
+        case RECORD_NAME_NPACK:                             sResult=QString("nPack");                                       break;
+        case RECORD_NAME_NSIS:                              sResult=QString("Nullsoft Scriptable Install System");          break;
+        case RECORD_NAME_NSPACK:                            sResult=QString("NsPack");                                      break;
+        case RECORD_NAME_OBFUSCAR:                          sResult=QString("Obfuscar");                                    break;
+        case RECORD_NAME_OBFUSCATORNET2009:                 sResult=QString("Obfuscator.NET 2009");                         break;
+        case RECORD_NAME_OBJECTPASCAL:                      sResult=QString("Object Pascal");                               break;
+        case RECORD_NAME_OBSIDIUM:                          sResult=QString("Obsidium");                                    break;
+        case RECORD_NAME_OPENDOCUMENT:                      sResult=QString("Open Document");                               break;
+        case RECORD_NAME_OPERA:                             sResult=QString("Opera");                                       break;
+        case RECORD_NAME_ORIEN:                             sResult=QString("ORiEN");                                       break;
+        case RECORD_NAME_PACKMAN:                           sResult=QString("Packman");                                     break;
+        case RECORD_NAME_PCGUARD:                           sResult=QString("PC Guard");                                    break;
+        case RECORD_NAME_PDB:                               sResult=QString("PDB");                                         break;
+        case RECORD_NAME_PDF:                               sResult=QString("PDF");                                         break;
+        case RECORD_NAME_PEARMOR:                           sResult=QString("PE-Armor");                                    break;
+        case RECORD_NAME_PEBUNDLE:                          sResult=QString("PEBundle");                                    break;
+        case RECORD_NAME_PECOMPACT:                         sResult=QString("PECompact");                                   break;
+        case RECORD_NAME_PEENCRYPT:                         sResult=QString("PE Encrypt");                                  break;
+        case RECORD_NAME_PELOCK:                            sResult=QString("PELock");                                      break;
+        case RECORD_NAME_PEPACK:                            sResult=QString("PE-PACK");                                     break;
+        case RECORD_NAME_PEQUAKE:                           sResult=QString("PE Quake");                                    break;
+        case RECORD_NAME_PESPIN:                            sResult=QString("PESpin");                                      break;
+        case RECORD_NAME_PETITE:                            sResult=QString("Petite");                                      break;
+        case RECORD_NAME_PEX:                               sResult=QString("PeX");                                         break;
+        case RECORD_NAME_PHOENIXPROTECTOR:                  sResult=QString("Phoenix Protector");                           break;
+        case RECORD_NAME_PHP:                               sResult=QString("PHP");                                         break;
+        case RECORD_NAME_PKLITE32:                          sResult=QString("PKLITE32");                                    break;
+        case RECORD_NAME_PLAIN:                             sResult=QString("Plain");                                       break;
+        case RECORD_NAME_PNG:                               sResult=QString("PNG");                                         break;
+        case RECORD_NAME_POLYCRYPTPE:                       sResult=QString("PolyCrypt PE");                                break;
+        case RECORD_NAME_POWERBASIC:                        sResult=QString("PowerBASIC");                                  break;
+        case RECORD_NAME_PRIVATEEXEPROTECTOR:               sResult=QString("Private EXE Protector");                       break;
+        case RECORD_NAME_PYTHON:                            sResult=QString("Python");                                      break;
+        case RECORD_NAME_QT:                                sResult=QString("Qt");                                          break;
+        case RECORD_NAME_QTINSTALLER:                       sResult=QString("Qt Installer");                                break;
+        case RECORD_NAME_QUICKPACKNT:                       sResult=QString("QuickPack NT");                                break;
+        case RECORD_NAME_RAR:                               sResult=QString("RAR");                                         break;
+        case RECORD_NAME_RCRYPTOR:                          sResult=QString("RCryptor");                                    break;
+        case RECORD_NAME_RENETPACK:                         sResult=QString("ReNET-pack");                                  break;
+        case RECORD_NAME_RESOURCE:                          sResult=QString("Resource");                                    break;
+        case RECORD_NAME_REVPROT:                           sResult=QString("REVProt");                                     break;
+        case RECORD_NAME_RLP:                               sResult=QString("RLP");                                         break;
+        case RECORD_NAME_RLPACK:                            sResult=QString("RLPack");                                      break;
+        case RECORD_NAME_RTF:                               sResult=QString("Rich Text Format");                            break;
+        case RECORD_NAME_SDPROTECTORPRO:                    sResult=QString("SDProtector Pro");                             break;
+        case RECORD_NAME_SETUPFACTORY:                      sResult=QString("Setup Factory");                               break;
+        case RECORD_NAME_SIMBIOZ:                           sResult=QString("SimbiOZ");                                     break;
+        case RECORD_NAME_SIMPLEPACK:                        sResult=QString("Simple Pack");                                 break;
+        case RECORD_NAME_SIXXPACK:                          sResult=QString("Sixxpack");                                    break;
+        case RECORD_NAME_SKATER:                            sResult=QString("Skater");                                      break;
+        case RECORD_NAME_SMARTASSEMBLY:                     sResult=QString("Smart Assembly");                              break;
+        case RECORD_NAME_SMARTINSTALLMAKER:                 sResult=QString("Smart Install Maker");                         break;
+        case RECORD_NAME_SOFTWARECOMPRESS:                  sResult=QString("Software Compress");                           break;
+        case RECORD_NAME_SOFTWAREZATOR:                     sResult=QString("SoftwareZator");                               break;
+        case RECORD_NAME_SPICESNET:                         sResult=QString("Spices.Net");                                  break;
+        case RECORD_NAME_SQUEEZSFX:                         sResult=QString("Squeez Self Extractor");                       break;
+        case RECORD_NAME_STARFORCE:                         sResult=QString("StarForce");                                   break;
+        case RECORD_NAME_SVKPROTECTOR:                      sResult=QString("SVK Protector");                               break;
+        case RECORD_NAME_TARMAINSTALLER:                    sResult=QString("Tarma Installer");                             break;
+        case RECORD_NAME_TELOCK:                            sResult=QString("tElock");                                      break;
+        case RECORD_NAME_THEMIDAWINLICENSE:                 sResult=QString("Themida/Winlicense");                          break;
+        case RECORD_NAME_TURBOLINKER:                       sResult=QString("Turbo linker");                                break;
+        case RECORD_NAME_UNICODE:                           sResult=QString("Unicode");                                     break;
+        case RECORD_NAME_UNKNOWNUPXLIKE:                    sResult=QString("Unknown UPX-like");                            break;
+        case RECORD_NAME_UNOPIX:                            sResult=QString("Unopix");                                      break;
+        case RECORD_NAME_UPX:                               sResult=QString("UPX");                                         break;
+        case RECORD_NAME_UTF8:                              sResult=QString("UTF-8");                                       break;
+        case RECORD_NAME_VALVE:                             sResult=QString("Valve");                                       break;
+        case RECORD_NAME_VBNET:                             sResult=QString("VB .NET");                                     break;
+        case RECORD_NAME_VCL:                               sResult=QString("Visual Component Library");                    break;
+        case RECORD_NAME_VCLPACKAGEINFO:                    sResult=QString("VCL PackageInfo");                             break;
+        case RECORD_NAME_VIRTUALPASCAL:                     sResult=QString("Virtual Pascal");                              break;
+        case RECORD_NAME_VISE:                              sResult=QString("Vise");                                        break;
+        case RECORD_NAME_VISUALBASIC:                       sResult=QString("Visual Basic");                                break;
+        case RECORD_NAME_VISUALCCPP:                        sResult=QString("Visual C/C++");                                break;
+        case RECORD_NAME_VISUALOBJECTS:                     sResult=QString("Visual Objects");                              break;
+        case RECORD_NAME_VMPROTECT:                         sResult=QString("VMProtect");                                   break;
+        case RECORD_NAME_VPACKER:                           sResult=QString("VPacker");                                     break;
+        case RECORD_NAME_WATCOMC:                           sResult=QString("Watcom C");                                    break;
+        case RECORD_NAME_WATCOMCCPP:                        sResult=QString("Watcom C/C++");                                break;
+        case RECORD_NAME_WATCOMLINKER:                      sResult=QString("Watcom linker");                               break;
+        case RECORD_NAME_WINACE:                            sResult=QString("WinACE");                                      break;
+        case RECORD_NAME_WINAUTH:                           sResult=QString("Windows Authenticode");                        break;
+        case RECORD_NAME_WINDOWSICON:                       sResult=QString("Windows Icon");                                break;
+        case RECORD_NAME_WINDOWSINSTALLER:                  sResult=QString("Windows Installer");                           break;
+        case RECORD_NAME_WINRAR:                            sResult=QString("WinRAR");                                      break;
+        case RECORD_NAME_WINUPACK:                          sResult=QString("(Win)Upack");                                  break;
+        case RECORD_NAME_WIXTOOLSET:                        sResult=QString("WiX Toolset");                                 break;
+        case RECORD_NAME_WWPACK32:                          sResult=QString("WWPack32");                                    break;
+        case RECORD_NAME_WXWIDGETS:                         sResult=QString("wxWidgets");                                   break;
+        case RECORD_NAME_XENOCODEPOSTBUILD:                 sResult=QString("Xenocode Postbuild");                          break;
+        case RECORD_NAME_XCOMP:                             sResult=QString("XComp");                                       break;
+        case RECORD_NAME_XML:                               sResult=QString("XML");                                         break;
+        case RECORD_NAME_XPACK:                             sResult=QString("XPack");                                       break;
+        case RECORD_NAME_YANDEX:                            sResult=QString("Yandex");                                      break;
+        case RECORD_NAME_YANO:                              sResult=QString("Yano");                                        break;
+        case RECORD_NAME_YODASCRYPTER:                      sResult=QString("Yoda's Crypter");                              break;
+        case RECORD_NAME_YZPACK:                            sResult=QString("YZPack");                                      break;
+        case RECORD_NAME_ZIP:                               sResult=QString("ZIP");                                         break;
+        case RECORD_NAME_ZLIB:                              sResult=QString("zlib");                                        break;
+        case RECORD_NAME_ZPROTECT:                          sResult=QString("ZProtect");                                    break;
     }
-
     return sResult;
 }
 
@@ -3288,73 +2397,23 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                             // TODO !!! more buil versions
                             switch(nBuildNumber)
                             {
-                                case 20206:
-                                    recordPC.sVersion="2.70";
-                                    break;
-
-                                case 20240:
-                                    recordPC.sVersion="2.78a";
-                                    break;
-
-                                case 20243:
-                                    recordPC.sVersion="2.79b1";
-                                    break;
-
-                                case 20245:
-                                    recordPC.sVersion="2.79bB";
-                                    break;
-
-                                case 20247:
-                                    recordPC.sVersion="2.79bD";
-                                    break;
-
-                                case 20252:
-                                    recordPC.sVersion="2.80b1";
-                                    break;
-
-                                case 20256:
-                                    recordPC.sVersion="2.80b5";
-                                    break;
-
-                                case 20261:
-                                    recordPC.sVersion="2.82";
-                                    break;
-
-                                case 20288:
-                                    recordPC.sVersion="2.93b3";
-                                    break;
-
-                                case 20294:
-                                    recordPC.sVersion="2.96.2";
-                                    break;
-
-                                case 20295:
-                                    recordPC.sVersion="2.97b1";
-                                    break;
-
-                                case 20296:
-                                    recordPC.sVersion="2.98";
-                                    break;
-
-                                case 20300:
-                                    recordPC.sVersion="2.98.04";
-                                    break;
-
-                                case 20302:
-                                    recordPC.sVersion="2.98.06";
-                                    break;
-
-                                case 20303:
-                                    recordPC.sVersion="2.99b";
-                                    break;
-
-                                case 20308:
-                                    recordPC.sVersion="3.00.2";
-                                    break;
-
-                                case 20318:
-                                    recordPC.sVersion="3.02.2";
-                                    break;
+                                case 20206:     recordPC.sVersion="2.70";       break;
+                                case 20240:     recordPC.sVersion="2.78a";      break;
+                                case 20243:     recordPC.sVersion="2.79b1";     break;
+                                case 20245:     recordPC.sVersion="2.79bB";     break;
+                                case 20247:     recordPC.sVersion="2.79bD";     break;
+                                case 20252:     recordPC.sVersion="2.80b1";     break;
+                                case 20256:     recordPC.sVersion="2.80b5";     break;
+                                case 20261:     recordPC.sVersion="2.82";       break;
+                                case 20288:     recordPC.sVersion="2.93b3";     break;
+                                case 20294:     recordPC.sVersion="2.96.2";     break;
+                                case 20295:     recordPC.sVersion="2.97b1";     break;
+                                case 20296:     recordPC.sVersion="2.98";       break;
+                                case 20300:     recordPC.sVersion="2.98.04";    break;
+                                case 20302:     recordPC.sVersion="2.98.06";    break;
+                                case 20303:     recordPC.sVersion="2.99b";      break;
+                                case 20308:     recordPC.sVersion="3.00.2";     break;
+                                case 20318:     recordPC.sVersion="3.02.2";     break;
 
                                 //                            case 20343:
                                 //                                recordPC.sVersion="TODO";
@@ -3479,49 +2538,17 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                     switch(nByte)
                     {
-                        case 0x5C:
-                            ss.sVersion="0.1";
-                            break;
-
-                        case 0xB7:
-                            ss.sVersion="0.3";
-                            break;
-
-                        case 0x73:
-                            ss.sVersion="0.4";
-                            break;
-
-                        case 0x83:
-                            ss.sVersion="0.7";
-                            break;
-
-                        case 0xC8:
-                            ss.sVersion="1.0";
-                            break;
-
-                        case 0x7D:
-                            ss.sVersion="1.1";
-                            break;
-
-                        case 0x71:
-                            ss.sVersion="1.3beta";
-                            break;
-
-                        case 0xAC:
-                            ss.sVersion="1.3";
-                            break;
-
-                        case 0x88:
-                            ss.sVersion="1.3x";
-                            break;
-
-                        case 0x17:
-                            ss.sVersion="1.32";
-                            break;
-
-                        case 0x77:
-                            ss.sVersion="1.33";
-                            break;
+                        case 0x5C: ss.sVersion="0.1";     break;
+                        case 0xB7: ss.sVersion="0.3";     break;
+                        case 0x73: ss.sVersion="0.4";     break;
+                        case 0x83: ss.sVersion="0.7";     break;
+                        case 0xC8: ss.sVersion="1.0";     break;
+                        case 0x7D: ss.sVersion="1.1";     break;
+                        case 0x71: ss.sVersion="1.3beta"; break;
+                        case 0xAC: ss.sVersion="1.3";     break;
+                        case 0x88: ss.sVersion="1.3x";    break;
+                        case 0x17: ss.sVersion="1.32";    break;
+                        case 0x77: ss.sVersion="1.33";    break;
                     }
                 }
 
@@ -3638,64 +2665,21 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                     switch(nBuildNumber)
                     {
-                        case 0x24:
-                            ss.sVersion="0.24";
-                            break;
-
-                        case 0x25:
-                            ss.sVersion="0.25";
-                            break;
-
-                        case 0x27:
-                            ss.sVersion="0.27";
-                            break;
-
-                        case 0x28:
-                            ss.sVersion="0.28";
-                            break;
-
-                        case 0x29:
-                            ss.sVersion="0.29";
-                            break;
-
-                        case 0x30:
-                            ss.sVersion="0.30";
-                            break;
-
-                        case 0x32:
-                            ss.sVersion="0.32";
-                            break;
-
-                        case 0x33:
-                            ss.sVersion="0.33";
-                            break;
-
-                        case 0x35:
-                            ss.sVersion="0.35";
-                            break;
-
-                        case 0x36:
-                            ss.sVersion="0.36 beta";
-                            break;
-
-                        case 0x37:
-                            ss.sVersion="0.37 beta";
-                            break;
-
-                        case 0x38:
-                            ss.sVersion="0.38 beta";
-                            break;
-
-                        case 0x39:
-                            ss.sVersion="0.39 final";
-                            break;
-
-                        case 0x3A:
-                            ss.sVersion="0.399";
-                            break;
-
-                        default:
-                            ss.sVersion="";
+                        case 0x24:  ss.sVersion="0.24";         break;
+                        case 0x25:  ss.sVersion="0.25";         break;
+                        case 0x27:  ss.sVersion="0.27";         break;
+                        case 0x28:  ss.sVersion="0.28";         break;
+                        case 0x29:  ss.sVersion="0.29";         break;
+                        case 0x30:  ss.sVersion="0.30";         break;
+                        case 0x32:  ss.sVersion="0.32";         break;
+                        case 0x33:  ss.sVersion="0.33";         break;
+                        case 0x35:  ss.sVersion="0.35";         break;
+                        case 0x36:  ss.sVersion="0.36 beta";    break;
+                        case 0x37:  ss.sVersion="0.37 beta";    break;
+                        case 0x38:  ss.sVersion="0.38 beta";    break;
+                        case 0x39:  ss.sVersion="0.39 final";   break;
+                        case 0x3A:  ss.sVersion="0.399";        break;
+                        default:    ss.sVersion="";
                     }
 
                     pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
