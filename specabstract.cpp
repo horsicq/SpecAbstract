@@ -3729,7 +3729,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                     qint64 _nSize=pPEInfo->listSectionRecords.at(1).nSize;
                     qint32 _nCharacteristics=pPEInfo->listSectionRecords.at(1).nCharacteristics;
 
-                    if(_nCharacteristics&S_IMAGE_SCN_MEM_EXECUTE)
+                    if(_nCharacteristics&(XPE_DEF::S_IMAGE_SCN_MEM_EXECUTE))
                     {
                         qint64 nOffset_CliSecure=pe.find_unicodeString(_nOffset,_nSize,"CliSecure");
 
@@ -4541,8 +4541,8 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                 }
             }
 
-            bool bPackageinfo=XPE::isResourcePresent(S_RT_RCDATA,"PACKAGEINFO",&(pPEInfo->listResources));
-            bool bDvcal=XPE::isResourcePresent(S_RT_RCDATA,"DVCLAL",&(pPEInfo->listResources));
+            bool bPackageinfo=XPE::isResourcePresent(XPE_DEF::S_RT_RCDATA,"PACKAGEINFO",&(pPEInfo->listResources));
+            bool bDvcal=XPE::isResourcePresent(XPE_DEF::S_RT_RCDATA,"DVCLAL",&(pPEInfo->listResources));
 
             if(bPackageinfo||
                     bDvcal||
@@ -5133,7 +5133,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             {
                 if(XPE::isSectionNamePresent(".stabstr",&(pPEInfo->listSectionHeaders)))
                 {
-                    S_IMAGE_SECTION_HEADER sh=XPE::getSectionByName(".stabstr",&(pPEInfo->listSectionHeaders));
+                    XPE_DEF::IMAGE_SECTION_HEADER sh=XPE::getSectionByName(".stabstr",&(pPEInfo->listSectionHeaders));
 
                     if(sh.SizeOfRawData)
                     {
@@ -5353,7 +5353,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             }
 
             // wxWidgets
-            if(XPE::isResourcePresent(S_RT_MENU,"WXWINDOWMENU",&(pPEInfo->listResources)))
+            if(XPE::isResourcePresent(XPE_DEF::S_RT_MENU,"WXWINDOWMENU",&(pPEInfo->listResources)))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_WXWIDGETS,"","",0);
                 // TODO Version???
@@ -5398,7 +5398,7 @@ void SpecAbstract::PE_handle_Signtools(QIODevice *pDevice, bool bIsImage, SpecAb
         if(pe.isSignPresent())
         {
             // TODO image
-            S_IMAGE_DATA_DIRECTORY dd=pe.getOptionalHeader_DataDirectory(S_IMAGE_DIRECTORY_ENTRY_SECURITY);
+            XPE_DEF::IMAGE_DATA_DIRECTORY dd=pe.getOptionalHeader_DataDirectory(XPE_DEF::S_IMAGE_DIRECTORY_ENTRY_SECURITY);
 
             if(pe.compareSignature("........00020200",dd.VirtualAddress))
             {
@@ -5488,7 +5488,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                     }
                     else // New versions
                     {
-                        XPE::RESOURCE_RECORD resHeader=XPE::getResourceRecord(S_RT_RCDATA,11111,&(pPEInfo->listResources));
+                        XPE::RESOURCE_RECORD resHeader=XPE::getResourceRecord(XPE_DEF::S_RT_RCDATA,11111,&(pPEInfo->listResources));
 
                         nLdrTableOffset=resHeader.nOffset;
 
@@ -5861,8 +5861,8 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice,bool bIsImage, SpecAbstract:
         {
             if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_RAR))
             {
-                if(XPE::isResourcePresent(S_RT_DIALOG,"STARTDLG",&(pPEInfo->listResources))&&
-                        XPE::isResourcePresent(S_RT_DIALOG,"LICENSEDLG",&(pPEInfo->listResources)))
+                if(XPE::isResourcePresent(XPE_DEF::S_RT_DIALOG,"STARTDLG",&(pPEInfo->listResources))&&
+                        XPE::isResourcePresent(XPE_DEF::S_RT_DIALOG,"LICENSEDLG",&(pPEInfo->listResources)))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_SFX,RECORD_NAME_WINRAR,"","",0);
                     // TODO Version

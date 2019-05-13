@@ -466,14 +466,14 @@ public:
         QString sOverlaySignature;
         qint64 nOverlayOffset;
         qint64 nOverlaySize;
-        S_IMAGE_DOS_HEADEREX dosHeader;
-        S_IMAGE_FILE_HEADER fileHeader;
+        XMSDOS_DEF::IMAGE_DOS_HEADEREX dosHeader;
+        XPE_DEF::IMAGE_FILE_HEADER fileHeader;
         union OPTIONAL_HEADER
         {
-            S_IMAGE_OPTIONAL_HEADER32 optionalHeader32;
-            S_IMAGE_OPTIONAL_HEADER64 optionalHeader64;
+            XPE_DEF::IMAGE_OPTIONAL_HEADER32 optionalHeader32;
+            XPE_DEF::IMAGE_OPTIONAL_HEADER64 optionalHeader64;
         } optional_header;
-        QList<S_IMAGE_SECTION_HEADER> listSectionHeaders;
+        QList<XPE_DEF::IMAGE_SECTION_HEADER> listSectionHeaders;
         QList<XPE::SECTION_RECORD> listSectionRecords;
         QList<XPE::IMPORT_HEADER> listImports;
         XPE::EXPORT_HEADER export_header;
