@@ -1120,6 +1120,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_Microsoft(pDevice,pOptions->bIsImage,&result);
         PE_handle_Borland(pDevice,pOptions->bIsImage,&result);
         PE_handle_Tools(pDevice,pOptions->bIsImage,&result);
+        PE_handle_GCC(pDevice,pOptions->bIsImage,&result);
         PE_handle_Signtools(pDevice,pOptions->bIsImage,&result);
         PE_handle_SFX(pDevice,pOptions->bIsImage,&result);
         PE_handle_Installers(pDevice,pOptions->bIsImage,&result);
@@ -4852,7 +4853,6 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
 
 void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
-    // TODO Signtools!!!
     XPE pe(pDevice,bIsImage);
 
     if(pe.isValid())
@@ -4970,258 +4970,6 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
         if(!pPEInfo->cliInfo.bInit)
         {
-            bool bDetectGCC=false;
-            bool bHeurGCC=false;
-
-            if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER))
-            {
-                switch(pPEInfo->nMajorLinkerVersion)
-                {
-                    case 2:
-                        switch(pPEInfo->nMinorLinkerVersion) // TODO Check MinGW versions
-                        {
-                            case 24:
-                            case 25:
-                            case 26:
-                            case 27:
-                            case 28:
-                            case 29:
-                            case 30:
-                            case 31:
-                            case 56:
-                                bHeurGCC=true;
-                                break;
-                        }
-
-                        break;
-                }
-            }
-
-            QString sDllLib;
-
-            if((pPEInfo->nConstDataSectionOffset)&&(pPEInfo->nConstDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
-            {
-                sDllLib=pe.read_ansiString(pPEInfo->nConstDataSectionOffset);
-            }
-
-            if(XPE::isImportLibraryPresentI("msys-1.0.dll",&(pPEInfo->listImports)))
-            {
-                // Msys 1.0
-                _SCANS_STRUCT ssGCC=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_COMPILER,RECORD_NAME_GCC,"","",0);
-                pPEInfo->mapResultCompilers.insert(ssGCC.name,scansToScan(&(pPEInfo->basic_info),&ssGCC));
-                _SCANS_STRUCT ssMsys=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_COMPILER,RECORD_NAME_MSYS,"1.0","",0);
-                pPEInfo->mapResultTools.insert(ssMsys.name,scansToScan(&(pPEInfo->basic_info),&ssMsys));
-            }
-
-            if((sDllLib.contains("gcc"))||
-                    (sDllLib.contains("libgcj"))||
-                    (sDllLib=="_set_invalid_parameter_handler")||
-                    XPE::isImportLibraryPresentI("libgcc_s_dw2-1.dll",&(pPEInfo->listImports))||
-                    pPEInfo->mapOverlayDetects.contains(RECORD_NAME_MINGW))
-            {
-                bDetectGCC=true;
-            }
-
-            if(bDetectGCC||bHeurGCC)
-            {
-                // Mingw
-                // Msys
-                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_COMPILER,RECORD_NAME_GCC,"","",0);
-
-                if((pPEInfo->nConstDataSectionOffset)&&(pPEInfo->nConstDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
-                {
-                    qint64 _nOffset=pPEInfo->nConstDataSectionOffset;
-                    qint64 _nSize=pPEInfo->nConstDataSectionSize;
-
-                    // TODO get max version
-                    qint64 nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"GCC:");
-
-                    if(nOffset_Version!=-1)
-                    {
-                        bDetectGCC=true;
-
-                        QString sVersionString=pe.read_ansiString(nOffset_Version);
-
-                        // TODO MinGW-w64
-                        if(sVersionString.contains("MinGW")||sVersionString.contains("GNU"))
-                        {
-                            _SCANS_STRUCT ssTool=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_TOOL,RECORD_NAME_MINGW,"","",0);
-                            pPEInfo->mapResultTools.insert(ssTool.name,scansToScan(&(pPEInfo->basic_info),&ssTool));
-                        }
-                        else if(sVersionString.contains("MSYS2"))
-                        {
-                            _SCANS_STRUCT ssTool=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_TOOL,RECORD_NAME_MSYS2,"","",0);
-                            pPEInfo->mapResultTools.insert(ssTool.name,scansToScan(&(pPEInfo->basic_info),&ssTool));
-                        }
-
-                        // TODO function
-                        if((sVersionString.contains("(experimental)"))||
-                                (sVersionString.contains("(prerelease)")))
-                        {
-                            ss.sVersion=sVersionString.section(" ",-3,-1);
-                        }
-                        else if(sVersionString.contains("GNU"))
-                        {
-                            ss.sVersion=sVersionString.section(" ",-2,-1);
-                        }
-                        else
-                        {
-                            ss.sVersion=sVersionString.section(" ",-1,-1);
-                        }
-                    }
-                    else
-                    {
-                        // Cygwin
-                        // MinGW ???
-                        ss.sVersion=PE_get_GCC_vi(pDevice,bIsImage,_nOffset,_nSize).sVersion;
-                    }
-                }
-
-                if(bDetectGCC)
-                {
-                    pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-            }
-
-            for(int i=0; i<pPEInfo->listImports.count(); i++)
-            {
-                if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^CYGWIN")))
-                {
-                    //                    QRegularExpression rxVersion("(\\d+)");
-                    //                    QRegularExpressionMatch matchVersion=rxVersion.match(pPEInfo->listImports.at(i).sName.toUpper());
-
-                    //                    if(matchVersion.hasMatch())
-                    //                    {
-                    //                        double dVersion=matchVersion.captured(0).toDouble();
-                    //
-                    //                        if(dVersion)
-                    //                        {
-                    //                            // TODO
-                    //                        }
-                    //                    }
-
-
-                    QString sVersion=XBinary::regExp("(\\d+)",pPEInfo->listImports.at(i).sName.toUpper(),0);
-
-                    if(sVersion!="")
-                    {
-                        double dVersion=sVersion.toDouble();
-
-                        if(dVersion)
-                        {
-                            // TODO
-                        }
-                    }
-
-                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_CYGWIN,"","",0);
-
-                    // TODO version
-                    pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-
-                    if(!pPEInfo->mapResultCompilers.contains(RECORD_NAME_GCC))
-                    {
-                        _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_COMPILER,RECORD_NAME_GCC,"","",0);
-
-                        pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                    }
-
-                    break;
-                }
-            }
-
-            if(!pPEInfo->mapResultCompilers.contains(RECORD_NAME_GCC))
-            {
-                if(XPE::isSectionNamePresent(".stabstr",&(pPEInfo->listSectionHeaders)))
-                {
-                    XPE_DEF::IMAGE_SECTION_HEADER sh=XPE::getSectionByName(".stabstr",&(pPEInfo->listSectionHeaders));
-
-                    if(sh.SizeOfRawData)
-                    {
-                        qint64 _nOffset=sh.PointerToRawData;
-                        qint64 _nSize=sh.SizeOfRawData;
-
-                        bool bSuccess=false;
-
-                        if(!bSuccess)
-                        {
-                            qint64 nGCC_MinGW=pe.find_ansiString(_nOffset,_nSize,"/gcc/mingw32/");
-
-                            if(nGCC_MinGW!=-1)
-                            {
-                                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_COMPILER,RECORD_NAME_GCC,"","",0);
-                                ss.sVersion=pe.read_ansiString(nGCC_MinGW+13).section("/",0,0);
-                                pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-
-                                _SCANS_STRUCT ssTool=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_TOOL,RECORD_NAME_MINGW,"","",0);
-                                pPEInfo->mapResultTools.insert(ssTool.name,scansToScan(&(pPEInfo->basic_info),&ssTool));
-
-                                bSuccess=true;
-                            }
-                        }
-
-                        if(!bSuccess)
-                        {
-                            qint64 nCygwin=pe.find_ansiString(_nOffset,_nSize,"/gcc/i686-pc-cygwin/");
-
-                            if(nCygwin!=-1)
-                            {
-                                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_COMPILER,RECORD_NAME_GCC,"","",0);
-                                ss.sVersion=pe.read_ansiString(nCygwin+20).section("/",0,0);
-                                pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-
-                                _SCANS_STRUCT ssTool=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_TOOL,RECORD_NAME_CYGWIN,"","",0);
-                                pPEInfo->mapResultTools.insert(ssTool.name,scansToScan(&(pPEInfo->basic_info),&ssTool));
-
-                                bSuccess=true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if(!pPEInfo->mapResultCompilers.contains(RECORD_NAME_GCC)) // TODO Check
-            {
-                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_GCC))
-                {
-                    _SCANS_STRUCT _dss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_GCC);
-                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_COMPILER,RECORD_NAME_GCC,"","",0);
-                    ss.sVersion=_dss.sVersion;
-
-                    QString _sGCCVersion;
-
-                    if((pPEInfo->nConstDataSectionOffset)&&(pPEInfo->nConstDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
-                    {
-                        _sGCCVersion=PE_get_GCC_vi(pDevice,bIsImage,pPEInfo->nConstDataSectionOffset,pPEInfo->nConstDataSectionSize).sVersion;
-
-                        if(_sGCCVersion!="")
-                        {
-                            ss.sVersion=_sGCCVersion;
-                        }
-                    }
-
-                    if(_sGCCVersion=="")
-                    {
-                        if((pPEInfo->nDataSectionOffset)&&(pPEInfo->nDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
-                        {
-                            _sGCCVersion=PE_get_GCC_vi(pDevice,bIsImage,pPEInfo->nDataSectionOffset,pPEInfo->nDataSectionSize).sVersion;
-
-                            if(_sGCCVersion!="")
-                            {
-                                ss.sVersion=_sGCCVersion;
-                            }
-                        }
-                    }
-
-                    pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-
-                    if(_dss.sInfo=="MinGW") // mb TODO variant
-                    {
-                        _SCANS_STRUCT ssTool=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_TOOL,RECORD_NAME_MINGW,"","",0);
-                        pPEInfo->mapResultTools.insert(ssTool.name,scansToScan(&(pPEInfo->basic_info),&ssTool));
-                    }
-                }
-            }
-
             if((pPEInfo->nDataSectionOffset)&&(pPEInfo->nDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
             {
                 qint64 _nOffset=pPEInfo->nDataSectionOffset;
@@ -5361,29 +5109,297 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                 pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
         }
+    }
+}
 
-        if(pPEInfo->mapResultCompilers.contains(RECORD_NAME_GCC))
+void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    SpecAbstract::_SCANS_STRUCT recordLinker= {};
+    SpecAbstract::_SCANS_STRUCT recordCompiler= {};
+    SpecAbstract::_SCANS_STRUCT recordTool= {};
+
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
+    {
+        if(!pPEInfo->cliInfo.bInit)
         {
+            bool bDetectGCC=false;
+            bool bHeurGCC=false;
+
             if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER))
             {
-                // TODO Check version;
-                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LINKER,RECORD_NAME_GNULINKER,"","",0);
-                ss.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
-                pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                switch(pPEInfo->nMajorLinkerVersion)
+                {
+                    case 2:
+                        switch(pPEInfo->nMinorLinkerVersion) // TODO Check MinGW versions
+                        {
+                            case 23:
+                            case 24:
+                            case 25:
+                            case 26:
+                            case 27:
+                            case 28:
+                            case 29:
+                            case 30:
+                            case 31:
+                            case 56:
+                                bHeurGCC=true;
+                                break;
+                        }
+
+                        break;
+                }
             }
 
-            if((!pPEInfo->mapResultTools.contains(RECORD_NAME_MINGW))&&
-                    (!pPEInfo->mapResultTools.contains(RECORD_NAME_MSYS))&&
-                    (!pPEInfo->mapResultTools.contains(RECORD_NAME_MSYS2))&&
-                    (!pPEInfo->mapResultTools.contains(RECORD_NAME_CYGWIN)))
+            QString sDllLib;
+
+            if((pPEInfo->nConstDataSectionOffset)&&(pPEInfo->nConstDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
             {
-                _SCANS_STRUCT ssTool=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_TOOL,RECORD_NAME_MINGW,"","",0);
-                pPEInfo->mapResultTools.insert(ssTool.name,scansToScan(&(pPEInfo->basic_info),&ssTool));
+                sDllLib=pe.read_ansiString(pPEInfo->nConstDataSectionOffset);
             }
 
-            if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_MINGW)&&pPEInfo->mapResultTools.contains(RECORD_NAME_MINGW))
+            if(XPE::isImportLibraryPresentI("msys-1.0.dll",&(pPEInfo->listImports)))
             {
-                updateInfo(&pPEInfo->mapResultTools,RECORD_NAME_MINGW,"Debug");
+                // Msys 1.0
+                recordTool.type=RECORD_TYPE_TOOL;
+                recordTool.name=RECORD_NAME_MSYS;
+                recordTool.sVersion="1.0";
+            }
+
+            if((sDllLib.contains("gcc"))||
+                    (sDllLib.contains("libgcj"))||
+                    (sDllLib=="_set_invalid_parameter_handler")||
+                    XPE::isImportLibraryPresentI("libgcc_s_dw2-1.dll",&(pPEInfo->listImports))||
+                    pPEInfo->mapOverlayDetects.contains(RECORD_NAME_MINGW)||
+                    pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_GCC))
+            {
+                bDetectGCC=true;
+            }
+
+            if(bDetectGCC||bHeurGCC)
+            {
+                // Mingw
+                // Msys
+
+
+                if((pPEInfo->nConstDataSectionOffset)&&(pPEInfo->nConstDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+                {
+                    qint64 _nOffset=pPEInfo->nConstDataSectionOffset;
+                    qint64 _nSize=pPEInfo->nConstDataSectionSize;
+
+                    // TODO get max version
+                    qint64 nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"GCC:");
+
+                    if(nOffset_Version!=-1)
+                    {
+                        QString sVersionString=pe.read_ansiString(nOffset_Version);
+
+                        // TODO MinGW-w64
+                        if(sVersionString.contains("MinGW")||sVersionString.contains("GNU"))
+                        {
+                            recordTool.type=RECORD_TYPE_TOOL;
+                            recordTool.name=RECORD_NAME_MINGW;
+                        }
+                        else if(sVersionString.contains("MSYS2"))
+                        {
+                            recordTool.type=RECORD_TYPE_TOOL;
+                            recordTool.name=RECORD_NAME_MSYS2;
+                        }
+
+                        // TODO function
+                        if((sVersionString.contains("(experimental)"))||
+                                (sVersionString.contains("(prerelease)")))
+                        {
+                            recordCompiler.sVersion=sVersionString.section(" ",-3,-1);
+                        }
+                        else if(sVersionString.contains("GNU"))
+                        {
+                            recordCompiler.sVersion=sVersionString.section(" ",-2,-1);
+                        }
+                        else if(sVersionString.contains("Rev1, Built by MSYS2 project"))
+                        {
+                            recordCompiler.sVersion=sVersionString.section(" ",-2,-1);
+                        }
+                        else
+                        {
+                            recordCompiler.sVersion=sVersionString.section(" ",-1,-1);
+                        }
+                    }
+
+                    if(recordCompiler.sVersion=="")
+                    {
+                        QString _sGCCVersion;
+
+                        if((pPEInfo->nConstDataSectionOffset)&&(pPEInfo->nConstDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+                        {
+                            _sGCCVersion=PE_get_GCC_vi(pDevice,bIsImage,pPEInfo->nConstDataSectionOffset,pPEInfo->nConstDataSectionSize).sVersion;
+
+                            if(_sGCCVersion!="")
+                            {
+                                recordCompiler.sVersion=_sGCCVersion;
+                            }
+                        }
+
+                        if(_sGCCVersion=="")
+                        {
+                            if((pPEInfo->nDataSectionOffset)&&(pPEInfo->nDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+                            {
+                                _sGCCVersion=PE_get_GCC_vi(pDevice,bIsImage,pPEInfo->nDataSectionOffset,pPEInfo->nDataSectionSize).sVersion;
+
+                                if(_sGCCVersion!="")
+                                {
+                                    recordCompiler.sVersion=_sGCCVersion;
+                                }
+                            }
+                        }
+                    }
+
+                    if((recordTool.type==RECORD_TYPE_UNKNOWN)&&(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_GCC)))
+                    {
+                        if(pPEInfo->mapEntryPointDetects.value(RECORD_NAME_GCC).sInfo.contains("MinGW"))
+                        {
+                            recordTool.type=RECORD_TYPE_TOOL;
+                            recordTool.name=RECORD_NAME_MINGW;
+                        }
+                    }
+                }
+
+                if(recordCompiler.sVersion!="")
+                {
+                    bDetectGCC=true;
+                }
+
+                if(bDetectGCC)
+                {
+                    recordCompiler.type=RECORD_TYPE_COMPILER;
+                    recordCompiler.name=RECORD_NAME_GCC;
+                }
+            }
+
+            for(int i=0; i<pPEInfo->listImports.count(); i++)
+            {
+                if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^CYGWIN")))
+                {
+                    QString sVersion=XBinary::regExp("(\\d+)",pPEInfo->listImports.at(i).sName.toUpper(),0);
+
+                    if(sVersion!="")
+                    {
+                        double dVersion=sVersion.toDouble();
+
+                        if(dVersion)
+                        {
+                            // TODO
+                        }
+                    }
+
+                    recordTool.type=RECORD_TYPE_TOOL;
+                    recordTool.name=RECORD_NAME_CYGWIN;
+
+                    // TODO Version
+                    break;
+                }
+            }
+
+            if(recordCompiler.type==RECORD_TYPE_UNKNOWN)
+            {
+                if(XPE::isSectionNamePresent(".stabstr",&(pPEInfo->listSectionHeaders)))
+                {
+                    XPE_DEF::IMAGE_SECTION_HEADER sh=XPE::getSectionByName(".stabstr",&(pPEInfo->listSectionHeaders));
+
+                    if(sh.SizeOfRawData)
+                    {
+                        qint64 _nOffset=sh.PointerToRawData;
+                        qint64 _nSize=sh.SizeOfRawData;
+
+                        bool bSuccess=false;
+
+                        if(!bSuccess)
+                        {
+                            qint64 nGCC_MinGW=pe.find_ansiString(_nOffset,_nSize,"/gcc/mingw32/");
+
+                            if(nGCC_MinGW!=-1)
+                            {
+                                recordTool.type=RECORD_TYPE_TOOL;
+                                recordTool.name=RECORD_NAME_MINGW;
+
+                                bSuccess=true;
+                            }
+                        }
+
+                        if(!bSuccess)
+                        {
+                            qint64 nCygwin=pe.find_ansiString(_nOffset,_nSize,"/gcc/i686-pc-cygwin/");
+
+                            if(nCygwin!=-1)
+                            {
+                                recordTool.type=RECORD_TYPE_TOOL;
+                                recordTool.name=RECORD_NAME_CYGWIN;
+
+                                bSuccess=true;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(recordCompiler.type==RECORD_TYPE_UNKNOWN)
+            {
+                if(     (pPEInfo->mapResultTools.contains(RECORD_NAME_MINGW))||
+                        (pPEInfo->mapResultTools.contains(RECORD_NAME_MSYS))||
+                        (pPEInfo->mapResultTools.contains(RECORD_NAME_MSYS2))||
+                        (pPEInfo->mapResultTools.contains(RECORD_NAME_CYGWIN)))
+                {
+                    recordCompiler.type=RECORD_TYPE_COMPILER;
+                    recordCompiler.name=RECORD_NAME_GCC;
+                }
+            }
+
+            if((recordCompiler.name==RECORD_NAME_GCC)&&(recordTool.name==RECORD_NAME_UNKNOWN))
+            {
+                recordTool.type=RECORD_TYPE_TOOL;
+                recordTool.name=RECORD_NAME_MINGW;
+            }
+
+            if((recordCompiler.name==RECORD_NAME_GCC)&&(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER)))
+            {
+                recordLinker.type=RECORD_TYPE_LINKER;
+                recordLinker.name=RECORD_NAME_GNULINKER;
+                recordLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
+            }
+
+            if(recordTool.name=RECORD_NAME_MINGW)
+            {
+                if(recordTool.sVersion=="")
+                {
+                    switch(pPEInfo->nMajorLinkerVersion)
+                    {
+                    case 2:
+                        switch(pPEInfo->nMinorLinkerVersion)
+                        {
+                            case 23:    recordTool.sVersion="4.7.0-4.8.0";      break;
+                            case 24:    recordTool.sVersion="4.8.2-4.9.2";      break;
+                            case 25:    recordTool.sVersion="5.3.0";            break;
+                            case 29:    recordTool.sVersion="7.3.0";            break;
+                        }
+                        break;
+                    }
+                }
+            }
+
+            // TODO Check overlay debug
+
+            if(recordLinker.type!=RECORD_TYPE_UNKNOWN)
+            {
+                pPEInfo->mapResultLinkers.insert(recordLinker.name,scansToScan(&(pPEInfo->basic_info),&recordLinker));
+            }
+            if(recordCompiler.type!=RECORD_TYPE_UNKNOWN)
+            {
+                pPEInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pPEInfo->basic_info),&recordCompiler));
+            }
+            if(recordTool.type!=RECORD_TYPE_UNKNOWN)
+            {
+                pPEInfo->mapResultTools.insert(recordTool.name,scansToScan(&(pPEInfo->basic_info),&recordTool));
             }
         }
     }
