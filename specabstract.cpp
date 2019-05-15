@@ -68,6 +68,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_IMAGE,            SpecAbstract::RECORD_NAME_JPEG,                         "",             "",                     "FFD8FFE0....'JFIF'00"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_IMAGE,            SpecAbstract::RECORD_NAME_PNG,                          "",             "",                     "89'PNG\r\n'1A0A........'IHDR'"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_IMAGE,            SpecAbstract::RECORD_NAME_WINDOWSICON,                  "",             "",                     "00000100"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_IMAGE,            SpecAbstract::RECORD_NAME_WINDOWSBITMAP,                "",             "",                     "'BM'"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_DATABASE,         SpecAbstract::RECORD_NAME_MICROSOFTACCESS,              "",             "",                     "00010000'Standard Jet DB'00"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP,    "",             "",                     "'ITSF'03000000"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_AUTOIT,                       "3.X",          "Compiled script",      "A3484BBE986C4AA9"},
@@ -616,6 +617,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WATCOMLINKER:                      sResult=QString("Watcom linker");                               break;
         case RECORD_NAME_WINACE:                            sResult=QString("WinACE");                                      break;
         case RECORD_NAME_WINAUTH:                           sResult=QString("Windows Authenticode");                        break;
+        case RECORD_NAME_WINDOWSBITMAP:                     sResult=QString("Windows Bitmap");                              break;
         case RECORD_NAME_WINDOWSICON:                       sResult=QString("Windows Icon");                                break;
         case RECORD_NAME_WINDOWSINSTALLER:                  sResult=QString("Windows Installer");                           break;
         case RECORD_NAME_WINRAR:                            sResult=QString("WinRAR");                                      break;
@@ -4176,7 +4178,6 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             //            recordLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
         }
 
-
         if(recordCompiler.name==SpecAbstract::RECORD_NAME_VISUALCCPP)
         {
             QString sLinkerVersion=recordLinker.sVersion;
@@ -6369,6 +6370,30 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, bool bIsImage, SpecA
         // TODO more information
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINDOWSICON);
         pBinaryInfo->mapResultImages.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINDOWSBITMAP))&&(pBinaryInfo->basic_info.nSize>=40))
+    {
+        // Windows Bitmap
+        // TODO more information
+        quint32 _nSize=qFromBigEndian(pBinaryInfo->basic_info.sHeaderSignature.mid(2*2,8).toUInt(nullptr,16));
+        if(pBinaryInfo->basic_info.nSize>=_nSize)
+        {
+            QString sVersion;
+
+            switch(qFromBigEndian(pBinaryInfo->basic_info.sHeaderSignature.mid(14*2,8).toUInt(nullptr,16)))
+            {
+            case  40: sVersion="3"; break;
+            case 108: sVersion="4"; break;
+            case 124: sVersion="5"; break;
+            }
+
+            if(sVersion!="")
+            {
+                _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINDOWSBITMAP);
+                ss.sVersion=sVersion;
+                pBinaryInfo->mapResultImages.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+            }
+        }
     }
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PNG))&&(pBinaryInfo->basic_info.nSize>=8))
     {
