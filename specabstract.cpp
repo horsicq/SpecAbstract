@@ -4659,6 +4659,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                     sCppCompilerVersion=pe.read_ansiString(nOffset_EmbarcaderoCPP+35,4);
                 }
 
+                // TODO new version!
                 if(listVCL.count())
                 {
                     bVCL=true;
