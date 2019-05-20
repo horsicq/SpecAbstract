@@ -222,6 +222,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FAKESIGNATURE,                "",                 "Themida 1.8.0.0",      "B8........600BC074..E8000000005805..0000008038E975"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FAKESIGNATURE,                "",                 "Visual Basic 5.0-6.0", "6800000000E8........C0EB0F000000300000004000000000000000485858E9"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              "",                     "E9........E9........E9........E9........E9........E9........E9........E9........E9........E9........E9........CC"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_PUREBASIC,                    "4.X",              "",                     "68....0000680000000068......00E8......0083C40C6800000000E8......00A3"},
 };
 
 SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
@@ -571,6 +572,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_POLYCRYPTPE:                       sResult=QString("PolyCrypt PE");                                break;
         case RECORD_NAME_POWERBASIC:                        sResult=QString("PowerBASIC");                                  break;
         case RECORD_NAME_PRIVATEEXEPROTECTOR:               sResult=QString("Private EXE Protector");                       break;
+        case RECORD_NAME_PUREBASIC:                         sResult=QString("PureBasic");                                   break;
         case RECORD_NAME_PYTHON:                            sResult=QString("Python");                                      break;
         case RECORD_NAME_QT:                                sResult=QString("Qt");                                          break;
         case RECORD_NAME_QTINSTALLER:                       sResult=QString("Qt Installer");                                break;
@@ -5102,6 +5104,15 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_WATCOMCCPP))
             {
                 _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_WATCOMCCPP);
+
+                // TODO Version???
+                pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
+            // PureBasic
+            if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PUREBASIC))
+            {
+                _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PUREBASIC);
 
                 // TODO Version???
                 pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
