@@ -5307,14 +5307,13 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
 
                         if(dVersion)
                         {
-                            // TODO
+                            recordTool.sVersion=QString::number(dVersion,'f',2);
                         }
                     }
 
                     recordTool.type=RECORD_TYPE_TOOL;
                     recordTool.name=RECORD_NAME_CYGWIN;
 
-                    // TODO Version
                     break;
                 }
             }
@@ -5363,10 +5362,10 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
 
             if(recordCompiler.type==RECORD_TYPE_UNKNOWN)
             {
-                if(     (pPEInfo->mapResultTools.contains(RECORD_NAME_MINGW))||
-                        (pPEInfo->mapResultTools.contains(RECORD_NAME_MSYS))||
-                        (pPEInfo->mapResultTools.contains(RECORD_NAME_MSYS2))||
-                        (pPEInfo->mapResultTools.contains(RECORD_NAME_CYGWIN)))
+                if(     (recordTool.name==RECORD_NAME_MINGW)||
+                        (recordTool.name==RECORD_NAME_MSYS)||
+                        (recordTool.name==RECORD_NAME_MSYS2)||
+                        (recordTool.name==RECORD_NAME_CYGWIN))
                 {
                     recordCompiler.type=RECORD_TYPE_COMPILER;
                     recordCompiler.name=RECORD_NAME_GCC;
@@ -5386,7 +5385,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
                 recordLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
             }
 
-            if(recordTool.name=RECORD_NAME_MINGW)
+            if(recordTool.name==RECORD_NAME_MINGW)
             {
                 if(recordTool.sVersion=="")
                 {
