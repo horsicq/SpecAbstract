@@ -885,8 +885,6 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
 
     if(elf.isValid())
     {
-        result.bIs64=elf.is64();
-
         result.basic_info.parentId=parentId;
         result.basic_info.id.filetype=result.bIs64?RECORD_FILETYPE_ELF64:RECORD_FILETYPE_ELF32;
         result.basic_info.id.filepart=RECORD_FILEPART_HEADER;
@@ -897,6 +895,22 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         result.basic_info.bDeepScan=pOptions->bDeepScan;
 
         result.sEntryPointSignature=elf.getSignature(elf.getEntryPointOffset(),150);
+
+        result.bIs64=elf.is64();
+
+        result.nSectionStringTable=elf.getSectionStringTable(result.bIs64);
+        result.baStringTable=elf.getSection(result.nSectionStringTable);
+
+        result.listSectionHeaders=elf.getElf_ShdrList();
+        result.listProgramHeaders=elf.getElf_PhdrList();
+
+        result.listSectionRecords=XELF::getSectionRecords(&result.listSectionHeaders,pOptions->bIsImage,&result.baStringTable);
+
+        ELF_handle_GCC(pDevice,pOptions->bIsImage,&result);
+        ELF_handle_Tools(pDevice,pOptions->bIsImage,&result);
+
+        result.basic_info.listDetects.append(result.mapResultCompilers.values());
+        result.basic_info.listDetects.append(result.mapResultLibraries.values());
 
         if(!result.basic_info.listDetects.count())
         {
@@ -1125,7 +1139,6 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_Petite(pDevice,pOptions->bIsImage,&result);
         PE_handle_NETProtection(pDevice,pOptions->bIsImage,&result);
         PE_handle_PolyMorph(pDevice,pOptions->bIsImage,&result);
-        PE_handle_libraries(pDevice,pOptions->bIsImage,&result);
         PE_handle_Microsoft(pDevice,pOptions->bIsImage,&result);
         PE_handle_Borland(pDevice,pOptions->bIsImage,&result);
         PE_handle_Tools(pDevice,pOptions->bIsImage,&result);
@@ -3842,38 +3855,6 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
     }
 }
 
-void SpecAbstract::PE_handle_libraries(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
-{
-    Q_UNUSED(pDevice);
-    Q_UNUSED(bIsImage);
-
-    if(!pPEInfo->cliInfo.bInit)
-    {
-        // Qt
-        // mb TODO upper
-        if(XPE::isImportLibraryPresentI("QtCore4.dll",&(pPEInfo->listImports)))
-        {
-            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_QT,"4.X","",0);
-            pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-        }
-        else if(XPE::isImportLibraryPresentI("QtCored4.dll",&(pPEInfo->listImports)))
-        {
-            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_QT,"4.X","Debug",0);
-            pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-        }
-        else if(XPE::isImportLibraryPresentI("Qt5Core.dll",&(pPEInfo->listImports)))
-        {
-            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_QT,"5.X","",0);
-            pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-        }
-        else if(XPE::isImportLibraryPresentI("Qt5Cored.dll",&(pPEInfo->listImports)))
-        {
-            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_QT,"5.X","Debug",0);
-            pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-        }
-    }
-}
-
 void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     SpecAbstract::_SCANS_STRUCT recordLinker= {};
@@ -4979,6 +4960,29 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
         if(!pPEInfo->cliInfo.bInit)
         {
+            // Qt
+            // mb TODO upper
+            if(XPE::isImportLibraryPresentI("QtCore4.dll",&(pPEInfo->listImports)))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_QT,"4.X","",0);
+                pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+            else if(XPE::isImportLibraryPresentI("QtCored4.dll",&(pPEInfo->listImports)))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_QT,"4.X","Debug",0);
+                pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+            else if(XPE::isImportLibraryPresentI("Qt5Core.dll",&(pPEInfo->listImports)))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_QT,"5.X","",0);
+                pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+            else if(XPE::isImportLibraryPresentI("Qt5Cored.dll",&(pPEInfo->listImports)))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_QT,"5.X","Debug",0);
+                pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
             if((pPEInfo->nDataSectionOffset)&&(pPEInfo->nDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
             {
                 qint64 _nOffset=pPEInfo->nDataSectionOffset;
@@ -6587,6 +6591,35 @@ void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
         {
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_IBMPCPASCAL);
             pMSDOSInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+    }
+}
+
+void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstract::ELFINFO_STRUCT *pELFInfo)
+{
+    XELF elf(pDevice,bIsImage);
+
+    if(elf.isValid())
+    {
+
+    }
+}
+
+void SpecAbstract::ELF_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract::ELFINFO_STRUCT *pELFInfo)
+{
+    XELF elf(pDevice,bIsImage);
+
+    if(elf.isValid())
+    {
+        // GCC
+        if(XELF::isSectionNamePresent(".gcc_except_table",&(pELFInfo->listSectionRecords)))
+        {
+            SpecAbstract::_SCANS_STRUCT recordSS= {};
+
+            recordSS.type=SpecAbstract::RECORD_TYPE_COMPILER;
+            recordSS.name=SpecAbstract::RECORD_NAME_GCC;
+
+            pELFInfo->mapResultCompilers.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
         }
     }
 }
