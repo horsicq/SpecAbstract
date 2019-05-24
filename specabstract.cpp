@@ -5191,6 +5191,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
 
             if((sDllLib.contains("gcc"))||
                     (sDllLib.contains("libgcj"))||
+                    (sDllLib.contains("cyggcj"))||
                     (sDllLib=="_set_invalid_parameter_handler")||
                     XPE::isImportLibraryPresentI("libgcc_s_dw2-1.dll",&(pPEInfo->listImports))||
                     pPEInfo->mapOverlayDetects.contains(RECORD_NAME_MINGW)||
@@ -5203,8 +5204,6 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
             {
                 // Mingw
                 // Msys
-
-
                 if((pPEInfo->nConstDataSectionOffset)&&(pPEInfo->nConstDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
                 {
                     qint64 _nOffset=pPEInfo->nConstDataSectionOffset;
@@ -5218,7 +5217,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
                         QString sVersionString=pe.read_ansiString(nOffset_Version);
 
                         // TODO MinGW-w64
-                        if(sVersionString.contains("MinGW")||sVersionString.contains("GNU"))
+                        if(sVersionString.contains("MinGW"))
                         {
                             recordTool.type=RECORD_TYPE_TOOL;
                             recordTool.name=RECORD_NAME_MINGW;
@@ -5228,16 +5227,21 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
                             recordTool.type=RECORD_TYPE_TOOL;
                             recordTool.name=RECORD_NAME_MSYS2;
                         }
+                        else if(sVersionString.contains("Cygwin"))
+                        {
+                            recordTool.type=RECORD_TYPE_TOOL;
+                            recordTool.name=RECORD_NAME_CYGWIN;
+                        }
 
                         // TODO function
                         if((sVersionString.contains("(experimental)"))||
                                 (sVersionString.contains("(prerelease)")))
                         {
-                            recordCompiler.sVersion=sVersionString.section(" ",-3,-1);
+                            recordCompiler.sVersion=sVersionString.section(" ",-3,-1); // TODO Check
                         }
                         else if(sVersionString.contains("GNU"))
                         {
-                            recordCompiler.sVersion=sVersionString.section(" ",-2,-1);
+                            recordCompiler.sVersion=sVersionString.section(" ",2,-1);
                         }
                         else if(sVersionString.contains("Rev1, Built by MSYS2 project"))
                         {
