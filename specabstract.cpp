@@ -223,6 +223,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FAKESIGNATURE,                "",                 "Visual Basic 5.0-6.0", "6800000000E8........C0EB0F000000300000004000000000000000485858E9"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              "",                     "E9........E9........E9........E9........E9........E9........E9........E9........E9........E9........E9........CC"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_PUREBASIC,                    "4.X",              "",                     "68....0000680000000068......00E8......0083C40C6800000000E8......00A3"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_LCCWIN,                       "1.X-3.X",          "",                     "64a1........5589e56a..68........68........506489..........83ec..53565789"},
 };
 
 SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
@@ -509,6 +510,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_KKRUNCHY:                          sResult=QString("kkrunchy");                                    break;
         case RECORD_NAME_LAYHEYFORTRAN90:                   sResult=QString("Lahey Fortran 90");                            break;
         case RECORD_NAME_LAZARUS:                           sResult=QString("Lazarus");                                     break;
+        case RECORD_NAME_LCCLNK:                            sResult=QString("lcclnk");                                      break;
+        case RECORD_NAME_LCCWIN:                            sResult=QString("lcc-win");                                     break;
         case RECORD_NAME_LUACOMPILED:                       sResult=QString("Lua compiled");                                break;
         case RECORD_NAME_MACROBJECT:                        sResult=QString("Macrobject");                                  break;
         case RECORD_NAME_MASKPE:                            sResult=QString("MaskPE");                                      break;
@@ -5120,6 +5123,24 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
                 // TODO Version???
                 pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
+            // lcc-win
+            if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_LCCWIN))
+            {
+                _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_LCCWIN);
+
+                // TODO Version???
+                pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+
+                if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER))
+                {
+                    SpecAbstract::_SCANS_STRUCT recordLinker= {};
+                    recordLinker.name=RECORD_NAME_LCCLNK;
+                    recordLinker.type=RECORD_TYPE_LINKER;
+                    recordLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
+                    pPEInfo->mapResultLinkers.insert(recordLinker.name,scansToScan(&(pPEInfo->basic_info),&recordLinker));
+                }
             }
 
             // wxWidgets
