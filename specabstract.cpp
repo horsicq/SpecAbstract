@@ -5099,6 +5099,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                 }
             }
 
+            // TODO Create own function no compiler but linker -> compiler
             // Watcom linker
             if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WATCOMLINKER))
             {
