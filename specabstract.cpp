@@ -6627,7 +6627,17 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
     if(elf.isValid())
     {
+        // Qt
+        if(XELF::isSectionNamePresent(".qtversion",&(pELFInfo->listSectionRecords)))
+        {
+            // TODO version
+            SpecAbstract::_SCANS_STRUCT recordSS= {};
 
+            recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
+            recordSS.name=SpecAbstract::RECORD_NAME_QT;
+
+            pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+        }
     }
 }
 
