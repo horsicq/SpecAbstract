@@ -904,6 +904,9 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         result.nSectionStringTable=elf.getSectionStringTable(result.bIs64);
         result.baStringTable=elf.getSection(result.nSectionStringTable);
 
+        result.listTags=elf.getTagStructs();
+        result.listLibraries=elf.getLibraries(&result.listTags);
+
         result.listSectionHeaders=elf.getElf_ShdrList();
         result.listProgramHeaders=elf.getElf_PhdrList();
 

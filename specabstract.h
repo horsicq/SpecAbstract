@@ -455,6 +455,8 @@ public:
         bool bIs64;
         quint32 nSectionStringTable;
         QByteArray baStringTable;
+        QList<XELF::TAG_STRUCT> listTags;
+        QList<QString> listLibraries;
 
         QList<XELF_DEF::Elf_Shdr> listSectionHeaders;
         QList<XELF_DEF::Elf_Phdr> listProgramHeaders;
