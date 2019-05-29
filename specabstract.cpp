@@ -901,8 +901,8 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
 
         result.bIs64=elf.is64();
 
-        result.nSectionStringTable=elf.getSectionStringTable(result.bIs64);
-        result.baStringTable=elf.getSection(result.nSectionStringTable);
+        result.nStringTableSection=elf.getSectionStringTable(result.bIs64);
+        result.baStringTable=elf.getSection(result.nStringTableSection);
 
         result.listTags=elf.getTagStructs();
         result.listLibraries=elf.getLibraries(&result.listTags);
@@ -911,6 +911,14 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         result.listProgramHeaders=elf.getElf_PhdrList();
 
         result.listSectionRecords=XELF::getSectionRecords(&result.listSectionHeaders,pOptions->bIsImage,&result.baStringTable);
+
+        result.nCommentSection=XELF::getSectionNumber(".comment",&result.listSectionRecords);
+
+        if(result.nCommentSection!=-1)
+        {
+            result.osCommentSection.nOffset=result.listSectionRecords.at(result.nCommentSection).nOffset;
+            result.osCommentSection.nSize=result.listSectionRecords.at(result.nCommentSection).nSize;
+        }
 
         ELF_handle_GCC(pDevice,pOptions->bIsImage,&result);
         ELF_handle_Tools(pDevice,pOptions->bIsImage,&result);
@@ -1062,37 +1070,37 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         //            memoryScan(&result.mapCodeSectionScanDetects,pDevice,result.listSections.at(result.nCodeSection).PointerToRawData,result.listSections.at(result.nCodeSection).SizeOfRawData,_codesectionscan_records,sizeof(_codesectionscan_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
         //        }
 
-        result.nHeaderOffset=0;
-        result.nHeaderSize=qMin(result.basic_info.nSize,(qint64)2048);
+        result.osHeader.nOffset=0;
+        result.osHeader.nSize=qMin(result.basic_info.nSize,(qint64)2048);
 
         if(result.nCodeSection!=-1)
         {
-            result.nCodeSectionOffset=result.listSectionRecords.at(result.nCodeSection).nOffset; // mb TODO for image
-            result.nCodeSectionSize=result.listSectionRecords.at(result.nCodeSection).nSize; // TODO limit?
+            result.osCodeSection.nOffset=result.listSectionRecords.at(result.nCodeSection).nOffset; // mb TODO for image
+            result.osCodeSection.nSize=result.listSectionRecords.at(result.nCodeSection).nSize; // TODO limit?
         }
 
         if(result.nDataSection!=-1)
         {
-            result.nDataSectionOffset=result.listSectionRecords.at(result.nDataSection).nOffset;
-            result.nDataSectionSize=result.listSectionRecords.at(result.nDataSection).nSize;
+            result.osDataSection.nOffset=result.listSectionRecords.at(result.nDataSection).nOffset;
+            result.osDataSection.nSize=result.listSectionRecords.at(result.nDataSection).nSize;
         }
 
         if(result.nConstDataSection!=-1)
         {
-            result.nConstDataSectionOffset=result.listSectionRecords.at(result.nConstDataSection).nOffset;
-            result.nConstDataSectionSize=result.listSectionRecords.at(result.nConstDataSection).nSize;
+            result.osConstDataSection.nOffset=result.listSectionRecords.at(result.nConstDataSection).nOffset;
+            result.osConstDataSection.nSize=result.listSectionRecords.at(result.nConstDataSection).nSize;
         }
 
         if(result.nEntryPointSection!=-1)
         {
-            result.nEntryPointSectionOffset=result.listSectionRecords.at(result.nEntryPointSection).nOffset;
-            result.nEntryPointSectionSize=result.listSectionRecords.at(result.nEntryPointSection).nSize;
+            result.osEntryPointSection.nOffset=result.listSectionRecords.at(result.nEntryPointSection).nOffset;
+            result.osEntryPointSection.nSize=result.listSectionRecords.at(result.nEntryPointSection).nSize;
         }
 
         if(result.nImportSection!=-1)
         {
-            result.nImportSectionOffset=result.listSectionRecords.at(result.nImportSection).nOffset;
-            result.nImportSectionSize=result.listSectionRecords.at(result.nImportSection).nSize;
+            result.osImportSection.nOffset=result.listSectionRecords.at(result.nImportSection).nOffset;
+            result.osImportSection.nSize=result.listSectionRecords.at(result.nImportSection).nSize;
         }
 
         //        if(result.nCodeSectionSize)
@@ -2503,10 +2511,10 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
             {
                 int nVariant=pPEInfo->mapImportDetects.value(RECORD_NAME_ENIGMA).nVariant;
 
-                if((pPEInfo->nImportSectionOffset)&&(pPEInfo->nImportSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+                if(XBinary::checkOffsetSize(pPEInfo->osImportSection)&&(pPEInfo->basic_info.bDeepScan))
                 {
-                    qint64 nSectionOffset=pPEInfo->nImportSectionOffset;
-                    qint64 nSectionSize=pPEInfo->nImportSectionSize;
+                    qint64 nSectionOffset=pPEInfo->osImportSection.nOffset;
+                    qint64 nSectionSize=pPEInfo->osImportSection.nSize;
 
                     bool bDetect=false;
 
@@ -2873,10 +2881,10 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 // 1.X-2.X
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ACPROTECT))
                 {
-                    if((pPEInfo->nImportSectionOffset)&&(pPEInfo->nImportSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+                    if(XBinary::checkOffsetSize(pPEInfo->osImportSection)&&(pPEInfo->basic_info.bDeepScan))
                     {
-                        qint64 nSectionOffset=pPEInfo->nImportSectionOffset;
-                        qint64 nSectionSize=pPEInfo->nImportSectionSize;
+                        qint64 nSectionOffset=pPEInfo->osImportSection.nOffset;
+                        qint64 nSectionSize=pPEInfo->osImportSection.nSize;
 
                         qint64 nOffset1=pe.find_array(nSectionOffset,nSectionSize,"MineImport_Endss",16);
 
@@ -3081,10 +3089,10 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     {
                         SpecAbstract::_SCANS_STRUCT recordNPACK=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_NPACK);
 
-                        if((pPEInfo->nEntryPointSectionOffset)&&(pPEInfo->nEntryPointSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+                        if(XBinary::checkOffsetSize(pPEInfo->osEntryPointSection)&&(pPEInfo->basic_info.bDeepScan))
                         {
-                            qint64 _nOffset=pPEInfo->nEntryPointSectionOffset;
-                            qint64 _nSize=pPEInfo->nEntryPointSectionSize;
+                            qint64 _nOffset=pPEInfo->osEntryPointSection.nOffset;
+                            qint64 _nSize=pPEInfo->osEntryPointSection.nSize;
 
                             // TODO get max version
                             qint64 nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"nPack v");
@@ -3272,10 +3280,10 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     {
                         _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PEPACK);
 
-                        if((pPEInfo->nImportSectionOffset)&&(pPEInfo->nImportSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+                        if(XBinary::checkOffsetSize(pPEInfo->osImportSection)&&(pPEInfo->basic_info.bDeepScan))
                         {
-                            qint64 _nOffset=pPEInfo->nImportSectionOffset;
-                            qint64 _nSize=pPEInfo->nImportSectionSize;
+                            qint64 _nOffset=pPEInfo->osImportSection.nOffset;
+                            qint64 _nSize=pPEInfo->osImportSection.nSize;
 
                             qint64 nOffset_PEPACK=pe.find_ansiString(_nOffset,_nSize,"PE-PACK v");
 
@@ -3341,7 +3349,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     {
                         _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EXE32PACK);
 
-                        qint64 _nOffset=pPEInfo->nHeaderOffset;
+                        qint64 _nOffset=pPEInfo->osHeader.nOffset;
                         qint64 _nSize=qMin(pPEInfo->basic_info.nSize,(qint64)0x2000);
 
                         qint64 nOffset_version=pe.find_ansiString(_nOffset,_nSize,"Packed by exe32pack");
@@ -3661,10 +3669,10 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
         {
             // .NET
             // Enigma
-            if((pPEInfo->nCodeSectionOffset)&&(pPEInfo->nCodeSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+            if(XBinary::checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bDeepScan))
             {
-                qint64 nSectionOffset=pPEInfo->nCodeSectionOffset;
-                qint64 nSectionSize=pPEInfo->nCodeSectionSize;
+                qint64 nSectionOffset=pPEInfo->osCodeSection.nOffset;
+                qint64 nSectionSize=pPEInfo->osCodeSection.nSize;
 
                 QString sEnigmaVersion=findEnigmaVersion(pDevice,nSectionOffset,nSectionSize);
 
@@ -3700,10 +3708,10 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
             //                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             //            }
 
-            if((pPEInfo->nCodeSectionOffset)&&(pPEInfo->nCodeSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+            if(XBinary::checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bDeepScan))
             {
-                qint64 _nOffset=pPEInfo->nCodeSectionOffset;
-                qint64 _nSize=pPEInfo->nCodeSectionSize;
+                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
                 qint64 nOffset_String=pe.find_ansiString(_nOffset,_nSize,"RustemSoft.Skater");
 
@@ -3817,14 +3825,17 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
             {
                 _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_SMARTASSEMBLY);
 
-                qint64 _nOffset=pPEInfo->nCodeSectionOffset;
-                qint64 _nSize=pPEInfo->nCodeSectionSize;
-
-                qint64 nOffset_Confuser=pe.find_ansiString(_nOffset,_nSize,"Powered by SmartAssembly ");
-
-                if(nOffset_Confuser!=-1)
+                if(XBinary::checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bDeepScan))
                 {
-                    ss.sVersion=pe.read_ansiString(nOffset_Confuser+25);
+                    qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                    qint64 _nSize=pPEInfo->osCodeSection.nSize;
+
+                    qint64 nOffset_Confuser=pe.find_ansiString(_nOffset,_nSize,"Powered by SmartAssembly ");
+
+                    if(nOffset_Confuser!=-1)
+                    {
+                        ss.sVersion=pe.read_ansiString(nOffset_Confuser+25);
+                    }
                 }
 
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
@@ -3834,24 +3845,28 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
             {
                 _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_CONFUSER);
 
-                qint64 _nOffset=pPEInfo->nCodeSectionOffset;
-                qint64 _nSize=pPEInfo->nCodeSectionSize;
 
-                qint64 nOffset_Confuser=pe.find_ansiString(_nOffset,_nSize,"Confuser v");
-
-                if(nOffset_Confuser!=-1)
+                if(XBinary::checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bDeepScan))
                 {
-                    ss.sVersion=pe.read_ansiString(nOffset_Confuser+10);
-                }
+                    qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                    qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
-                if(nOffset_Confuser==-1)
-                {
-                    qint64 nOffset_ConfuserEx=pe.find_ansiString(_nOffset,_nSize,"ConfuserEx v");
+                    qint64 nOffset_Confuser=pe.find_ansiString(_nOffset,_nSize,"Confuser v");
 
-                    if(nOffset_ConfuserEx!=-1)
+                    if(nOffset_Confuser!=-1)
                     {
-                        ss.name=RECORD_NAME_CONFUSEREX;
-                        ss.sVersion=pe.read_ansiString(nOffset_ConfuserEx+12);
+                        ss.sVersion=pe.read_ansiString(nOffset_Confuser+10);
+                    }
+
+                    if(nOffset_Confuser==-1)
+                    {
+                        qint64 nOffset_ConfuserEx=pe.find_ansiString(_nOffset,_nSize,"ConfuserEx v");
+
+                        if(nOffset_ConfuserEx!=-1)
+                        {
+                            ss.name=RECORD_NAME_CONFUSEREX;
+                            ss.sVersion=pe.read_ansiString(nOffset_ConfuserEx+12);
+                        }
                     }
                 }
 
@@ -3889,10 +3904,10 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
         {
             // MFC
             // Static
-            if((pPEInfo->nDataSectionOffset)&&(pPEInfo->nDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+            if(XBinary::checkOffsetSize(pPEInfo->osDataSection)&&(pPEInfo->basic_info.bDeepScan))
             {
-                qint64 _nOffset=pPEInfo->nDataSectionOffset;
-                qint64 _nSize=pPEInfo->nDataSectionSize;
+                qint64 _nOffset=pPEInfo->osDataSection.nOffset;
+                qint64 _nSize=pPEInfo->osDataSection.nSize;
 
                 qint64 nOffset_MFC=pe.find_ansiString(_nOffset,_nSize,"CMFCComObject");
 
@@ -3980,10 +3995,10 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
 
             if(bVBnew)
             {
-                if((pPEInfo->nCodeSectionOffset)&&(pPEInfo->nCodeSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+                if(XBinary::checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bDeepScan))
                 {
-                    qint64 _nOffset=pPEInfo->nCodeSectionOffset;
-                    qint64 _nSize=pPEInfo->nCodeSectionSize;
+                    qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                    qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
                     qint64 nOffset_Options=pe.find_uint32(_nOffset,_nSize,0x21354256);
 
@@ -4489,11 +4504,10 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
 
             bool bCppExport=XPE::isExportFunctionPresent("__CPPdebugHook",&(pPEInfo->export_header));
 
-            if((pPEInfo->nCodeSectionOffset)&&(pPEInfo->nCodeSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+            if(XBinary::checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bDeepScan))
             {
-                qint64 _nOffset=pPEInfo->nCodeSectionOffset;
-                qint64 _nSize=pPEInfo->nCodeSectionSize;
-
+                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
                 nOffset_TObject=pe.find_array(_nOffset,_nSize,"\x07\x54\x4f\x62\x6a\x65\x63\x74",8); // TObject
 
@@ -4519,10 +4533,10 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                 //            nOffset_WideString=pe.find_array(_nOffset,_nSize,"\x0a\x57\x69\x64\x65\x53\x74\x72\x69\x6e\x67",11); // WideString
             }
 
-            if((pPEInfo->nDataSectionOffset)&&(pPEInfo->nDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+            if(XBinary::checkOffsetSize(pPEInfo->osDataSection)&&(pPEInfo->basic_info.bDeepScan))
             {
-                qint64 _nOffset=pPEInfo->nDataSectionOffset;
-                qint64 _nSize=pPEInfo->nDataSectionSize;
+                qint64 _nOffset=pPEInfo->osDataSection.nOffset;
+                qint64 _nSize=pPEInfo->osDataSection.nSize;
 
                 nOffset_BorlandCPP=pe.find_array(_nOffset,_nSize,"\x42\x6f\x72\x6c\x61\x6e\x64\x20\x43\x2b\x2b\x20\x2d\x20\x43\x6f\x70\x79\x72\x69\x67\x68\x74\x20",24); // Borland C++ - Copyright 1994 Borland Intl.
 
@@ -4908,10 +4922,10 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
         }
 
         // Flex
-        if((pPEInfo->nDataSectionOffset)&&(pPEInfo->nDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+        if(XBinary::checkOffsetSize(pPEInfo->osDataSection)&&(pPEInfo->basic_info.bDeepScan))
         {
-            qint64 _nOffset=pPEInfo->nDataSectionOffset;
-            qint64 _nSize=pPEInfo->nDataSectionSize;
+            qint64 _nOffset=pPEInfo->osDataSection.nOffset;
+            qint64 _nSize=pPEInfo->osDataSection.nSize;
             // TODO FPC Version in Major and Minor linker
 
             qint64 nOffset_FlexLM=pe.find_ansiString(_nOffset,_nSize,"@(#) FLEXlm ");
@@ -4989,10 +5003,10 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                 pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if((pPEInfo->nDataSectionOffset)&&(pPEInfo->nDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+            if(XBinary::checkOffsetSize(pPEInfo->osDataSection)&&(pPEInfo->basic_info.bDeepScan))
             {
-                qint64 _nOffset=pPEInfo->nDataSectionOffset;
-                qint64 _nSize=pPEInfo->nDataSectionSize;
+                qint64 _nOffset=pPEInfo->osDataSection.nOffset;
+                qint64 _nSize=pPEInfo->osDataSection.nSize;
                 // TODO FPC Version in Major and Minor linker
 
                 qint64 nOffset_FPC=pe.find_ansiString(_nOffset,_nSize,"FPC ");
@@ -5066,10 +5080,10 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             }
 
             // Virtual Pascal
-            if((pPEInfo->nDataSectionOffset)&&(pPEInfo->nDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+            if(XBinary::checkOffsetSize(pPEInfo->osDataSection)&&(pPEInfo->basic_info.bDeepScan))
             {
-                qint64 _nOffset=pPEInfo->nDataSectionOffset;
-                qint64 _nSize=pPEInfo->nDataSectionSize;
+                qint64 _nOffset=pPEInfo->osDataSection.nOffset;
+                qint64 _nSize=pPEInfo->osDataSection.nSize;
                 // TODO VP Version in Major and Minor linker
 
                 qint64 nOffset_VP=pe.find_ansiString(_nOffset,_nSize,"Virtual Pascal - Copyright (C) "); // "Virtual Pascal - Copyright (C) 1996-2000 vpascal.com"
@@ -5085,10 +5099,10 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             }
 
             // PowerBASIC
-            if((pPEInfo->nCodeSectionOffset)&&(pPEInfo->nCodeSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+            if(XBinary::checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bDeepScan))
             {
-                qint64 _nOffset=pPEInfo->nCodeSectionOffset;
-                qint64 _nSize=pPEInfo->nCodeSectionSize;
+                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                qint64 _nSize=pPEInfo->osCodeSection.nSize;
                 // TODO VP Version in Major and Minor linker
 
                 qint64 nOffset_PB=pe.find_ansiString(_nOffset,_nSize,"PowerBASIC");
@@ -5201,9 +5215,9 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
 
             QString sDllLib;
 
-            if((pPEInfo->nConstDataSectionOffset)&&(pPEInfo->nConstDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+            if(XBinary::checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bDeepScan))
             {
-                sDllLib=pe.read_ansiString(pPEInfo->nConstDataSectionOffset);
+                sDllLib=pe.read_ansiString(pPEInfo->osConstDataSection.nOffset);
             }
 
             if(XPE::isImportLibraryPresentI("msys-1.0.dll",&(pPEInfo->listImports)))
@@ -5229,62 +5243,36 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
             {
                 // Mingw
                 // Msys
-                if((pPEInfo->nConstDataSectionOffset)&&(pPEInfo->nConstDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+                if(XBinary::checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bDeepScan))
                 {
-                    qint64 _nOffset=pPEInfo->nConstDataSectionOffset;
-                    qint64 _nSize=pPEInfo->nConstDataSectionSize;
+                    VI_STRUCT viStruct=get_GCC_vi1(pDevice,bIsImage,pPEInfo->osConstDataSection.nOffset,pPEInfo->osConstDataSection.nSize);
 
-                    // TODO get max version
-                    qint64 nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"GCC:");
+                    recordCompiler.sVersion=viStruct.sVersion;
 
-                    if(nOffset_Version!=-1)
+                    // TODO MinGW-w64
+                    if(viStruct.sInfo.contains("MinGW"))
                     {
-                        QString sVersionString=pe.read_ansiString(nOffset_Version);
-
-                        // TODO MinGW-w64
-                        if(sVersionString.contains("MinGW"))
-                        {
-                            recordTool.type=RECORD_TYPE_TOOL;
-                            recordTool.name=RECORD_NAME_MINGW;
-                        }
-                        else if(sVersionString.contains("MSYS2"))
-                        {
-                            recordTool.type=RECORD_TYPE_TOOL;
-                            recordTool.name=RECORD_NAME_MSYS2;
-                        }
-                        else if(sVersionString.contains("Cygwin"))
-                        {
-                            recordTool.type=RECORD_TYPE_TOOL;
-                            recordTool.name=RECORD_NAME_CYGWIN;
-                        }
-
-                        // TODO function
-                        if((sVersionString.contains("(experimental)"))||
-                                (sVersionString.contains("(prerelease)")))
-                        {
-                            recordCompiler.sVersion=sVersionString.section(" ",-3,-1); // TODO Check
-                        }
-                        else if(sVersionString.contains("GNU"))
-                        {
-                            recordCompiler.sVersion=sVersionString.section(" ",2,-1);
-                        }
-                        else if(sVersionString.contains("Rev1, Built by MSYS2 project"))
-                        {
-                            recordCompiler.sVersion=sVersionString.section(" ",-2,-1);
-                        }
-                        else
-                        {
-                            recordCompiler.sVersion=sVersionString.section(" ",-1,-1);
-                        }
+                        recordTool.type=RECORD_TYPE_TOOL;
+                        recordTool.name=RECORD_NAME_MINGW;
+                    }
+                    else if(viStruct.sInfo.contains("MSYS2"))
+                    {
+                        recordTool.type=RECORD_TYPE_TOOL;
+                        recordTool.name=RECORD_NAME_MSYS2;
+                    }
+                    else if(viStruct.sInfo.contains("Cygwin"))
+                    {
+                        recordTool.type=RECORD_TYPE_TOOL;
+                        recordTool.name=RECORD_NAME_CYGWIN;
                     }
 
                     if(recordCompiler.sVersion=="")
                     {
                         QString _sGCCVersion;
 
-                        if((pPEInfo->nConstDataSectionOffset)&&(pPEInfo->nConstDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+                        if(XBinary::checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bDeepScan))
                         {
-                            _sGCCVersion=PE_get_GCC_vi(pDevice,bIsImage,pPEInfo->nConstDataSectionOffset,pPEInfo->nConstDataSectionSize).sVersion;
+                            _sGCCVersion=get_GCC_vi2(pDevice,bIsImage,pPEInfo->osConstDataSection.nOffset,pPEInfo->osConstDataSection.nSize).sVersion;
 
                             if(_sGCCVersion!="")
                             {
@@ -5294,9 +5282,9 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
 
                         if(_sGCCVersion=="")
                         {
-                            if((pPEInfo->nDataSectionOffset)&&(pPEInfo->nDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+                            if(XBinary::checkOffsetSize(pPEInfo->osDataSection)&&(pPEInfo->basic_info.bDeepScan))
                             {
-                                _sGCCVersion=PE_get_GCC_vi(pDevice,bIsImage,pPEInfo->nDataSectionOffset,pPEInfo->nDataSectionSize).sVersion;
+                                _sGCCVersion=get_GCC_vi2(pDevice,bIsImage,pPEInfo->osDataSection.nOffset,pPEInfo->osDataSection.nSize).sVersion;
 
                                 if(_sGCCVersion!="")
                                 {
@@ -5492,10 +5480,10 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                 {
                     ss.sInfo="Uninstall";
 
-                    if((pPEInfo->nCodeSectionOffset)&&(pPEInfo->nCodeSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+                    if(XBinary::checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bDeepScan))
                     {
-                        qint64 _nOffset=pPEInfo->nCodeSectionOffset;
-                        qint64 _nSize=pPEInfo->nCodeSectionSize;
+                        qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                        qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
                         qint64 nOffsetVersion=pe.find_ansiString(_nOffset,_nSize,"Setup version: Inno Setup version ");
 
@@ -5741,10 +5729,10 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_INSTALLSHIELD,"","",0);
 
-                if((pPEInfo->nDataSectionOffset)&&(pPEInfo->nDataSectionSize)&&(pPEInfo->basic_info.bDeepScan))
+                if(XBinary::checkOffsetSize(pPEInfo->osDataSection)&&(pPEInfo->basic_info.bDeepScan))
                 {
-                    qint64 _nOffset=pPEInfo->nDataSectionOffset;
-                    qint64 _nSize=pPEInfo->nDataSectionSize;
+                    qint64 _nOffset=pPEInfo->osDataSection.nOffset;
+                    qint64 _nSize=pPEInfo->osDataSection.nSize;
 
                     qint64 nOffsetVersion=pe.find_ansiString(_nOffset,_nSize,"SOFTWARE\\InstallShield\\1");
 
@@ -6650,15 +6638,29 @@ void SpecAbstract::ELF_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstrac
 
     if(elf.isValid())
     {
+        SpecAbstract::_SCANS_STRUCT recordCompiler= {};
         // GCC
         if(XELF::isSectionNamePresent(".gcc_except_table",&(pELFInfo->listSectionRecords)))
         {
-            SpecAbstract::_SCANS_STRUCT recordSS= {};
+            recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
+            recordCompiler.name=SpecAbstract::RECORD_NAME_GCC;
+        }
 
-            recordSS.type=SpecAbstract::RECORD_TYPE_COMPILER;
-            recordSS.name=SpecAbstract::RECORD_NAME_GCC;
+        if(XBinary::checkOffsetSize(pELFInfo->osCommentSection))
+        {
+            VI_STRUCT viStruct=get_GCC_vi1(pDevice,bIsImage,pELFInfo->osCommentSection.nOffset,pELFInfo->osCommentSection.nSize);
 
-            pELFInfo->mapResultCompilers.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+            if(viStruct.sVersion!="")
+            {
+                recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
+                recordCompiler.name=SpecAbstract::RECORD_NAME_GCC;
+                recordCompiler.sVersion=viStruct.sVersion;
+            }
+        }
+
+        if(recordCompiler.type!=SpecAbstract::RECORD_TYPE_UNKNOWN)
+        {
+            pELFInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pELFInfo->basic_info),&recordCompiler));
         }
     }
 }
@@ -6768,8 +6770,8 @@ SpecAbstract::VI_STRUCT SpecAbstract::PE_get_UPX_vi(QIODevice *pDevice,bool bIsI
     XBinary binary(pDevice);
 
     // TODO make both
-    qint64 nStringOffset1=binary.find_array(pPEInfo->nHeaderOffset,pPEInfo->nHeaderSize,"\x24\x49\x64\x3a\x20\x55\x50\x58\x20",9);
-    qint64 nStringOffset2=binary.find_array(pPEInfo->nHeaderOffset,pPEInfo->nHeaderSize,"\x55\x50\x58\x21",4);
+    qint64 nStringOffset1=binary.find_array(pPEInfo->osHeader.nOffset,pPEInfo->osHeader.nSize,"\x24\x49\x64\x3a\x20\x55\x50\x58\x20",9);
+    qint64 nStringOffset2=binary.find_array(pPEInfo->osHeader.nOffset,pPEInfo->osHeader.nSize,"\x55\x50\x58\x21",4);
 
     if(nStringOffset1!=-1)
     {
@@ -6782,7 +6784,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::PE_get_UPX_vi(QIODevice *pDevice,bool bIsI
         }
 
         // NRV
-        qint64 nNRVStringOffset1=binary.find_array(pPEInfo->nHeaderOffset,pPEInfo->nHeaderSize,"\x24\x49\x64\x3a\x20\x4e\x52\x56\x20",9);
+        qint64 nNRVStringOffset1=binary.find_array(pPEInfo->osHeader.nOffset,pPEInfo->osHeader.nOffset,"\x24\x49\x64\x3a\x20\x4e\x52\x56\x20",9);
 
         if(nNRVStringOffset1!=-1)
         {
@@ -9383,7 +9385,56 @@ SpecAbstract::VI_STRUCT SpecAbstract::PE_get_Armadillo_vi(QIODevice *pDevice,boo
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::PE_get_GCC_vi(QIODevice *pDevice,bool bIsImage, qint64 nOffset, qint64 nSize)
+SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi1(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+{
+    VI_STRUCT result={};
+
+    XBinary binary(pDevice,bIsImage);
+
+    // TODO get max version
+    qint64 nOffset_Version=binary.find_ansiString(nOffset,nSize,"GCC:");
+
+    if(nOffset_Version!=-1)
+    {
+        QString sVersionString=binary.read_ansiString(nOffset_Version);
+
+        // TODO MinGW-w64
+        if(sVersionString.contains("MinGW"))
+        {
+            result.sInfo="MinGW";
+        }
+        else if(sVersionString.contains("MSYS2"))
+        {
+            result.sInfo="MSYS2";
+        }
+        else if(sVersionString.contains("Cygwin"))
+        {
+            result.sInfo="Cygwin";
+        }
+
+        if((sVersionString.contains("(experimental)"))||
+                (sVersionString.contains("(prerelease)")))
+        {
+            result.sVersion=sVersionString.section(" ",-3,-1); // TODO Check
+        }
+        else if(sVersionString.contains("GNU"))
+        {
+            result.sVersion=sVersionString.section(" ",2,-1);
+        }
+        else if(sVersionString.contains("Rev1, Built by MSYS2 project"))
+        {
+            result.sVersion=sVersionString.section(" ",-2,-1);
+        }
+        else
+        {
+            result.sVersion=sVersionString.section(" ",-1,-1);
+        }
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi2(QIODevice *pDevice,bool bIsImage, qint64 nOffset, qint64 nSize)
 {
     VI_STRUCT result;
 

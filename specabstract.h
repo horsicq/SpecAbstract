@@ -453,14 +453,19 @@ public:
         QString sEntryPointSignature;
         // TODO
         bool bIs64;
-        quint32 nSectionStringTable;
-        QByteArray baStringTable;
+
         QList<XELF::TAG_STRUCT> listTags;
         QList<QString> listLibraries;
 
         QList<XELF_DEF::Elf_Shdr> listSectionHeaders;
         QList<XELF_DEF::Elf_Phdr> listProgramHeaders;
         QList<XELF::SECTION_RECORD> listSectionRecords;
+
+        qint32 nCommentSection;
+        qint32 nStringTableSection;
+        QByteArray baStringTable;
+
+        XBinary::OFFSETSIZE osCommentSection;
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
@@ -526,18 +531,12 @@ public:
         quint16 nMajorImageVersion;
         bool bIs64;
 
-        qint64 nHeaderOffset;
-        qint64 nHeaderSize;
-        qint64 nEntryPointSectionOffset;
-        qint64 nEntryPointSectionSize;
-        qint64 nCodeSectionOffset;
-        qint64 nCodeSectionSize;
-        qint64 nDataSectionOffset;
-        qint64 nDataSectionSize;
-        qint64 nConstDataSectionOffset;
-        qint64 nConstDataSectionSize;
-        qint64 nImportSectionOffset;
-        qint64 nImportSectionSize;
+        XBinary::OFFSETSIZE osHeader;
+        XBinary::OFFSETSIZE osEntryPointSection;
+        XBinary::OFFSETSIZE osCodeSection;
+        XBinary::OFFSETSIZE osDataSection;
+        XBinary::OFFSETSIZE osConstDataSection;
+        XBinary::OFFSETSIZE osImportSection;
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
@@ -720,7 +719,8 @@ public:
     static bool checkVersionString(QString sVersion);
     static VI_STRUCT PE_get_UPX_vi(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static VI_STRUCT PE_get_Armadillo_vi(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
-    static VI_STRUCT PE_get_GCC_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
+    static VI_STRUCT get_GCC_vi1(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
+    static VI_STRUCT get_GCC_vi2(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
 
     static bool PE_isValid_UPX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 
