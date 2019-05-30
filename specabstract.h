@@ -661,7 +661,7 @@ public:
     static QString createTypeString(const SCAN_STRUCT *pScanStruct);
     static SCAN_STRUCT createHeaderScanStruct(const SCAN_STRUCT *pScanStruct);
 
-    static QString findEnigmaVersion(QIODevice *pDevice,qint64 nOffset,qint64 nSize);
+    static QString findEnigmaVersion(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
 
     static BINARYINFO_STRUCT getBinaryInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);
     static MSDOSINFO_STRUCT getMSDOSInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);

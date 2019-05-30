@@ -731,11 +731,11 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::createHeaderScanStruct(const SpecAbstrac
 }
 
 // TODO VI
-QString SpecAbstract::findEnigmaVersion(QIODevice *pDevice, qint64 nOffset, qint64 nSize)
+QString SpecAbstract::findEnigmaVersion(QIODevice *pDevice,bool bIsImage, qint64 nOffset, qint64 nSize)
 {
     QString sResult;
 
-    XBinary binary(pDevice);
+    XBinary binary(pDevice,bIsImage);
 
     qint64 _nOffset=binary.find_array(nOffset,nSize,"\x00\x00\x00\x45\x4e\x49\x47\x4d\x41",9); // \x00\x00\x00ENIGMA
 
@@ -2538,7 +2538,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     //                    if((!bDetect)&&(nVariant==1))
                     if(!bDetect)
                     {
-                        QString sEnigmaVersion=findEnigmaVersion(pDevice,nSectionOffset,nSectionSize);
+                        QString sEnigmaVersion=findEnigmaVersion(pDevice,bIsImage,nSectionOffset,nSectionSize);
 
                         if(sEnigmaVersion!="")
                         {
@@ -3674,7 +3674,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 qint64 nSectionOffset=pPEInfo->osCodeSection.nOffset;
                 qint64 nSectionSize=pPEInfo->osCodeSection.nSize;
 
-                QString sEnigmaVersion=findEnigmaVersion(pDevice,nSectionOffset,nSectionSize);
+                QString sEnigmaVersion=findEnigmaVersion(pDevice,bIsImage,nSectionOffset,nSectionSize);
 
                 if(sEnigmaVersion!="")
                 {
