@@ -900,6 +900,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         result.sEntryPointSignature=elf.getSignature(elf.getEntryPointOffset(),150);
 
         result.bIs64=elf.is64();
+        result.bIsBigEndian=elf.isBigEndian();
 
         result.nStringTableSection=elf.getSectionStringTable(result.bIs64);
         result.baStringTable=elf.getSection(result.nStringTableSection);
@@ -6626,6 +6627,33 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
             recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
             recordSS.name=SpecAbstract::RECORD_NAME_QT;
+
+            XELF::SECTION_RECORD record=XELF::getSectionRecord(".qtversion",&(pELFInfo->listSectionRecords));
+
+            quint64 nVersion=0;
+
+            if(pELFInfo->bIs64)
+            {
+                if(record.nSize==16)
+                {
+                    nVersion=elf.read_uint64(record.nOffset+8,pELFInfo->bIsBigEndian);
+                }
+            }
+            else
+            {
+                if(record.nSize==8)
+                {
+                    nVersion=elf.read_uint32(record.nOffset+4,pELFInfo->bIsBigEndian);
+                }
+            }
+
+            if(nVersion)
+            {
+                recordSS.sVersion=QString("%1.%2.%3")
+                        .arg((nVersion >> 16) & 0xff)
+                        .arg((nVersion >> 8) & 0xff)
+                        .arg((nVersion) & 0xff);
+            }
 
             pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
         }

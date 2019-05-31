@@ -453,6 +453,7 @@ public:
         QString sEntryPointSignature;
         // TODO
         bool bIs64;
+        bool bIsBigEndian;
 
         QList<XELF::TAG_STRUCT> listTags;
         QList<QString> listLibraries;
