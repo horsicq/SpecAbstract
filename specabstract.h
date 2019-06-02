@@ -451,7 +451,7 @@ public:
     {
         BASIC_INFO basic_info;
         QString sEntryPointSignature;
-        // TODO
+
         bool bIs64;
         bool bIsBigEndian;
 
@@ -523,7 +523,6 @@ public:
 
         QString sEntryPointSectionName;
 
-        // TODO import
         qint64 nEntryPointAddress;
         qint64 nImageBaseAddress;
         quint8 nMinorLinkerVersion;
