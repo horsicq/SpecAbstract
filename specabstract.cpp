@@ -888,6 +888,9 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
 
     if(elf.isValid())
     {
+        result.bIs64=elf.is64();
+        result.bIsBigEndian=elf.isBigEndian();
+
         result.basic_info.parentId=parentId;
         result.basic_info.id.filetype=result.bIs64?RECORD_FILETYPE_ELF64:RECORD_FILETYPE_ELF32;
         result.basic_info.id.filepart=RECORD_FILEPART_HEADER;
@@ -898,9 +901,6 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         result.basic_info.bDeepScan=pOptions->bDeepScan;
 
         result.sEntryPointSignature=elf.getSignature(elf.getEntryPointOffset(),150);
-
-        result.bIs64=elf.is64();
-        result.bIsBigEndian=elf.isBigEndian();
 
         result.nStringTableSection=elf.getSectionStringTable(result.bIs64);
         result.baStringTable=elf.getSection(result.nStringTableSection);
