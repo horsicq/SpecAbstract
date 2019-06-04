@@ -31,6 +31,8 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_7Z,                           "",             "",                     "'7z'BCAF271C"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_CERTIFICATE,      SpecAbstract::RECORD_NAME_WINAUTH,                      "2.0",          "PKCS #7",              "........00020200"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_MINGW,                        "",             "",                     "'.file'000000"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_PDBFILELINK,                  "2.0",          "",                     "'NB10'"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_PDBFILELINK,                  "7.0",          "",                     "'RSDS'"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_ZIP,                          "",             "",                     "'PK'0304"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_ZIP,                          "",             "Empty",                "'PK'0506"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_PDF,                          "",             "",                     "'%PDF'"},
@@ -556,6 +558,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PACKMAN:                           sResult=QString("Packman");                                     break;
         case RECORD_NAME_PCGUARD:                           sResult=QString("PC Guard");                                    break;
         case RECORD_NAME_PDB:                               sResult=QString("PDB");                                         break;
+        case RECORD_NAME_PDBFILELINK:                       sResult=QString("PDB file link");                               break;
         case RECORD_NAME_PDF:                               sResult=QString("PDF");                                         break;
         case RECORD_NAME_PEARMOR:                           sResult=QString("PE-Armor");                                    break;
         case RECORD_NAME_PEBUNDLE:                          sResult=QString("PEBundle");                                    break;
@@ -6318,10 +6321,17 @@ void SpecAbstract::Binary_handle_DebugData(QIODevice *pDevice,bool bIsImage, Spe
     XBinary binary(pDevice);
     Q_UNUSED(bIsImage);
 
-    // MinGW debug data
     if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MINGW))&&(pBinaryInfo->basic_info.nSize>=8))
     {
+        // MinGW debug data
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MINGW);
+        pBinaryInfo->mapResultDebugData.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PDBFILELINK))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        // PDB File Link
+        // TODO more infos
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PDBFILELINK);
         pBinaryInfo->mapResultDebugData.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 }
