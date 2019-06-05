@@ -273,10 +273,10 @@ SpecAbstract::STRING_RECORD _TEXT_records[]=
 {
     {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_CCPP,                         "",             "",                     "#include [\"<].*?[>\"]"},
     {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_CCPP,                         "",             "header",               "#ifndef (\\w+).*\\s+#define \\1"},
-    {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_PYTHON,                       "",             "",                     "import"},
     {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_HTML,                         "",             "",                     "^<(!DOCTYPE )?[Hh][Tt][Mm][Ll]"},
-    {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_XML,                          "",             "",                     "^<\\?xml"},
     {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_PHP,                          "",             "",                     "^<\\?php"},
+    {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_PYTHON,                       "",             "",                     "import"},
+    {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_XML,                          "",             "",                     "^<\\?xml"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
@@ -2702,7 +2702,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 #ifdef QT_DEBUG
                     qDebug("nBuildNumber: %x",nBuildNumber);
 #endif
-
 
                     switch(nBuildNumber)
                     {
@@ -9343,7 +9342,6 @@ SpecAbstract::VI_STRUCT SpecAbstract::PE_get_Armadillo_vi(QIODevice *pDevice,boo
                     }
                 }
             }
-
         }
 
         if(stDetects.contains("kernel32_1")&&stDetects.contains("user32_1")&&stDetects.contains("gdi32_1"))
@@ -9487,7 +9485,6 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi2(QIODevice *pDevice,bool bIsIma
         result.sVersion=sVersionString.section("-",1,1).section("/",0,0);
     }
 
-
     return result;
 }
 
@@ -9496,16 +9493,18 @@ bool SpecAbstract::PE_isValid_UPX(QIODevice *pDevice,bool bIsImage, SpecAbstract
     Q_UNUSED(pDevice);
     Q_UNUSED(bIsImage);
 
+    bool bResult=false;
+
     if(pPEInfo->listSectionHeaders.count()>=3)
     {
         // pPEInfo->listSections.at(0).SizeOfRawData!=0 dump file
         if((pPEInfo->listSectionHeaders.at(0).SizeOfRawData==0)&&((pPEInfo->nResourceSection==-1)||(pPEInfo->nResourceSection==2)))
         {
-            return true;
+            bResult=true;
         }
     }
 
-    return false;
+    return bResult;
 }
 
 SpecAbstract::SCAN_STRUCT SpecAbstract::scansToScan(SpecAbstract::BASIC_INFO *pBasicInfo, SpecAbstract::_SCANS_STRUCT *pScansStruct)
