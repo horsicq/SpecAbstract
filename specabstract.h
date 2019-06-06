@@ -480,6 +480,8 @@ public:
         QString sEntryPointSignature;
         // TODO
         bool bIs64;
+        bool bIsBigEndian;
+        QList<XMACH::LIBRARY_RECORD> listLibraryRecords;
     };
 
     struct PEINFO_STRUCT

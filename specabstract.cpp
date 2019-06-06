@@ -958,6 +958,7 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
     if(mach.isValid())
     {
         result.bIs64=mach.is64();
+        result.bIsBigEndian=mach.isBigEndian();
 
         result.basic_info.parentId=parentId;
         result.basic_info.id.filetype=result.bIs64?RECORD_FILETYPE_MACH64:RECORD_FILETYPE_MACH32;
@@ -969,6 +970,8 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
         result.basic_info.bDeepScan=pOptions->bDeepScan;
 
         result.sEntryPointSignature=mach.getSignature(mach.getEntryPointOffset(),150);
+
+        result.listLibraryRecords=mach.getLibraryRecords();
 
         if(!result.basic_info.listDetects.count())
         {
@@ -6658,10 +6661,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
             if(nVersion)
             {
-                recordSS.sVersion=QString("%1.%2.%3")
-                        .arg((nVersion >> 16) & 0xff)
-                        .arg((nVersion >> 8) & 0xff)
-                        .arg((nVersion) & 0xff);
+                recordSS.sVersion=XBinary::get_uint32_version(nVersion);
             }
 
             pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
