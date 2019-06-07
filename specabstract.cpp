@@ -973,6 +973,11 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
 
         result.listLibraryRecords=mach.getLibraryRecords();
 
+        MACH_handle_Tools(pDevice,pOptions->bIsImage,&result);
+
+        result.basic_info.listDetects.append(result.mapResultCompilers.values());
+        result.basic_info.listDetects.append(result.mapResultLibraries.values());
+
         if(!result.basic_info.listDetects.count())
         {
             _SCANS_STRUCT ssUnknown= {};
@@ -6634,7 +6639,6 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
         // Qt
         if(XELF::isSectionNamePresent(".qtversion",&(pELFInfo->listSectionRecords)))
         {
-            // TODO version
             SpecAbstract::_SCANS_STRUCT recordSS= {};
 
             recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
@@ -6698,6 +6702,28 @@ void SpecAbstract::ELF_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstrac
         if(recordCompiler.type!=SpecAbstract::RECORD_TYPE_UNKNOWN)
         {
             pELFInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pELFInfo->basic_info),&recordCompiler));
+        }
+    }
+}
+
+void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstract::MACHINFO_STRUCT *pMACHInfo)
+{
+    XELF elf(pDevice,bIsImage);
+
+    if(elf.isValid())
+    {
+        // Qt
+        if(XMACH::isLibraryRecordNamePresent(&(pMACHInfo->listLibraryRecords),"QtCore"))
+        {
+            XMACH::LIBRARY_RECORD lr=XMACH::getLibraryRecordByName(&(pMACHInfo->listLibraryRecords),"QtCore");
+
+            SpecAbstract::_SCANS_STRUCT recordSS= {};
+
+            recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
+            recordSS.name=SpecAbstract::RECORD_NAME_QT;
+            recordSS.sVersion=XBinary::get_uint32_version(lr.current_version);
+
+            pMACHInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
         }
     }
 }
