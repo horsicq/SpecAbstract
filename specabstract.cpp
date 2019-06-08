@@ -279,6 +279,11 @@ SpecAbstract::STRING_RECORD _TEXT_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_XML,                          "",             "",                     "^<\\?xml"},
 };
 
+SpecAbstract::SIGNATURE_RECORD _MSDOS_header_records[]=
+{
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,       SpecAbstract::RECORD_NAME_CRYEXE,                       "4.0",          "",                     "'MZ'....................................................'CryEXE 4.0 By Iosco^DaTo!'"},
+};
+
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
 {
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_COMPILER,        SpecAbstract::RECORD_NAME_IBMPCPASCAL,                  "1.00(1981)",   "",                     "B8....8ED88C06....BA....D1EAB9....2BCAD1EA"},
@@ -440,6 +445,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CREATEINSTALL:                     sResult=QString("CreateInstall");                               break;
         case RECORD_NAME_CRINKLER:                          sResult=QString("Crinkler");                                    break;
         case RECORD_NAME_CRUNCH:                            sResult=QString("Crunch");                                      break;
+        case RECORD_NAME_CRYEXE:                            sResult=QString("CryEXE");                                      break;
         case RECORD_NAME_CRYPTER:                           sResult=QString("Crypter");                                     break;
         case RECORD_NAME_CRYPTOCRACKSPEPROTECTOR:           sResult=QString("CRYPToCRACks PE Protector");                   break;
         case RECORD_NAME_CRYPTOOBFUSCATORFORNET:            sResult=QString("Crypto Obfuscator For .Net");                  break;
@@ -859,11 +865,14 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
 
     result.sEntryPointSignature=msdos.getSignature(msdos.getEntryPointOffset(),150);
 
-    signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_MSDOS_entrypoint_records,sizeof(_MSDOS_entrypoint_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
+    signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_header_records,sizeof(_MSDOS_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS);
+    signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_MSDOS_entrypoint_records,sizeof(_MSDOS_entrypoint_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS);
 
     MSDOS_handle_Tools(pDevice,pOptions->bIsImage,&result);
+    MSDOS_handle_Protection(pDevice,pOptions->bIsImage,&result);
 
     result.basic_info.listDetects.append(result.mapResultCompilers.values());
+    result.basic_info.listDetects.append(result.mapResultProtectors.values());
 
     if(!result.basic_info.listDetects.count())
     {
@@ -6626,6 +6635,21 @@ void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
         {
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_IBMPCPASCAL);
             pMSDOSInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+    }
+}
+
+void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
+{
+    XMSDOS msdos(pDevice,bIsImage);
+
+    if(msdos.isValid())
+    {
+        // IBM PC Pascal
+        if(pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_CRYEXE))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CRYEXE);
+            pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
 }
