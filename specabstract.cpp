@@ -282,6 +282,7 @@ SpecAbstract::STRING_RECORD _TEXT_records[]=
 SpecAbstract::SIGNATURE_RECORD _MSDOS_header_records[]=
 {
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,       SpecAbstract::RECORD_NAME_CRYEXE,                       "4.0",          "",                     "'MZ'....................................................'CryEXE 4.0 By Iosco^DaTo!'"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,       SpecAbstract::RECORD_NAME_LSCRYPRT,                     "1.21",         "",                     "4D5A....................................................'L.S.    Crypt By'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
@@ -520,6 +521,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LAZARUS:                           sResult=QString("Lazarus");                                     break;
         case RECORD_NAME_LCCLNK:                            sResult=QString("lcclnk");                                      break;
         case RECORD_NAME_LCCWIN:                            sResult=QString("lcc-win");                                     break;
+        case RECORD_NAME_LSCRYPRT:                          sResult=QString("LSCRYPT");                                     break;
         case RECORD_NAME_LUACOMPILED:                       sResult=QString("Lua compiled");                                break;
         case RECORD_NAME_MACROBJECT:                        sResult=QString("Macrobject");                                  break;
         case RECORD_NAME_MASKPE:                            sResult=QString("MaskPE");                                      break;
@@ -6645,10 +6647,14 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
 
     if(msdos.isValid())
     {
-        // IBM PC Pascal
         if(pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_CRYEXE))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CRYEXE);
+            pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+        if(pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LSCRYPRT))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LSCRYPRT);
             pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
