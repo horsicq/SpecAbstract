@@ -282,7 +282,8 @@ SpecAbstract::STRING_RECORD _TEXT_records[]=
 SpecAbstract::SIGNATURE_RECORD _MSDOS_header_records[]=
 {
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,       SpecAbstract::RECORD_NAME_CRYEXE,                       "4.0",          "",                     "'MZ'....................................................'CryEXE 4.0 By Iosco^DaTo!'"},
-    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,       SpecAbstract::RECORD_NAME_LSCRYPRT,                     "1.21",         "",                     "4D5A....................................................'L.S.    Crypt By'"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,       SpecAbstract::RECORD_NAME_LSCRYPRT,                     "1.21",         "",                     "'MZ'....................................................'L.S.    Crypt By'"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,       SpecAbstract::RECORD_NAME_PACKWIN,                      "1.0",          "",                     "'MZ'........................................................'YRZLITE (C) 1993 WYellow Rose'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
@@ -291,6 +292,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_COMPILER,        SpecAbstract::RECORD_NAME_IBMPCPASCAL,                  "2.00(1984)",   "",                     "B8....8ED88C06....FA8ED0268B1E....2BD881FB....7E..BB....D1E3"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_COMPILER,        SpecAbstract::RECORD_NAME_IBMPCPASCAL,                  "2.02(1987)",   "",                     "2E8E1E....8CD08CDB2BC3D1E0"}, // TODO Check
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_COMPILER,        SpecAbstract::RECORD_NAME_IBMPCPASCAL,                  "2.05(1987)",   "",                     "B8....8ED88BD08C06....268B1E....891E....2BD8F7C3....75..B1..D3E3"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,       SpecAbstract::RECORD_NAME_PACKWIN,                      "1.0",          "",                     "8CC0FA8ED0BC....FB060E1F2E8B0E....8BF14E8BFE8CDB2E031E....8EC3FDF3A453B8....50CB"},
 };
 
 SpecAbstract::SpecAbstract(QObject *parent)
@@ -564,6 +566,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_OPERA:                             sResult=QString("Opera");                                       break;
         case RECORD_NAME_ORIEN:                             sResult=QString("ORiEN");                                       break;
         case RECORD_NAME_PACKMAN:                           sResult=QString("Packman");                                     break;
+        case RECORD_NAME_PACKWIN:                           sResult=QString("PACKWIN");                                     break;
         case RECORD_NAME_PCGUARD:                           sResult=QString("PC Guard");                                    break;
         case RECORD_NAME_PDB:                               sResult=QString("PDB");                                         break;
         case RECORD_NAME_PDBFILELINK:                       sResult=QString("PDB file link");                               break;
@@ -6655,6 +6658,11 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
         if(pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LSCRYPRT))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LSCRYPRT);
+            pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+        if(pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PACKWIN))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PACKWIN);
             pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
