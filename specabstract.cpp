@@ -6222,6 +6222,11 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
                         {
                             ss.name=RECORD_NAME_MICROSOFTVISIO;
                         }
+                        else if(sApplication=="SheetJS")
+                        {
+                            ss.name=RECORD_NAME_MICROSOFTEXCEL;
+                            ss.sInfo="SheetJS";
+                        }
 
                         ss.sVersion=XBinary::regExp("<AppVersion>(.*?)</AppVersion>",sData,1);
                         pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
