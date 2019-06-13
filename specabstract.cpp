@@ -6242,7 +6242,25 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
                         // TODO
                         _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_BINARY,RECORD_TYPE_ARCHIVE,RECORD_NAME_JAR,"","",0);
 
-                        ss.sVersion=XBinary::regExp("Created-By: (.*?)\n",sData,1);
+                        QString sVendor=XBinary::regExp("Specification-Vendor: (.*?)\n",sData,1);
+                        QString sVersion=XBinary::regExp("Specification-Version: (.*?)\n",sData,1);
+                        QString sImpVendor=XBinary::regExp("Implementation-Vendor: (.*?)\n",sData,1);
+                        QString sImpVersion=XBinary::regExp("Implementation-Version: (.*?)\n",sData,1);
+
+                        if((sImpVendor!="")&&(sImpVersion!=""))
+                        {
+                            ss.sVersion=sImpVendor+"-"+sImpVersion;
+                        }
+
+                        if(ss.sVersion=="")
+                        {
+                            if((sVendor!="")&&(sVersion!=""))
+                            {
+                                ss.sVersion=sVendor+"-"+sVersion;
+                            }
+                        }
+
+//                        ss.sInfo=XBinary::regExp("Created-By: (.*?)\n",sData,1);
 
                         if(ss.sVersion!="")
                         {
