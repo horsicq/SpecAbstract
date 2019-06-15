@@ -6665,6 +6665,7 @@ void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_IBMPCPASCAL);
             pMSDOSInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
+
         if(pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_TURBOLINKER))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_TURBOLINKER);
@@ -6672,6 +6673,21 @@ void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
             ss.sVersion=QString::number((double)msdos.read_uint8(0x1F)/16,'f',1);
 
             pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+
+            if(pMSDOSInfo->basic_info.bDeepScan)
+            {
+                qint64 _nOffset=0;
+                qint64 _nSize=pMSDOSInfo->basic_info.nSize;
+
+                qint64 nOffsetVersion=msdos.find_ansiString(_nOffset,_nSize,"Borland C++");
+
+                if(nOffsetVersion!=-1)
+                {
+                    // TODO version
+                    _SCANS_STRUCT ssCompiler=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_COMPILER,RECORD_NAME_BORLANDCPP,"","",0);
+                    pMSDOSInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pMSDOSInfo->basic_info),&ssCompiler));
+                }
+            }
         }
     }
 }
