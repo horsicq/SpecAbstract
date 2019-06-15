@@ -877,6 +877,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     MSDOS_handle_Tools(pDevice,pOptions->bIsImage,&result);
     MSDOS_handle_Protection(pDevice,pOptions->bIsImage,&result);
 
+    result.basic_info.listDetects.append(result.mapResultLinkers.values());
     result.basic_info.listDetects.append(result.mapResultCompilers.values());
     result.basic_info.listDetects.append(result.mapResultProtectors.values());
 
@@ -6672,7 +6673,7 @@ void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
             ss.sVersion=QString::number((double)msdos.read_uint8(0x1F)/16,'f',1);
 
-            pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+            pMSDOSInfo->mapResultLinkers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
 
             if(pMSDOSInfo->basic_info.bDeepScan)
             {
@@ -6683,8 +6684,15 @@ void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
                 if(nOffsetVersion!=-1)
                 {
+                    QString sBorlandString=msdos.read_ansiString(nOffsetVersion);
                     // TODO version
                     _SCANS_STRUCT ssCompiler=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_COMPILER,RECORD_NAME_BORLANDCPP,"","",0);
+
+                    if(sBorlandString=="Borland C++ - Copyright 1991 Borland Intl.")
+                    {
+                        ssCompiler.sVersion="1991";
+                    }
+
                     pMSDOSInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pMSDOSInfo->basic_info),&ssCompiler));
                 }
             }

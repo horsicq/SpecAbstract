@@ -448,6 +448,7 @@ public:
         QString sEntryPointSignature;
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
     };
