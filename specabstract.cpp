@@ -2399,7 +2399,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
         {
             // TODO MPRESS import
 
-            VI_STRUCT viUPX=PE_get_UPX_vi(pDevice,bIsImage,pPEInfo);
+            VI_STRUCT viUPX=get_UPX_vi(pDevice,bIsImage,pPEInfo->osHeader.nOffset,pPEInfo->osHeader.nSize);
 
             // UPX
             // TODO 32-64
@@ -6918,7 +6918,7 @@ bool SpecAbstract::checkVersionString(QString sVersion)
     return bResult;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::PE_get_UPX_vi(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo)
+SpecAbstract::VI_STRUCT SpecAbstract::get_UPX_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
 {
     Q_UNUSED(bIsImage);
     // TODO unknown vesrion
@@ -6927,8 +6927,8 @@ SpecAbstract::VI_STRUCT SpecAbstract::PE_get_UPX_vi(QIODevice *pDevice,bool bIsI
     XBinary binary(pDevice);
 
     // TODO make both
-    qint64 nStringOffset1=binary.find_array(pPEInfo->osHeader.nOffset,pPEInfo->osHeader.nSize,"\x24\x49\x64\x3a\x20\x55\x50\x58\x20",9);
-    qint64 nStringOffset2=binary.find_array(pPEInfo->osHeader.nOffset,pPEInfo->osHeader.nSize,"\x55\x50\x58\x21",4);
+    qint64 nStringOffset1=binary.find_array(nOffset,nSize,"\x24\x49\x64\x3a\x20\x55\x50\x58\x20",9);
+    qint64 nStringOffset2=binary.find_array(nOffset,nSize,"\x55\x50\x58\x21",4);
 
     if(nStringOffset1!=-1)
     {
@@ -6941,7 +6941,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::PE_get_UPX_vi(QIODevice *pDevice,bool bIsI
         }
 
         // NRV
-        qint64 nNRVStringOffset1=binary.find_array(pPEInfo->osHeader.nOffset,pPEInfo->osHeader.nOffset,"\x24\x49\x64\x3a\x20\x4e\x52\x56\x20",9);
+        qint64 nNRVStringOffset1=binary.find_array(nOffset,nSize,"\x24\x49\x64\x3a\x20\x4e\x52\x56\x20",9);
 
         if(nNRVStringOffset1!=-1)
         {

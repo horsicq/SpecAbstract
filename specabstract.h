@@ -732,7 +732,7 @@ public:
     static bool isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pList,RECORD_FILETYPE filetype,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo);
 
     static bool checkVersionString(QString sVersion);
-    static VI_STRUCT PE_get_UPX_vi(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+    static VI_STRUCT get_UPX_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT PE_get_Armadillo_vi(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static VI_STRUCT get_GCC_vi1(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_GCC_vi2(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
