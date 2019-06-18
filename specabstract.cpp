@@ -27,7 +27,10 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_INNOSETUP,                    "",             "Install",              "'zlb'1A"}, // TODO none
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_INNOSETUP,                    "",             "Uninstall",            "'Inno Setup Messages'"},  // TODO check
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_CAB,                          "",             "",                     "'MSCF'"},
-    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_ZLIB,                         "",             "",                     "78"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_ZLIB,                         "",             "level 1(no/low)",      "7801"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_ZLIB,                         "",             "level 2-5",            "785E"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_ZLIB,                         "",             "level 6(default)",     "789C"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_ZLIB,                         "",             "level 7-9(best)",      "78DA"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_7Z,                           "",             "",                     "'7z'BCAF271C"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_CERTIFICATE,      SpecAbstract::RECORD_NAME_WINAUTH,                      "2.0",          "PKCS #7",              "........00020200"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_MINGW,                        "",             "",                     "'.file'000000"},
@@ -579,6 +582,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PELOCK:                            sResult=QString("PELock");                                      break;
         case RECORD_NAME_PEPACK:                            sResult=QString("PE-PACK");                                     break;
         case RECORD_NAME_PEQUAKE:                           sResult=QString("PE Quake");                                    break;
+        case RECORD_NAME_PERL:                              sResult=QString("Perl");                                        break;
         case RECORD_NAME_PESPIN:                            sResult=QString("PESpin");                                      break;
         case RECORD_NAME_PETITE:                            sResult=QString("Petite");                                      break;
         case RECORD_NAME_PEX:                               sResult=QString("PeX");                                         break;
@@ -5083,6 +5087,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                 }
             }
 
+            // Python
             for(int i=0; i<pPEInfo->listImports.count(); i++)
             {
                 if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^PYTHON")))
@@ -5098,6 +5103,30 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                             _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_PYTHON,"","",0);
 
                             ss.sVersion=QString::number(dVersion/10,'f',1);
+                            pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                        }
+                    }
+
+                    break;
+                }
+            }
+
+            // Perl
+            for(int i=0; i<pPEInfo->listImports.count(); i++)
+            {
+                if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^PERL")))
+                {
+                    QString sVersion=XBinary::regExp("(\\d+)",pPEInfo->listImports.at(i).sName.toUpper(),0);
+
+                    if(sVersion!="")
+                    {
+                        double dVersion=sVersion.toDouble();
+
+                        if(dVersion)
+                        {
+                            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_PERL,"","",0);
+
+                            ss.sVersion=QString::number(dVersion/100,'f',2);
                             pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                         }
                     }
@@ -5222,6 +5251,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
                     case 2:
                         switch(pPEInfo->nMinorLinkerVersion) // TODO Check MinGW versions
                         {
+                            case 22:
                             case 23:
                             case 24:
                             case 25:
@@ -5334,6 +5364,22 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
                 if(recordCompiler.sVersion!="")
                 {
                     bDetectGCC=true;
+                }
+
+                if(!bDetectGCC)
+                {
+                    if(pPEInfo->basic_info.bDeepScan)
+                    {
+                        qint64 nGCC_MinGW=pe.find_ansiString(pPEInfo->osConstDataSection.nOffset,pPEInfo->osConstDataSection.nSize,"Mingw-w64 runtime failure:");
+
+                        if(nGCC_MinGW!=-1)
+                        {
+                            recordTool.type=RECORD_TYPE_TOOL;
+                            recordTool.name=RECORD_NAME_MINGW;
+
+                            bDetectGCC=true;
+                        }
+                    }
                 }
 
                 if(bDetectGCC)
