@@ -993,6 +993,9 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
 
         result.listLibraryRecords=mach.getLibraryRecords();
 
+        // TODO Segments
+        // TODO Sections
+
         MACH_handle_Tools(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
