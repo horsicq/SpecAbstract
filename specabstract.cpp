@@ -3153,6 +3153,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     qint64 _nOffset=0;
                     QString _sVersion;
 
+                    // TODO a function
                     while(true)
                     {
                         bool bContinue=false;
