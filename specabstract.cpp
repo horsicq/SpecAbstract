@@ -946,9 +946,11 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
 
         ELF_handle_GCC(pDevice,pOptions->bIsImage,&result);
         ELF_handle_Tools(pDevice,pOptions->bIsImage,&result);
+        ELF_handle_Protection(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
+        result.basic_info.listDetects.append(result.mapResultPackers.values());
 
         if(!result.basic_info.listDetects.count())
         {
@@ -6850,6 +6852,31 @@ void SpecAbstract::ELF_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstrac
     }
 }
 
+void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecAbstract::ELFINFO_STRUCT *pELFInfo)
+{
+    XELF elf(pDevice,bIsImage);
+
+    if(elf.isValid())
+    {
+        // TODO
+//        qint64 nHeaderOffset=0;
+//        qint64 nHeaderSize=qMin((qint64)0x1000,pELFInfo->basic_info.nSize);
+//        VI_STRUCT viUPX=get_UPX_vi(pDevice,bIsImage,nHeaderOffset,nHeaderSize);
+
+//        if(viUPX.sVersion!="")
+//        {
+//            SpecAbstract::_SCANS_STRUCT recordUPX= {};
+
+//            recordUPX.type=RECORD_TYPE_PACKER;
+//            recordUPX.name=RECORD_NAME_UPX;
+//            recordUPX.sVersion=viUPX.sVersion;
+//            recordUPX.sInfo=viUPX.sInfo;
+
+//            pELFInfo->mapResultPackers.insert(recordUPX.name,scansToScan(&(pELFInfo->basic_info),&recordUPX));
+//        }
+    }
+}
+
 void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstract::MACHINFO_STRUCT *pMACHInfo)
 {
     XELF elf(pDevice,bIsImage);
@@ -6970,6 +6997,7 @@ bool SpecAbstract::checkVersionString(QString sVersion)
 
 SpecAbstract::VI_STRUCT SpecAbstract::get_UPX_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
 {
+    // TODO PE
     Q_UNUSED(bIsImage);
     // TODO unknown vesrion
     VI_STRUCT result;
@@ -6977,8 +7005,8 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_UPX_vi(QIODevice *pDevice, bool bIsIma
     XBinary binary(pDevice);
 
     // TODO make both
-    qint64 nStringOffset1=binary.find_array(nOffset,nSize,"\x24\x49\x64\x3a\x20\x55\x50\x58\x20",9);
-    qint64 nStringOffset2=binary.find_array(nOffset,nSize,"\x55\x50\x58\x21",4);
+    qint64 nStringOffset1=binary.find_array(nOffset,nSize,"$Id: UPX",9);
+    qint64 nStringOffset2=binary.find_ansiString(nOffset,nSize,"UPX!");
 
     if(nStringOffset1!=-1)
     {

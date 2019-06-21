@@ -478,6 +478,7 @@ public:
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
     };
 
     struct MACHINFO_STRUCT
@@ -723,6 +724,7 @@ public:
 
     static void ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, ELFINFO_STRUCT *pELFInfo);
     static void ELF_handle_GCC(QIODevice *pDevice,bool bIsImage, ELFINFO_STRUCT *pELFInfo);
+    static void ELF_handle_Protection(QIODevice *pDevice,bool bIsImage, ELFINFO_STRUCT *pELFInfo);
 
     static void MACH_handle_Tools(QIODevice *pDevice,bool bIsImage, MACHINFO_STRUCT *pMACHInfo);
 
