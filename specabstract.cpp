@@ -1186,6 +1186,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_Protection(pDevice,pOptions->bIsImage,&result);
         PE_handle_VMProtect(pDevice,pOptions->bIsImage,&result);
         PE_handle_Armadillo(pDevice,pOptions->bIsImage,&result);
+        PE_handle_Obsidium(pDevice,pOptions->bIsImage,&result);
         PE_handle_StarForce(pDevice,pOptions->bIsImage,&result);
         PE_handle_Petite(pDevice,pOptions->bIsImage,&result);
         PE_handle_NETProtection(pDevice,pOptions->bIsImage,&result);
@@ -3531,6 +3532,19 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
 
                 pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
+        }
+    }
+}
+
+void SpecAbstract::PE_handle_Obsidium(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
+    {
+        if(!pPEInfo->cliInfo.bInit)
+        {
+            // TODO
         }
     }
 }
