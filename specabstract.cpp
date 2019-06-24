@@ -993,7 +993,11 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
 
         result.sEntryPointSignature=mach.getSignature(mach.getEntryPointOffset(),150);
 
-        result.listLibraryRecords=mach.getLibraryRecords();
+
+        result.listCommandRecords=mach.getCommandRecords();
+
+        result.listLibraryRecords=mach.getLibraryRecords(&result.listCommandRecords);
+        result.listSectionRecords=mach.getSectionRecords(&result.listCommandRecords);
 
         // TODO Segments
         // TODO Sections

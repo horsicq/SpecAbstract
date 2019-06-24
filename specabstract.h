@@ -488,7 +488,9 @@ public:
         // TODO
         bool bIs64;
         bool bIsBigEndian;
+        QList<XMACH::COMMAND_RECORD> listCommandRecords;
         QList<XMACH::LIBRARY_RECORD> listLibraryRecords;
+        QList<XMACH::SECTION_RECORD> listSectionRecords;
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
