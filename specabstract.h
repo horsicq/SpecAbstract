@@ -747,7 +747,7 @@ public:
 
     static QList<VCL_STRUCT> PE_getVCLstruct(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,bool bIs64);
     static VCL_PACKAGEINFO PE_getVCLPackageInfo(QIODevice *pDevice,bool bIsImage,QList<XPE::RESOURCE_RECORD> *pListResources);
-    static SpecAbstract::_SCANS_STRUCT PE_getRichSignatureDescription(quint32 nRichID);
+    static SpecAbstract::_SCANS_STRUCT PE_getRichSignatureDescription(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo,quint32 nRichID);
 
     static QList<SCAN_STRUCT> mapToList(QMap<RECORD_NAME,SCAN_STRUCT> *pMapRecords);
     //    static SCAN_STRUCT getScanStruct(QMap<RECORD_NAMES,SCANS_STRUCT> *pMapDetects,BASIC_INFO *pBasicInfo,RECORD_NAMES recordName);

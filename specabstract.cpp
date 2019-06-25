@@ -3549,6 +3549,7 @@ void SpecAbstract::PE_handle_Obsidium(QIODevice *pDevice, bool bIsImage, SpecAbs
         if(!pPEInfo->cliInfo.bInit)
         {
             // TODO
+            // Check overlays!!!
         }
     }
 }
@@ -4110,7 +4111,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
                 if(nRichSignaturesCount>=i)
                 {
                     quint32 _nRich=(pPEInfo->listRichSignatures.at(nRichSignaturesCount-i).nId<<16)+pPEInfo->listRichSignatures.at(nRichSignaturesCount-i).nVersion;
-                    SpecAbstract::_SCANS_STRUCT ssRich=SpecAbstract::PE_getRichSignatureDescription(_nRich);
+                    SpecAbstract::_SCANS_STRUCT ssRich=SpecAbstract::PE_getRichSignatureDescription(pDevice,bIsImage,pPEInfo,_nRich);
 
                     if((ssLinker.type!=SpecAbstract::RECORD_TYPE_LINKER)&&(ssRich.type==SpecAbstract::RECORD_TYPE_LINKER))
                     {
@@ -10098,361 +10099,366 @@ SpecAbstract::VCL_PACKAGEINFO SpecAbstract::PE_getVCLPackageInfo(QIODevice *pDev
     return result;
 }
 
-SpecAbstract::_SCANS_STRUCT SpecAbstract::PE_getRichSignatureDescription(quint32 nRichID)
+SpecAbstract::_SCANS_STRUCT SpecAbstract::PE_getRichSignatureDescription(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo,quint32 nRichID)
 {
     SpecAbstract::_SCANS_STRUCT result= {};
 
-    if(nRichID)
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
     {
-        quint32 nMajor=nRichID>>16;
-        quint32 nMinor=nRichID&0xFFFF;
-
-        switch(nMajor)
+        if(nRichID)
         {
-            case 0x00D:
-                result.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                result.name=SpecAbstract::RECORD_NAME_VISUALBASIC;
-                break;
+            quint32 nMajor=nRichID>>16;
+            quint32 nMinor=nRichID&0xFFFF;
 
-            case 0x006:
-            case 0x045:
-            case 0x05e:
-            case 0x07c:
-            case 0x094:
-            case 0x09a:
-            case 0x0c9:
-            case 0x0db:
-            case 0x0ff:
-                result.type=SpecAbstract::RECORD_TYPE_CONVERTER;
-                result.name=SpecAbstract::RECORD_NAME_RESOURCE;
-                break;
-
-            case 0x03f:
-            case 0x05c:
-            case 0x07a:
-            case 0x092:
-            case 0x09b:
-            case 0x0ca:
-            case 0x0dc:
-            case 0x100:
-                result.type=SpecAbstract::RECORD_TYPE_LIBRARY;
-                result.name=SpecAbstract::RECORD_NAME_EXPORT;
-                break;
-
-            //            case 0x001: Total Import
-            case 0x002:
-            case 0x019:
-            case 0x09c:
-            case 0x05d:
-            case 0x07b:
-            case 0x093:
-            case 0x0cb:
-            case 0x0dd:
-            case 0x101:
-                result.type=SpecAbstract::RECORD_TYPE_LIBRARY;
-                result.name=SpecAbstract::RECORD_NAME_IMPORT;
-                break;
-
-            case 0x004:
-            case 0x013:
-            case 0x03d:
-            case 0x05a:
-            case 0x078:
-            case 0x091:
-            case 0x09d:
-            case 0x0cc:
-            case 0x0de:
-            case 0x102:
-                result.type=SpecAbstract::RECORD_TYPE_LINKER;
-                result.name=SpecAbstract::RECORD_NAME_MICROSOFTLINKER;
-                break;
-
-            case 0x00f:
-            case 0x012:
-            case 0x040:
-            case 0x07d:
-            case 0x095:
-            case 0x09e:
-            case 0x0cd:
-            case 0x0df:
-            case 0x103:
-                result.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                result.name=SpecAbstract::RECORD_NAME_MASM;
-                break;
-
-            case 0x00a:
-            case 0x015:
-            case 0x01c:
-            case 0x05f:
-            case 0x06d:
-            case 0x083:
-            case 0x0aa:
-            case 0x0ce:
-            case 0x0e0:
-            case 0x104:
-                result.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                //            result.name=SpecAbstract::RECORD_NAME_MICROSOFTC;
-                result.name=SpecAbstract::RECORD_NAME_VISUALCCPP; // TODO Visual C++
-                result.sInfo="C";
-                break;
-
-            case 0x00b:
-            case 0x016:
-            case 0x01d:
-            case 0x060:
-            case 0x06e:
-            case 0x084:
-            case 0x0ab:
-            case 0x0cf:
-            case 0x0e1:
-            case 0x105:
-                result.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                result.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
-                result.sInfo="C++";
-                break;
-
-            case 0x089:
-                result.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                result.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
-                result.sInfo="C/LTCG";
-                break;
-
-            case 0x08a:
-                result.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                result.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
-                result.sInfo="C++/LTCG";
-                break;
-
-            //
-            case 0x085: // auto
-            case 0x086: // auto
-            case 0x087: // auto
-            case 0x088: // auto
-
-            //
-            case 0x0d0: // auto
-            case 0x0d1: // auto
-            case 0x0d2: // auto
-            case 0x0d3: // auto
-            case 0x0d4: // auto
-            case 0x0d5: // auto
-            case 0x0d6: // auto
-
-            //
-            case 0x0e2: // auto
-            case 0x0e3: // auto
-            case 0x0e4: // auto
-            case 0x0e5: // auto
-            case 0x0e6: // auto
-            case 0x0e7: // auto
-            case 0x0e8: // auto
-
-            //
-            case 0x0ac:
-            case 0x0ad:
-            case 0x0ae:
-            case 0x0af:
-            case 0x0b0:
-            case 0x0b1:
-            case 0x0b2:
-
-            //
-            case 0x106:
-            case 0x107:
-            case 0x108:
-            case 0x109:
-            case 0x10a:
-            case 0x10b:
-            case 0x10c:
-                result.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                result.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
-                break;
-        }
-
-        switch(nMajor)
-        {
-            case 0x006:
-                result.sVersion="5.00";
-                break;
-
-            case 0x002:
-                result.sVersion="5.10";
-                break;
-
-            case 0x013:
-                result.sVersion="5.12";
-                break;
-
-            case 0x004:
-            case 0x00d:
-                result.sVersion="6.00";
-                break;
-
-            case 0x00a:
-            case 0x00b:
-            case 0x015:
-            case 0x016:
-                result.sVersion="12.00";
-                break;
-
-            case 0x012:
-                result.sVersion="6.14";
-                break;
-
-            case 0x040:
-            case 0x03d:
-            case 0x045:
-            case 0x03f:
-            case 0x019:
-                result.sVersion="7.00";
-                break;
-
-            case 0x01c:
-            case 0x01d:
-                result.sVersion="13.00";
-                break;
-
-            case 0x00f:
-            case 0x05e:
-            case 0x05c:
-            case 0x05d:
-            case 0x05a:
-                result.sVersion="7.10";
-                break;
-
-            case 0x05f:
-            case 0x060:
-                result.sVersion="13.10";
-                break;
-
-            case 0x078:
-            case 0x07a:
-            case 0x07b:
-            case 0x07c:
-            case 0x07d:
-                result.sVersion="8.00";
-                break;
-
-            case 0x06d:
-            case 0x06e:
-                result.sVersion="14.00";
-                break;
-
-            case 0x091:
-            case 0x092:
-            case 0x093:
-            case 0x094:
-            case 0x095:
-                result.sVersion="9.00";
-                break;
-
-            case 0x083:
-            case 0x084:
-            case 0x085: // auto
-            case 0x086: // auto
-            case 0x087: // auto
-            case 0x088: // auto
-            case 0x089:
-            case 0x08a:
-                result.sVersion="15.00";
-                break;
-
-            case 0x09a:
-            case 0x09b:
-            case 0x09c:
-            case 0x09d:
-            case 0x09e:
-                result.sVersion="10.00";
-                break;
-
-            case 0x0aa:
-            case 0x0ab:
-            case 0x0ac:
-            case 0x0ad:
-            case 0x0ae:
-            case 0x0af:
-            case 0x0b0:
-            case 0x0b1:
-            case 0x0b2:
-                result.sVersion="16.00";
-                break;
-
-            case 0x0c9:
-            case 0x0ca:
-            case 0x0cb:
-            case 0x0cc:
-            case 0x0cd:
-                result.sVersion="11.00";
-                break;
-
-            case 0x0ce:
-            case 0x0cf:
-            case 0x0d0: // auto
-            case 0x0d1: // auto
-            case 0x0d2: // auto
-            case 0x0d3: // auto
-            case 0x0d4: // auto
-            case 0x0d5: // auto
-            case 0x0d6: // auto
-                result.sVersion="17.00";
-                break;
-
-            case 0x0db:
-            case 0x0dc:
-            case 0x0dd:
-            case 0x0de:
-            case 0x0df:
-                result.sVersion="12.00";
-                break;
-
-            case 0x0e0:
-            case 0x0e1:
-            case 0x0e2: // auto
-            case 0x0e3: // auto
-            case 0x0e4: // auto
-            case 0x0e5: // auto
-            case 0x0e6: // auto
-            case 0x0e7: // auto
-            case 0x0e8: // auto
-                result.sVersion="18.00";
-                break;
-
-            case 0x0ff:
-            case 0x100:
-            case 0x101:
-            case 0x102:
-            case 0x103:
-                result.sVersion="14.00";
-                break;
-
-            case 0x104:
-            case 0x105:
-            case 0x106:
-            case 0x107:
-            case 0x108:
-            case 0x109:
-            case 0x10a:
-            case 0x10b:
-            case 0x10c:
-                result.sVersion="19.00";
-                break;
-        }
-
-        if(nMinor>=25008)
-        {
-            if(result.sVersion=="14.00")
+            switch(nMajor)
             {
-                result.sVersion="14.15";
-            }
-            else if(result.sVersion=="19.00")
-            {
-                result.sVersion="19.15";
-            }
-        }
+                case 0x00D:
+                    result.type=SpecAbstract::RECORD_TYPE_COMPILER;
+                    result.name=SpecAbstract::RECORD_NAME_VISUALBASIC;
+                    break;
 
-        if(result.type!=SpecAbstract::RECORD_TYPE_UNKNOWN)
-        {
-            result.sVersion+=QString(".%1").arg(nMinor);
+                case 0x006:
+                case 0x045:
+                case 0x05e:
+                case 0x07c:
+                case 0x094:
+                case 0x09a:
+                case 0x0c9:
+                case 0x0db:
+                case 0x0ff:
+                    result.type=SpecAbstract::RECORD_TYPE_CONVERTER;
+                    result.name=SpecAbstract::RECORD_NAME_RESOURCE;
+                    break;
+
+                case 0x03f:
+                case 0x05c:
+                case 0x07a:
+                case 0x092:
+                case 0x09b:
+                case 0x0ca:
+                case 0x0dc:
+                case 0x100:
+                    result.type=SpecAbstract::RECORD_TYPE_LIBRARY;
+                    result.name=SpecAbstract::RECORD_NAME_EXPORT;
+                    break;
+
+                //            case 0x001: Total Import
+                case 0x002:
+                case 0x019:
+                case 0x09c:
+                case 0x05d:
+                case 0x07b:
+                case 0x093:
+                case 0x0cb:
+                case 0x0dd:
+                case 0x101:
+                    result.type=SpecAbstract::RECORD_TYPE_LIBRARY;
+                    result.name=SpecAbstract::RECORD_NAME_IMPORT;
+                    break;
+
+                case 0x004:
+                case 0x013:
+                case 0x03d:
+                case 0x05a:
+                case 0x078:
+                case 0x091:
+                case 0x09d:
+                case 0x0cc:
+                case 0x0de:
+                case 0x102:
+                    result.type=SpecAbstract::RECORD_TYPE_LINKER;
+                    result.name=SpecAbstract::RECORD_NAME_MICROSOFTLINKER;
+                    break;
+
+                case 0x00f:
+                case 0x012:
+                case 0x040:
+                case 0x07d:
+                case 0x095:
+                case 0x09e:
+                case 0x0cd:
+                case 0x0df:
+                case 0x103:
+                    result.type=SpecAbstract::RECORD_TYPE_COMPILER;
+                    result.name=SpecAbstract::RECORD_NAME_MASM;
+                    break;
+
+                case 0x00a:
+                case 0x015:
+                case 0x01c:
+                case 0x05f:
+                case 0x06d:
+                case 0x083:
+                case 0x0aa:
+                case 0x0ce:
+                case 0x0e0:
+                case 0x104:
+                    result.type=SpecAbstract::RECORD_TYPE_COMPILER;
+                    //            result.name=SpecAbstract::RECORD_NAME_MICROSOFTC;
+                    result.name=SpecAbstract::RECORD_NAME_VISUALCCPP; // TODO Visual C++
+                    result.sInfo="C";
+                    break;
+
+                case 0x00b:
+                case 0x016:
+                case 0x01d:
+                case 0x060:
+                case 0x06e:
+                case 0x084:
+                case 0x0ab:
+                case 0x0cf:
+                case 0x0e1:
+                case 0x105:
+                    result.type=SpecAbstract::RECORD_TYPE_COMPILER;
+                    result.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
+                    result.sInfo="C++";
+                    break;
+
+                case 0x089:
+                    result.type=SpecAbstract::RECORD_TYPE_COMPILER;
+                    result.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
+                    result.sInfo="C/LTCG";
+                    break;
+
+                case 0x08a:
+                    result.type=SpecAbstract::RECORD_TYPE_COMPILER;
+                    result.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
+                    result.sInfo="C++/LTCG";
+                    break;
+
+                //
+                case 0x085: // auto
+                case 0x086: // auto
+                case 0x087: // auto
+                case 0x088: // auto
+
+                //
+                case 0x0d0: // auto
+                case 0x0d1: // auto
+                case 0x0d2: // auto
+                case 0x0d3: // auto
+                case 0x0d4: // auto
+                case 0x0d5: // auto
+                case 0x0d6: // auto
+
+                //
+                case 0x0e2: // auto
+                case 0x0e3: // auto
+                case 0x0e4: // auto
+                case 0x0e5: // auto
+                case 0x0e6: // auto
+                case 0x0e7: // auto
+                case 0x0e8: // auto
+
+                //
+                case 0x0ac:
+                case 0x0ad:
+                case 0x0ae:
+                case 0x0af:
+                case 0x0b0:
+                case 0x0b1:
+                case 0x0b2:
+
+                //
+                case 0x106:
+                case 0x107:
+                case 0x108:
+                case 0x109:
+                case 0x10a:
+                case 0x10b:
+                case 0x10c:
+                    result.type=SpecAbstract::RECORD_TYPE_COMPILER;
+                    result.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
+                    break;
+            }
+
+            switch(nMajor)
+            {
+                case 0x006:
+                    result.sVersion="5.00";
+                    break;
+
+                case 0x002:
+                    result.sVersion="5.10";
+                    break;
+
+                case 0x013:
+                    result.sVersion="5.12";
+                    break;
+
+                case 0x004:
+                case 0x00d:
+                    result.sVersion="6.00";
+                    break;
+
+                case 0x00a:
+                case 0x00b:
+                case 0x015:
+                case 0x016:
+                    result.sVersion="12.00";
+                    break;
+
+                case 0x012:
+                    result.sVersion="6.14";
+                    break;
+
+                case 0x040:
+                case 0x03d:
+                case 0x045:
+                case 0x03f:
+                case 0x019:
+                    result.sVersion="7.00";
+                    break;
+
+                case 0x01c:
+                case 0x01d:
+                    result.sVersion="13.00";
+                    break;
+
+                case 0x00f:
+                case 0x05e:
+                case 0x05c:
+                case 0x05d:
+                case 0x05a:
+                    result.sVersion="7.10";
+                    break;
+
+                case 0x05f:
+                case 0x060:
+                    result.sVersion="13.10";
+                    break;
+
+                case 0x078:
+                case 0x07a:
+                case 0x07b:
+                case 0x07c:
+                case 0x07d:
+                    result.sVersion="8.00";
+                    break;
+
+                case 0x06d:
+                case 0x06e:
+                    result.sVersion="14.00";
+                    break;
+
+                case 0x091:
+                case 0x092:
+                case 0x093:
+                case 0x094:
+                case 0x095:
+                    result.sVersion="9.00";
+                    break;
+
+                case 0x083:
+                case 0x084:
+                case 0x085: // auto
+                case 0x086: // auto
+                case 0x087: // auto
+                case 0x088: // auto
+                case 0x089:
+                case 0x08a:
+                    result.sVersion="15.00";
+                    break;
+
+                case 0x09a:
+                case 0x09b:
+                case 0x09c:
+                case 0x09d:
+                case 0x09e:
+                    result.sVersion="10.00";
+                    break;
+
+                case 0x0aa:
+                case 0x0ab:
+                case 0x0ac:
+                case 0x0ad:
+                case 0x0ae:
+                case 0x0af:
+                case 0x0b0:
+                case 0x0b1:
+                case 0x0b2:
+                    result.sVersion="16.00";
+                    break;
+
+                case 0x0c9:
+                case 0x0ca:
+                case 0x0cb:
+                case 0x0cc:
+                case 0x0cd:
+                    result.sVersion="11.00";
+                    break;
+
+                case 0x0ce:
+                case 0x0cf:
+                case 0x0d0: // auto
+                case 0x0d1: // auto
+                case 0x0d2: // auto
+                case 0x0d3: // auto
+                case 0x0d4: // auto
+                case 0x0d5: // auto
+                case 0x0d6: // auto
+                    result.sVersion="17.00";
+                    break;
+
+                case 0x0db:
+                case 0x0dc:
+                case 0x0dd:
+                case 0x0de:
+                case 0x0df:
+                    result.sVersion="12.00";
+                    break;
+
+                case 0x0e0:
+                case 0x0e1:
+                case 0x0e2: // auto
+                case 0x0e3: // auto
+                case 0x0e4: // auto
+                case 0x0e5: // auto
+                case 0x0e6: // auto
+                case 0x0e7: // auto
+                case 0x0e8: // auto
+                    result.sVersion="18.00";
+                    break;
+
+                case 0x0ff:
+                case 0x100:
+                case 0x101:
+                case 0x102:
+                case 0x103:
+                    result.sVersion="14.00";
+                    break;
+
+                case 0x104:
+                case 0x105:
+                case 0x106:
+                case 0x107:
+                case 0x108:
+                case 0x109:
+                case 0x10a:
+                case 0x10b:
+                case 0x10c:
+                    result.sVersion="19.00";
+                    break;
+            }
+
+            if(nMinor>=25008)
+            {
+                if(result.sVersion=="14.00")
+                {
+                    result.sVersion=QString("14.%1").arg(pPEInfo->nMinorLinkerVersion);
+                }
+                else if(result.sVersion=="19.00")
+                {
+                    result.sVersion=QString("19.%1").arg(pPEInfo->nMinorLinkerVersion);
+                }
+            }
+
+            if(result.type!=SpecAbstract::RECORD_TYPE_UNKNOWN)
+            {
+                result.sVersion+=QString(".%1").arg(nMinor);
+            }
         }
     }
 
