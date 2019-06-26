@@ -6146,6 +6146,7 @@ void SpecAbstract::PE_handle_FixDetects(QIODevice *pDevice,bool bIsImage, SpecAb
         pPEInfo->mapResultCompilers.remove(RECORD_NAME_MASM);
         pPEInfo->mapResultTools.remove(RECORD_NAME_MASM32);
     }
+    // Check SafeEngine
 }
 
 void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
