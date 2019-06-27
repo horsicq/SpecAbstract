@@ -4106,7 +4106,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             SpecAbstract::_SCANS_STRUCT _ssCompiler1= {};
             SpecAbstract::_SCANS_STRUCT _ssCompiler2= {};
 
-            for(int i=1; i<=6; i++)
+            for(int i=1; i<=10; i++)
             {
                 if(nRichSignaturesCount>=i)
                 {
@@ -4131,7 +4131,8 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
 
             ssCompiler=_ssCompiler1;
 
-            if(XPE::isImportLibraryPresentI("MSVCRT.dll",&(pPEInfo->listImports)))
+            if(     XPE::isImportLibraryPresentI("MSVCRT.dll",&(pPEInfo->listImports))||
+                    XPE::isImportLibraryPresentI("MSVCP140.dll",&(pPEInfo->listImports)))
             {
                 if(_ssCompiler2.name==SpecAbstract::RECORD_NAME_VISUALCCPP)
                 {
