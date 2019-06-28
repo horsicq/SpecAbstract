@@ -3956,74 +3956,74 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             recordLinker.name=RECORD_NAME_MICROSOFTLINKER;
         }
 
-        if(!pPEInfo->cliInfo.bInit)
+        // MFC
+        // Static
+        if(XBinary::checkOffsetSize(pPEInfo->osDataSection)&&(pPEInfo->basic_info.bDeepScan))
         {
-            // MFC
-            // Static
-            if(XBinary::checkOffsetSize(pPEInfo->osDataSection)&&(pPEInfo->basic_info.bDeepScan))
+            qint64 _nOffset=pPEInfo->osDataSection.nOffset;
+            qint64 _nSize=pPEInfo->osDataSection.nSize;
+
+            qint64 nOffset_MFC=pe.find_ansiString(_nOffset,_nSize,"CMFCComObject");
+
+            if(nOffset_MFC!=-1)
             {
-                qint64 _nOffset=pPEInfo->osDataSection.nOffset;
-                qint64 _nSize=pPEInfo->osDataSection.nSize;
-
-                qint64 nOffset_MFC=pe.find_ansiString(_nOffset,_nSize,"CMFCComObject");
-
-                if(nOffset_MFC!=-1)
-                {
-                    recordMFC.type=RECORD_TYPE_LIBRARY;
-                    recordMFC.name=RECORD_NAME_MFC;
-                    recordMFC.sInfo="Static";
-                }
+                recordMFC.type=RECORD_TYPE_LIBRARY;
+                recordMFC.name=RECORD_NAME_MFC;
+                recordMFC.sInfo="Static";
             }
+        }
 
-            for(int i=0; i<pPEInfo->listImports.count(); i++)
+        for(int i=0; i<pPEInfo->listImports.count(); i++)
+        {
+            // https://en.wikipedia.org/wiki/Microsoft_Foundation_Class_Library
+            // TODO eMbedded Visual C++ 4.0 		mfcce400.dll 	MFC 6.0
+            if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^MFC")))
             {
-                // https://en.wikipedia.org/wiki/Microsoft_Foundation_Class_Library
-                // TODO eMbedded Visual C++ 4.0 		mfcce400.dll 	MFC 6.0
-                if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^MFC")))
+                //                    QRegularExpression rxVersion("(\\d+)");
+                //                    QRegularExpressionMatch matchVersion=rxVersion.match(pPEInfo->listImports.at(i).sName.toUpper());
+                //
+                //                    if(matchVersion.hasMatch())
+                //                    {
+                //                        double dVersion=matchVersion.captured(0).toDouble()/10;
+                //
+                //                        if(dVersion)
+                //                        {
+                //                            recordMFC.type=RECORD_TYPE_LIBRARY;
+                //                            recordMFC.name=RECORD_NAME_MFC;
+                //                            recordMFC.sVersion=QString::number(dVersion,'f',2);
+                //
+                //                            if(pPEInfo->listImports.at(i).sName.toUpper().contains("U.DLL"))
+                //                            {
+                //                                recordMFC.sInfo="Unicode";
+                //                            }
+                //                        }
+                //                    }
+
+                QString sVersion=XBinary::regExp("(\\d+)",pPEInfo->listImports.at(i).sName.toUpper(),0);
+
+                if(sVersion!="")
                 {
-                    //                    QRegularExpression rxVersion("(\\d+)");
-                    //                    QRegularExpressionMatch matchVersion=rxVersion.match(pPEInfo->listImports.at(i).sName.toUpper());
-                    //
-                    //                    if(matchVersion.hasMatch())
-                    //                    {
-                    //                        double dVersion=matchVersion.captured(0).toDouble()/10;
-                    //
-                    //                        if(dVersion)
-                    //                        {
-                    //                            recordMFC.type=RECORD_TYPE_LIBRARY;
-                    //                            recordMFC.name=RECORD_NAME_MFC;
-                    //                            recordMFC.sVersion=QString::number(dVersion,'f',2);
-                    //
-                    //                            if(pPEInfo->listImports.at(i).sName.toUpper().contains("U.DLL"))
-                    //                            {
-                    //                                recordMFC.sInfo="Unicode";
-                    //                            }
-                    //                        }
-                    //                    }
+                    double dVersion=sVersion.toDouble()/10;
 
-                    QString sVersion=XBinary::regExp("(\\d+)",pPEInfo->listImports.at(i).sName.toUpper(),0);
-
-                    if(sVersion!="")
+                    if(dVersion)
                     {
-                        double dVersion=sVersion.toDouble()/10;
+                        recordMFC.type=RECORD_TYPE_LIBRARY;
+                        recordMFC.name=RECORD_NAME_MFC;
+                        recordMFC.sVersion=QString::number(dVersion,'f',2);
 
-                        if(dVersion)
+                        if(pPEInfo->listImports.at(i).sName.toUpper().contains("U.DLL"))
                         {
-                            recordMFC.type=RECORD_TYPE_LIBRARY;
-                            recordMFC.name=RECORD_NAME_MFC;
-                            recordMFC.sVersion=QString::number(dVersion,'f',2);
-
-                            if(pPEInfo->listImports.at(i).sName.toUpper().contains("U.DLL"))
-                            {
-                                recordMFC.sInfo="Unicode";
-                            }
+                            recordMFC.sInfo="Unicode";
                         }
                     }
-
-                    break;
                 }
-            }
 
+                break;
+            }
+        }
+
+        if(!pPEInfo->cliInfo.bInit)
+        {
             // VB
             bool bVBnew=false;
 
@@ -4724,7 +4724,9 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                     sCppCompilerVersion=pe.read_ansiString(nOffset_EmbarcaderoCPP+35,4);
                 }
 
-                // TODO new version!
+
+                bool bNewVersion=false;
+
                 if(listVCL.count())
                 {
                     bVCL=true;
@@ -4826,6 +4828,8 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                         sDelphiVersion="XE2-XE4";
                         sObjectPascalCompilerVersion="23.0-25.0";
                         //                    sVCLVersion="230-250";
+
+                        bNewVersion=true;
                     }
                     else if((nVCLOffset==52)&&(nVCLValue==444))
                     {
@@ -4833,6 +4837,53 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                         sDelphiVersion="XE2-XE8";
                         sObjectPascalCompilerVersion="23.0-29.0";
                         //                    sVCLVersion="230-290";
+
+                        bNewVersion=true;
+                    }
+                }
+
+                if(bNewVersion)
+                {
+                    if(XBinary::checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bDeepScan))
+                    {
+                        qint64 _nOffset=pPEInfo->osConstDataSection.nOffset;
+                        qint64 _nSize=pPEInfo->osConstDataSection.nSize;
+
+                        qint64 nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"Embarcadero Delphi for Win32 compiler version ");
+                        if(nOffset_Version!=-1)
+                        {
+                            company=COMPANY_EMBARCADERO;
+
+                            sObjectPascalCompilerVersion=pe.read_ansiString(nOffset_Version+46);
+                            sDelphiVersion="XE7+";
+
+                            QString sMajorVersion=sObjectPascalCompilerVersion.section(" ",0,0);
+
+                            if(sMajorVersion=="28.0")
+                            {
+                               sDelphiVersion="XE7";
+                            }
+                            else if(sMajorVersion=="29.0")
+                            {
+                               sDelphiVersion="XE8";
+                            }
+                            else if(sMajorVersion=="30.0")
+                            {
+                               sDelphiVersion="10 Seattle";
+                            }
+                            else if(sMajorVersion=="31.0")
+                            {
+                               sDelphiVersion="10.1 Berlin";
+                            }
+                            else if(sMajorVersion=="32.0")
+                            {
+                               sDelphiVersion="10.2 Tokyo";
+                            }
+                            else if(sMajorVersion=="33.0")
+                            {
+                               sDelphiVersion="10.3 Rio";
+                            }
+                        }
                     }
                 }
 
