@@ -312,6 +312,8 @@ public:
         RECORD_NAME_TARMAINSTALLER,
         RECORD_NAME_TELOCK,
         RECORD_NAME_THEMIDAWINLICENSE,
+        RECORD_NAME_TURBOC,
+        RECORD_NAME_TURBOCPP,
         RECORD_NAME_TURBOLINKER,
         RECORD_NAME_UNICODE,
         RECORD_NAME_UNKNOWNUPXLIKE,
@@ -723,6 +725,7 @@ public:
     static void Binary_handle_FixDetects(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
 
     static void MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, MSDOSINFO_STRUCT *pMSDOSInfo);
+    static void MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_Protection(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
 
     static void ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, ELFINFO_STRUCT *pELFInfo);

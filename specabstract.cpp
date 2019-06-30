@@ -624,6 +624,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_TARMAINSTALLER:                    sResult=QString("Tarma Installer");                             break;
         case RECORD_NAME_TELOCK:                            sResult=QString("tElock");                                      break;
         case RECORD_NAME_THEMIDAWINLICENSE:                 sResult=QString("Themida/Winlicense");                          break;
+        case RECORD_NAME_TURBOC:                            sResult=QString("Turbo C");                                     break;
+        case RECORD_NAME_TURBOCPP:                          sResult=QString("Turbo C++");                                   break;
         case RECORD_NAME_TURBOLINKER:                       sResult=QString("Turbo linker");                                break;
         case RECORD_NAME_UNICODE:                           sResult=QString("Unicode");                                     break;
         case RECORD_NAME_UNKNOWNUPXLIKE:                    sResult=QString("Unknown UPX-like");                            break;
@@ -878,6 +880,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_header_records,sizeof(_MSDOS_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS);
     signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_MSDOS_entrypoint_records,sizeof(_MSDOS_entrypoint_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS);
 
+    MSDOS_handle_Borland(pDevice,pOptions->bIsImage,&result);
     MSDOS_handle_Tools(pDevice,pOptions->bIsImage,&result);
     MSDOS_handle_Protection(pDevice,pOptions->bIsImage,&result);
 
@@ -6790,7 +6793,15 @@ void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_IBMPCPASCAL);
             pMSDOSInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
+    }
+}
 
+void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
+{
+    XMSDOS msdos(pDevice,bIsImage);
+
+    if(msdos.isValid())
+    {
         if(pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_TURBOLINKER))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_TURBOLINKER);
@@ -6798,27 +6809,82 @@ void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
             ss.sVersion=QString::number((double)msdos.read_uint8(0x1F)/16,'f',1);
 
             pMSDOSInfo->mapResultLinkers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
 
-            if(pMSDOSInfo->basic_info.bDeepScan)
+        if(pMSDOSInfo->basic_info.bDeepScan)
+        {
+            qint64 _nOffset=0;
+            qint64 _nSize=pMSDOSInfo->basic_info.nSize;
+
+
+
+            qint64 nOffsetTurboC=msdos.find_ansiString(_nOffset,_nSize,"Turbo-C - ");
+
+            if(nOffsetTurboC!=-1)
             {
-                qint64 _nOffset=0;
-                qint64 _nSize=pMSDOSInfo->basic_info.nSize;
+                QString sBorlandString=msdos.read_ansiString(nOffsetTurboC);
+                // TODO version
+                _SCANS_STRUCT ssCompiler=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_COMPILER,RECORD_NAME_TURBOC,"","",0);
 
-                qint64 nOffsetVersion=msdos.find_ansiString(_nOffset,_nSize,"Borland C++");
-
-                if(nOffsetVersion!=-1)
+                if(sBorlandString=="Turbo-C - Copyright (c) 1987 Borland Intl.")
                 {
-                    QString sBorlandString=msdos.read_ansiString(nOffsetVersion);
-                    // TODO version
-                    _SCANS_STRUCT ssCompiler=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_COMPILER,RECORD_NAME_BORLANDCPP,"","",0);
-
-                    if(sBorlandString=="Borland C++ - Copyright 1991 Borland Intl.")
-                    {
-                        ssCompiler.sVersion="1991";
-                    }
-
-                    pMSDOSInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pMSDOSInfo->basic_info),&ssCompiler));
+                    ssCompiler.sVersion="1987";
                 }
+                else if(sBorlandString=="Turbo-C - Copyright (c) 1988 Borland Intl.")
+                {
+                    ssCompiler.sVersion="1988";
+                }
+
+                pMSDOSInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pMSDOSInfo->basic_info),&ssCompiler));
+            }
+
+            qint64 nOffsetTurboCPP=msdos.find_ansiString(_nOffset,_nSize,"Turbo C++ - ");
+
+            if(nOffsetTurboCPP!=-1)
+            {
+                QString sBorlandString=msdos.read_ansiString(nOffsetTurboCPP);
+                // TODO version
+                _SCANS_STRUCT ssCompiler=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_COMPILER,RECORD_NAME_TURBOCPP,"","",0);
+
+                if(sBorlandString=="Turbo C++ - Copyright 1990 Borland Intl.")
+                {
+                    ssCompiler.sVersion="1990";
+                }
+
+                pMSDOSInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pMSDOSInfo->basic_info),&ssCompiler));
+            }
+
+            qint64 nOffsetBorlandCPP=msdos.find_ansiString(_nOffset,_nSize,"Borland C++");
+
+            if(nOffsetBorlandCPP!=-1)
+            {
+                QString sBorlandString=msdos.read_ansiString(nOffsetBorlandCPP);
+                // TODO version
+                _SCANS_STRUCT ssCompiler=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_COMPILER,RECORD_NAME_BORLANDCPP,"","",0);
+
+                if(sBorlandString=="Borland C++ - Copyright 1991 Borland Intl.")
+                {
+                    ssCompiler.sVersion="1991";
+                }
+
+                pMSDOSInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pMSDOSInfo->basic_info),&ssCompiler));
+            }
+        }
+
+        if(!pMSDOSInfo->mapResultLinkers.contains(RECORD_NAME_TURBOLINKER))
+        {
+            if(     pMSDOSInfo->mapResultCompilers.contains(RECORD_NAME_TURBOC)||
+                    pMSDOSInfo->mapResultCompilers.contains(RECORD_NAME_TURBOCPP)||
+                    pMSDOSInfo->mapResultCompilers.contains(RECORD_NAME_BORLANDCPP))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_LINKER,RECORD_NAME_TURBOLINKER,"","",0);
+
+                // TODO Version
+                // Turbo-C 1987 1.0
+                // Turbo-C 1988 2.0
+                // Borland C++ 1991 3.0-5.00?
+
+                pMSDOSInfo->mapResultLinkers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
             }
         }
     }
