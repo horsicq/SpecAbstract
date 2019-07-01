@@ -6816,8 +6816,6 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
             qint64 _nOffset=0;
             qint64 _nSize=pMSDOSInfo->basic_info.nSize;
 
-
-
             qint64 nOffsetTurboC=msdos.find_ansiString(_nOffset,_nSize,"Turbo-C - ");
 
             if(nOffsetTurboC!=-1)
@@ -6866,6 +6864,14 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
                 {
                     ssCompiler.sVersion="1991";
                 }
+                else if(sBorlandString=="Borland C++ - Copyright 1994 Borland Intl.")
+                {
+                    ssCompiler.sVersion="1994";
+                }
+                else if(sBorlandString=="Borland C++ - Copyright 1995 Borland Intl.")
+                {
+                    ssCompiler.sVersion="1995";
+                }
 
                 pMSDOSInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pMSDOSInfo->basic_info),&ssCompiler));
             }
@@ -6882,7 +6888,7 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
                 // TODO Version
                 // Turbo-C 1987 1.0
                 // Turbo-C 1988 2.0
-                // Borland C++ 1991 3.0-5.00?
+                // Borland C++ 1991 3.0-7.00?
 
                 pMSDOSInfo->mapResultLinkers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
             }
