@@ -449,6 +449,9 @@ public:
     {
         BASIC_INFO basic_info;
         QString sEntryPointSignature;
+        QString sOverlaySignature;
+        qint64 nOverlayOffset;
+        qint64 nOverlaySize;
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;

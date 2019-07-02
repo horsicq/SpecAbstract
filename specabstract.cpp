@@ -875,6 +875,14 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     result.basic_info.sHeaderSignature=msdos.getSignature(0,150);
     result.basic_info.bDeepScan=pOptions->bDeepScan;
 
+    result.nOverlayOffset=msdos.getOverlayOffset();
+    result.nOverlaySize=msdos.getOverlaySize();
+
+    if(result.nOverlaySize)
+    {
+        result.sOverlaySignature=msdos.getSignature(result.nOverlayOffset,150);
+    }
+
     result.sEntryPointSignature=msdos.getSignature(msdos.getEntryPointOffset(),150);
 
     signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_header_records,sizeof(_MSDOS_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS);
@@ -1057,7 +1065,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         if(result.nOverlaySize)
         {
-            result.sOverlaySignature=pe.getSignature(pe.getOverlayOffset(),150);
+            result.sOverlaySignature=pe.getSignature(result.nOverlayOffset,150);
         }
 
         if(result.bIs64)
