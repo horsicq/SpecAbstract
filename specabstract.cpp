@@ -413,6 +413,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALLOY:                             sResult=QString("Alloy");                                       break;
         case RECORD_NAME_ANDPAKK2:                          sResult=QString("ANDpakk2");                                    break;
         case RECORD_NAME_ANTIDOTE:                          sResult=QString("AntiDote");                                    break;
+        case RECORD_NAME_APK:                               sResult=QString("APK");                                         break;
         case RECORD_NAME_ARMADILLO:                         sResult=QString("Armadillo");                                   break;
         case RECORD_NAME_ARMPROTECTOR:                      sResult=QString("ARM Protector");                               break;
         case RECORD_NAME_ASDPACK:                           sResult=QString("ASDPack");                                     break;
@@ -4507,6 +4508,11 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
         }
 
+        if(pe.isImportLibraryPresentI("MSVCRT.dll",&(pPEInfo->listImports)))
+        {
+            // TODO
+        }
+
         if((recordLinker.name==RECORD_NAME_MICROSOFTLINKER)&&(recordLinker.sVersion==""))
         {
             recordLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
@@ -6373,36 +6379,68 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
                 }
                 else if(record.sFileName=="META-INF/MANIFEST.MF")
                 {
-                    if((record.nUncompressedSize)&&(record.nUncompressedSize<=0x4000))
+                    if(record.nUncompressedSize)
                     {
                         QString sData=xzip.decompress(&record).data();
-                        // TODO
-                        _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_BINARY,RECORD_TYPE_ARCHIVE,RECORD_NAME_JAR,"","",0);
+
 
                         QString sVendor=XBinary::regExp("Specification-Vendor: (.*?)\n",sData,1);
                         QString sVersion=XBinary::regExp("Specification-Version: (.*?)\n",sData,1);
                         QString sImpVendor=XBinary::regExp("Implementation-Vendor: (.*?)\n",sData,1);
                         QString sImpVersion=XBinary::regExp("Implementation-Version: (.*?)\n",sData,1);
+                        QString sBuildBy=XBinary::regExp("Built-By: (.*?)\n",sData,1);
+                        QString sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sData,1);
 
-                        if((sImpVendor!="")&&(sImpVersion!=""))
+                        // JAR
+                        if( (sVendor!="")||
+                            (sVersion!="")||
+                            (sImpVendor!="")||
+                            (sImpVersion!=""))
                         {
-                            ss.sVersion=sImpVendor+"-"+sImpVersion;
-                        }
+                            QString sJarVersion;
 
-                        if(ss.sVersion=="")
-                        {
-                            if((sVendor!="")&&(sVersion!=""))
+                            if((sImpVendor!="")&&(sImpVersion!=""))
                             {
-                                ss.sVersion=sVendor+"-"+sVersion;
+                                sJarVersion=sImpVendor+"-"+sImpVersion;
+                            }
+
+                            if(sJarVersion=="")
+                            {
+                                if((sVendor!="")&&(sVersion!=""))
+                                {
+                                    sJarVersion=sVendor+"-"+sVersion;
+                                }
+                            }
+
+    //                        ss.sInfo=XBinary::regExp("Created-By: (.*?)\n",sData,1);
+
+                            if(sJarVersion!="")
+                            {
+                                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_BINARY,RECORD_TYPE_ARCHIVE,RECORD_NAME_JAR,"","",0);
+                                ss.sVersion=sJarVersion;
+                                pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+                                break;
                             }
                         }
 
-//                        ss.sInfo=XBinary::regExp("Created-By: (.*?)\n",sData,1);
-
-                        if(ss.sVersion!="")
+                        // APK
+                        if( (sBuildBy!="")&&
+                            (sCreatedBy!=""))
                         {
-                            pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
-                            break;
+                            QString sApkVersion;
+
+                            if(sCreatedBy.contains("Android"))
+                            {
+                                sApkVersion=sCreatedBy;
+                            }
+
+                            if(sApkVersion!="")
+                            {
+                                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_BINARY,RECORD_TYPE_ARCHIVE,RECORD_NAME_APK,"","",0);
+                                ss.sVersion=sApkVersion;
+                                pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+                                break;
+                            }
                         }
                     }
                 }
@@ -6775,6 +6813,7 @@ void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, bool bIsImage, S
             (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTEXCEL))||
             (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTVISIO))||
             (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_OPENDOCUMENT))||
+            (pBinaryInfo->mapResultArchives.contains(RECORD_NAME_APK))||
             (pBinaryInfo->mapResultArchives.contains(RECORD_NAME_JAR)))
     {
         pBinaryInfo->mapResultArchives.remove(RECORD_NAME_ZIP);
