@@ -284,19 +284,21 @@ SpecAbstract::STRING_RECORD _TEXT_records[]=
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_header_records[]=
 {
-    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,       SpecAbstract::RECORD_NAME_CRYEXE,                       "4.0",          "",                     "'MZ'....................................................'CryEXE 4.0 By Iosco^DaTo!'"},
-    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,       SpecAbstract::RECORD_NAME_LSCRYPRT,                     "1.21",         "",                     "'MZ'....................................................'L.S.    Crypt By'"},
-    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,       SpecAbstract::RECORD_NAME_PACKWIN,                      "1.0",          "",                     "'MZ'........................................................'YRZLITE (C) 1993 WYellow Rose'"},
-    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_LINKER,          SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",             "",                     "'MZ'........................................................FB"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYEXE,                       "4.0",          "",                     "'MZ'....................................................'CryEXE 4.0 By Iosco^DaTo!'"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LSCRYPRT,                     "1.21",         "",                     "'MZ'....................................................'L.S.    Crypt By'"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PACKWIN,                      "1.0",          "",                     "'MZ'........................................................'YRZLITE (C) 1993 WYellow Rose'"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",             "",                     "'MZ'........................................................FB"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
 {
-    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_COMPILER,        SpecAbstract::RECORD_NAME_IBMPCPASCAL,                  "1.00(1981)",   "",                     "B8....8ED88C06....BA....D1EAB9....2BCAD1EA"},
-    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_COMPILER,        SpecAbstract::RECORD_NAME_IBMPCPASCAL,                  "2.00(1984)",   "",                     "B8....8ED88C06....FA8ED0268B1E....2BD881FB....7E..BB....D1E3"},
-    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_COMPILER,        SpecAbstract::RECORD_NAME_IBMPCPASCAL,                  "2.02(1987)",   "",                     "2E8E1E....8CD08CDB2BC3D1E0"}, // TODO Check
-    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_COMPILER,        SpecAbstract::RECORD_NAME_IBMPCPASCAL,                  "2.05(1987)",   "",                     "B8....8ED88BD08C06....268B1E....891E....2BD8F7C3....75..B1..D3E3"},
-    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,       SpecAbstract::RECORD_NAME_PACKWIN,                      "1.0",          "",                     "8CC0FA8ED0BC....FB060E1F2E8B0E....8BF14E8BFE8CDB2E031E....8EC3FDF3A453B8....50CB"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_IBMPCPASCAL,                  "1.00(1981)",   "",                     "B8....8ED88C06....BA....D1EAB9....2BCAD1EA"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_IBMPCPASCAL,                  "2.00(1984)",   "",                     "B8....8ED88C06....FA8ED0268B1E....2BD881FB....7E..BB....D1E3"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_IBMPCPASCAL,                  "2.02(1987)",   "",                     "2E8E1E....8CD08CDB2BC3D1E0"}, // TODO Check
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_IBMPCPASCAL,                  "2.05(1987)",   "",                     "B8....8ED88BD08C06....268B1E....891E....2BD8F7C3....75..B1..D3E3"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PACKWIN,                      "1.0",          "",                     "8CC0FA8ED0BC....FB060E1F2E8B0E....8BF14E8BFE8CDB2E031E....8EC3FDF3A453B8....50CB"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_WATCOMCCPP,                   "1994",         "",                     "......'WATCOM C/C++16 Run-Time system. (c) Copyright by WATCOM International Corp. 1988-1994. '"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_WATCOMCCPP,                   "1995",         "",                     "......'WATCOM C/C++16 Run-Time system. (c) Copyright by WATCOM International Corp. 1988-1995. '"},
 };
 
 SpecAbstract::SpecAbstract(QObject *parent)
@@ -6838,6 +6840,13 @@ void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
         if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_IBMPCPASCAL))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_IBMPCPASCAL);
+            pMSDOSInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+
+        // WATCOM C
+        if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_WATCOMCCPP))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_WATCOMCCPP);
             pMSDOSInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
