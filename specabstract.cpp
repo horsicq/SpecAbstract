@@ -81,6 +81,8 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_AUTOIT,                       "3.X",          "Compiled script",      "A3484BBE986C4AA9"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_RTF,                          "",             "",                     "'{'5C'rtf'"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_LUACOMPILED,                  "",             "",                     "1B'Lua'..000104040408"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_COFF,                         "",             "",                     "'!<arch>'0A2F"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_DEX,                          "",             "",                     "'dex\n'......00"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
@@ -449,6 +451,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CODEGEAROBJECTPASCAL:              sResult=QString("Codegear Object Pascal");                      break;
         case RECORD_NAME_CODEVEIL:                          sResult=QString("CodeVeil");                                    break;
         case RECORD_NAME_CODEWALL:                          sResult=QString("CodeWall");                                    break;
+        case RECORD_NAME_COFF:                              sResult=QString("COFF");                                        break;
         case RECORD_NAME_CONFUSER:                          sResult=QString("Confuser");                                    break;
         case RECORD_NAME_CONFUSEREX:                        sResult=QString("ConfuserEx");                                  break;
         case RECORD_NAME_CPP:                               sResult=QString("C++");                                         break;
@@ -462,6 +465,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CYGWIN:                            sResult=QString("Cygwin");                                      break;
         case RECORD_NAME_DEB:                               sResult=QString("DEB");                                         break;
         case RECORD_NAME_DEEPSEA:                           sResult=QString("DeepSea");                                     break;
+        case RECORD_NAME_DEX:                               sResult=QString("DEX");                                         break;
         case RECORD_NAME_DMD32D:                            sResult=QString("DMD32 D");                                     break;
         case RECORD_NAME_DNGUARD:                           sResult=QString("DNGuard");                                     break;
         case RECORD_NAME_DOTFIXNICEPROTECT:                 sResult=QString("DotFix Nice Protect");                         break;
@@ -6602,6 +6606,46 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice,bool bIsImage, SpecA
     {
         // Lua
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LUACOMPILED);
+        pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_COFF))&&(pBinaryInfo->basic_info.nSize>=76))
+    {
+        // COFF
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_COFF);
+
+        bool bDetected=false;
+
+        qint64 nOffset=binary.read_uint32(72,true)+58;
+
+        if(binary.compareSignature("600A4C01",nOffset))
+        {
+            ss.sInfo="I386";
+            bDetected=1;
+        }
+        if(binary.compareSignature("600A6486",nOffset))
+        {
+            ss.sInfo="AMD64";
+            bDetected=1;
+        }
+
+        if(binary.compareSignature("600A0000FFFF....4C01",nOffset))
+        {
+            ss.sInfo="I386";
+            bDetected=1;
+        }
+        if(binary.compareSignature("600A0000FFFF....6486",nOffset))
+        {
+            ss.sInfo="AMD64";
+            bDetected=1;
+        }
+
+        pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DEX))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        // dex
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_DEX);
+        ss.sVersion=XBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(8,6));
         pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 }
