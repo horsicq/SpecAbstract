@@ -282,6 +282,9 @@ SpecAbstract::STRING_RECORD _TEXT_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_PHP,                          "",             "",                     "^<\\?php"},
     {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_PYTHON,                       "",             "",                     "import"},
     {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_XML,                          "",             "",                     "^<\\?xml"},
+    {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_PERL,                         "",             "",                     "#!perl"},
+    {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_PERL,                         "",             "",                     "#!/usr/bin/env perl"},
+    {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_PERL,                         "",             "",                     "#!/usr/bin/perl"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_header_records[]=
@@ -6282,6 +6285,12 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
         if(pBinaryInfo->mapTextHeaderDetects.contains(RECORD_NAME_PHP))
         {
             _SCANS_STRUCT ss=pBinaryInfo->mapTextHeaderDetects.value(RECORD_NAME_PHP);
+            pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        }
+
+        if(pBinaryInfo->mapTextHeaderDetects.contains(RECORD_NAME_PERL))
+        {
+            _SCANS_STRUCT ss=pBinaryInfo->mapTextHeaderDetects.value(RECORD_NAME_PERL);
             pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
         }
 
