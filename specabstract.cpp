@@ -3577,40 +3577,47 @@ void SpecAbstract::PE_handle_Obsidium(QIODevice *pDevice, bool bIsImage, SpecAbs
 
 void SpecAbstract::PE_handle_StarForce(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
-    bool bSF3=XPE::isSectionNamePresent(".sforce3",&(pPEInfo->listSectionHeaders));
-    bool bSF4=XPE::isSectionNamePresent(".ps4",&(pPEInfo->listSectionHeaders));
+    XPE pe(pDevice,bIsImage);
 
-    if(bSF3||bSF4)
+    if(pe.isValid())
     {
-        QString sVersion;
-        QString sInfo;
+        bool bSF3=XPE::isSectionNamePresent(".sforce3",&(pPEInfo->listSectionHeaders));
+        bool bSF4=XPE::isSectionNamePresent(".ps4",&(pPEInfo->listSectionHeaders));
 
-        if(bSF3)
+        if(bSF3||bSF4)
         {
-            sVersion="3.X";
-        }
+            QString sVersion;
+            QString sInfo;
 
-        if(bSF4)
-        {
-            sVersion="4.X-5.X";
-        }
-
-        int nImportCount=pPEInfo->listImports.count();
-
-        for(int i=0; i<nImportCount; i++)
-        {
-            if(pPEInfo->listImports.at(i).listPositions.count()==1)
+            if(bSF3)
             {
-                if(pPEInfo->listImports.at(i).listPositions.at(0).sName=="")
+                sVersion="3.X";
+            }
+
+            if(bSF4)
+            {
+                sVersion="4.X-5.X";
+            }
+
+            int nImportCount=pPEInfo->listImports.count();
+
+            for(int i=0; i<nImportCount; i++)
+            {
+                if(pPEInfo->listImports.at(i).listPositions.count()==1)
                 {
-                    sInfo=pPEInfo->listImports.at(i).sName;
+                    if(pPEInfo->listImports.at(i).listPositions.at(0).sName=="")
+                    {
+                        sInfo=pPEInfo->listImports.at(i).sName;
+                    }
                 }
             }
-        }
 
-        SpecAbstract::_SCANS_STRUCT recordSS=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_STARFORCE,sVersion,sInfo,0);
-        pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+            SpecAbstract::_SCANS_STRUCT recordSS=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_STARFORCE,sVersion,sInfo,0);
+            pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+        }
     }
+
+
 }
 
 void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
