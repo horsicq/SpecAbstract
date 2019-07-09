@@ -6413,11 +6413,13 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
                         QString sBuildBy=XBinary::regExp("Built-By: (.*?)\n",sData,1);
                         QString sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sData,1);
 
+                        bool bJetBrainsJar=sCreatedBy.contains("JetBrains");
                         // JAR
                         if( (sVendor!="")||
                             (sVersion!="")||
                             (sImpVendor!="")||
-                            (sImpVersion!=""))
+                            (sImpVersion!="")||
+                            bJetBrainsJar)
                         {
                             QString sJarVersion;
 
@@ -6432,6 +6434,12 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
                                 {
                                     sJarVersion=sVendor+"-"+sVersion;
                                 }
+                            }
+
+                            if((sJarVersion=="")&&(bJetBrainsJar))
+                            {
+                                sJarVersion=sCreatedBy;
+                                sCreatedBy=sCreatedBy.remove("\r");
                             }
 
     //                        ss.sInfo=XBinary::regExp("Created-By: (.*?)\n",sData,1);
