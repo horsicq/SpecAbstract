@@ -6413,64 +6413,43 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
                         QString sBuildBy=XBinary::regExp("Built-By: (.*?)\n",sData,1);
                         QString sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sData,1);
 
-                        bool bJetBrainsJar=sCreatedBy.contains("JetBrains");
-                        // JAR
-                        if( (sVendor!="")||
-                            (sVersion!="")||
-                            (sImpVendor!="")||
-                            (sImpVersion!="")||
-                            bJetBrainsJar)
+                        bool bIsAPK=false;
+
+                        if((sVersion=="")&&sCreatedBy.contains("Android"))
                         {
-                            QString sJarVersion;
-
-                            if((sImpVendor!="")&&(sImpVersion!=""))
-                            {
-                                sJarVersion=sImpVendor+"-"+sImpVersion;
-                            }
-
-                            if(sJarVersion=="")
-                            {
-                                if((sVendor!="")&&(sVersion!=""))
-                                {
-                                    sJarVersion=sVendor+"-"+sVersion;
-                                }
-                            }
-
-                            if((sJarVersion=="")&&(bJetBrainsJar))
-                            {
-                                sJarVersion=sCreatedBy;
-                                sCreatedBy=sCreatedBy.remove("\r");
-                            }
-
-    //                        ss.sInfo=XBinary::regExp("Created-By: (.*?)\n",sData,1);
-
-                            if(sJarVersion!="")
-                            {
-                                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_BINARY,RECORD_TYPE_ARCHIVE,RECORD_NAME_JAR,"","",0);
-                                ss.sVersion=sJarVersion;
-                                pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
-                                break;
-                            }
+                            bIsAPK=true;
+                            sVersion=sCreatedBy;
                         }
 
-                        // APK
-                        if( (sBuildBy!="")&&
-                            (sCreatedBy!=""))
+                        if((sVersion=="")&&sCreatedBy.contains("JetBrains"))
                         {
-                            QString sApkVersion;
+                            sVersion=sCreatedBy;
+                            sVersion=sVersion.remove("\r");
+                        }
 
-                            if(sCreatedBy.contains("Android"))
-                            {
-                                sApkVersion=sCreatedBy;
-                            }
+                        if((sVersion=="")&&(sImpVendor!="")&&(sImpVersion!=""))
+                        {
+                            sVersion=sImpVendor+"-"+sImpVersion;
+                        }
 
-                            if(sApkVersion!="")
-                            {
-                                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_BINARY,RECORD_TYPE_ARCHIVE,RECORD_NAME_APK,"","",0);
-                                ss.sVersion=sApkVersion;
-                                pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
-                                break;
-                            }
+                        if((sVersion=="")&&(sVendor!="")&&(sImpVersion!=""))
+                        {
+                            sVersion=sVendor+"-"+sImpVersion;
+                        }
+
+                        if(bIsAPK)
+                        {
+                            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_BINARY,RECORD_TYPE_ARCHIVE,RECORD_NAME_APK,"","",0);
+                            ss.sVersion=sVersion;
+                            pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+                            break;
+                        }
+                        else
+                        {
+                            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_BINARY,RECORD_TYPE_ARCHIVE,RECORD_NAME_JAR,"","",0);
+                            ss.sVersion=sVersion;
+                            pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+                            break;
                         }
                     }
                 }
