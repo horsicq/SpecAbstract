@@ -49,7 +49,9 @@ public:
         RECORD_FILETYPE_MACH,
         RECORD_FILETYPE_MACH32,
         RECORD_FILETYPE_MACH64,
-        RECORD_FILETYPE_TEXT
+        RECORD_FILETYPE_TEXT,
+//        RECORD_FILETYPE_JAR,
+        RECORD_FILETYPE_APK
     };
     enum RECORD_FILEPART
     {
@@ -100,8 +102,8 @@ public:
         RECORD_NAME_ALEXPROTECTOR,
         RECORD_NAME_ALLOY,
         RECORD_NAME_ANDPAKK2,
+        RECORD_NAME_ANDROIDGRADLE,
         RECORD_NAME_ANTIDOTE,
-        RECORD_NAME_APK,
         RECORD_NAME_ARMADILLO,
         RECORD_NAME_ARMPROTECTOR,
         RECORD_NAME_ASDPACK,
@@ -422,7 +424,8 @@ public:
         QString sHeaderSignature;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapHeaderDetects;
         QList<SpecAbstract::SCAN_STRUCT> listDetects;
-        bool bDeepScan;
+        bool bIsDeepScan;
+        bool bIsUnknown;
     };
 
     struct BINARYINFO_STRUCT
@@ -434,9 +437,13 @@ public:
         XBinary::UNICODE_TYPE unicodeType;
         QString sHeaderText;
 
+        bool bIsZip;
+        QList<XArchive::RECORD> listArchiveRecords;
+
         QMap<RECORD_NAME,_SCANS_STRUCT> mapTextHeaderDetects;
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTexts;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultArchives;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCertificates;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultDebugData;
@@ -446,6 +453,8 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultDatabases;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultImages;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectorData;
+
+        QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct MSDOSINFO_STRUCT
@@ -460,6 +469,8 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
+
+        QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct ELFINFO_STRUCT
@@ -573,12 +584,14 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultSFX;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultNETObfuscators;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultDongleProtection;
+
+        QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct SCAN_OPTIONS
     {
         //        bool bEmulate;
-        bool bScanOverlay;
+        bool bRecursive;
         bool bDeepScan;
         bool bResultAsXML;
         bool bSubdirectories;
@@ -670,6 +683,9 @@ public:
     };
 
     explicit SpecAbstract(QObject *parent=nullptr);
+
+    static void scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions,bool bInit=false);
+
     static QString append(QString sResult,QString sString);
     static QString recordFiletypeIdToString(RECORD_FILETYPE id);
     static QString recordFilepartIdToString(RECORD_FILEPART id);
@@ -727,6 +743,9 @@ public:
     static void Binary_handle_InstallerData(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_SFXData(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_ProtectorData(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
+    static void Binary_handle_MicrosoftOffice(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
+    static void Binary_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
+    static void Binary_handle_JAR(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
 
     static void Binary_handle_FixDetects(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
 
