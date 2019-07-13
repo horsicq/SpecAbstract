@@ -69,6 +69,7 @@ public:
         RECORD_TYPE_DATABASE,
         RECORD_TYPE_DEBUGDATA,
         RECORD_TYPE_DONGLEPROTECTION,
+        RECORD_TYPE_DOSEXTENDER,
         RECORD_TYPE_FORMAT,
         RECORD_TYPE_GENERIC,
         RECORD_TYPE_IMAGE,
@@ -126,6 +127,7 @@ public:
         RECORD_NAME_BREAKINTOPATTERN,
         RECORD_NAME_C,
         RECORD_NAME_CAB,
+        RECORD_NAME_CAUSEWAY,
         RECORD_NAME_CCPP,
         RECORD_NAME_CEXE,
         RECORD_NAME_CIL,
@@ -466,6 +468,8 @@ public:
         qint64 nOverlaySize;
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
+
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultDosExtenders;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
@@ -754,6 +758,7 @@ public:
     static void MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_Protection(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
+    static void MSDOS_handle_DosExtenders(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_Recursive(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo,SpecAbstract::SCAN_OPTIONS *pOptions);
 
     static void ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, ELFINFO_STRUCT *pELFInfo);

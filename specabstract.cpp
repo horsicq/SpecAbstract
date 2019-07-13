@@ -43,7 +43,8 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_DATABASE,         SpecAbstract::RECORD_NAME_PDB,                          "7.00",         "",                     "'Microsoft C/C++ MSF 7.00\r\n'1A'DS'000000"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_DATABASE,         SpecAbstract::RECORD_NAME_MICROSOFTLINKERDATABASE,      "",             "",                     "'Microsoft Linker Database\n\n'071A"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_GZIP,                         "",             "",                     "1F8B08"},
-    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_RAR,                          "",             "",                     "'Rar!'1A07"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_RAR,                          "1.4",          "",                     "'RE~^'"},
+    {1, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_RAR,                          "4.X-5.X",      "",                     "'Rar!'1A07"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_AVASTANTIVIRUS,               "",             "",                     "'ASWsetupFPkgFil3'"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_OPERA,                        "",             "",                     "'OPR7z'BCAF271C"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_INSTALLANYWHERE,              "",             "",                     "5B3E"},
@@ -304,6 +305,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PACKWIN,                      "1.0",          "",                     "8CC0FA8ED0BC....FB060E1F2E8B0E....8BF14E8BFE8CDB2E031E....8EC3FDF3A453B8....50CB"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_WATCOMCCPP,                   "1994",         "",                     "......'WATCOM C/C++16 Run-Time system. (c) Copyright by WATCOM International Corp. 1988-1994. '"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_WATCOMCCPP,                   "1995",         "",                     "......'WATCOM C/C++16 Run-Time system. (c) Copyright by WATCOM International Corp. 1988-1995. '"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_DOSEXTENDER,      SpecAbstract::RECORD_NAME_CAUSEWAY,                     "3.1X-3.4X",    "",                     "FA161F26A1....83E8..8ED0FB061607BE....8BFEB9....F3A407368C......8BD88CCA3603......368B......FD8BC53D....76"},
 };
 
 SpecAbstract::SpecAbstract(QObject *parent)
@@ -436,6 +438,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_DATABASE:                          sResult=tr("Database");                                         break;
         case RECORD_TYPE_DEBUGDATA:                         sResult=tr("Debug data");                                       break;
         case RECORD_TYPE_DONGLEPROTECTION:                  sResult=tr("Dongle protection");                                break;
+        case RECORD_TYPE_DOSEXTENDER:                       sResult=tr("DOS extender");                                     break;
         case RECORD_TYPE_FORMAT:                            sResult=tr("Format");                                           break;
         case RECORD_TYPE_GENERIC:                           sResult=tr("Generic");                                          break;
         case RECORD_TYPE_IMAGE:                             sResult=tr("Image");                                            break;
@@ -501,6 +504,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BREAKINTOPATTERN:                  sResult=QString("Break Into Pattern");                          break;
         case RECORD_NAME_C:                                 sResult=QString("C");                                           break;
         case RECORD_NAME_CAB:                               sResult=QString("CAB");                                         break;
+        case RECORD_NAME_CAUSEWAY:                          sResult=QString("CauseWay");                                    break;
         case RECORD_NAME_CCPP:                              sResult=QString("C/C++");                                       break;
         case RECORD_NAME_CEXE:                              sResult=QString("CExe");                                        break;
         case RECORD_NAME_CIL:                               sResult=QString("cil");                                         break;
@@ -974,12 +978,14 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     MSDOS_handle_Borland(pDevice,pOptions->bIsImage,&result);
     MSDOS_handle_Tools(pDevice,pOptions->bIsImage,&result);
     MSDOS_handle_Protection(pDevice,pOptions->bIsImage,&result);
+    MSDOS_handle_DosExtenders(pDevice,pOptions->bIsImage,&result);
 
     if(pOptions->bRecursive)
     {
         MSDOS_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions);
     }
 
+    result.basic_info.listDetects.append(result.mapResultDosExtenders.values());
     result.basic_info.listDetects.append(result.mapResultLinkers.values());
     result.basic_info.listDetects.append(result.mapResultCompilers.values());
     result.basic_info.listDetects.append(result.mapResultProtectors.values());
@@ -6508,6 +6514,19 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
     {
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RAR);
 
+        if(ss.nVariant==1)
+        {
+            quint8 nVersion=XBinary::hexToUint8(pBinaryInfo->basic_info.sHeaderSignature.mid(6*2,2));
+
+            if(nVersion==0)
+            {
+                ss.sVersion="4.X";
+            }
+            else if(nVersion==1)
+            {
+                ss.sVersion="5.X";
+            }
+        }
         // TODO options
         // TODO files
         pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
@@ -7159,6 +7178,37 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
         {
             _SCANS_STRUCT ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PACKWIN);
             pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+    }
+}
+
+void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
+{
+    XMSDOS msdos(pDevice,bIsImage);
+
+    if(msdos.isValid())
+    {
+        if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_CAUSEWAY))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_CAUSEWAY);
+
+            if(pMSDOSInfo->basic_info.bIsDeepScan)
+            {
+                qint64 nVersionOffset=msdos.find_ansiString(0,pMSDOSInfo->basic_info.nSize,"CauseWay DOS Extender v");
+
+                if(nVersionOffset!=-1)
+                {
+                    QString sVersion=msdos.read_ansiString(nVersionOffset+23);
+                    sVersion=sVersion.section(" ",0,0);
+
+                    if(sVersion!="")
+                    {
+                        ss.sVersion=sVersion;
+                    }
+                }
+            }
+
+            pMSDOSInfo->mapResultDosExtenders.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
 }
