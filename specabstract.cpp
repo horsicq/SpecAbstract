@@ -419,6 +419,7 @@ QString SpecAbstract::recordFilepartIdToString(SpecAbstract::RECORD_FILEPART id)
         case RECORD_FILEPART_UNKNOWN:                       sResult=QString("Unknown");                                     break;
         case RECORD_FILEPART_HEADER:                        sResult=QString("Header");                                      break;
         case RECORD_FILEPART_OVERLAY:                       sResult=QString("Overlay");                                     break;
+        case RECORD_FILEPART_ARCHIVERECORD:                 sResult=QString("Archive record");                              break;
     }
 
     return sResult;
@@ -804,6 +805,11 @@ QString SpecAbstract::createTypeString(const SpecAbstract::SCAN_STRUCT *pScanStr
     if(pScanStruct->parentId.filepart!=RECORD_FILEPART_HEADER)
     {
         sResult+=QString("%1: ").arg(SpecAbstract::recordFilepartIdToString(pScanStruct->parentId.filepart));
+
+        if(pScanStruct->parentId.sInfo!="")
+        {
+            sResult+=QString("%1").arg(pScanStruct->parentId.sInfo);
+        }
     }
 
     sResult+=SpecAbstract::recordFiletypeIdToString(pScanStruct->id.filetype);
@@ -911,7 +917,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     Binary_handle_ProtectorData(pDevice,pOptions->bIsImage,&result);
     Binary_handle_MicrosoftOffice(pDevice,pOptions->bIsImage,&result);
     Binary_handle_OpenOffice(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_JAR(pDevice,pOptions->bIsImage,&result);
+    Binary_handle_JAR(pDevice,pOptions->bIsImage,&result); // TODO recursive
 
     Binary_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
@@ -938,6 +944,8 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
 
         result.basic_info.bIsUnknown=true;
     }
+
+    result.basic_info.listDetects.append(result.listRecursiveDetects);
 
     result.basic_info.nElapsedTime=timer.elapsed();
 

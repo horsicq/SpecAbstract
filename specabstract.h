@@ -57,7 +57,8 @@ public:
     {
         RECORD_FILEPART_UNKNOWN=0,
         RECORD_FILEPART_HEADER,
-        RECORD_FILEPART_OVERLAY
+        RECORD_FILEPART_OVERLAY,
+        RECORD_FILEPART_ARCHIVERECORD
     };
     enum RECORD_TYPE
     {
@@ -369,6 +370,7 @@ public:
         QUuid uuid;
         RECORD_FILETYPE filetype;
         RECORD_FILEPART filepart;
+        QString sInfo;
     };
 
     // TODO flags(static scan/emul/heur)
