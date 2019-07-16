@@ -804,12 +804,14 @@ QString SpecAbstract::createTypeString(const SpecAbstract::SCAN_STRUCT *pScanStr
 
     if(pScanStruct->parentId.filepart!=RECORD_FILEPART_HEADER)
     {
-        sResult+=QString("%1: ").arg(SpecAbstract::recordFilepartIdToString(pScanStruct->parentId.filepart));
+        sResult+=SpecAbstract::recordFilepartIdToString(pScanStruct->parentId.filepart);
 
         if(pScanStruct->parentId.sInfo!="")
         {
-            sResult+=QString("%1").arg(pScanStruct->parentId.sInfo);
+            sResult+=QString("(%1)").arg(pScanStruct->parentId.sInfo);
         }
+
+        sResult+=": ";
     }
 
     sResult+=SpecAbstract::recordFiletypeIdToString(pScanStruct->id.filetype);
@@ -862,7 +864,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
 
     BINARYINFO_STRUCT result=BINARYINFO_STRUCT();
 
-    XPE binary(pDevice,pOptions->bIsImage);
+    XBinary binary(pDevice,pOptions->bIsImage);
 
     result.basic_info.parentId=parentId;
     result.basic_info.id.filetype=RECORD_FILETYPE_BINARY;
@@ -917,7 +919,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     Binary_handle_ProtectorData(pDevice,pOptions->bIsImage,&result);
     Binary_handle_MicrosoftOffice(pDevice,pOptions->bIsImage,&result);
     Binary_handle_OpenOffice(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_JAR(pDevice,pOptions->bIsImage,&result); // TODO recursive
+    Binary_handle_JAR(pDevice,pOptions->bIsImage,&result,pOptions);
 
     Binary_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
@@ -988,10 +990,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     MSDOS_handle_Protection(pDevice,pOptions->bIsImage,&result);
     MSDOS_handle_DosExtenders(pDevice,pOptions->bIsImage,&result);
 
-    if(pOptions->bRecursive)
-    {
-        MSDOS_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions);
-    }
+    MSDOS_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions);
 
     result.basic_info.listDetects.append(result.mapResultDosExtenders.values());
     result.basic_info.listDetects.append(result.mapResultLinkers.values());
@@ -1328,11 +1327,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         PE_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
-
-        if(pOptions->bRecursive)
-        {
-            PE_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions);
-        }
+        PE_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions);
 
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
@@ -6343,19 +6338,22 @@ void SpecAbstract::PE_handle_FixDetects(QIODevice *pDevice,bool bIsImage, SpecAb
 
 void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo, SpecAbstract::SCAN_OPTIONS *pOptions)
 {
-    XPE pe(pDevice,bIsImage);
-
-    if(pe.isValid())
+    if(pOptions->bRecursive)
     {
-        if(pPEInfo->nOverlaySize)
+        XPE pe(pDevice,bIsImage);
+
+        if(pe.isValid())
         {
-            SpecAbstract::SCAN_RESULT scanResult= {0};
+            if(pPEInfo->nOverlaySize)
+            {
+                SpecAbstract::SCAN_RESULT scanResult= {0};
 
-            SpecAbstract::ID _parentId=pPEInfo->basic_info.id;
-            _parentId.filepart=SpecAbstract::RECORD_FILEPART_OVERLAY;
-            scan(pDevice,&scanResult,pPEInfo->nOverlayOffset,pPEInfo->nOverlaySize,_parentId,pOptions);
+                SpecAbstract::ID _parentId=pPEInfo->basic_info.id;
+                _parentId.filepart=SpecAbstract::RECORD_FILEPART_OVERLAY;
+                scan(pDevice,&scanResult,pPEInfo->nOverlayOffset,pPEInfo->nOverlaySize,_parentId,pOptions);
 
-            pPEInfo->listRecursiveDetects.append(scanResult.listRecords);
+                pPEInfo->listRecursiveDetects.append(scanResult.listRecords);
+            }
         }
     }
 }
@@ -6950,7 +6948,7 @@ void SpecAbstract::Binary_handle_OpenOffice(QIODevice *pDevice, bool bIsImage, S
     }
 }
 
-void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
+void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo,SpecAbstract::SCAN_OPTIONS *pOptions)
 {
     if(pBinaryInfo->bIsZip)
     {
@@ -6997,6 +6995,30 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
                         _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_BINARY,RECORD_TYPE_ARCHIVE,RECORD_NAME_JAR,"","",0);
                         ss.sVersion=sCreatedBy;
                         pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+                    }
+
+                    if((bIsAPK)&&(pOptions->bRecursive))
+                    {
+                        XArchive::RECORD recordClasses=XArchive::getArchiveRecord("classes.dex",&(pBinaryInfo->listArchiveRecords));
+
+                        QByteArray baData=xzip.decompress(&recordClasses);
+
+                        QBuffer buffer(&baData);
+
+                        if(buffer.open(QIODevice::ReadOnly))
+                        {
+                            SpecAbstract::SCAN_RESULT scanResult= {0};
+
+                            SpecAbstract::ID _parentId=pBinaryInfo->basic_info.id;
+                            _parentId.filepart=SpecAbstract::RECORD_FILEPART_ARCHIVERECORD;
+                            _parentId.sInfo=QString("classes.dex");
+                            _parentId.bVirtual=true; // TODO Check
+                            scan(&buffer,&scanResult,0,buffer.size(),_parentId,pOptions);
+
+                            pBinaryInfo->listRecursiveDetects.append(scanResult.listRecords);
+
+                            buffer.close();
+                        }
                     }
 
 //                    if((sVersion=="")&&sCreatedBy.contains("JetBrains"))
@@ -7223,19 +7245,22 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, bool bIsImage, 
 
 void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,SpecAbstract::SCAN_OPTIONS *pOptions)
 {
-    XMSDOS msdos(pDevice,bIsImage);
-
-    if(msdos.isValid())
+    if(pOptions->bRecursive)
     {
-        if(pMSDOSInfo->nOverlaySize)
+        XMSDOS msdos(pDevice,bIsImage);
+
+        if(msdos.isValid())
         {
-            SpecAbstract::SCAN_RESULT scanResult= {0};
+            if(pMSDOSInfo->nOverlaySize)
+            {
+                SpecAbstract::SCAN_RESULT scanResult= {0};
 
-            SpecAbstract::ID _parentId=pMSDOSInfo->basic_info.id;
-            _parentId.filepart=SpecAbstract::RECORD_FILEPART_OVERLAY;
-            scan(pDevice,&scanResult,pMSDOSInfo->nOverlayOffset,pMSDOSInfo->nOverlaySize,_parentId,pOptions);
+                SpecAbstract::ID _parentId=pMSDOSInfo->basic_info.id;
+                _parentId.filepart=SpecAbstract::RECORD_FILEPART_OVERLAY;
+                scan(pDevice,&scanResult,pMSDOSInfo->nOverlayOffset,pMSDOSInfo->nOverlaySize,_parentId,pOptions);
 
-            pMSDOSInfo->listRecursiveDetects.append(scanResult.listRecords);
+                pMSDOSInfo->listRecursiveDetects.append(scanResult.listRecords);
+            }
         }
     }
 }

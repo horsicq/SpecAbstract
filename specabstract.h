@@ -371,6 +371,7 @@ public:
         RECORD_FILETYPE filetype;
         RECORD_FILEPART filepart;
         QString sInfo;
+        bool bVirtual;
     };
 
     // TODO flags(static scan/emul/heur)
@@ -753,7 +754,7 @@ public:
     static void Binary_handle_ProtectorData(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_MicrosoftOffice(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
-    static void Binary_handle_JAR(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
+    static void Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, BINARYINFO_STRUCT *pBinaryInfo,SpecAbstract::SCAN_OPTIONS *pOptions);
 
     static void Binary_handle_FixDetects(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
 
