@@ -6863,9 +6863,9 @@ void SpecAbstract::Binary_handle_SFXData(QIODevice *pDevice,bool bIsImage, SpecA
 
 void SpecAbstract::Binary_handle_ProtectorData(QIODevice *pDevice,bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
 {
-    XBinary binary(pDevice);
+    Q_UNUSED(pDevice);
     Q_UNUSED(bIsImage);
-
+//    XBinary binary(pDevice);
     // Inno Setup
     if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_FISHNET))&&(pBinaryInfo->basic_info.nSize>=8))
     {
@@ -6876,6 +6876,8 @@ void SpecAbstract::Binary_handle_ProtectorData(QIODevice *pDevice,bool bIsImage,
 
 void SpecAbstract::Binary_handle_MicrosoftOffice(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
 {
+    Q_UNUSED(bIsImage);
+
     if(pBinaryInfo->bIsZip)
     {
         XZip xzip(pDevice);
@@ -6921,6 +6923,8 @@ void SpecAbstract::Binary_handle_MicrosoftOffice(QIODevice *pDevice, bool bIsIma
 
 void SpecAbstract::Binary_handle_OpenOffice(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
 {
+    Q_UNUSED(bIsImage);
+
     if(pBinaryInfo->bIsZip)
     {
         XZip xzip(pDevice);
@@ -6950,6 +6954,8 @@ void SpecAbstract::Binary_handle_OpenOffice(QIODevice *pDevice, bool bIsImage, S
 
 void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo,SpecAbstract::SCAN_OPTIONS *pOptions)
 {
+    Q_UNUSED(bIsImage);
+
     if(pBinaryInfo->bIsZip)
     {
         XZip xzip(pDevice);
