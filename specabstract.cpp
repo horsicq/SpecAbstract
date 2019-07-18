@@ -697,6 +697,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_TARMAINSTALLER:                    sResult=QString("Tarma Installer");                             break;
         case RECORD_NAME_TELOCK:                            sResult=QString("tElock");                                      break;
         case RECORD_NAME_THEMIDAWINLICENSE:                 sResult=QString("Themida/Winlicense");                          break;
+        case RECORD_NAME_TOTALCOMMANDERINSTALLER:           sResult=QString("Total Commander Installer");                   break;
         case RECORD_NAME_TURBOC:                            sResult=QString("Turbo C");                                     break;
         case RECORD_NAME_TURBOCPP:                          sResult=QString("Turbo C++");                                   break;
         case RECORD_NAME_TURBOLINKER:                       sResult=QString("Turbo linker");                                break;
@@ -6078,6 +6079,13 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_GPINSTALL,"","",0);
                 ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
                 ss.sVersion.replace(", ",".");
+                pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
+            if(XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Total Commander Installer"))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_TOTALCOMMANDERINSTALLER,"","",0);
+                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
