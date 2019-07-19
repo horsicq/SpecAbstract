@@ -84,6 +84,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_LUACOMPILED,                  "",             "",                     "1B'Lua'..000104040408"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_COFF,                         "",             "",                     "'!<arch>'0A2F"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_DEX,                          "",             "",                     "'dex\n'......00"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_IMAGE,            SpecAbstract::RECORD_NAME_DJVU,                         "",             "",                     "'AT&T'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
@@ -532,6 +533,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DEB:                               sResult=QString("DEB");                                         break;
         case RECORD_NAME_DEEPSEA:                           sResult=QString("DeepSea");                                     break;
         case RECORD_NAME_DEX:                               sResult=QString("DEX");                                         break;
+        case RECORD_NAME_DJVU:                              sResult=QString("DjVu");                                        break;
         case RECORD_NAME_DMD32D:                            sResult=QString("DMD32 D");                                     break;
         case RECORD_NAME_DNGUARD:                           sResult=QString("DNGuard");                                     break;
         case RECORD_NAME_DOTFIXNICEPROTECT:                 sResult=QString("DotFix Nice Protect");                         break;
@@ -6760,6 +6762,13 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, bool bIsImage, SpecA
         // PNG
         // TODO resolution
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PNG);
+        pBinaryInfo->mapResultImages.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DJVU))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        // DJVU
+        // TODO options
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_DJVU);
         pBinaryInfo->mapResultImages.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 }
