@@ -529,6 +529,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CRYPTER:                           sResult=QString("Crypter");                                     break;
         case RECORD_NAME_CRYPTOCRACKSPEPROTECTOR:           sResult=QString("CRYPToCRACks PE Protector");                   break;
         case RECORD_NAME_CRYPTOOBFUSCATORFORNET:            sResult=QString("Crypto Obfuscator For .Net");                  break;
+        case RECORD_NAME_CWSDPMI:                           sResult=QString("CWSDPMI");                                     break;
         case RECORD_NAME_CYGWIN:                            sResult=QString("Cygwin");                                      break;
         case RECORD_NAME_DEB:                               sResult=QString("DEB");                                         break;
         case RECORD_NAME_DEEPSEA:                           sResult=QString("DeepSea");                                     break;
@@ -7261,6 +7262,15 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, bool bIsImage, 
                 }
             }
 
+            pMSDOSInfo->mapResultDosExtenders.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+
+        // CWSDPMI
+        QString sCWSDPMI=msdos.read_ansiString(0xb0);
+
+        if(sCWSDPMI.section(" ",0,0)=="CWSDPMI")
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_DOSEXTENDER,RECORD_NAME_CWSDPMI,"","",0);;
             pMSDOSInfo->mapResultDosExtenders.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
