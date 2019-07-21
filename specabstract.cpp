@@ -666,6 +666,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PHP:                               sResult=QString("PHP");                                         break;
         case RECORD_NAME_PKLITE32:                          sResult=QString("PKLITE32");                                    break;
         case RECORD_NAME_PLAIN:                             sResult=QString("Plain");                                       break;
+        case RECORD_NAME_PMODEW:                            sResult=QString("PMODE/W");                                     break;
         case RECORD_NAME_PNG:                               sResult=QString("PNG");                                         break;
         case RECORD_NAME_POLYCRYPTPE:                       sResult=QString("PolyCrypt PE");                                break;
         case RECORD_NAME_POWERBASIC:                        sResult=QString("PowerBASIC");                                  break;
@@ -7266,11 +7267,32 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, bool bIsImage, 
         }
 
         // CWSDPMI
-        QString sCWSDPMI=msdos.read_ansiString(0xb0);
-
-        if(sCWSDPMI.section(" ",0,0)=="CWSDPMI")
+        if(pMSDOSInfo->basic_info.bIsDeepScan)
         {
-            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_DOSEXTENDER,RECORD_NAME_CWSDPMI,"","",0);;
+            qint64 nVersionOffset=msdos.find_ansiString(0,0x100,"CWSDPMI");
+
+            if(nVersionOffset!=-1)
+            {
+                QString sCWSDPMI=msdos.read_ansiString(nVersionOffset);
+
+                if(sCWSDPMI.section(" ",0,0)=="CWSDPMI")
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_DOSEXTENDER,RECORD_NAME_CWSDPMI,"","",0);
+
+                    ss.sVersion=sCWSDPMI.section(" ",1,1);
+
+                    pMSDOSInfo->mapResultDosExtenders.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+                }
+            }
+        }
+        // PMODE/W
+        QString sPMODEW=msdos.read_ansiString(0x55);
+        if(sPMODEW.section(" ",0,0)=="PMODE/W")
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_DOSEXTENDER,RECORD_NAME_PMODEW,"","",0);
+
+            ss.sVersion=sPMODEW.section(" ",1,1).remove("v");
+
             pMSDOSInfo->mapResultDosExtenders.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
