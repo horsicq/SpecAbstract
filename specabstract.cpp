@@ -4567,7 +4567,11 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             {
                 recordTool.sVersion="2017";
             }
-            else if((sLinkerVersion=="14.10.25834")&&(sCompilerVersion=="19.10.25834"))
+            else if((sLinkerVersion=="14.11.25547")&&(sCompilerVersion=="19.11.25547"))
+            {
+                recordTool.sVersion="2017";
+            }
+            else if((sLinkerVersion=="14.10.25834")&&(sCompilerVersion=="19.10.25834")) // TODO Check
             {
                 recordTool.sVersion="2017";
             }
@@ -4608,6 +4612,10 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
                 recordTool.sVersion="2015";
             }
             else if(sCompilerMajorVersion=="19.10") // TODO ???
+            {
+                recordTool.sVersion="2017";
+            }
+            else if(sCompilerMajorVersion=="19.11")
             {
                 recordTool.sVersion="2017";
             }
