@@ -7435,6 +7435,16 @@ void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbst
 
     if(elf.isValid())
     {
+        // GCC
+        if(XMACH::isSectionNamePresent(&(pMACHInfo->listSectionRecords),"__gcc_except_tab"))
+        {
+            SpecAbstract::_SCANS_STRUCT recordSS= {};
+
+            recordSS.type=SpecAbstract::RECORD_TYPE_COMPILER;
+            recordSS.name=SpecAbstract::RECORD_NAME_GCC;
+
+            pMACHInfo->mapResultCompilers.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
+        }
         // Qt
         if(XMACH::isLibraryRecordNamePresent(&(pMACHInfo->listLibraryRecords),"QtCore"))
         {
