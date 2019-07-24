@@ -4571,9 +4571,13 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             {
                 recordTool.sVersion="2017";
             }
-            else if((sLinkerVersion=="14.10.25834")&&(sCompilerVersion=="19.10.25834")) // TODO Check
+            else if((sLinkerVersion=="14.10.25834")&&(sCompilerVersion=="19.10.25834")) // TODO Check v15.5.4
             {
                 recordTool.sVersion="2017";
+            }
+            else if((sLinkerVersion=="14.20.27508")&&(sCompilerVersion=="19.20.27508"))
+            {
+                recordTool.sVersion="2019";
             }
             else if(sCompilerMajorVersion=="12.00")
             {
