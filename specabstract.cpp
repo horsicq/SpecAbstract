@@ -10994,17 +10994,17 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::PE_getRichSignatureDescription(QIODevi
             {
                 if(result.sVersion=="14.00")
                 {
-                    result.sVersion=QString("14.%1").arg(pPEInfo->nMinorLinkerVersion);
+                    result.sVersion=QString("14.%1").arg(pPEInfo->nMinorLinkerVersion,2,10,QChar('0'));
                 }
                 else if(result.sVersion=="19.00")
                 {
-                    result.sVersion=QString("19.%1").arg(pPEInfo->nMinorLinkerVersion);
+                    result.sVersion=QString("19.%1").arg(pPEInfo->nMinorLinkerVersion,2,10,QChar('0'));
                 }
             }
 
             if(result.type!=SpecAbstract::RECORD_TYPE_UNKNOWN)
             {
-                result.sVersion+=QString(".%1").arg(nMinor);
+                result.sVersion+=QString(".%1").arg(nMinor,2,10,QChar('0'));
             }
         }
     }
