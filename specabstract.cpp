@@ -7299,7 +7299,8 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, bool bIsImage, 
         }
         // PMODE/W
         QString sPMODEW=msdos.read_ansiString(0x55);
-        if(sPMODEW.section(" ",0,0)=="PMODE/W")
+        QString sPMODE_W=sPMODEW.section(" ",0,0);
+        if((sPMODE_W=="PMODE/W")||(sPMODE_W=="PMODE\\W"))
         {
             _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_DOSEXTENDER,RECORD_NAME_PMODEW,"","",0);
 
