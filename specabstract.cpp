@@ -734,6 +734,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WINRAR:                            sResult=QString("WinRAR");                                      break;
         case RECORD_NAME_WINUPACK:                          sResult=QString("(Win)Upack");                                  break;
         case RECORD_NAME_WIXTOOLSET:                        sResult=QString("WiX Toolset");                                 break;
+        case RECORD_NAME_WWPACK:                            sResult=QString("WWPack");                                      break;
         case RECORD_NAME_WWPACK32:                          sResult=QString("WWPack32");                                    break;
         case RECORD_NAME_WXWIDGETS:                         sResult=QString("wxWidgets");                                   break;
         case RECORD_NAME_XENOCODEPOSTBUILD:                 sResult=QString("Xenocode Postbuild");                          break;
