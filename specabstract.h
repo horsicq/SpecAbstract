@@ -286,6 +286,7 @@ public:
         RECORD_NAME_PEX,
         RECORD_NAME_PHOENIXPROTECTOR,
         RECORD_NAME_PHP,
+        RECORD_NAME_PKLITE,
         RECORD_NAME_PKLITE32,
         RECORD_NAME_PLAIN,
         RECORD_NAME_PMODEW,
@@ -480,6 +481,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
 
         QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
     };

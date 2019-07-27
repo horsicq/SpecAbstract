@@ -295,6 +295,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_header_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LSCRYPRT,                     "1.21",         "",                     "'MZ'....................................................'L.S.    Crypt By'"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PACKWIN,                      "1.0",          "",                     "'MZ'........................................................'YRZLITE (C) 1993 WYellow Rose'"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",             "",                     "'MZ'........................................................FB"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "",             "",                     "'MZ'........................................................'PKLITE Copr. 1990 PKWARE Inc. All Rights Reserved'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
@@ -664,6 +665,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PEX:                               sResult=QString("PeX");                                         break;
         case RECORD_NAME_PHOENIXPROTECTOR:                  sResult=QString("Phoenix Protector");                           break;
         case RECORD_NAME_PHP:                               sResult=QString("PHP");                                         break;
+        case RECORD_NAME_PKLITE:                            sResult=QString("PKLITE");                                      break;
         case RECORD_NAME_PKLITE32:                          sResult=QString("PKLITE32");                                    break;
         case RECORD_NAME_PLAIN:                             sResult=QString("Plain");                                       break;
         case RECORD_NAME_PMODEW:                            sResult=QString("PMODE/W");                                     break;
@@ -1000,6 +1002,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     result.basic_info.listDetects.append(result.mapResultDosExtenders.values());
     result.basic_info.listDetects.append(result.mapResultLinkers.values());
     result.basic_info.listDetects.append(result.mapResultCompilers.values());
+    result.basic_info.listDetects.append(result.mapResultPackers.values());
     result.basic_info.listDetects.append(result.mapResultProtectors.values());
 
     if(!result.basic_info.listDetects.count())
@@ -7245,6 +7248,11 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
         {
             _SCANS_STRUCT ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PACKWIN);
             pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+        if(pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PKLITE))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PKLITE);
+            pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
 }
