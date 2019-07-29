@@ -508,12 +508,14 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BREAKINTOPATTERN:                  sResult=QString("Break Into Pattern");                          break;
         case RECORD_NAME_C:                                 sResult=QString("C");                                           break;
         case RECORD_NAME_CAB:                               sResult=QString("CAB");                                         break;
+        case RECORD_NAME_CARBON:                            sResult=QString("Carbon");                                      break;
         case RECORD_NAME_CAUSEWAY:                          sResult=QString("CauseWay");                                    break;
         case RECORD_NAME_CCPP:                              sResult=QString("C/C++");                                       break;
         case RECORD_NAME_CEXE:                              sResult=QString("CExe");                                        break;
         case RECORD_NAME_CIL:                               sResult=QString("cil");                                         break;
         case RECORD_NAME_CLICKTEAM:                         sResult=QString("ClickTeam");                                   break;
         case RECORD_NAME_CLISECURE:                         sResult=QString("CliSecure");                                   break;
+        case RECORD_NAME_COCOA:                             sResult=QString("Cocoa");                                       break;
         case RECORD_NAME_CODEGEARCPP:                       sResult=QString("CodeGear C++");                                break;
         case RECORD_NAME_CODEGEARCPPBUILDER:                sResult=QString("CodeGear C++ Builder");                        break;
         case RECORD_NAME_CODEGEARDELPHI:                    sResult=QString("CodeGear Delphi");                             break;
@@ -7475,6 +7477,30 @@ void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbst
             recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
             recordSS.name=SpecAbstract::RECORD_NAME_QT;
             recordSS.sVersion=XBinary::get_uint32_version(lr.current_version);
+
+            pMACHInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
+        }
+        // Carbon
+        if(XMACH::isLibraryRecordNamePresent(&(pMACHInfo->listLibraryRecords),"Carbon"))
+        {
+            XMACH::LIBRARY_RECORD lr=XMACH::getLibraryRecordByName(&(pMACHInfo->listLibraryRecords),"Carbon");
+
+            SpecAbstract::_SCANS_STRUCT recordSS= {};
+
+            recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
+            recordSS.name=SpecAbstract::RECORD_NAME_CARBON;
+
+            pMACHInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
+        }
+        // Cocoa
+        if(XMACH::isLibraryRecordNamePresent(&(pMACHInfo->listLibraryRecords),"Cocoa"))
+        {
+            XMACH::LIBRARY_RECORD lr=XMACH::getLibraryRecordByName(&(pMACHInfo->listLibraryRecords),"Cocoa");
+
+            SpecAbstract::_SCANS_STRUCT recordSS= {};
+
+            recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
+            recordSS.name=SpecAbstract::RECORD_NAME_COCOA;
 
             pMACHInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
         }
