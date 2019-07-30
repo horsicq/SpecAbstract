@@ -1133,9 +1133,11 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
         // TODO Sections
 
         MACH_handle_Tools(pDevice,pOptions->bIsImage,&result);
+        MACH_handle_Protection(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
+        result.basic_info.listDetects.append(result.mapResultProtectors.values());
 
         if(!result.basic_info.listDetects.count())
         {
@@ -7453,9 +7455,9 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
 
 void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstract::MACHINFO_STRUCT *pMACHInfo)
 {
-    XELF elf(pDevice,bIsImage);
+    XMACH mach(pDevice,bIsImage);
 
-    if(elf.isValid())
+    if(mach.isValid())
     {
         // GCC
         if(XMACH::isSectionNamePresent(&(pMACHInfo->listSectionRecords),"__gcc_except_tab"))
@@ -7483,7 +7485,7 @@ void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbst
         // Carbon
         if(XMACH::isLibraryRecordNamePresent(&(pMACHInfo->listLibraryRecords),"Carbon"))
         {
-            XMACH::LIBRARY_RECORD lr=XMACH::getLibraryRecordByName(&(pMACHInfo->listLibraryRecords),"Carbon");
+//            XMACH::LIBRARY_RECORD lr=XMACH::getLibraryRecordByName(&(pMACHInfo->listLibraryRecords),"Carbon");
 
             SpecAbstract::_SCANS_STRUCT recordSS= {};
 
@@ -7495,7 +7497,7 @@ void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbst
         // Cocoa
         if(XMACH::isLibraryRecordNamePresent(&(pMACHInfo->listLibraryRecords),"Cocoa"))
         {
-            XMACH::LIBRARY_RECORD lr=XMACH::getLibraryRecordByName(&(pMACHInfo->listLibraryRecords),"Cocoa");
+//            XMACH::LIBRARY_RECORD lr=XMACH::getLibraryRecordByName(&(pMACHInfo->listLibraryRecords),"Cocoa");
 
             SpecAbstract::_SCANS_STRUCT recordSS= {};
 
@@ -7503,6 +7505,27 @@ void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbst
             recordSS.name=SpecAbstract::RECORD_NAME_COCOA;
 
             pMACHInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
+        }
+    }
+}
+
+void SpecAbstract::MACH_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecAbstract::MACHINFO_STRUCT *pMACHInfo)
+{
+    XMACH mach(pDevice,bIsImage);
+
+    if(mach.isValid())
+    {
+        // VMProtect
+        if(XMACH::isLibraryRecordNamePresent(&(pMACHInfo->listLibraryRecords),"libVMProtectSDK.dylib"))
+        {
+//            XMACH::LIBRARY_RECORD lr=XMACH::getLibraryRecordByName(&(pMACHInfo->listLibraryRecords),"libVMProtectSDK.dylib");
+
+            SpecAbstract::_SCANS_STRUCT recordSS= {};
+
+            recordSS.type=SpecAbstract::RECORD_TYPE_PROTECTOR;
+            recordSS.name=SpecAbstract::RECORD_NAME_VMPROTECT;
+
+            pMACHInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
         }
     }
 }

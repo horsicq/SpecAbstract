@@ -530,6 +530,7 @@ public:
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
     };
 
     struct PEINFO_STRUCT
@@ -778,6 +779,7 @@ public:
     static void ELF_handle_Protection(QIODevice *pDevice,bool bIsImage, ELFINFO_STRUCT *pELFInfo);
 
     static void MACH_handle_Tools(QIODevice *pDevice,bool bIsImage, MACHINFO_STRUCT *pMACHInfo);
+    static void MACH_handle_Protection(QIODevice *pDevice,bool bIsImage, MACHINFO_STRUCT *pMACHInfo);
 
     static void updateVersion(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sVersion);
     static void updateInfo(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sInfo);
