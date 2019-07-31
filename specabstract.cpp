@@ -1331,6 +1331,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_PolyMorph(pDevice,pOptions->bIsImage,&result);
         PE_handle_Microsoft(pDevice,pOptions->bIsImage,&result);
         PE_handle_Borland(pDevice,pOptions->bIsImage,&result);
+        PE_handle_Watcom(pDevice,pOptions->bIsImage,&result);
         PE_handle_Tools(pDevice,pOptions->bIsImage,&result);
         PE_handle_GCC(pDevice,pOptions->bIsImage,&result);
         PE_handle_Signtools(pDevice,pOptions->bIsImage,&result);
@@ -5130,6 +5131,51 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
 
 }
 
+void SpecAbstract::PE_handle_Watcom(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    // TODO Turbo Linker
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
+    {
+        _SCANS_STRUCT ssLinker={};
+        _SCANS_STRUCT ssCompiler={};
+
+        // Watcom linker
+        if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WATCOMLINKER))
+        {
+            ssLinker=pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WATCOMLINKER);
+        }
+
+        // Watcom CPP
+        if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_WATCOMCCPP))
+        {
+            // TODO Version???
+            ssCompiler=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_WATCOMCCPP);
+        }
+
+        if((ssLinker.type!=RECORD_TYPE_UNKNOWN)&&(ssCompiler.type==RECORD_TYPE_UNKNOWN))
+        {
+            ssCompiler=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_COMPILER,RECORD_NAME_WATCOMCCPP,"","",0);
+        }
+
+        if((ssLinker.type==RECORD_TYPE_UNKNOWN)&&(ssCompiler.type!=RECORD_TYPE_UNKNOWN))
+        {
+            ssLinker=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LINKER,RECORD_NAME_WATCOMLINKER,"","",0);
+        }
+
+        if(ssLinker.type!=RECORD_TYPE_UNKNOWN)
+        {
+            pPEInfo->mapResultLinkers.insert(ssLinker.name,scansToScan(&(pPEInfo->basic_info),&ssLinker));
+        }
+
+        if(ssCompiler.type!=RECORD_TYPE_UNKNOWN)
+        {
+            pPEInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pPEInfo->basic_info),&ssCompiler));
+        }
+    }
+}
+
 void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     XPE pe(pDevice,bIsImage);
@@ -5408,24 +5454,6 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                     // TODO Version???
                     pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
-            }
-
-            // TODO Create own function no compiler but linker -> compiler
-            // Watcom linker
-            if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WATCOMLINKER))
-            {
-                _SCANS_STRUCT ss=pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WATCOMLINKER);
-
-                pPEInfo->mapResultLinkers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-            }
-
-            // Watcom CPP
-            if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_WATCOMCCPP))
-            {
-                _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_WATCOMCCPP);
-
-                // TODO Version???
-                pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
             // PureBasic
