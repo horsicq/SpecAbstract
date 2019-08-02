@@ -6294,7 +6294,7 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice,bool bIsImage, SpecAbstract:
                 }
             }
 
-            if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_WINRAR))
+            if((pPEInfo->mapOverlayDetects.contains(RECORD_NAME_WINRAR))||(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_ZIP)))
             {
                 if(pPEInfo->sResourceManifest.contains("WinRAR"))
                 {
