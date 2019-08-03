@@ -732,6 +732,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WATCOMC:                           sResult=QString("Watcom C");                                    break;
         case RECORD_NAME_WATCOMCCPP:                        sResult=QString("Watcom C/C++");                                break;
         case RECORD_NAME_WATCOMLINKER:                      sResult=QString("Watcom linker");                               break;
+        case RECORD_NAME_WDOSX:                             sResult=QString("WDOSX");                                       break;
         case RECORD_NAME_WINACE:                            sResult=QString("WinACE");                                      break;
         case RECORD_NAME_WINAUTH:                           sResult=QString("Windows Authenticode");                        break;
         case RECORD_NAME_WINDOWSBITMAP:                     sResult=QString("Windows Bitmap");                              break;
@@ -7365,6 +7366,17 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, bool bIsImage, 
 
             pMSDOSInfo->mapResultDosExtenders.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
+
+        QString sWDOSX=msdos.read_ansiString(0x34);
+
+        if(sWDOSX.section(" ",0,0)=="WDOSX")
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_DOSEXTENDER,RECORD_NAME_WDOSX,"","",0);
+
+            ss.sVersion=sWDOSX.section(" ",1,1);
+
+            pMSDOSInfo->mapResultDosExtenders.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
     }
 }
 
@@ -7468,6 +7480,8 @@ void SpecAbstract::ELF_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstrac
 
 void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecAbstract::ELFINFO_STRUCT *pELFInfo)
 {
+    Q_UNUSED(pELFInfo)
+
     XELF elf(pDevice,bIsImage);
 
     if(elf.isValid())

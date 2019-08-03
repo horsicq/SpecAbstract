@@ -350,6 +350,7 @@ public:
         RECORD_NAME_WATCOMC,
         RECORD_NAME_WATCOMCCPP,
         RECORD_NAME_WATCOMLINKER,
+        RECORD_NAME_WDOSX,
         RECORD_NAME_WINACE,
         RECORD_NAME_WINAUTH,
         RECORD_NAME_WINDOWSBITMAP,
@@ -542,7 +543,7 @@ public:
         qint64 nOverlayOffset;
         qint64 nOverlaySize;
         XMSDOS_DEF::IMAGE_DOS_HEADEREX dosHeader;
-        XPE_DEF::IMAGE_FILE_HEADER fileHeader;
+        XPE_DEF::S_IMAGE_FILE_HEADER fileHeader;
         union OPTIONAL_HEADER
         {
             XPE_DEF::IMAGE_OPTIONAL_HEADER32 optionalHeader32;
