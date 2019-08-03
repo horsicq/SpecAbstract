@@ -690,6 +690,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_REVPROT:                           sResult=QString("REVProt");                                     break;
         case RECORD_NAME_RLP:                               sResult=QString("RLP");                                         break;
         case RECORD_NAME_RLPACK:                            sResult=QString("RLPack");                                      break;
+        case RECORD_NAME_ROSASM:                            sResult=QString("RosAsm");                                      break;
         case RECORD_NAME_RTF:                               sResult=QString("Rich Text Format");                            break;
         case RECORD_NAME_SDPROTECTORPRO:                    sResult=QString("SDProtector Pro");                             break;
         case RECORD_NAME_SETUPFACTORY:                      sResult=QString("Setup Factory");                               break;
@@ -740,6 +741,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WINDOWSINSTALLER:                  sResult=QString("Windows Installer");                           break;
         case RECORD_NAME_WINRAR:                            sResult=QString("WinRAR");                                      break;
         case RECORD_NAME_WINUPACK:                          sResult=QString("(Win)Upack");                                  break;
+        case RECORD_NAME_WINZIP:                            sResult=QString("WinZip");                                      break;
         case RECORD_NAME_WIXTOOLSET:                        sResult=QString("WiX Toolset");                                 break;
         case RECORD_NAME_WWPACK:                            sResult=QString("WWPack");                                      break;
         case RECORD_NAME_WWPACK32:                          sResult=QString("WWPack32");                                    break;
@@ -6332,12 +6334,23 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice,bool bIsImage, SpecAbstract:
             }
 
             // WinACE
-            if(XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("WinACE")||
+            if(     XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("WinACE")||
                     XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("WinAce")||
                     XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("UNACE"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_SFX,RECORD_NAME_WINACE,"","",0);
                 ss.sVersion=XPE::getResourceVersionValue("ProductVersion",&(pPEInfo->resVersion));
+                pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
+            // WinZip
+            else if(    (pPEInfo->sResourceManifest.contains("WinZipComputing.WinZip"))||
+                        (XPE::isSectionNamePresent("_winzip_",&(pPEInfo->listSectionHeaders))))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_SFX,RECORD_NAME_WINZIP,"","",0);
+
+                QString _sManifest=pPEInfo->sResourceManifest.section("assemblyIdentity",1,1);
+                ss.sVersion=XBinary::regExp("version=\"(.*?)\"",_sManifest,1);
                 pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
         }
