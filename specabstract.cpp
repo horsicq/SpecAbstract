@@ -6227,49 +6227,48 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             }
 
             // Windows Installer
-            for(int i=0; i<pPEInfo->listResources.count(); i++)
+            if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_MICROSOFTOFFICE))
             {
-                qint64 _nOffset=pPEInfo->listResources.at(i).nOffset;
-                qint64 _nSize=pPEInfo->listResources.at(i).nSize;
-                qint64 _nSignatureSize=qMin(_nSize,(qint64)8);
+                VI_STRUCT vi=get_WindowsInstaller_vi(pDevice,bIsImage,pPEInfo->nOverlayOffset,pPEInfo->nOverlaySize);
 
-                if(_nSignatureSize)
+                if(vi.sVersion!="")
                 {
-                    QString sSignature=pe.getSignature(_nOffset,_nSignatureSize);
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_WINDOWSINSTALLER,"","",0);
 
-                    if(sSignature=="D0CF11E0A1B11AE1")
+                    ss.sVersion=vi.sVersion;
+                    ss.sInfo=vi.sInfo;
+
+                    pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+               }
+            }
+
+            if(!pPEInfo->mapResultInstallers.contains(RECORD_NAME_WINDOWSINSTALLER))
+            {
+                for(int i=0; i<pPEInfo->listResources.count(); i++)
+                {
+                    qint64 _nOffset=pPEInfo->listResources.at(i).nOffset;
+                    qint64 _nSize=pPEInfo->listResources.at(i).nSize;
+                    qint64 _nSignatureSize=qMin(_nSize,(qint64)8);
+
+                    if(_nSignatureSize)
                     {
-                        qint64 nStringOffset=pe.find_ansiString(_nOffset,_nSize,"Windows Installer");
+                        QString sSignature=pe.getSignature(_nOffset,_nSignatureSize);
 
-                        if(nStringOffset!=-1)
+                        if(sSignature=="D0CF11E0A1B11AE1") // DOC File
                         {
-                            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_WINDOWSINSTALLER,"","",0);
+                            VI_STRUCT vi=get_WindowsInstaller_vi(pDevice,bIsImage,_nOffset,_nSize);
 
-                            QString _sString=pe.read_ansiString(nStringOffset);
-
-                            if(_sString.contains("xml",Qt::CaseInsensitive))
+                            if(vi.sVersion!="")
                             {
-                                ss.sInfo="XML";
+                                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_WINDOWSINSTALLER,"","",0);
+
+                                ss.sVersion=vi.sVersion;
+                                ss.sInfo=vi.sInfo;
+
+                                pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+
+                                break;
                             }
-
-                            //                            QRegularExpression rxVersion("\\((.*?)\\)");
-                            //                            QRegularExpressionMatch matchVersion=rxVersion.match(_sString);
-
-                            //                            if(matchVersion.hasMatch())
-                            //                            {
-                            //                                ss.sVersion=matchVersion.captured(1);
-                            //                            }
-
-                            QString sVersion=XBinary::regExp("\\((.*?)\\)",_sString,1);
-
-                            if(sVersion!="")
-                            {
-                                ss.sVersion=sVersion;
-                            }
-
-                            pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-
-                            break;
                         }
                     }
                 }
@@ -10380,6 +10379,34 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi2(QIODevice *pDevice,bool bIsIma
     {
         QString sVersionString=binary.read_ansiString(nOffset_Version);
         result.sVersion=sVersionString.section("-",1,1).section("/",0,0);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::get_WindowsInstaller_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+{
+    VI_STRUCT result;
+
+    XBinary binary(pDevice,bIsImage);
+
+    qint64 nStringOffset=binary.find_ansiString(nOffset,nSize,"Windows Installer");
+
+    if(nStringOffset!=-1)
+    {
+        QString _sString=binary.read_ansiString(nStringOffset);
+
+        if(_sString.contains("xml",Qt::CaseInsensitive))
+        {
+            result.sInfo="XML";
+        }
+
+        QString sVersion=XBinary::regExp("\\((.*?)\\)",_sString,1);
+
+        if(sVersion!="")
+        {
+            result.sVersion=sVersion;
+        }
     }
 
     return result;
