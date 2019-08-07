@@ -723,6 +723,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_VBNET:                             sResult=QString("VB .NET");                                     break;
         case RECORD_NAME_VCL:                               sResult=QString("Visual Component Library");                    break;
         case RECORD_NAME_VCLPACKAGEINFO:                    sResult=QString("VCL PackageInfo");                             break;
+        case RECORD_NAME_VERACRYPT:                         sResult=QString("VeraCrypt");                                   break;
         case RECORD_NAME_VIRTUALPASCAL:                     sResult=QString("Virtual Pascal");                              break;
         case RECORD_NAME_VISE:                              sResult=QString("Vise");                                        break;
         case RECORD_NAME_VISUALBASIC:                       sResult=QString("Visual Basic");                                break;
@@ -6198,6 +6199,14 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             if(XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("Dropbox Update Setup"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_DROPBOX,"","",0);
+                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+
+                pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
+            if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("VeraCrypt"))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_VERACRYPT,"","",0);
                 ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
