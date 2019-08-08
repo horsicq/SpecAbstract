@@ -4372,6 +4372,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
 
         if(recordCompiler.name!=RECORD_NAME_VISUALCCPP)
         {
+            // TODO Check mb MS Linker only
             if(pe.compareEntryPoint("E8......00E9$$$$$$$$6A..68........E8"))
             {
                 recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
