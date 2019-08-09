@@ -6353,13 +6353,21 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice,bool bIsImage, SpecAbstract:
             }
 
             // WinZip
-            else if(    (pPEInfo->sResourceManifest.contains("WinZipComputing.WinZip"))||
-                        (XPE::isSectionNamePresent("_winzip_",&(pPEInfo->listSectionHeaders))))
+            if( (pPEInfo->sResourceManifest.contains("WinZipComputing.WinZip"))||
+                (XPE::isSectionNamePresent("_winzip_",&(pPEInfo->listSectionHeaders))))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_SFX,RECORD_NAME_WINZIP,"","",0);
 
                 QString _sManifest=pPEInfo->sResourceManifest.section("assemblyIdentity",1,1);
                 ss.sVersion=XBinary::regExp("version=\"(.*?)\"",_sManifest,1);
+                pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
+            // Cab
+            if(XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Self-Extracting Cabinet"))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_SFX,RECORD_NAME_CAB,"","",0);
+                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion));
                 pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
         }
