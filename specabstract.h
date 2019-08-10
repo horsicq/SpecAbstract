@@ -361,6 +361,7 @@ public:
         RECORD_NAME_WINRAR,
         RECORD_NAME_WINUPACK,
         RECORD_NAME_WINZIP,
+        RECORD_NAME_WISE,
         RECORD_NAME_WIXTOOLSET,
         RECORD_NAME_WWPACK,
         RECORD_NAME_WWPACK32,
@@ -555,7 +556,7 @@ public:
         QList<XPE_DEF::IMAGE_SECTION_HEADER> listSectionHeaders;
         QList<XPE::SECTIONFILE_RECORD> listSectionRecords;
         QList<XPE::IMPORT_HEADER> listImports;
-        XPE::EXPORT_HEADER export_header;
+        XPE::EXPORT_HEADER exportHeader;
         QList<XPE::RESOURCE_RECORD> listResources;
         QList<XPE::RICH_RECORD> listRichSignatures;
         QString sResourceManifest;

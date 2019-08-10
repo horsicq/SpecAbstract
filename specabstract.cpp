@@ -743,6 +743,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WINRAR:                            sResult=QString("WinRAR");                                      break;
         case RECORD_NAME_WINUPACK:                          sResult=QString("(Win)Upack");                                  break;
         case RECORD_NAME_WINZIP:                            sResult=QString("WinZip");                                      break;
+        case RECORD_NAME_WISE:                              sResult=QString("Wise");                                        break;
         case RECORD_NAME_WIXTOOLSET:                        sResult=QString("WiX Toolset");                                 break;
         case RECORD_NAME_WWPACK:                            sResult=QString("WWPack");                                      break;
         case RECORD_NAME_WWPACK32:                          sResult=QString("WWPack32");                                    break;
@@ -1218,7 +1219,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         //                qDebug("%d %s",j,result.listImports.at(i).listPositions.at(j).sFunction.toLatin1().data());
         //            }
         //        }
-        result.export_header=pe.getExport();
+        result.exportHeader=pe.getExport();
         result.listResources=pe.getResources();
         result.listRichSignatures=pe.getRichSignatureRecords();
         result.cliInfo=pe.getCliInfo(true);
@@ -4732,7 +4733,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
 
             QList<VCL_STRUCT> listVCL;
 
-            bool bCppExport=XPE::isExportFunctionPresent("__CPPdebugHook",&(pPEInfo->export_header));
+            bool bCppExport=XPE::isExportFunctionPresent("__CPPdebugHook",&(pPEInfo->exportHeader));
 
             if(XBinary::checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
             {
@@ -6283,6 +6284,37 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                     }
                 }
             }
+
+            // WISE Installer
+            if(pPEInfo->exportHeader.sName=="STUB32.EXE")
+            {
+                if(pPEInfo->exportHeader.listPositions.count()==2)
+                {
+                    if( (pPEInfo->exportHeader.listPositions.at(0).sFunctionName=="_MainWndProc@16")||
+                        (pPEInfo->exportHeader.listPositions.at(1).sFunctionName=="_StubFileWrite@12"))
+                    {
+                        _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_WISE,"","",0);
+
+                        // Check version
+                        pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+                else if(pPEInfo->exportHeader.listPositions.count()==6)
+                {
+                    if( (pPEInfo->exportHeader.listPositions.at(0).sFunctionName=="_LanguageDlg@16")||
+                        (pPEInfo->exportHeader.listPositions.at(1).sFunctionName=="_PasswordDlg@16")||
+                        (pPEInfo->exportHeader.listPositions.at(2).sFunctionName=="_ProgressDlg@16")||
+                        (pPEInfo->exportHeader.listPositions.at(3).sFunctionName=="_UpdateCRC@8")||
+                        (pPEInfo->exportHeader.listPositions.at(4).sFunctionName=="_t1@40")||
+                        (pPEInfo->exportHeader.listPositions.at(5).sFunctionName=="_t2@12"))
+                    {
+                        _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_WISE,"","",0);
+
+                        // Check version
+                        pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+            }
         }
     }
 }
@@ -6297,8 +6329,8 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice,bool bIsImage, SpecAbstract:
         {
             if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_RAR))
             {
-                if(XPE::isResourcePresent(XPE_DEF::S_RT_DIALOG,"STARTDLG",&(pPEInfo->listResources))&&
-                        XPE::isResourcePresent(XPE_DEF::S_RT_DIALOG,"LICENSEDLG",&(pPEInfo->listResources)))
+                if( XPE::isResourcePresent(XPE_DEF::S_RT_DIALOG,"STARTDLG",&(pPEInfo->listResources))&&
+                    XPE::isResourcePresent(XPE_DEF::S_RT_DIALOG,"LICENSEDLG",&(pPEInfo->listResources)))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_SFX,RECORD_NAME_WINRAR,"","",0);
                     // TODO Version
