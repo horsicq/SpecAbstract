@@ -4393,10 +4393,22 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
         if(recordCompiler.name!=RECORD_NAME_VISUALCCPP)
         {
             // TODO Check mb MS Linker only
-            if(pe.compareEntryPoint("E8......00E9$$$$$$$$6A..68........E8"))
+
+            if(!pPEInfo->bIs64)
             {
-                recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                recordCompiler.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
+                if(pe.compareEntryPoint("E8......00E9$$$$$$$$6A..68........E8"))
+                {
+                    recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
+                    recordCompiler.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
+                }
+            }
+            else
+            {
+                if(pe.compareEntryPoint("4883EC28E8........4883C428E9$$$$$$$$48895C24"))
+                {
+                    recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
+                    recordCompiler.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
+                }
             }
         }
 
@@ -4414,11 +4426,24 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             recordLinker.name=SpecAbstract::RECORD_NAME_MICROSOFTLINKER;
         }
 
+        if((recordCompiler.name==RECORD_NAME_VISUALCCPP)&&(recordLinker.name!=RECORD_NAME_MICROSOFTLINKER))
+        {
+            recordLinker.type=SpecAbstract::RECORD_TYPE_LINKER;
+            recordLinker.name=SpecAbstract::RECORD_NAME_MICROSOFTLINKER;
+        }
+
+        if((recordLinker.name==RECORD_NAME_MICROSOFTLINKER)&&(recordLinker.sVersion==""))
+        {
+            recordLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion,2,10,QChar('0'));
+        }
+
         if((recordMFC.name==RECORD_NAME_MFC)&&(recordLinker.sVersion=="")&&(pPEInfo->nMinorLinkerVersion!=10))
         {
             recordLinker.sVersion=recordMFC.sVersion;
             //            recordLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
         }
+
+        // TODO linker -> Compiler
 
         if(recordCompiler.name==SpecAbstract::RECORD_NAME_VISUALCCPP)
         {
@@ -4687,11 +4712,6 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
         if(pe.isImportLibraryPresentI("MSVCRT.dll",&(pPEInfo->listImports)))
         {
             // TODO
-        }
-
-        if((recordLinker.name==RECORD_NAME_MICROSOFTLINKER)&&(recordLinker.sVersion==""))
-        {
-            recordLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
         }
 
         if(recordLinker.type!=RECORD_TYPE_UNKNOWN)
