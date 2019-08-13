@@ -729,6 +729,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_VISE:                              sResult=QString("Vise");                                        break;
         case RECORD_NAME_VISUALBASIC:                       sResult=QString("Visual Basic");                                break;
         case RECORD_NAME_VISUALCCPP:                        sResult=QString("Visual C/C++");                                break;
+        case RECORD_NAME_VISUALCSHARP:                      sResult=QString("Visual C#");                                   break;
         case RECORD_NAME_VISUALOBJECTS:                     sResult=QString("Visual Objects");                              break;
         case RECORD_NAME_VMPROTECT:                         sResult=QString("VMProtect");                                   break;
         case RECORD_NAME_VPACKER:                           sResult=QString("VPacker");                                     break;
@@ -4129,6 +4130,9 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
         {
             recordLinker.type=RECORD_TYPE_LINKER;
             recordLinker.name=RECORD_NAME_MICROSOFTLINKER;
+
+            recordCompiler.type=RECORD_TYPE_COMPILER;
+            recordCompiler.name=RECORD_NAME_VISUALCSHARP;
         }
 
         // MFC
