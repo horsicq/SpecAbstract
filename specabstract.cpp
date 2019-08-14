@@ -4447,9 +4447,33 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             //            recordLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
         }
 
-        // TODO linker -> Compiler
+        if(recordLinker.name==RECORD_NAME_MICROSOFTLINKER)
+        {
+            if( (recordCompiler.name==RECORD_NAME_VISUALCCPP)||
+                (recordCompiler.name==RECORD_NAME_VISUALCSHARP))
+            {
+                if(recordCompiler.sVersion=="")
+                {
+                    QString sLinkerVersion=recordLinker.sVersion;
+                    QString sLinkerMajorVersion=sLinkerVersion.section(".",0,1);
 
-        if(recordCompiler.name==SpecAbstract::RECORD_NAME_VISUALCCPP)
+                    if      (sLinkerMajorVersion=="6.00") recordCompiler.sVersion="12.00";
+                    else if (sLinkerMajorVersion=="7.00") recordCompiler.sVersion="13.00";
+                    else if (sLinkerMajorVersion=="7.10") recordCompiler.sVersion="13.10";
+                    else if (sLinkerMajorVersion=="8.00") recordCompiler.sVersion="14.00";
+                    else if (sLinkerMajorVersion=="9.00") recordCompiler.sVersion="15.00";
+                    else if (sLinkerMajorVersion=="10.00") recordCompiler.sVersion="16.00";
+                    else if (sLinkerMajorVersion=="11.00") recordCompiler.sVersion="17.00";
+                    else if (sLinkerMajorVersion=="12.00") recordCompiler.sVersion="18.00";
+                    else if (sLinkerMajorVersion=="14.00") recordCompiler.sVersion="19.00";
+                    else if (sLinkerMajorVersion=="14.10") recordCompiler.sVersion="19.10";
+                    else if (sLinkerMajorVersion=="14.20") recordCompiler.sVersion="19.20";
+                }
+            }
+        }
+
+        if( (recordCompiler.name==RECORD_NAME_VISUALCCPP)||
+            (recordCompiler.name==RECORD_NAME_VISUALCSHARP))
         {
             QString sLinkerVersion=recordLinker.sVersion;
             QString sCompilerVersion=recordCompiler.sVersion;
