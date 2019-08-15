@@ -4392,6 +4392,10 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             {
                 recordCompiler.sVersion="19.10";
             }
+            else if(recordMFC.sVersion=="14.16")
+            {
+                recordCompiler.sVersion="19.16";
+            }
         }
 
         if(recordCompiler.name!=RECORD_NAME_VISUALCCPP)
@@ -4663,6 +4667,10 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
                 recordTool.sVersion="2017";
             }
             else if((sLinkerVersion=="14.10.25834")&&(sCompilerVersion=="19.10.25834")) // TODO Check v15.5.4
+            {
+                recordTool.sVersion="2017";
+            }
+            else if((sLinkerVersion=="14.16.27027")&&(sCompilerVersion=="19.16.27027"))
             {
                 recordTool.sVersion="2017";
             }
