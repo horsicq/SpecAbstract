@@ -4471,6 +4471,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
                     else if (sLinkerMajorVersion=="12.00") recordCompiler.sVersion="18.00";
                     else if (sLinkerMajorVersion=="14.00") recordCompiler.sVersion="19.00";
                     else if (sLinkerMajorVersion=="14.10") recordCompiler.sVersion="19.10";
+                    else if (sLinkerMajorVersion=="14.16") recordCompiler.sVersion="19.16";
                     else if (sLinkerMajorVersion=="14.20") recordCompiler.sVersion="19.20";
                 }
             }
@@ -4722,7 +4723,11 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             {
                 recordTool.sVersion="2017";
             }
-            else if(sCompilerMajorVersion=="19.15") // TODO
+            else if(sCompilerMajorVersion=="19.15")
+            {
+                recordTool.sVersion="2017";
+            }
+            else if(sCompilerMajorVersion=="19.16")
             {
                 recordTool.sVersion="2017";
             }

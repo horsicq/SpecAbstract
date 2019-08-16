@@ -34,6 +34,7 @@
 class SpecAbstract : public QObject
 {
     Q_OBJECT
+
 public:
     enum RECORD_FILETYPE
     {
