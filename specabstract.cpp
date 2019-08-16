@@ -300,6 +300,8 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_header_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",             "",                     "'MZ'........................................................FB"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "",             "",                     "'MZ'........................................................'PKLITE Copr. 1990 PKWARE Inc. All Rights Reserved'"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_WWPACK,                       "",             "",                     "'MZ'....................................................'WWP'"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LZEXE,                        "0.90",         "",                     "'MZ'....................................................'LZ09'"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LZEXE,                        "0.91",         "",                     "'MZ'....................................................'LZ91'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
@@ -312,6 +314,9 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_WATCOMCCPP,                   "1994",         "",                     "......'WATCOM C/C++16 Run-Time system. (c) Copyright by WATCOM International Corp. 1988-1994. '"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_WATCOMCCPP,                   "1995",         "",                     "......'WATCOM C/C++16 Run-Time system. (c) Copyright by WATCOM International Corp. 1988-1995. '"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_DOSEXTENDER,      SpecAbstract::RECORD_NAME_CAUSEWAY,                     "3.1X-3.4X",    "",                     "FA161F26A1....83E8..8ED0FB061607BE....8BFEB9....F3A407368C......8BD88CCA3603......368B......FD8BC53D....76"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LZEXE,                        "0.90",         "",                     "060E1F8B0E....8BF14E89F78CDB03......8EC3B4..31EDFDAC01C5AAE2"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LZEXE,                        "0.91",         "",                     "060E1F8B0E....8BF14E89F78CDB03......8EC3FDF3A453B8....50CB"},
+
 };
 
 SpecAbstract::SpecAbstract(QObject *parent)
@@ -612,6 +617,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LCCWIN:                            sResult=QString("lcc-win");                                     break;
         case RECORD_NAME_LSCRYPRT:                          sResult=QString("LSCRYPT");                                     break;
         case RECORD_NAME_LUACOMPILED:                       sResult=QString("Lua compiled");                                break;
+        case RECORD_NAME_LZEXE:                             sResult=QString("LZEXE");                                       break;
         case RECORD_NAME_MACROBJECT:                        sResult=QString("Macrobject");                                  break;
         case RECORD_NAME_MASKPE:                            sResult=QString("MaskPE");                                      break;
         case RECORD_NAME_MASM:                              sResult=QString("MASM");                                        break;
@@ -7454,6 +7460,31 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
         if(pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WWPACK))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WWPACK);
+            pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+        if( pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LZEXE)||
+            pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_LZEXE))
+        {
+            bool bHeader=pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LZEXE);
+            bool bEP=pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_LZEXE);
+
+            _SCANS_STRUCT ss={};
+
+            if(bHeader&&bEP)
+            {
+                ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LZEXE);
+            }
+            else if(bEP)
+            {
+                ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_LZEXE);
+                ss.sInfo=append(ss.sInfo,"modified header");
+            }
+            else if(bHeader)
+            {
+                ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LZEXE);
+                ss.sInfo=append(ss.sInfo,"modified entrypoint");
+            }
+
             pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
