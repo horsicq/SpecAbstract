@@ -298,7 +298,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_header_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LSCRYPRT,                     "1.21",         "",                     "'MZ'....................................................'L.S.    Crypt By'"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PACKWIN,                      "1.0",          "",                     "'MZ'........................................................'YRZLITE (C) 1993 WYellow Rose'"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",             "",                     "'MZ'........................................................FB"},
-    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "",             "",                     "'MZ'........................................................'PKLITE Copr. 1990 PKWARE Inc. All Rights Reserved'"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "1.0",          "",                     "'MZ'........................................................'PKLITE Copr. 1990 PKWARE Inc. All Rights Reserved'"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_WWPACK,                       "",             "",                     "'MZ'....................................................'WWP'"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LZEXE,                        "0.90",         "",                     "'MZ'....................................................'LZ09'"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LZEXE,                        "0.91",         "",                     "'MZ'....................................................'LZ91'"},
@@ -4358,50 +4358,20 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
             recordCompiler.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
 
-            if(recordMFC.sVersion=="6.00")
-            {
-                recordCompiler.sVersion="12.00";
-            }
-            else if(recordMFC.sVersion=="7.00")
-            {
-                recordCompiler.sVersion="13.00";
-            }
-            else if(recordMFC.sVersion=="7.10")
-            {
-                recordCompiler.sVersion="13.10";
-            }
-            else if(recordMFC.sVersion=="8.00")
-            {
-                recordCompiler.sVersion="14.00";
-            }
-            else if(recordMFC.sVersion=="9.00")
-            {
-                recordCompiler.sVersion="15.00";
-            }
-            else if(recordMFC.sVersion=="10.00")
-            {
-                recordCompiler.sVersion="16.00";
-            }
-            else if(recordMFC.sVersion=="11.00")
-            {
-                recordCompiler.sVersion="17.00";
-            }
-            else if(recordMFC.sVersion=="12.00")
-            {
-                recordCompiler.sVersion="18.00";
-            }
-            else if(recordMFC.sVersion=="14.00")
-            {
-                recordCompiler.sVersion="19.00";
-            }
-            else if(recordMFC.sVersion=="14.10")
-            {
-                recordCompiler.sVersion="19.10";
-            }
-            else if(recordMFC.sVersion=="14.16")
-            {
-                recordCompiler.sVersion="19.16";
-            }
+            if      (recordMFC.sVersion=="6.00")    recordCompiler.sVersion="12.00";
+            else if (recordMFC.sVersion=="7.00")    recordCompiler.sVersion="13.00";
+            else if (recordMFC.sVersion=="7.10")    recordCompiler.sVersion="13.10";
+            else if (recordMFC.sVersion=="8.00")    recordCompiler.sVersion="14.00";
+            else if (recordMFC.sVersion=="9.00")    recordCompiler.sVersion="15.00";
+            else if (recordMFC.sVersion=="10.00")   recordCompiler.sVersion="16.00";
+            else if (recordMFC.sVersion=="11.00")   recordCompiler.sVersion="17.00";
+            else if (recordMFC.sVersion=="12.00")   recordCompiler.sVersion="18.00";
+            else if (recordMFC.sVersion=="14.00")   recordCompiler.sVersion="19.00";
+            else if (recordMFC.sVersion=="14.10")   recordCompiler.sVersion="19.10";
+            else if (recordMFC.sVersion=="14.12")   recordCompiler.sVersion="19.12";
+            else if (recordMFC.sVersion=="14.13")   recordCompiler.sVersion="19.13";
+            else if (recordMFC.sVersion=="14.16")   recordCompiler.sVersion="19.16";
+            else if (recordMFC.sVersion=="14.20")   recordCompiler.sVersion="19.20";
         }
 
         if(recordCompiler.name!=RECORD_NAME_VISUALCCPP)
@@ -4467,18 +4437,20 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
                     QString sLinkerVersion=recordLinker.sVersion;
                     QString sLinkerMajorVersion=sLinkerVersion.section(".",0,1);
 
-                    if      (sLinkerMajorVersion=="6.00") recordCompiler.sVersion="12.00";
-                    else if (sLinkerMajorVersion=="7.00") recordCompiler.sVersion="13.00";
-                    else if (sLinkerMajorVersion=="7.10") recordCompiler.sVersion="13.10";
-                    else if (sLinkerMajorVersion=="8.00") recordCompiler.sVersion="14.00";
-                    else if (sLinkerMajorVersion=="9.00") recordCompiler.sVersion="15.00";
-                    else if (sLinkerMajorVersion=="10.00") recordCompiler.sVersion="16.00";
-                    else if (sLinkerMajorVersion=="11.00") recordCompiler.sVersion="17.00";
-                    else if (sLinkerMajorVersion=="12.00") recordCompiler.sVersion="18.00";
-                    else if (sLinkerMajorVersion=="14.00") recordCompiler.sVersion="19.00";
-                    else if (sLinkerMajorVersion=="14.10") recordCompiler.sVersion="19.10";
-                    else if (sLinkerMajorVersion=="14.16") recordCompiler.sVersion="19.16";
-                    else if (sLinkerMajorVersion=="14.20") recordCompiler.sVersion="19.20";
+                    if      (sLinkerMajorVersion=="6.00")   recordCompiler.sVersion="12.00";
+                    else if (sLinkerMajorVersion=="7.00")   recordCompiler.sVersion="13.00";
+                    else if (sLinkerMajorVersion=="7.10")   recordCompiler.sVersion="13.10";
+                    else if (sLinkerMajorVersion=="8.00")   recordCompiler.sVersion="14.00";
+                    else if (sLinkerMajorVersion=="9.00")   recordCompiler.sVersion="15.00";
+                    else if (sLinkerMajorVersion=="10.00")  recordCompiler.sVersion="16.00";
+                    else if (sLinkerMajorVersion=="11.00")  recordCompiler.sVersion="17.00";
+                    else if (sLinkerMajorVersion=="12.00")  recordCompiler.sVersion="18.00";
+                    else if (sLinkerMajorVersion=="14.00")  recordCompiler.sVersion="19.00";
+                    else if (sLinkerMajorVersion=="14.10")  recordCompiler.sVersion="19.10";
+                    else if (sLinkerMajorVersion=="14.12")  recordCompiler.sVersion="19.12";
+                    else if (sLinkerMajorVersion=="14.13")  recordCompiler.sVersion="19.13";
+                    else if (sLinkerMajorVersion=="14.16")  recordCompiler.sVersion="19.16";
+                    else if (sLinkerMajorVersion=="14.20")  recordCompiler.sVersion="19.20";
                 }
             }
         }
@@ -4726,6 +4698,14 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
                 recordTool.sVersion="2017";
             }
             else if(sCompilerMajorVersion=="19.11")
+            {
+                recordTool.sVersion="2017";
+            }
+            else if(sCompilerMajorVersion=="19.12")
+            {
+                recordTool.sVersion="2017";
+            }
+            else if(sCompilerMajorVersion=="19.13")
             {
                 recordTool.sVersion="2017";
             }
@@ -6015,32 +5995,9 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                             if(!sSetupDataString.contains("("))
                             {
                                 sSetupDataString=pe.read_ansiString(pe.read_uint32(nLdrTableOffset+12+24));
-                                ss.sInfo=append(ss.sInfo,"OLD.TODO");
+                                // TODO
+//                                ss.sInfo=append(ss.sInfo,"OLD.TODO");
                             }
-
-                            //                            QRegularExpression rxVersion("\\((.*?)\\)");
-                            //                            QRegularExpression rxOptions("\\) \\((.*?)\\)");
-                            //                            QRegularExpressionMatch matchVersion=rxVersion.match(sSetupDataString);
-                            //                            QRegularExpressionMatch matchOptions=rxOptions.match(sSetupDataString);
-
-                            //                            if(matchVersion.hasMatch())
-                            //                            {
-                            //                                ss.sVersion=matchVersion.captured(1);
-                            //                            }
-
-                            //                            if(matchOptions.hasMatch())
-                            //                            {
-                            //                                QString sEncode=matchOptions.captured(1);
-
-                            //                                if(sEncode=="a")
-                            //                                {
-                            //                                    ss.sInfo=append(ss.sInfo,"ANSI");
-                            //                                }
-                            //                                else if(sEncode=="u")
-                            //                                {
-                            //                                    ss.sInfo=append(ss.sInfo,"Unicode");
-                            //                                }
-                            //                            }
 
                             QString sVersion=XBinary::regExp("\\((.*?)\\)",sSetupDataString,1);
                             QString sOptions=XBinary::regExp("\\) \\((.*?)\\)",sSetupDataString,1);
