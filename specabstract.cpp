@@ -4368,8 +4368,11 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             else if (recordMFC.sVersion=="12.00")   recordCompiler.sVersion="18.00";
             else if (recordMFC.sVersion=="14.00")   recordCompiler.sVersion="19.00";
             else if (recordMFC.sVersion=="14.10")   recordCompiler.sVersion="19.10";
+            else if (recordMFC.sVersion=="14.11")   recordCompiler.sVersion="19.11";
             else if (recordMFC.sVersion=="14.12")   recordCompiler.sVersion="19.12";
             else if (recordMFC.sVersion=="14.13")   recordCompiler.sVersion="19.13";
+            else if (recordMFC.sVersion=="14.14")   recordCompiler.sVersion="19.14";
+            else if (recordMFC.sVersion=="14.15")   recordCompiler.sVersion="19.15";
             else if (recordMFC.sVersion=="14.16")   recordCompiler.sVersion="19.16";
             else if (recordMFC.sVersion=="14.20")   recordCompiler.sVersion="19.20";
         }
@@ -4447,8 +4450,11 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
                     else if (sLinkerMajorVersion=="12.00")  recordCompiler.sVersion="18.00";
                     else if (sLinkerMajorVersion=="14.00")  recordCompiler.sVersion="19.00";
                     else if (sLinkerMajorVersion=="14.10")  recordCompiler.sVersion="19.10";
+                    else if (sLinkerMajorVersion=="14.11")  recordCompiler.sVersion="19.11";
                     else if (sLinkerMajorVersion=="14.12")  recordCompiler.sVersion="19.12";
                     else if (sLinkerMajorVersion=="14.13")  recordCompiler.sVersion="19.13";
+                    else if (sLinkerMajorVersion=="14.14")  recordCompiler.sVersion="19.14";
+                    else if (sLinkerMajorVersion=="14.15")  recordCompiler.sVersion="19.15";
                     else if (sLinkerMajorVersion=="14.16")  recordCompiler.sVersion="19.16";
                     else if (sLinkerMajorVersion=="14.20")  recordCompiler.sVersion="19.20";
                 }
@@ -4464,6 +4470,8 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
 
             recordTool.type=SpecAbstract::RECORD_TYPE_TOOL;
             recordTool.name=SpecAbstract::RECORD_NAME_MICROSOFTVISUALSTUDIO;
+
+            // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warnings-by-compiler-version?view=vs-2019
 
             if(sCompilerVersion=="12.00.8168")
             {
@@ -4535,19 +4543,19 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
             else if((sLinkerVersion=="11.00.51106")&&(sCompilerVersion=="17.00.51106"))
             {
-                recordTool.sVersion="2012 update 1";
+                recordTool.sVersion="2012 Update 1";
             }
             else if((sLinkerVersion=="11.00.60315")&&(sCompilerVersion=="17.00.60315"))
             {
-                recordTool.sVersion="2012 update 2";
+                recordTool.sVersion="2012 Update 2";
             }
             else if((sLinkerVersion=="11.00.60610")&&(sCompilerVersion=="17.00.60610"))
             {
-                recordTool.sVersion="2012 update 3";
+                recordTool.sVersion="2012 Update 3";
             }
             else if((sLinkerVersion=="11.00.61030")&&(sCompilerVersion=="17.00.61030"))
             {
-                recordTool.sVersion="2012 update 4";
+                recordTool.sVersion="2012 Update 4";
             }
             else if((sLinkerVersion=="12.00.21005")&&(sCompilerVersion=="18.00.21005"))
             {
@@ -4555,15 +4563,15 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
             else if((sLinkerVersion=="12.00.30501")&&(sCompilerVersion=="18.00.30501"))
             {
-                recordTool.sVersion="2013 update 2";
+                recordTool.sVersion="2013 Update 2";
             }
             else if((sLinkerVersion=="12.00.30723")&&(sCompilerVersion=="18.00.30723"))
             {
-                recordTool.sVersion="2013 update 3";
+                recordTool.sVersion="2013 Update 3";
             }
             else if((sLinkerVersion=="12.00.31101")&&(sCompilerVersion=="18.00.31101"))
             {
-                recordTool.sVersion="2013 update 4";
+                recordTool.sVersion="2013 Update 4";
             }
             else if((sLinkerVersion=="12.00.40629")&&(sCompilerVersion=="18.00.40629"))
             {
@@ -4583,15 +4591,15 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
             else if((sLinkerVersion=="14.00.23026")&&(sCompilerVersion=="19.00.23026"))
             {
-                recordTool.sVersion="2015";
+                recordTool.sVersion="2015 RTM";
             }
             else if((sLinkerVersion=="14.00.23506")&&(sCompilerVersion=="19.00.23506"))
             {
-                recordTool.sVersion="2015 update 1";
+                recordTool.sVersion="2015 Update 1";
             }
             else if((sLinkerVersion=="14.00.23918")&&(sCompilerVersion=="19.00.23918"))
             {
-                recordTool.sVersion="2015 update 2";
+                recordTool.sVersion="2015 Update 2";
             }
             else if((sLinkerVersion=="14.00.24103")&&(sCompilerVersion=="19.00.24103"))
             {
@@ -4603,27 +4611,27 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
             else if((sLinkerVersion=="14.00.24123")&&(sCompilerVersion=="19.00.24123"))
             {
-                recordTool.sVersion="2015 update 3";
+                recordTool.sVersion="2015 Update 3";
             }
             else if((sLinkerVersion=="14.00.24210")&&(sCompilerVersion=="19.00.24210"))
             {
-                recordTool.sVersion="2015 update 3";
+                recordTool.sVersion="2015 Update 3";
             }
             else if((sLinkerVersion=="14.00.24212")&&(sCompilerVersion=="19.00.24212"))
             {
-                recordTool.sVersion="2015 update 3";
+                recordTool.sVersion="2015 Update 3";
             }
             else if((sLinkerVersion=="14.00.24213")&&(sCompilerVersion=="19.00.24213"))
             {
-                recordTool.sVersion="2015 update 3";
+                recordTool.sVersion="2015 Update 3";
             }
             else if((sLinkerVersion=="14.00.24215")&&(sCompilerVersion=="19.00.24215"))
             {
-                recordTool.sVersion="2015 update 3.1";
+                recordTool.sVersion="2015 Update 3.1";
             }
             else if((sLinkerVersion=="14.00.24218")&&(sCompilerVersion=="19.00.24218"))
             {
-                recordTool.sVersion="2015 update 3.1";
+                recordTool.sVersion="2015 Update 3.1";
             }
             else if((sLinkerVersion=="14.00.24723")&&(sCompilerVersion=="19.00.24723"))
             {
@@ -4631,27 +4639,51 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
             else if((sLinkerVersion=="14.10.25017")&&(sCompilerVersion=="19.10.25017"))
             {
-                recordTool.sVersion="2017";
+                recordTool.sVersion="2017 RTM";
             }
             else if((sLinkerVersion=="14.10.25019")&&(sCompilerVersion=="19.10.25019"))
             {
                 recordTool.sVersion="2017"; // 15.2?
             }
-            else if((sLinkerVersion=="14.10.25203")&&(sCompilerVersion=="19.10.25203"))
+            else if((sLinkerVersion=="14.10.25506")&&(sCompilerVersion=="19.10.25506"))
             {
-                recordTool.sVersion="2017";
+                recordTool.sVersion="2017 version 15.3";
             }
             else if((sLinkerVersion=="14.11.25547")&&(sCompilerVersion=="19.11.25547"))
             {
                 recordTool.sVersion="2017";
             }
-            else if((sLinkerVersion=="14.10.25834")&&(sCompilerVersion=="19.10.25834")) // TODO Check v15.5.4
+            else if((sLinkerVersion=="14.11.25830")&&(sCompilerVersion=="19.11.25830"))
+            {
+                recordTool.sVersion="2017 version 15.5";
+            }
+            else if((sLinkerVersion=="14.12.25834")&&(sCompilerVersion=="19.12.25834")) // TODO Check v15.5.4
             {
                 recordTool.sVersion="2017";
             }
-            else if((sLinkerVersion=="14.16.27027")&&(sCompilerVersion=="19.16.27027"))
+            else if((sLinkerVersion=="14.13.26128")&&(sCompilerVersion=="19.13.26128"))
+            {
+                recordTool.sVersion="2017 version 15.6";
+            }
+            else if((sLinkerVersion=="14.14.26428")&&(sCompilerVersion=="19.14.26428"))
+            {
+                recordTool.sVersion="2017 version 15.7";
+            }
+            else if((sLinkerVersion=="14.15.26726")&&(sCompilerVersion=="19.15.26726"))
+            {
+                recordTool.sVersion="2017 version 15.8";
+            }
+            else if((sLinkerVersion=="14.16.26926")&&(sCompilerVersion=="19.16.26926"))
+            {
+                recordTool.sVersion="2017 version 15.9";
+            }
+            else if((sLinkerVersion=="14.16.27027")&&(sCompilerVersion=="19.16.27027")) // TODO Check
             {
                 recordTool.sVersion="2017";
+            }
+            else if((sLinkerVersion=="14.20.27004")&&(sCompilerVersion=="19.20.27004"))
+            {
+                recordTool.sVersion="2019 RTM";
             }
             else if((sLinkerVersion=="14.20.27508")&&(sCompilerVersion=="19.20.27508"))
             {
@@ -4695,27 +4727,35 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
             else if(sCompilerMajorVersion=="19.10") // TODO ???
             {
-                recordTool.sVersion="2017";
+                recordTool.sVersion="2017 RTM";
             }
             else if(sCompilerMajorVersion=="19.11")
             {
-                recordTool.sVersion="2017";
+                recordTool.sVersion="2017 version 15.3";
             }
             else if(sCompilerMajorVersion=="19.12")
             {
-                recordTool.sVersion="2017";
+                recordTool.sVersion="2017 version 15.5";
             }
             else if(sCompilerMajorVersion=="19.13")
             {
-                recordTool.sVersion="2017";
+                recordTool.sVersion="2017 version 15.6";
+            }
+            else if(sCompilerMajorVersion=="19.14")
+            {
+                recordTool.sVersion="2017 version 15.7";
             }
             else if(sCompilerMajorVersion=="19.15")
             {
-                recordTool.sVersion="2017";
+                recordTool.sVersion="2017 version 15.8";
             }
             else if(sCompilerMajorVersion=="19.16")
             {
-                recordTool.sVersion="2017";
+                recordTool.sVersion="2017 version 15.9";
+            }
+            else if(sCompilerMajorVersion=="19.20")
+            {
+                recordTool.sVersion="2019";
             }
 
             if(recordTool.sVersion=="")
