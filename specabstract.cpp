@@ -775,7 +775,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
 
 SpecAbstract::UNPACK_OPTIONS SpecAbstract::getPossibleUnpackOptions(QIODevice *pDevice,bool bIsImage)
 {
-    UNPACK_OPTIONS result= {};
+    UNPACK_OPTIONS result={};
 
     QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(pDevice);
 
@@ -966,7 +966,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
 
     if(!result.basic_info.listDetects.count())
     {
-        _SCANS_STRUCT ssUnknown= {};
+        _SCANS_STRUCT ssUnknown={};
 
         ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
         ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
@@ -988,7 +988,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     QElapsedTimer timer;
     timer.start();
 
-    MSDOSINFO_STRUCT result= {};
+    MSDOSINFO_STRUCT result={};
 
     XMSDOS msdos(pDevice,pOptions->bIsImage);
 
@@ -1029,7 +1029,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
 
     if(!result.basic_info.listDetects.count())
     {
-        _SCANS_STRUCT ssUnknown= {};
+        _SCANS_STRUCT ssUnknown={};
 
         ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
         ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
@@ -1051,7 +1051,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
     QElapsedTimer timer;
     timer.start();
 
-    ELFINFO_STRUCT result= {};
+    ELFINFO_STRUCT result={};
 
     XELF elf(pDevice,pOptions->bIsImage);
 
@@ -1100,7 +1100,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
 
         if(!result.basic_info.listDetects.count())
         {
-            _SCANS_STRUCT ssUnknown= {};
+            _SCANS_STRUCT ssUnknown={};
 
             ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
             ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
@@ -1121,7 +1121,7 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
     QElapsedTimer timer;
     timer.start();
 
-    MACHINFO_STRUCT result= {};
+    MACHINFO_STRUCT result={};
 
     XMACH mach(pDevice,pOptions->bIsImage);
 
@@ -1159,7 +1159,7 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
 
         if(!result.basic_info.listDetects.count())
         {
-            _SCANS_STRUCT ssUnknown= {};
+            _SCANS_STRUCT ssUnknown={};
 
             ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
             ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
@@ -1180,7 +1180,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
     QElapsedTimer timer;
     timer.start();
 
-    PEINFO_STRUCT result= {};
+    PEINFO_STRUCT result={};
 
     XPE pe(pDevice,pOptions->bIsImage);
 
@@ -1377,7 +1377,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         // TODO unknown cryptors
         if(!result.basic_info.listDetects.count())
         {
-            _SCANS_STRUCT ssUnknown= {};
+            _SCANS_STRUCT ssUnknown={};
 
             ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
             ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
@@ -1397,7 +1397,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
 SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStruct(quint32 nVariant, SpecAbstract::RECORD_FILETYPE filetype, SpecAbstract::RECORD_TYPE type, SpecAbstract::RECORD_NAME name, QString sVersion, QString sInfo, qint64 nOffset)
 {
-    _SCANS_STRUCT result= {};
+    _SCANS_STRUCT result={};
 
     result.nVariant=nVariant;
     result.filetype=filetype;
@@ -2590,7 +2590,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 {
                     if((viUPX.sVersion!=""))
                     {
-                        SpecAbstract::_SCANS_STRUCT recordUPX= {};
+                        SpecAbstract::_SCANS_STRUCT recordUPX={};
 
                         recordUPX.type=RECORD_TYPE_PACKER;
                         recordUPX.name=RECORD_NAME_UPX;
@@ -2727,7 +2727,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                     bool bDetect=false;
 
-                    SpecAbstract::_SCANS_STRUCT recordEnigma= {};
+                    SpecAbstract::_SCANS_STRUCT recordEnigma={};
 
                     recordEnigma.type=SpecAbstract::RECORD_TYPE_PROTECTOR;
                     recordEnigma.name=SpecAbstract::RECORD_NAME_ENIGMA;
@@ -2988,7 +2988,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 {
                     if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_KKRUNCHY))
                     {
-                        SpecAbstract::_SCANS_STRUCT ss= {};
+                        SpecAbstract::_SCANS_STRUCT ss={};
 
                         if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_KKRUNCHY))
                         {
@@ -3098,7 +3098,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                         if(nOffset1!=-1)
                         {
-                            SpecAbstract::_SCANS_STRUCT recordACProtect= {};
+                            SpecAbstract::_SCANS_STRUCT recordACProtect={};
                             recordACProtect.type=RECORD_TYPE_PROTECTOR;
                             recordACProtect.name=RECORD_NAME_ACPROTECT;
 
@@ -3448,7 +3448,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                     if(_sVersion!="")
                     {
-                        SpecAbstract::_SCANS_STRUCT recordASPack= {};
+                        SpecAbstract::_SCANS_STRUCT recordASPack={};
 
                         recordASPack.type=RECORD_TYPE_PACKER;
                         recordASPack.name=RECORD_NAME_ASPACK;
@@ -3464,7 +3464,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 // TODO false
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_WWPACK32))
                 {
-                    SpecAbstract::_SCANS_STRUCT ss= {};
+                    SpecAbstract::_SCANS_STRUCT ss={};
 
                     ss.type=RECORD_TYPE_PACKER;
                     ss.name=RECORD_NAME_WWPACK32;
@@ -4116,11 +4116,11 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
 
 void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
-    SpecAbstract::_SCANS_STRUCT recordLinker= {};
-    SpecAbstract::_SCANS_STRUCT recordCompiler= {};
-    SpecAbstract::_SCANS_STRUCT recordTool= {};
-    SpecAbstract::_SCANS_STRUCT recordMFC= {};
-    SpecAbstract::_SCANS_STRUCT recordNET= {};
+    SpecAbstract::_SCANS_STRUCT recordLinker={};
+    SpecAbstract::_SCANS_STRUCT recordCompiler={};
+    SpecAbstract::_SCANS_STRUCT recordTool={};
+    SpecAbstract::_SCANS_STRUCT recordMFC={};
+    SpecAbstract::_SCANS_STRUCT recordNET={};
 
     XPE pe(pDevice,bIsImage);
 
@@ -4285,11 +4285,11 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             recordLinker.type=SpecAbstract::RECORD_TYPE_LINKER;
             recordLinker.name=SpecAbstract::RECORD_NAME_MICROSOFTLINKER;
 
-            SpecAbstract::_SCANS_STRUCT ssLinker= {};
+            SpecAbstract::_SCANS_STRUCT ssLinker={};
 
-            SpecAbstract::_SCANS_STRUCT ssCompiler= {};
-            SpecAbstract::_SCANS_STRUCT _ssCompiler1= {};
-            SpecAbstract::_SCANS_STRUCT _ssCompiler2= {};
+            SpecAbstract::_SCANS_STRUCT ssCompiler={};
+            SpecAbstract::_SCANS_STRUCT _ssCompiler1={};
+            SpecAbstract::_SCANS_STRUCT _ssCompiler2={};
 
             for(int i=1; i<=10; i++)
             {
@@ -4391,7 +4391,8 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
             else
             {
-                if(pe.compareEntryPoint("4883EC28E8........4883C428E9$$$$$$$$48895C24"))
+                if( pe.compareEntryPoint("4883EC28E8........4883C428E9$$$$$$$$48895C24")||
+                    pe.compareEntryPoint("4883EC28E8........4883C428E9$$$$$$$$488BC44889580848897010488978184C896020"))
                 {
                     recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
                     recordCompiler.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
@@ -5597,7 +5598,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
                 if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER))
                 {
-                    SpecAbstract::_SCANS_STRUCT recordLinker= {};
+                    SpecAbstract::_SCANS_STRUCT recordLinker={};
                     recordLinker.name=RECORD_NAME_LCCLNK;
                     recordLinker.type=RECORD_TYPE_LINKER;
                     recordLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
@@ -5619,9 +5620,9 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
 void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
-    SpecAbstract::_SCANS_STRUCT recordLinker= {};
-    SpecAbstract::_SCANS_STRUCT recordCompiler= {};
-    SpecAbstract::_SCANS_STRUCT recordTool= {};
+    SpecAbstract::_SCANS_STRUCT recordLinker={};
+    SpecAbstract::_SCANS_STRUCT recordCompiler={};
+    SpecAbstract::_SCANS_STRUCT recordTool={};
 
     XPE pe(pDevice,bIsImage);
 
@@ -6527,7 +6528,7 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_UPX)&&
                         (pPEInfo->mapImportDetects.value(RECORD_NAME_UPX).nVariant==0))
                 {
-                    SpecAbstract::_SCANS_STRUCT recordSS= {};
+                    SpecAbstract::_SCANS_STRUCT recordSS={};
 
                     recordSS.type=RECORD_TYPE_PACKER;
                     recordSS.name=RECORD_NAME_UNKNOWNUPXLIKE;
@@ -6588,7 +6589,7 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
         {
             if(XBinary::isRegExpPresent(_TEXT_records[i].pszString,pBinaryInfo->sHeaderText))
             {
-                SpecAbstract::_SCANS_STRUCT record= {};
+                SpecAbstract::_SCANS_STRUCT record={};
                 record.nVariant=_TEXT_records[i].nVariant;
                 record.filetype=_TEXT_records[i].filetype;
                 record.type=_TEXT_records[i].type;
@@ -7591,7 +7592,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
         // Qt
         if(XELF::isSectionNamePresent(".qtversion",&(pELFInfo->listSectionRecords)))
         {
-            SpecAbstract::_SCANS_STRUCT recordSS= {};
+            SpecAbstract::_SCANS_STRUCT recordSS={};
 
             recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
             recordSS.name=SpecAbstract::RECORD_NAME_QT;
@@ -7631,7 +7632,7 @@ void SpecAbstract::ELF_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstrac
 
     if(elf.isValid())
     {
-        SpecAbstract::_SCANS_STRUCT recordCompiler= {};
+        SpecAbstract::_SCANS_STRUCT recordCompiler={};
         // GCC
         if(XELF::isSectionNamePresent(".gcc_except_table",&(pELFInfo->listSectionRecords)))
         {
@@ -7673,7 +7674,7 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
 
 //        if(viUPX.sVersion!="")
 //        {
-//            SpecAbstract::_SCANS_STRUCT recordUPX= {};
+//            SpecAbstract::_SCANS_STRUCT recordUPX={};
 
 //            recordUPX.type=RECORD_TYPE_PACKER;
 //            recordUPX.name=RECORD_NAME_UPX;
@@ -7694,7 +7695,7 @@ void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbst
         // GCC
         if(XMACH::isSectionNamePresent(&(pMACHInfo->listSectionRecords),"__gcc_except_tab"))
         {
-            SpecAbstract::_SCANS_STRUCT recordSS= {};
+            SpecAbstract::_SCANS_STRUCT recordSS={};
 
             recordSS.type=SpecAbstract::RECORD_TYPE_COMPILER;
             recordSS.name=SpecAbstract::RECORD_NAME_GCC;
@@ -7706,7 +7707,7 @@ void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbst
         {
             XMACH::LIBRARY_RECORD lr=XMACH::getLibraryRecordByName(&(pMACHInfo->listLibraryRecords),"QtCore");
 
-            SpecAbstract::_SCANS_STRUCT recordSS= {};
+            SpecAbstract::_SCANS_STRUCT recordSS={};
 
             recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
             recordSS.name=SpecAbstract::RECORD_NAME_QT;
@@ -7719,7 +7720,7 @@ void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbst
         {
 //            XMACH::LIBRARY_RECORD lr=XMACH::getLibraryRecordByName(&(pMACHInfo->listLibraryRecords),"Carbon");
 
-            SpecAbstract::_SCANS_STRUCT recordSS= {};
+            SpecAbstract::_SCANS_STRUCT recordSS={};
 
             recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
             recordSS.name=SpecAbstract::RECORD_NAME_CARBON;
@@ -7731,7 +7732,7 @@ void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbst
         {
 //            XMACH::LIBRARY_RECORD lr=XMACH::getLibraryRecordByName(&(pMACHInfo->listLibraryRecords),"Cocoa");
 
-            SpecAbstract::_SCANS_STRUCT recordSS= {};
+            SpecAbstract::_SCANS_STRUCT recordSS={};
 
             recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
             recordSS.name=SpecAbstract::RECORD_NAME_COCOA;
@@ -7752,7 +7753,7 @@ void SpecAbstract::MACH_handle_Protection(QIODevice *pDevice, bool bIsImage, Spe
         {
 //            XMACH::LIBRARY_RECORD lr=XMACH::getLibraryRecordByName(&(pMACHInfo->listLibraryRecords),"libVMProtectSDK.dylib");
 
-            SpecAbstract::_SCANS_STRUCT recordSS= {};
+            SpecAbstract::_SCANS_STRUCT recordSS={};
 
             recordSS.type=SpecAbstract::RECORD_TYPE_PROTECTOR;
             recordSS.name=SpecAbstract::RECORD_NAME_VMPROTECT;
@@ -10598,7 +10599,7 @@ bool SpecAbstract::PE_isValid_UPX(QIODevice *pDevice,bool bIsImage, SpecAbstract
 
 SpecAbstract::SCAN_STRUCT SpecAbstract::scansToScan(SpecAbstract::BASIC_INFO *pBasicInfo, SpecAbstract::_SCANS_STRUCT *pScansStruct)
 {
-    SCAN_STRUCT result= {};
+    SCAN_STRUCT result={};
 
     result.id=pBasicInfo->id;
     result.nSize=pBasicInfo->nSize;
@@ -10624,7 +10625,7 @@ QByteArray SpecAbstract::_BasicPEInfoToArray(SpecAbstract::BASIC_PE_INFO *pInfo)
 
 SpecAbstract::BASIC_PE_INFO SpecAbstract::_ArrayToBasicPEInfo(const QByteArray *pbaArray)
 {
-    BASIC_PE_INFO result= {};
+    BASIC_PE_INFO result={};
 
     QDataStream ds((QByteArray *)pbaArray,QIODevice::ReadOnly);
 
@@ -10651,7 +10652,7 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
 
                     if(_nOffset!=-1)
                     {
-                        SpecAbstract::_SCANS_STRUCT record= {};
+                        SpecAbstract::_SCANS_STRUCT record={};
                         record.nVariant=pRecords[i].nVariant;
                         record.filetype=pRecords[i].filetype;
                         record.type=pRecords[i].type;
@@ -10680,7 +10681,7 @@ void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, 
             {
                 if(XBinary::compareSignatureStrings(sSignature,pRecords[i].pszSignature))
                 {
-                    SpecAbstract::_SCANS_STRUCT record= {};
+                    SpecAbstract::_SCANS_STRUCT record={};
                     record.nVariant=pRecords[i].nVariant;
                     record.filetype=pRecords[i].filetype;
                     record.type=pRecords[i].type;
@@ -10734,7 +10735,7 @@ void SpecAbstract::resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_
 
                 if(bSuccess)
                 {
-                    SpecAbstract::_SCANS_STRUCT record= {};
+                    SpecAbstract::_SCANS_STRUCT record={};
                     record.nVariant=pRecords[i].nVariant;
                     record.filetype=pRecords[i].filetype;
                     record.type=pRecords[i].type;
@@ -10786,7 +10787,7 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
                         QString sTest1=pListStrings->at(i);
                         QString sTest2=pRecords[j].pszString;
 
-                        SpecAbstract::_SCANS_STRUCT record= {};
+                        SpecAbstract::_SCANS_STRUCT record={};
                         record.nVariant=pRecords[j].nVariant;
                         record.filetype=pRecords[j].filetype;
                         record.type=pRecords[j].type;
@@ -10829,7 +10830,7 @@ QByteArray SpecAbstract::serializeScanStruct(SCAN_STRUCT ssRecord, bool bIsHeade
 
 SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(QByteArray baData, bool *pbIsHeader)
 {
-    SCAN_STRUCT ssResult= {};
+    SCAN_STRUCT ssResult={};
 
     QDataStream ds(baData);
 
@@ -10889,7 +10890,7 @@ QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice
 
                 if(nValue<=0xFFFF)
                 {
-                    VCL_STRUCT record= {};
+                    VCL_STRUCT record={};
 
                     record.nValue=nValue;
                     record.nOffset=nAddressSize*(i+1);
@@ -10913,7 +10914,7 @@ QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice
 
 SpecAbstract::VCL_PACKAGEINFO SpecAbstract::PE_getVCLPackageInfo(QIODevice *pDevice,bool bIsImage, QList<XPE::RESOURCE_RECORD> *pListResources)
 {
-    VCL_PACKAGEINFO result= {};
+    VCL_PACKAGEINFO result={};
 
     XPE pe(pDevice,bIsImage);
 
@@ -10973,7 +10974,7 @@ SpecAbstract::VCL_PACKAGEINFO SpecAbstract::PE_getVCLPackageInfo(QIODevice *pDev
 
 SpecAbstract::_SCANS_STRUCT SpecAbstract::PE_getRichSignatureDescription(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo,quint32 nRichID)
 {
-    SpecAbstract::_SCANS_STRUCT result= {};
+    SpecAbstract::_SCANS_STRUCT result={};
 
     XPE pe(pDevice,bIsImage);
 
