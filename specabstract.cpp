@@ -287,9 +287,7 @@ SpecAbstract::STRING_RECORD _TEXT_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_PHP,                          "",             "",                     "^<\\?php"},
     {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_PYTHON,                       "",             "",                     "import"},
     {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_XML,                          "",             "",                     "^<\\?xml"},
-    {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_PERL,                         "",             "",                     "#!perl"},
-    {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_PERL,                         "",             "",                     "#!/usr/bin/env perl"},
-    {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_PERL,                         "",             "",                     "#!/usr/bin/perl"},
+    {0, SpecAbstract::RECORD_FILETYPE_TEXT,     SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_SHELL,                        "",             "",                     "#!"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_header_records[]=
@@ -316,7 +314,6 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_DOSEXTENDER,      SpecAbstract::RECORD_NAME_CAUSEWAY,                     "3.1X-3.4X",    "",                     "FA161F26A1....83E8..8ED0FB061607BE....8BFEB9....F3A407368C......8BD88CCA3603......368B......FD8BC53D....76"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LZEXE,                        "0.90",         "",                     "060E1F8B0E....8BF14E89F78CDB03......8EC3B4..31EDFDAC01C5AAE2"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LZEXE,                        "0.91",         "",                     "060E1F8B0E....8BF14E89F78CDB03......8EC3FDF3A453B8....50CB"},
-
 };
 
 SpecAbstract::SpecAbstract(QObject *parent)
@@ -701,6 +698,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_RTF:                               sResult=QString("Rich Text Format");                            break;
         case RECORD_NAME_SDPROTECTORPRO:                    sResult=QString("SDProtector Pro");                             break;
         case RECORD_NAME_SETUPFACTORY:                      sResult=QString("Setup Factory");                               break;
+        case RECORD_NAME_SHELL:                             sResult=QString("Shell");                                       break;
         case RECORD_NAME_SIMBIOZ:                           sResult=QString("SimbiOZ");                                     break;
         case RECORD_NAME_SIMPLEPACK:                        sResult=QString("Simple Pack");                                 break;
         case RECORD_NAME_SIXXPACK:                          sResult=QString("Sixxpack");                                    break;
@@ -6637,10 +6635,30 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
             pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
         }
 
-        if(pBinaryInfo->mapTextHeaderDetects.contains(RECORD_NAME_PERL))
+//        if(pBinaryInfo->mapTextHeaderDetects.contains(RECORD_NAME_PERL))
+//        {
+//            _SCANS_STRUCT ss=pBinaryInfo->mapTextHeaderDetects.value(RECORD_NAME_PERL);
+//            pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+//        }
+
+        if(pBinaryInfo->mapTextHeaderDetects.contains(RECORD_NAME_SHELL))
         {
-            _SCANS_STRUCT ss=pBinaryInfo->mapTextHeaderDetects.value(RECORD_NAME_PERL);
-            pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+            QString sInterpreter;
+
+            if(sInterpreter=="") sInterpreter=XBinary::regExp("#!.*/(\\w+)",                pBinaryInfo->sHeaderText,1); // #!/usr/bin/perl
+            if(sInterpreter=="") sInterpreter=XBinary::regExp("#!/usr/bin/env (\\w+)",      pBinaryInfo->sHeaderText,1); // #!/usr/bin/env perl
+            if(sInterpreter=="") sInterpreter=XBinary::regExp("#!(\\w+)",                   pBinaryInfo->sHeaderText,1); // #!perl
+
+            if(sInterpreter=="perl")
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_TEXT,RECORD_TYPE_SOURCECODE,RECORD_NAME_PERL,"","",0);
+                pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+            }
+            else if(sInterpreter=="sh")
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_TEXT,RECORD_TYPE_SOURCECODE,RECORD_NAME_SHELL,"","",0);
+                pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+            }
         }
 
         if(pBinaryInfo->mapResultTexts.count()==0)
