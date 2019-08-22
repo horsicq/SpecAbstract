@@ -271,6 +271,7 @@ SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_CONFUSER,                     "1.X",          "",                     "ConfusedByAttribute"},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_SPICESNET,                    "",             "",                     "NineRays.Obfuscator"},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_OBFUSCATORNET2009,            "",             "",                     "Macrobject.Obfuscator"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_XENOCODEPOSTBUILD,            "",             "",                     "Xenocode.Client.Attributes.AssemblyAttributes"},
 };
 
 //// TODO
@@ -755,6 +756,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WWPACK32:                          sResult=QString("WWPack32");                                    break;
         case RECORD_NAME_WXWIDGETS:                         sResult=QString("wxWidgets");                                   break;
         case RECORD_NAME_XENOCODE:                          sResult=QString("Xenocode");                                    break;
+        case RECORD_NAME_XENOCODEPOSTBUILD:                 sResult=QString("Xenocode Postbuild");                          break;
         case RECORD_NAME_XENOCODEPOSTBUILD2009:             sResult=QString("Xenocode Postbuild 2009");                     break;
         case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2009:  sResult=QString("Xenocode Virtual Application Studio 2009");    break;
         case RECORD_NAME_XCOMP:                             sResult=QString("XComp");                                       break;
@@ -4107,6 +4109,12 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
         {
             _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_XENOCODEPOSTBUILD2009,"","",0);
             ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+        // Xenocode Postbuild
+        if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_XENOCODEPOSTBUILD))
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_XENOCODEPOSTBUILD);
             pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
     }
