@@ -627,6 +627,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MICROSOFTC:                        sResult=QString("Microsoft C");                                 break;
         case RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP:         sResult=QString("Microsoft Compiled HTML Help");                break;
         case RECORD_NAME_MICROSOFTCPP:                      sResult=QString("Microsoft C++");                               break;
+        case RECORD_NAME_MICROSOFTDOTNETFRAMEWORK:          sResult=QString("Microsoft .NET Framework");                    break;
         case RECORD_NAME_MICROSOFTEXCEL:                    sResult=QString("Microsoft Excel");                             break;
         case RECORD_NAME_MICROSOFTLINKER:                   sResult=QString("Microsoft linker");                            break;
         case RECORD_NAME_MICROSOFTLINKERDATABASE:           sResult=QString("Microsoft Linker Database");                   break;
@@ -6299,6 +6300,14 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("VeraCrypt"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_VERACRYPT,"","",0);
+                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+
+                pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
+            if(XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Microsoft .NET Framework"))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_MICROSOFTDOTNETFRAMEWORK,"","",0);
                 ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
