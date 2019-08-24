@@ -32,6 +32,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_ZLIB,                         "",             "level 6(default)",     "789C"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_ZLIB,                         "",             "level 7-9(best)",      "78DA"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_7Z,                           "",             "",                     "'7z'BCAF271C"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_ARJ,                          "",             "",                     "60EA"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_CERTIFICATE,      SpecAbstract::RECORD_NAME_WINAUTH,                      "2.0",          "PKCS #7",              "........00020200"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_MINGW,                        "",             "",                     "'.file'000000"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_PDBFILELINK,                  "2.0",          "",                     "'NB10'"},
@@ -492,6 +493,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ANDPAKK2:                          sResult=QString("ANDpakk2");                                    break;
         case RECORD_NAME_ANDROIDGRADLE:                     sResult=QString("Android Gradle");                              break;
         case RECORD_NAME_ANTIDOTE:                          sResult=QString("AntiDote");                                    break;
+        case RECORD_NAME_ARJ:                               sResult=QString("ARJ");                                         break;
         case RECORD_NAME_ARMADILLO:                         sResult=QString("Armadillo");                                   break;
         case RECORD_NAME_ARMPROTECTOR:                      sResult=QString("ARM Protector");                               break;
         case RECORD_NAME_ASDPACK:                           sResult=QString("ASDPack");                                     break;
@@ -6794,6 +6796,15 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ZLIB))&&(pBinaryInfo->basic_info.nSize>=32))
     {
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ZLIB);
+
+        // TODO options
+        // TODO files
+        pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    // ARJ
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ARJ))&&(pBinaryInfo->basic_info.nSize>=4))
+    {
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ARJ);
 
         // TODO options
         // TODO files
