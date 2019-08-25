@@ -302,6 +302,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_header_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_WWPACK,                       "",             "",                     "'MZ'....................................................'WWP'"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LZEXE,                        "0.90",         "",                     "'MZ'....................................................'LZ09'"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LZEXE,                        "0.91",         "",                     "'MZ'....................................................'LZ91'"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_SFX,              SpecAbstract::RECORD_NAME_LHASSFX,                      "2.11S",        "",                     "'MZ'....................................................................'LHA'27's SFX 2.11S (c) Yoshi, 1991'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
@@ -615,6 +616,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LAZARUS:                           sResult=QString("Lazarus");                                     break;
         case RECORD_NAME_LCCLNK:                            sResult=QString("lcclnk");                                      break;
         case RECORD_NAME_LCCWIN:                            sResult=QString("lcc-win");                                     break;
+        case RECORD_NAME_LHASSFX:                           sResult=QString("LHA's SFX");                                   break;
         case RECORD_NAME_LSCRYPRT:                          sResult=QString("LSCRYPT");                                     break;
         case RECORD_NAME_LUACOMPILED:                       sResult=QString("Lua compiled");                                break;
         case RECORD_NAME_LZEXE:                             sResult=QString("LZEXE");                                       break;
@@ -1020,6 +1022,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     MSDOS_handle_Borland(pDevice,pOptions->bIsImage,&result);
     MSDOS_handle_Tools(pDevice,pOptions->bIsImage,&result);
     MSDOS_handle_Protection(pDevice,pOptions->bIsImage,&result);
+    MSDOS_handle_SFX(pDevice,pOptions->bIsImage,&result);
     MSDOS_handle_DosExtenders(pDevice,pOptions->bIsImage,&result);
 
     MSDOS_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions);
@@ -1028,6 +1031,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     result.basic_info.listDetects.append(result.mapResultLinkers.values());
     result.basic_info.listDetects.append(result.mapResultCompilers.values());
     result.basic_info.listDetects.append(result.mapResultPackers.values());
+    result.basic_info.listDetects.append(result.mapResultSFX.values());
     result.basic_info.listDetects.append(result.mapResultProtectors.values());
 
     if(!result.basic_info.listDetects.count())
@@ -7530,6 +7534,20 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
             }
 
             pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+    }
+}
+
+void SpecAbstract::MSDOS_handle_SFX(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
+{
+    XMSDOS msdos(pDevice,bIsImage);
+
+    if(msdos.isValid())
+    {
+        if(pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LHASSFX))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LHASSFX);
+            pMSDOSInfo->mapResultSFX.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
 }

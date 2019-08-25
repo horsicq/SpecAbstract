@@ -229,6 +229,7 @@ public:
         RECORD_NAME_LAZARUS,
         RECORD_NAME_LCCLNK,
         RECORD_NAME_LCCWIN,
+        RECORD_NAME_LHASSFX,
         RECORD_NAME_LSCRYPRT,
         RECORD_NAME_LUACOMPILED,
         RECORD_NAME_LZEXE,
@@ -500,6 +501,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultSFX;
 
         QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
     };
@@ -787,6 +789,7 @@ public:
     static void MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_Protection(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
+    static void MSDOS_handle_SFX(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_DosExtenders(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_Recursive(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo,SpecAbstract::SCAN_OPTIONS *pOptions);
 
