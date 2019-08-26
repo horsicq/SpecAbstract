@@ -550,6 +550,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DJVU:                              sResult=QString("DjVu");                                        break;
         case RECORD_NAME_DMD32D:                            sResult=QString("DMD32 D");                                     break;
         case RECORD_NAME_DNGUARD:                           sResult=QString("DNGuard");                                     break;
+        case RECORD_NAME_DOS16M:                            sResult=QString("DOS/16M");                                     break;
         case RECORD_NAME_DOTFIXNICEPROTECT:                 sResult=QString("DotFix Nice Protect");                         break;
         case RECORD_NAME_DOTFUSCATOR:                       sResult=QString("Dotfuscator");                                 break;
         case RECORD_NAME_DOTNET:                            sResult=QString(".NET");                                        break;
@@ -7638,6 +7639,19 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, bool bIsImage, 
             ss.sVersion=sWDOSX.section(" ",1,1);
 
             pMSDOSInfo->mapResultDosExtenders.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+
+        // DOS/16M
+        if(pMSDOSInfo->basic_info.bIsDeepScan)
+        {
+            qint64 nVersionOffset=msdos.find_ansiString(0,qMin(pMSDOSInfo->basic_info.nSize,(qint64)0x1000),"DOS/16M Copyright (C) Tenberry Software Inc");
+
+            if(nVersionOffset!=-1)
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_DOSEXTENDER,RECORD_NAME_DOS16M,"","",0);
+                // TODO Version
+                pMSDOSInfo->mapResultDosExtenders.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+            }
         }
     }
 }
