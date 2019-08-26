@@ -6453,6 +6453,23 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice,bool bIsImage, SpecAbstract:
                 }
             }
 
+            if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_ZIP))
+            {
+                if(XBinary::checkOffsetSize(pPEInfo->osDataSection)&&(pPEInfo->basic_info.bIsDeepScan))
+                {
+                    qint64 _nOffset=pPEInfo->osDataSection.nOffset;
+                    qint64 _nSize=pPEInfo->osDataSection.nSize;
+
+                    qint64 nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"ZIP self-extractor");
+                    if(nOffset_Version!=-1)
+                    {
+                        _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_SFX,RECORD_NAME_ZIP,"","",0);
+                        // TODO Version
+                        pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+            }
+
             // 7z SFX
             if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("7-Zip"))
             {
