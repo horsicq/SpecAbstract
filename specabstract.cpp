@@ -33,6 +33,8 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_ZLIB,                         "",                 "level 7-9(best)",      "78DA"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_7Z,                           "",                 "",                     "'7z'BCAF271C"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_ARJ,                          "",                 "",                     "60EA"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_LHA,                          "",                 "",                     "....'-lh'..2D"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_LHA,                          "",                 "",                     "....'-lz'..2D"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_CERTIFICATE,      SpecAbstract::RECORD_NAME_WINAUTH,                      "2.0",              "PKCS #7",              "........00020200"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_MINGW,                        "",                 "",                     "'.file'000000"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_PDBFILELINK,                  "2.0",              "",                     "'NB10'"},
@@ -617,6 +619,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LAZARUS:                               sResult=QString("Lazarus");                                     break;
         case RECORD_NAME_LCCLNK:                                sResult=QString("lcclnk");                                      break;
         case RECORD_NAME_LCCWIN:                                sResult=QString("lcc-win");                                     break;
+        case RECORD_NAME_LHA:                                   sResult=QString("LHA");                                         break;
         case RECORD_NAME_LHASSFX:                               sResult=QString("LHA's SFX");                                   break;
         case RECORD_NAME_LSCRYPRT:                              sResult=QString("LSCRYPT");                                     break;
         case RECORD_NAME_LUACOMPILED:                           sResult=QString("Lua compiled");                                break;
@@ -6832,6 +6835,33 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
         // TODO options
         // TODO files
         pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    // LHA
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LHA))&&(pBinaryInfo->basic_info.nSize>=4))
+    {
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LHA);
+
+        bool bDetected=false;
+
+        switch(binary.read_uint8(0x5))
+        {
+            case 0x30: bDetected=1; break;
+            case 0x31: bDetected=1; break;
+            case 0x32: bDetected=1; break;
+            case 0x33: bDetected=1; break;
+            case 0x34: bDetected=1; break;
+            case 0x35: bDetected=1; break;
+            case 0x36: bDetected=1; break;
+            case 0x64: bDetected=1; break;
+            case 0x73: bDetected=1; break;
+        }
+
+        if(bDetected)
+        {
+            // TODO options
+            // TODO files
+            pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        }
     }
 }
 
