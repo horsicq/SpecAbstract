@@ -4891,15 +4891,15 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                 qint64 _nOffset=pPEInfo->osDataSection.nOffset;
                 qint64 _nSize=pPEInfo->osDataSection.nSize;
 
-                nOffset_BorlandCPP=pe.find_array(_nOffset,_nSize,"\x42\x6f\x72\x6c\x61\x6e\x64\x20\x43\x2b\x2b\x20\x2d\x20\x43\x6f\x70\x79\x72\x69\x67\x68\x74\x20",24); // Borland C++ - Copyright 1994 Borland Intl.
+                nOffset_BorlandCPP=pe.find_ansiString(_nOffset,_nSize,"Borland C++ - Copyright "); // Borland C++ - Copyright 1994 Borland Intl.
 
                 if(nOffset_BorlandCPP==-1)
                 {
-                    nOffset_CodegearCPP=pe.find_array(_nOffset,_nSize,"\x43\x6f\x64\x65\x47\x65\x61\x72\x20\x43\x2b\x2b\x20\x2d\x20\x43\x6f\x70\x79\x72\x69\x67\x68\x74\x20",25); // CodeGear C++ - Copyright 2008 Embarcadero Technologies
+                    nOffset_CodegearCPP=pe.find_ansiString(_nOffset,_nSize,"CodeGear C++ - Copyright "); // CodeGear C++ - Copyright 2008 Embarcadero Technologies
 
                     if(nOffset_CodegearCPP==-1)
                     {
-                        nOffset_EmbarcaderoCPP=pe.find_array(_nOffset,_nSize,"\x45\x6d\x62\x61\x72\x63\x61\x64\x65\x72\x6f\x20\x52\x41\x44\x20\x53\x74\x75\x64\x69\x6f\x20\x2d\x20\x43\x6f\x70\x79\x72\x69\x67\x68\x74\x20",35); // Embarcadero RAD Studio - Copyright 2009 Embarcadero Technologies, Inc.
+                        nOffset_EmbarcaderoCPP=pe.find_ansiString(_nOffset,_nSize,"Embarcadero RAD Studio - Copyright "); // Embarcadero RAD Studio - Copyright 2009 Embarcadero Technologies, Inc.
                     }
                 }
             }
@@ -5020,6 +5020,10 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                     sCppCompilerVersion=pe.read_ansiString(nOffset_EmbarcaderoCPP+35,4);
                 }
 
+                if(sCppCompilerVersion=="2009")
+                {
+                    sBuilderVersion="2009";
+                }
 
                 bool bNewVersion=false;
 
