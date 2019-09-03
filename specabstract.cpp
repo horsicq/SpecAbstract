@@ -5024,6 +5024,10 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                 {
                     sBuilderVersion="2009";
                 }
+                else if(sCppCompilerVersion=="2015")
+                {
+                    sBuilderVersion="2015";
+                }
 
                 bool bNewVersion=false;
 
@@ -6599,6 +6603,25 @@ void SpecAbstract::PE_handle_FixDetects(QIODevice *pDevice,bool bIsImage, SpecAb
         pPEInfo->mapResultTools.remove(RECORD_NAME_MASM32);
     }
     // Check SafeEngine
+
+
+    if( pPEInfo->mapResultCompilers.contains(RECORD_NAME_VISUALCCPP)&&
+        pPEInfo->mapResultCompilers.contains(RECORD_NAME_BORLANDOBJECTPASCAL))
+    {
+        pPEInfo->mapResultCompilers.remove(RECORD_NAME_BORLANDOBJECTPASCAL);
+    }
+
+    if( pPEInfo->mapResultLinkers.contains(RECORD_NAME_MICROSOFTLINKER)&&
+        pPEInfo->mapResultLinkers.contains(RECORD_NAME_TURBOLINKER))
+    {
+        pPEInfo->mapResultLinkers.remove(RECORD_NAME_TURBOLINKER);
+    }
+
+    if( pPEInfo->mapResultTools.contains(RECORD_NAME_MICROSOFTVISUALSTUDIO)&&
+        pPEInfo->mapResultTools.contains(RECORD_NAME_BORLANDDELPHI))
+    {
+        pPEInfo->mapResultTools.remove(RECORD_NAME_BORLANDDELPHI);
+    }
 }
 
 void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo, SpecAbstract::SCAN_OPTIONS *pOptions)
@@ -11002,7 +11025,7 @@ QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice
 
     while(_nSize>0)
     {
-        qint64 nClassOffset=pe.find_array(_nOffset,_nSize,"\x07\x08\x54\x43\x6f\x6e\x74\x72\x6f\x6c",10);
+        qint64 nClassOffset=pe.find_array(_nOffset,_nSize,"\x07\x08\x54\x43\x6f\x6e\x74\x72\x6f\x6c",10); // 0708'TControl'
 
         if(nClassOffset==-1)
         {
