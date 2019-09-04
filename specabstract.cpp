@@ -89,6 +89,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_DEX,                          "",                 "",                     "'dex\n'......00"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_IMAGE,            SpecAbstract::RECORD_NAME_DJVU,                         "",                 "",                     "'AT&T'"},
     {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_XENOCODE,                     "",                 "",                     "'xvm'0001"},
+    {0, SpecAbstract::RECORD_FILETYPE_BINARY,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_JAVACOMPILEDCLASS,            "",                 "",                     "CAFEBABE"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
@@ -613,6 +614,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_IPBPROTECT:                            sResult=QString("iPB Protect");                                 break;
         case RECORD_NAME_JAR:                                   sResult=QString("JAR");                                         break;
         case RECORD_NAME_JAVA:                                  sResult=QString("Java");                                        break;
+        case RECORD_NAME_JAVACOMPILEDCLASS:                     sResult=QString("Java compiled class");                         break;
         case RECORD_NAME_JPEG:                                  sResult=QString("JPEG");                                        break;
         case RECORD_NAME_KKRUNCHY:                              sResult=QString("kkrunchy");                                    break;
         case RECORD_NAME_LAYHEYFORTRAN90:                       sResult=QString("Lahey Fortran 90");                            break;
@@ -6976,6 +6978,45 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice,bool bIsImage, SpecA
         // Lua
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LUACOMPILED);
         pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_JAVACOMPILEDCLASS))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        // java
+        quint16 nMinor=binary.read_uint16(4,true);
+        quint16 nMajor=binary.read_uint16(6,true);
+
+        QString sVersion;
+
+        if(nMajor)
+        {
+            switch(nMajor)
+            {
+                case 0x2D: sVersion="JDK 1.1"; break;
+                case 0x2E: sVersion="JDK 1.2"; break;
+                case 0x2F: sVersion="JDK 1.3"; break;
+                case 0x30: sVersion="JDK 1.4"; break;
+                case 0x31: sVersion="Java SE 5.0"; break;
+                case 0x32: sVersion="Java SE 6.0"; break;
+                case 0x33: sVersion="Java SE 7"; break;
+                case 0x34: sVersion="Java SE 8"; break;
+                case 0x35: sVersion="Java SE 9"; break;
+                case 0x36: sVersion="Java SE 10"; break;
+                case 0x37: sVersion="Java SE 11"; break;
+                case 0x38: sVersion="Java SE 12"; break;
+            }
+
+            if((sVersion!="")&&(nMinor))
+            {
+                sVersion+=QString(".%1").arg(nMinor);
+            }
+
+            if(sVersion!="")
+            {
+                _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_JAVACOMPILEDCLASS);
+                ss.sVersion=sVersion;
+                pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+            }
+        }
     }
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_COFF))&&(pBinaryInfo->basic_info.nSize>=76))
     {
