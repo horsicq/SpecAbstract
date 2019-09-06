@@ -1357,6 +1357,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_VMProtect(pDevice,pOptions->bIsImage,&result);
         PE_handle_Armadillo(pDevice,pOptions->bIsImage,&result);
         PE_handle_Obsidium(pDevice,pOptions->bIsImage,&result);
+        PE_handle_Themida(pDevice,pOptions->bIsImage,&result);
         PE_handle_StarForce(pDevice,pOptions->bIsImage,&result);
         PE_handle_Petite(pDevice,pOptions->bIsImage,&result);
         PE_handle_NETProtection(pDevice,pOptions->bIsImage,&result);
@@ -3729,8 +3730,118 @@ void SpecAbstract::PE_handle_Obsidium(QIODevice *pDevice, bool bIsImage, SpecAbs
     {
         if(!pPEInfo->cliInfo.bInit)
         {
-            // TODO
-            // Check overlays!!!
+            int nNumberOfImports=pPEInfo->listImports.count();
+
+            if((nNumberOfImports==2)||(nNumberOfImports==3))
+            {
+                bool bKernel32=false;
+                bool bUser32=false;
+                bool bAdvapi32=false;
+
+                if(pPEInfo->listImports.at(0).sName=="KERNEL32.DLL")
+                {
+                    if(pPEInfo->listImports.at(0).listPositions.count()==1)
+                    {
+                        if((pPEInfo->listImports.at(0).listPositions.at(0).sFunction=="ExitProcess"))
+                        {
+                            bKernel32=true;
+                        }
+                    }
+                }
+
+                if(pPEInfo->listImports.at(1).sName=="USER32.DLL")
+                {
+                    if(pPEInfo->listImports.at(1).listPositions.count()==1)
+                    {
+                        if((pPEInfo->listImports.at(1).listPositions.at(0).sFunction=="MessageBoxA"))
+                        {
+                            bUser32=true;
+                        }
+                    }
+                }
+
+                if(nNumberOfImports==3)
+                {
+                    if(pPEInfo->listImports.at(2).sName=="ADVAPI32.DLL")
+                    {
+                        if(pPEInfo->listImports.at(2).listPositions.count()==1)
+                        {
+                            if((pPEInfo->listImports.at(2).listPositions.at(0).sFunction=="RegOpenKeyExA"))
+                            {
+                                bAdvapi32=true;
+                            }
+                        }
+                    }
+                }
+
+                if(bKernel32&&bUser32)
+                {
+                    if( pe.compareEntryPoint("EB$$50EB$$E8")||
+                        pe.compareEntryPoint("EB$$E8........EB$$EB"))
+                    {
+                        SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_OBSIDIUM,"","",0);
+
+                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+            }
+        }
+    }
+}
+
+void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
+    {
+        if(!pPEInfo->cliInfo.bInit)
+        {
+            if(pPEInfo->listImports.count()==2)
+            {
+                bool bKernel32=false;
+                bool bComctl32=false;
+
+                if(pPEInfo->listImports.at(0).sName=="KERNEL32.dll")
+                {
+                    if(pPEInfo->listImports.at(0).listPositions.count()==2)
+                    {
+                        if( (pPEInfo->listImports.at(0).listPositions.at(0).sFunction=="CreateFileA")||
+                            (pPEInfo->listImports.at(0).listPositions.at(1).sFunction=="lstrcpy"))
+                        {
+                            bKernel32=true;
+                        }
+                    }
+                }
+                else if(pPEInfo->listImports.at(0).sName=="kernel32.dll")
+                {
+                    if(pPEInfo->listImports.at(0).listPositions.count()==1)
+                    {
+                        if((pPEInfo->listImports.at(0).listPositions.at(0).sFunction=="lstrcpy"))
+                        {
+                            bKernel32=true;
+                        }
+                    }
+                }
+
+                if((pPEInfo->listImports.at(1).sName=="COMCTL32.dll")||(pPEInfo->listImports.at(1).sName=="comctl32.dll"))
+                {
+                    if(pPEInfo->listImports.at(1).listPositions.count()==1)
+                    {
+                        if((pPEInfo->listImports.at(1).listPositions.at(0).sFunction=="InitCommonControls"))
+                        {
+                            bComctl32=true;
+                        }
+                    }
+                }
+
+                if(bKernel32&&bComctl32)
+                {
+                    SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_THEMIDAWINLICENSE,"","",0);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
         }
     }
 }
