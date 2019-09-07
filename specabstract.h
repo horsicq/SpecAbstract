@@ -188,6 +188,7 @@ public:
         RECORD_NAME_EXESAX,
         RECORD_NAME_EXESHIELD,
         RECORD_NAME_EXPORT,
+        RECORD_NAME_EXPRESSOR,
         RECORD_NAME_EZIP,
         RECORD_NAME_FAKESIGNATURE,
         RECORD_NAME_FASM,
@@ -755,6 +756,7 @@ public:
     static void PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Obsidium(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Themida(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_eXPressor(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_StarForce(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Petite(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);

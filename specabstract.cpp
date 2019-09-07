@@ -578,6 +578,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_EXESAX:                                sResult=QString("ExeSax");                                      break;
         case RECORD_NAME_EXESHIELD:                             sResult=QString("Exe Shield");                                  break;
         case RECORD_NAME_EXPORT:                                sResult=QString("Export");                                      break;
+        case RECORD_NAME_EXPRESSOR:                             sResult=QString("eXPressor");                                   break;
         case RECORD_NAME_EZIP:                                  sResult=QString("EZIP");                                        break;
         case RECORD_NAME_FAKESIGNATURE:                         sResult=QString("Fake signature");                              break;
         case RECORD_NAME_FASM:                                  sResult=QString("FASM");                                        break;
@@ -1358,6 +1359,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_Armadillo(pDevice,pOptions->bIsImage,&result);
         PE_handle_Obsidium(pDevice,pOptions->bIsImage,&result);
         PE_handle_Themida(pDevice,pOptions->bIsImage,&result);
+        PE_handle_eXPressor(pDevice,pOptions->bIsImage,&result);
         PE_handle_StarForce(pDevice,pOptions->bIsImage,&result);
         PE_handle_Petite(pDevice,pOptions->bIsImage,&result);
         PE_handle_NETProtection(pDevice,pOptions->bIsImage,&result);
@@ -3840,6 +3842,108 @@ void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, bool bIsImage, SpecAbst
                     SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_THEMIDAWINLICENSE,"","",0);
 
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
+        }
+    }
+}
+
+void SpecAbstract::PE_handle_eXPressor(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    // TODO new versions
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
+    {
+        if(!pPEInfo->cliInfo.bInit)
+        {
+            if(pPEInfo->listImports.count()==2)
+            {
+                bool bKernel32=false;
+                bool bUser32=false;
+
+                if(pPEInfo->listImports.at(0).sName=="KERNEL32.dll")
+                {
+                    if(pPEInfo->listImports.at(0).listPositions.count()==9)
+                    {
+                        if( (pPEInfo->listImports.at(0).listPositions.at(0).sFunction=="VirtualFree")||
+                            (pPEInfo->listImports.at(0).listPositions.at(1).sFunction=="VirtualAlloc")||
+                            (pPEInfo->listImports.at(0).listPositions.at(2).sFunction=="GetProcAddress")||
+                            (pPEInfo->listImports.at(0).listPositions.at(3).sFunction=="LoadLibraryExA")||
+                            (pPEInfo->listImports.at(0).listPositions.at(4).sFunction=="GetModuleHandleA")||
+                            (pPEInfo->listImports.at(0).listPositions.at(5).sFunction=="VirtualProtect")||
+                            (pPEInfo->listImports.at(0).listPositions.at(6).sFunction=="ExitProcess")||
+                            (pPEInfo->listImports.at(0).listPositions.at(7).sFunction=="GetModuleFileNameA")||
+                            (pPEInfo->listImports.at(0).listPositions.at(8).sFunction=="LoadLibraryA"))
+                        {
+                            bKernel32=true;
+                        }
+                    }
+                    else if(pPEInfo->listImports.at(0).listPositions.count()==10)
+                    {
+                        if( (pPEInfo->listImports.at(0).listPositions.at(0).sFunction=="LocalAlloc")||
+                            (pPEInfo->listImports.at(0).listPositions.at(1).sFunction=="LocalFree")||
+                            (pPEInfo->listImports.at(0).listPositions.at(2).sFunction=="GetProcAddress")||
+                            (pPEInfo->listImports.at(0).listPositions.at(3).sFunction=="ExitProcess")||
+                            (pPEInfo->listImports.at(0).listPositions.at(4).sFunction=="LoadLibraryExA")||
+                            (pPEInfo->listImports.at(0).listPositions.at(5).sFunction=="GetModuleHandleA")||
+                            (pPEInfo->listImports.at(0).listPositions.at(6).sFunction=="VirtualFree")||
+                            (pPEInfo->listImports.at(0).listPositions.at(7).sFunction=="VirtualProtect")||
+                            (pPEInfo->listImports.at(0).listPositions.at(8).sFunction=="VirtualAlloc")||
+                            (pPEInfo->listImports.at(0).listPositions.at(9).sFunction=="GetModuleFileNameA"))
+                        {
+                            bKernel32=true; // 1.2
+                        }
+                    }
+                    else if(pPEInfo->listImports.at(0).listPositions.count()==11)
+                    {
+                        if( (pPEInfo->listImports.at(0).listPositions.at(0).sFunction=="VirtualFree")||
+                            (pPEInfo->listImports.at(0).listPositions.at(1).sFunction=="VirtualAlloc")||
+                            (pPEInfo->listImports.at(0).listPositions.at(2).sFunction=="GetProcAddress")||
+                            (pPEInfo->listImports.at(0).listPositions.at(3).sFunction=="ExitProcess")||
+                            (pPEInfo->listImports.at(0).listPositions.at(4).sFunction=="LoadLibraryExA")||
+                            (pPEInfo->listImports.at(0).listPositions.at(5).sFunction=="GetModuleHandleA")||
+                            (pPEInfo->listImports.at(0).listPositions.at(6).sFunction=="VirtualProtect")||
+                            (pPEInfo->listImports.at(0).listPositions.at(7).sFunction=="GetModuleFileNameA")||
+                            (pPEInfo->listImports.at(0).listPositions.at(8).sFunction=="HeapAlloc")||
+                            (pPEInfo->listImports.at(0).listPositions.at(9).sFunction=="GetProcessHeap")||
+                            (pPEInfo->listImports.at(0).listPositions.at(10).sFunction=="HeapAlloc"))
+                        {
+                            bKernel32=true; // 1.3
+                        }
+                    }
+                }
+
+                if(pPEInfo->listImports.at(1).sName=="USER32.dll")
+                {
+                    if(pPEInfo->listImports.at(1).listPositions.count()==2)
+                    {
+                        if( (pPEInfo->listImports.at(1).listPositions.at(0).sFunction=="wsprintfA")||
+                            (pPEInfo->listImports.at(1).listPositions.at(1).sFunction=="MessageBoxA"))
+                        {
+                            bUser32=true;
+                        }
+                    }
+                }
+
+                if(bKernel32&&bUser32)
+                {
+                    if(pPEInfo->nImportSection!=-1)
+                    {
+                        qint64 nOffset=pPEInfo->osImportSection.nOffset;
+                        qint64 nSize=pPEInfo->osImportSection.nSize;
+
+                        qint64 nVersionOffset=pe.find_ansiString(nOffset,nSize,"ExPr-v.");
+
+                        if(nVersionOffset!=-1)
+                        {
+                            SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_EXPRESSOR,"","",0);
+
+                            ss.sVersion=pe.read_ansiString(nVersionOffset+7,3);
+
+                            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                        }
+                    }
                 }
             }
         }
