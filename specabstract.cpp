@@ -320,6 +320,9 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_DOSEXTENDER,      SpecAbstract::RECORD_NAME_CAUSEWAY,                     "3.1X-3.4X",        "",                     "FA161F26A1....83E8..8ED0FB061607BE....8BFEB9....F3A407368C......8BD88CCA3603......368B......FD8BC53D....76"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LZEXE,                        "0.90",             "",                     "060E1F8B0E....8BF14E89F78CDB03......8EC3B4..31EDFDAC01C5AAE2"},
     {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LZEXE,                        "0.91",             "",                     "060E1F8B0E....8BF14E89F78CDB03......8EC3FDF3A453B8....50CB"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_AINEXE,                       "2.1",              "",                     "A1....2D....8ED0BC....8CD836A3....05....36A3....2EA1....8AD4B1..D2EAFEC9D3E08CD336"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_AINEXE,                       "2.3",              "",                     "0E07B9....BE....33FFFCF3A4A1....2D....8ED0BC....8CD836......05....36......2E"},
+    {0, SpecAbstract::RECORD_FILETYPE_MSDOS,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_AINEXE,                       "2.22",             "",                     "A1....2D....8ED0BC....8CD836A3....05....36A3....2EA1....8AD4B1..D2EAD3E08CD3368B2E....2E032E....FDFECA"},
 };
 
 SpecAbstract::SpecAbstract(QObject *parent)
@@ -492,6 +495,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_AGILENET:                              sResult=QString("Agile .NET");                                  break;
         case RECORD_NAME_AHPACKER:                              sResult=QString("AHPacker");                                    break;
         case RECORD_NAME_AHTEAMEPPROTECTOR:                     sResult=QString("AHTeam EP Protector");                         break;
+        case RECORD_NAME_AINEXE:                                sResult=QString("AINEXE");                                      break;
         case RECORD_NAME_ALEXPROTECTOR:                         sResult=QString("Alex Protector");                              break;
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
         case RECORD_NAME_ANDPAKK2:                              sResult=QString("ANDpakk2");                                    break;
@@ -7866,6 +7870,11 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
                 ss.sInfo=append(ss.sInfo,"modified entrypoint");
             }
 
+            pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+        if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_AINEXE))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_AINEXE);
             pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
