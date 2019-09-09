@@ -4564,6 +4564,14 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
                 }
             }
 
+            if(recordMFC.name==RECORD_NAME_MFC)
+            {
+                if(_ssCompiler2.name==SpecAbstract::RECORD_NAME_VISUALCCPP)
+                {
+                    ssCompiler=_ssCompiler2;
+                }
+            }
+
             if(ssLinker.type==SpecAbstract::RECORD_TYPE_LINKER)
             {
                 recordLinker.sVersion=ssLinker.sVersion;
@@ -4592,7 +4600,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
         }
 
-        if((recordMFC.name==RECORD_NAME_MFC)&&(recordCompiler.name!=RECORD_NAME_VISUALCCPP))
+        if((recordMFC.name==RECORD_NAME_MFC)&&(recordCompiler.type==RECORD_TYPE_UNKNOWN))
         {
             recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
             recordCompiler.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
