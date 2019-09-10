@@ -240,6 +240,15 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              "",                     "E9........E9........E9........E9........E9........E9........E9........E9........E9........E9........E9........CC"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_PUREBASIC,                    "4.X",              "",                     "68....0000680000000068......00E8......0083C40C6800000000E8......00A3"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_LCCWIN,                       "1.X-3.X",          "",                     "64a1........5589e56a..68........68........506489..........83ec..53565789"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TELOCK,                       "0.92a",            "",                     "E97EE9FFFF"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TELOCK,                       "0.95",             "",                     "E9D5E4FFFF"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TELOCK,                       "0.96",             "",                     "E959E4FFFF"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TELOCK,                       "0.98b1",           "",                     "E925E4FFFF"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TELOCK,                       "0.98b2",           "",                     "E91BE4FFFF"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TELOCK,                       "0.98",             "Special Build",        "E999D7FFFF"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TELOCK,                       "0.99",             "",                     "E95EDFFFFF"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TELOCK,                       "0.99c",            "",                     "E93FDFFFFF"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TELOCK,                       "1.00",             "",                     "E9E5E2FFFF"},
 };
 
 SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
@@ -1360,6 +1369,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         PE_handle_Protection(pDevice,pOptions->bIsImage,&result);
         PE_handle_VMProtect(pDevice,pOptions->bIsImage,&result);
+        PE_handle_tElock(pDevice,pOptions->bIsImage,&result);
         PE_handle_Armadillo(pDevice,pOptions->bIsImage,&result);
         PE_handle_Obsidium(pDevice,pOptions->bIsImage,&result);
         PE_handle_Themida(pDevice,pOptions->bIsImage,&result);
@@ -3705,6 +3715,54 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
     }
 }
 
+void SpecAbstract::PE_handle_tElock(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
+    {
+        if(!pPEInfo->cliInfo.bInit)
+        {
+            if(pPEInfo->listImports.count()==2)
+            {
+                bool bKernel32=false;
+                bool bUser32=false;
+
+                if(pPEInfo->listImports.at(0).sName=="kernel32.dll")
+                {
+                    if(pPEInfo->listImports.at(0).listPositions.count()==1)
+                    {
+                        if(pPEInfo->listImports.at(0).listPositions.at(0).sFunction=="GetModuleHandleA")
+                        {
+                            bKernel32=true;
+                        }
+                    }
+                }
+                if(pPEInfo->listImports.at(1).sName=="user32.dll")
+                {
+                    if(pPEInfo->listImports.at(1).listPositions.count()==1)
+                    {
+                        if((pPEInfo->listImports.at(1).listPositions.at(0).sFunction=="MessageBoxA"))
+                        {
+                            bUser32=true;
+                        }
+                    }
+                }
+
+                if(bKernel32&&bUser32)
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_TELOCK))
+                    {
+                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_TELOCK);
+
+                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+            }
+        }
+    }
+}
+
 void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     XPE pe(pDevice,bIsImage);
@@ -5152,6 +5210,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                 QString sBuilderVersion;
                 QString sObjectPascalCompilerVersion;
                 QString sCppCompilerVersion;
+                bool bNewVersion=false;
 
                 enum COMPANY
                 {
@@ -5196,6 +5255,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                         {
                             // TODO Borland Version
                             sDelphiVersion="2005+";
+                            bNewVersion=true;
                         }
                         else
                         {
@@ -5258,16 +5318,14 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                     sBuilderVersion="2015";
                 }
 
-                bool bNewVersion=false;
-
                 if(listVCL.count())
                 {
                     bVCL=true;
                     int nVCLOffset=listVCL.at(0).nOffset;
                     int nVCLValue=listVCL.at(0).nValue;
 
-                    //                qDebug("nVCLOffset: %d",nVCLOffset);
-                    //                qDebug("nVCLValue: %d",nVCLValue);
+                    //                    qDebug("nVCLOffset: %d",nVCLOffset);
+                    //                    qDebug("nVCLValue: %d",nVCLValue);
                     //                bVCL=true;
 
                     if((nVCLOffset==24)&&(nVCLValue==168))
@@ -5373,6 +5431,23 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
 
                         bNewVersion=true;
                     }
+                    else if((nVCLOffset==104)&&(nVCLValue==760)) // 64
+                    {
+                        company=COMPANY_EMBARCADERO;
+                        sDelphiVersion="XE2";
+                        sObjectPascalCompilerVersion="23.0";
+
+                        bNewVersion=true;
+                    }
+                    else if((nVCLOffset==128)&&(nVCLValue==776)) // 64
+                    {
+                        company=COMPANY_EMBARCADERO;
+                        sDelphiVersion="XE8-10 Seattle";
+                        sObjectPascalCompilerVersion="30.0";
+
+                        bNewVersion=true;
+                    }
+                    // TODO more x64
                 }
 
                 if(bNewVersion)
@@ -5382,7 +5457,17 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                         qint64 _nOffset=pPEInfo->osConstDataSection.nOffset;
                         qint64 _nSize=pPEInfo->osConstDataSection.nSize;
 
-                        qint64 nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"Embarcadero Delphi for Win32 compiler version ");
+                        qint64 nOffset_Version=0;
+
+                        if(pPEInfo->bIs64)
+                        {
+                            nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"Embarcadero Delphi for Win64 compiler version ");
+                        }
+                        else
+                        {
+                            nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"Embarcadero Delphi for Win32 compiler version ");
+                        }
+
                         if(nOffset_Version!=-1)
                         {
                             company=COMPANY_EMBARCADERO;
