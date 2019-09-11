@@ -634,6 +634,7 @@ public:
         bool bRecursive;
         bool bDeepScan;
         bool bResultAsXML;
+        bool bResultAsJSON;
         bool bSubdirectories;
         bool bIsImage;
     };

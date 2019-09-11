@@ -5948,11 +5948,44 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             }
 
             // wxWidgets
+            // TODO DLL
             if(XPE::isResourcePresent(XPE_DEF::S_RT_MENU,"WXWINDOWMENU",&(pPEInfo->listResources)))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_WXWIDGETS,"","",0);
-                // TODO Version???
+
                 ss.sInfo="Static";
+
+                if(XBinary::checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bIsDeepScan))
+                {
+                    qint64 _nOffset=pPEInfo->osConstDataSection.nOffset;
+                    qint64 _nSize=pPEInfo->osConstDataSection.nSize;
+                    // TODO VP Version in Major and Minor linker
+
+                    qint64 nOffset_Version=-1;
+
+                    if(nOffset_Version==-1)
+                    {
+                        nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"3.1.1 (wchar_t,Visual C++ 1900,wx containers)");
+
+                        if(nOffset_Version!=-1)
+                        {
+                            ss.sVersion="3.1.1";
+                            ss.sInfo=append(ss.sInfo,"Visual C++ 1900");
+                        }
+                    }
+
+                    if(nOffset_Version==-1)
+                    {
+                        nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"3.1.2 (wchar_t,Visual C++ 1900,wx containers,compatible with 3.0)");
+
+                        if(nOffset_Version!=-1)
+                        {
+                            ss.sVersion="3.1.2";
+                            ss.sInfo=append(ss.sInfo,"Visual C++ 1900");
+                        }
+                    }
+                }
+
                 pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
         }
