@@ -3901,6 +3901,7 @@ void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, bool bIsImage, SpecAbst
 
                 if(bKernel32&&bComctl32)
                 {
+                    // TODO Version
                     SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_THEMIDAWINLICENSE,"","",0);
 
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
@@ -3919,7 +3920,7 @@ void SpecAbstract::PE_handle_eXPressor(QIODevice *pDevice, bool bIsImage, SpecAb
     {
         if(!pPEInfo->cliInfo.bInit)
         {
-            if(pPEInfo->listImports.count()==2)
+            if(pPEInfo->listImports.count()>=2)
             {
                 bool bKernel32=false;
                 bool bUser32=false;
@@ -3974,6 +3975,14 @@ void SpecAbstract::PE_handle_eXPressor(QIODevice *pDevice, bool bIsImage, SpecAb
                             bKernel32=true; // 1.3
                         }
                     }
+                    else if(pPEInfo->listImports.at(0).listPositions.count()==2)
+                    {
+                        if( (pPEInfo->listImports.at(0).listPositions.at(0).sFunction=="GetProcAddress")||
+                            (pPEInfo->listImports.at(0).listPositions.at(1).sFunction=="LoadModule"))
+                        {
+                            bKernel32=true; // 1.5-1-6
+                        }
+                    }
                 }
 
                 if(pPEInfo->listImports.at(1).sName=="USER32.dll")
@@ -3982,6 +3991,13 @@ void SpecAbstract::PE_handle_eXPressor(QIODevice *pDevice, bool bIsImage, SpecAb
                     {
                         if( (pPEInfo->listImports.at(1).listPositions.at(0).sFunction=="wsprintfA")||
                             (pPEInfo->listImports.at(1).listPositions.at(1).sFunction=="MessageBoxA"))
+                        {
+                            bUser32=true;
+                        }
+                    }
+                    else if(pPEInfo->listImports.at(1).listPositions.count()==1)
+                    {
+                        if( (pPEInfo->listImports.at(1).listPositions.at(0).sFunction=="MessageBoxA"))
                         {
                             bUser32=true;
                         }
@@ -4004,6 +4020,20 @@ void SpecAbstract::PE_handle_eXPressor(QIODevice *pDevice, bool bIsImage, SpecAb
                             ss.sVersion=pe.read_ansiString(nVersionOffset+7,3);
 
                             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                        }
+                        else
+                        {
+                            if(pPEInfo->listSectionRecords.count()>=3)
+                            {
+                                if((pPEInfo->listSectionRecords.at(0).nSize==0)&&(pPEInfo->listSectionRecords.at(2).sName==".code"))
+                                {
+                                    SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_EXPRESSOR,"","",0);
+
+                                    ss.sVersion="1.5-1.6";
+
+                                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                                }
+                            }
                         }
                     }
                 }
@@ -5948,45 +5978,80 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             }
 
             // wxWidgets
-            // TODO DLL
-            if(XPE::isResourcePresent(XPE_DEF::S_RT_MENU,"WXWINDOWMENU",&(pPEInfo->listResources)))
+            // TODO a function
+
+            for(int i=0; i<pPEInfo->listImports.count(); i++)
             {
-                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_WXWIDGETS,"","",0);
-
-                ss.sInfo="Static";
-
-                if(XBinary::checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bIsDeepScan))
+                if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^WX")))
                 {
-                    qint64 _nOffset=pPEInfo->osConstDataSection.nOffset;
-                    qint64 _nSize=pPEInfo->osConstDataSection.nSize;
-                    // TODO VP Version in Major and Minor linker
+                    QString sVersion=XBinary::regExp("(\\d+)",pPEInfo->listImports.at(i).sName.toUpper(),0);
 
-                    qint64 nOffset_Version=-1;
-
-                    if(nOffset_Version==-1)
+                    if(sVersion!="")
                     {
-                        nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"3.1.1 (wchar_t,Visual C++ 1900,wx containers)");
+                        double dVersion=sVersion.toDouble();
 
-                        if(nOffset_Version!=-1)
+                        if(dVersion)
                         {
-                            ss.sVersion="3.1.1";
-                            ss.sInfo=append(ss.sInfo,"Visual C++ 1900");
+                            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_WXWIDGETS,"","",0);
+
+                            if(dVersion<100)
+                            {
+                                ss.sVersion=QString::number(dVersion/10,'f',1);
+                            }
+                            else if(dVersion<1000)
+                            {
+                                ss.sVersion=QString::number(dVersion/100,'f',2);
+                            }
+
+                            pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                         }
                     }
 
-                    if(nOffset_Version==-1)
-                    {
-                        nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"3.1.2 (wchar_t,Visual C++ 1900,wx containers,compatible with 3.0)");
-
-                        if(nOffset_Version!=-1)
-                        {
-                            ss.sVersion="3.1.2";
-                            ss.sInfo=append(ss.sInfo,"Visual C++ 1900");
-                        }
-                    }
+                    break;
                 }
+            }
 
-                pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            if(!pPEInfo->mapResultLibraries.contains(RECORD_NAME_WXWIDGETS))
+            {
+                if(XPE::isResourcePresent(XPE_DEF::S_RT_MENU,"WXWINDOWMENU",&(pPEInfo->listResources)))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_WXWIDGETS,"","",0);
+
+                    ss.sInfo="Static";
+
+                    if(XBinary::checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bIsDeepScan))
+                    {
+                        qint64 _nOffset=pPEInfo->osConstDataSection.nOffset;
+                        qint64 _nSize=pPEInfo->osConstDataSection.nSize;
+                        // TODO VP Version in Major and Minor linker
+
+                        qint64 nOffset_Version=-1;
+
+                        if(nOffset_Version==-1)
+                        {
+                            nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"3.1.1 (wchar_t,Visual C++ 1900,wx containers)");
+
+                            if(nOffset_Version!=-1)
+                            {
+                                ss.sVersion="3.1.1";
+                                ss.sInfo=append(ss.sInfo,"Visual C++ 1900");
+                            }
+                        }
+
+                        if(nOffset_Version==-1)
+                        {
+                            nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"3.1.2 (wchar_t,Visual C++ 1900,wx containers,compatible with 3.0)");
+
+                            if(nOffset_Version!=-1)
+                            {
+                                ss.sVersion="3.1.2";
+                                ss.sInfo=append(ss.sInfo,"Visual C++ 1900");
+                            }
+                        }
+                    }
+
+                    pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
             }
         }
     }
