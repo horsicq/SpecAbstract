@@ -10895,8 +10895,6 @@ void SpecAbstract::PE_handle_FixDetects(QIODevice *pDevice,bool bIsImage, SpecAb
         pPEInfo->mapResultTools.remove(RECORD_NAME_MASM32);
     }
     // Check SafeEngine
-
-
     if( pPEInfo->mapResultCompilers.contains(RECORD_NAME_VISUALCCPP)&&
         pPEInfo->mapResultCompilers.contains(RECORD_NAME_BORLANDOBJECTPASCAL))
     {
@@ -11107,9 +11105,14 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
         pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
     // CAB
-    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_CAB))&&(pBinaryInfo->basic_info.nSize>=9))
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_CAB))&&(pBinaryInfo->basic_info.nSize>=30))
     {
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CAB);
+
+        quint8 nMinorVersion=binary.read_uint8(0x18);
+        quint8 nMajorVersion=binary.read_uint8(0x19);
+
+        ss.sVersion=QString("%1.%2").arg(nMajorVersion).arg(nMinorVersion);
 
         // TODO options
         // TODO files
