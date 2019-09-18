@@ -1257,6 +1257,23 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         //                qDebug("%d %s",j,result.listImports.at(i).listPositions.at(j).sFunction.toLatin1().data());
         //            }
         //        }
+        result.nImportHash=pe.getImportHash();
+
+#ifdef QT_DEBUG
+        QString sDebugString=QString::number(result.nImportHash,16);
+        qDebug("Import hash: %s",sDebugString.toLatin1().data());
+
+        QList<XPE::IMPORT_RECORD> listImports=pe.getImportRecords();
+
+        int nCount=listImports.count();
+
+        for(int i=0;i<nCount; i++)
+        {
+            QString sRecord=listImports.at(i).sLibrary+" "+listImports.at(i).sFunction;
+
+            qDebug("%s",sRecord.toLatin1().data());
+        }
+#endif
         result.exportHeader=pe.getExport();
         result.listResources=pe.getResources();
         result.listRichSignatures=pe.getRichSignatureRecords();
@@ -3794,7 +3811,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
             {
                 if(pPEInfo->listImports.at(0).sName.toUpper()=="KERNEL32.DLL")
                 {
-                    bKernel32=true;
+                    bKernel32=pPEInfo->listImports.at(0).listPositions.count();
 
                     if(pPEInfo->listImports.at(0).listPositions.count()==70)
                     {
@@ -4044,96 +4061,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
                     }
                     else if(pPEInfo->listImports.at(0).listPositions.count()==86)
                     {
-                        if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetVersionExA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(1).sName=="DebugActiveProcess")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(2).sName=="ResumeThread")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(3).sName=="GetThreadContext")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(4).sName=="TerminateProcess")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(5).sName=="GetExitCodeProcess")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(6).sName=="CreateProcessA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(7).sName=="GetModuleFileNameA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(8).sName=="GetCurrentThread")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(9).sName=="SuspendThread")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(10).sName=="DeleteFileA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(11).sName=="Sleep")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(12).sName=="GetTempPathA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(13).sName=="FindClose")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(14).sName=="FindNextFileA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(15).sName=="FindFirstFileA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(16).sName=="UnmapViewOfFile")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(17).sName=="FreeLibrary")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(18).sName=="CloseHandle")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(19).sName=="GetStartupInfoA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(20).sName=="GetShortPathNameA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(21).sName=="SetPriorityClass")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(22).sName=="VirtualProtectEx")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(23).sName=="ReleaseMutex")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(24).sName=="SetThreadContext")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(25).sName=="ReadFile")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(26).sName=="LoadLibraryA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(27).sName=="MapViewOfFile")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(28).sName=="CreateFileMappingA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(29).sName=="CreateMutexA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(30).sName=="SetFilePointer")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(31).sName=="GetCurrentProcessId")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(32).sName=="SleepEx")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(33).sName=="CreateThread")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(34).sName=="WriteFile")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(35).sName=="GetTempFileNameA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(36).sName=="CreateMailslotA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(37).sName=="SetEnvironmentVariableA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(38).sName=="GetCommandLineA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(39).sName=="GetModuleHandleA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(40).sName=="GetFileSize")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(41).sName=="SetThreadPriority")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(42).sName=="GetCurrentProcess")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(43).sName=="GetLastError")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(44).sName=="WaitForDebugEvent")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(45).sName=="ContinueDebugEvent")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(46).sName=="WaitForSingleObject")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(47).sName=="CreateFileA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(48).sName=="ReadProcessMemory")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(49).sName=="CompareStringA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(50).sName=="WriteProcessMemory")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(51).sName=="GetProcAddress")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(52).sName=="GetEnvironmentVariableA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(53).sName=="CompareStringW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(54).sName=="ExitProcess")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(55).sName=="GetVersion")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(56).sName=="FlushFileBuffers")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(57).sName=="LCMapStringW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(58).sName=="LCMapStringA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(59).sName=="SetStdHandle")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(60).sName=="GetOEMCP")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(61).sName=="GetACP")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(62).sName=="GetCPInfo")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(63).sName=="GetStringTypeW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(64).sName=="GetStringTypeA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(65).sName=="MultiByteToWideChar")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(66).sName=="HeapReAlloc")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(67).sName=="VirtualAlloc")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(68).sName=="VirtualFree")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(69).sName=="HeapCreate")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(70).sName=="HeapDestroy")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(71).sName=="GetFileType")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(72).sName=="GetStdHandle")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(73).sName=="SetHandleCount")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(74).sName=="GetEnvironmentStringsW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(75).sName=="GetEnvironmentStrings")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(76).sName=="RtlUnwind")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(77).sName=="GetTimeZoneInformation")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(78).sName=="GetSystemTime")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(79).sName=="GetLocalTime")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(80).sName=="WideCharToMultiByte")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(81).sName=="HeapFree")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(82).sName=="HeapAlloc")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(83).sName=="UnhandledExceptionFilter")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(84).sName=="FreeEnvironmentStringsA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(85).sName=="FreeEnvironmentStringsW"))
-                        {
-                            stDetects.insert("kernel32_2");
-                        }
-                        else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="DeleteFileA")&&
+                        if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="DeleteFileA")&&
                                 (pPEInfo->listImports.at(0).listPositions.at(1).sName=="DebugActiveProcess")&&
                                 (pPEInfo->listImports.at(0).listPositions.at(2).sName=="ResumeThread")&&
                                 (pPEInfo->listImports.at(0).listPositions.at(3).sName=="GetThreadContext")&&
@@ -5871,136 +5799,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
                     }
                     else if(pPEInfo->listImports.at(0).listPositions.count()==126)
                     {
-                        if( (pPEInfo->listImports.at(0).listPositions.at(0).sName=="LoadLibraryA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(2).sName=="GlobalLock")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(3).sName=="GlobalAlloc")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(4).sName=="GetTickCount")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(5).sName=="WideCharToMultiByte")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(6).sName=="IsBadReadPtr")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(7).sName=="GlobalAddAtomA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(8).sName=="GlobalAddAtomW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(9).sName=="GetModuleHandleA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(10).sName=="GlobalFree")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(11).sName=="GlobalGetAtomNameA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(12).sName=="GlobalDeleteAtom")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(13).sName=="GlobalGetAtomNameW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(14).sName=="FreeConsole")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(15).sName=="GetEnvironmentVariableA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(16).sName=="VirtualProtect")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(17).sName=="VirtualAlloc")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(18).sName=="GetProcAddress")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(19).sName=="GetLastError")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(20).sName=="LoadLibraryA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(21).sName=="SetLastError")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(22).sName=="SetThreadPriority")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(23).sName=="GetCurrentThread")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(24).sName=="SetEnvironmentVariableA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(25).sName=="ReleaseMutex")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(26).sName=="WaitForSingleObject")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(27).sName=="CreateMutexA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(28).sName=="OpenMutexA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(29).sName=="SetErrorMode")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(30).sName=="GetCurrentThreadId")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(31).sName=="FindClose")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(32).sName=="FindFirstFileW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(33).sName=="VirtualQueryEx")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(34).sName=="GetExitCodeProcess")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(35).sName=="ReadProcessMemory")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(36).sName=="VirtualProtectEx")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(37).sName=="ContinueDebugEvent")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(38).sName=="ResumeThread")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(39).sName=="OutputDebugStringA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(40).sName=="OutputDebugStringW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(41).sName=="SetThreadContext")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(42).sName=="GetThreadContext")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(43).sName=="WaitForDebugEvent")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(44).sName=="WriteProcessMemory")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(45).sName=="UnmapViewOfFile")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(46).sName=="SuspendThread")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(47).sName=="DebugActiveProcess")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(48).sName=="MapViewOfFile")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(49).sName=="DuplicateHandle")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(50).sName=="GetCurrentProcess")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(51).sName=="CreateFileMappingA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(52).sName=="SetEvent")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(53).sName=="CreateEventA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(54).sName=="MultiByteToWideChar")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(55).sName=="CloseHandle")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(56).sName=="CreateProcessA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(57).sName=="GetStartupInfoA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(58).sName=="GetCommandLineA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(59).sName=="GetSystemTimeAsFileTime")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(60).sName=="ExitProcess")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(61).sName=="LocalFree")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(62).sName=="FlushFileBuffers")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(63).sName=="WriteConsoleW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(64).sName=="GetConsoleOutputCP")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(65).sName=="WriteConsoleA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(66).sName=="SetStdHandle")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(67).sName=="FormatMessageA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(68).sName=="GetConsoleMode")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(69).sName=="GetConsoleCP")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(70).sName=="SetFilePointer")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(71).sName=="GetLocaleInfoW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(72).sName=="GetStringTypeW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(73).sName=="GetStringTypeA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(74).sName=="IsValidLocale")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(75).sName=="EnumSystemLocalesA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(76).sName=="GetLocaleInfoA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(77).sName=="GetUserDefaultLCID")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(78).sName=="QueryPerformanceCounter")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(79).sName=="GetFileType")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(80).sName=="SetHandleCount")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(81).sName=="GetEnvironmentStringsW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(82).sName=="Sleep")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(83).sName=="EnterCriticalSection")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(84).sName=="LeaveCriticalSection")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(85).sName=="GetVersionExA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(86).sName=="InitializeCriticalSection")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(87).sName=="GetCurrentProcessId")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(88).sName=="GetModuleFileNameW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(89).sName=="GetShortPathNameW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(90).sName=="GetModuleFileNameA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(91).sName=="CreateFileA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(92).sName=="GetShortPathNameA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(93).sName=="FreeEnvironmentStringsW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(94).sName=="GetEnvironmentStrings")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(95).sName=="FreeEnvironmentStringsA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(96).sName=="InterlockedIncrement")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(97).sName=="InterlockedDecrement")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(98).sName=="InterlockedExchange")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(99).sName=="DeleteCriticalSection")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(100).sName=="RtlUnwind")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(101).sName=="RaiseException")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(102).sName=="TerminateProcess")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(103).sName=="UnhandledExceptionFilter")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(104).sName=="SetUnhandledExceptionFilter")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(105).sName=="IsDebuggerPresent")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(106).sName=="HeapFree")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(107).sName=="HeapAlloc")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(108).sName=="GetProcessHeap")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(109).sName=="GetCPInfo")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(110).sName=="LCMapStringA")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(111).sName=="LCMapStringW")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(112).sName=="TlsGetValue")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(113).sName=="TlsAlloc")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(114).sName=="TlsSetValue")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(115).sName=="TlsFree")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(116).sName=="WriteFile")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(117).sName=="GetStdHandle")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(118).sName=="HeapSize")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(119).sName=="GetACP")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(120).sName=="GetOEMCP")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(121).sName=="IsValidCodePage")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(122).sName=="HeapDestroy")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(123).sName=="HeapCreate")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(124).sName=="VirtualFree")&&
-                                (pPEInfo->listImports.at(0).listPositions.at(125).sName=="HeapReAlloc"))
-                        {
-                            stDetects.insert("kernel32_11");
-                        }
-                        else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="CreateThread")&&
+                        if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="CreateThread")&&
                                 (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GlobalUnlock")&&
                                 (pPEInfo->listImports.at(0).listPositions.at(2).sName=="GlobalLock")&&
                                 (pPEInfo->listImports.at(0).listPositions.at(3).sName=="GlobalAlloc")&&
@@ -6775,7 +6574,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
 
                 if(pPEInfo->listImports.at(1).sName.toUpper()=="USER32.DLL")
                 {
-                    bUser32=true;
+                    bUser32=pPEInfo->listImports.at(1).listPositions.count();
 
                     if(pPEInfo->listImports.at(1).listPositions.count()==24)
                     {
@@ -6805,33 +6604,6 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
                                 (pPEInfo->listImports.at(1).listPositions.at(23).sName=="SetWindowTextA"))
                         {
                             stDetects.insert("user32_1");
-                        }
-                        else if((pPEInfo->listImports.at(1).listPositions.at(0).sName=="MessageBoxA")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(1).sName=="EnumWindows")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(2).sName=="SendMessageTimeoutA")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(3).sName=="GetWindowThreadProcessId")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(4).sName=="DestroyWindow")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(5).sName=="SystemParametersInfoA")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(6).sName=="CreateDialogParamA")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(7).sName=="UpdateWindow")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(8).sName=="SetWindowTextA")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(9).sName=="DispatchMessageA")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(10).sName=="TranslateMessage")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(11).sName=="BeginPaint")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(12).sName=="EndPaint")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(13).sName=="LoadCursorA")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(14).sName=="GetSystemMetrics")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(15).sName=="ShowWindow")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(16).sName=="KillTimer")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(17).sName=="PostQuitMessage")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(18).sName=="DefWindowProcA")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(19).sName=="RegisterClassA")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(20).sName=="CreateWindowExA")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(21).sName=="GetMessageA")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(22).sName=="SetTimer")&&
-                                (pPEInfo->listImports.at(1).listPositions.at(23).sName=="GetDlgItem"))
-                        {
-                            stDetects.insert("user32_2");
                         }
                         else if((pPEInfo->listImports.at(1).listPositions.at(0).sName=="IsWindow")&&
                                 (pPEInfo->listImports.at(1).listPositions.at(1).sName=="PeekMessageA")&&
@@ -7382,7 +7154,6 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
                                 (pPEInfo->listImports.at(1).listPositions.at(44).sName=="PostMessageW"))
                         {
                             stDetects.insert("user32_10");
-                            stDetects.insert("user32_11");
                             stDetects.insert("user32_12");
                         }
                     }
@@ -7503,7 +7274,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
 
                 if(pPEInfo->listImports.at(2).sName.toUpper()=="GDI32.DLL")
                 {
-                    bGdi32=true;
+                    bGdi32=pPEInfo->listImports.at(2).listPositions.count();
 
                     if(pPEInfo->listImports.at(2).listPositions.count()==10)
                     {
@@ -7519,19 +7290,6 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
                                 (pPEInfo->listImports.at(2).listPositions.at(9).sName=="CreateCompatibleDC"))
                         {
                             stDetects.insert("gdi32_1");
-                        }
-                        else if((pPEInfo->listImports.at(2).listPositions.at(0).sName=="DeleteObject")&&
-                                (pPEInfo->listImports.at(2).listPositions.at(1).sName=="DeleteDC")&&
-                                (pPEInfo->listImports.at(2).listPositions.at(2).sName=="SelectPalette")&&
-                                (pPEInfo->listImports.at(2).listPositions.at(3).sName=="CreateDCA")&&
-                                (pPEInfo->listImports.at(2).listPositions.at(4).sName=="RealizePalette")&&
-                                (pPEInfo->listImports.at(2).listPositions.at(5).sName=="BitBlt")&&
-                                (pPEInfo->listImports.at(2).listPositions.at(6).sName=="SelectObject")&&
-                                (pPEInfo->listImports.at(2).listPositions.at(7).sName=="CreatePalette")&&
-                                (pPEInfo->listImports.at(2).listPositions.at(8).sName=="CreateCompatibleDC")&&
-                                (pPEInfo->listImports.at(2).listPositions.at(9).sName=="CreateDIBitmap"))
-                        {
-                            stDetects.insert("gdi32_2");
                         }
                         else if((pPEInfo->listImports.at(2).listPositions.at(0).sName=="CreateDIBitmap")&&
                                 (pPEInfo->listImports.at(2).listPositions.at(1).sName=="RealizePalette")&&
@@ -7564,7 +7322,6 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
                             stDetects.insert("gdi32_4c");
                             stDetects.insert("gdi32_9");
                             stDetects.insert("gdi32_10");
-                            stDetects.insert("gdi32_11");
                             stDetects.insert("gdi32_12");
                             stDetects.insert("gdi32_13");
                             stDetects.insert("gdi32_14");
@@ -7636,10 +7393,6 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
             if(stDetects.contains("kernel32_1")&&stDetects.contains("user32_1")&&stDetects.contains("gdi32_1"))
             {
                 sVersion="1.74-1.84"; // Check 1.74
-            }
-            else if(stDetects.contains("kernel32_2")&&stDetects.contains("user32_2")&&stDetects.contains("gdi32_2"))
-            {
-                sVersion="1.90";
             }
             else if(stDetects.contains("kernel32_3")&&stDetects.contains("user32_3")&&stDetects.contains("gdi32_3"))
             {
@@ -7741,6 +7494,15 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
             {
                 sVersion="8.60";
             }
+
+    #ifdef QT_DEBUG
+            qDebug("Armadillo Version: %s",sVersion.toLatin1().data());
+    #endif
+
+            if      (pPEInfo->nImportHash==0x4b5345e36c)      sVersion="3.76a";
+            else if (pPEInfo->nImportHash==0x3b258f0a90)      sVersion=""; // TODO Check old Version
+            else if (pPEInfo->nImportHash==0x3b6e96f260)      sVersion="1.90";
+            else if (pPEInfo->nImportHash==0x5cee9acb73)      sVersion="6.60-7.00";
 
     #ifdef QT_DEBUG
             qDebug() << stDetects;
@@ -9805,11 +9567,30 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                     // Lazarus
                     qint64 nOffset_Lazarus=pe.find_ansiString(_nOffset,_nSize,"Lazarus LCL: ");
 
+                    if(nOffset_Lazarus==-1)
+                    {
+                        if(XBinary::checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bIsDeepScan))
+                        {
+                            _nOffset=pPEInfo->osConstDataSection.nOffset;
+                            _nSize=pPEInfo->osConstDataSection.nSize;
+
+                            nOffset_Lazarus=pe.find_ansiString(_nOffset,_nSize,"Lazarus LCL: ");
+                        }
+                    }
+
+                    QString sLazarusVersion;
+
+                    if(nOffset_Lazarus!=-1)
+                    {
+                        sLazarusVersion=pe.read_ansiString(nOffset_Lazarus+13);
+                        sLazarusVersion=sLazarusVersion.section(" ",0,0);
+                    }
+
                     if(nOffset_Lazarus!=-1)
                     {
                         _SCANS_STRUCT ssLazarus=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_TOOL,RECORD_NAME_LAZARUS,"","",0);
-                        QString sLazarusVersion=pe.read_ansiString(nOffset_Lazarus+13);
-                        ssLazarus.sVersion=sLazarusVersion.section(" ",0,0);
+
+                        ssLazarus.sVersion=sLazarusVersion;
 
                         pPEInfo->mapResultTools.insert(ssLazarus.name,scansToScan(&(pPEInfo->basic_info),&ssLazarus));
                     }
