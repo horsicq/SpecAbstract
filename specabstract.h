@@ -573,7 +573,8 @@ public:
         QList<XPE_DEF::IMAGE_SECTION_HEADER> listSectionHeaders;
         QList<XPE::SECTIONFILE_RECORD> listSectionRecords;
         QList<XPE::IMPORT_HEADER> listImports;
-        quint64 nImportHash;
+        quint64 nImportHash64;
+        quint32 nImportHash32;
         XPE::EXPORT_HEADER exportHeader;
         QList<XPE::RESOURCE_RECORD> listResources;
         QList<XPE::RICH_RECORD> listRichSignatures;
