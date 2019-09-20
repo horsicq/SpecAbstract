@@ -700,7 +700,7 @@ public:
     struct VCL_STRUCT
     {
         quint32 nValue;
-        quint32 nOffset;
+        qint64 nOffset;
         bool bIs64;
     };
 

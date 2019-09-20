@@ -2843,7 +2843,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 // Get version
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PESPIN))
                 {
-                    quint8 nByte=pPEInfo->sEntryPointSignature.mid(54,2).toInt(0,16);
+                    quint8 nByte=pPEInfo->sEntryPointSignature.mid(54,2).toUInt(nullptr,16);
 
                     switch(nByte)
                     {
@@ -9485,26 +9485,28 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice,bool bIsImage, SpecA
         if(binary.compareSignature("600A4C01",nOffset))
         {
             ss.sInfo="I386";
-            bDetected=1;
+            bDetected=true;
         }
         if(binary.compareSignature("600A6486",nOffset))
         {
             ss.sInfo="AMD64";
-            bDetected=1;
+            bDetected=true;
         }
-
         if(binary.compareSignature("600A0000FFFF....4C01",nOffset))
         {
             ss.sInfo="I386";
-            bDetected=1;
+            bDetected=true;
         }
         if(binary.compareSignature("600A0000FFFF....6486",nOffset))
         {
             ss.sInfo="AMD64";
-            bDetected=1;
+            bDetected=true;
         }
 
-        pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        if(bDetected)
+        {
+            pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        }
     }
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DEX))&&(pBinaryInfo->basic_info.nSize>=8))
     {
@@ -10800,7 +10802,7 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
 
 void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QString sSignature, SpecAbstract::SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2)
 {
-    int nSignaturesCount=nRecordsSize/sizeof(SIGNATURE_RECORD);
+    int nSignaturesCount=nRecordsSize/(int)sizeof(SIGNATURE_RECORD);
 
     for(int i=0; i<nSignaturesCount; i++)
     {
