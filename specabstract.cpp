@@ -97,6 +97,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
 {
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",                 "",                     "'MZ'50000200000004000F00FFFF0000B80000000000000040001A000000000000000000000000000000000000000000000000000000000000000000....0000BA10000E1FB409CD21B8014CCD219090'This program must be run under Win'....'\r\n$'370000000000"},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",                 "Patched",              "'MZ'............................................................................................................................BA10000E1FB409CD21B8014CCD219090'This program must be run under Win'....'\r\n$'370000000000"},
+    {1, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",                 "MSDOS",                "'MZ'........................................................FB..'jr'"},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "",                 "",                     "'MZ'90000300000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000....00000E1FBA0E00B409CD21B8014CCD21'This program cannot be run in DOS mode.\r\r\n$'00000000"},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_GENERICLINKER,                "",                 "",                     "'MZ'90000300000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000800000000E1FBA0E00B409CD21B8014CCD21'This program cannot be run in DOS mode.\r\r\n$'00000000"},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "",                 "Patched",              "'MZ'90000300000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000....000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"},
@@ -357,6 +358,8 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
         if(stTypes.contains(XBinary::FT_PE32)||stTypes.contains(XBinary::FT_PE64))
         {
+            // TODO PE-MSDOS
+
             SpecAbstract::PEINFO_STRUCT pe_info=SpecAbstract::getPEInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(pe_info.basic_info.listDetects);
@@ -5721,7 +5724,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
 
             if      (pPEInfo->nImportHash64==0x4b5345e36c)                                          sVersion="3.76a";
             else if (pPEInfo->nImportHash64==0x35e237026a)                                          sVersion=""; // TODO Check old Version
-            else if (pPEInfo->nImportHash64==0x3635cf517b)                                          sVersion="1.74-1.84"; // ???
+            else if ((pPEInfo->nImportHash64==0x3635cf517b)&&(pPEInfo->nImportHash32==0xe6ce8a9e))  sVersion="1.74-1.84"; // ???
             else if ((pPEInfo->nImportHash64==0x3c61329b29)&&(pPEInfo->nImportHash32==0x7177627b))  sVersion="1.91c";
             else if ((pPEInfo->nImportHash64==0x3c61329b29)&&(pPEInfo->nImportHash32==0x412e26ca))  sVersion="2.00";
             else if (pPEInfo->nImportHash64==0x341358d6d9)                                          sVersion="2.52";
@@ -5729,9 +5732,10 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
             else if (pPEInfo->nImportHash64==0x3b258f0a90)                                          sVersion=""; // TODO Check old Version
             else if (pPEInfo->nImportHash64==0x32bbf3aafe)                                          sVersion=""; // TODO Check old Version
             else if (pPEInfo->nImportHash64==0x32c7a9336f)                                          sVersion=""; // TODO Check old Version
-            else if (pPEInfo->nImportHash64==0x3b6e96f260)                                          sVersion="1.90";
-            else if (pPEInfo->nImportHash64==0x3fb526760f)                                          sVersion=""; // TODO Check
+            else if ((pPEInfo->nImportHash64==0x3b6e96f260)&&(pPEInfo->nImportHash32==0x927ddbdb))  sVersion="1.90";
+            else if ((pPEInfo->nImportHash64==0x3fb526760f)&&(pPEInfo->nImportHash32==0x72359c40))  sVersion=""; // TODO Check
             else if (pPEInfo->nImportHash64==0x40666b9f00)                                          sVersion="3.00-3.10"; // ???
+            else if ((pPEInfo->nImportHash64==0x4518d21e36)&&(pPEInfo->nImportHash32==0xb79df9fe))  sVersion="3.61";
             else if ((pPEInfo->nImportHash64==0x4518d21e36)&&(pPEInfo->nImportHash32==0x774538e7))  sVersion="3.70";
             else if ((pPEInfo->nImportHash64==0x4fc78bc010)&&(pPEInfo->nImportHash32==0x807db698))  sVersion="4.00-4.40";
             else if ((pPEInfo->nImportHash64==0x508175d00e)&&(pPEInfo->nImportHash32==0xb50f60e8))  sVersion="4.42-4.54";
@@ -7130,7 +7134,14 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
         {
             _SCANS_STRUCT recordTurboLinker=pPEInfo->basic_info.mapHeaderDetects.value(SpecAbstract::RECORD_NAME_TURBOLINKER);
 
-            recordTurboLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion,2,10,QChar('0'));
+            if(recordTurboLinker.nVariant==0)
+            {
+                recordTurboLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion,2,10,QChar('0'));
+            }
+            else if(recordTurboLinker.nVariant==1)
+            {
+                recordTurboLinker.sVersion=QString::number((double)pe.read_uint8(0x1F)/16,'f',1); // TODO PE-MSDOS
+            }
 
             pPEInfo->mapResultLinkers.insert(recordTurboLinker.name,scansToScan(&(pPEInfo->basic_info),&recordTurboLinker));
         }
