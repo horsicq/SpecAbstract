@@ -5724,6 +5724,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
 
             if      (pPEInfo->nImportHash64==0x4b5345e36c)                                          sVersion="3.76a";
             else if (pPEInfo->nImportHash64==0x35e237026a)                                          sVersion=""; // TODO Check old Version
+            else if ((pPEInfo->nImportHash64==0x3010e1d59e)&&(pPEInfo->nImportHash32==0x834a7ecf))  sVersion="2.XX-3.XX"; // ???
             else if ((pPEInfo->nImportHash64==0x3635cf517b)&&(pPEInfo->nImportHash32==0xe6ce8a9e))  sVersion="1.74-1.84"; // ???
             else if ((pPEInfo->nImportHash64==0x3c61329b29)&&(pPEInfo->nImportHash32==0x7177627b))  sVersion="1.91c";
             else if ((pPEInfo->nImportHash64==0x3c61329b29)&&(pPEInfo->nImportHash32==0x412e26ca))  sVersion="2.00";
@@ -5734,6 +5735,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
             else if (pPEInfo->nImportHash64==0x32c7a9336f)                                          sVersion=""; // TODO Check old Version
             else if ((pPEInfo->nImportHash64==0x3b6e96f260)&&(pPEInfo->nImportHash32==0x927ddbdb))  sVersion="1.90";
             else if ((pPEInfo->nImportHash64==0x3fb526760f)&&(pPEInfo->nImportHash32==0x72359c40))  sVersion=""; // TODO Check
+            else if ((pPEInfo->nImportHash64==0x3fb526760f)&&(pPEInfo->nImportHash32==0xf9f173fb))  sVersion=""; // TODO Check
             else if (pPEInfo->nImportHash64==0x40666b9f00)                                          sVersion="3.00-3.10"; // ???
             else if ((pPEInfo->nImportHash64==0x4518d21e36)&&(pPEInfo->nImportHash32==0xb79df9fe))  sVersion="3.61";
             else if ((pPEInfo->nImportHash64==0x4518d21e36)&&(pPEInfo->nImportHash32==0x774538e7))  sVersion="3.70";
@@ -9086,7 +9088,7 @@ void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAb
         {
             if(pPEInfo->nOverlaySize)
             {
-                SpecAbstract::SCAN_RESULT scanResult= {0};
+                SpecAbstract::SCAN_RESULT scanResult={0};
 
                 SpecAbstract::ID _parentId=pPEInfo->basic_info.id;
                 _parentId.filepart=SpecAbstract::RECORD_FILEPART_OVERLAY;
@@ -9872,7 +9874,7 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
 
                         if(buffer.open(QIODevice::ReadOnly))
                         {
-                            SpecAbstract::SCAN_RESULT scanResult= {0};
+                            SpecAbstract::SCAN_RESULT scanResult={0};
 
                             SpecAbstract::ID _parentId=pBinaryInfo->basic_info.id;
                             _parentId.filepart=SpecAbstract::RECORD_FILEPART_ARCHIVERECORD;
@@ -10227,7 +10229,7 @@ void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, bool bIsImage, Spe
         {
             if(pMSDOSInfo->nOverlaySize)
             {
-                SpecAbstract::SCAN_RESULT scanResult= {0};
+                SpecAbstract::SCAN_RESULT scanResult={0};
 
                 SpecAbstract::ID _parentId=pMSDOSInfo->basic_info.id;
                 _parentId.filepart=SpecAbstract::RECORD_FILEPART_OVERLAY;
