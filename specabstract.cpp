@@ -5739,6 +5739,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
             else if (pPEInfo->nImportHash64==0x40666b9f00)                                          sVersion="3.00-3.10"; // ???
             else if ((pPEInfo->nImportHash64==0x4518d21e36)&&(pPEInfo->nImportHash32==0xb79df9fe))  sVersion="3.61";
             else if ((pPEInfo->nImportHash64==0x4518d21e36)&&(pPEInfo->nImportHash32==0x774538e7))  sVersion="3.70";
+            else if ((pPEInfo->nImportHash64==0x4610da601a)&&(pPEInfo->nImportHash32==0x5a7b25e5))  sVersion="3.75a";
             else if ((pPEInfo->nImportHash64==0x4fc78bc010)&&(pPEInfo->nImportHash32==0x807db698))  sVersion="4.00-4.40";
             else if ((pPEInfo->nImportHash64==0x508175d00e)&&(pPEInfo->nImportHash32==0xb50f60e8))  sVersion="4.42-4.54";
             else if ((pPEInfo->nImportHash64==0x508175d00e)&&(pPEInfo->nImportHash32==0x5ca4890e))  sVersion="4.66";
