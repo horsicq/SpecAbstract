@@ -5784,7 +5784,7 @@ void SpecAbstract::PE_handle_Obsidium(QIODevice *pDevice, bool bIsImage, SpecAbs
             {
                 bool bKernel32=false;
                 bool bUser32=false;
-                bool bAdvapi32=false;
+//                bool bAdvapi32=false;
 
                 if(pPEInfo->listImports.at(0).sName=="KERNEL32.DLL")
                 {
@@ -5816,7 +5816,7 @@ void SpecAbstract::PE_handle_Obsidium(QIODevice *pDevice, bool bIsImage, SpecAbs
                         {
                             if((pPEInfo->listImports.at(2).listPositions.at(0).sFunction=="RegOpenKeyExA"))
                             {
-                                bAdvapi32=true;
+//                                bAdvapi32=true;
                             }
                         }
                     }
@@ -8554,6 +8554,15 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                     ss.sVersion="3.X"; // TODO check "E:\delivery\Dev\wix37\build\ship\x86\burn.pdb"
                     pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
+            }
+
+            // CAB SFX
+
+            if(pPEInfo->sResourceManifest.contains("sfxcab.exe"))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_SFX,RECORD_NAME_CAB,"","",0);
+                // TODO Version
+                pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
             // Install Anywhere
