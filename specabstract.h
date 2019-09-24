@@ -614,6 +614,7 @@ public:
         XBinary::OFFSETSIZE osDataSection;
         XBinary::OFFSETSIZE osConstDataSection;
         XBinary::OFFSETSIZE osImportSection;
+        XBinary::OFFSETSIZE osResourceSection;
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;

@@ -1345,6 +1345,12 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
             result.osImportSection.nSize=result.listSectionRecords.at(result.nImportSection).nSize;
         }
 
+        if(result.nResourceSection!=-1)
+        {
+            result.osResourceSection.nOffset=result.listSectionRecords.at(result.nResourceSection).nOffset;
+            result.osResourceSection.nSize=result.listSectionRecords.at(result.nResourceSection).nSize;
+        }
+
         //        if(result.nCodeSectionSize)
         //        {
         //            memoryScan(&result.mapCodeSectionScanDetects,pDevice,result.nCodeSectionOffset,result.nCodeSectionSize,_codesectionscan_records,sizeof(_codesectionscan_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
@@ -8557,11 +8563,26 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             }
 
             // CAB SFX
-
             if(pPEInfo->sResourceManifest.contains("sfxcab.exe"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_SFX,RECORD_NAME_CAB,"","",0);
-                // TODO Version
+
+                if(XBinary::checkOffsetSize(pPEInfo->osResourceSection)&&(pPEInfo->basic_info.bIsDeepScan))
+                {
+                    qint64 nSectionOffset=pPEInfo->listSectionHeaders.at(pPEInfo->nResourceSection).PointerToRawData+
+                            pPEInfo->listSectionHeaders.at(pPEInfo->nResourceSection).Misc.VirtualSize;
+
+                    qint64 nVersionOffset=pe.find_signature(nSectionOffset-0x600,0x600,"BD04EFFE00000100");
+                    if(nVersionOffset!=-1)
+                    {
+                        ss.sVersion=QString("%1.%2.%3.%4")
+                                .arg(pe.read_uint16(nVersionOffset+16+2))
+                                .arg(pe.read_uint16(nVersionOffset+16+0))
+                                .arg(pe.read_uint16(nVersionOffset+16+6))
+                                .arg(pe.read_uint16(nVersionOffset+16+4));
+                    }
+                }
+
                 pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
