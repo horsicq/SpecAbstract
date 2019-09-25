@@ -8795,6 +8795,14 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
+            if(XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Visual Studio Installer"))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_MICROSOFTVISUALSTUDIO,"","",0);
+                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+
+                pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
             if(XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("Dropbox Update Setup"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_DROPBOX,"","",0);
