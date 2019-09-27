@@ -8329,10 +8329,10 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
 
             if(recordCompiler.type==RECORD_TYPE_UNKNOWN)
             {
-                if(     (recordTool.name==RECORD_NAME_MINGW)||
-                        (recordTool.name==RECORD_NAME_MSYS)||
-                        (recordTool.name==RECORD_NAME_MSYS2)||
-                        (recordTool.name==RECORD_NAME_CYGWIN))
+                if( (recordTool.name==RECORD_NAME_MINGW)||
+                    (recordTool.name==RECORD_NAME_MSYS)||
+                    (recordTool.name==RECORD_NAME_MSYS2)||
+                    (recordTool.name==RECORD_NAME_CYGWIN))
                 {
                     recordCompiler.type=RECORD_TYPE_COMPILER;
                     recordCompiler.name=RECORD_NAME_GCC;
@@ -8365,6 +8365,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
                             case 24:    recordTool.sVersion="4.8.2-4.9.2";      break;
                             case 25:    recordTool.sVersion="5.3.0";            break;
                             case 29:    recordTool.sVersion="7.3.0";            break;
+                            case 30:    recordTool.sVersion="7.3.0";            break; // TODO Check
                         }
                         break;
                     }
