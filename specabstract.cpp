@@ -2721,19 +2721,28 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                                 case 20252:     recordPC.sVersion="2.80b1";     break;
                                 case 20256:     recordPC.sVersion="2.80b5";     break;
                                 case 20261:     recordPC.sVersion="2.82";       break;
+                                case 20285:     recordPC.sVersion="2.92.0";     break;
                                 case 20288:     recordPC.sVersion="2.93b3";     break;
                                 case 20294:     recordPC.sVersion="2.96.2";     break;
                                 case 20295:     recordPC.sVersion="2.97b1";     break;
                                 case 20296:     recordPC.sVersion="2.98";       break;
                                 case 20300:     recordPC.sVersion="2.98.04";    break;
+                                case 20301:     recordPC.sVersion="2.98.05";    break;
                                 case 20302:     recordPC.sVersion="2.98.06";    break;
                                 case 20303:     recordPC.sVersion="2.99b";      break;
                                 case 20308:     recordPC.sVersion="3.00.2";     break;
+                                case 20312:     recordPC.sVersion="3.01.3";     break;
+                                case 20317:     recordPC.sVersion="3.02.1";     break;
                                 case 20318:     recordPC.sVersion="3.02.2";     break;
-
-                                //                            case 20343:
-                                //                                recordPC.sVersion="TODO";
-                                //                                break;
+                                case 20323:     recordPC.sVersion="3.03.5b";    break;
+                                case 20327:     recordPC.sVersion="3.03.9b";    break;
+                                case 20329:     recordPC.sVersion="3.03.10b";   break;
+                                case 20334:     recordPC.sVersion="3.03.12b";   break;
+                                case 20342:     recordPC.sVersion="3.03.18b";   break;
+                                case 20343:     recordPC.sVersion="3.03.19b";   break;
+                                case 20344:     recordPC.sVersion="3.03.20b";   break;
+                                case 20345:     recordPC.sVersion="3.03.21b";   break;
+                                case 20348:     recordPC.sVersion="3.03.23b";   break;
                                 default:
                                 {
                                     if(nBuildNumber>20308)
@@ -5737,6 +5746,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
             else if ((pPEInfo->nImportHash64==0x3c61329b29)&&(pPEInfo->nImportHash32==0x412e26ca))  sVersion="2.00";
             else if (pPEInfo->nImportHash64==0x341358d6d9)                                          sVersion="2.52";
             else if (pPEInfo->nImportHash64==0x2973050b33)                                          sVersion=""; // TODO Check old Version
+            else if ((pPEInfo->nImportHash64==0x31f48f8367)&&(pPEInfo->nImportHash32==0x59d53246))  sVersion="2.50Beta3"; // 2.50 Beta-3 08Feb2002 (Build 1105)
             else if (pPEInfo->nImportHash64==0x3b258f0a90)                                          sVersion=""; // TODO Check old Version
             else if (pPEInfo->nImportHash64==0x32bbf3aafe)                                          sVersion=""; // TODO Check old Version
             else if (pPEInfo->nImportHash64==0x32c7a9336f)                                          sVersion=""; // TODO Check old Version
@@ -5751,6 +5761,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
             else if ((pPEInfo->nImportHash64==0x508175d00e)&&(pPEInfo->nImportHash32==0xb50f60e8))  sVersion="4.42-4.54";
             else if ((pPEInfo->nImportHash64==0x508175d00e)&&(pPEInfo->nImportHash32==0x5ca4890e))  sVersion="4.66";
             else if (pPEInfo->nImportHash64==0x506972b7dd)                                          sVersion="4.66"; // ???
+            else if ((pPEInfo->nImportHash64==0x5670adeaf6)&&(pPEInfo->nImportHash32==0x1e178fd2))  sVersion="5.20Beta1"; // Version 5.20Beta1 01-10-2007
             else if ((pPEInfo->nImportHash64==0x57770751cb)&&(pPEInfo->nImportHash32==0xd8505c97))  sVersion="6.00";
             else if (pPEInfo->nImportHash64==0x5cee9acb73)                                          sVersion="6.60-7.00"; // ???
             else if ((pPEInfo->nImportHash64==0x600594c96e)&&(pPEInfo->nImportHash32==0xad072543))  sVersion="6.2.4.624";
