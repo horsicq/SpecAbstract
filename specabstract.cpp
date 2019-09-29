@@ -5746,11 +5746,13 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
             else if ((pPEInfo->nImportHash64==0x3c61329b29)&&(pPEInfo->nImportHash32==0x412e26ca))  sVersion="2.00";
             else if (pPEInfo->nImportHash64==0x341358d6d9)                                          sVersion="2.52";
             else if (pPEInfo->nImportHash64==0x2973050b33)                                          sVersion=""; // TODO Check old Version
+            else if ((pPEInfo->nImportHash64==0x2f2f1df1d1)&&(pPEInfo->nImportHash32==0x8623cf54))  sVersion=""; // TODO Check old Version
             else if ((pPEInfo->nImportHash64==0x31f48f8367)&&(pPEInfo->nImportHash32==0x59d53246))  sVersion="2.50Beta3"; // 2.50 Beta-3 08Feb2002 (Build 1105)
             else if (pPEInfo->nImportHash64==0x3b258f0a90)                                          sVersion=""; // TODO Check old Version
             else if (pPEInfo->nImportHash64==0x32bbf3aafe)                                          sVersion=""; // TODO Check old Version
             else if (pPEInfo->nImportHash64==0x32c7a9336f)                                          sVersion=""; // TODO Check old Version
             else if ((pPEInfo->nImportHash64==0x3b6e96f260)&&(pPEInfo->nImportHash32==0x927ddbdb))  sVersion="1.90";
+            else if ((pPEInfo->nImportHash64==0x3d983cd830)&&(pPEInfo->nImportHash32==0xa61b1778))  sVersion=""; // TODO Check
             else if ((pPEInfo->nImportHash64==0x3fb526760f)&&(pPEInfo->nImportHash32==0x72359c40))  sVersion=""; // TODO Check
             else if ((pPEInfo->nImportHash64==0x3fb526760f)&&(pPEInfo->nImportHash32==0xf9f173fb))  sVersion=""; // TODO Check
             else if (pPEInfo->nImportHash64==0x40666b9f00)                                          sVersion="3.00-3.10"; // ???
@@ -5763,10 +5765,12 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
             else if (pPEInfo->nImportHash64==0x506972b7dd)                                          sVersion="4.66"; // ???
             else if ((pPEInfo->nImportHash64==0x5670adeaf6)&&(pPEInfo->nImportHash32==0x1e178fd2))  sVersion="5.20Beta1"; // Version 5.20Beta1 01-10-2007
             else if ((pPEInfo->nImportHash64==0x57770751cb)&&(pPEInfo->nImportHash32==0xd8505c97))  sVersion="6.00";
+            else if ((pPEInfo->nImportHash64==0x57770751cb)&&(pPEInfo->nImportHash32==0x65f6ce6f))  sVersion="6.04";
             else if (pPEInfo->nImportHash64==0x5cee9acb73)                                          sVersion="6.60-7.00"; // ???
             else if ((pPEInfo->nImportHash64==0x600594c96e)&&(pPEInfo->nImportHash32==0xad072543))  sVersion="6.2.4.624";
             else if ((pPEInfo->nImportHash64==0x5f7a50e70b)&&(pPEInfo->nImportHash32==0x0ecbdf27))  sVersion="6.40";
             else if ((pPEInfo->nImportHash64==0x5d069de3a4)&&(pPEInfo->nImportHash32==0x34512142))  sVersion="6.60-7.00";
+
 
     #ifdef QT_DEBUG
             qDebug() << stDetects;
