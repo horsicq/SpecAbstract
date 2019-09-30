@@ -513,6 +513,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
         case RECORD_NAME_ANDPAKK2:                              sResult=QString("ANDpakk2");                                    break;
         case RECORD_NAME_ANDROIDGRADLE:                         sResult=QString("Android Gradle");                              break;
+        case RECORD_NAME_ANSLYMPACKER:                          sResult=QString("AnslymPacker");                                break;
         case RECORD_NAME_ANTIDOTE:                              sResult=QString("AntiDote");                                    break;
         case RECORD_NAME_ARJ:                                   sResult=QString("ARJ");                                         break;
         case RECORD_NAME_ARMADILLO:                             sResult=QString("Armadillo");                                   break;
@@ -1416,6 +1417,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_SFX(pDevice,pOptions->bIsImage,&result);
         PE_handle_Installers(pDevice,pOptions->bIsImage,&result);
         PE_handle_DongleProtection(pDevice,pOptions->bIsImage,&result);
+        PE_handle_AnslymPacker(pDevice,pOptions->bIsImage,&result);
+
         PE_handle_UnknownProtection(pDevice,pOptions->bIsImage,&result);
 
         PE_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
@@ -5670,8 +5673,8 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
 
                 if(nNumberOfImports==4)
                 {
-                    if((pPEInfo->listImports.at(3).listPositions.at(0).sName=="GetSaveFileNameA")&&
-                            (pPEInfo->listImports.at(3).listPositions.at(1).sName=="GetOpenFileNameA"))
+                    if( (pPEInfo->listImports.at(3).listPositions.at(0).sName=="GetSaveFileNameA")&&
+                        (pPEInfo->listImports.at(3).listPositions.at(1).sName=="GetOpenFileNameA"))
                     {
                         stDetects.insert("comdlg32_13");
                         stDetects.insert("comdlg32_14");
@@ -7151,6 +7154,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
 void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     // TODO Turbo Linker
+    // https://delphi.fandom.com/wiki/Determine_Delphi_Application
     XPE pe(pDevice,bIsImage);
 
     if(pe.isValid())
@@ -7490,6 +7494,8 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                     }
                     // TODO more x64
                 }
+
+                // TODO Console !!!
 
                 if(bNewVersion)
                 {
@@ -9073,6 +9079,23 @@ void SpecAbstract::PE_handle_DongleProtection(QIODevice *pDevice,bool bIsImage, 
         {
             _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_DONGLEPROTECTION,RECORD_NAME_GUARDIANSTEALTH,"","",0);
             pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+    }
+}
+
+void SpecAbstract::PE_handle_AnslymPacker(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
+    {
+        if(!pPEInfo->cliInfo.bInit)
+        {
+            if((pPEInfo->nImportHash64==0xaf2e74867b)&&(pPEInfo->nImportHash32==0x51a4c42b))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_ANSLYMPACKER,"","",0);
+                pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
         }
     }
 }

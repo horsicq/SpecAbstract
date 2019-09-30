@@ -107,6 +107,7 @@ public:
         RECORD_NAME_ALLOY,
         RECORD_NAME_ANDPAKK2,
         RECORD_NAME_ANDROIDGRADLE,
+        RECORD_NAME_ANSLYMPACKER,
         RECORD_NAME_ANTIDOTE,
         RECORD_NAME_ARJ,
         RECORD_NAME_ARMADILLO,
@@ -777,6 +778,7 @@ public:
     static void PE_handle_SFX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_PolyMorph(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_DongleProtection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_AnslymPacker(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 
     static void PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 
