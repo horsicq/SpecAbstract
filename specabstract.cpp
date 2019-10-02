@@ -1397,6 +1397,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_import(pDevice,pOptions->bIsImage,&result);
 
         PE_handle_Protection(pDevice,pOptions->bIsImage,&result);
+        PE_handle_CExe(pDevice,pOptions->bIsImage,&result);
         PE_handle_VMProtect(pDevice,pOptions->bIsImage,&result);
         PE_handle_tElock(pDevice,pOptions->bIsImage,&result);
         PE_handle_Armadillo(pDevice,pOptions->bIsImage,&result);
@@ -2012,37 +2013,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                     }
                 }
             }
-            else if(pPEInfo->listImports.at(0).listPositions.count()==22)
-            {
-                if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="lstrcatA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(1).sName=="LoadResource")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(2).sName=="SizeofResource")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(3).sName=="FindResourceA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(4).sName=="CloseHandle")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(5).sName=="WriteFile")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(6).sName=="CreateFileA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(7).sName=="GetTempFileNameA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(8).sName=="DeleteFileA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(9).sName=="Sleep")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(10).sName=="GetExitCodeProcess")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(11).sName=="WaitForSingleObject")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(12).sName=="CreateProcessA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(13).sName=="GetStartupInfoA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(14).sName=="LockResource")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(15).sName=="lstrcpyA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(16).sName=="GetCommandLineA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(17).sName=="FreeLibrary")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(18).sName=="GetProcAddress")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(19).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(20).sName=="GetWindowsDirectoryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(21).sName=="GetModuleFileNameA"))
-                {
-                    if(pPEInfo->listImports.count()==3)
-                    {
-                        stDetects.insert("kernel32_cexe");
-                    }
-                }
-            }
         }
         else if(pPEInfo->listImports.at(0).sName.toUpper()=="USER32.DLL")
         {
@@ -2172,21 +2142,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                 }
             }
         }
-        else if(pPEInfo->listImports.at(1).sName.toUpper()=="LZ32.DLL")
-        {
-            if(pPEInfo->listImports.at(1).listPositions.count()==3)
-            {
-                if((pPEInfo->listImports.at(1).listPositions.at(0).sName=="LZCopy")&&
-                        (pPEInfo->listImports.at(1).listPositions.at(1).sName=="LZOpenFileA")&&
-                        (pPEInfo->listImports.at(1).listPositions.at(2).sName=="LZClose"))
-                {
-                    if(pPEInfo->listImports.count()==3)
-                    {
-                        stDetects.insert("lz32_cexe");
-                    }
-                }
-            }
-        }
     }
 
     if(pPEInfo->listImports.count()>=3)
@@ -2215,16 +2170,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                     {
                         stDetects.insert("kernel32_pespin");
                     }
-                }
-            }
-        }
-        else if(pPEInfo->listImports.at(2).sName.toUpper()=="USER32.DLL")
-        {
-            if(pPEInfo->listImports.at(2).listPositions.count()==1)
-            {
-                if(pPEInfo->listImports.at(2).listPositions.at(0).sName=="MessageBoxA")
-                {
-                    stDetects.insert("user32_cexe");
                 }
             }
         }
@@ -2547,7 +2492,7 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
         pPEInfo->mapImportDetects.insert(RECORD_NAME_PECOMPACT,getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_PECOMPACT,"1.10b7-1.34","",0));
     }
 
-    if(stDetects.contains("kernel32_pecompact5")) // TODO Cjeck
+    if(stDetects.contains("kernel32_pecompact5")) // TODO Check
     {
         pPEInfo->mapImportDetects.insert(RECORD_NAME_PECOMPACT,getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_PECOMPACT,"1.30-1.40","",0));
     }
@@ -2569,11 +2514,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     else if(stDetects.contains("kernel32_exefog_1.2"))
     {
         pPEInfo->mapImportDetects.insert(RECORD_NAME_EXEFOG,getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_EXEFOG,"1.2","",0));
-    }
-
-    if(stDetects.contains("kernel32_cexe")&&stDetects.contains("lz32_cexe")&&stDetects.contains("user32_cexe"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_CEXE,getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_CEXE,"1.0","",0));
     }
 
     //    if(stDetects.contains("kernel32_pecompact2"))
@@ -2713,7 +2653,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                         {
                             quint32 nBuildNumber=pPEInfo->listSectionHeaders.at(0).PointerToLinenumbers;
 
-                            // TODO !!! more buil versions
+                            // TODO !!! more build versions
                             switch(nBuildNumber)
                             {
                                 case 20206:     recordPC.sVersion="2.70";       break;
@@ -2883,13 +2823,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            // CExe
-            if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CEXE))
-            {
-                SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CEXE);
-                pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-            }
-
             if(!pPEInfo->bIs64)
             {
                 // ZProtect
@@ -2985,21 +2918,25 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     {
                         nBuildNumber=pPEInfo->nMinorImageVersion;
                     }
-
 #ifdef QT_DEBUG
                     qDebug("nBuildNumber: %x",nBuildNumber);
 #endif
-
                     switch(nBuildNumber)
                     {
+                        case 0x21:  ss.sVersion="0.21";         break;
+                        case 0x22:  ss.sVersion="0.22";         break;
+                        case 0x23:  ss.sVersion="0.23";         break;
                         case 0x24:  ss.sVersion="0.24";         break;
                         case 0x25:  ss.sVersion="0.25";         break;
+                        case 0x26:  ss.sVersion="0.26";         break;
                         case 0x27:  ss.sVersion="0.27";         break;
                         case 0x28:  ss.sVersion="0.28";         break;
                         case 0x29:  ss.sVersion="0.29";         break;
                         case 0x30:  ss.sVersion="0.30";         break;
+                        case 0x31:  ss.sVersion="0.31";         break;
                         case 0x32:  ss.sVersion="0.32";         break;
                         case 0x33:  ss.sVersion="0.33";         break;
+                        case 0x34:  ss.sVersion="0.34";         break;
                         case 0x35:  ss.sVersion="0.35";         break;
                         case 0x36:  ss.sVersion="0.36 beta";    break;
                         case 0x37:  ss.sVersion="0.37 beta";    break;
@@ -3710,8 +3647,8 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
                 }
             }
 
-            if(stDetects.contains("kernel32_3")&&
-                    stDetects.contains("user32_3"))
+            if( stDetects.contains("kernel32_3")&&
+                stDetects.contains("user32_3"))
             {
                 SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_VMPROTECT,"","",0);
                 ss.sVersion="3.X";
@@ -3732,11 +3669,11 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
                 {
                     for(int i=0; i<pPEInfo->listSectionHeaders.count(); i++)
                     {
-                        if((i==pPEInfo->nEntryPointSection)||
-                                (i==pPEInfo->nResourceSection)||
-                                (i==pPEInfo->nTLSSection)||
-                                (i==pPEInfo->nRelocsSection)||
-                                (QString((char *)pPEInfo->listSectionHeaders.at(i).Name)==".tls")
+                        if( (i==pPEInfo->nEntryPointSection)||
+                            (i==pPEInfo->nResourceSection)||
+                            (i==pPEInfo->nTLSSection)||
+                            (i==pPEInfo->nRelocsSection)||
+                            (QString((char *)pPEInfo->listSectionHeaders.at(i).Name)==".tls")
                           )
                         {
                             continue;
@@ -3753,14 +3690,32 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
 
             if(bSuccess)
             {
-                if(pe.compareEntryPoint("68........E8")||
-                        pe.compareEntryPoint("68........E9")||
-                        pe.compareEntryPoint("EB$$E9$$$$$$$$68........E8"))
+                if( pe.compareEntryPoint("68........E8")||
+                    pe.compareEntryPoint("68........E9")||
+                    pe.compareEntryPoint("EB$$E9$$$$$$$$68........E8"))
                 {
                     // TODO more checks
                     SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_VMPROTECT,"","",0);
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
+            }
+        }
+    }
+}
+
+void SpecAbstract::PE_handle_CExe(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
+    {
+        if(!pPEInfo->cliInfo.bInit)
+        {
+            if( ((pPEInfo->nImportHash64==0xcda93f5a0)&&(pPEInfo->nImportHash32==0x6ad5f3a1))||
+                ((pPEInfo->nImportHash64==0xd97446c35)&&(pPEInfo->nImportHash32==0x95065b94)))
+            {
+                SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_CEXE,"1.0","",0);
+                pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
         }
     }
@@ -5010,55 +4965,55 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
 
             if(stDetects.contains("kernel32_4d")&&stDetects.contains("user32_4d")&&stDetects.contains("gdi32_4d"))
             {
-                sVersion="3.78";
+                sVersion="3.78.XXX";
             }
             else if(stDetects.contains("kernel32_7a0")&&stDetects.contains("user32_7a0")&&stDetects.contains("gdi32_7a0"))
             {
-                sVersion="4.66";
+                sVersion="4.66.XXX";
             }
             else if(stDetects.contains("kernel32_7a3")&&stDetects.contains("user32_7a3")&&stDetects.contains("gdi32_7a3"))
             {
-                sVersion="6.00Beta1";
+                sVersion="6.00Beta1.XXX";
             }
             else if(stDetects.contains("kernel32_8a")&&stDetects.contains("user32_8a")&&stDetects.contains("gdi32_8a"))
             {
-                sVersion="6.00-6.04";
+                sVersion="6.00-6.04.XXX";
             }
             else if(stDetects.contains("kernel32_11")&&stDetects.contains("user32_11")&&stDetects.contains("gdi32_11"))
             {
-                sVersion="6.60-7.00";
+                sVersion="6.60-7.00.XXX";
             }
             else if(stDetects.contains("kernel32_13")&&stDetects.contains("user32_13")&&stDetects.contains("gdi32_13")&&stDetects.contains("comdlg32_13"))
             {
-                sVersion="7.20";
+                sVersion="7.20.XXX";
             }
             else if(stDetects.contains("kernel32_14")&&stDetects.contains("user32_14")&&stDetects.contains("gdi32_14")&&stDetects.contains("comdlg32_14"))
             {
-                sVersion="8.60";
+                sVersion="8.60.XXX";
             }
 
     #ifdef QT_DEBUG
             qDebug("Armadillo Version: %s",sVersion.toLatin1().data());
     #endif
 
-            if      (pPEInfo->nImportHash64==0x4b5345e36c)                                          sVersion="3.76a";
-            else if (pPEInfo->nImportHash64==0x35e237026a)                                          sVersion=""; // TODO Check old Version
+            if      (pPEInfo->nImportHash64==0x4b5345e36c)                                          sVersion="3.76a.XX";
+            else if (pPEInfo->nImportHash64==0x35e237026a)                                          sVersion=".XX"; // TODO Check old Version
             else if ((pPEInfo->nImportHash64==0x3010e1d59e)&&(pPEInfo->nImportHash32==0x834a7ecf))  sVersion="2.XX-3.XX"; // ???
             else if ((pPEInfo->nImportHash64==0x3635cf517b)&&(pPEInfo->nImportHash32==0xe6ce8a9e))  sVersion="1.74-1.84"; // ???
             else if ((pPEInfo->nImportHash64==0x3c61329b29)&&(pPEInfo->nImportHash32==0x7177627b))  sVersion="1.91c";
             else if ((pPEInfo->nImportHash64==0x3c61329b29)&&(pPEInfo->nImportHash32==0x412e26ca))  sVersion="2.00";
-            else if (pPEInfo->nImportHash64==0x341358d6d9)                                          sVersion="2.52";
-            else if (pPEInfo->nImportHash64==0x2973050b33)                                          sVersion=""; // TODO Check old Version
+            else if ((pPEInfo->nImportHash64==0x341358d6d9)&&(pPEInfo->nImportHash32==0xb256a26f))  sVersion="2.52";
+            else if (pPEInfo->nImportHash64==0x2973050b33)                                          sVersion=".XX"; // TODO Check old Version
             else if ((pPEInfo->nImportHash64==0x2f2f1df1d1)&&(pPEInfo->nImportHash32==0x8623cf54))  sVersion=""; // TODO Check old Version
             else if ((pPEInfo->nImportHash64==0x31f48f8367)&&(pPEInfo->nImportHash32==0x59d53246))  sVersion="2.50Beta3"; // 2.50 Beta-3 08Feb2002 (Build 1105)
-            else if (pPEInfo->nImportHash64==0x3b258f0a90)                                          sVersion=""; // TODO Check old Version
-            else if (pPEInfo->nImportHash64==0x32bbf3aafe)                                          sVersion=""; // TODO Check old Version
-            else if (pPEInfo->nImportHash64==0x32c7a9336f)                                          sVersion=""; // TODO Check old Version
+            else if (pPEInfo->nImportHash64==0x3b258f0a90)                                          sVersion=".XX"; // TODO Check old Version
+            else if ((pPEInfo->nImportHash64==0x32bbf3aafe)&&(pPEInfo->nImportHash32==0x5a037362))  sVersion=""; // TODO Check old Version
+            else if (pPEInfo->nImportHash64==0x32c7a9336f)                                          sVersion=".XX"; // TODO Check old Version
             else if ((pPEInfo->nImportHash64==0x3b6e96f260)&&(pPEInfo->nImportHash32==0x927ddbdb))  sVersion="1.90";
             else if ((pPEInfo->nImportHash64==0x3d983cd830)&&(pPEInfo->nImportHash32==0xa61b1778))  sVersion=""; // TODO Check
             else if ((pPEInfo->nImportHash64==0x3fb526760f)&&(pPEInfo->nImportHash32==0x72359c40))  sVersion=""; // TODO Check
             else if ((pPEInfo->nImportHash64==0x3fb526760f)&&(pPEInfo->nImportHash32==0xf9f173fb))  sVersion=""; // TODO Check
-            else if (pPEInfo->nImportHash64==0x40666b9f00)                                          sVersion="3.00-3.10"; // ???
+            else if ((pPEInfo->nImportHash64==0x40666b9f00)&&(pPEInfo->nImportHash32==0x64c37e91))  sVersion="3.00-3.10"; // ???
             else if ((pPEInfo->nImportHash64==0x43d1d2c52f)&&(pPEInfo->nImportHash32==0x82883188))  sVersion="3.30a";
             else if ((pPEInfo->nImportHash64==0x4518d21e36)&&(pPEInfo->nImportHash32==0x228301a9))  sVersion="3.60";
             else if ((pPEInfo->nImportHash64==0x4518d21e36)&&(pPEInfo->nImportHash32==0xb79df9fe))  sVersion="3.61";
@@ -5068,14 +5023,14 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
             else if ((pPEInfo->nImportHash64==0x4fc78bc010)&&(pPEInfo->nImportHash32==0x807db698))  sVersion="4.00-4.40";
             else if ((pPEInfo->nImportHash64==0x508175d00e)&&(pPEInfo->nImportHash32==0xb50f60e8))  sVersion="4.42-4.54";
             else if ((pPEInfo->nImportHash64==0x508175d00e)&&(pPEInfo->nImportHash32==0x5ca4890e))  sVersion="4.66";
-            else if (pPEInfo->nImportHash64==0x506972b7dd)                                          sVersion="4.66"; // ???
+            else if (pPEInfo->nImportHash64==0x506972b7dd)                                          sVersion="4.66.XX"; // ???
             else if ((pPEInfo->nImportHash64==0x56fa69e1fe)&&(pPEInfo->nImportHash32==0xdb61d809))  sVersion="5.02";
             else if ((pPEInfo->nImportHash64==0x5670adeaf6)&&(pPEInfo->nImportHash32==0x1e178fd2))  sVersion="5.20Beta1"; // Version 5.20Beta1 01-10-2007
             else if ((pPEInfo->nImportHash64==0x5670adeaf6)&&(pPEInfo->nImportHash32==0xc791b70b))  sVersion="5.20";
             else if ((pPEInfo->nImportHash64==0x56fa69e1fe)&&(pPEInfo->nImportHash32==0x7b44517b))  sVersion="5.40";
             else if ((pPEInfo->nImportHash64==0x57770751cb)&&(pPEInfo->nImportHash32==0xd8505c97))  sVersion="6.00";
             else if ((pPEInfo->nImportHash64==0x57770751cb)&&(pPEInfo->nImportHash32==0x65f6ce6f))  sVersion="6.04";
-            else if (pPEInfo->nImportHash64==0x5cee9acb73)                                          sVersion="6.60-7.00"; // ???
+            else if (pPEInfo->nImportHash64==0x5cee9acb73)                                          sVersion="6.60-7.00.XX"; // ???
             else if ((pPEInfo->nImportHash64==0x600594c96e)&&(pPEInfo->nImportHash32==0xad072543))  sVersion="6.2.4.624";
             else if ((pPEInfo->nImportHash64==0x5f7a50e70b)&&(pPEInfo->nImportHash32==0x0ecbdf27))  sVersion="6.40";
             else if ((pPEInfo->nImportHash64==0x5d069de3a4)&&(pPEInfo->nImportHash32==0x34512142))  sVersion="6.60-7.00";
@@ -9407,6 +9362,10 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
                 if(sBorlandString=="Borland C++ - Copyright 1991 Borland Intl.")
                 {
                     ssCompiler.sVersion="1991";
+                }
+                else if(sBorlandString=="Borland C++ - Copyright 1993 Borland Intl.")
+                {
+                    ssCompiler.sVersion="1993";
                 }
                 else if(sBorlandString=="Borland C++ - Copyright 1994 Borland Intl.")
                 {
