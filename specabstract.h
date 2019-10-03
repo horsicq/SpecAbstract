@@ -268,6 +268,7 @@ public:
         RECORD_NAME_MSYS2,
         RECORD_NAME_MZ0OPE,
         RECORD_NAME_NAKEDPACKER,
+        RECORD_NAME_NEOLITE,
         RECORD_NAME_NOOBYPROTECT,
         RECORD_NAME_NORTHSTARPESHRINKER,
         RECORD_NAME_NOSTUBLINKER,
@@ -780,6 +781,7 @@ public:
     static void PE_handle_PolyMorph(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_DongleProtection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_AnslymPacker(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_NeoLite(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 
     static void PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 
