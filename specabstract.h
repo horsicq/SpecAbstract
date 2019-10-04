@@ -577,6 +577,7 @@ public:
         QList<XPE::IMPORT_HEADER> listImports;
         quint64 nImportHash64;
         quint32 nImportHash32;
+        QList<quint32> listImportPositionHashes;
         XPE::EXPORT_HEADER exportHeader;
         QList<XPE::RESOURCE_RECORD> listResources;
         QList<XPE::RICH_RECORD> listRichSignatures;
@@ -698,6 +699,18 @@ public:
         bool bIsString2;
         const char *pszName2;
         quint32 nID2;
+    };
+
+    struct IMPORTHASH_RECORD
+    {
+        quint32 nVariant;
+        const RECORD_FILETYPE filetype;
+        const RECORD_TYPE type;
+        const RECORD_NAME name;
+        const char *pszVersion;
+        const char *pszInfo;
+        quint64 nHash64;
+        quint32 nHash32;
     };
 
     struct VCL_STRUCT
@@ -845,10 +858,11 @@ public:
     static QByteArray _BasicPEInfoToArray(BASIC_PE_INFO *pInfo);
     static BASIC_PE_INFO _ArrayToBasicPEInfo(const QByteArray *pbaArray);
 
-    static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SCANMEMORY_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2);
+    static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SCANMEMORY_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2); // TODO Check
     static void signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
-    static void resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,RESOURCES_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
+    static void resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,RESOURCES_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2); // TODO Check
     static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
+    static void importHashScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nHash64,quint32 nHash32,IMPORTHASH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
 
     static QByteArray serializeScanStruct(SCAN_STRUCT ssRecord,bool bIsHeader=false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData,bool *pbIsHeader=nullptr);

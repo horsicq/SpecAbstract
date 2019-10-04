@@ -253,6 +253,11 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TELOCK,                       "1.00",             "",                     "E9E5E2FFFF"},
 };
 
+SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
+{
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_KKRUNCHY,                     "",                 "",                     0x134c8cd1e,    0x29188619}
+};
+
 SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
 {
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_DOTFUSCATOR,                  "",                 "",                     "DotfuscatorAttribute"},
@@ -923,7 +928,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     QElapsedTimer timer;
     timer.start();
 
-    BINARYINFO_STRUCT result=BINARYINFO_STRUCT();
+    BINARYINFO_STRUCT result={};
 
     XBinary binary(pDevice,pOptions->bIsImage);
 
@@ -1265,6 +1270,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         //        }
         result.nImportHash64=pe.getImportHash64();
         result.nImportHash32=pe.getImportHash32();
+        result.listImportPositionHashes=pe.getImportPositionHashes();
 
 #ifdef QT_DEBUG
         QString sDebugString=QString::number(result.nImportHash64,16)+" "+QString::number(result.nImportHash32,16);
@@ -1279,6 +1285,18 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
             QString sRecord=listImports.at(i).sLibrary+" "+listImports.at(i).sFunction;
 
             qDebug("%s",sRecord.toLatin1().data());
+        }
+
+        QList<XPE::IMPORT_HEADER> _listImports=pe.getImports();
+
+        for(int i=0;i<_listImports.count();i++)
+        {
+            qDebug("Import hash: %x",result.listImportPositionHashes.at(i));
+            for(int j=0;j<_listImports.at(i).listPositions.count();j++)
+            {
+                qDebug("%s %s",_listImports.at(i).sName.toLatin1().data(),
+                       _listImports.at(i).listPositions.at(j).sFunction.toLatin1().data());
+            }
         }
 #endif
         result.exportHeader=pe.getExport();
@@ -1482,15 +1500,17 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     Q_UNUSED(bIsImage);
     // Import Check
 
-#ifdef QT_DEBUG
-    for(int j=0;j<pPEInfo->listImports.count();j++)
-    {
-        for(int i=0;i<pPEInfo->listImports.at(j).listPositions.count();i++)
-        {
-            qDebug("(pPEInfo->listImports.at(%d).listPositions.at(%d).sName==\"%s\")&&",j,i,pPEInfo->listImports.at(j).listPositions.at(i).sName.toLatin1().data());
-        }
-    }
-#endif
+//#ifdef QT_DEBUG
+//    for(int j=0;j<pPEInfo->listImports.count();j++)
+//    {
+//        for(int i=0;i<pPEInfo->listImports.at(j).listPositions.count();i++)
+//        {
+//            qDebug("(pPEInfo->listImports.at(%d).listPositions.at(%d).sName==\"%s\")&&",j,i,pPEInfo->listImports.at(j).listPositions.at(i).sName.toLatin1().data());
+//        }
+//    }
+//#endif
+
+    importHashScan(&(pPEInfo->mapImportDetects),pPEInfo->nImportHash64,pPEInfo->nImportHash32,_PE_importhash_records,sizeof(_PE_importhash_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
 
     QSet<QString> stDetects;
 
@@ -1538,7 +1558,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                         else if(pPEInfo->listImports.at(0).sName=="KERNEL32.DLL")
                         {
                             stDetects.insert("kernel32_exefog_1.2");
-                            stDetects.insert("kernel32_kkrunchy");
                         }
                     }
                 }
@@ -2226,11 +2245,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     if(stDetects.contains("kernel32_rlp"))
     {
         pPEInfo->mapImportDetects.insert(RECORD_NAME_RLP,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_RLP,"0.7.4b","",0));
-    }
-
-    if(stDetects.contains("kernel32_kkrunchy"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_KKRUNCHY,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_KKRUNCHY,"","",0));
     }
 
     if(stDetects.contains("kernel32_quickpacknt"))
@@ -3785,7 +3799,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
             bool bUser32=false;
             bool bGdi32=false;
 
-            if((nNumberOfImports==3)||(nNumberOfImports==4))
+            if((nNumberOfImports==3)||(nNumberOfImports==4)||(nNumberOfImports==5))
             {
                 if(pPEInfo->listImports.at(0).sName.toUpper()=="KERNEL32.DLL")
                 {
@@ -9112,6 +9126,35 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
 
                         pMapRecords->insert(record.name,record);
                     }
+                }
+            }
+        }
+    }
+}
+
+void SpecAbstract::importHashScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint64 nHash64, quint32 nHash32, SpecAbstract::IMPORTHASH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2)
+{
+    int nSignaturesCount=nRecordsSize/(int)sizeof(SIGNATURE_RECORD);
+
+    for(int i=0; i<nSignaturesCount; i++)
+    {
+        if((pRecords[i].filetype==fileType1)||(pRecords[i].filetype==fileType2))
+        {
+            if(!pMapRecords->contains(pRecords[i].name))
+            {
+                if((pRecords[i].nHash64==nHash64)&&(pRecords[i].nHash32==nHash32))
+                {
+                    SpecAbstract::_SCANS_STRUCT record={};
+                    record.nVariant=pRecords[i].nVariant;
+                    record.filetype=pRecords[i].filetype;
+                    record.type=pRecords[i].type;
+                    record.name=pRecords[i].name;
+                    record.sVersion=pRecords[i].pszVersion;
+                    record.sInfo=pRecords[i].pszInfo;
+
+                    record.nOffset=0;
+
+                    pMapRecords->insert(record.name,record);
                 }
             }
         }
