@@ -1,4 +1,4 @@
-Import hash: 4b5345e36c
+Import hash: 4b5345e36c 5f6ae2cf
 KERNEL32.dll GetTickCount
 KERNEL32.dll GlobalAddAtomA
 KERNEL32.dll GetModuleHandleA
@@ -146,7 +146,7 @@ GDI32.dll SelectObject
 GDI32.dll CreateCompatibleDC
 GDI32.dll CreatePalette
 
-Import hash: 3b258f0a90
+Import hash: 3b258f0a90 e4bcc578
 KERNEL32.dll DebugActiveProcess
 KERNEL32.dll ResumeThread
 KERNEL32.dll GetThreadContext
@@ -684,7 +684,7 @@ GDI32.dll BitBlt
 GDI32.dll SelectObject
 GDI32.dll CreateCompatibleDC
 
-Import hash: 506972b7dd
+Import hash: 506972b7dd d09a4dc7
 KERNEL32.dll LoadLibraryA
 KERNEL32.dll GetProcAddress
 KERNEL32.dll GlobalLock
@@ -1074,7 +1074,7 @@ GDI32.dll CreateDIBitmap
 GDI32.dll DeleteDC
 GDI32.dll CreateCompatibleDC
 
-Import hash: 2973050b33
+Import hash: 2973050b33 1a0c885c
 KERNEL32.dll ReadFile
 KERNEL32.dll GetFileSize
 KERNEL32.dll CreateFileA
@@ -1159,7 +1159,7 @@ GDI32.dll RealizePalette
 GDI32.dll CreateDIBitmap
 GDI32.dll DeleteDC
 
-Import hash: 32c7a9336f
+Import hash: 32c7a9336f 6762fc6d
 KERNEL32.dll VirtualAlloc
 KERNEL32.dll Sleep
 KERNEL32.dll CreateThread
@@ -7399,3 +7399,12 @@ comdlg32.dll GetOpenFileNameA
 Import hash: 134c8cd1e 29188619
 KERNEL32.DLL LoadLibraryA
 KERNEL32.DLL GetProcAddress
+
+Import hash: ee8cb83a a4083f58
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll GetProcAddress
+
+Import hash: 184210a7f faef25b
+kernel32.dll LoadLibraryA
+kernel32.dll GetProcAddress
+kernel32.dll VirtualProtect

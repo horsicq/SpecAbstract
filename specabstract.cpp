@@ -255,7 +255,57 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
 
 SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
 {
-    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_KKRUNCHY,                     "",                 "",                     0x134c8cd1e,    0x29188619}
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_KKRUNCHY,                     "",                 "",                     0x134c8cd1e,    0x29188619},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "",                 "",                     0x0ee8cb83a,    0xa4083f58},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_SCPACK,                       "0.2",              "",                     0x184210a7f,    0x0faef25b},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.76a",            "",                     0x4b5345e36c,   0x5f6ae2cf},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "",                 "",                     0x35e237026a,   0x419bf128},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.XX-3.XX",        "",                     0x3010e1d59e,   0x834a7ecf},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.74-1.84",        "",                     0x3635cf517b,   0xe6ce8a9e},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.91c",            "",                     0x3c61329b29,   0x7177627b},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.00",             "",                     0x3c61329b29,   0x412e26ca},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.52",             "",                     0x341358d6d9,   0xb256a26f},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "",                 "",                     0x2973050b33,   0x1a0c885c},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "",                 "",                     0x2f2f1df1d1,   0x8623cf54},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.50Beta3",        "",                     0x31f48f8367,   0x59d53246},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "",                 "",                     0x3b258f0a90,   0xe4bcc578},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "",                 "",                     0x32bbf3aafe,   0x5a037362},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "",                 "",                     0x32c7a9336f,   0x6762fc6d},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.90",             "",                     0x3b6e96f260,   0x927ddbdb},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "",                 "",                     0x3d983cd830,   0xa61b1778},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "",                 "",                     0x3fb526760f,   0x72359c40},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "",                 "",                     0x3fb526760f,   0xf9f173fb},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.00-3.10",        "",                     0x40666b9f00,   0x64c37e91},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.30a",            "",                     0x43d1d2c52f,   0x82883188},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.60",             "",                     0x4518d21e36,   0x228301a9},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.61",             "",                     0x4518d21e36,   0xb79df9fe},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.70",             "",                     0x4518d21e36,   0x774538e7},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.75a",            "",                     0x4610da601a,   0x5a7b25e5},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.76",             "",                     0x4c0ed4e9ea,   0x251722e7},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.78",             "",                     0x4c0ed4e9ea,   0xccda289c},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "4.00-4.40",        "",                     0x4fc78bc010,   0x807db698},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "4.42-4.54",        "",                     0x508175d00e,   0xb50f60e8},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "4.66",             "",                     0x508175d00e,   0x5ca4890e},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "4.66",             "",                     0x508175d00e,   0x1a14aa82},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "4.66",             "",                     0x506972b7dd,   0xd09a4dc7},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "5.02",             "",                     0x56fa69e1fe,   0xdb61d809},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "5.20Beta1",        "",                     0x5670adeaf6,   0x1e178fd2},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "5.20",             "",                     0x5670adeaf6,   0xc791b70b},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "5.40",             "",                     0x56fa69e1fe,   0x7b44517b},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "6.00Beta1",        "",                     0x56fa69e1fe,   0xf35bbfc1},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "6.00",             "",                     0x57770751cb,   0xd8505c97},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "6.04",             "",                     0x57770751cb,   0x65f6ce6f},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "6.60-7.00",        "",                     0x5cee9acb73,   0xa6f43b6d},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "6.2.4.624",        "",                     0x600594c96e,   0xad072543},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "6.40",             "",                     0x5f7a50e70b,   0x0ecbdf27},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "6.60-7.00",        "",                     0x5d069de3a4,   0x34512142},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "7.20",             "",                     0x79deb2e3e4,   0x2a3627b7},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "8.60",             "",                     0x79f90ba091,   0x804c7692},
+};
+
+SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
+{
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_SCPACK,                       "",                 "",                     ".scpack"},
 };
 
 SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
@@ -734,6 +784,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_RLPACK:                                sResult=QString("RLPack");                                      break;
         case RECORD_NAME_ROSASM:                                sResult=QString("RosAsm");                                      break;
         case RECORD_NAME_RTF:                                   sResult=QString("Rich Text Format");                            break;
+        case RECORD_NAME_SCPACK:                                sResult=QString("SC Pack");                                     break;
         case RECORD_NAME_SDPROTECTORPRO:                        sResult=QString("SDProtector Pro");                             break;
         case RECORD_NAME_SETUPFACTORY:                          sResult=QString("Setup Factory");                               break;
         case RECORD_NAME_SHELL:                                 sResult=QString("Shell");                                       break;
@@ -806,6 +857,16 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ZIP:                                   sResult=QString("ZIP");                                         break;
         case RECORD_NAME_ZLIB:                                  sResult=QString("zlib");                                        break;
         case RECORD_NAME_ZPROTECT:                              sResult=QString("ZProtect");                                    break;
+        case RECORD_NAME_UNKNOWN0:                              sResult=QString("_Unknown");                                    break;
+        case RECORD_NAME_UNKNOWN1:                              sResult=QString("_Unknown");                                    break;
+        case RECORD_NAME_UNKNOWN2:                              sResult=QString("_Unknown");                                    break;
+        case RECORD_NAME_UNKNOWN3:                              sResult=QString("_Unknown");                                    break;
+        case RECORD_NAME_UNKNOWN4:                              sResult=QString("_Unknown");                                    break;
+        case RECORD_NAME_UNKNOWN5:                              sResult=QString("_Unknown");                                    break;
+        case RECORD_NAME_UNKNOWN6:                              sResult=QString("_Unknown");                                    break;
+        case RECORD_NAME_UNKNOWN7:                              sResult=QString("_Unknown");                                    break;
+        case RECORD_NAME_UNKNOWN8:                              sResult=QString("_Unknown");                                    break;
+        case RECORD_NAME_UNKNOWN9:                              sResult=QString("_Unknown");                                    break;
     }
     return sResult;
 }
@@ -1259,6 +1320,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         result.listSectionHeaders=pe.getSectionHeaders();
         result.listSectionRecords=XPE::getSectionRecords(&result.listSectionHeaders,pe.isImage());
+        result.listSectionNames=XPE::getSectionNames(&(result.listSectionRecords));
+
         result.listImports=pe.getImports();
         //        for(int i=0;i<result.listImports.count();i++)
         //        {
@@ -1286,6 +1349,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
             qDebug("%s",sRecord.toLatin1().data());
         }
+
+        qDebug("=====================================================================");
 
         QList<XPE::IMPORT_HEADER> _listImports=pe.getImports();
 
@@ -1389,6 +1454,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_PE_header_records,sizeof(_PE_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
         signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_PE_entrypoint_records,sizeof(_PE_entrypoint_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
         signatureScan(&result.mapOverlayDetects,result.sOverlaySignature,_binary_records,sizeof(_binary_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_BINARY);
+
+        stringScan(&result.mapSectionNamesDetects,&result.listSectionNames,_PE_sectionNames_records,sizeof(_PE_sectionNames_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
 
         //        for(int i=0;i<result.listImports.count();i++)
         //        {
@@ -1543,7 +1610,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
                     if(pPEInfo->listImports.count()==1)
                     {
-                        stDetects.insert("kernel32_fsg");
                         stDetects.insert("kernel32_winupack");
                         stDetects.insert("kernel32_andpakk");
                         stDetects.insert("kernel32_bero");
@@ -2441,11 +2507,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     if(stDetects.contains("kernel32_alloy2"))
     {
         pPEInfo->mapImportDetects.insert(RECORD_NAME_ALLOY,getScansStruct(2,RECORD_FILETYPE_PE32,RECORD_TYPE_PROTECTOR,RECORD_NAME_ALLOY,"4.X","",0));
-    }
-
-    if(stDetects.contains("kernel32_fsg"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_FSG,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_FSG,"","",0));
     }
 
     if(stDetects.contains("kernel32_hmimysprotector"))
@@ -3607,6 +3668,26 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                         pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     }
                 }
+
+                // SC PACK
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_SCPACK))
+                {
+                    if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_SCPACK))
+                    {
+                        if(pPEInfo->listSectionRecords.count()>=3)
+                        {
+                            if(pPEInfo->nEntryPointSection==1)
+                            {
+                                if(pPEInfo->listSectionHeaders.at(1).VirtualAddress==pPEInfo->nEntryPointAddress)
+                                {
+                                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_SCPACK);
+
+                                    pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }
@@ -3815,61 +3896,27 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
                 }
             }
 
-            QString sVersion;
-
-            if      (pPEInfo->nImportHash64==0x4b5345e36c)                                          sVersion="3.76a.XX";
-            else if ((pPEInfo->nImportHash64==0x35e237026a)&&(pPEInfo->nImportHash32==0x419bf128))  sVersion=""; // TODO Check old Version
-            else if ((pPEInfo->nImportHash64==0x3010e1d59e)&&(pPEInfo->nImportHash32==0x834a7ecf))  sVersion="2.XX-3.XX"; // ???
-            else if ((pPEInfo->nImportHash64==0x3635cf517b)&&(pPEInfo->nImportHash32==0xe6ce8a9e))  sVersion="1.74-1.84"; // ???
-            else if ((pPEInfo->nImportHash64==0x3c61329b29)&&(pPEInfo->nImportHash32==0x7177627b))  sVersion="1.91c";
-            else if ((pPEInfo->nImportHash64==0x3c61329b29)&&(pPEInfo->nImportHash32==0x412e26ca))  sVersion="2.00";
-            else if ((pPEInfo->nImportHash64==0x341358d6d9)&&(pPEInfo->nImportHash32==0xb256a26f))  sVersion="2.52";
-            else if (pPEInfo->nImportHash64==0x2973050b33)                                          sVersion=".XX"; // TODO Check old Version
-            else if ((pPEInfo->nImportHash64==0x2f2f1df1d1)&&(pPEInfo->nImportHash32==0x8623cf54))  sVersion=""; // TODO Check old Version
-            else if ((pPEInfo->nImportHash64==0x31f48f8367)&&(pPEInfo->nImportHash32==0x59d53246))  sVersion="2.50Beta3"; // 2.50 Beta-3 08Feb2002 (Build 1105)
-            else if (pPEInfo->nImportHash64==0x3b258f0a90)                                          sVersion=".XX"; // TODO Check old Version
-            else if ((pPEInfo->nImportHash64==0x32bbf3aafe)&&(pPEInfo->nImportHash32==0x5a037362))  sVersion=""; // TODO Check old Version
-            else if (pPEInfo->nImportHash64==0x32c7a9336f)                                          sVersion=".XX"; // TODO Check old Version
-            else if ((pPEInfo->nImportHash64==0x3b6e96f260)&&(pPEInfo->nImportHash32==0x927ddbdb))  sVersion="1.90";
-            else if ((pPEInfo->nImportHash64==0x3d983cd830)&&(pPEInfo->nImportHash32==0xa61b1778))  sVersion=""; // TODO Check
-            else if ((pPEInfo->nImportHash64==0x3fb526760f)&&(pPEInfo->nImportHash32==0x72359c40))  sVersion=""; // TODO Check
-            else if ((pPEInfo->nImportHash64==0x3fb526760f)&&(pPEInfo->nImportHash32==0xf9f173fb))  sVersion=""; // TODO Check
-            else if ((pPEInfo->nImportHash64==0x40666b9f00)&&(pPEInfo->nImportHash32==0x64c37e91))  sVersion="3.00-3.10"; // ???
-            else if ((pPEInfo->nImportHash64==0x43d1d2c52f)&&(pPEInfo->nImportHash32==0x82883188))  sVersion="3.30a";
-            else if ((pPEInfo->nImportHash64==0x4518d21e36)&&(pPEInfo->nImportHash32==0x228301a9))  sVersion="3.60";
-            else if ((pPEInfo->nImportHash64==0x4518d21e36)&&(pPEInfo->nImportHash32==0xb79df9fe))  sVersion="3.61";
-            else if ((pPEInfo->nImportHash64==0x4518d21e36)&&(pPEInfo->nImportHash32==0x774538e7))  sVersion="3.70";
-            else if ((pPEInfo->nImportHash64==0x4610da601a)&&(pPEInfo->nImportHash32==0x5a7b25e5))  sVersion="3.75a";
-            else if ((pPEInfo->nImportHash64==0x4c0ed4e9ea)&&(pPEInfo->nImportHash32==0x251722e7))  sVersion="3.76";
-            else if ((pPEInfo->nImportHash64==0x4c0ed4e9ea)&&(pPEInfo->nImportHash32==0xccda289c))  sVersion="3.78";
-            else if ((pPEInfo->nImportHash64==0x4fc78bc010)&&(pPEInfo->nImportHash32==0x807db698))  sVersion="4.00-4.40";
-            else if ((pPEInfo->nImportHash64==0x508175d00e)&&(pPEInfo->nImportHash32==0xb50f60e8))  sVersion="4.42-4.54";
-            else if ((pPEInfo->nImportHash64==0x508175d00e)&&(pPEInfo->nImportHash32==0x5ca4890e))  sVersion="4.66";
-            else if ((pPEInfo->nImportHash64==0x508175d00e)&&(pPEInfo->nImportHash32==0x1a14aa82))  sVersion="4.66";
-            else if (pPEInfo->nImportHash64==0x506972b7dd)                                          sVersion="4.66.XX"; // ???
-            else if ((pPEInfo->nImportHash64==0x56fa69e1fe)&&(pPEInfo->nImportHash32==0xdb61d809))  sVersion="5.02";
-            else if ((pPEInfo->nImportHash64==0x5670adeaf6)&&(pPEInfo->nImportHash32==0x1e178fd2))  sVersion="5.20Beta1"; // Version 5.20Beta1 01-10-2007
-            else if ((pPEInfo->nImportHash64==0x5670adeaf6)&&(pPEInfo->nImportHash32==0xc791b70b))  sVersion="5.20";
-            else if ((pPEInfo->nImportHash64==0x56fa69e1fe)&&(pPEInfo->nImportHash32==0x7b44517b))  sVersion="5.40";
-            else if ((pPEInfo->nImportHash64==0x56fa69e1fe)&&(pPEInfo->nImportHash32==0xf35bbfc1))  sVersion="6.00Beta1";
-            else if ((pPEInfo->nImportHash64==0x57770751cb)&&(pPEInfo->nImportHash32==0xd8505c97))  sVersion="6.00";
-            else if ((pPEInfo->nImportHash64==0x57770751cb)&&(pPEInfo->nImportHash32==0x65f6ce6f))  sVersion="6.04";
-            else if ((pPEInfo->nImportHash64==0x5cee9acb73)&&(pPEInfo->nImportHash32==0xa6f43b6d))  sVersion="6.60-7.00"; // ???
-            else if ((pPEInfo->nImportHash64==0x600594c96e)&&(pPEInfo->nImportHash32==0xad072543))  sVersion="6.2.4.624";
-            else if ((pPEInfo->nImportHash64==0x5f7a50e70b)&&(pPEInfo->nImportHash32==0x0ecbdf27))  sVersion="6.40";
-            else if ((pPEInfo->nImportHash64==0x5d069de3a4)&&(pPEInfo->nImportHash32==0x34512142))  sVersion="6.60-7.00";
-            else if ((pPEInfo->nImportHash64==0x79deb2e3e4)&&(pPEInfo->nImportHash32==0x2a3627b7))  sVersion="7.20";
-            else if ((pPEInfo->nImportHash64==0x79f90ba091)&&(pPEInfo->nImportHash32==0x804c7692))  sVersion="8.60";
-
             if(bKernel32&&bUser32&&bGdi32)
             {
+                bool bDetect=false;
+
+                SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_ARMADILLO,"","",0);
+
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ARMADILLO))
+                {
+                    ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ARMADILLO);
+
+                    bDetect=true;
+                }
+
+
                 if((pPEInfo->nMajorLinkerVersion==0x53)&&(pPEInfo->nMinorLinkerVersion==0x52))
                 {
-                    SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_ARMADILLO,"","",0);
+                    bDetect=true;
+                }
 
-                    ss.sVersion=sVersion;
-//                    ss.sInfo=sInfo;
-
+                if(bDetect)
+                {
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
             }
@@ -7216,7 +7263,12 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,
     Q_UNUSED(pDevice);
     Q_UNUSED(bIsImage);
 
-    if((pPEInfo->mapResultPackers.count()==0)&&(pPEInfo->mapResultProtectors.count()==0))
+    if((pPEInfo->mapResultPackers.count()==0)&&
+            (pPEInfo->mapResultProtectors.count()==0)&&
+            (pPEInfo->mapResultSFX.count()==0)&&
+            (pPEInfo->mapResultInstallers.count()==0)&&
+            (pPEInfo->mapResultNETObfuscators.count()==0)&&
+            (pPEInfo->mapResultDongleProtection.count()==0))
     {
         if(pPEInfo->listSectionRecords.count())
         {
@@ -7233,6 +7285,36 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,
                     pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
                 }
             }
+
+//            if(pPEInfo->nEntryPointSection!=0)
+//            {
+//                if(pPEInfo->listImports.count()==1)
+//                {
+//                    SpecAbstract::_SCANS_STRUCT recordSS={};
+
+//                    recordSS.type=RECORD_TYPE_PACKER;
+//                    recordSS.name=RECORD_NAME_UNKNOWN;
+//                    recordSS.sVersion=QString("%1").arg(pPEInfo->nImportHash32);
+
+//                    pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+//                }
+//            }
+//            QList<QString> list=pPEInfo->listSectionNames.toSet().toList();
+
+//            for(int i=0;i<list.count();i++)
+//            {
+//                if(i>9)
+//                {
+//                    break;
+//                }
+
+//                SpecAbstract::_SCANS_STRUCT recordSS={};
+//                recordSS.type=RECORD_TYPE_PACKER;
+//                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN0+i);
+//                recordSS.sVersion=list.at(i);
+
+//                pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+//            }
         }
     }
 }

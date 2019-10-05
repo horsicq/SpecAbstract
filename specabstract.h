@@ -323,6 +323,7 @@ public:
         RECORD_NAME_RLPACK,
         RECORD_NAME_ROSASM,
         RECORD_NAME_RTF,
+        RECORD_NAME_SCPACK,
         RECORD_NAME_SDPROTECTORPRO,
         RECORD_NAME_SETUPFACTORY,
         RECORD_NAME_SHELL,
@@ -394,7 +395,17 @@ public:
         RECORD_NAME_YZPACK,
         RECORD_NAME_ZIP,
         RECORD_NAME_ZLIB,
-        RECORD_NAME_ZPROTECT
+        RECORD_NAME_ZPROTECT,
+        RECORD_NAME_UNKNOWN0,
+        RECORD_NAME_UNKNOWN1,
+        RECORD_NAME_UNKNOWN2,
+        RECORD_NAME_UNKNOWN3,
+        RECORD_NAME_UNKNOWN4,
+        RECORD_NAME_UNKNOWN5,
+        RECORD_NAME_UNKNOWN6,
+        RECORD_NAME_UNKNOWN7,
+        RECORD_NAME_UNKNOWN8,
+        RECORD_NAME_UNKNOWN9
     };
 
     struct ID
@@ -574,6 +585,7 @@ public:
         } optional_header;
         QList<XPE_DEF::IMAGE_SECTION_HEADER> listSectionHeaders;
         QList<XPE::SECTIONFILE_RECORD> listSectionRecords;
+        QList<QString> listSectionNames;
         QList<XPE::IMPORT_HEADER> listImports;
         quint64 nImportHash64;
         quint32 nImportHash32;
@@ -591,6 +603,7 @@ public:
         QMap<RECORD_NAME,_SCANS_STRUCT> mapImportDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapDotAnsistringsDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapDotUnicodestringsDetects;
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapSectionNamesDetects;
 
         qint32 nEntryPointSection;
         qint32 nResourceSection;
