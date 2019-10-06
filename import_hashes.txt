@@ -7408,3 +7408,13 @@ Import hash: 184210a7f faef25b
 kernel32.dll LoadLibraryA
 kernel32.dll GetProcAddress
 kernel32.dll VirtualProtect
+
+Import hash: 1046a0029 f3f52749
+Kernel32.dll LoadLibraryA
+Kernel32.dll GetProcAddress
+
+Import hash: 1eb276f62 db8fbb75
+kernel32.dll LoadLibraryA
+kernel32.dll GetProcAddress
+kernel32.dll VirtualAlloc
+kernel32.dll VirtualFree

@@ -229,6 +229,7 @@ public:
         RECORD_NAME_JAVA,
         RECORD_NAME_JAVACOMPILEDCLASS,
         RECORD_NAME_JPEG,
+        RECORD_NAME_KBYS,
         RECORD_NAME_KKRUNCHY,
         RECORD_NAME_LAYHEYFORTRAN90,
         RECORD_NAME_LAZARUS,
@@ -323,6 +324,7 @@ public:
         RECORD_NAME_RLPACK,
         RECORD_NAME_ROSASM,
         RECORD_NAME_RTF,
+        RECORD_NAME_SAFEENGINESHIELDEN,
         RECORD_NAME_SCPACK,
         RECORD_NAME_SDPROTECTORPRO,
         RECORD_NAME_SETUPFACTORY,
@@ -343,6 +345,7 @@ public:
         RECORD_NAME_TELOCK,
         RECORD_NAME_THEMIDAWINLICENSE,
         RECORD_NAME_TOTALCOMMANDERINSTALLER,
+        RECORD_NAME_TTPROTECT,
         RECORD_NAME_TURBOC,
         RECORD_NAME_TURBOCPP,
         RECORD_NAME_TURBOLINKER,
@@ -357,6 +360,7 @@ public:
         RECORD_NAME_VCL,
         RECORD_NAME_VCLPACKAGEINFO,
         RECORD_NAME_VERACRYPT,
+        RECORD_NAME_VIRTUALIZEPROTECT,
         RECORD_NAME_VIRTUALPASCAL,
         RECORD_NAME_VISE,
         RECORD_NAME_VISUALBASIC,
@@ -786,6 +790,9 @@ public:
     static void PE_handle_import(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Protection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_VProtect(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_TTProtect(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_SafeengineShielden(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_CExe(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_tElock(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
