@@ -8129,3 +8129,13 @@ GDI32.dll RealizePalette
 GDI32.dll CreateDIBitmap
 GDI32.dll DeleteDC
 GDI32.dll CreateCompatibleDC
+
+Import hash: f8d21b48 8137a62
+kernel32.dll FatalExit
+
+Import hash: 26d690da0 2301e49c
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL GetModuleHandleA
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL ExitProcess
+USER32.DLL MessageBoxA
