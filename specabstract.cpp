@@ -268,6 +268,8 @@ SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_KBYS,                         "1.XX-2.XX",        "",                     0x1eb276f62,    0xdb8fbb75},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTOCRACKSPEPROTECTOR,      "",                 "",                     0xf8d21b48,     0x8137a62},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ACPROTECT,                    "1.XX-2.XX",        "",                     0x26d690da0,    0x2301e49c},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_AHPACKER,                     "0.1",              "",                     0x263ed9b5a,    0x117f896a},
+    // Armadillo
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        "",                     0x2973050b33,   0x1a0c885c},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        "",                     0x2f2f1df1d1,   0x8623cf54},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.XX-3.XX",        "",                     0x3010e1d59e,   0x834a7ecf}, // Check
@@ -286,6 +288,7 @@ SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.53",             "",                     0x3d32f719da,   0x9de5348d}, // 2.53 15May2002 (Build 1232)
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.XX-3.XX",        "",                     0x3d983cd830,   0xa61b1778},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.60",             "",                     0x3fa882c0da,   0xaece7e99}, // 2.60 30Jul2002 (Build 1312)
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.60c",            "",                     0x404c97c5fa,   0x4470cea0}, // 2.60c 17Aug2002 (Build 1431)
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.XX-3.XX",        "",                     0x3fb526760f,   0x72359c40},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.XX-3.XX",        "",                     0x3fb526760f,   0xf9f173fb},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.00-3.10",        "",                     0x40666b9f00,   0x64c37e91},
@@ -298,6 +301,7 @@ SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.76a",            "",                     0x4b5345e36c,   0x5f6ae2cf},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.76",             "",                     0x4c0ed4e9ea,   0x251722e7},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.78",             "",                     0x4c0ed4e9ea,   0xccda289c},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.78",             "",                     0x4bdf485221,   0x21ff4a57}, // 3.78 22Sep2004
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "4.20",             "",                     0x4fc78bc010,   0x047e53e2}, // 4.20 23May2005
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "4.00-4.40",        "",                     0x4fc78bc010,   0x807db698},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "4.42-4.54",        "",                     0x508175d00e,   0xb50f60e8},
@@ -310,6 +314,7 @@ SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "5.20",             "",                     0x5670adeaf6,   0xc791b70b},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "5.20",             "",                     0x56698f2e57,   0x56b916d1}, // 5.20 30-10-2007
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "5.40",             "",                     0x56fa69e1fe,   0x7b44517b},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "5.42",             "",                     0x56fa69e1fe,   0x503225ce}, // 5.42 20-02-2008
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "6.00Beta1",        "",                     0x56fa69e1fe,   0xf35bbfc1},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "6.00",             "",                     0x57770751cb,   0xd8505c97},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "6.04",             "",                     0x57770751cb,   0x65f6ce6f},
@@ -1734,11 +1739,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                     stDetects.insert("kernel32_asprotect");
                     stDetects.insert("kernel32_alexprotector");
                     stDetects.insert("kernel32_exe_pack");
-
-                    if(pPEInfo->listImports.count()==2)
-                    {
-                        stDetects.insert("kernel32_ahpacker");
-                    }
                 }
                 else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetModuleHandleA")&&
                         (pPEInfo->listImports.at(0).listPositions.at(1).sName=="LoadLibraryA")&&
@@ -2212,7 +2212,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                         stDetects.insert("user32_pex");
                         stDetects.insert("user32_revprot");
                         stDetects.insert("user32_exe_pack");
-                        stDetects.insert("user32_ahpacker");
                         stDetects.insert("user32_softwarecompress");
                         stDetects.insert("user32_simplepack_a");
                     }
@@ -2469,11 +2468,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     if(stDetects.contains("kernel32_npack")&&stDetects.contains("user32_npack"))
     {
         pPEInfo->mapImportDetects.insert(RECORD_NAME_NPACK,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_NPACK,"","",0));
-    }
-
-    if(stDetects.contains("kernel32_ahpacker")&&stDetects.contains("user32_ahpacker"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_AHPACKER,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_AHPACKER,"0.1","",0));
     }
 
     if(stDetects.contains("kernel32_beroexepacker"))
@@ -4046,7 +4040,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
 
             int nNumberOfImports=pPEInfo->listImports.count();
 
-            if((nNumberOfImports==3)||(nNumberOfImports==4)||(nNumberOfImports==5))
+            if(nNumberOfImports>=3)
             {
                 bImportDetect=  (   (pPEInfo->listImports.at(0).sName.toUpper()=="KERNEL32.DLL")&&
                                     (pPEInfo->listImports.at(1).sName.toUpper()=="USER32.DLL")&&
