@@ -285,6 +285,7 @@ SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.00",             "",                     0x3c61329b29,   0x412e26ca},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.53",             "",                     0x3d32f719da,   0x9de5348d}, // 2.53 15May2002 (Build 1232)
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.XX-3.XX",        "",                     0x3d983cd830,   0xa61b1778},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.60",             "",                     0x3fa882c0da,   0xaece7e99}, // 2.60 30Jul2002 (Build 1312)
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.XX-3.XX",        "",                     0x3fb526760f,   0x72359c40},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.XX-3.XX",        "",                     0x3fb526760f,   0xf9f173fb},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "3.00-3.10",        "",                     0x40666b9f00,   0x64c37e91},
@@ -307,6 +308,7 @@ SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "5.02",             "",                     0x56e266c9cd,   0xd756b3c1}, // 5.02 11-07-2007
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "5.20Beta1",        "",                     0x5670adeaf6,   0x1e178fd2},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "5.20",             "",                     0x5670adeaf6,   0xc791b70b},
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "5.20",             "",                     0x56698f2e57,   0x56b916d1}, // 5.20 30-10-2007
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "5.40",             "",                     0x56fa69e1fe,   0x7b44517b},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "6.00Beta1",        "",                     0x56fa69e1fe,   0xf35bbfc1},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "6.00",             "",                     0x57770751cb,   0xd8505c97},
@@ -4040,29 +4042,21 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
     {
         if(!pPEInfo->cliInfo.bInit)
         {
-            int nNumberOfImports=pPEInfo->listImports.count();
+            bool bImportDetect=false;
 
-            bool bKernel32=false;
-            bool bUser32=false;
-            bool bGdi32=false;
+            int nNumberOfImports=pPEInfo->listImports.count();
 
             if((nNumberOfImports==3)||(nNumberOfImports==4)||(nNumberOfImports==5))
             {
-                if(pPEInfo->listImports.at(0).sName.toUpper()=="KERNEL32.DLL")
-                {
-                    bKernel32=pPEInfo->listImports.at(0).listPositions.count();
-                }
-                if(pPEInfo->listImports.at(1).sName.toUpper()=="USER32.DLL")
-                {
-                    bUser32=pPEInfo->listImports.at(1).listPositions.count();
-                }
-                if(pPEInfo->listImports.at(2).sName.toUpper()=="GDI32.DLL")
-                {
-                    bGdi32=pPEInfo->listImports.at(2).listPositions.count();
-                }
+                bImportDetect=  (   (pPEInfo->listImports.at(0).sName.toUpper()=="KERNEL32.DLL")&&
+                                    (pPEInfo->listImports.at(1).sName.toUpper()=="USER32.DLL")&&
+                                    (pPEInfo->listImports.at(2).sName.toUpper()=="GDI32.DLL")   )||
+                                (   (pPEInfo->listImports.at(0).sName.toUpper()=="KERNEL32.DLL")&&
+                                    (pPEInfo->listImports.at(1).sName.toUpper()=="GDI32.DLL")&&
+                                    (pPEInfo->listImports.at(2).sName.toUpper()=="USER32.DLL")   );
             }
 
-            if(bKernel32&&bUser32&&bGdi32)
+            if(bImportDetect)
             {
                 bool bDetect=false;
 
