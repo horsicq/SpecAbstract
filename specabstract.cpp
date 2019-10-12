@@ -269,10 +269,13 @@ SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTOCRACKSPEPROTECTOR,      "",                 "",                     0xf8d21b48,     0x8137a62},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ACPROTECT,                    "1.XX-2.XX",        "",                     0x26d690da0,    0x2301e49c},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_AHPACKER,                     "0.1",              "",                     0x263ed9b5a,    0x117f896a},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASDPACK,                      "1.00",             "",                     0x55706e12,     0xc7af1b6},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASDPACK,                      "2.00",             "",                     0xc3068d5e,     0x3f603725},
     // Armadillo
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        "",                     0x2973050b33,   0x1a0c885c},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        "",                     0x2f2f1df1d1,   0x8623cf54},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.XX-3.XX",        "",                     0x3010e1d59e,   0x834a7ecf}, // Check
+    {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.XX-3.XX",        "",                     0x48c1ac32d5,   0x3f2559bb}, // MSVCRT.dll
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.50Beta3",        "",                     0x31f48f8367,   0x59d53246},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.51",             "",                     0x32bbf3aafe,   0x5a037362}, // 2.51 28Feb2002
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        "",                     0x32c7a9336f,   0x6762fc6d},
@@ -1652,11 +1655,7 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
         {
             if(pPEInfo->listImports.at(0).listPositions.count()==1)
             {
-                if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetModuleHandleA"))
-                {
-                    stDetects.insert("kernel32_asdpack"); // Kernel32.dll
-                }
-                else if((pPEInfo->listImports.at(0).listPositions.at(0).nOrdinal==1))
+                if((pPEInfo->listImports.at(0).listPositions.at(0).nOrdinal==1))
                 {
                     if(pPEInfo->listImports.count()==1)
                     {
@@ -2347,11 +2346,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     if(stDetects.contains("kernel32_andpakk"))
     {
         pPEInfo->mapImportDetects.insert(RECORD_NAME_ANDPAKK2,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_ANDPAKK2,"0.18","",0));
-    }
-
-    if(stDetects.contains("kernel32_asdpack"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_ASDPACK,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_ASDPACK,"2.0","",0));
     }
 
     if(stDetects.contains("kernel32_vpacker"))
@@ -3105,10 +3099,26 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 // ASDPack
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ASDPACK))
                 {
-                    // TODO compare entryPoint and import sections
+                    bool bDetected=false;
+                    SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ASDPACK);
+
+                    if(pPEInfo->listSectionRecords.count()==2)
+                    {
+                        if(pPEInfo->nTLSSection!=-1)
+                        {
+                            bDetected=true; // 1.00
+                        }
+                    }
+
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ASDPACK))
                     {
-                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ASDPACK);
+                        ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ASDPACK);
+                        bDetected=true;
+                    }
+
+                    if(bDetected)
+                    {
+
                         pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     }
                 }
@@ -9394,6 +9404,10 @@ void SpecAbstract::importHashScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
             {
                 if((pRecords[i].nHash64==nHash64)&&(pRecords[i].nHash32==nHash32))
                 {
+#ifdef QT_DEBUG
+                    qDebug("IMPORT HASH: %s",recordNameIdToString(pRecords[i].name).toLatin1().data());
+#endif
+
                     SpecAbstract::_SCANS_STRUCT record={};
                     record.nVariant=pRecords[i].nVariant;
                     record.filetype=pRecords[i].filetype;
