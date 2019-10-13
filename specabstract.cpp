@@ -266,11 +266,16 @@ SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "",                 "",                     0x0ee8cb83a,    0xa4083f58},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_SCPACK,                       "0.2",              "",                     0x184210a7f,    0x0faef25b},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_KBYS,                         "1.XX-2.XX",        "",                     0x1eb276f62,    0xdb8fbb75},
+
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTOCRACKSPEPROTECTOR,      "",                 "",                     0xf8d21b48,     0x8137a62},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ACPROTECT,                    "1.XX-2.XX",        "",                     0x26d690da0,    0x2301e49c},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_AHPACKER,                     "0.1",              "",                     0x263ed9b5a,    0x117f896a},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASDPACK,                      "1.00",             "",                     0x55706e12,     0xc7af1b6},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASDPACK,                      "2.00",             "",                     0xc3068d5e,     0x3f603725},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FISHPEPACKER,                 "1.02",             "",                     0x1eb276f62,    0xdb8fbb75},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FISHPEPACKER,                 "1.03",             "",                     0x13e215a53,    0xdf3c1e0},
+
+
     // Armadillo
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        "",                     0x2973050b33,   0x1a0c885c},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        "",                     0x2f2f1df1d1,   0x8623cf54},
@@ -1683,7 +1688,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                             stDetects.insert("kernel32_mew");
                             stDetects.insert("kernel32_beroexepacker");
                             stDetects.insert("kernel32_exefog_1.1");
-                            stDetects.insert("kernel32_fishpepacker_b");
                         }
                         else if(pPEInfo->listImports.at(0).sName=="KERNEL32.DLL")
                         {
@@ -1814,7 +1818,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                         }
 
                         stDetects.insert("kernel32_32lite");
-                        stDetects.insert("kernel32_fishpepacker_a");
                     }
                     else if(pPEInfo->listImports.count()==2)
                     {
@@ -2408,14 +2411,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
         pPEInfo->mapImportDetects.insert(RECORD_NAME_RLPACK,getScansStruct(3,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_RLPACK,"1.20.1","",0));
     }
 
-    if(stDetects.contains("kernel32_fishpepacker_a"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_FISHPEPACKER,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_FISHPEPACKER,"1.02","",0));
-    }
-    else if(stDetects.contains("kernel32_fishpepacker_b"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_FISHPEPACKER,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_FISHPEPACKER,"1.03","",0));
-    }
 
     if(stDetects.contains("kernel32_aspack"))
     {

@@ -9630,3 +9630,7 @@ Kernel32.dll GetModuleHandleA
 Import hash: 55706e12 c7af1b6
 user32.dll MessageBoxA
 user32.dll MessageBeep
+
+Import hash: 13e215a53 df3c1e0
+kernel32.dll LoadLibraryA
+kernel32.dll GetProcAddress
