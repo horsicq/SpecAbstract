@@ -276,6 +276,7 @@ SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FISHPEPACKER,                 "1.03",             "",                     0x13e215a53,    0xdf3c1e0},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ALEXPROTECTOR,                "1.0",              "",                     0x1d6f34b26,    0x63fe4ff9},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRUNCH,                       "1.0",              "",                     0x90c17bc0b,    0x5e67bbdd},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ALLOY,                        "4.X",              "",                     0x6c83794a6,    0xc50dde33},
     // Armadillo
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        "",                     0x2973050b33,   0x1a0c885c},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        "",                     0x2f2f1df1d1,   0x8623cf54},
@@ -373,8 +374,9 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TELOCK,                       "",                 "",                     "UPX!"}, // TODO Check!
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ACPROTECT,                    "",                 "",                     ".perplex"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ALEXPROTECTOR,                "1.0",              "",                     ".alex"},
-    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRUNCH,                       "1.0",              "",                     ".alex"},
-    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PETITE,                       "",                 "",                     "BitArts"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRUNCH,                       "1.0",              "",                     "BitArts"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PETITE,                       "",                 "",                     ".petite"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ALLOY,                        "",                 "",                     ".alloy32"},
 };
 
 SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
@@ -2092,27 +2094,7 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
             }
             else if(pPEInfo->listImports.at(0).listPositions.count()==14)
             {
-                if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(2).sName=="VirtualAlloc")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(3).sName=="VirtualFree")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(4).sName=="ExitProcess")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(5).sName=="CreateFileA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(6).sName=="CloseHandle")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(7).sName=="WriteFile")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(8).sName=="GetSystemDirectoryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(9).sName=="GetFileTime")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(10).sName=="SetFileTime")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(11).sName=="GetWindowsDirectoryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(12).sName=="lstrcatA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(13).sName=="FreeLibrary"))
-                {
-                    if(pPEInfo->listImports.count()==1)
-                    {
-                        stDetects.insert("kernel32_alloy1");
-                    }
-                }
-                else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="ResetEvent")&&
+                if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="ResetEvent")&&
                         (pPEInfo->listImports.at(0).listPositions.at(1).sName=="CreateThread")&&
                         (pPEInfo->listImports.at(0).listPositions.at(2).sName=="LoadLibraryA")&&
                         (pPEInfo->listImports.at(0).listPositions.at(3).sName=="FindResourceA")&&
@@ -2523,11 +2505,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     if(stDetects.contains("kernel32_alloy0"))
     {
         pPEInfo->mapImportDetects.insert(RECORD_NAME_ALLOY,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PROTECTOR,RECORD_NAME_ALLOY,"4.X","",0));
-    }
-
-    if(stDetects.contains("kernel32_alloy1"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_ALLOY,getScansStruct(1,RECORD_FILETYPE_PE32,RECORD_TYPE_PROTECTOR,RECORD_NAME_ALLOY,"4.X","",0));
     }
 
     if(stDetects.contains("kernel32_alloy2"))
