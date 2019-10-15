@@ -81,6 +81,7 @@ public:
         RECORD_TYPE_LINKER,
         RECORD_TYPE_NETOBFUSCATOR,
         RECORD_TYPE_PACKER,
+        RECORD_TYPE_PETOOL,
         RECORD_TYPE_PROTECTOR,
         RECORD_TYPE_PROTECTORDATA,
         RECORD_TYPE_SFX,
@@ -161,6 +162,7 @@ public:
         RECORD_NAME_CYGWIN,
         RECORD_NAME_DEB,
         RECORD_NAME_DEEPSEA,
+        RECORD_NAME_DEPACK,
         RECORD_NAME_DEX,
         RECORD_NAME_DJVU,
         RECORD_NAME_DMD32D,
@@ -262,6 +264,7 @@ public:
         RECORD_NAME_MINGW,
         RECORD_NAME_MKFPACK,
         RECORD_NAME_MOLEBOX,
+        RECORD_NAME_MOLEBOXULTRA,
         RECORD_NAME_MORPHNAH,
         RECORD_NAME_MPACK,
         RECORD_NAME_MPRESS,
@@ -320,6 +323,7 @@ public:
         RECORD_NAME_RENETPACK,
         RECORD_NAME_RESOURCE,
         RECORD_NAME_REVPROT,
+        RECORD_NAME_PGMPAK,
         RECORD_NAME_RLP,
         RECORD_NAME_RLPACK,
         RECORD_NAME_ROSASM,
@@ -368,6 +372,7 @@ public:
         RECORD_NAME_VISUALCSHARP,
         RECORD_NAME_VISUALOBJECTS,
         RECORD_NAME_VMPROTECT,
+        RECORD_NAME_VMUNPACKER,
         RECORD_NAME_VPACKER,
         RECORD_NAME_WATCOMC,
         RECORD_NAME_WATCOMCCPP,
@@ -393,6 +398,7 @@ public:
         RECORD_NAME_XCOMP,
         RECORD_NAME_XML,
         RECORD_NAME_XPACK,
+        RECORD_NAME_XVOLKOLAK,
         RECORD_NAME_YANDEX,
         RECORD_NAME_YANO,
         RECORD_NAME_YODASCRYPTER,
@@ -640,6 +646,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultPETools;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultSigntools;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
@@ -806,6 +813,7 @@ public:
     static void PE_handle_Borland(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Watcom(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Tools(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_PETools(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_wxWidgets(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_GCC(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Signtools(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
