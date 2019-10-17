@@ -9958,3 +9958,12 @@ KERNEL32.DLL ExitProcess
 KERNEL32.DLL VirtualAlloc
 KERNEL32.DLL VirtualFree
 USER32.DLL MessageBoxA
+
+Import hash: 22234c932 c8f3a96f
+KERNEL32.DLL _lopen
+KERNEL32.DLL ExitProcess
+USER32.DLL MessageBoxA
+SHELL32.DLL ShellExecuteA
+
+Import hash: 3f288856 b8a07cc
+kernel32.dll LoadLibraryA
