@@ -9967,3 +9967,175 @@ SHELL32.DLL ShellExecuteA
 
 Import hash: 3f288856 b8a07cc
 kernel32.dll LoadLibraryA
+
+Import hash: a7382d76 1303a51b
+KeRnEl32.dLl LoadLibraryA
+KeRnEl32.dLl GetProcAddress
+
+Import hash: c485c9e2 ff2d65f9
+kernel32.dll Beep
+kernel32.dll Sleep
+
+Import hash: 50b93d55a 3c705cae
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll GetProcAddress
+KERNEL32.dll LoadLibraryExA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll VirtualProtect
+KERNEL32.dll ExitProcess
+KERNEL32.dll GetModuleFileNameA
+USER32.dll MessageBoxA
+
+Import hash: 69e399a9b 4d02e093
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll GetProcAddress
+KERNEL32.dll LoadLibraryExA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll VirtualProtect
+KERNEL32.dll ExitProcess
+KERNEL32.dll GetModuleFileNameA
+KERNEL32.dll LoadLibraryA
+USER32.dll wsprintfA
+USER32.dll MessageBoxA
+
+Import hash: 5b000b292 66b35c6e
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll GetProcAddress
+KERNEL32.dll ExitProcess
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll VirtualProtect
+KERNEL32.dll GetModuleFileNameA
+USER32.dll wsprintfA
+USER32.dll MessageBoxA
+
+Import hash: 50b93d55a 7ababb5a
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll ExitProcess
+KERNEL32.dll GetProcAddress
+KERNEL32.dll LoadLibraryExA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll VirtualProtect
+KERNEL32.dll GetModuleFileNameA
+USER32.dll MessageBoxA
+
+Import hash: 5ca1becb0 921d0280
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll GetProcAddress
+KERNEL32.dll ExitProcess
+KERNEL32.dll LoadLibraryExA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll VirtualProtect
+KERNEL32.dll GetModuleFileNameA
+KERNEL32.dll HeapAlloc
+KERNEL32.dll GetProcessHeap
+KERNEL32.dll HeapFree
+
+Import hash: 605d4706c 958a9ea2
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll GetProcAddress
+KERNEL32.dll LoadLibraryExA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll VirtualProtect
+KERNEL32.dll ExitProcess
+KERNEL32.dll GetModuleFileNameA
+USER32.dll MessageBoxA
+MSVBVM60.DLL _CIcos
+
+Import hash: 72af15d4f 95ca15e4
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll ExitProcess
+KERNEL32.dll GetProcAddress
+KERNEL32.dll LoadLibraryExA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll VirtualProtect
+KERNEL32.dll GetModuleFileNameA
+KERNEL32.dll FreeLibrary
+KERNEL32.dll LoadLibraryA
+USER32.dll wsprintfA
+USER32.dll MessageBoxA
+
+Import hash: 76a19e5a5 bd41da20
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll ExitProcess
+KERNEL32.dll GetProcAddress
+KERNEL32.dll LoadLibraryExA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll VirtualProtect
+KERNEL32.dll GetModuleFileNameA
+KERNEL32.dll FreeLibrary
+KERNEL32.dll LoadLibraryA
+USER32.dll wsprintfA
+USER32.dll MessageBoxA
+kernel32.dll LoadLibraryA
+
+Import hash: 5d589502a ca58fa0c
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll GetLastError
+KERNEL32.dll CreateMutexA
+KERNEL32.dll ExitProcess
+KERNEL32.dll GetProcAddress
+KERNEL32.dll LoadLibraryExA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll VirtualProtect
+KERNEL32.dll GetModuleFileNameA
+USER32.dll MessageBoxA
+
+Import hash: 6f561d023 32f4466c
+KERNEL32.dll LocalAlloc
+KERNEL32.dll LocalFree
+KERNEL32.dll GetProcAddress
+KERNEL32.dll ExitProcess
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualProtect
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll GetModuleFileNameA
+USER32.dll wsprintfA
+USER32.dll MessageBoxA
+
+Import hash: 7441e5986 f51eba68
+KERNEL32.dll LocalAlloc
+KERNEL32.dll LocalFree
+KERNEL32.dll GetProcAddress
+KERNEL32.dll ExitProcess
+KERNEL32.dll LoadLibraryExA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualProtect
+KERNEL32.dll GetModuleFileNameA
+KERNEL32.dll VirtualAlloc
+USER32.dll wsprintfA
+USER32.dll MessageBoxA
+
+Import hash: 751f43a61 bc84ce09
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll GetProcAddress
+KERNEL32.dll ExitProcess
+KERNEL32.dll LoadLibraryExA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll VirtualProtect
+KERNEL32.dll GetModuleFileNameA
+KERNEL32.dll HeapAlloc
+KERNEL32.dll GetProcessHeap
+KERNEL32.dll HeapFree
+USER32.dll wsprintfA
+USER32.dll MessageBoxA
+
+Import hash: 231271f8e 986028bf
+kernel32.dll LoadLibraryA
+kernel32.dll GetProcAddress
+kernel32.dll VirtualAlloc
+kernel32.dll VirtualFree
+kernel32.dll VirtualProtect
