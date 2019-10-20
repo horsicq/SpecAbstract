@@ -10139,3 +10139,10 @@ kernel32.dll GetProcAddress
 kernel32.dll VirtualAlloc
 kernel32.dll VirtualFree
 kernel32.dll VirtualProtect
+
+Import hash: 241c3b6a6 81a3d66b
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll HeapAlloc
+KERNEL32.dll GetProcessHeap
+KERNEL32.dll HeapFree
+KERNEL32.dll GetProcAddress
