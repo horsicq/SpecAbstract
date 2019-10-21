@@ -128,6 +128,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NSPACK,                       "2.0-2.4",          "",                     "'MZ'40000100000002000000FFFF00000002000000000000400000....................CD21B44CCD21'packed by nspack$'40000000"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_LAYHEYFORTRAN90,              "",                 "",                     "'MZ'....................................................................................................................6C030000"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HMIMYSPROTECTOR,              "0.1",              "",                     "'MZ'............................................................'hmimys'27's ProtectV0.1'"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEPACKSPROTECT,               "2.3",              "",                     "'MZ'............................................................'pepack'27's ProtectV2.3'"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "1.00-1.20",        "",                     "'MZ'....................................................................................................................600000000E1FBA0E00B409CD21B8014CCD21'Windows Program'0D0A24"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "1.30-1.32",        "",                     "'MZ'....................................................................................................................40000000'PE'00004C01....'FSG!'"},
     {1, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "1.33-2.00",        "",                     "'MZ'....................'PE'00004C01....'FSG!'"},
@@ -147,6 +148,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_WATCOMLINKER,                 "",                 "Win95/exe",            "'MZ'80000100000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000700000000E1FBA0E00B409CD21B8014CCD21'This is a Windows 95 executable\r\n'24"},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_STUB,             SpecAbstract::RECORD_NAME_VALVE,                        "",                 "",                     "'MZ'............................................................................................................................'VLV'"},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_UNILINK,                      "",                 "",                     "'MZ'....................................................'UniLink!'"},
+
 };
 
 SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
@@ -328,6 +330,8 @@ SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_BCPACK,                       "",                 "",                     0x231271f8e,    0x986028bf},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_BAMBAM,                       "0.1-0.4",          "",                     0x241c3b6a6,    0x81a3d66b},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DOTFIXNICEPROTECT,            "",                 "",                     0x263ed9b5a,    0x117f896a},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HMIMYSPROTECTOR,              "0.1",              "",                     0x1db028dca,    0x50ca53fc},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEPACKSPROTECT,               "2.3",              "",                     0x1db028dca,    0x50ca53fc},
     // Armadillo
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        "",                     0x2973050b33,   0x1a0c885c},
     {0, SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        "",                     0x2f2f1df1d1,   0x8623cf54},
@@ -450,6 +454,8 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_BCPACK,                       "",                 "",                     ".BCPack"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_BAMBAM,                       "",                 "",                     ".bedrock"},
     {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DOTFIXNICEPROTECT,            "",                 "",                     ".dotfix"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HMIMYSPROTECTOR,              "0.1",              "",                     "hmimys"},
+    {0, SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEPACKSPROTECT,               "2.3",              "",                     "okpack"},
 };
 
 SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
@@ -908,6 +914,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PEENCRYPT:                             sResult=QString("PE Encrypt");                                  break;
         case RECORD_NAME_PELOCK:                                sResult=QString("PELock");                                      break;
         case RECORD_NAME_PEPACK:                                sResult=QString("PE-PACK");                                     break;
+        case RECORD_NAME_PEPACKSPROTECT:                        sResult=QString("pepack's Protect");                            break;
         case RECORD_NAME_PEQUAKE:                               sResult=QString("PE Quake");                                    break;
         case RECORD_NAME_PERL:                                  sResult=QString("Perl");                                        break;
         case RECORD_NAME_PESPIN:                                sResult=QString("PESpin");                                      break;
@@ -1920,16 +1927,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
                     stDetects.insert("kernel32_pecompactx");
                 }
-                else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(2).sName=="VirtualFree")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(3).sName=="VirtualAlloc"))
-                {
-                    if((pPEInfo->listImports.count()==1)&&(pPEInfo->listImports.at(0).sName=="Kernel32.dll"))
-                    {
-                        stDetects.insert("kernel32_hmimysprotector");
-                    }
-                }
             }
             else if(pPEInfo->listImports.at(0).listPositions.count()==5)
             {
@@ -2533,11 +2530,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     if(stDetects.contains("kernel32_alloy2"))
     {
         pPEInfo->mapImportDetects.insert(RECORD_NAME_ALLOY,getScansStruct(2,RECORD_FILETYPE_PE32,RECORD_TYPE_PROTECTOR,RECORD_NAME_ALLOY,"4.X","",0));
-    }
-
-    if(stDetects.contains("kernel32_hmimysprotector"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_HMIMYSPROTECTOR,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PROTECTOR,RECORD_NAME_HMIMYSPROTECTOR,"0.1","",0));
     }
 
     if(stDetects.contains("kernel32_hmimyspacker"))
@@ -3372,6 +3364,21 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     {
                         // TODO compare entryPoint and import sections
                         SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_HMIMYSPROTECTOR);
+                        pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                    }
+                }
+
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_PEPACKSPROTECT))
+                {
+                    if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PEPACKSPROTECT))
+                    {
+                        // TODO compare entryPoint and import sections
+                        SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PEPACKSPROTECT);
+                        pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                    }
+                    else if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_PEPACKSPROTECT))
+                    {
+                        SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_PEPACKSPROTECT);
                         pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
                     }
                 }
@@ -7514,6 +7521,49 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,
                     }
                 }
 
+//            qint64 nSize=pPEInfo->basic_info.nSize;
+
+//            if(pPEInfo->nOverlaySize)
+//            {
+//                nSize-=pPEInfo->nOverlaySize;
+//            }
+
+//            qint64 nProtect=pe.find_ansiString(0,nSize,"Protected");
+
+//            if(nProtect==-1)
+//            {
+//                nProtect=pe.find_ansiString(0,nSize,"protected");
+//            }
+
+//            if(nProtect==-1)
+//            {
+//                nProtect=pe.find_ansiString(0,nSize,"protect");
+//            }
+
+//            if(nProtect==-1)
+//            {
+//                nProtect=pe.find_ansiString(0,nSize,"Protector");
+//            }
+
+//            if(nProtect==-1)
+//            {
+//                nProtect=pe.find_ansiString(0,nSize,"protector");
+//            }
+
+//            if(nProtect!=-1)
+//            {
+//                SpecAbstract::_SCANS_STRUCT recordSS={};
+
+//                recordSS.type=RECORD_TYPE_PACKER;
+//                recordSS.name=RECORD_NAME_UNKNOWN;
+//                recordSS.sVersion=QString("%1").arg(pe.read_ansiString(nProtect,32));
+//                recordSS.sInfo=QString("%1").arg(pPEInfo->nImportHash32);
+
+//                pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+//            }
+
+
+
     //            if(pPEInfo->nEntryPointSection!=0)
     //            {
     //                if(pPEInfo->listImports.count()>0)
@@ -7628,17 +7678,17 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
     {
         int nSignaturesCount=sizeof(_TEXT_records)/sizeof(STRING_RECORD);
 
-        for(int i=0; i<nSignaturesCount; i++)
+        for(int i=0; i<nSignaturesCount; i++) // TODO move to an own function
         {
             if(XBinary::isRegExpPresent(_TEXT_records[i].pszString,pBinaryInfo->sHeaderText))
             {
                 SpecAbstract::_SCANS_STRUCT record={};
-                record.nVariant=_TEXT_records[i].nVariant;
-                record.filetype=_TEXT_records[i].filetype;
-                record.type=_TEXT_records[i].type;
-                record.name=_TEXT_records[i].name;
-                record.sVersion=_TEXT_records[i].pszVersion;
-                record.sInfo=_TEXT_records[i].pszInfo;
+                record.nVariant=_TEXT_records[i].basicInfo.nVariant;
+                record.filetype=_TEXT_records[i].basicInfo.filetype;
+                record.type=_TEXT_records[i].basicInfo.type;
+                record.name=_TEXT_records[i].basicInfo.name;
+                record.sVersion=_TEXT_records[i].basicInfo.pszVersion;
+                record.sInfo=_TEXT_records[i].basicInfo.pszInfo;
                 record.nOffset=0;
 
                 pBinaryInfo->mapTextHeaderDetects.insert(record.name,record);
@@ -9318,21 +9368,21 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
 
         for(int i=0; i<nSignaturesCount; i++)
         {
-            if((pRecords[i].filetype==fileType1)||(pRecords[i].filetype==fileType2))
+            if((pRecords[i].basicInfo.filetype==fileType1)||(pRecords[i].basicInfo.filetype==fileType2))
             {
-                if(!pMmREcords->contains(pRecords[i].name))
+                if(!pMmREcords->contains(pRecords[i].basicInfo.name))
                 {
                     qint64 _nOffset=binary.find_array(nOffset,nSize,(char *)pRecords[i].pData,pRecords[i].nSize);
 
                     if(_nOffset!=-1)
                     {
                         SpecAbstract::_SCANS_STRUCT record={};
-                        record.nVariant=pRecords[i].nVariant;
-                        record.filetype=pRecords[i].filetype;
-                        record.type=pRecords[i].type;
-                        record.name=pRecords[i].name;
-                        record.sVersion=pRecords[i].pszVersion;
-                        record.sInfo=pRecords[i].pszInfo;
+                        record.nVariant=pRecords[i].basicInfo.nVariant;
+                        record.filetype=pRecords[i].basicInfo.filetype;
+                        record.type=pRecords[i].basicInfo.type;
+                        record.name=pRecords[i].basicInfo.name;
+                        record.sVersion=pRecords[i].basicInfo.pszVersion;
+                        record.sInfo=pRecords[i].basicInfo.pszInfo;
                         record.nOffset=_nOffset;
 
                         pMmREcords->insert(record.name,record);
@@ -9349,23 +9399,23 @@ void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, 
 
     for(int i=0; i<nSignaturesCount; i++)
     {
-        if((pRecords[i].filetype==fileType1)||(pRecords[i].filetype==fileType2))
+        if((pRecords[i].basicInfo.filetype==fileType1)||(pRecords[i].basicInfo.filetype==fileType2))
         {
-            if(!pMapRecords->contains(pRecords[i].name))
+            if(!pMapRecords->contains(pRecords[i].basicInfo.name))
             {
                 if(XBinary::compareSignatureStrings(sSignature,pRecords[i].pszSignature))
                 {
 #ifdef QT_DEBUG
-                    qDebug("SIGNATURE SCAN: %s",recordNameIdToString(pRecords[i].name).toLatin1().data());
+                    qDebug("SIGNATURE SCAN: %s",recordNameIdToString(pRecords[i].basicInfo.name).toLatin1().data());
 #endif
 
                     SpecAbstract::_SCANS_STRUCT record={};
-                    record.nVariant=pRecords[i].nVariant;
-                    record.filetype=pRecords[i].filetype;
-                    record.type=pRecords[i].type;
-                    record.name=pRecords[i].name;
-                    record.sVersion=pRecords[i].pszVersion;
-                    record.sInfo=pRecords[i].pszInfo;
+                    record.nVariant=pRecords[i].basicInfo.nVariant;
+                    record.filetype=pRecords[i].basicInfo.filetype;
+                    record.type=pRecords[i].basicInfo.type;
+                    record.name=pRecords[i].basicInfo.name;
+                    record.sVersion=pRecords[i].basicInfo.pszVersion;
+                    record.sInfo=pRecords[i].basicInfo.pszInfo;
 
                     record.nOffset=0;
 
@@ -9382,9 +9432,9 @@ void SpecAbstract::resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_
 
     for(int i=0; i<nSignaturesCount; i++)
     {
-        if((pRecords[i].filetype==fileType1)||(pRecords[i].filetype==fileType2))
+        if((pRecords[i].basicInfo.filetype==fileType1)||(pRecords[i].basicInfo.filetype==fileType2))
         {
-            if(!pMapRecords->contains(pRecords[i].name))
+            if(!pMapRecords->contains(pRecords[i].basicInfo.name))
             {
                 bool bSuccess=false;
 
@@ -9414,12 +9464,12 @@ void SpecAbstract::resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_
                 if(bSuccess)
                 {
                     SpecAbstract::_SCANS_STRUCT record={};
-                    record.nVariant=pRecords[i].nVariant;
-                    record.filetype=pRecords[i].filetype;
-                    record.type=pRecords[i].type;
-                    record.name=pRecords[i].name;
-                    record.sVersion=pRecords[i].pszVersion;
-                    record.sInfo=pRecords[i].pszInfo;
+                    record.nVariant=pRecords[i].basicInfo.nVariant;
+                    record.filetype=pRecords[i].basicInfo.filetype;
+                    record.type=pRecords[i].basicInfo.type;
+                    record.name=pRecords[i].basicInfo.name;
+                    record.sVersion=pRecords[i].basicInfo.pszVersion;
+                    record.sInfo=pRecords[i].basicInfo.pszInfo;
                     record.nOffset=0;
 
                     pMapRecords->insert(record.name,record);
@@ -9453,9 +9503,9 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
     {
         for(int j=0; j<nSignaturesCount; j++)
         {
-            if((pRecords[j].filetype==fileType1)||(pRecords[j].filetype==fileType2))
+            if((pRecords[j].basicInfo.filetype==fileType1)||(pRecords[j].basicInfo.filetype==fileType2))
             {
-                if(!pMapRecords->contains(pRecords[j].name))
+                if(!pMapRecords->contains(pRecords[j].basicInfo.name))
                 {
                     quint32 nCRC1=listStringCRC[i];
                     quint32 nCRC2=listSignatureCRC[j];
@@ -9463,15 +9513,15 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
                     if(nCRC1==nCRC2)
                     {
 #ifdef QT_DEBUG
-                    qDebug("STRING SCAN: %s",recordNameIdToString(pRecords[j].name).toLatin1().data());
+                    qDebug("STRING SCAN: %s",recordNameIdToString(pRecords[j].basicInfo.name).toLatin1().data());
 #endif
                         SpecAbstract::_SCANS_STRUCT record={};
-                        record.nVariant=pRecords[j].nVariant;
-                        record.filetype=pRecords[j].filetype;
-                        record.type=pRecords[j].type;
-                        record.name=pRecords[j].name;
-                        record.sVersion=pRecords[j].pszVersion;
-                        record.sInfo=pRecords[j].pszInfo;
+                        record.nVariant=pRecords[j].basicInfo.nVariant;
+                        record.filetype=pRecords[j].basicInfo.filetype;
+                        record.type=pRecords[j].basicInfo.type;
+                        record.name=pRecords[j].basicInfo.name;
+                        record.sVersion=pRecords[j].basicInfo.pszVersion;
+                        record.sInfo=pRecords[j].basicInfo.pszInfo;
 
                         record.nOffset=0;
 
@@ -9489,23 +9539,23 @@ void SpecAbstract::importHashScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
 
     for(int i=0; i<nSignaturesCount; i++)
     {
-        if((pRecords[i].filetype==fileType1)||(pRecords[i].filetype==fileType2))
+        if((pRecords[i].basicInfo.filetype==fileType1)||(pRecords[i].basicInfo.filetype==fileType2))
         {
-            if(!pMapRecords->contains(pRecords[i].name))
+            if(!pMapRecords->contains(pRecords[i].basicInfo.name))
             {
                 if((pRecords[i].nHash64==nHash64)&&(pRecords[i].nHash32==nHash32))
                 {
 #ifdef QT_DEBUG
-                    qDebug("IMPORT HASH: %s",recordNameIdToString(pRecords[i].name).toLatin1().data());
+                    qDebug("IMPORT HASH: %s",recordNameIdToString(pRecords[i].basicInfo.name).toLatin1().data());
 #endif
 
                     SpecAbstract::_SCANS_STRUCT record={};
-                    record.nVariant=pRecords[i].nVariant;
-                    record.filetype=pRecords[i].filetype;
-                    record.type=pRecords[i].type;
-                    record.name=pRecords[i].name;
-                    record.sVersion=pRecords[i].pszVersion;
-                    record.sInfo=pRecords[i].pszInfo;
+                    record.nVariant=pRecords[i].basicInfo.nVariant;
+                    record.filetype=pRecords[i].basicInfo.filetype;
+                    record.type=pRecords[i].basicInfo.type;
+                    record.name=pRecords[i].basicInfo.name;
+                    record.sVersion=pRecords[i].basicInfo.pszVersion;
+                    record.sInfo=pRecords[i].basicInfo.pszInfo;
 
                     record.nOffset=0;
 

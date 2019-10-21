@@ -301,6 +301,7 @@ public:
         RECORD_NAME_PEENCRYPT,
         RECORD_NAME_PELOCK,
         RECORD_NAME_PEPACK,
+        RECORD_NAME_PEPACKSPROTECT,
         RECORD_NAME_PEQUAKE,
         RECORD_NAME_PERL,
         RECORD_NAME_PESPIN,
@@ -681,7 +682,7 @@ public:
         bool bCopyOverlay;     // In
     };
 
-    struct SIGNATURE_RECORD
+    struct _BASICINFO
     {
         quint32 nVariant;
         const RECORD_FILETYPE filetype;
@@ -689,40 +690,30 @@ public:
         const RECORD_NAME name;
         const char *pszVersion;
         const char *pszInfo;
+    };
+
+    struct SIGNATURE_RECORD
+    {
+        _BASICINFO basicInfo;
         const char *pszSignature;
     };
 
     struct STRING_RECORD
     {
-        quint32 nVariant;
-        const RECORD_FILETYPE filetype;
-        const RECORD_TYPE type;
-        const RECORD_NAME name;
-        const char *pszVersion;
-        const char *pszInfo;
+        _BASICINFO basicInfo;
         const char *pszString;
     };
 
     struct SCANMEMORY_RECORD
     {
-        quint32 nVariant;
-        const RECORD_FILETYPE filetype;
-        const RECORD_TYPE type;
-        const RECORD_NAME name;
-        const char *pszVersion;
-        const char *pszInfo;
+        _BASICINFO basicInfo;
         const char *pData;
         int nSize;
     };
 
     struct RESOURCES_RECORD
     {
-        quint32 nVariant;
-        const RECORD_FILETYPE filetype;
-        const RECORD_TYPE type;
-        const RECORD_NAME name;
-        const char *pszVersion;
-        const char *pszInfo;
+        _BASICINFO basicInfo;
         bool bIsString1;
         const char *pszName1;
         quint32 nID1;
@@ -733,12 +724,7 @@ public:
 
     struct IMPORTHASH_RECORD
     {
-        quint32 nVariant;
-        const RECORD_FILETYPE filetype;
-        const RECORD_TYPE type;
-        const RECORD_NAME name;
-        const char *pszVersion;
-        const char *pszInfo;
+        _BASICINFO basicInfo;
         quint64 nHash64;
         quint32 nHash32;
     };

@@ -10146,3 +10146,9 @@ KERNEL32.dll HeapAlloc
 KERNEL32.dll GetProcessHeap
 KERNEL32.dll HeapFree
 KERNEL32.dll GetProcAddress
+
+Import hash: 1db028dca 50ca53fc
+Kernel32.dll LoadLibraryA
+Kernel32.dll GetProcAddress
+Kernel32.dll VirtualFree
+Kernel32.dll VirtualAlloc
