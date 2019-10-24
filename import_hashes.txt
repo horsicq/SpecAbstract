@@ -10152,3 +10152,17 @@ Kernel32.dll LoadLibraryA
 Kernel32.dll GetProcAddress
 Kernel32.dll VirtualFree
 Kernel32.dll VirtualAlloc
+
+Import hash: 240d976a2 10c77c1b
+kernel32.dll GetProcAddress
+kernel32.dll GetModuleHandleA
+kernel32.dll LoadLibraryA
+kernel32.dll VirtualAlloc
+kernel32.dll VirtualFree
+
+Import hash: 241c3b6a6 bf363f04
+KERNEL32.dll HeapAlloc
+KERNEL32.dll GetProcessHeap
+KERNEL32.dll HeapFree
+KERNEL32.dll GetProcAddress
+KERNEL32.dll LoadLibraryA
