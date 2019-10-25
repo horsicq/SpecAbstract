@@ -10166,3 +10166,25 @@ KERNEL32.dll GetProcessHeap
 KERNEL32.dll HeapFree
 KERNEL32.dll GetProcAddress
 KERNEL32.dll LoadLibraryA
+
+Import hash: 9c94674d4 6d738d20
+KERNEL32.dll CreateThread
+KERNEL32.dll GetVersion
+KERNEL32.dll GetCommandLineA
+KERNEL32.dll GetStartupInfoA
+KERNEL32.dll GetProcAddress
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll Sleep
+KERNEL32.dll GetACP
+USER32.dll DefWindowProcA
+USER32.dll RegisterClassExA
+USER32.dll CreateWindowExA
+USER32.dll GetSystemMetrics
+USER32.dll ShowWindow
+USER32.dll GetDC
+USER32.dll ReleaseDC
+USER32.dll FindWindowA
+USER32.dll GetMessageA
+USER32.dll DestroyWindow
+GDI32.dll SetPixel
