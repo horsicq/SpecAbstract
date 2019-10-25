@@ -92,8 +92,8 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_XENOCODE,                     "",                 ""},                    "'xvm'0001"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_JAVACOMPILEDCLASS,            "",                 ""},                    "CAFEBABE"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_MOLEBOXULTRA,                 "",                 ""},                    "'XOJUMANJ'"},
-    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_1337EXECRYPTER,               "1",                "TEST"},                "60'*[S-P-L-I-T]*'60"},
-    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_1337EXECRYPTER,               "2",                "TEST"},                "'~SPLIT~'"},
+    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_1337EXECRYPTER,               "1",                ""},                    "60'*[S-P-L-I-T]*'60"},
+    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_1337EXECRYPTER,               "2",                ""},                    "'~SPLIT~'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
@@ -186,6 +186,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ORIEN,                        "",                 ""},                    "E95D010000CED1CE..'\r\n--------------------------------------------\r\n- ORiEN executable files protection system'"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_VPACKER,                      "0.02.10",          ""},                    "60E8........C3"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ASPROTECT,                    "1.23-2.77",        ""},                    "6801......E801000000C3C3"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEPACK,                      "1.0",              ""},                    "6068........B8........FF1068........50B8........FF10"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEPACK,                      "1.4",              ""},                    "33C08BC068........68........E8"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEPACK,                      "1.4",              ""},                    "EB01909068........68........E8"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PESPIN,                       "",                 ""},                    "EB016860E8000000008B1C2483C312812BE8B10600FE4BFD822C24"},
@@ -296,6 +297,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_JDPACK,                       "2.00",             ""},                    "558BEC6AFF68........68........64A1000000005064892500000000......E801000000"},
 //    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VCASMPROTECTOR,               "1.0",              ""},                    "558BEC6AFF68........68........64A1000000005064892500000000E803000000"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VCASMPROTECTOR,               "1.X",              ""},                    "EB..'[VProtect]'00"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AASE,                         "1.0",              "TEST"},                 "558BEC83C4F053B8........E8........68........E8........68........68........E8........50"},
 };
 
 SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
@@ -343,6 +345,7 @@ SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NAKEDPACKER,                  "1.0",              ""},                    0x241c3b6a6,    0xbf363f04},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER,"",                 ""},                    0x241c3b6a6,    0xbf363f04},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VCASMPROTECTOR,               "1.X",              ""},                    0x9c94674d4,    0x6d738d20},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEPACK,                      "1.0",              ""},                    0x263ed9b5a,    0x117f896a},
     // Armadillo
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2973050b33,   0x1a0c885c},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2f2f1df1d1,   0x8623cf54},
@@ -403,7 +406,7 @@ SpecAbstract::IMPORTHASH_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "6.40",             ""},                    0x5f7a50e70b,   0xae4aa460}, // 6.40 11-02-2009
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "6.60-7.00",        ""},                    0x5d069de3a4,   0x34512142},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "7.20",             ""},                    0x79deb2e3e4,   0x2a3627b7},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "8.60",             ""},                    0x79f90ba091,   0x804c7692},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "8.60",             ""},                    0x263ed9b5a,    0x804c7692},
 };
 
 // .snaker ??? tool
@@ -472,9 +475,11 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER,"",                 ""},                    ".Kaos2 "},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER,"",                 ""},                    ".Kaos12"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VCASMPROTECTOR,               "1.X",              ""},                    "vcasm"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EPROT,                        "0.01",             "TEST"},                "!eprot"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEPACK,                      "1.0",              "TEST"},                "!EPack"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEPACK,                      "1.4",              "TEST"},                ".!ep"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EPROT,                        "0.01",             ""},                    "!eprot"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEPACK,                      "1.0",              ""},                    "!EPack"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEPACK,                      "1.4",              ""},                    ".!ep"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_12311134,                     "",                 "TEST"},                "Xiao"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ABCCRYPTOR,                   "",                 "TEST"},                ".aBc  "},
 };
 
 SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
@@ -726,9 +731,11 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
     switch(id)
     {
         case RECORD_NAME_UNKNOWN:                               sResult=QString("Unknown");                                     break;
+        case RECORD_NAME_12311134:                              sResult=QString("12311134");                                    break;
         case RECORD_NAME_1337EXECRYPTER:                        sResult=QString("1337 Exe Crypter");                            break;
         case RECORD_NAME_32LITE:                                sResult=QString("32Lite");                                      break;
         case RECORD_NAME_7Z:                                    sResult=QString("7-Zip");                                       break;
+        case RECORD_NAME_AASE:                                  sResult=QString("Aase");                                        break;
         case RECORD_NAME_ABCCRYPTOR:                            sResult=QString("ABC Cryptor");                                 break;
         case RECORD_NAME_ACPROTECT:                             sResult=QString("ACProtect");                                   break;
         case RECORD_NAME_ACTUALINSTALLER:                       sResult=QString("Actual Installer");                            break;
@@ -1868,7 +1875,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                 {
                     stDetects.insert("kernel32_aspack");
                     stDetects.insert("kernel32_asprotect");
-                    stDetects.insert("kernel32_exe_pack");
                 }
                 else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetModuleHandleA")&&
                         (pPEInfo->listImports.at(0).listPositions.at(1).sName=="LoadLibraryA")&&
@@ -2261,7 +2267,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
                     if(pPEInfo->listImports.count()==2)
                     {
-                        stDetects.insert("user32_exe_pack");
                         stDetects.insert("user32_softwarecompress");
                         stDetects.insert("user32_simplepack_a");
                     }
@@ -2525,11 +2530,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
         pPEInfo->mapImportDetects.insert(RECORD_NAME_SIMPLEPACK,getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_SIMPLEPACK,"1.11","",0));
     }
 
-    if(stDetects.contains("kernel32_exe_pack")&&stDetects.contains("user32_exe_pack"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_EXEPACK,getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_EXEPACK,"","",0));
-    }
-
     if(stDetects.contains("kernel32_alloy0"))
     {
         pPEInfo->mapImportDetects.insert(RECORD_NAME_ALLOY,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PROTECTOR,RECORD_NAME_ALLOY,"4.X","",0));
@@ -2702,14 +2702,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
             }
         }
 
-        // 1337 Exe Crypter
-        if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_1337EXECRYPTER))
-        {
-            SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapOverlayDetects.value(RECORD_NAME_1337EXECRYPTER);
-            ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_1337EXECRYPTER,ss.sVersion,ss.sInfo,0);
-            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-        }
-
         if(!pPEInfo->cliInfo.bInit)
         {
             // TODO MPRESS import
@@ -2869,6 +2861,17 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 }
             }
 
+            // 1337 Exe Crypter
+            if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_1337EXECRYPTER))
+            {
+                if(XPE::isImportLibraryPresentI("MSVBVM60.DLL",&(pPEInfo->listImports)))
+                {
+                    SpecAbstract::_SCANS_STRUCT ssOverlay=pPEInfo->mapOverlayDetects.value(RECORD_NAME_1337EXECRYPTER);
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_1337EXECRYPTER,ssOverlay.sVersion,ssOverlay.sInfo,0);
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
+
             // CRYPToCRACks PE Protector
             if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTOCRACKSPEPROTECTOR))
             {
@@ -3010,11 +3013,25 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 // AHPacker
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_AHPACKER))
                 {
-                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_AHPACKER))
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_AHPACKER)&&(!pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EXEPACK)))
                     {
                         SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_AHPACKER);
                         pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     }
+                }
+
+                // AHPacker
+                if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_12311134))
+                {
+                    SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_12311134);
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // Aase
+                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_AASE))
+                {
+                    SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_AASE);
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
                 // BeRoEXEPacker
@@ -3239,6 +3256,24 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                         // TODO compare entryPoint and import sections
                         SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_32LITE);
                         pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+
+                // EProt
+                if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EPROT))
+                {
+                    if(pPEInfo->nEntryPointSection>0)
+                    {
+                        if(pPEInfo->sEntryPointSectionName=="!eprot")
+                        {
+                            quint32 nValue=pe.read_uint32(pPEInfo->osEntryPointSection.nOffset+pPEInfo->osEntryPointSection.nSize-4);
+
+                            if(nValue==0x78787878)
+                            {
+                                SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_EPROT);
+                                pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                            }
+                        }
                     }
                 }
 
@@ -3707,12 +3742,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                     pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
-                else if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EXEPACK))
-                {
-                    SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_EXEPACK);
-
-                    pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
 
                 if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EPROT))
                 {
@@ -4121,7 +4150,7 @@ void SpecAbstract::PE_handle_VProtect(QIODevice *pDevice, bool bIsImage, SpecAbs
         {
             if(pPEInfo->nEntryPointSection>0)
             {
-                if(pPEInfo->listSectionNames.at(pPEInfo->nEntryPointSection)=="VProtect")
+                if(pPEInfo->sEntryPointSectionName=="VProtect")
                 {
                     if(XBinary::checkOffsetSize(pPEInfo->osEntryPointSection)&&(pPEInfo->basic_info.bIsDeepScan))
                     {
@@ -4164,7 +4193,7 @@ void SpecAbstract::PE_handle_TTProtect(QIODevice *pDevice, bool bIsImage, SpecAb
                 {
                     if(pPEInfo->nEntryPointSection>0)
                     {
-                        if(pPEInfo->listSectionNames.at(pPEInfo->nEntryPointSection)==".TTP")
+                        if(pPEInfo->sEntryPointSectionName==".TTP")
                         {
                             SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_TTPROTECT,"","",0);
 
@@ -4189,7 +4218,7 @@ void SpecAbstract::PE_handle_SafeengineShielden(QIODevice *pDevice, bool bIsImag
             {
                 if(pPEInfo->nEntryPointSection>0)
                 {
-                    if(pPEInfo->listSectionNames.at(pPEInfo->nEntryPointSection)==".sedata")
+                    if(pPEInfo->sEntryPointSectionName==".sedata")
                     {
                         SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_SAFEENGINESHIELDEN,"2.XX","",0);
 
