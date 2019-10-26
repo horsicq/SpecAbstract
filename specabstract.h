@@ -103,6 +103,8 @@ public:
         RECORD_NAME_ACPROTECT,
         RECORD_NAME_ACTUALINSTALLER,
         RECORD_NAME_ADVANCEDINSTALLER,
+        RECORD_NAME_ADVANCEDUPXSCRAMMBLER,
+        RECORD_NAME_AGAINNATIVITYCRYPTER,
         RECORD_NAME_AGILENET,
         RECORD_NAME_AHPACKER,
         RECORD_NAME_AHTEAMEPPROTECTOR,
@@ -729,11 +731,11 @@ public:
         quint32 nID2;
     };
 
-    struct IMPORTHASH_RECORD
+    struct CONST_RECORD
     {
         _BASICINFO basicInfo;
-        quint64 nHash64;
-        quint32 nHash32;
+        quint64 nConst1;
+        quint64 nConst2;
     };
 
     struct VCL_STRUCT
@@ -775,6 +777,8 @@ public:
     static QString recordNameIdToString(RECORD_NAME id);
 
     static SpecAbstract::UNPACK_OPTIONS getPossibleUnpackOptions(QIODevice *pDevice, bool bIsImage);
+
+    static QString _SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct);
 
     static QString createResultString(const SCAN_STRUCT *pScanStruct);
     static QString createResultString2(const SCAN_STRUCT *pScanStruct);
@@ -889,7 +893,7 @@ public:
     static void signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
     static void resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,RESOURCES_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2); // TODO Check
     static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
-    static void importHashScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nHash64,quint32 nHash32,IMPORTHASH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
+    static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
 
     static QByteArray serializeScanStruct(SCAN_STRUCT ssRecord,bool bIsHeader=false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData,bool *pbIsHeader=nullptr);
