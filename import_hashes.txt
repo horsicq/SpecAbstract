@@ -10366,3 +10366,39 @@ MSVBVM60.DLL _allmul
 MSVBVM60.DLL _CItan
 MSVBVM60.DLL _CIexp
 MSVBVM60.DLL __vbaFreeStr
+
+Import hash: c06abc0fa 77035a90
+kernel32.dll GetCurrentThreadId
+kernel32.dll ExitProcess
+kernel32.dll RtlUnwind
+kernel32.dll RaiseException
+kernel32.dll GetCommandLineA
+kernel32.dll TlsSetValue
+kernel32.dll TlsGetValue
+kernel32.dll LocalAlloc
+kernel32.dll GetModuleHandleA
+kernel32.dll GetModuleFileNameA
+kernel32.dll FreeLibrary
+kernel32.dll HeapFree
+kernel32.dll HeapReAlloc
+kernel32.dll HeapAlloc
+kernel32.dll GetProcessHeap
+user32.dll CharNextA
+kernel32.dll LoadLibraryA
+kernel32.dll GetWindowsDirectoryA
+kernel32.dll GetTempPathA
+kernel32.dll GetSystemDirectoryA
+kernel32.dll GetProcAddress
+kernel32.dll GetModuleHandleA
+kernel32.dll GetCurrentDirectoryA
+user32.dll MessageBoxA
+
+Import hash: 3404eaa9b 3789c118
+kernel32.dll GetModuleHandleA
+kernel32.dll LoadLibraryA
+kernel32.dll GetProcAddress
+kernel32.dll VirtualAlloc
+kernel32.dll VirtualFree
+kernel32.dll VirtualProtect
+kernel32.dll HeapCreate
+kernel32.dll HeapAlloc
