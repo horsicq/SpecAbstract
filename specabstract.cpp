@@ -3479,7 +3479,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_HMIMYSPACKER))
                 {
-                    if(XPE::isSectionNamePresent(".hmimys",&(pPEInfo->listSectionHeaders)))
+                    if(XPE::isSectionNamePresent(".hmimys",&(pPEInfo->listSectionHeaders))) // TODO Check
                     {
                         SpecAbstract::_SCANS_STRUCT recordSS=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_HMIMYSPACKER,"","",0);
                         pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
@@ -4559,8 +4559,8 @@ void SpecAbstract::PE_handle_StarForce(QIODevice *pDevice, bool bIsImage, SpecAb
 
     if(pe.isValid())
     {
-        bool bSF3=XPE::isSectionNamePresent(".sforce3",&(pPEInfo->listSectionHeaders));
-        bool bSF4=XPE::isSectionNamePresent(".ps4",&(pPEInfo->listSectionHeaders));
+        bool bSF3=XPE::isSectionNamePresent(".sforce3",&(pPEInfo->listSectionHeaders)); // TODO
+        bool bSF4=XPE::isSectionNamePresent(".ps4",&(pPEInfo->listSectionHeaders)); // TODO
 
         if(bSF3||bSF4)
         {
@@ -4706,7 +4706,7 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
                         pPEInfo->mapResultPackers.insert(recordPETITE.name,scansToScan(&(pPEInfo->basic_info),&recordPETITE));
                     }
                 }
-                else if(XPE::isSectionNamePresent(".petite",&(pPEInfo->listSectionHeaders)))
+                else if(XPE::isSectionNamePresent(".petite",&(pPEInfo->listSectionHeaders))) // TODO
                 {
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PETITE))
                     {
@@ -6833,7 +6833,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
 
             if(recordCompiler.type==RECORD_TYPE_UNKNOWN)
             {
-                if(XPE::isSectionNamePresent(".stabstr",&(pPEInfo->listSectionHeaders)))
+                if(XPE::isSectionNamePresent(".stabstr",&(pPEInfo->listSectionHeaders))) // TODO
                 {
                     XPE_DEF::IMAGE_SECTION_HEADER sh=XPE::getSectionByName(".stabstr",&(pPEInfo->listSectionHeaders));
 
@@ -7102,7 +7102,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_CAB))
             {
                 // Wix Tools
-                if(XPE::isSectionNamePresent(".wixburn",&(pPEInfo->listSectionHeaders)))
+                if(XPE::isSectionNamePresent(".wixburn",&(pPEInfo->listSectionHeaders))) // TODO
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_WIXTOOLSET,"","",0);
                     ss.sVersion="3.X"; // TODO check "E:\delivery\Dev\wix37\build\ship\x86\burn.pdb"
@@ -7577,7 +7577,7 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice,bool bIsImage, SpecAbstract:
 
             // WinZip
             if( (pPEInfo->sResourceManifest.contains("WinZipComputing.WinZip"))||
-                (XPE::isSectionNamePresent("_winzip_",&(pPEInfo->listSectionHeaders))))
+                (XPE::isSectionNamePresent("_winzip_",&(pPEInfo->listSectionHeaders)))) // TODO
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_SFX,RECORD_NAME_WINZIP,"","",0);
 
@@ -9006,7 +9006,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
     if(elf.isValid())
     {
         // Qt
-        if(XELF::isSectionNamePresent(".qtversion",&(pELFInfo->listSectionRecords)))
+        if(XELF::isSectionNamePresent(".qtversion",&(pELFInfo->listSectionRecords))) // TODO
         {
             SpecAbstract::_SCANS_STRUCT recordSS={};
 
@@ -9050,7 +9050,7 @@ void SpecAbstract::ELF_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstrac
     {
         SpecAbstract::_SCANS_STRUCT recordCompiler={};
         // GCC
-        if(XELF::isSectionNamePresent(".gcc_except_table",&(pELFInfo->listSectionRecords)))
+        if(XELF::isSectionNamePresent(".gcc_except_table",&(pELFInfo->listSectionRecords)))  // TODO
         {
             recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
             recordCompiler.name=SpecAbstract::RECORD_NAME_GCC;
@@ -9109,7 +9109,7 @@ void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbst
     if(mach.isValid())
     {
         // GCC
-        if(XMACH::isSectionNamePresent(&(pMACHInfo->listSectionRecords),"__gcc_except_tab"))
+        if(XMACH::isSectionNamePresent(&(pMACHInfo->listSectionRecords),"__gcc_except_tab"))  // TODO
         {
             SpecAbstract::_SCANS_STRUCT recordSS={};
 
