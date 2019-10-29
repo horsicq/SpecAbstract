@@ -104,6 +104,7 @@ public:
         RECORD_NAME_ACTUALINSTALLER,
         RECORD_NAME_ADVANCEDINSTALLER,
         RECORD_NAME_ADVANCEDUPXSCRAMMBLER,
+        RECORD_NAME_AFFILLIATEEXE,
         RECORD_NAME_AGAINNATIVITYCRYPTER,
         RECORD_NAME_AGILENET,
         RECORD_NAME_AHPACKER,
@@ -165,6 +166,8 @@ public:
         RECORD_NAME_CRYPTER,
         RECORD_NAME_CRYPTOCRACKPEPROTECTOR,
         RECORD_NAME_CRYPTOOBFUSCATORFORNET,
+        RECORD_NAME_CVTOMF,
+        RECORD_NAME_CVTRES,
         RECORD_NAME_CWSDPMI,
         RECORD_NAME_CYGWIN,
         RECORD_NAME_DEB,
@@ -631,6 +634,7 @@ public:
         QMap<RECORD_NAME,_SCANS_STRUCT> mapDotAnsistringsDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapDotUnicodestringsDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapSectionNamesDetects;
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapRichDetects;
 
         qint32 nEntryPointSection;
         qint32 nResourceSection;
