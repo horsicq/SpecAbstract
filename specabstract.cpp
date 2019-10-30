@@ -421,11 +421,28 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.94-1.93",        "exe"},                 0,              0xe6aa8495},
 };
 
-SpecAbstract::CONST_RECORD _PE_rich_records[]=
+SpecAbstract::MSRICH_RECORD _PE_rich_records[]=
 {
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "",                 ""},                    0x0001,         (quint64)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "5.10",             ""},                    0x0002,         (quint64)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "5.10",             ""},                    0x0003,         (quint64)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "",                 ""},                    0x0001,         0},             // Linker generated import object version 0
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "5.10",             ""},                    0x0002,         (quint32)-1},   // LINK 5.10 (Visual Studio 97 SP3)
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "5.10",             ""},                    0x0003,         (quint32)-1},   // LINK 5.10 (Visual Studio 97 SP3) OMF to COFF conversion
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.00",             ""},                    0x0004,         (quint32)-1},   // LINK 6.00 (Visual Studio 98)
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.00",             ""},                    0x0005,         (quint32)-1},   // LINK 6.00 (Visual Studio 98) OMF to COFF conversion
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "5.00",             ""},                    0x0006,         (quint32)-1},   // CVTRES 5.00
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALBASIC,                  "5.00",             "Native"},              0x0007,         (quint32)-1},   // VB 5.0 native code
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "5.00",             "C/C++"},               0x0008,         (quint32)-1},   // VC++ 5.0 C/C++
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALBASIC,                  "6.00",             "Native"},              0x0009,         (quint32)-1},   // VB 6.0 native code
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "6.00",             "C"},                   0x000A,         (quint32)-1},   // VC++ 6.0 C
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "6.00",             "C++"},                 0x000B,         (quint32)-1},   // VC++ 6.0 C++
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "6.00",             ""},                    0x000C,         (quint32)-1},   // ALIASOBJ.EXE (CRT Tool that builds OLDNAMES.LIB)
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "6.00",             ""},                    0x000D,         (quint32)-1},   // VB 6.0 generated object
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.13",             ""},                    0x000E,         (quint32)-1},   // MASM 6.13
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "7.01",             ""},                    0x000F,         (quint32)-1},   // MASM 7.01
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "5.11",             ""},                    0x0010,         (quint32)-1},   // LINK 5.11
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "5.11",             ""},                    0x0011,         (quint32)-1},   // LINK 5.11 OMF to COFF conversion
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.14",             "MMX2 support"},        0x0012,         (quint32)-1},   // MASM 6.14 (MMX2 support)
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "5.12",             ""},                    0x0013,         (quint32)-1},   // LINK 5.12
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "5.12",             ""},                    0x0014,         (quint32)-1},   // LINK 5.12 OMF to COFF conversion
 };
 
 // .snaker ??? tool
@@ -769,6 +786,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_AHTEAMEPPROTECTOR:                     sResult=QString("AHTeam EP Protector");                         break;
         case RECORD_NAME_AINEXE:                                sResult=QString("AINEXE");                                      break;
         case RECORD_NAME_ALEXPROTECTOR:                         sResult=QString("Alex Protector");                              break;
+        case RECORD_NAME_ALIASOBJ:                              sResult=QString("ALIASOBJ");                                    break;
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
         case RECORD_NAME_ANDPAKK2:                              sResult=QString("ANDpakk2");                                    break;
         case RECORD_NAME_ANDROIDGRADLE:                         sResult=QString("Android Gradle");                              break;
@@ -1704,7 +1722,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         for(int i=0;i<nNumberOfRichSignatures;i++)
         {
-            constScan(&(result.mapRichDetects),result.listRichSignatures.at(i).nId,result.listRichSignatures.at(i).nVersion,_PE_rich_records,sizeof(_PE_rich_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
+            PE_richScan(&(result.mapRichDetects),result.listRichSignatures.at(i).nId,result.listRichSignatures.at(i).nVersion,_PE_rich_records,sizeof(_PE_rich_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
         }
 
 
@@ -9731,7 +9749,7 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
 
 void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, SpecAbstract::CONST_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2)
 {
-    int nSignaturesCount=nRecordsSize/(int)sizeof(SIGNATURE_RECORD);
+    int nSignaturesCount=nRecordsSize/(int)sizeof(CONST_RECORD);
 
     for(int i=0; i<nSignaturesCount; i++)
     {
@@ -9760,6 +9778,49 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
 
 #ifdef QT_DEBUG
                     qDebug("CONST SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
+#endif
+                }
+            }
+        }
+    }
+}
+
+void SpecAbstract::PE_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2)
+{
+    int nSignaturesCount=nRecordsSize/(int)sizeof(MSRICH_RECORD);
+
+    for(int i=0; i<nSignaturesCount; i++)
+    {
+        if((pRecords[i].basicInfo.filetype==fileType1)||(pRecords[i].basicInfo.filetype==fileType2))
+        {
+            if(!pMapRecords->contains(pRecords[i].basicInfo.name))
+            {
+                bool bCheck=false;
+
+                bCheck= ((pRecords[i].nID==nID)||(pRecords[i].nID==-1))&&
+                        ((pRecords[i].nBuild==nBuild)||(pRecords[i].nBuild==-1));
+
+                if(bCheck)
+                {
+                    SpecAbstract::_SCANS_STRUCT record={};
+                    record.nVariant=pRecords[i].basicInfo.nVariant;
+                    record.filetype=pRecords[i].basicInfo.filetype;
+                    record.type=pRecords[i].basicInfo.type;
+                    record.name=pRecords[i].basicInfo.name;
+                    record.sVersion=pRecords[i].basicInfo.pszVersion;
+                    record.sInfo=pRecords[i].basicInfo.pszInfo;
+
+                    if(pRecords[i].nBuild==-1)
+                    {
+                        record.sVersion+=QString(".%1").arg(nBuild);
+                    }
+
+                    record.nOffset=0;
+
+                    pMapRecords->insert(record.name,record);
+
+#ifdef QT_DEBUG
+                    qDebug("RICH SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
 #endif
                 }
             }

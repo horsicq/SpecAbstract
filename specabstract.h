@@ -111,6 +111,7 @@ public:
         RECORD_NAME_AHTEAMEPPROTECTOR,
         RECORD_NAME_AINEXE,
         RECORD_NAME_ALEXPROTECTOR,
+        RECORD_NAME_ALIASOBJ,
         RECORD_NAME_ALLOY,
         RECORD_NAME_ANDPAKK2,
         RECORD_NAME_ANDROIDGRADLE,
@@ -743,6 +744,13 @@ public:
         quint64 nConst2;
     };
 
+    struct MSRICH_RECORD
+    {
+        _BASICINFO basicInfo;
+        quint16 nID;
+        quint32 nBuild;
+    };
+
     struct VCL_STRUCT
     {
         quint32 nValue;
@@ -899,6 +907,7 @@ public:
     static void resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,RESOURCES_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2); // TODO Check
     static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
     static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
+    static void PE_richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
 
     static QByteArray serializeScanStruct(SCAN_STRUCT ssRecord,bool bIsHeader=false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData,bool *pbIsHeader=nullptr);
