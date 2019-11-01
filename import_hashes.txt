@@ -10766,3 +10766,16 @@ comctl32.dll ImageList_Add
 comctl32.dll ImageList_GetImageCount
 comctl32.dll ImageList_Destroy
 comctl32.dll ImageList_Create
+
+Import hash: 1a89b5f0f f44517d8
+Kernel32.dll GetProcAddress
+Kernel32.dll LoadLibraryA
+User32.dll MessageBoxA
+
+Import hash: 7bc87a20
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL VirtualProtect
+KERNEL32.DLL VirtualAlloc
+KERNEL32.DLL VirtualFree
+KERNEL32.DLL ExitProcess
