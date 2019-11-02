@@ -300,6 +300,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AASE,                         "1.0",              ""},                    "558BEC83C4F053B8........E8........68........E8........68........68........E8........50"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ADVANCEDUPXSCRAMMBLER,        "0.5",              ""},                    "B8........B9........803408..E2FAEB"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AZPROTECT,                    "0001",             ""},                    "EB70FC608C804D110070258100400D91BB608C804D11007021811D610D810040CE608C804D11007025812581258125812961418131611D610040B730"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WINKRIPT,                     "1.0",              ""},                    "33C08BB8........8B90........85FF74..33C950EB..8A0439C0C8..34..880439413BCA72..58"},
 };
 
 SpecAbstract::CONST_RECORD _PE_importhash_records[]=
@@ -350,10 +351,14 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER,"",                 ""},                    0x241c3b6a6,    0xbf363f04},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VCASMPROTECTOR,               "1.X",              ""},                    0x9c94674d4,    0x6d738d20},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEPACK,                      "1.0",              ""},                    0x263ed9b5a,    0x117f896a},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 ""},                    0x21bae50da1,   0xab934456},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AASE,                         "1.0",              ""},                    0xc06abc0fa,    0x77035a90},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AFFILLIATEEXE,                "1.0",              "TEST"},                0xaad68a6e94,   0xe7046691},
     {{0, SpecAbstract::RECORD_FILETYPE_PE64,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LARP64,                       "1.0.3",            "TEST"},                0x1a89b5f0f,    0xf44517d8},
+    // VB
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 ""},                    0x21bae50da1,   0xab934456},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WINGSCRYPT,                   "1.0",              "TEST"},                0x216906261a,   0x86d73370},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WHITELLCRYPT,                 "",                 "TEST"},                0x27e360241a,   0x69740a38},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ZELDACRYPT,                   "1.0",              "TEST"},                0x27e360241a,   0xffacb503},
     // Armadillo
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2973050b33,   0x1a0c885c},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2f2f1df1d1,   0x8623cf54},
@@ -528,7 +533,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NSPACK,                       "",                 ""},                    ".nsp0"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NSPACK,                       "",                 ""},                    ".nsp1"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NSPACK,                       "",                 ""},                    ".nsp2"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WINKRIPT,                     "1.0",              "TEST"},                ".wkt0"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WINKRIPT,                     "1.0",              ""},                    ".wkt0"},
 };
 
 SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
@@ -1086,12 +1091,14 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WATCOMCCPP:                            sResult=QString("Watcom C/C++");                                break;
         case RECORD_NAME_WATCOMLINKER:                          sResult=QString("Watcom linker");                               break;
         case RECORD_NAME_WDOSX:                                 sResult=QString("WDOSX");                                       break;
+        case RECORD_NAME_WHITELLCRYPT:                          sResult=QString("Whitell Crypt");                               break;
         case RECORD_NAME_WINACE:                                sResult=QString("WinACE");                                      break;
         case RECORD_NAME_WINAUTH:                               sResult=QString("Windows Authenticode");                        break;
         case RECORD_NAME_WINDOWSBITMAP:                         sResult=QString("Windows Bitmap");                              break;
         case RECORD_NAME_WINDOWSICON:                           sResult=QString("Windows Icon");                                break;
         case RECORD_NAME_WINDOWSINSTALLER:                      sResult=QString("Windows Installer");                           break;
-        case RECORD_NAME_WINKRIPT:                              sResult=QString("WinKript");                                     break;
+        case RECORD_NAME_WINGSCRYPT:                            sResult=QString("WingsCrypt");                                  break;
+        case RECORD_NAME_WINKRIPT:                              sResult=QString("WinKript");                                    break;
         case RECORD_NAME_WINRAR:                                sResult=QString("WinRAR");                                      break;
         case RECORD_NAME_WINUPACK:                              sResult=QString("(Win)Upack");                                  break;
         case RECORD_NAME_WINZIP:                                sResult=QString("WinZip");                                      break;
@@ -1112,6 +1119,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_YANO:                                  sResult=QString("Yano");                                        break;
         case RECORD_NAME_YODASCRYPTER:                          sResult=QString("Yoda's Crypter");                              break;
         case RECORD_NAME_YZPACK:                                sResult=QString("YZPack");                                      break;
+        case RECORD_NAME_ZELDACRYPT:                            sResult=QString("ZeldaCrypt");                                  break;
         case RECORD_NAME_ZIP:                                   sResult=QString("ZIP");                                         break;
         case RECORD_NAME_ZLIB:                                  sResult=QString("zlib");                                        break;
         case RECORD_NAME_ZPROTECT:                              sResult=QString("ZProtect");                                    break;
@@ -3105,9 +3113,9 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 }
 
                 // WinKript
-                if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_WINKRIPT))
+                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_WINKRIPT))
                 {
-                    SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_WINKRIPT);
+                    SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_WINKRIPT);
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
@@ -3954,13 +3962,40 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
-                // TPP Pack
+                // VB start
+                // AGAINNATIVITYCRYPTER
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_AGAINNATIVITYCRYPTER)) // TODO more checks!
                 {
                     _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_AGAINNATIVITYCRYPTER);
 
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
+
+                // WingsCrypt
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_WINGSCRYPT)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_WINGSCRYPT);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // Whitell Crypt
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_WHITELLCRYPT)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_WHITELLCRYPT);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // ZeldaCrypt
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ZELDACRYPT)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ZELDACRYPT);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // VB end
 
                 // VCasm-Protector
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_VCASMPROTECTOR))
