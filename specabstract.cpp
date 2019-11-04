@@ -351,14 +351,20 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER,"",                 ""},                    0x241c3b6a6,    0xbf363f04},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VCASMPROTECTOR,               "1.X",              ""},                    0x9c94674d4,    0x6d738d20},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEPACK,                      "1.0",              ""},                    0x263ed9b5a,    0x117f896a},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AASE,                         "1.0",              ""},                    0xc06abc0fa,    0x77035a90},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AFFILLIATEEXE,                "1.0",              "TEST"},                0xaad68a6e94,   0xe7046691},
     {{0, SpecAbstract::RECORD_FILETYPE_PE64,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LARP64,                       "1.0.3",            "TEST"},                0x1a89b5f0f,    0xf44517d8},
-    // VB
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 ""},                    0x21bae50da1,   0xab934456},
+    // VB cryptors
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 "TEST"},                0x608b5ca5f,    0x27f8d01f},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 "TEST"},                0x21bae50da1,   0xab934456},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WINGSCRYPT,                   "1.0",              "TEST"},                0x216906261a,   0x86d73370},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WHITELLCRYPT,                 "",                 "TEST"},                0x27e360241a,   0x69740a38},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ZELDACRYPT,                   "1.0",              "TEST"},                0x27e360241a,   0xffacb503},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BIOHAZARDCRYPTER,             "",                 "TEST"},                0x341d510008,   0x4c51ceec},
+    // Delphi cryptors
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ASSCRYPTER,                   "1.0",              "TEST"},                0x12d94ca858,   0x36fb88c9},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AASE,                         "1.0",              "TEST"},                0xc06abc0fa,    0x77035a90},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ANSKYAPOLYMORPHICPACKER,      "1.3",              "TEST"},                0x120bc5fc6c,   0x50822fc0},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ANSLYMPACKER,                 "",                 "TEST"},                0xaf2e74867b,   0x51a4c42b},
     // Armadillo
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2973050b33,   0x1a0c885c},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2f2f1df1d1,   0x8623cf54},
@@ -454,6 +460,11 @@ SpecAbstract::MSRICH_RECORD _PE_rich_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.00",            "C++/std"},             0x0016,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.00",            "C/book"},              0x0017,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.00",            "C++/book"},            0x0018,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "7.00",             ""},                    0x0019,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "7.00",             ""},                    0x001A,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALBASIC,                  "7.00",             "Native"},              0x001B,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "13.00",            "C"},                   0x001C,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "13.00",            "C++"},                 0x001D,         (quint32)-1},
 };
 
 // .snaker ??? tool
@@ -805,8 +816,10 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
         case RECORD_NAME_ANDPAKK2:                              sResult=QString("ANDpakk2");                                    break;
         case RECORD_NAME_ANDROIDGRADLE:                         sResult=QString("Android Gradle");                              break;
+        case RECORD_NAME_ANSKYAPOLYMORPHICPACKER:               sResult=QString("Anskya Polymorphic Packer");                   break;
         case RECORD_NAME_ANSLYMPACKER:                          sResult=QString("AnslymPacker");                                break;
         case RECORD_NAME_ANTIDOTE:                              sResult=QString("AntiDote");                                    break;
+        case RECORD_NAME_ARCRYPT:                               sResult=QString("AR Crypt");                                    break;
         case RECORD_NAME_ARJ:                                   sResult=QString("ARJ");                                         break;
         case RECORD_NAME_ARMADILLO:                             sResult=QString("Armadillo");                                   break;
         case RECORD_NAME_ARMPROTECTOR:                          sResult=QString("ARM Protector");                               break;
@@ -814,6 +827,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ASM:                                   sResult=QString("Asm");                                         break;
         case RECORD_NAME_ASPACK:                                sResult=QString("ASPack");                                      break;
         case RECORD_NAME_ASPROTECT:                             sResult=QString("ASProtect");                                   break;
+        case RECORD_NAME_ASSCRYPTER:                            sResult=QString("Ass Crypter");                                 break;
         case RECORD_NAME_ASSEMBLYINVOKE:                        sResult=QString("AssemblyInvoke");                              break;
         case RECORD_NAME_AUTOIT:                                sResult=QString("AutoIt");                                      break;
         case RECORD_NAME_AVASTANTIVIRUS:                        sResult=QString("Avast Antivirus");                             break;
@@ -822,6 +836,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BABELNET:                              sResult=QString("Babel .NET");                                  break;
         case RECORD_NAME_BAMBAM:                                sResult=QString("bambam");                                      break;
         case RECORD_NAME_BEROEXEPACKER:                         sResult=QString("BeRoEXEPacker");                               break;
+        case RECORD_NAME_BIOHAZARDCRYPTER:                      sResult=QString("Biohazard Crypter");                           break;
         case RECORD_NAME_BITROCKINSTALLER:                      sResult=QString("BitRock Installer");                           break;
         case RECORD_NAME_BITSHAPEPECRYPT:                       sResult=QString("BitShape PE Crypt");                           break;
         case RECORD_NAME_BORLANDCPP:                            sResult=QString("Borland C++");                                 break;
@@ -1796,7 +1811,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_SFX(pDevice,pOptions->bIsImage,&result);
         PE_handle_Installers(pDevice,pOptions->bIsImage,&result);
         PE_handle_DongleProtection(pDevice,pOptions->bIsImage,&result);
-        PE_handle_AnslymPacker(pDevice,pOptions->bIsImage,&result);
+//        PE_handle_AnslymPacker(pDevice,pOptions->bIsImage,&result);
         PE_handle_NeoLite(pDevice,pOptions->bIsImage,&result);
 
         PE_handle_PETools(pDevice,pOptions->bIsImage,&result);
@@ -3118,18 +3133,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
-                // Aase
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_AASE))
-                {
-                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_AASE))
-                    {
-                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_AASE);
-                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                    }
-                }
-
-
-
                 // AffilliateEXE
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_AFFILLIATEEXE))
                 {
@@ -3962,6 +3965,15 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 }
 
                 // VB start
+
+                // AR Crypt
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ARCRYPT)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ARCRYPT);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
                 // AGAINNATIVITYCRYPTER
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_AGAINNATIVITYCRYPTER)) // TODO more checks!
                 {
@@ -3994,7 +4006,55 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
+                // Biohazard Crypter
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_BIOHAZARDCRYPTER)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_BIOHAZARDCRYPTER);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
                 // VB end
+
+                // Delphi Cryptors
+
+                // Ass Crypter
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ASSCRYPTER)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ASSCRYPTER);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // Aase
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_AASE)) // TODO more checks!
+                {
+//                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_AASE))
+//                    {
+//                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_AASE);
+//                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+//                    }
+
+                    SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_AASE);
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // Anskya Polymorphic Packer
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ANSKYAPOLYMORPHICPACKER)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ANSKYAPOLYMORPHICPACKER);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // AnslymPacker
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ANSLYMPACKER)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ANSLYMPACKER);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // Delphi Cryptors end
 
                 // VCasm-Protector
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_VCASMPROTECTOR))
@@ -7731,22 +7791,22 @@ void SpecAbstract::PE_handle_DongleProtection(QIODevice *pDevice,bool bIsImage, 
     }
 }
 
-void SpecAbstract::PE_handle_AnslymPacker(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
-{
-    XPE pe(pDevice,bIsImage);
+//void SpecAbstract::PE_handle_AnslymPacker(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+//{
+//    XPE pe(pDevice,bIsImage);
 
-    if(pe.isValid())
-    {
-        if(!pPEInfo->cliInfo.bInit)
-        {
-            if((pPEInfo->nImportHash64==0xaf2e74867b)&&(pPEInfo->nImportHash32==0x51a4c42b))
-            {
-                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_ANSLYMPACKER,"","",0);
-                pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-            }
-        }
-    }
-}
+//    if(pe.isValid())
+//    {
+//        if(!pPEInfo->cliInfo.bInit)
+//        {
+//            if((pPEInfo->nImportHash64==0xaf2e74867b)&&(pPEInfo->nImportHash32==0x51a4c42b))
+//            {
+//                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_ANSLYMPACKER,"","",0);
+//                pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+//            }
+//        }
+//    }
+//}
 
 void SpecAbstract::PE_handle_NeoLite(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
