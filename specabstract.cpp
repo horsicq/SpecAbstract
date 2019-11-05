@@ -365,6 +365,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AASE,                         "1.0",              "TEST"},                0xc06abc0fa,    0x77035a90},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ANSKYAPOLYMORPHICPACKER,      "1.3",              "TEST"},                0x120bc5fc6c,   0x50822fc0},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ANSLYMPACKER,                 "",                 "TEST"},                0xaf2e74867b,   0x51a4c42b},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CIGICIGICRYPTER,              "1.0",              "TEST"},                0x12998dbdd9,   0xf75643a6},
     // Armadillo
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2973050b33,   0x1a0c885c},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2f2f1df1d1,   0x8623cf54},
@@ -851,6 +852,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CAUSEWAY:                              sResult=QString("CauseWay");                                    break;
         case RECORD_NAME_CCPP:                                  sResult=QString("C/C++");                                       break;
         case RECORD_NAME_CEXE:                                  sResult=QString("CExe");                                        break;
+        case RECORD_NAME_CIGICIGICRYPTER:                       sResult=QString("Cigicigi Crypter");                            break;
         case RECORD_NAME_CIL:                                   sResult=QString("cil");                                         break;
         case RECORD_NAME_CLICKTEAM:                             sResult=QString("ClickTeam");                                   break;
         case RECORD_NAME_CLISECURE:                             sResult=QString("CliSecure");                                   break;
@@ -4034,7 +4036,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 //                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
 //                    }
 
-                    SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_AASE);
+                    SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_AASE);
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
@@ -4050,6 +4052,14 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ANSLYMPACKER)) // TODO more checks!
                 {
                     _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ANSLYMPACKER);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // Cigicigi Crypter
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CIGICIGICRYPTER)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CIGICIGICRYPTER);
 
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
