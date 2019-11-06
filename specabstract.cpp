@@ -357,9 +357,14 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 "TEST"},                0x608b5ca5f,    0x27f8d01f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 "TEST"},                0x21bae50da1,   0xab934456},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WINGSCRYPT,                   "1.0",              "TEST"},                0x216906261a,   0x86d73370},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTRROADS,                  "1.0",              "TEST"},                0x216906261a,   0x86d73370},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WHITELLCRYPT,                 "",                 "TEST"},                0x27e360241a,   0x69740a38},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ZELDACRYPT,                   "1.0",              "TEST"},                0x27e360241a,   0xffacb503},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BIOHAZARDCRYPTER,             "",                 "TEST"},                0x341d510008,   0x4c51ceec},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTABLESEDUCATION,          "1.0",              "TEST"},                0x379caa9586,   0x497a33ab},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTIC,                      "2.1",              "TEST"},                0x2551095bcf,   0x28ee87cc},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTOZ,                      "3",                "TEST"},                0x32a797d70b,   0x9ce9bc9d},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DIRTYCRYPTOR,                 "",                 "TEST"},                0x2d5043f921,   0x1278f5f4},
     // Delphi cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ASSCRYPTER,                   "1.0",              "TEST"},                0x12d94ca858,   0x36fb88c9},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AASE,                         "1.0",              "TEST"},                0xc06abc0fa,    0x77035a90},
@@ -871,9 +876,13 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CRINKLER:                              sResult=QString("Crinkler");                                    break;
         case RECORD_NAME_CRUNCH:                                sResult=QString("Crunch");                                      break;
         case RECORD_NAME_CRYEXE:                                sResult=QString("CryEXE");                                      break;
+        case RECORD_NAME_CRYPTABLESEDUCATION:                   sResult=QString("Cryptable Seduction");                         break;
         case RECORD_NAME_CRYPTER:                               sResult=QString("Crypter");                                     break;
+        case RECORD_NAME_CRYPTIC:                               sResult=QString("Cryptic");                                     break;
         case RECORD_NAME_CRYPTOCRACKPEPROTECTOR:                sResult=QString("CrypToCrack Pe Protector");                    break;
         case RECORD_NAME_CRYPTOOBFUSCATORFORNET:                sResult=QString("Crypto Obfuscator For .Net");                  break;
+        case RECORD_NAME_CRYPTOZ:                               sResult=QString("CRyptOZ");                                     break;
+        case RECORD_NAME_CRYPTRROADS:                           sResult=QString("Crypt R.roads");                               break;
         case RECORD_NAME_CVTOMF:                                sResult=QString("CVTOMF");                                      break;
         case RECORD_NAME_CVTRES:                                sResult=QString("CVTRES");                                      break;
         case RECORD_NAME_CWSDPMI:                               sResult=QString("CWSDPMI");                                     break;
@@ -883,6 +892,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DEPACK:                                sResult=QString("dePack");                                      break;
         case RECORD_NAME_DEX:                                   sResult=QString("DEX");                                         break;
         case RECORD_NAME_DJVU:                                  sResult=QString("DjVu");                                        break;
+        case RECORD_NAME_DIRTYCRYPTOR:                          sResult=QString("DirTy Cryptor");                               break;
         case RECORD_NAME_DMD32D:                                sResult=QString("DMD32 D");                                     break;
         case RECORD_NAME_DNGUARD:                               sResult=QString("DNGuard");                                     break;
         case RECORD_NAME_DOS16M:                                sResult=QString("DOS/16M");                                     break;
@@ -3992,6 +4002,14 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
+                // Crypt R.Roads
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTRROADS)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTRROADS);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
                 // Whitell Crypt
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_WHITELLCRYPT)) // TODO more checks!
                 {
@@ -4015,6 +4033,39 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
+
+                // Cryptable seducation
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTABLESEDUCATION)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTABLESEDUCATION);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // Cryptic
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTIC)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTIC);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // CRyptOZ
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTOZ)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTOZ);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // Dirty Cryptor
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_DIRTYCRYPTOR)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_DIRTYCRYPTOR);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
                 // VB end
 
                 // Delphi Cryptors
