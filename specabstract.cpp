@@ -82,6 +82,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_IMAGE,            SpecAbstract::RECORD_NAME_WINDOWSICON,                  "",                 ""},                    "00000100"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_IMAGE,            SpecAbstract::RECORD_NAME_WINDOWSBITMAP,                "",                 ""},                    "'BM'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_DATABASE,         SpecAbstract::RECORD_NAME_MICROSOFTACCESS,              "",                 ""},                    "00010000'Standard Jet DB'00"},
+    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_DATABASE,         SpecAbstract::RECORD_NAME_MICROSOFTACCESS,              "2010",             ""},                    "00010000'Standard ACE DB'00"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP,    "",                 ""},                    "'ITSF'03000000"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_AUTOIT,                       "3.X",              "Compiled script"},     "A3484BBE986C4AA9"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_RTF,                          "",                 ""},                    "'{'5C'rtf'"},
@@ -365,12 +366,17 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTIC,                      "2.1",              "TEST"},                0x2551095bcf,   0x28ee87cc},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTOZ,                      "3",                "TEST"},                0x32a797d70b,   0x9ce9bc9d},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DIRTYCRYPTOR,                 "",                 "TEST"},                0x2d5043f921,   0x1278f5f4},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FAKUSCRYPTOR,                 "1.4",              "TEST"},                0x1c5896cc05,   0x660aa806},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FASTFILECRYPT,                "1.6",              "TEST"},                0x54fe70e1c,    0x12125e9a},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FILESHIELD,                   "1.0",              "TEST"},                0x369ad56c1b,   0x907d472a},
     // Delphi cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ASSCRYPTER,                   "1.0",              "TEST"},                0x12d94ca858,   0x36fb88c9},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AASE,                         "1.0",              "TEST"},                0xc06abc0fa,    0x77035a90},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ANSKYAPOLYMORPHICPACKER,      "1.3",              "TEST"},                0x120bc5fc6c,   0x50822fc0},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ANSLYMPACKER,                 "",                 "TEST"},                0xaf2e74867b,   0x51a4c42b},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CIGICIGICRYPTER,              "1.0",              "TEST"},                0x12998dbdd9,   0xf75643a6},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FEARZCRYPTER,                 "1.0",              "TEST"},                0x18fc31e7a1,   0xba67afd7},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FEARZPACKER,                  "0.3",              "TEST"},                0xbeb44c9f3,    0xf7a7ee23},
     // Armadillo
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2973050b33,   0x1a0c885c},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2f2f1df1d1,   0x8623cf54},
@@ -924,7 +930,12 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_EXPRESSOR:                             sResult=QString("eXPressor");                                   break;
         case RECORD_NAME_EZIP:                                  sResult=QString("EZIP");                                        break;
         case RECORD_NAME_FAKESIGNATURE:                         sResult=QString("Fake signature");                              break;
+        case RECORD_NAME_FAKUSCRYPTOR:                          sResult=QString("Fakus Cryptor");                               break;
         case RECORD_NAME_FASM:                                  sResult=QString("FASM");                                        break;
+        case RECORD_NAME_FASTFILECRYPT:                         sResult=QString("Fast File Crypt");                             break;
+        case RECORD_NAME_FEARZCRYPTER:                          sResult=QString("fEaRz Crypter");                               break;
+        case RECORD_NAME_FEARZPACKER:                           sResult=QString("fEaRz Packer");                                break;
+        case RECORD_NAME_FILESHIELD:                            sResult=QString("FileShield");                                   break;
         case RECORD_NAME_FISHNET:                               sResult=QString("FISH .NET");                                   break;
         case RECORD_NAME_FISHPEPACKER:                          sResult=QString("Fish PE Packer");                              break;
         case RECORD_NAME_FISHPESHIELD:                          sResult=QString("Fish PE Shield");                              break;
@@ -4066,6 +4077,30 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
+                // Fakus Cryptor
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FAKUSCRYPTOR)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FAKUSCRYPTOR);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // Fast file Crypt
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FASTFILECRYPT)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FASTFILECRYPT);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // FileShield
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FILESHIELD)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FILESHIELD);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
                 // VB end
 
                 // Delphi Cryptors
@@ -4111,6 +4146,22 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CIGICIGICRYPTER)) // TODO more checks!
                 {
                     _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CIGICIGICRYPTER);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // fEaRz Crypter
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FEARZCRYPTER)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FEARZCRYPTER);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // fEaRz Packer
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FEARZPACKER)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FEARZPACKER);
 
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
@@ -8505,11 +8556,21 @@ void SpecAbstract::Binary_handle_Databases(QIODevice *pDevice, bool bIsImage, Sp
         //        ss.sVersion=QString("%1.%2").arg(QBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(32*2,4))).arg(QBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(34*2,4)));
         pBinaryInfo->mapResultDatabases.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
-    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTACCESS))&&(pBinaryInfo->basic_info.nSize>=32))
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTACCESS))&&(pBinaryInfo->basic_info.nSize>=128))
     {
         // Microsoft Access Database
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MICROSOFTACCESS);
-        //        ss.sVersion=QString("%1.%2").arg(QBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(32*2,4))).arg(QBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(34*2,4)));
+
+        quint32 nVersion=binary.read_int32(0x14);
+
+        switch(nVersion)
+        {
+            case 0x0000: ss.sVersion="JET3"; break;// TODO
+            case 0x0001: ss.sVersion="JET4"; break;// TODO
+            case 0x0002: ss.sVersion="2007"; break;
+            case 0x0103: ss.sVersion="2010"; break;
+        }
+
         pBinaryInfo->mapResultDatabases.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 }
