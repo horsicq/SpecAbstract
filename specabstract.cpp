@@ -457,12 +457,12 @@ SpecAbstract::MSRICH_RECORD _PE_rich_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALBASIC,                  "5.00",             "Native"},              0x0007,         (quint32)-1},   // VB 5.0 native code
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "11.00",            "C/C++"},               0x0008,         (quint32)-1},   // VC++ 5.0 C/C++
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALBASIC,                  "6.00",             "Native"},              0x0009,         (quint32)-1},   // VB 6.0 native code
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.00",            "C"},                   0x000A,         (quint32)-1},   // VC++ 6.0 C
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.00",            "C++"},                 0x000B,         (quint32)-1},   // VC++ 6.0 C++
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "6.00",             ""},                    0x000C,         (quint32)-1},   // ALIASOBJ.EXE (CRT Tool that builds OLDNAMES.LIB)
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "6.00",             ""},                    0x000D,         (quint32)-1},   // VB 6.0 generated object
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.13",             ""},                    0x000E,         (quint32)-1},   // MASM 6.13
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "7.01",             ""},                    0x000F,         (quint32)-1},   // MASM 7.01
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.00",            "C"},                   0x000a,         (quint32)-1},   // VC++ 6.0 C
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.00",            "C++"},                 0x000b,         (quint32)-1},   // VC++ 6.0 C++
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "6.00",             ""},                    0x000c,         (quint32)-1},   // ALIASOBJ.EXE (CRT Tool that builds OLDNAMES.LIB)
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "6.00",             ""},                    0x000d,         (quint32)-1},   // VB 6.0 generated object
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.13",             ""},                    0x000e,         (quint32)-1},   // MASM 6.13
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "7.01",             ""},                    0x000f,         (quint32)-1},   // MASM 7.01
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "5.11",             ""},                    0x0010,         (quint32)-1},   // LINK 5.11
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "5.11",             ""},                    0x0011,         (quint32)-1},   // LINK 5.11 OMF to COFF conversion
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.14",             "MMX2 support"},        0x0012,         (quint32)-1},   // MASM 6.14 (MMX2 support)
@@ -473,10 +473,54 @@ SpecAbstract::MSRICH_RECORD _PE_rich_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.00",            "C/book"},              0x0017,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.00",            "C++/book"},            0x0018,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "7.00",             ""},                    0x0019,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "7.00",             ""},                    0x001A,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALBASIC,                  "7.00",             "Native"},              0x001B,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "13.00",            "C"},                   0x001C,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "13.00",            "C++"},                 0x001D,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "7.00",             ""},                    0x001a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALBASIC,                  "7.00",             "Native"},              0x001b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "13.00",            "C"},                   0x001c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "13.00",            "C++"},                 0x001d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.10",             ""},                    0x001e,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.10",             ""},                    0x001f,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.01",             ""},                    0x0020,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.01",             ""},                    0x0021,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALBASIC,                  "6.00",             "Native"},              0x0022,         (quint32)-1}, // 6.10 ???
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.10",            "C"},                   0x0023,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.10",            "C++"},                 0x0024,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.20",             ""},                    0x0025,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.20",             ""},                    0x0026,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "7.00",             ""},                    0x0027,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.21",             ""},                    0x0028,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.21",             ""},                    0x0029,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.15",             ""},                    0x002a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "13.00",            "LTCG/C"},              0x002b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "13.00",            "LTCG/C++"},            0x002c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.20",             ""},                    0x002d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_ILASM,                        "1.00",             ""},                    0x002e,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALBASIC,                  "6.00",             "Native"},              0x002f,         (quint32)-1}, // 6.20 ???
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.20",            "C"},                   0x0030,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.20",            "C++"},                 0x0031,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.20",            "C/std"},               0x0032,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.20",            "C++/std"},             0x0033,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.20",            "C/book"},              0x0034,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.20",            "C++/book"},            0x0035,         (quint32)-1},
+
+
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "14.00",            ""},                    0x00fd,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "19.00",            ""},                    0x00fe,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "14.00",            ""},                    0x00ff,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "14.00",            ""},                    0x0100,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "14.00",            ""},                    0x0101,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "14.00",            ""},                    0x0102,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "14.00",            ""},                    0x0103,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "19.00",            "C"},                   0x0104,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "19.00",            "C++"},                 0x0105,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "19.00",            "CVTCIL/C"},            0x0106,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "19.00",            "CVTCIL/CPP"},          0x0107,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "19.00",            "LTCG/C"},              0x0108,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "19.00",            "LTCG/C++"},            0x0109,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "19.00",            "LTCG/MSIL"},           0x010a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "19.00",            "POGO_I_C"},            0x010b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "19.00",            "POGO_I_CPP"},          0x010c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "19.00",            "POGO_O_C"},            0x010d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "19.00",            "POGO_O_CPP"},          0x010e,         (quint32)-1},
 };
 
 // .snaker ??? tool
@@ -846,6 +890,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_AVERCRYPTOR:                           sResult=QString("AverCryptor");                                 break;
         case RECORD_NAME_AZPROTECT:                             sResult=QString("AZProtect");                                   break;
         case RECORD_NAME_BABELNET:                              sResult=QString("Babel .NET");                                  break;
+        case RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR:           sResult=QString("Backdoor PE Compress Protector");              break;
         case RECORD_NAME_BAMBAM:                                sResult=QString("bambam");                                      break;
         case RECORD_NAME_BEROEXEPACKER:                         sResult=QString("BeRoEXEPacker");                               break;
         case RECORD_NAME_BIOHAZARDCRYPTER:                      sResult=QString("Biohazard Crypter");                           break;
@@ -890,6 +935,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CRYPTOZ:                               sResult=QString("CRyptOZ");                                     break;
         case RECORD_NAME_CRYPTRROADS:                           sResult=QString("Crypt R.roads");                               break;
         case RECORD_NAME_CVTOMF:                                sResult=QString("CVTOMF");                                      break;
+        case RECORD_NAME_CVTPGD:                                sResult=QString("Cvtpgd");                                      break;
         case RECORD_NAME_CVTRES:                                sResult=QString("CVTRES");                                      break;
         case RECORD_NAME_CWSDPMI:                               sResult=QString("CWSDPMI");                                     break;
         case RECORD_NAME_CYGWIN:                                sResult=QString("Cygwin");                                      break;
@@ -948,7 +994,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_GENERIC:                               sResult=QString("Generic");                                     break;
         case RECORD_NAME_GENERICLINKER:                         sResult=QString("Generic Linker");                              break;
         case RECORD_NAME_GENTEEINSTALLER:                       sResult=QString("Gentee Installer");                            break;
+        case RECORD_NAME_GHAZZACRYPTER:                         sResult=QString("GhaZza CryPter");                              break; // st
         case RECORD_NAME_GHOSTINSTALLER:                        sResult=QString("Ghost Installer");                             break;
+        case RECORD_NAME_GKRIPTO:                               sResult=QString("GKripto");                                     break;
         case RECORD_NAME_GNULINKER:                             sResult=QString("GNU ld");                                      break;
         case RECORD_NAME_GOASM:                                 sResult=QString("GoAsm");                                       break;
         case RECORD_NAME_GOLIATHNET:                            sResult=QString("Goliath .NET");                                break;
@@ -957,13 +1005,20 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_GPINSTALL:                             sResult=QString("GP-Install");                                  break;
         case RECORD_NAME_GUARDIANSTEALTH:                       sResult=QString("Guardian Stealth");                            break;
         case RECORD_NAME_GZIP:                                  sResult=QString("GZIP");                                        break;
+        case RECORD_NAME_H4CKY0UORGCRYPTER:                     sResult=QString("H4ck-y0u.org Crypter");                        break;
+        case RECORD_NAME_HACCREWCRYPTER:                        sResult=QString("HAC Crew Crypter");                            break;
+        case RECORD_NAME_HALVCRYPTER:                           sResult=QString("HaLV Crypter");                                break;
         case RECORD_NAME_HIDEPE:                                sResult=QString("HidePE");                                      break;
         case RECORD_NAME_HMIMYSPACKER:                          sResult=QString("Hmimys Packer");                               break;
         case RECORD_NAME_HMIMYSPROTECTOR:                       sResult=QString("Hmimys's Protector");                          break;
+        case RECORD_NAME_HOUNDHACKCRYPTER:                      sResult=QString("Hound Hack Crypter");                          break;
         case RECORD_NAME_HTML:                                  sResult=QString("HTML");                                        break;
         case RECORD_NAME_HXS:                                   sResult=QString("HXS");                                         break;
         case RECORD_NAME_IBMPCPASCAL:                           sResult=QString("IBM PC Pascal");                               break;
+        case RECORD_NAME_ICRYPT:                                sResult=QString("ICrypt");                                      break;
+        case RECORD_NAME_ILASM:                                 sResult=QString("ILAsm");                                       break;
         case RECORD_NAME_IMPORT:                                sResult=QString("Import");                                      break;
+        case RECORD_NAME_INFCRYPTOR:                            sResult=QString("INF Cryptor");                                 break;
         case RECORD_NAME_INNOSETUP:                             sResult=QString("Inno Setup");                                  break;
         case RECORD_NAME_INSTALLANYWHERE:                       sResult=QString("InstallAnywhere");                             break;
         case RECORD_NAME_INSTALLSHIELD:                         sResult=QString("InstallShield");                               break;
@@ -975,8 +1030,12 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_JPEG:                                  sResult=QString("JPEG");                                        break;
         case RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER:         sResult=QString("KaOs PE-DLL eXecutable Undetecter");           break;
         case RECORD_NAME_KBYS:                                  sResult=QString("KByS");                                        break;
+        case RECORD_NAME_KGBCRYPTER:                            sResult=QString("KGB Crypter");                                 break;
+        case RECORD_NAME_KIAMSCRYPTOR:                          sResult=QString("KiAms Cryptor");                               break;
         case RECORD_NAME_KKRUNCHY:                              sResult=QString("kkrunchy");                                    break;
+        case RECORD_NAME_KRATOSCRYPTER:                         sResult=QString("Kratos Crypter");                              break;
         case RECORD_NAME_KRYPTON:                               sResult=QString("Krypton");                                     break;
+        case RECORD_NAME_KUR0KX2TO:                             sResult=QString("Kur0k.X2.to");                                 break;
         case RECORD_NAME_LARP64:                                sResult=QString("lARP64");                                      break;
         case RECORD_NAME_LAYHEYFORTRAN90:                       sResult=QString("Lahey Fortran 90");                            break;
         case RECORD_NAME_LAZARUS:                               sResult=QString("Lazarus");                                     break;
@@ -984,10 +1043,14 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LCCWIN:                                sResult=QString("lcc-win");                                     break;
         case RECORD_NAME_LHA:                                   sResult=QString("LHA");                                         break;
         case RECORD_NAME_LHASSFX:                               sResult=QString("LHA's SFX");                                   break;
+        case RECORD_NAME_LIGHTNINGCRYPTERPRIVATE:               sResult=QString("Lightning Crypter Private");                   break;
+        case RECORD_NAME_LIGHTNINGCRYPTERSCANTIME:              sResult=QString("Lightning Crypter ScanTime");                  break;
         case RECORD_NAME_LSCRYPRT:                              sResult=QString("LSCRYPT");                                     break;
         case RECORD_NAME_LUACOMPILED:                           sResult=QString("Lua compiled");                                break;
+        case RECORD_NAME_LUCYPHER:                              sResult=QString("LuCypher");                                    break;
         case RECORD_NAME_LZEXE:                                 sResult=QString("LZEXE");                                       break;
         case RECORD_NAME_MACROBJECT:                            sResult=QString("Macrobject");                                  break;
+        case RECORD_NAME_MALPACKER:                             sResult=QString("Mal Packer");                                  break;
         case RECORD_NAME_MASKPE:                                sResult=QString("MaskPE");                                      break;
         case RECORD_NAME_MASM:                                  sResult=QString("MASM");                                        break;
         case RECORD_NAME_MASM32:                                sResult=QString("MASM32");                                      break;
@@ -1007,20 +1070,28 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MICROSOFTVISIO:                        sResult=QString("Microsoft Visio");                             break;
         case RECORD_NAME_MICROSOFTVISUALSTUDIO:                 sResult=QString("Microsoft Visual Studio");                     break;
         case RECORD_NAME_MINGW:                                 sResult=QString("MinGW");                                       break;
+        case RECORD_NAME_MINKE:                                 sResult=QString("Minke");                                       break;
         case RECORD_NAME_MKFPACK:                               sResult=QString("MKFPack");                                     break;
         case RECORD_NAME_MOLEBOX:                               sResult=QString("MoleBox");                                     break;
         case RECORD_NAME_MOLEBOXULTRA:                          sResult=QString("MoleBox Ultra");                               break;
+        case RECORD_NAME_MONEYCRYPTER:                          sResult=QString("Money Crypter");                               break;
         case RECORD_NAME_MORPHNAH:                              sResult=QString("Morphnah");                                    break;
+        case RECORD_NAME_MORTALTEAMCRYPTER:                     sResult=QString("Mortal Team Crypter");                         break;
+        case RECORD_NAME_MORUKCREWCRYPTERPRIVATE:               sResult=QString("MoruK creW Crypter Private");                  break;
         case RECORD_NAME_MPACK:                                 sResult=QString("mPack");                                       break;
         case RECORD_NAME_MPRESS:                                sResult=QString("MPRESS");                                      break;
+        case RECORD_NAME_MRUNDECTETABLE:                        sResult=QString("Mr Undectetable");                             break;
         case RECORD_NAME_MSYS:                                  sResult=QString("Msys");                                        break;
         case RECORD_NAME_MSYS2:                                 sResult=QString("MSYS2");                                       break;
         case RECORD_NAME_MZ0OPE:                                sResult=QString("MZ0oPE");                                      break;
         case RECORD_NAME_NAKEDPACKER:                           sResult=QString("NakedPacker");                                 break;
         case RECORD_NAME_NEOLITE:                               sResult=QString("NeoLite");                                     break;
+        case RECORD_NAME_NIDHOGG:                               sResult=QString("Nidhogg");                                     break;
+        case RECORD_NAME_NME:                                   sResult=QString("NME");                                         break;
         case RECORD_NAME_NOOBYPROTECT:                          sResult=QString("NoobyProtect");                                break;
         case RECORD_NAME_NORTHSTARPESHRINKER:                   sResult=QString("North Star PE Shrinker");                      break;
         case RECORD_NAME_NOSTUBLINKER:                          sResult=QString("NOSTUBLINKER");                                break;
+        case RECORD_NAME_NOXCRYPT:                              sResult=QString("noX Crypt");                                   break;
         case RECORD_NAME_NPACK:                                 sResult=QString("nPack");                                       break;
         case RECORD_NAME_NSIS:                                  sResult=QString("Nullsoft Scriptable Install System");          break;
         case RECORD_NAME_NSPACK:                                sResult=QString("NsPack");                                      break;
@@ -1029,10 +1100,14 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_OBJECTPASCAL:                          sResult=QString("Object Pascal");                               break;
         case RECORD_NAME_OBSIDIUM:                              sResult=QString("Obsidium");                                    break;
         case RECORD_NAME_OPENDOCUMENT:                          sResult=QString("Open Document");                               break;
+        case RECORD_NAME_OPENSOURCECODECRYPTER:                 sResult=QString("Open Source Code Crypter");                    break;
         case RECORD_NAME_OPERA:                                 sResult=QString("Opera");                                       break;
         case RECORD_NAME_ORIEN:                                 sResult=QString("ORiEN");                                       break;
+        case RECORD_NAME_OSCCRYPTER:                            sResult=QString("OSC-Crypter");                                 break;
+        case RECORD_NAME_P0KESCRAMBLER:                         sResult=QString("p0ke Scrambler");                              break;
         case RECORD_NAME_PACKMAN:                               sResult=QString("Packman");                                     break;
         case RECORD_NAME_PACKWIN:                               sResult=QString("PACKWIN");                                     break;
+        case RECORD_NAME_PANDORA:                               sResult=QString("Pandora");                                     break;
         case RECORD_NAME_PCGUARD:                               sResult=QString("PC Guard");                                    break;
         case RECORD_NAME_PDB:                                   sResult=QString("PDB");                                         break;
         case RECORD_NAME_PDBFILELINK:                           sResult=QString("PDB file link");                               break;
@@ -1049,23 +1124,29 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PESPIN:                                sResult=QString("PESpin");                                      break;
         case RECORD_NAME_PETITE:                                sResult=QString("Petite");                                      break;
         case RECORD_NAME_PEX:                                   sResult=QString("PeX");                                         break;
+        case RECORD_NAME_PFECX:                                 sResult=QString("PFE CX");                                      break;
         case RECORD_NAME_PHOENIXPROTECTOR:                      sResult=QString("Phoenix Protector");                           break;
         case RECORD_NAME_PHP:                                   sResult=QString("PHP");                                         break;
+        case RECORD_NAME_PICRYPTOR:                             sResult=QString("PI Cryptor");                                  break;
         case RECORD_NAME_PKLITE:                                sResult=QString("PKLITE");                                      break;
         case RECORD_NAME_PKLITE32:                              sResult=QString("PKLITE32");                                    break;
         case RECORD_NAME_PLAIN:                                 sResult=QString("Plain");                                       break;
         case RECORD_NAME_PMODEW:                                sResult=QString("PMODE/W");                                     break;
         case RECORD_NAME_PNG:                                   sResult=QString("PNG");                                         break;
+        case RECORD_NAME_POKECRYPTER:                           sResult=QString("Poke Crypter");                                break;
         case RECORD_NAME_POLYCRYPTPE:                           sResult=QString("PolyCrypt PE");                                break;
         case RECORD_NAME_POWERBASIC:                            sResult=QString("PowerBASIC");                                  break;
         case RECORD_NAME_PRIVATEEXEPROTECTOR:                   sResult=QString("Private EXE Protector");                       break;
+        case RECORD_NAME_PUBCRYPTER:                            sResult=QString("Pub Crypter");                                 break;
         case RECORD_NAME_PUREBASIC:                             sResult=QString("PureBasic");                                   break;
+        case RECORD_NAME_PUSSYCRYPTER:                          sResult=QString("PussyCrypter");                                break;
         case RECORD_NAME_PYTHON:                                sResult=QString("Python");                                      break;
         case RECORD_NAME_QT:                                    sResult=QString("Qt");                                          break;
         case RECORD_NAME_QTINSTALLER:                           sResult=QString("Qt Installer");                                break;
         case RECORD_NAME_QUICKPACKNT:                           sResult=QString("QuickPack NT");                                break;
         case RECORD_NAME_RAR:                                   sResult=QString("RAR");                                         break;
         case RECORD_NAME_RCRYPTOR:                              sResult=QString("RCryptor(Russian Cryptor)");                   break;
+        case RECORD_NAME_RDGTEJONCRYPTER:                       sResult=QString("RDG Tejon Crypter");                           break;
         case RECORD_NAME_RENETPACK:                             sResult=QString("ReNET-pack");                                  break;
         case RECORD_NAME_RESOURCE:                              sResult=QString("Resource");                                    break;
         case RECORD_NAME_REVPROT:                               sResult=QString("REVProt");                                     break;
@@ -1080,30 +1161,42 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SETUPFACTORY:                          sResult=QString("Setup Factory");                               break;
         case RECORD_NAME_SHELL:                                 sResult=QString("Shell");                                       break;
         case RECORD_NAME_SIMBIOZ:                               sResult=QString("SimbiOZ");                                     break;
+        case RECORD_NAME_SIMCRYPTER:                            sResult=QString("Sim Crypter");                                 break;
+        case RECORD_NAME_SIMPLECRYPTER:                         sResult=QString("Simple Crypter");                              break;
         case RECORD_NAME_SIMPLEPACK:                            sResult=QString("Simple Pack");                                 break;
         case RECORD_NAME_SIXXPACK:                              sResult=QString("Sixxpack");                                    break;
         case RECORD_NAME_SKATER:                                sResult=QString("Skater");                                      break;
         case RECORD_NAME_SMARTASSEMBLY:                         sResult=QString("Smart Assembly");                              break;
         case RECORD_NAME_SMARTINSTALLMAKER:                     sResult=QString("Smart Install Maker");                         break;
+        case RECORD_NAME_SMOKESCREENCRYPTER:                    sResult=QString("SmokeScreen Crypter");                         break;
+        case RECORD_NAME_SNOOPCRYPT:                            sResult=QString("Snoop Crypt");                                 break;
         case RECORD_NAME_SOFTWARECOMPRESS:                      sResult=QString("Software Compress");                           break;
         case RECORD_NAME_SOFTWAREZATOR:                         sResult=QString("SoftwareZator");                               break;
         case RECORD_NAME_SPICESNET:                             sResult=QString("Spices.Net");                                  break;
         case RECORD_NAME_SQUEEZSFX:                             sResult=QString("Squeez Self Extractor");                       break;
         case RECORD_NAME_STARFORCE:                             sResult=QString("StarForce");                                   break;
+        case RECORD_NAME_STASFODIDOCRYPTOR:                     sResult=QString("StasFodidoCryptor");                           break;
         case RECORD_NAME_SVKPROTECTOR:                          sResult=QString("SVK Protector");                               break;
         case RECORD_NAME_TARMAINSTALLER:                        sResult=QString("Tarma Installer");                             break;
         case RECORD_NAME_TELOCK:                                sResult=QString("tElock");                                      break;
+        case RECORD_NAME_TGRCRYPTER:                            sResult=QString("TGR Crypter");                                 break;
         case RECORD_NAME_THEBESTCRYPTORBYFSK:                   sResult=QString("The Best Cryptor [by FsK]");                   break;
         case RECORD_NAME_THEMIDAWINLICENSE:                     sResult=QString("Themida/Winlicense");                          break;
+        case RECORD_NAME_THEZONECRYPTER:                        sResult=QString("The Zone Crypter");                            break;
         case RECORD_NAME_TOTALCOMMANDERINSTALLER:               sResult=QString("Total Commander Installer");                   break;
         case RECORD_NAME_TPPPACK:                               sResult=QString("TTP Pack");                                    break;
+        case RECORD_NAME_TSTCRYPTER:                            sResult=QString("TsT Crypter");                                 break;
         case RECORD_NAME_TTPROTECT:                             sResult=QString("TTprotect");                                   break;
         case RECORD_NAME_TURBOC:                                sResult=QString("Turbo C");                                     break;
         case RECORD_NAME_TURBOCPP:                              sResult=QString("Turbo C++");                                   break;
         case RECORD_NAME_TURBOLINKER:                           sResult=QString("Turbo linker");                                break;
+        case RECORD_NAME_TURKISHCYBERSIGNATURE:                 sResult=QString("Turkish Cyber Signature");                     break;
+        case RECORD_NAME_TURKOJANCRYPTER:                       sResult=QString("Turkojan Crypter");                            break;
+        case RECORD_NAME_UNDERGROUNDCRYPTER:                    sResult=QString("UnderGround Crypter");                         break;
+        case RECORD_NAME_UNDOCRYPTER:                           sResult=QString("UnDo Crypter");                                break;
         case RECORD_NAME_UNICODE:                               sResult=QString("Unicode");                                     break;
         case RECORD_NAME_UNILINK:                               sResult=QString("UniLink");                                     break;
-        case RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR:           sResult=QString("Backdoor PE Compress Protector");              break;
+        case RECORD_NAME_UNKOWNCRYPTER:                         sResult=QString("unkOwn Crypter");                              break;
         case RECORD_NAME_UNK_UPXLIKE:                           sResult=QString("(Unknown)UPX-like");                           break;
         case RECORD_NAME_UNOPIX:                                sResult=QString("Unopix");                                      break;
         case RECORD_NAME_UPX:                                   sResult=QString("UPX");                                         break;
@@ -1131,6 +1224,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WHITELLCRYPT:                          sResult=QString("Whitell Crypt");                               break;
         case RECORD_NAME_WINACE:                                sResult=QString("WinACE");                                      break;
         case RECORD_NAME_WINAUTH:                               sResult=QString("Windows Authenticode");                        break;
+        case RECORD_NAME_WINDOFCRYPT:                           sResult=QString("WindOfCrypt");                                 break;
         case RECORD_NAME_WINDOWSBITMAP:                         sResult=QString("Windows Bitmap");                              break;
         case RECORD_NAME_WINDOWSICON:                           sResult=QString("Windows Icon");                                break;
         case RECORD_NAME_WINDOWSINSTALLER:                      sResult=QString("Windows Installer");                           break;
@@ -1141,6 +1235,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WINZIP:                                sResult=QString("WinZip");                                      break;
         case RECORD_NAME_WISE:                                  sResult=QString("Wise");                                        break;
         case RECORD_NAME_WIXTOOLSET:                            sResult=QString("WiX Toolset");                                 break;
+        case RECORD_NAME_WLCRYPT:                               sResult=QString("WL-Crypt");                                    break;
+        case RECORD_NAME_WLGROUPCRYPTER:                        sResult=QString("WL-Group Crypter");                            break;
+        case RECORD_NAME_WOUTHRSEXECRYPTER:                     sResult=QString("WouThrs EXE Crypter");                         break;
         case RECORD_NAME_WWPACK:                                sResult=QString("WWPack");                                      break;
         case RECORD_NAME_WWPACK32:                              sResult=QString("WWPack32");                                    break;
         case RECORD_NAME_WXWIDGETS:                             sResult=QString("wxWidgets");                                   break;
@@ -1836,6 +1933,9 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_DongleProtection(pDevice,pOptions->bIsImage,&result);
 //        PE_handle_AnslymPacker(pDevice,pOptions->bIsImage,&result);
         PE_handle_NeoLite(pDevice,pOptions->bIsImage,&result);
+
+        PE_handle_VisualBasicCryptors(pDevice,pOptions->bIsImage,&result);
+        PE_handle_DelphiCryptors(pDevice,pOptions->bIsImage,&result);
 
         PE_handle_PETools(pDevice,pOptions->bIsImage,&result);
 
@@ -3987,187 +4087,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
-                // VB start
-
-                // AR Crypt
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ARCRYPT)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ARCRYPT);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // AGAINNATIVITYCRYPTER
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_AGAINNATIVITYCRYPTER)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_AGAINNATIVITYCRYPTER);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // WingsCrypt
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_WINGSCRYPT)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_WINGSCRYPT);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // Crypt R.Roads
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTRROADS)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTRROADS);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // Whitell Crypt
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_WHITELLCRYPT)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_WHITELLCRYPT);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // ZeldaCrypt
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ZELDACRYPT)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ZELDACRYPT);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // Biohazard Crypter
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_BIOHAZARDCRYPTER)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_BIOHAZARDCRYPTER);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // Cryptable seducation
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTABLESEDUCATION)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTABLESEDUCATION);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // Cryptic
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTIC)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTIC);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // CRyptOZ
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTOZ)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTOZ);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // Dirty Cryptor
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_DIRTYCRYPTOR)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_DIRTYCRYPTOR);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // Fakus Cryptor
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FAKUSCRYPTOR)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FAKUSCRYPTOR);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // Fast file Crypt
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FASTFILECRYPT)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FASTFILECRYPT);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // FileShield
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FILESHIELD)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FILESHIELD);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // VB end
-
-                // Delphi Cryptors
-
-                // Ass Crypter
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ASSCRYPTER)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ASSCRYPTER);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // Aase
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_AASE)) // TODO more checks!
-                {
-//                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_AASE))
-//                    {
-//                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_AASE);
-//                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-//                    }
-
-                    SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_AASE);
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // Anskya Polymorphic Packer
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ANSKYAPOLYMORPHICPACKER)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ANSKYAPOLYMORPHICPACKER);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // AnslymPacker
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ANSLYMPACKER)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ANSLYMPACKER);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // Cigicigi Crypter
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CIGICIGICRYPTER)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CIGICIGICRYPTER);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // fEaRz Crypter
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FEARZCRYPTER)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FEARZCRYPTER);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // fEaRz Packer
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FEARZPACKER)) // TODO more checks!
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FEARZPACKER);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-
-                // Delphi Cryptors end
-
                 // VCasm-Protector
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_VCASMPROTECTOR))
                 {
@@ -4522,7 +4441,7 @@ void SpecAbstract::PE_handle_TTProtect(QIODevice *pDevice, bool bIsImage, SpecAb
         {
             if(pPEInfo->listImportPositionHashes.count()>=1)
             {
-                if(pPEInfo->listImportPositionHashes.at(0)==0xf3f52749)
+                if(pPEInfo->listImportPositionHashes.at(0)==0xf3f52749) // TODO !!!
                 {
                     if(pPEInfo->nEntryPointSection>0)
                     {
@@ -4581,6 +4500,7 @@ void SpecAbstract::PE_handle_CExe(QIODevice *pDevice, bool bIsImage, SpecAbstrac
     {
         if(!pPEInfo->cliInfo.bInit)
         {
+            // TODO !!!
             if( ((pPEInfo->nImportHash64==0xcda93f5a0)&&(pPEInfo->nImportHash32==0x6ad5f3a1))||
                 ((pPEInfo->nImportHash64==0xd97446c35)&&(pPEInfo->nImportHash32==0x95065b94)))
             {
@@ -4604,6 +4524,7 @@ void SpecAbstract::PE_handle_tElock(QIODevice *pDevice, bool bIsImage, SpecAbstr
                 bool bKernel32=false;
                 bool bUser32=false;
 
+                // TODO !!!
                 if(pPEInfo->listImports.at(0).sName=="kernel32.dll")
                 {
                     if(pPEInfo->listImports.at(0).listPositions.count()==1)
@@ -4892,6 +4813,7 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
                 bool bUser32=false;
                 QString sVersion;
 
+                // TODO !!!
                 for(int i=0; i<pPEInfo->listImports.count(); i++)
                 {
                     if(pPEInfo->listImports.at(i).sName.toUpper()=="USER32.DLL")
@@ -7944,6 +7866,195 @@ void SpecAbstract::PE_handle_NeoLite(QIODevice *pDevice, bool bIsImage, SpecAbst
                     }
                 }
             }
+        }
+    }
+}
+
+void SpecAbstract::PE_handle_VisualBasicCryptors(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
+    {
+        // AR Crypt
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ARCRYPT)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ARCRYPT);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // AGAINNATIVITYCRYPTER
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_AGAINNATIVITYCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_AGAINNATIVITYCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // WingsCrypt
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_WINGSCRYPT)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_WINGSCRYPT);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // Crypt R.Roads
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTRROADS)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTRROADS);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // Whitell Crypt
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_WHITELLCRYPT)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_WHITELLCRYPT);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // ZeldaCrypt
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ZELDACRYPT)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ZELDACRYPT);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // Biohazard Crypter
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_BIOHAZARDCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_BIOHAZARDCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // Cryptable seducation
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTABLESEDUCATION)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTABLESEDUCATION);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // Cryptic
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTIC)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTIC);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // CRyptOZ
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTOZ)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTOZ);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // Dirty Cryptor
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_DIRTYCRYPTOR)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_DIRTYCRYPTOR);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // Fakus Cryptor
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FAKUSCRYPTOR)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FAKUSCRYPTOR);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // Fast file Crypt
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FASTFILECRYPT)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FASTFILECRYPT);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // FileShield
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FILESHIELD)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FILESHIELD);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+    }
+}
+
+void SpecAbstract::PE_handle_DelphiCryptors(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
+    {
+        // Ass Crypter
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ASSCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ASSCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // Aase
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_AASE)) // TODO more checks!
+        {
+//                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_AASE))
+//                    {
+//                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_AASE);
+//                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+//                    }
+
+            SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_AASE);
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // Anskya Polymorphic Packer
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ANSKYAPOLYMORPHICPACKER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ANSKYAPOLYMORPHICPACKER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // AnslymPacker
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ANSLYMPACKER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ANSLYMPACKER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // Cigicigi Crypter
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CIGICIGICRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CIGICIGICRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // fEaRz Crypter
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FEARZCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FEARZCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // fEaRz Packer
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FEARZPACKER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FEARZPACKER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
     }
 }
