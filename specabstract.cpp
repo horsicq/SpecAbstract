@@ -359,16 +359,42 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 "TEST"},                0x21bae50da1,   0xab934456},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WINGSCRYPT,                   "1.0",              "TEST"},                0x216906261a,   0x86d73370},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTRROADS,                  "1.0",              "TEST"},                0x216906261a,   0x86d73370},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TSTCRYPTER,                   "1.0",              "TEST"},                0x216906261a,   0x86d73370},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TURKOJANCRYPTER,              "1.0",              "TEST"},                0x216906261a,   0x86d73370},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WHITELLCRYPT,                 "",                 "TEST"},                0x27e360241a,   0x69740a38},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MORTALTEAMCRYPTER2,           "",                 "TEST"},                0x27e360241a,   0x69740a38},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PUSSYCRYPTER,                 "1.0",              "TEST"},                0x27e360241a,   0x69740a38},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ZELDACRYPT,                   "1.0",              "TEST"},                0x27e360241a,   0xffacb503},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BIOHAZARDCRYPTER,             "",                 "TEST"},                0x341d510008,   0x4c51ceec},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTABLESEDUCATION,          "1.0",              "TEST"},                0x379caa9586,   0x497a33ab},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTIC,                      "2.1",              "TEST"},                0x2551095bcf,   0x28ee87cc},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTOZ,                      "3",                "TEST"},                0x32a797d70b,   0x9ce9bc9d},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DIRTYCRYPTOR,                 "",                 "TEST"},                0x2d5043f921,   0x1278f5f4},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KIAMSCRYPTOR,                 "1.4",              "TEST"},                0x2d5043f921,   0x1278f5f4},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FAKUSCRYPTOR,                 "1.4",              "TEST"},                0x1c5896cc05,   0x660aa806},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FASTFILECRYPT,                "1.6",              "TEST"},                0x54fe70e1c,    0x12125e9a},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FILESHIELD,                   "1.0",              "TEST"},                0x369ad56c1b,   0x907d472a},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_GHAZZACRYPTER,                "1.0",              "TEST"},                0x2de302f688,   0x1d13438c},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_H4CKY0UORGCRYPTER,            "",                 "TEST"},                0x68ec019f4,    0x182303e5},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HACCREWCRYPTER,               "",                 "TEST"},                0x3161aded4d,   0x02d8fada},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HALVCRYPTER,                  "",                 "TEST"},                0x3c92864a7,    0x1921b4b9},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KGBCRYPTER,                   "1.0",              "TEST"},                0x8fdee2084,    0x12e6f129},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KRATOSCRYPTER,                "",                 "TEST"},                0xFFFFFFFFFF,   0xFFFFFFFF}, // TODO
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KUR0KX2TO,                    "",                 "TEST"},                0x36d46acf30,   0xcf3805f3},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LIGHTNINGCRYPTERPRIVATE,      "1.0",              "TEST"},                0x25a8480de5,   0x208c1618},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LIGHTNINGCRYPTERSCANTIME,     "1.0",              "TEST"},                0x24bfbff151,   0xea84dab2},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LUCYPHER,                     "1.1",              "TEST"},                0x202da672fb,   0x3343405e},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MONEYCRYPTER,                 "1.0",              "TEST"},                0x353acba6b3,   0x53908533},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NOXCRYPT,                     "1.1",              "TEST"},                0x36d2a71d08,   0x9b536657},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_RDGTEJONCRYPTER,              "0.1",              "TEST"},                0xFFFFFFFFFF,   0xFFFFFFFF}, // TODO
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_RDGTEJONCRYPTER,              "0.8",              "TEST"},                0x2c078d7e86,   0x3c328f0c},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SMOKESCREENCRYPTER,           "2.0",              "TEST"},                0x87606a2bd,    0xcfe4cd48},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SNOOPCRYPT,                   "1.0",              "TEST"},                0x8bb735ad5,    0x22823ed8},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_STASFODIDOCRYPTOR,            "1.0",              "TEST"},                0x339880106,    0xe8805018},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TURKISHCYBERSIGNATURE,        "1.0",              "TEST"},                0x216ef51472,   0xfaacabe5},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_UNDOCRYPTER,                  "1.0",              "TEST"},                0x37b90cd5a,    0xaab92c4c},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WLCRYPT,                      "1.0",              "TEST"},                0xeaeea9a42,    0x0f0642ae},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WOUTHRSEXECRYPTER,            "1.0",              "TEST"},                0x1d8a9e5e20,   0xc9e08d88},
     // Delphi cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ASSCRYPTER,                   "1.0",              "TEST"},                0x12d94ca858,   0x36fb88c9},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AASE,                         "1.0",              "TEST"},                0xc06abc0fa,    0x77035a90},
@@ -377,6 +403,33 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CIGICIGICRYPTER,              "1.0",              "TEST"},                0x12998dbdd9,   0xf75643a6},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FEARZCRYPTER,                 "1.0",              "TEST"},                0x18fc31e7a1,   0xba67afd7},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FEARZPACKER,                  "0.3",              "TEST"},                0xbeb44c9f3,    0xf7a7ee23},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_GKRIPTO,                      "1.0",              "TEST"},                0x105df99f74,   0x2d62ed5d},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HOUNDHACKCRYPTER,             "1.0.4",            "TEST"},                0xc4b2710d8,    0x6c4aee3f},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ICRYPT,                       "1.0",              "TEST"},                0x151f5b424a,   0xdc6b4478},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_INFCRYPTOR,                   "",                 "TEST"},                0x14921fe579,   0x06dfef0b},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_UNDERGROUNDCRYPTER,           "1.0",              "TEST"},                0x14921fe579,   0x06dfef0b},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MALPACKER,                    "1.2",              "TEST"},                0xd0983ca0a,    0xb82a3f7c},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MINKE,                        "1.01",             "TEST"},                0x161bc831e3,   0xb1440658},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_OPENSOURCECODECRYPTER,        "1.0",              "TEST"},                0x1e843722ad,   0x6061e509},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MORTALTEAMCRYPTER,            "",                 "TEST"},                0x1e843722ad,   0x6061e509},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MORUKCREWCRYPTERPRIVATE,      "",                 "TEST"},                0x1e843722ad,   0x6061e509},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MRUNDECTETABLE,               "1.0",              "TEST"},                0x149b74637d,   0x2b12c49f},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NIDHOGG,                      "1.0",              "TEST"},                0xda5d3bb1f,    0xa52e27cc},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NME,                          "1.1",              "TEST"},                0x84313106b,    0x8d73a5b4},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_OSCCRYPTER,                   "",                 "TEST"},                0x1e67f9aa68,   0xc45e88cf},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_P0KESCRAMBLER,                "1.2",              "TEST"},                0x14017ccc57,   0x6766361e},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PANDORA,                      "1.0",              "TEST"},                0x1aa111e7ea,   0x5ee89fbb},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PFECX,                        "0.1",              "TEST"},                0x37c8dbb1e7,   0x161cb3f4},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PICRYPTOR,                    "3.0",              "TEST"},                0x22d7f64fb1,   0xfcde90f0},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_POKECRYPTER,                  "",                 "TEST"},                0x3abfae0702,   0xb99acbcc},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PUBCRYPTER,                   "",                 "TEST"},                0xFFFFFFFFFF,   0xFFFFFFFF}, // TODO
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SIMCRYPTER,                   "",                 "TEST"},                0x10c6960150,   0x3070a531},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SIMPLECRYPTER,                "1.2",              "TEST"},                0x23932eb2ab,   0x01e5337f},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TGRCRYPTER,                   "1.0",              "TEST"},                0x1a0adc8c41,   0xc26df3a5},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_THEZONECRYPTER,               "",                 "TEST"},                0x316e900676,   0x67850921},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_UNKOWNCRYPTER,                "1.0",              "TEST"},                0x19d3b4b92a,   0xeb51c252},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WINDOFCRYPT,                  "1.0",              "TEST"},                0x124c114b87,   0xf7c9cbe1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WLGROUPCRYPTER,               "",                 "TEST"},                0x13bf0f6720,   0xb0f58a0d},
     // Armadillo
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2973050b33,   0x1a0c885c},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2f2f1df1d1,   0x8623cf54},
@@ -1077,6 +1130,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MONEYCRYPTER:                          sResult=QString("Money Crypter");                               break;
         case RECORD_NAME_MORPHNAH:                              sResult=QString("Morphnah");                                    break;
         case RECORD_NAME_MORTALTEAMCRYPTER:                     sResult=QString("Mortal Team Crypter");                         break;
+        case RECORD_NAME_MORTALTEAMCRYPTER2:                    sResult=QString("Mortal Team Crypter 2");                       break;
         case RECORD_NAME_MORUKCREWCRYPTERPRIVATE:               sResult=QString("MoruK creW Crypter Private");                  break;
         case RECORD_NAME_MPACK:                                 sResult=QString("mPack");                                       break;
         case RECORD_NAME_MPRESS:                                sResult=QString("MPRESS");                                      break;
@@ -7987,6 +8041,189 @@ void SpecAbstract::PE_handle_VisualBasicCryptors(QIODevice *pDevice, bool bIsIma
 
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
+
+        // GhaZza CryPter
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_GHAZZACRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_GHAZZACRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_H4CKY0UORGCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_H4CKY0UORGCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_HACCREWCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_HACCREWCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_HALVCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_HALVCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_KGBCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_KGBCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_KIAMSCRYPTOR)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_KIAMSCRYPTOR);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_KRATOSCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_KRATOSCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_KUR0KX2TO)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_KUR0KX2TO);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_LIGHTNINGCRYPTERPRIVATE)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_LIGHTNINGCRYPTERPRIVATE);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_LIGHTNINGCRYPTERSCANTIME)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_LIGHTNINGCRYPTERSCANTIME);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_LUCYPHER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_LUCYPHER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_MONEYCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_MONEYCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_MORTALTEAMCRYPTER2)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_MORTALTEAMCRYPTER2);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_NOXCRYPT)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_NOXCRYPT);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_PUSSYCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_PUSSYCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_RDGTEJONCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_RDGTEJONCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_RDGTEJONCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_RDGTEJONCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_SMOKESCREENCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_SMOKESCREENCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_SNOOPCRYPT)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_SNOOPCRYPT);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_STASFODIDOCRYPTOR)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_STASFODIDOCRYPTOR);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_TSTCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_TSTCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_TURKISHCYBERSIGNATURE)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_TURKISHCYBERSIGNATURE);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_TURKOJANCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_TURKOJANCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_UNDOCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_UNDOCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_WLCRYPT)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_WLCRYPT);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_WOUTHRSEXECRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_WOUTHRSEXECRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
     }
 }
 
@@ -8053,6 +8290,196 @@ void SpecAbstract::PE_handle_DelphiCryptors(QIODevice *pDevice, bool bIsImage, S
         if(pPEInfo->mapImportDetects.contains(RECORD_NAME_FEARZPACKER)) // TODO more checks!
         {
             _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_FEARZPACKER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // GKripto
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_GKRIPTO)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_GKRIPTO);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_HOUNDHACKCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_HOUNDHACKCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ICRYPT)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ICRYPT);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_INFCRYPTOR)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_INFCRYPTOR);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_MALPACKER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_MALPACKER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_MINKE)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_MINKE);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_MORTALTEAMCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_MORTALTEAMCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_MORUKCREWCRYPTERPRIVATE)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_MORUKCREWCRYPTERPRIVATE);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_MRUNDECTETABLE)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_MRUNDECTETABLE);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_NIDHOGG)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_NIDHOGG);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_NME)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_NME);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_OPENSOURCECODECRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_OPENSOURCECODECRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_OSCCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_OSCCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_P0KESCRAMBLER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_P0KESCRAMBLER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_PANDORA)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_PANDORA);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_PFECX)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_PFECX);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_PICRYPTOR)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_PICRYPTOR);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_POKECRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_POKECRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_PUBCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_PUBCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_SIMCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_SIMCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_SIMPLECRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_SIMPLECRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_TGRCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_TGRCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_THEZONECRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_THEZONECRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_UNDERGROUNDCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_UNDERGROUNDCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_UNKOWNCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_UNKOWNCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_WINDOFCRYPT)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_WINDOFCRYPT);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_WLGROUPCRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_WLGROUPCRYPTER);
 
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
