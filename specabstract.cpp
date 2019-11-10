@@ -554,8 +554,7 @@ SpecAbstract::MSRICH_RECORD _PE_rich_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.20",            "C++/std"},             0x0033,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.20",            "C/book"},              0x0034,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "12.20",            "C++/book"},            0x0035,         (quint32)-1},
-
-
+    // TODO
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "14.00",            ""},                    0x00fd,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "19.00",            ""},                    0x00fe,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "14.00",            ""},                    0x00ff,         (quint32)-1},
