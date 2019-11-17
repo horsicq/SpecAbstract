@@ -14328,3 +14328,8 @@ kernel32.dll GetFileSize
 kernel32.dll CreateProcessA
 kernel32.dll CreateFileA
 kernel32.dll CloseHandle
+
+Import hash: d4631f92
+kernel32.dll GetProcAddress
+kernel32.dll GetModuleHandleA
+kernel32.dll LoadLibraryA
