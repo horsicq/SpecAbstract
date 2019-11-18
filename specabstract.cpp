@@ -630,6 +630,16 @@ SpecAbstract::MSRICH_RECORD _PE_rich_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "8.00",             ""},                    0x007c,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "8.00",             ""},                    0x007d,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "8.00",             ""},                    0x007e,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "Prerelease",       ""},                    0x007f,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "CVTCIL/C"},            0x0080,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "CVTCIL/C++"},          0x0081,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "LTCG/MSIL"},           0x0082,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "C"},                   0x0083,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "C++"},                 0x0084,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "C/std"},               0x0085,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "C++/std"},             0x0086,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "CVTCIL/C"},            0x0087,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "CVTCIL/C++"},          0x0088,         (quint32)-1},
 
     // TODO
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "C"},                   0x009f,         (quint32)-1},
@@ -10698,8 +10708,8 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
             {
                 bool bCheck=false;
 
-                bCheck= ((pRecords[i].nConst1==nCost1)||(pRecords[i].nConst1==-1))&&
-                        ((pRecords[i].nConst2==nCost2)||(pRecords[i].nConst2==-1));
+                bCheck= ((pRecords[i].nConst1==nCost1)||(pRecords[i].nConst1==(quint64)-1))&&
+                        ((pRecords[i].nConst2==nCost2)||(pRecords[i].nConst2==(quint64)-1));
 
                 if(bCheck)
                 {
@@ -10736,8 +10746,8 @@ void SpecAbstract::PE_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
             {
                 bool bCheck=false;
 
-                bCheck= ((pRecords[i].nID==nID)||(pRecords[i].nID==-1))&&
-                        ((pRecords[i].nBuild==nBuild)||(pRecords[i].nBuild==-1));
+                bCheck= ((pRecords[i].nID==nID)||(pRecords[i].nID==(quint16)-1))&&
+                        ((pRecords[i].nBuild==nBuild)||(pRecords[i].nBuild==(quint32)-1));
 
                 if(bCheck)
                 {
@@ -10749,7 +10759,7 @@ void SpecAbstract::PE_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
                     record.sVersion=pRecords[i].basicInfo.pszVersion;
                     record.sInfo=pRecords[i].basicInfo.pszInfo;
 
-                    if(pRecords[i].nBuild==-1)
+                    if(pRecords[i].nBuild==(quint32)-1)
                     {
                         record.sVersion+=QString(".%1").arg(nBuild);
                     }
