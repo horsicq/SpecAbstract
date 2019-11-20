@@ -987,8 +987,13 @@ public:
     static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
     static void PE_richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
 
+    static QList<_SCANS_STRUCT> PE_richScan(quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
+
     static QByteArray serializeScanStruct(SCAN_STRUCT ssRecord,bool bIsHeader=false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData,bool *pbIsHeader=nullptr);
+
+private:
+    static bool PE_compareRichRecord(_SCANS_STRUCT *pResult,MSRICH_RECORD *pRecord,quint16 nID,quint32 nBuild,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
 
 protected:
     void _errorMessage(QString sMessage);

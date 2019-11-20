@@ -530,7 +530,7 @@ SpecAbstract::MSRICH_RECORD _PE_rich_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "C++/book"},            0x0018,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "7.00",             ""},                    0x0019,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "7.00",             ""},                    0x001a,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "Basic"},              0x001b,          (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "Basic"},               0x001b,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "C"},                   0x001c,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "C++"},                 0x001d,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.10",             ""},                    0x001e,         (quint32)-1},
@@ -640,8 +640,28 @@ SpecAbstract::MSRICH_RECORD _PE_rich_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "C++/std"},             0x0086,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "CVTCIL/C"},            0x0087,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "CVTCIL/C++"},          0x0088,         (quint32)-1},
-
-    // TODO
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "LTCG/C"},              0x0089,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "LTCG/C++"},            0x008a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "LTCG/MSIL"},           0x008b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "POGO_I_C"},            0x008c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "POGO_I_CPP"},          0x008d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "POGO_O_C"},            0x008e,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "POGO_O_CPP"},          0x008f,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "15.00",            ""},                    0x0090,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "9.00",             ""},                    0x0091,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "9.00",             ""},                    0x0092,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "9.00",             ""},                    0x0093,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "9.00",             ""},                    0x0094,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "9.00",             ""},                    0x0095,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "9.00",             ""},                    0x0096,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_RESOURCE,                     "9.00",             ""},                    0x0097,         (quint32)-1}, // Manifest
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "10.00",            ""},                    0x0098,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "16.00",            ""},                    0x0099,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "10.00",            ""},                    0x009a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "10.00"             ""},                    0x009b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "10.00"             ""},                    0x009c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "10.00",            ""},                    0x009d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "10.00",            ""},                    0x009e,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "C"},                   0x009f,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "C++"},                 0x00a0,         (quint32)-1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "CVTCIL/C"},            0x00a1,         (quint32)-1},
@@ -2019,7 +2039,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.nMinorImageVersion=result.bIs64?result.optional_header.optionalHeader64.MinorImageVersion:result.optional_header.optionalHeader32.MinorImageVersion;
         result.nMajorImageVersion=result.bIs64?result.optional_header.optionalHeader64.MajorImageVersion:result.optional_header.optionalHeader32.MajorImageVersion;
 
-        result.nEntryPointSection=pe.getEntryPointSection();
+        result.nEntryPointSection=pe.getEntryPointSection(); // TODO optimize!
         result.nResourceSection=pe.getResourcesSection();
         result.nImportSection=pe.getImportSection();
         result.nCodeSection=pe.getNormalCodeSection();
@@ -2109,12 +2129,12 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         }
 
         // Rich
-        int nNumberOfRichSignatures=result.listRichSignatures.count();
+//        int nNumberOfRichSignatures=result.listRichSignatures.count();
 
-        for(int i=0;i<nNumberOfRichSignatures;i++)
-        {
-            PE_richScan(&(result.mapRichDetects),result.listRichSignatures.at(i).nId,result.listRichSignatures.at(i).nVersion,_PE_rich_records,sizeof(_PE_rich_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
-        }
+//        for(int i=0;i<nNumberOfRichSignatures;i++)
+//        {
+//            PE_richScan(&(result.mapRichDetects),result.listRichSignatures.at(i).nId,result.listRichSignatures.at(i).nVersion,_PE_rich_records,sizeof(_PE_rich_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
+//        }
 
 
         //        for(int i=0;i<result.listImports.count();i++)
@@ -5522,84 +5542,49 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
         // Rich
         int nRichSignaturesCount=pPEInfo->listRichSignatures.count();
 
-        if(nRichSignaturesCount>=1)
+        QList<SpecAbstract::_SCANS_STRUCT> listRichDescriptions;
+
+        for(int i=0;i<nRichSignaturesCount;i++)
         {
-            recordLinker.type=SpecAbstract::RECORD_TYPE_LINKER;
-            recordLinker.name=SpecAbstract::RECORD_NAME_MICROSOFTLINKER;
+            listRichDescriptions.append(PE_richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_PE_rich_records,sizeof(_PE_rich_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE));
+        }
 
-            SpecAbstract::_SCANS_STRUCT ssLinker={};
+        int nRichDescriptionsCount=listRichDescriptions.count();
 
-            SpecAbstract::_SCANS_STRUCT ssCompiler={};
-            SpecAbstract::_SCANS_STRUCT _ssCompiler1={};
-            SpecAbstract::_SCANS_STRUCT _ssCompiler2={};
-
-            for(int i=1; i<=10; i++)
+        for(int i=nRichDescriptionsCount-1;i>=0;i--)
+        {
+            if(listRichDescriptions.at(i).type==SpecAbstract::RECORD_TYPE_LINKER)
             {
-                if(nRichSignaturesCount>=i)
+                recordLinker.name=listRichDescriptions.at(i).name;
+                recordLinker.sVersion=listRichDescriptions.at(i).sVersion;
+                recordLinker.sInfo=listRichDescriptions.at(i).sInfo;
+                recordLinker.type=listRichDescriptions.at(i).type;
+            }
+
+            if(listRichDescriptions.at(i).type==SpecAbstract::RECORD_TYPE_COMPILER)
+            {
+                if(listRichDescriptions.at(i).name==RECORD_NAME_UNIVERSALTUPLECOMPILER)
                 {
-                    quint32 _nRich=(pPEInfo->listRichSignatures.at(nRichSignaturesCount-i).nId<<16)+pPEInfo->listRichSignatures.at(nRichSignaturesCount-i).nVersion;
-                    SpecAbstract::_SCANS_STRUCT ssRich=SpecAbstract::PE_getRichSignatureDescription(pDevice,bIsImage,pPEInfo,_nRich);
-
-                    if((ssLinker.type!=SpecAbstract::RECORD_TYPE_LINKER)&&(ssRich.type==SpecAbstract::RECORD_TYPE_LINKER))
+                    if(listRichDescriptions.at(i).sInfo!="Basic") // TODO
                     {
-                        ssLinker=ssRich;
+                        recordCompiler.name=RECORD_NAME_VISUALCCPP;
+                        recordCompiler.sVersion=listRichDescriptions.at(i).sVersion;
+                        recordCompiler.sInfo=listRichDescriptions.at(i).sInfo;
+                        recordCompiler.type=listRichDescriptions.at(i).type;
                     }
-
-                    if((_ssCompiler1.type!=SpecAbstract::RECORD_TYPE_COMPILER)&&(ssRich.type==SpecAbstract::RECORD_TYPE_COMPILER))
-                    {
-                        _ssCompiler1=ssRich;
-                    }
-                    else if((_ssCompiler2.type!=SpecAbstract::RECORD_TYPE_COMPILER)&&(ssRich.type==SpecAbstract::RECORD_TYPE_COMPILER))
-                    {
-                        _ssCompiler2=ssRich;
-                    }
+                }
+                else
+                {
+                    recordCompiler.name=listRichDescriptions.at(i).name;
+                    recordCompiler.sVersion=listRichDescriptions.at(i).sVersion;
+                    recordCompiler.sInfo=listRichDescriptions.at(i).sInfo;
+                    recordCompiler.type=listRichDescriptions.at(i).type;
                 }
             }
 
-            ssCompiler=_ssCompiler1;
-
-            if(     XPE::isImportLibraryPresentI("MSVCRT.dll",&(pPEInfo->listImports))||
-                    XPE::isImportLibraryPresentI("MSVCP140.dll",&(pPEInfo->listImports)))
+            if(listRichDescriptions.at(i).name==SpecAbstract::RECORD_NAME_IMPORT)
             {
-                if(_ssCompiler2.name==SpecAbstract::RECORD_NAME_VISUALCCPP)
-                {
-                    ssCompiler=_ssCompiler2;
-                }
-            }
-
-            if(recordMFC.name==RECORD_NAME_MFC)
-            {
-                if(_ssCompiler2.name==SpecAbstract::RECORD_NAME_VISUALCCPP)
-                {
-                    ssCompiler=_ssCompiler2;
-                }
-            }
-
-            if(ssLinker.type==SpecAbstract::RECORD_TYPE_LINKER)
-            {
-                recordLinker.sVersion=ssLinker.sVersion;
-                recordLinker.sInfo=ssLinker.sInfo;
-            }
-
-            if(ssCompiler.type==SpecAbstract::RECORD_TYPE_COMPILER)
-            {
-                recordCompiler.type=ssCompiler.type;
-                recordCompiler.name=ssCompiler.name;
-                recordCompiler.sVersion=ssCompiler.sVersion;
-                recordCompiler.sInfo=ssCompiler.sInfo;
-
-                // VB 6.0
-                if(recordCompiler.name==SpecAbstract::RECORD_NAME_VISUALBASIC)
-                {
-                    if(nRichSignaturesCount>1)
-                    {
-                        recordCompiler.sInfo="Native";
-                    }
-                    else
-                    {
-                        recordCompiler.sInfo="P-Code";
-                    }
-                }
+                break;
             }
         }
 
@@ -10740,41 +10725,35 @@ void SpecAbstract::PE_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
 
     for(int i=0; i<nSignaturesCount; i++)
     {
-        if((pRecords[i].basicInfo.filetype==fileType1)||(pRecords[i].basicInfo.filetype==fileType2))
+        if(!pMapRecords->contains(pRecords[i].basicInfo.name))
         {
-            if(!pMapRecords->contains(pRecords[i].basicInfo.name))
+            SpecAbstract::_SCANS_STRUCT record={};
+
+            if(PE_compareRichRecord(&record,&(pRecords[i]),nID,nBuild,fileType1,fileType2))
             {
-                bool bCheck=false;
-
-                bCheck= ((pRecords[i].nID==nID)||(pRecords[i].nID==(quint16)-1))&&
-                        ((pRecords[i].nBuild==nBuild)||(pRecords[i].nBuild==(quint32)-1));
-
-                if(bCheck)
-                {
-                    SpecAbstract::_SCANS_STRUCT record={};
-                    record.nVariant=pRecords[i].basicInfo.nVariant;
-                    record.filetype=pRecords[i].basicInfo.filetype;
-                    record.type=pRecords[i].basicInfo.type;
-                    record.name=pRecords[i].basicInfo.name;
-                    record.sVersion=pRecords[i].basicInfo.pszVersion;
-                    record.sInfo=pRecords[i].basicInfo.pszInfo;
-
-                    if(pRecords[i].nBuild==(quint32)-1)
-                    {
-                        record.sVersion+=QString(".%1").arg(nBuild);
-                    }
-
-                    record.nOffset=0;
-
-                    pMapRecords->insert(record.name,record);
-
-#ifdef QT_DEBUG
-                    qDebug("RICH SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
-#endif
-                }
+                pMapRecords->insert(record.name,record);
             }
         }
     }
+}
+
+QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::PE_richScan(quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2)
+{
+    QList<SpecAbstract::_SCANS_STRUCT> listResult;
+
+    int nSignaturesCount=nRecordsSize/(int)sizeof(MSRICH_RECORD);
+
+    for(int i=0; i<nSignaturesCount; i++)
+    {
+        SpecAbstract::_SCANS_STRUCT record={};
+
+        if(PE_compareRichRecord(&record,&(pRecords[i]),nID,nBuild,fileType1,fileType2))
+        {
+            listResult.append(record);
+        }
+    }
+
+    return listResult;
 }
 
 QByteArray SpecAbstract::serializeScanStruct(SCAN_STRUCT ssRecord, bool bIsHeader)
@@ -10829,6 +10808,46 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(QByteArray baData,
     ds >> *pbIsHeader;
 
     return ssResult;
+}
+
+bool SpecAbstract::PE_compareRichRecord(_SCANS_STRUCT *pResult,SpecAbstract::MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2)
+{
+    bool bResult=false;
+
+    if((pRecord->basicInfo.filetype==fileType1)||(pRecord->basicInfo.filetype==fileType2))
+    {
+        bool bCheck=false;
+
+        bCheck= ((pRecord->nID==nID)||(pRecord->nID==(quint16)-1))&&
+                ((pRecord->nBuild==nBuild)||(pRecord->nBuild==(quint32)-1));
+
+        if(bCheck)
+        {
+            SpecAbstract::_SCANS_STRUCT record={};
+            record.nVariant=pRecord->basicInfo.nVariant;
+            record.filetype=pRecord->basicInfo.filetype;
+            record.type=pRecord->basicInfo.type;
+            record.name=pRecord->basicInfo.name;
+            record.sVersion=pRecord->basicInfo.pszVersion;
+            record.sInfo=pRecord->basicInfo.pszInfo;
+
+            if(pRecord->nBuild==(quint32)-1)
+            {
+                record.sVersion+=QString(".%1").arg(nBuild);
+            }
+
+            record.nOffset=0;
+
+#ifdef QT_DEBUG
+            qDebug("RICH SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
+#endif
+            *pResult=record;
+
+            bResult=true;
+        }
+    }
+
+    return bResult;
 }
 
 QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,bool bIs64)
