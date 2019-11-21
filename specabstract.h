@@ -691,7 +691,7 @@ public:
             XPE_DEF::IMAGE_OPTIONAL_HEADER64 optionalHeader64;
         } optional_header;
         QList<XPE_DEF::IMAGE_SECTION_HEADER> listSectionHeaders;
-        QList<XPE::SECTIONFILE_RECORD> listSectionRecords;
+        QList<XPE::SECTION_RECORD> listSectionRecords;
         QList<QString> listSectionNames;
         QList<XPE::IMPORT_HEADER> listImports;
         quint64 nImportHash64;

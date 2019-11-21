@@ -496,7 +496,10 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
 
 SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
 {
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.59-1.93",        ""},                    0,              0x29188619}, // TODO !!! // 0.59-0.93 exe
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.94-1.93",        "exe"},                 0,              0xe6aa8495},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "1.94-2.03",        "exe"},                 0,              0xe28a6a4f},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "1.94-2.03",        "dll"},                 0,              0x3778aab9},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NSPACK,                       "",                 ""},                    0,              0x7bc87a20},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASPACK,                       "2.XX",             ""},                    0,              0xd4631f92},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ASPROTECT,                    "1.XX-2.XX",        ""},                    0,              0xd4631f92},
@@ -948,7 +951,11 @@ SpecAbstract::SpecAbstract(QObject *parent)
 void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, bool bInit)
 {
     QElapsedTimer scanTimer;
-    scanTimer.start();
+
+    if(bInit)
+    {
+        scanTimer.start();
+    }
 
     if(QString(pDevice->metaObject()->className())=="QFile")
     {
@@ -2287,8 +2294,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                 if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="LoadLibraryA")&&
                         (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress"))
                 {
-                    stDetects.insert("kernel32_upx0exe");   // 0.59-0.93
-                    stDetects.insert("kernel32_upx1dll");
                     stDetects.insert("kernel32_pecompact3");
 
                     if(pPEInfo->listImports.count()==1)
@@ -2332,8 +2337,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                         (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress")&&
                         (pPEInfo->listImports.at(0).listPositions.at(2).sName=="VirtualProtect"))
                 {
-                    stDetects.insert("kernel32_upx2dll");
-
                     if((pPEInfo->listImports.at(0).sName=="KERNEL32.DLL")&&(pPEInfo->listImports.count()==1))
                     {
                         stDetects.insert("kernel32_quickpacknt");
@@ -2387,14 +2390,7 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
             }
             else if(pPEInfo->listImports.at(0).listPositions.count()==4)
             {
-                if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(2).sName=="VirtualProtect")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(3).sName=="ExitProcess"))
-                {
-                    stDetects.insert("kernel32_upx2exe");   // 1.94-2.03
-                }
-                else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetModuleHandleA")&&
+                if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetModuleHandleA")&&
                         (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress")&&
                         (pPEInfo->listImports.at(0).listPositions.at(2).sName=="ExitProcess")&&
                         (pPEInfo->listImports.at(0).listPositions.at(3).sName=="LoadLibraryA"))
@@ -3060,21 +3056,7 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     //        pPEInfo->mapImportDetects.insert(RECORD_NAME_PECOMPACT,getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_PECOMPACT,"2.X","",0));
     //    }
 
-    if(stDetects.contains("kernel32_upx0exe")||
-            stDetects.contains("kernel32_upx1dll"))
-    {
-        // TODO isDll;
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_UPX,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_UPX,"0.59-1.93","",0));
-    }
-    else if(stDetects.contains("kernel32_upx2exe"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_UPX,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_UPX,"1.94-2.03","exe",0));
-    }
-    else if(stDetects.contains("kernel32_upx2dll"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_UPX,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_UPX,"1.94-2.03","dll",0));
-    }
-    else if(stDetects.contains("kernel32_upx3exe"))
+    if(stDetects.contains("kernel32_upx3exe"))
     {
         // TODO 32 64
         // RECORD_FILETYPE_PE
@@ -10265,7 +10247,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_UPX_vi(QIODevice *pDevice, bool bIsIma
     XBinary binary(pDevice,bIsImage);
 
     // TODO make both
-    qint64 nStringOffset1=binary.find_array(nOffset,nSize,"$Id: UPX",9);
+    qint64 nStringOffset1=binary.find_ansiString(nOffset,nSize,"$Id: UPX");
     qint64 nStringOffset2=binary.find_ansiString(nOffset,nSize,"UPX!");
 
     if(nStringOffset1!=-1)
