@@ -500,6 +500,10 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.94-1.93",        "exe"},                 0,              0xe6aa8495},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "1.94-2.03",        "exe"},                 0,              0xe28a6a4f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "1.94-2.03",        "dll"},                 0,              0x3778aab9},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "2.90-3.XX",        "exe"},                 0,              0x7bc87a20},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "2.90-3.XX",        "dll"},                 0,              0x5d22f587},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "3.91+",            "exe"},                 -1,             0xc0d43f71},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "3.91+",            "dll"},                 -1,             0x3778aab9},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NSPACK,                       "",                 ""},                    0,              0x7bc87a20},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASPACK,                       "2.XX",             ""},                    0,              0xd4631f92},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ASPROTECT,                    "1.XX-2.XX",        ""},                    0,              0xd4631f92},
@@ -2434,8 +2438,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                         (pPEInfo->listImports.at(0).listPositions.at(3).sName=="VirtualAlloc")&&
                         (pPEInfo->listImports.at(0).listPositions.at(4).sName=="VirtualFree"))
                 {
-                    stDetects.insert("kernel32_upx3dll");
-
                     if(pPEInfo->listImports.count()==2)
                     {
                         stDetects.insert("kernel32_simplepack_b");
@@ -2523,16 +2525,7 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
             }
             else if(pPEInfo->listImports.at(0).listPositions.count()==6)
             {
-                if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(2).sName=="VirtualProtect")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(3).sName=="VirtualAlloc")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(4).sName=="VirtualFree")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(5).sName=="ExitProcess"))
-                {
-                    stDetects.insert("kernel32_upx3exe");  // 2.90-3.xx
-                }
-                else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="VirtualAlloc")&&
+                if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="VirtualAlloc")&&
                         (pPEInfo->listImports.at(0).listPositions.at(1).sName=="VirtualFree")&&
                         (pPEInfo->listImports.at(0).listPositions.at(2).sName=="GetModuleHandleA")&&
                         (pPEInfo->listImports.at(0).listPositions.at(3).sName=="GetProcAddress")&&
@@ -2799,32 +2792,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
         }
     }
 
-    for(int i=0; i<pPEInfo->listImports.count(); i++)
-    {
-        if(pPEInfo->listImports.at(i).sName.toUpper()=="KERNEL32.DLL")
-        {
-            if(pPEInfo->listImports.at(i).listPositions.count()==4)
-            {
-                if((pPEInfo->listImports.at(i).listPositions.at(0).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(i).listPositions.at(1).sName=="ExitProcess")&&
-                        (pPEInfo->listImports.at(i).listPositions.at(2).sName=="GetProcAddress")&&
-                        (pPEInfo->listImports.at(i).listPositions.at(3).sName=="VirtualProtect"))
-                {
-                    stDetects.insert("kernel32_upx3exe_new");   // 3.91+
-                }
-            }
-            else if(pPEInfo->listImports.at(i).listPositions.count()==3)
-            {
-                if((pPEInfo->listImports.at(i).listPositions.at(0).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(i).listPositions.at(1).sName=="GetProcAddress")&&
-                        (pPEInfo->listImports.at(i).listPositions.at(2).sName=="VirtualProtect"))
-                {
-                    stDetects.insert("kernel32_upx3dll_new");   // 3.91+
-                }
-            }
-        }
-    }
-
 #ifdef QT_DEBUG
     qDebug()<<stDetects;
 #endif
@@ -3055,26 +3022,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     //    {
     //        pPEInfo->mapImportDetects.insert(RECORD_NAME_PECOMPACT,getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_PECOMPACT,"2.X","",0));
     //    }
-
-    if(stDetects.contains("kernel32_upx3exe"))
-    {
-        // TODO 32 64
-        // RECORD_FILETYPE_PE
-        // Version
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_UPX,getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_UPX,"2.90-3.XX","exe",0));
-    }
-    else if(stDetects.contains("kernel32_upx3dll"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_UPX,getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_UPX,"2.90-3.XX","dll",0));
-    }
-    else if(stDetects.contains("kernel32_upx3exe_new"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_UPX,getScansStruct(1,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_UPX,"3.91+","exe",0));
-    }
-    else if(stDetects.contains("kernel32_upx3dll_new"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_UPX,getScansStruct(1,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_UPX,"3.91+","dll",0));
-    }
 }
 
 void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)

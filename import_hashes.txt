@@ -14348,3 +14348,24 @@ Import hash: 3778aab9
 KERNEL32.DLL LoadLibraryA
 KERNEL32.DLL GetProcAddress
 KERNEL32.DLL VirtualProtect
+
+Import hash: c0d43f71
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL ExitProcess
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL VirtualProtect
+
+Import hash: 5d22f587
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL VirtualProtect
+KERNEL32.DLL VirtualAlloc
+KERNEL32.DLL VirtualFree
+
+Import hash: 7bc87a20
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL VirtualProtect
+KERNEL32.DLL VirtualAlloc
+KERNEL32.DLL VirtualFree
+KERNEL32.DLL ExitProcess
