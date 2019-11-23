@@ -14376,3 +14376,10 @@ KERNEL32.DLL LoadLibraryA
 KERNEL32.DLL VirtualAlloc
 KERNEL32.DLL VirtualFree
 KERNEL32.DLL VirtualProtect
+
+Import hash: e6146bc9
+Kernel32.dll GetProcAddress
+Kernel32.dll LoadLibraryA
+Kernel32.dll GetModuleHandleA
+Kernel32.dll VirtualAlloc
+Kernel32.dll VirtualFree

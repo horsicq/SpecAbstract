@@ -508,6 +508,7 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NSPACK,                       "",                 ""},                    0,              0x7bc87a20},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASPACK,                       "2.XX",             ""},                    0,              0xd4631f92},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ASPROTECT,                    "1.XX-2.XX",        ""},                    0,              0xd4631f92},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MKFPACK,                      "",                 ""},                    0,              0xe6146bc9},
 };
 
 SpecAbstract::MSRICH_RECORD _PE_rich_records[]=
@@ -2482,17 +2483,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                         stDetects.insert("kernel32_hmimyspacker");
                     }
                 }
-                else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetProcAddress")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(1).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(2).sName=="GetModuleHandleA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(3).sName=="VirtualAlloc")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(4).sName=="VirtualFree"))
-                {
-                    if(pPEInfo->listImports.at(0).sName=="Kernel32.dll")
-                    {
-                        stDetects.insert("kernel32_mkfpack");
-                    }
-                }
                 else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetModuleHandleA")&&
                         (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress")&&
                         (pPEInfo->listImports.at(0).listPositions.at(2).sName=="VirtualAlloc")&&
@@ -2840,11 +2830,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     else if(stDetects.contains("kernel32_rlpack_d"))
     {
         pPEInfo->mapImportDetects.insert(RECORD_NAME_RLPACK,getScansStruct(3,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_RLPACK,"1.20.1","",0));
-    }
-
-    if(stDetects.contains("kernel32_mkfpack"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_MKFPACK,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_MKFPACK,"","",0));
     }
 
     if(stDetects.contains("kernel32_packmana"))
