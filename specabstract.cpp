@@ -355,6 +355,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AFFILLIATEEXE,                "1.0",              "TEST"},                0xaad68a6e94,   0xe7046691},
     {{0, SpecAbstract::RECORD_FILETYPE_PE64,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LARP64,                       "1.0.3",            "TEST"},                0x1a89b5f0f,    0xf44517d8},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_VPACKER,                      "0.02.10",          ""},                    0x3404eaa9b,    0x3789c118},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_XCOMP,                        "0.97-0.98",        ""},                    0x2f6afb438,    0xea1e66e4},
     // VB cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 "TEST"},                0x608b5ca5f,    0x27f8d01f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 "TEST"},                0x21bae50da1,   0xab934456},
@@ -2500,17 +2501,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                 {
                     stDetects.insert("kernel32_packmanb");
                 }
-                else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetProcAddress")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(1).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(2).sName=="VirtualAlloc")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(3).sName=="VirtualFree")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(4).sName=="VirtualProtect"))
-                {
-                    if(pPEInfo->listImports.count()==1)
-                    {
-                        stDetects.insert("kernel32_xcomp");
-                    }
-                }
                 else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetModuleHandleA")&&
                         (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress")&&
                         (pPEInfo->listImports.at(0).listPositions.at(2).sName=="GlobalAlloc")&&
@@ -2952,11 +2942,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     if(stDetects.contains("kernel32_pepack")&&stDetects.contains("user32_pepack"))
     {
         pPEInfo->mapImportDetects.insert(RECORD_NAME_PEPACK,getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_PEPACK,"1.0","",0));
-    }
-
-    if(stDetects.contains("kernel32_xcomp"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_XCOMP,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_XCOMP,"0.97-0.98","",0));
     }
 
     if(stDetects.contains("kernel32_xpack"))

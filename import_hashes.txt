@@ -14369,3 +14369,10 @@ KERNEL32.DLL VirtualProtect
 KERNEL32.DLL VirtualAlloc
 KERNEL32.DLL VirtualFree
 KERNEL32.DLL ExitProcess
+
+Import hash: 2f6afb438 ea1e66e4
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL VirtualAlloc
+KERNEL32.DLL VirtualFree
+KERNEL32.DLL VirtualProtect
