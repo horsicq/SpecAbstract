@@ -14383,3 +14383,7 @@ Kernel32.dll LoadLibraryA
 Kernel32.dll GetModuleHandleA
 Kernel32.dll VirtualAlloc
 Kernel32.dll VirtualFree
+
+Import hash: 16a45c345 108edf16
+kernel32.dll lstrcpy
+comctl32.dll InitCommonControls
