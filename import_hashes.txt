@@ -14387,3 +14387,10 @@ Kernel32.dll VirtualFree
 Import hash: 16a45c345 108edf16
 kernel32.dll lstrcpy
 comctl32.dll InitCommonControls
+
+Import hash: 2d86e7bf1 d0c4c278
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll ExitProcess
+KERNEL32.dll GetProcAddress
+USER32.dll wsprintfA
+USER32.dll MessageBoxA

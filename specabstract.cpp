@@ -308,6 +308,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
 {
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_KKRUNCHY,                     "",                 ""},                    0x134c8cd1e,    0x29188619},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ANDPAKK2,                     "0.18",             ""},                    0x134c8cd1e,    0x29188619},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_WINUPACK,                     "",                 ""},                    0x134c8cd1e,    0x29188619},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "",                 ""},                    0x0ee8cb83a,    0xa4083f58},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_SCPACK,                       "0.2",              ""},                    0x184210a7f,    0x0faef25b},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_KBYS,                         "1.XX-2.XX",        ""},                    0x1eb276f62,    0xdb8fbb75},
@@ -358,7 +359,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_XCOMP,                        "0.97-0.98",        ""},                    0x2f6afb438,    0xea1e66e4},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PECOMPACT,                    "2.40-3.XX",        ""},                    0x1eb276f62,    0xdb8fbb75},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_THEMIDAWINLICENSE,            "",                 ""},                    0x16a45c345,    0x108edf16},
-
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NPACK,                        "",                 ""},                    0x2d86e7bf1,    0xd0c4c278},
     // VB cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 "TEST"},                0x608b5ca5f,    0x27f8d01f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 "TEST"},                0x21bae50da1,   0xab934456},
@@ -2307,7 +2308,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
                     if(pPEInfo->listImports.count()==1)
                     {
-                        stDetects.insert("kernel32_winupack");
                         stDetects.insert("kernel32_bero");
 
                         if(pPEInfo->listImports.at(0).sName=="kernel32.dll")
@@ -2367,15 +2367,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                     if(pPEInfo->listImports.count()==2)
                     {
                         stDetects.insert("kernel32_orien");
-                    }
-                }
-                else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(1).sName=="ExitProcess")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(2).sName=="GetProcAddress"))
-                {
-                    if(pPEInfo->listImports.count()==2)
-                    {
-                        stDetects.insert("kernel32_npack");
                     }
                 }
                 else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetProcAddress")&&
@@ -2706,7 +2697,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                 {
                     if(pPEInfo->listImports.count()==2)
                     {
-                        stDetects.insert("user32_npack");
                         stDetects.insert("user32_simplepack_b");
                         stDetects.insert("user32_simplepack_c");
                     }
@@ -2850,11 +2840,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     if(stDetects.contains("kernel32_softwarecompress")&&stDetects.contains("user32_softwarecompress"))
     {
         pPEInfo->mapImportDetects.insert(RECORD_NAME_SOFTWARECOMPRESS,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PROTECTOR,RECORD_NAME_SOFTWARECOMPRESS,"1.2-1.4","",0));
-    }
-
-    if(stDetects.contains("kernel32_npack")&&stDetects.contains("user32_npack"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_NPACK,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_NPACK,"","",0));
     }
 
     if(stDetects.contains("kernel32_beroexepacker"))
@@ -3899,6 +3884,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 }
 
                 // nPack
+                // TODO Timestamp 'nPck'
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_NPACK))
                 {
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_NPACK))
@@ -8779,9 +8765,9 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
         {
             QString sInterpreter;
 
-            if(sInterpreter=="") sInterpreter=XBinary::regExp("#!.*/(\\w+)",                pBinaryInfo->sHeaderText,1); // #!/usr/bin/perl
-            if(sInterpreter=="") sInterpreter=XBinary::regExp("#!/usr/bin/env (\\w+)",      pBinaryInfo->sHeaderText,1); // #!/usr/bin/env perl
-            if(sInterpreter=="") sInterpreter=XBinary::regExp("#!(\\w+)",                   pBinaryInfo->sHeaderText,1); // #!perl
+            if(sInterpreter=="") sInterpreter=XBinary::regExp("#!\\/usr\\/bin\\/env (\\w+)",    pBinaryInfo->sHeaderText,1); // #!/usr/bin/env perl
+            if(sInterpreter=="") sInterpreter=XBinary::regExp("#!.*/(\\w+)",                    pBinaryInfo->sHeaderText,1); // #!/usr/bin/perl
+            if(sInterpreter=="") sInterpreter=XBinary::regExp("#!(\\w+)",                       pBinaryInfo->sHeaderText,1); // #!perl
 
             if(sInterpreter=="perl")
             {
