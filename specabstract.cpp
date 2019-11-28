@@ -507,6 +507,7 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "1.94-2.03",        "dll"},                 0,              0x3778aab9},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "2.90-3.XX",        "exe"},                 0,              0x7bc87a20},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "2.90-3.XX",        "dll"},                 0,              0x5d22f587},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE64,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "3.91+",            "dll"},                 0,              0x5d22f587}, // TODO Check!
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "3.91+",            "exe"},                 -1,             0xc0d43f71},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "3.91+",            "dll"},                 -1,             0x3778aab9},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NSPACK,                       "",                 ""},                    0,              0x7bc87a20},
@@ -10517,13 +10518,13 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
 
     for(int i=0; i<nCount; i++)
     {
-        quint32 nCRC=XBinary::getCRC32(pListStrings->at(i));
+        quint32 nCRC=XBinary::getStringCustomCRC32(pListStrings->at(i));
         listStringCRC.append(nCRC);
     }
 
     for(int i=0; i<nSignaturesCount; i++)
     {
-        quint32 nCRC=XBinary::getCRC32(pRecords[i].pszString);
+        quint32 nCRC=XBinary::getStringCustomCRC32(pRecords[i].pszString);
         listSignatureCRC.append(nCRC);
     }
 
