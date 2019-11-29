@@ -14465,3 +14465,23 @@ COMCTL32.dll InitCommonControls
 Import hash: df29c01
 KERNEL32.dll GetModuleHandleA
 KERNEL32.dll GetProcAddress
+
+Import hash: 193d36193 cde019bc
+kernel32.dll GetModuleHandleA
+kernel32.dll GetProcAddress
+kernel32.dll LoadLibraryA
+
+Import hash: 27a6db491 cee2ac8e
+KERNEL32.dll GetProcAddress
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll VirtualFree
+
+Import hash: 2b72496f4 6bfc6671
+KERNEL32.DLL GetModuleHandleA
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL GlobalAlloc
+KERNEL32.DLL GlobalFree
+KERNEL32.DLL LoadLibraryA
+USER32.DLL MessageBoxA
