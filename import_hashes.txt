@@ -14485,3 +14485,9 @@ KERNEL32.DLL GlobalAlloc
 KERNEL32.DLL GlobalFree
 KERNEL32.DLL LoadLibraryA
 USER32.DLL MessageBoxA
+
+Import hash: 20953b667 f053f402
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL VirtualAlloc
+KERNEL32.DLL VirtualFree
