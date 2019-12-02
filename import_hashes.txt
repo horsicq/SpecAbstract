@@ -14491,3 +14491,25 @@ KERNEL32.DLL LoadLibraryA
 KERNEL32.DLL GetProcAddress
 KERNEL32.DLL VirtualAlloc
 KERNEL32.DLL VirtualFree
+
+Import hash: f0a41228
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL GetModuleHandleA
+
+Import hash: 6639a206
+KERNEL32.dll GetProcAddress
+KERNEL32.dll GetModuleHandleA
+
+Import hash: 528281ff
+kernel32.dll GetProcAddress
+kernel32.dll GetModuleHandleA
+
+Import hash: 42f4ff4ba d0e26d
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL GetModuleHandleA
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL VirtualAlloc
+KERNEL32.DLL VirtualProtect
+KERNEL32.DLL VirtualFree
+KERNEL32.DLL ExitProcess
+USER32.DLL MessageBoxA

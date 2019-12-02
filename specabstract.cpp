@@ -302,6 +302,11 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ADVANCEDUPXSCRAMMBLER,        "0.5",              ""},                    "B8........B9........803408..E2FAEB"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AZPROTECT,                    "0001",             ""},                    "EB70FC608C804D110070258100400D91BB608C804D11007021811D610D810040CE608C804D11007025812581258125812961418131611D610040B730"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WINKRIPT,                     "1.0",              ""},                    "33C08BB8........8B90........85FF74..33C950EB..8A0439C0C8..34..880439413BCA72..58"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "1.0",              ""},                    "BB........BF........BE........53E80A00000002D275058A164612D2"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "1.31",             ""},                    "BE........BF........BB........53BB........B280"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "1.31",             ""},                    "BB........BF........BE........53BB........B280A4B680FFD373F9"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "1.33",             ""},                    "BE........AD93AD97AD5696B280A4B680FF1373"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "2.0",              ""},                    "8725......00619455A4B680FF13"},
 };
 
 SpecAbstract::CONST_RECORD _PE_importhash_records[]=
@@ -363,6 +368,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_THEMIDAWINLICENSE,            "",                 ""},                    0x16a45c345,    0x108edf16},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NPACK,                        "",                 ""},                    0x2d86e7bf1,    0xd0c4c278},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PEPACK,                       "1.0",              ""},                    0x3be698dd2,    0x41708a45},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_SIMPLEPACK,                   "1.0",              ""},                    0x42f4ff4ba,    0x00d0e26d},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_SIMPLEPACK,                   "1.11",             ""},                    0x385a630a6,    0xc1e807a4},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_SIMPLEPACK,                   "1.2-1.3",          ""},                    0x473022e77,    0xa9e261a2},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_XPACK,                        "0.97-0.98",        ""},                    0x22224caef,    0x2ac44dd2},
@@ -527,10 +533,15 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MKFPACK,                      "",                 ""},                    0,              0xe6146bc9},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPRESS,                       "",                 ""},                    0,              0xf6c9318b},
     {{0, SpecAbstract::RECORD_FILETYPE_PE64,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPRESS,                       "",                 ""},                    0,              0xd7061c7b},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PACKMAN,                      "0.0.0.1",          ""},                    0,              0xf6c9318b},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PACKMAN,                      "1.0",              ""},                    0,              0x7d84ff86},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PECOMPACT,                    "1.40-1.84",        ""},                    0,              0x2df20f40},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PECOMPACT,                    "2.40-3.XX",        ""},                    0,              0xdb8fbb75},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXE32PACK,                    "1.3X-1.4X",        ""},                    0,              0x0df29c01},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              ""},                   -1,              0xf0a41228}, // KERNEL32.DLL
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              ""},                   -1,              0x0df29c01}, // KERNEL32.dll
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              ""},                   -1,              0x6639a206}, // KERNEL32.dll
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              ""},                   -1,              0x528281ff}, // kernel32.dll
 };
 
 SpecAbstract::MSRICH_RECORD _PE_rich_records[]=
@@ -857,6 +868,8 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPRESS,                       "",                 ""},                    ".MPRESS2"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NAKEDPACKER,                  "1.0",              ""},                    ".naked1"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NAKEDPACKER,                  "1.0",              ""},                    ".naked2"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NEOLITE,                      "1.0",              ""},                    ".neolit"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NPACK,                        "",                 ""},                    ".nPack"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NSPACK,                       "",                 ""},                    ".nsp0"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NSPACK,                       "",                 ""},                    ".nsp1"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NSPACK,                       "",                 ""},                    ".nsp2"},
@@ -865,6 +878,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_RCRYPTOR,                     "",                 ""},                    "RCryptor"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SAFEENGINESHIELDEN,           "",                 ""},                    ".sedata"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_SCPACK,                       "",                 ""},                    ".scpack"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SOFTWARECOMPRESS,             "",                 ""},                    "SoftComp"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SVKPROTECTOR,                 "1.3X-1.4X",        ""},                    ".svkp "},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SVKPROTECTOR,                 "1.1X",             ""},                    "SVKP"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TELOCK,                       "",                 ""},                    "UPX!"},
@@ -2345,11 +2359,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                 {
                     stDetects.insert("kernel32_zprotect");
                 }
-                else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetModuleHandleA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress"))
-                {
-                    stDetects.insert("kernel32_packmana");
-                }
             }
             else if(pPEInfo->listImports.at(0).listPositions.count()==3)
             {
@@ -2474,22 +2483,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
                     }
                 }
             }
-            else if(pPEInfo->listImports.at(0).listPositions.count()==7)
-            {
-                if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetModuleHandleA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(2).sName=="GetProcAddress")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(3).sName=="VirtualAlloc")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(4).sName=="VirtualProtect")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(5).sName=="VirtualFree")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(6).sName=="ExitProcess"))
-                {
-                    if(pPEInfo->listImports.count()==2)
-                    {
-                        stDetects.insert("kernel32_simplepack_a");
-                    }
-                }
-            }
             else if(pPEInfo->listImports.at(0).listPositions.count()==8)
             {
                 if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="LoadLibraryA")&&
@@ -2597,22 +2590,7 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
     if(pPEInfo->listImports.count()>=2)
     {
-        if(pPEInfo->listImports.at(1).sName.toUpper()=="USER32.DLL")
-        {
-            if(pPEInfo->listImports.at(1).listPositions.count()==1)
-            {
-                if(pPEInfo->listImports.at(1).listPositions.at(0).sName=="MessageBoxA")
-                {
-                    stDetects.insert("user32_enigma");
-
-                    if(pPEInfo->listImports.count()==2)
-                    {
-                        stDetects.insert("user32_simplepack_a");
-                    }
-                }
-            }
-        }
-        else if(pPEInfo->listImports.at(1).sName.toUpper()=="COMCTL32.DLL")
+        if(pPEInfo->listImports.at(1).sName.toUpper()=="COMCTL32.DLL")
         {
             if(pPEInfo->listImports.at(1).listPositions.count()==1)
             {
@@ -2713,11 +2691,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
         pPEInfo->mapImportDetects.insert(RECORD_NAME_RLPACK,getScansStruct(3,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_RLPACK,"1.20.1","",0));
     }
 
-    if(stDetects.contains("kernel32_packmana"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_PACKMAN,getScansStruct(0,RECORD_FILETYPE_PE32,RECORD_TYPE_PACKER,RECORD_NAME_PACKMAN,"0.0.0.1","",0));
-    }
-
     if(stDetects.contains("user32_pespina")&&stDetects.contains("comctl32_pespina"))
     {
         pPEInfo->mapImportDetects.insert(RECORD_NAME_PESPIN,getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_PESPIN,"1.0-1.2","",0));
@@ -2741,11 +2714,6 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     if(stDetects.contains("kernel32_enigma2")&&stDetects.contains("user32_enigma"))
     {
         pPEInfo->mapImportDetects.insert(RECORD_NAME_ENIGMA,getScansStruct(1,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_ENIGMA,"","",0)); // TODO version
-    }
-
-    if(stDetects.contains("kernel32_simplepack_a")&&stDetects.contains("user32_simplepack_a"))
-    {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_SIMPLEPACK,getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_SIMPLEPACK,"1.0","",0));
     }
 
     if(stDetects.contains("kernel32_alloy0"))
