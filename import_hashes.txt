@@ -14578,3 +14578,22 @@ KERNEL32.DLL GetProcAddress
 KERNEL32.DLL VirtualAlloc
 KERNEL32.DLL VirtualFree
 KERNEL32.DLL ExitProcess
+
+Import hash: 778a92ee8 6f2c367e
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL VirtualAlloc
+KERNEL32.DLL VirtualFree
+KERNEL32.DLL ExitProcess
+KERNEL32.DLL CreateFileA
+KERNEL32.DLL CloseHandle
+KERNEL32.DLL WriteFile
+KERNEL32.DLL GetSystemDirectoryA
+KERNEL32.DLL GetFileTime
+KERNEL32.DLL SetFileTime
+KERNEL32.DLL GetWindowsDirectoryA
+KERNEL32.DLL lstrcatA
+KERNEL32.DLL FreeLibrary
+KERNEL32.DLL GetTempPathA
+KERNEL32.DLL DeleteFileA
+KERNEL32.DLL GetModuleHandleA
