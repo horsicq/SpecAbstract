@@ -110,6 +110,8 @@ SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_DMD32D,                       "",                 ""},                    "'MZ'60000100000004001000FFFF0000FE0000001200000040000000000000000000000000000000000000000000000000000000000000000000000060000000'Requires Win32   $'161F33D2B409CD21B8014CCD2100'PE'0000"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_HXS,                          "",                 ""},                    "'MZ'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040000000'PE'00004C010200000000000000000000000000E00001200B010000000000000000000000000000000000000000000000000000000040000000000000"},
     {{1, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_NOSTUBLINKER,                 "",                 ""},                    "'MZ'....................................................................................................................40000000'PE'0000"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PRIVATEEXEPROTECTOR,          "1.90-1.95",        ""},                    "'MZ'90000300000004000000FFFF0000B80000000000000040000000000000000000000000000000000000000000000000000000000000000000000078000000BA10000E1FB409CD21B8014CCD219090'This program must be run under Win32\r\n$'37'PE'0000"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PRIVATEEXEPROTECTOR,          "1.7-1.8",          ""},                    "'MZ'50000200000004000F00FFFF0000B80000000000000040001A00000000000000000000000000000000000000000000000000000000000000000078000000BA10000E1FB409CD21B8014CCD219090'This program must be run under Win32\r\n$'37'PE'0000"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_WINUPACK,                     "0.1X-0.24",        ""},                    "'MZKERNEL32.DLL'0000'PE'0000........'UpackByDwing'"},
     {{1, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_WINUPACK,                     "0.24-0.32",        ""},                    "'MZKERNEL32.DLL'0000'LoadLibraryA'00000000'GetProcAddress'............................40000000"},
     {{2, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_WINUPACK,                     "0.33",             ""},                    "'MZLoadLibraryA'0000'PE'0000........'KERNEL32'"},
@@ -2266,6 +2268,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_DongleProtection(pDevice,pOptions->bIsImage,&result);
 //        PE_handle_AnslymPacker(pDevice,pOptions->bIsImage,&result);
         PE_handle_NeoLite(pDevice,pOptions->bIsImage,&result);
+        PE_handle_PrivateEXEProtector(pDevice,pOptions->bIsImage,&result);
 
         PE_handle_VisualBasicCryptors(pDevice,pOptions->bIsImage,&result);
         PE_handle_DelphiCryptors(pDevice,pOptions->bIsImage,&result);
@@ -7571,6 +7574,86 @@ void SpecAbstract::PE_handle_NeoLite(QIODevice *pDevice, bool bIsImage, SpecAbst
                         pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     }
                 }
+            }
+        }
+    }
+}
+
+void SpecAbstract::PE_handle_PrivateEXEProtector(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
+    {
+        if(!pPEInfo->cliInfo.bInit)
+        {
+            bool bKernel32ExitProcess=false;
+            bool bKernel32=false;
+            bool bUser32=false;
+            bool bCharacteristics=false;
+            bool bPEPLinker=false;
+            bool bTurboLinker=false;
+
+            if(pPEInfo->listImports.count()>=1)
+            {
+                if(pPEInfo->listImports.at(0).sName=="KERNEL32.DLL")
+                {
+                    if(pPEInfo->listImports.at(0).listPositions.count()==1)
+                    {
+                        bKernel32=true;
+
+                        if(pPEInfo->listImports.at(0).listPositions.at(0).sName=="ExitProcess")
+                        {
+                            bKernel32ExitProcess=true;
+                        }
+                    }
+                }
+            }
+
+            if(pPEInfo->listImports.count()==2)
+            {
+                if(pPEInfo->listImports.at(1).sName=="USER32.DLL")
+                {
+                    if(pPEInfo->listImports.at(1).listPositions.count()==1)
+                    {
+                        bUser32=true;
+                    }
+                }
+            }
+
+            int nCount=pPEInfo->listSectionHeaders.count();
+
+            for(int i=0;i<nCount;i++)
+            {
+                if((pPEInfo->listSectionHeaders.at(i).Characteristics&0xFFFF)==0)
+                {
+                    bCharacteristics=true;
+                    break;
+                }
+            }
+
+            bPEPLinker=pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PRIVATEEXEPROTECTOR);
+            bTurboLinker=pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_TURBOLINKER);
+
+            if(bKernel32ExitProcess&&bCharacteristics&&bPEPLinker)
+            {
+                SpecAbstract::_SCANS_STRUCT ss=pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PRIVATEEXEPROTECTOR);
+
+                pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
+            if(bKernel32&&bCharacteristics&&bTurboLinker)
+            {
+                SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_PRIVATEEXEPROTECTOR,"2.25","",0);
+
+                pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
+            if(bKernel32&&bUser32&&bCharacteristics&&bTurboLinker)
+            {
+                SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_PRIVATEEXEPROTECTOR,"2.30-2.70","",0);
+
+                pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
         }
     }
