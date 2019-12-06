@@ -311,6 +311,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "1.33",             ""},                    "BE........AD93AD97AD5696B280A4B680FF1373"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "2.0",              ""},                    "8725......00619455A4B680FF13"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEBUNDLE,                     "",                 ""},                    "9C60E802......33C08BC483C004938BE38B5BFC81EB........87DD"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_BLADEJOINER,                  "1.5",              ""},                    "558BEC81C4E4FEFFFF53565733C08945F08985"},
 };
 
 SpecAbstract::CONST_RECORD _PE_importhash_records[]=
@@ -361,7 +362,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DOTFIXNICEPROTECT,            "",                 ""},                    0x263ed9b5a,    0x117f896a},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HMIMYSPROTECTOR,              "0.1",              ""},                    0x1db028dca,    0x50ca53fc},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEPACKSPROTECT,               "2.3",              ""},                    0x1db028dca,    0x50ca53fc},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_JDPACK,                       "",                 ""},                    0x240d976a2,    0x10c77c1b},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_JDPACK,                       "1.01",             ""},                    0x240d976a2,    0x10c77c1b},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NAKEDPACKER,                  "1.0",              ""},                    0x241c3b6a6,    0xbf363f04},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER,"",                 ""},                    0x241c3b6a6,    0xbf363f04},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VCASMPROTECTOR,               "1.X",              ""},                    0x9c94674d4,    0x6d738d20},
@@ -397,6 +398,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PECOMPACT,                    "0.975-1.10b3",     ""},                    0x134c8cd1e,    0x29188619},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PECOMPACT,                    "1.10b7-1.34",      ""},                    0x212cf28ad,    0xe4c11305},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEBUNDLE,                     "",                 ""},                    0x778a92ee8,    0x6f2c367e},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_BLADEJOINER,                  "1.5",              ""},                    0x1a905fabfb,   0x05877992},
     // VB cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 "TEST"},                0x608b5ca5f,    0x27f8d01f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 "TEST"},                0x21bae50da1,   0xab934456},
@@ -563,6 +565,7 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              ""},                   -1,              0x0df29c01}, // KERNEL32.dll
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              ""},                   -1,              0x6639a206}, // KERNEL32.dll
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              ""},                   -1,              0x528281ff}, // kernel32.dll
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_JDPACK,                       "2.00",             ""},                    0,              0x45d48065},
 };
 
 SpecAbstract::MSRICH_RECORD _PE_rich_records[]=
@@ -1155,6 +1158,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_IMAGE:                                 sResult=tr("Image");                                            break;
         case RECORD_TYPE_INSTALLER:                             sResult=tr("Installer");                                        break;
         case RECORD_TYPE_INSTALLERDATA:                         sResult=tr("Installer data");                                   break;
+        case RECORD_TYPE_JOINER:                                sResult=tr("Joiner");                                           break;
         case RECORD_TYPE_LIBRARY:                               sResult=tr("Library");                                          break;
         case RECORD_TYPE_LINKER:                                sResult=tr("Linker");                                           break;
         case RECORD_TYPE_NETOBFUSCATOR:                         sResult=tr(".NET obfuscator");                                  break;
@@ -1225,6 +1229,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BIOHAZARDCRYPTER:                      sResult=QString("Biohazard Crypter");                           break;
         case RECORD_NAME_BITROCKINSTALLER:                      sResult=QString("BitRock Installer");                           break;
         case RECORD_NAME_BITSHAPEPECRYPT:                       sResult=QString("BitShape PE Crypt");                           break;
+        case RECORD_NAME_BLADEJOINER:                           sResult=QString("Blade Joiner");                                break;
         case RECORD_NAME_BORLANDCPP:                            sResult=QString("Borland C++");                                 break;
         case RECORD_NAME_BORLANDCPPBUILDER:                     sResult=QString("Borland C++ Builder");                         break;
         case RECORD_NAME_BORLANDDELPHI:                         sResult=QString("Borland Delphi");                              break;
@@ -2273,6 +2278,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_VisualBasicCryptors(pDevice,pOptions->bIsImage,&result);
         PE_handle_DelphiCryptors(pDevice,pOptions->bIsImage,&result);
 
+        PE_handle_Joiners(pDevice,pOptions->bIsImage,&result);
+
         PE_handle_PETools(pDevice,pOptions->bIsImage,&result);
 
         PE_handle_UnknownProtection(pDevice,pOptions->bIsImage,&result);
@@ -2291,6 +2298,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.listDetects.append(result.mapResultNETObfuscators.values());
         result.basic_info.listDetects.append(result.mapResultDongleProtection.values());
         result.basic_info.listDetects.append(result.mapResultPackers.values());
+        result.basic_info.listDetects.append(result.mapResultJoiners.values());
         result.basic_info.listDetects.append(result.mapResultSFX.values());
         result.basic_info.listDetects.append(result.mapResultInstallers.values());
 
@@ -2354,15 +2362,7 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
         {
             if(pPEInfo->listImports.at(0).listPositions.count()==2)
             {
-                if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress"))
-                {
-                    if(pPEInfo->listImports.count()==1)
-                    {
-                        stDetects.insert("kernel32_bero");
-                    }
-                }
-                else if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetProcAddress")&&
+                if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetProcAddress")&&
                         (pPEInfo->listImports.at(0).listPositions.at(1).sName=="LoadLibraryA"))
                 {
                     stDetects.insert("kernel32_zprotect");
@@ -8228,6 +8228,27 @@ void SpecAbstract::PE_handle_DelphiCryptors(QIODevice *pDevice, bool bIsImage, S
             _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_WLGROUPCRYPTER);
 
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+    }
+}
+
+void SpecAbstract::PE_handle_Joiners(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
+    {
+        // Blade Joiner
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_BLADEJOINER))
+        {
+            if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_BLADEJOINER))
+            {
+                if(pPEInfo->nOverlaySize)
+                {
+                    SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_BLADEJOINER);
+                    pPEInfo->mapResultJoiners.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                }
+            }
         }
     }
 }

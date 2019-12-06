@@ -77,6 +77,7 @@ public:
         RECORD_TYPE_IMAGE,
         RECORD_TYPE_INSTALLER,
         RECORD_TYPE_INSTALLERDATA,
+        RECORD_TYPE_JOINER,
         RECORD_TYPE_LIBRARY,
         RECORD_TYPE_LINKER,
         RECORD_TYPE_NETOBFUSCATOR,
@@ -138,6 +139,7 @@ public:
         RECORD_NAME_BIOHAZARDCRYPTER,
         RECORD_NAME_BITROCKINSTALLER,
         RECORD_NAME_BITSHAPEPECRYPT,
+        RECORD_NAME_BLADEJOINER,
         RECORD_NAME_BORLANDCPP,
         RECORD_NAME_BORLANDCPPBUILDER,
         RECORD_NAME_BORLANDDELPHI,
@@ -750,6 +752,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultPETools;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultSigntools;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultJoiners;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultInstallers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultSFX;
@@ -921,6 +924,8 @@ public:
 
     static void PE_handle_VisualBasicCryptors(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_DelphiCryptors(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+
+    static void PE_handle_Joiners(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 
     static void PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 
