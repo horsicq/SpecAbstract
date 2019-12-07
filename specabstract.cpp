@@ -312,6 +312,8 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "2.0",              ""},                    "8725......00619455A4B680FF13"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEBUNDLE,                     "",                 ""},                    "9C60E802......33C08BC483C004938BE38B5BFC81EB........87DD"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_BLADEJOINER,                  "1.5",              ""},                    "558BEC81C4E4FEFFFF53565733C08945F08985"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_CELESTYFILEBINDER,            "1.0",              "C++ Dynamic library"}, "E896040000E963FDFFFF8BFF558BEC81EC28030000A3E8514000890DE45140008915E0514000891DDC5140008935D8514000893DD4514000668C1500"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_CELESTYFILEBINDER,            "1.0",              "C++ Static library"},  "E8261F0000E989FEFFFF8BFF558BEC83EC208B450856576A0859BE0C9240008D7DE0F3A58945F88B450C5F8945FC5E85C074"},
 };
 
 SpecAbstract::CONST_RECORD _PE_importhash_records[]=
@@ -399,6 +401,8 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PECOMPACT,                    "1.10b7-1.34",      ""},                    0x212cf28ad,    0xe4c11305},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEBUNDLE,                     "",                 ""},                    0x778a92ee8,    0x6f2c367e},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_BLADEJOINER,                  "1.5",              ""},                    0x1a905fabfb,   0x05877992},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_CELESTYFILEBINDER,            "1.0",              "C++ Dynamic library"}, 0x2625a9db1f,   0x7c76448a},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_CELESTYFILEBINDER,            "1.0",              "C++ Static library"},  0x245138f5a4,   0x8a50a75e},
     // VB cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 "TEST"},                0x608b5ca5f,    0x27f8d01f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 "TEST"},                0x21bae50da1,   0xab934456},
@@ -1242,6 +1246,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CARBON:                                sResult=QString("Carbon");                                      break;
         case RECORD_NAME_CAUSEWAY:                              sResult=QString("CauseWay");                                    break;
         case RECORD_NAME_CCPP:                                  sResult=QString("C/C++");                                       break;
+        case RECORD_NAME_CELESTYFILEBINDER:                     sResult=QString("Celesty File Binder");                         break;
         case RECORD_NAME_CEXE:                                  sResult=QString("CExe");                                        break;
         case RECORD_NAME_CIGICIGICRYPTER:                       sResult=QString("Cigicigi Crypter");                            break;
         case RECORD_NAME_CIL:                                   sResult=QString("cil");                                         break;
@@ -8248,6 +8253,17 @@ void SpecAbstract::PE_handle_Joiners(QIODevice *pDevice, bool bIsImage, SpecAbst
                     SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_BLADEJOINER);
                     pPEInfo->mapResultJoiners.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
                 }
+            }
+        }
+
+        // Celesty File Binder
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CELESTYFILEBINDER))
+        {
+            if(pe.isResourcePresent("RBIND",-1,&(pPEInfo->listResources)))
+            {
+                SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapImportDetects.value(RECORD_NAME_CELESTYFILEBINDER);
+                pPEInfo->mapResultJoiners.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
             }
         }
     }
