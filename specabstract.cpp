@@ -318,6 +318,8 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_POLYCRYPTPE,                  "",                 ""},                    "60E8........EB"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PUNISHER,                     "1.5 demo",         ""},                    "EB0483A4BCCE60EB0480BC0411E800000000"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SECURESHADE,                  "1.8",              ""},                    "558BEC81EC........535657BE........8D7D..8D45..A5A5A5A56A..50A4E8........8B1D........595968........FFD3"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SHRINKER,                     "3.2",              ""},                    "833D..........558BEC565775..68........E8........83....8B....A3........85F674..68"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SHRINKER,                     "3.5",              ""},                    "833D..........558BEC565775..68........E8........83....8B....A3........85F674..83"},
 };
 
 SpecAbstract::CONST_RECORD _PE_importhash_records[]=
@@ -411,6 +413,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_POLYCRYPTPE,                  "",                 ""},                    0x2870982b,     0x15bfcac8},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PUNISHER,                     "1.5 demo",         ""},                    0x1f9e3b7a1,    0x12e15bcc},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SECURESHADE,                  "1.8",              ""},                    0x8c9f7bdc8,    0x21ce458d},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_INQUARTOSOBFUSCATOR,          "",                 ""},                    0x1046a0029,    0xf3f52749},
     // VB cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 "TEST"},                0x608b5ca5f,    0x27f8d01f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 "TEST"},                0x21bae50da1,   0xab934456},
@@ -579,6 +582,12 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              ""},                   -1,              0x6639a206}, // KERNEL32.dll
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              ""},                   -1,              0x528281ff}, // kernel32.dll
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_JDPACK,                       "2.00",             ""},                    0,              0x45d48065},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SHRINKER,                     "3.2",              ""},                    0,              0x3eed31e3},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SHRINKER,                     "3.2",              ""},                    0,              0x47ce503a},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SHRINKER,                     "3.2",              ""},                    0,              0xb9d96a3e},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SHRINKER,                     "3.5",              ""},                    0,              0x2bc39e03},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SHRINKER,                     "3.5",              ""},                    0,              0x8155e514},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SHRINKER,                     "3.5",              ""},                    0,              0x0471beb2},
 };
 
 SpecAbstract::MSRICH_RECORD _PE_rich_records[]=
@@ -890,6 +899,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FISHPESHIELD,                 "",                 ""},                    ".FishPE"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_INSTALLER,        SpecAbstract::RECORD_NAME_GENTEEINSTALLER,              "",                 ""},                    ".gentee"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HMIMYSPROTECTOR,              "0.1",              ""},                    "hmimys"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_INQUARTOSOBFUSCATOR,          "",                 ""},                    ".inq"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_JDPACK,                       "",                 ""},                    ".jdpack"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER,"",                 ""},                    ".Kaos12"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER,"",                 ""},                    ".Kaos2 "},
@@ -922,6 +932,9 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_RLPACK,                       "",                 ""},                    ".RLPack"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SAFEENGINESHIELDEN,           "",                 ""},                    ".sedata"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_SCPACK,                       "",                 ""},                    ".scpack"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SHRINKER,                     "",                 ""},                    ".shrink0"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SHRINKER,                     "",                 ""},                    ".shrink1"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SHRINKER,                     "",                 ""},                    ".shrink2"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SOFTWARECOMPRESS,             "",                 ""},                    "SoftComp"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SVKPROTECTOR,                 "1.3X-1.4X",        ""},                    ".svkp "},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SVKPROTECTOR,                 "1.1X",             ""},                    "SVKP"},
@@ -1373,6 +1386,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_IMPORT:                                sResult=QString("Import");                                      break;
         case RECORD_NAME_INFCRYPTOR:                            sResult=QString("INF Cryptor");                                 break;
         case RECORD_NAME_INNOSETUP:                             sResult=QString("Inno Setup");                                  break;
+        case RECORD_NAME_INQUARTOSOBFUSCATOR:                   sResult=QString("Inquartos Obfuscator");                        break;
         case RECORD_NAME_INSTALLANYWHERE:                       sResult=QString("InstallAnywhere");                             break;
         case RECORD_NAME_INSTALLSHIELD:                         sResult=QString("InstallShield");                               break;
         case RECORD_NAME_IPBPROTECT:                            sResult=QString("iPB Protect");                                 break;
@@ -1519,6 +1533,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SETUPFACTORY:                          sResult=QString("Setup Factory");                               break;
         case RECORD_NAME_SEXECRYPTER:                           sResult=QString("Sexe Crypter");                                break;
         case RECORD_NAME_SHELL:                                 sResult=QString("Shell");                                       break;
+        case RECORD_NAME_SHRINKER:                              sResult=QString("Shrinker");                                    break;
         case RECORD_NAME_SIMBIOZ:                               sResult=QString("SimbiOZ");                                     break;
         case RECORD_NAME_SIMCRYPTER:                            sResult=QString("Sim Crypter");                                 break;
         case RECORD_NAME_SIMPLECRYPTER:                         sResult=QString("Simple Crypter");                              break;
@@ -3277,6 +3292,16 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
+                // Inquartos Obfuscator
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_INQUARTOSOBFUSCATOR))
+                {
+                    if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_INQUARTOSOBFUSCATOR)&&pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERIC))
+                    {
+                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_INQUARTOSOBFUSCATOR);
+                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+
                 // ACProtect
                 // 1.X-2.X
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ACPROTECT))
@@ -3392,6 +3417,16 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PUNISHER))
                     {
                         SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PUNISHER);
+                        pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                    }
+                }
+
+                // Shrinker
+                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_SHRINKER))
+                {
+                    if(pe.isImportFunctionPresentI("KERNEL32.DLL","8",&(pPEInfo->listImports)))
+                    {
+                        SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_SHRINKER);
                         pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
                     }
                 }
