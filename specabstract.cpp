@@ -314,6 +314,10 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_BLADEJOINER,                  "1.5",              ""},                    "558BEC81C4E4FEFFFF53565733C08945F08985"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_CELESTYFILEBINDER,            "1.0",              "C++ Dynamic library"}, "E896040000E963FDFFFF8BFF558BEC81EC28030000A3E8514000890DE45140008915E0514000891DDC5140008935D8514000893DD4514000668C1500"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_CELESTYFILEBINDER,            "1.0",              "C++ Static library"},  "E8261F0000E989FEFFFF8BFF558BEC83EC208B450856576A0859BE0C9240008D7DE0F3A58945F88B450C5F8945FC5E85C074"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PESHIELD,                     "0.25-0.26",        ""},                    "60E8"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_POLYCRYPTPE,                  "",                 ""},                    "60E8........EB"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PUNISHER,                     "1.5 demo",         ""},                    "EB0483A4BCCE60EB0480BC0411E800000000"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SECURESHADE,                  "1.8",              ""},                    "558BEC81EC........535657BE........8D7D..8D45..A5A5A5A56A..50A4E8........8B1D........595968........FFD3"},
 };
 
 SpecAbstract::CONST_RECORD _PE_importhash_records[]=
@@ -403,6 +407,10 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_BLADEJOINER,                  "1.5",              ""},                    0x1a905fabfb,   0x05877992},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_CELESTYFILEBINDER,            "1.0",              "C++ Dynamic library"}, 0x2625a9db1f,   0x7c76448a},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_CELESTYFILEBINDER,            "1.0",              "C++ Static library"},  0x245138f5a4,   0x8a50a75e},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PESHIELD,                     "0.25-0.26",        ""},                    0x16410b804,    0xf922f724},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_POLYCRYPTPE,                  "",                 ""},                    0x2870982b,     0x15bfcac8},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PUNISHER,                     "1.5 demo",         ""},                    0x1f9e3b7a1,    0x12e15bcc},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SECURESHADE,                  "1.8",              ""},                    0x8c9f7bdc8,    0x21ce458d},
     // VB cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 "TEST"},                0x608b5ca5f,    0x27f8d01f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 "TEST"},                0x21bae50da1,   0xab934456},
@@ -472,6 +480,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PICRYPTOR,                    "3.0",              "TEST"},                0x22d7f64fb1,   0xfcde90f0},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_POKECRYPTER,                  "",                 "TEST"},                0x3abfae0702,   0xb99acbcc},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PUBCRYPTER,                   "",                 "TEST"},                0xFFFFFFFFFF,   0xFFFFFFFF}, // TODO
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SEXECRYPTER,                  "1.1",              "TEST"},                0x144c4ac3f1,   0xb1309fe4},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SIMCRYPTER,                   "",                 "TEST"},                0x10c6960150,   0x3070a531},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SIMPLECRYPTER,                "1.2",              "TEST"},                0x23932eb2ab,   0x01e5337f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TGRCRYPTER,                   "1.0",              "TEST"},                0x1a0adc8c41,   0xc26df3a5},
@@ -903,7 +912,10 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0,SpecAbstract::RECORD_FILETYPE_PE,       SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NSPACK,                       "",                 ""},                    ".nsp2"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEBUNDLE,                     "",                 ""},                    "pebundle"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEPACKSPROTECT,               "2.3",              ""},                    "okpack"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PESHIELD,                     "0.25-0.26",        ""},                    "PESHiELD"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PESHIELD,                     "0.25-0.26",        ""},                    "ANAKIN2K"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PETITE,                       "",                 ""},                    ".petite"},
+    {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PUNISHER,                     "1.5 demo",         ""},                    "PUNiSHER"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_RCRYPTOR,                     "",                 ""},                    "RCryptor"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_RLP,                          "",                 ""},                    ".rlp"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_RLPACK,                       "",                 ""},                    ".packed"},
@@ -1464,6 +1476,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PEPACKSPROTECT:                        sResult=QString("pepack's Protect");                            break;
         case RECORD_NAME_PEQUAKE:                               sResult=QString("PE Quake");                                    break;
         case RECORD_NAME_PERL:                                  sResult=QString("Perl");                                        break;
+        case RECORD_NAME_PESHIELD:                              sResult=QString("PE-SHiELD");                                   break;
         case RECORD_NAME_PESPIN:                                sResult=QString("PESpin");                                      break;
         case RECORD_NAME_PETITE:                                sResult=QString("Petite");                                      break;
         case RECORD_NAME_PEX:                                   sResult=QString("PeX");                                         break;
@@ -1481,6 +1494,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_POWERBASIC:                            sResult=QString("PowerBASIC");                                  break;
         case RECORD_NAME_PRIVATEEXEPROTECTOR:                   sResult=QString("Private EXE Protector");                       break;
         case RECORD_NAME_PUBCRYPTER:                            sResult=QString("Pub Crypter");                                 break;
+        case RECORD_NAME_PUNISHER:                              sResult=QString("PUNiSHER");                                    break;
         case RECORD_NAME_PUREBASIC:                             sResult=QString("PureBasic");                                   break;
         case RECORD_NAME_PUSSYCRYPTER:                          sResult=QString("PussyCrypter");                                break;
         case RECORD_NAME_PYTHON:                                sResult=QString("Python");                                      break;
@@ -1501,7 +1515,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SAFEENGINESHIELDEN:                    sResult=QString("Safengine Shielden");                          break;
         case RECORD_NAME_SCPACK:                                sResult=QString("SC Pack");                                     break;
         case RECORD_NAME_SDPROTECTORPRO:                        sResult=QString("SDProtector Pro");                             break;
+        case RECORD_NAME_SECURESHADE:                           sResult=QString("Secure Shade");                                break;
         case RECORD_NAME_SETUPFACTORY:                          sResult=QString("Setup Factory");                               break;
+        case RECORD_NAME_SEXECRYPTER:                           sResult=QString("Sexe Crypter");                                break;
         case RECORD_NAME_SHELL:                                 sResult=QString("Shell");                                       break;
         case RECORD_NAME_SIMBIOZ:                               sResult=QString("SimbiOZ");                                     break;
         case RECORD_NAME_SIMCRYPTER:                            sResult=QString("Sim Crypter");                                 break;
@@ -3356,6 +3372,64 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PEBUNDLE))
                     {
                         SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PEBUNDLE);
+                        pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                    }
+                }
+
+                // PE-SHiELD
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_PESHIELD))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PESHIELD))
+                    {
+                        SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PESHIELD);
+                        pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                    }
+                }
+
+                // PUNiSHER
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_PUNISHER))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PUNISHER))
+                    {
+                        SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PUNISHER);
+                        pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                    }
+                }
+
+                // Secure Shade
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_SECURESHADE))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_SECURESHADE))
+                    {
+                        SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_SECURESHADE);
+                        pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                    }
+                }
+
+
+                // PolyCrypt PE
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_POLYCRYPTPE))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_POLYCRYPTPE))
+                    {
+                        SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_POLYCRYPTPE);
+
+                        if(pPEInfo->nImportSection==pPEInfo->nEntryPointSection)
+                        {
+                            if(XBinary::checkOffsetSize(pPEInfo->osEntryPointSection)&&(pPEInfo->basic_info.bIsDeepScan))
+                            {
+                                qint64 _nOffset=pPEInfo->osEntryPointSection.nOffset;
+                                qint64 _nSize=pPEInfo->osEntryPointSection.nSize;
+
+                                qint64 nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"PolyCrypt PE (c) 2004-2005, JLabSoftware.");
+
+                                if(nOffset_Version==-1)
+                                {
+                                    recordSS.sInfo="Modified";
+                                }
+                            }
+                        }
+
                         pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
                     }
                 }
@@ -8182,6 +8256,13 @@ void SpecAbstract::PE_handle_DelphiCryptors(QIODevice *pDevice, bool bIsImage, S
         if(pPEInfo->mapImportDetects.contains(RECORD_NAME_SIMCRYPTER)) // TODO more checks!
         {
             _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_SIMCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_SEXECRYPTER)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_SEXECRYPTER);
 
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }

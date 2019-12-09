@@ -14821,3 +14821,82 @@ KERNEL32.dll MultiByteToWideChar
 KERNEL32.dll GetStringTypeW
 SHELL32.dll ShellExecuteA
 SHELL32.dll SHGetSpecialFolderPathA
+
+Import hash: 16410b804 f922f724
+KERNEL32.DLL GetModuleHandleA
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL GetProcAddress
+
+Import hash: 2870982b 15bfcac8
+KERNEL32 GetProcAddress
+
+Import hash: 1f9e3b7a1 12e15bcc
+KERNEL32.DLL 63
+KERNEL32.DLL ConvertThreadToFiber
+KERNEL32.DLL GetModuleHandleA
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL LoadLibraryA
+
+Import hash: 8c9f7bdc8 21ce458d
+KERNEL32.dll CloseHandle
+KERNEL32.dll FreeResource
+KERNEL32.dll ResumeThread
+KERNEL32.dll VirtualProtectEx
+KERNEL32.dll WriteProcessMemory
+KERNEL32.dll VirtualAllocEx
+KERNEL32.dll GetThreadContext
+KERNEL32.dll CreateProcessA
+KERNEL32.dll LockResource
+KERNEL32.dll LoadResource
+KERNEL32.dll SizeofResource
+KERNEL32.dll GetModuleFileNameA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll GetProcAddress
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll FreeLibrary
+MSVCRT.dll _ftol
+MSVCRT.dll _CIpow
+MSVCRT.dll malloc
+
+Import hash: 144c4ac3f1 b1309fe4
+kernel32.dll DeleteCriticalSection
+kernel32.dll LeaveCriticalSection
+kernel32.dll EnterCriticalSection
+kernel32.dll InitializeCriticalSection
+kernel32.dll VirtualFree
+kernel32.dll VirtualAlloc
+kernel32.dll LocalFree
+kernel32.dll LocalAlloc
+kernel32.dll GetCurrentThreadId
+kernel32.dll GetStartupInfoA
+kernel32.dll GetModuleFileNameA
+kernel32.dll GetCommandLineA
+kernel32.dll FreeLibrary
+kernel32.dll ExitProcess
+kernel32.dll WriteFile
+kernel32.dll UnhandledExceptionFilter
+kernel32.dll RtlUnwind
+kernel32.dll RaiseException
+kernel32.dll GetStdHandle
+user32.dll GetKeyboardType
+user32.dll MessageBoxA
+user32.dll CharNextA
+advapi32.dll RegQueryValueExA
+advapi32.dll RegOpenKeyExA
+advapi32.dll RegCloseKey
+kernel32.dll TlsSetValue
+kernel32.dll TlsGetValue
+kernel32.dll LocalAlloc
+kernel32.dll GetModuleHandleA
+kernel32.dll WriteProcessMemory
+kernel32.dll VirtualAllocEx
+kernel32.dll SizeofResource
+kernel32.dll SetThreadContext
+kernel32.dll ResumeThread
+kernel32.dll ReadProcessMemory
+kernel32.dll LockResource
+kernel32.dll LoadResource
+kernel32.dll GetThreadContext
+kernel32.dll FreeResource
+kernel32.dll FindResourceA
+kernel32.dll CreateProcessA
