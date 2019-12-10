@@ -15378,3 +15378,20 @@ KERNEL32.DLL GetVersion
 Import hash: 1046a0029 f3f52749
 Kernel32.dll LoadLibraryA
 Kernel32.dll GetProcAddress
+
+Import hash: 76b28c3da 8c42943c
+kernel32.dll CloseHandle
+kernel32.dll CreateFileA
+kernel32.dll EnumResourceNamesA
+kernel32.dll ExitProcess
+kernel32.dll FindResourceA
+kernel32.dll GetTempPathA
+kernel32.dll LoadResource
+kernel32.dll LockResource
+kernel32.dll SizeofResource
+kernel32.dll WriteFile
+kernel32.dll lstrcatA
+kernel32.dll lstrcpyA
+kernel32.dll lstrlenA
+shell32.dll ShellExecuteA
+user32.dll CharLowerBuffA

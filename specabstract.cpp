@@ -312,6 +312,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "2.0",              ""},                    "8725......00619455A4B680FF13"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEBUNDLE,                     "",                 ""},                    "9C60E802......33C08BC483C004938BE38B5BFC81EB........87DD"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_BLADEJOINER,                  "1.5",              ""},                    "558BEC81C4E4FEFFFF53565733C08945F08985"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_NJOINER,                      "0.1",              ""},                    "6A0068........68........6A00E8140000006A00E813000000CCFF25........FF25........FF25........FF25"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_CELESTYFILEBINDER,            "1.0",              "C++ Dynamic library"}, "E896040000E963FDFFFF8BFF558BEC81EC28030000A3E8514000890DE45140008915E0514000891DDC5140008935D8514000893DD4514000668C1500"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_CELESTYFILEBINDER,            "1.0",              "C++ Static library"},  "E8261F0000E989FEFFFF8BFF558BEC83EC208B450856576A0859BE0C9240008D7DE0F3A58945F88B450C5F8945FC5E85C074"},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PESHIELD,                     "0.25-0.26",        ""},                    "60E8"},
@@ -414,6 +415,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PUNISHER,                     "1.5 demo",         ""},                    0x1f9e3b7a1,    0x12e15bcc},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SECURESHADE,                  "1.8",              ""},                    0x8c9f7bdc8,    0x21ce458d},
     {{0,SpecAbstract::RECORD_FILETYPE_PE32,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_INQUARTOSOBFUSCATOR,          "",                 ""},                    0x1046a0029,    0xf3f52749},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_NJOINER,                      "0.1",              ""},                    0x76b28c3da,    0x8c42943c},
     // VB cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 "TEST"},                0x608b5ca5f,    0x27f8d01f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 "TEST"},                0x21bae50da1,   0xab934456},
@@ -1456,6 +1458,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_NAKEDPACKER:                           sResult=QString("NakedPacker");                                 break;
         case RECORD_NAME_NEOLITE:                               sResult=QString("NeoLite");                                     break;
         case RECORD_NAME_NIDHOGG:                               sResult=QString("Nidhogg");                                     break;
+        case RECORD_NAME_NJOINER:                               sResult=QString("N-Joiner");                                    break;
         case RECORD_NAME_NME:                                   sResult=QString("NME");                                         break;
         case RECORD_NAME_NOOBYPROTECT:                          sResult=QString("NoobyProtect");                                break;
         case RECORD_NAME_NORTHSTARPESHRINKER:                   sResult=QString("North Star PE Shrinker");                      break;
@@ -8373,12 +8376,21 @@ void SpecAbstract::PE_handle_Joiners(QIODevice *pDevice, bool bIsImage, SpecAbst
         }
 
         // Celesty File Binder
-
         if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CELESTYFILEBINDER))
         {
             if(pe.isResourcePresent("RBIND",-1,&(pPEInfo->listResources)))
             {
                 SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapImportDetects.value(RECORD_NAME_CELESTYFILEBINDER);
+                pPEInfo->mapResultJoiners.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+            }
+        }
+
+        // N-Joiner
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_NJOINER))
+        {
+            if(pe.isResourcePresent("NJ",-1,&(pPEInfo->listResources))||pe.isResourcePresent("NJOY",-1,&(pPEInfo->listResources)))
+            {
+                SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapImportDetects.value(RECORD_NAME_NJOINER);
                 pPEInfo->mapResultJoiners.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
             }
         }
