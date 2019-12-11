@@ -15395,3 +15395,12 @@ kernel32.dll lstrcpyA
 kernel32.dll lstrlenA
 shell32.dll ShellExecuteA
 user32.dll CharLowerBuffA
+
+Import hash: 756476d1
+kernel32.dll GetModuleHandleA
+kernel32.dll GetProcAddress
+kernel32.dll ExitProcess
+kernel32.dll LoadLibraryA
+
+Import hash: 4eb19904 48ea1201
+kernel32 1
