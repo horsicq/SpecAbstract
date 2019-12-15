@@ -1055,6 +1055,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_AINEXE,                       "2.22",             ""},                    "A1....2D....8ED0BC....8CD836A3....05....36A3....2EA1....8AD4B1..D2EAD3E08CD3368B2E....2E032E....FDFECA"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PGMPAK,                       "0.13",             ""},                    "FA1E1750B430CD213C..73..B44CCD21FCBE....BF....E8....E8....BB....BA....8AC38BF3"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PGMPAK,                       "0.15",             ""},                    "1E1750B430CD213C..73..B44CCD21FCBE....BF....E8....E8....BB....BA....8AC38BF3"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_TURBOCPP,                     "1988",             ""},                    "BA....2E8916....B430CD218B2E....8B1E....8EDAA3....8C06....891E....892E....C43E....8BC78BD8"},
 };
 
 SpecAbstract::SpecAbstract(QObject *parent)
@@ -1273,6 +1274,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BITROCKINSTALLER:                      sResult=QString("BitRock Installer");                           break;
         case RECORD_NAME_BITSHAPEPECRYPT:                       sResult=QString("BitShape PE Crypt");                           break;
         case RECORD_NAME_BLADEJOINER:                           sResult=QString("Blade Joiner");                                break;
+        case RECORD_NAME_BORLANDCCPP:                           sResult=QString("Borland C/C++");                               break;
         case RECORD_NAME_BORLANDCPP:                            sResult=QString("Borland C++");                                 break;
         case RECORD_NAME_BORLANDCPPBUILDER:                     sResult=QString("Borland C++ Builder");                         break;
         case RECORD_NAME_BORLANDDELPHI:                         sResult=QString("Borland Delphi");                              break;
@@ -5668,6 +5670,11 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
 
     if(pe.isValid())
     {
+        _SCANS_STRUCT recordLinker={};
+        _SCANS_STRUCT recordCompiler={};
+        _SCANS_STRUCT recordTool={};
+        _SCANS_STRUCT recordVCL={};
+
         if(pPEInfo->basic_info.mapHeaderDetects.contains(SpecAbstract::RECORD_NAME_TURBOLINKER))
         {
             _SCANS_STRUCT recordTurboLinker=pPEInfo->basic_info.mapHeaderDetects.value(SpecAbstract::RECORD_NAME_TURBOLINKER);
@@ -5681,7 +5688,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                 recordTurboLinker.sVersion=QString::number((double)pe.read_uint8(0x1F)/16,'f',1); // TODO PE-MSDOS
             }
 
-            pPEInfo->mapResultLinkers.insert(recordTurboLinker.name,scansToScan(&(pPEInfo->basic_info),&recordTurboLinker));
+            recordLinker=recordTurboLinker;
         }
 
         if(!pPEInfo->cliInfo.bInit)
@@ -6061,10 +6068,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                     }
                 }
 
-                _SCANS_STRUCT recordCompiler;
                 recordCompiler.type=RECORD_TYPE_COMPILER;
-
-                _SCANS_STRUCT recordTool;
                 recordTool.type=RECORD_TYPE_TOOL;
 
                 if(!bCpp)
@@ -6110,23 +6114,17 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                     recordTool.sVersion=sBuilderVersion;
                 }
 
-                pPEInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pPEInfo->basic_info),&recordCompiler));
-                pPEInfo->mapResultTools.insert(recordTool.name,scansToScan(&(pPEInfo->basic_info),&recordTool));
-
                 if(bVCL)
                 {
-                    _SCANS_STRUCT recordVCL;
                     recordVCL.type=RECORD_TYPE_LIBRARY;
                     recordVCL.name=RECORD_NAME_VCL;
                     recordVCL.sVersion=sVCLVersion;
-
-                    pPEInfo->mapResultTools.insert(recordVCL.name,scansToScan(&(pPEInfo->basic_info),&recordVCL));
                 }
 
-                if(!pPEInfo->mapResultLinkers.contains(RECORD_NAME_TURBOLINKER))
+                if(recordLinker.type==RECORD_TYPE_UNKNOWN)
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LINKER,RECORD_NAME_TURBOLINKER,"","",0);
-                    pPEInfo->mapResultLinkers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    recordLinker=ss;
                 }
             }
         }
@@ -6136,11 +6134,30 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
             if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_EMBARCADERODELPHIDOTNET))
             {
                 _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_EMBARCADERODELPHIDOTNET);
-                pPEInfo->mapResultTools.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                recordTool=ss;
             }
         }
-    }
 
+        if(recordLinker.type!=RECORD_TYPE_UNKNOWN)
+        {
+            pPEInfo->mapResultLinkers.insert(recordLinker.name,scansToScan(&(pPEInfo->basic_info),&recordLinker));
+        }
+
+        if(recordCompiler.type!=RECORD_TYPE_UNKNOWN)
+        {
+            pPEInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pPEInfo->basic_info),&recordCompiler));
+        }
+
+        if(recordVCL.type!=RECORD_TYPE_UNKNOWN)
+        {
+            pPEInfo->mapResultLibraries.insert(recordVCL.name,scansToScan(&(pPEInfo->basic_info),&recordVCL));
+        }
+
+        if(recordTool.type!=RECORD_TYPE_UNKNOWN)
+        {
+            pPEInfo->mapResultTools.insert(recordTool.name,scansToScan(&(pPEInfo->basic_info),&recordTool));
+        }
+    }
 }
 
 void SpecAbstract::PE_handle_Watcom(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
@@ -6892,7 +6909,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
                 }
             }
 
-            if((recordCompiler.name==RECORD_NAME_GCC)&&(recordTool.name==RECORD_NAME_UNKNOWN))
+            if((recordCompiler.name==RECORD_NAME_GCC)&&(recordTool.type==RECORD_TYPE_UNKNOWN))
             {
                 recordTool.type=RECORD_TYPE_TOOL;
                 recordTool.name=RECORD_NAME_MINGW;
@@ -9474,13 +9491,16 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
 
     if(msdos.isValid())
     {
+        SpecAbstract::_SCANS_STRUCT recordLinker={};
+        SpecAbstract::_SCANS_STRUCT recordCompiler={};
+
         if(pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_TURBOLINKER))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_TURBOLINKER);
 
             ss.sVersion=QString::number((double)msdos.read_uint8(0x1F)/16,'f',1);
 
-            pMSDOSInfo->mapResultLinkers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+            recordLinker=ss;
         }
 
         if(pMSDOSInfo->basic_info.bIsDeepScan)
@@ -9488,7 +9508,11 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
             qint64 _nOffset=0;
             qint64 _nSize=pMSDOSInfo->basic_info.nSize;
 
-            qint64 nOffsetTurboC=msdos.find_ansiString(_nOffset,_nSize,"Turbo-C - ");
+            qint64 nOffsetTurboC=-1;
+            qint64 nOffsetTurboCPP=-1;
+            qint64 nOffsetBorlandCPP=-1;
+
+            nOffsetTurboC=msdos.find_ansiString(_nOffset,_nSize,"Turbo-C - ");
 
             if(nOffsetTurboC!=-1)
             {
@@ -9508,7 +9532,10 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
                 pMSDOSInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pMSDOSInfo->basic_info),&ssCompiler));
             }
 
-            qint64 nOffsetTurboCPP=msdos.find_ansiString(_nOffset,_nSize,"Turbo C++ - ");
+            if(nOffsetTurboC==-1)
+            {
+                nOffsetTurboCPP=msdos.find_ansiString(_nOffset,_nSize,"Turbo C++ - ");
+            }
 
             if(nOffsetTurboCPP!=-1)
             {
@@ -9524,7 +9551,10 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
                 pMSDOSInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pMSDOSInfo->basic_info),&ssCompiler));
             }
 
-            qint64 nOffsetBorlandCPP=msdos.find_ansiString(_nOffset,_nSize,"Borland C++");
+            if((nOffsetTurboC==-1)&&(nOffsetTurboCPP==-1))
+            {
+                nOffsetBorlandCPP=msdos.find_ansiString(_nOffset,_nSize,"Borland C++");
+            }
 
             if(nOffsetBorlandCPP!=-1)
             {
@@ -9553,11 +9583,19 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
             }
         }
 
-        if(!pMSDOSInfo->mapResultLinkers.contains(RECORD_NAME_TURBOLINKER))
+        if(recordCompiler.type==RECORD_TYPE_UNKNOWN)
         {
-            if(     pMSDOSInfo->mapResultCompilers.contains(RECORD_NAME_TURBOC)||
-                    pMSDOSInfo->mapResultCompilers.contains(RECORD_NAME_TURBOCPP)||
-                    pMSDOSInfo->mapResultCompilers.contains(RECORD_NAME_BORLANDCPP))
+            if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_TURBOCPP))
+            {
+                recordCompiler=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_TURBOCPP);
+            }
+        }
+
+        if(recordLinker.type==RECORD_TYPE_UNKNOWN)
+        {
+            if( (recordCompiler.name==RECORD_NAME_TURBOC)||
+                (recordCompiler.name==RECORD_NAME_TURBOCPP)||
+                (recordCompiler.name==RECORD_NAME_BORLANDCPP))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_LINKER,RECORD_NAME_TURBOLINKER,"","",0);
 
@@ -9566,8 +9604,18 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
                 // Turbo-C 1988 2.0
                 // Borland C++ 1991 3.0-7.00?
 
-                pMSDOSInfo->mapResultLinkers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+                recordLinker=ss;
             }
+        }
+
+        if(recordLinker.type!=RECORD_TYPE_UNKNOWN)
+        {
+            pMSDOSInfo->mapResultLinkers.insert(recordLinker.name,scansToScan(&(pMSDOSInfo->basic_info),&recordLinker));
+        }
+
+        if(recordCompiler.type!=RECORD_TYPE_UNKNOWN)
+        {
+            pMSDOSInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pMSDOSInfo->basic_info),&recordCompiler));
         }
     }
 }
