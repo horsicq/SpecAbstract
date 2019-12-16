@@ -211,6 +211,7 @@ public:
         RECORD_NAME_EMBARCADERODELPHIDOTNET,
         RECORD_NAME_EMBARCADEROOBJECTPASCAL,
         RECORD_NAME_EMPTYFILE,
+        RECORD_NAME_ENCRYPTPE,
         RECORD_NAME_ENIGMA,
         RECORD_NAME_EPROT,
         RECORD_NAME_EXE32PACK,
@@ -715,7 +716,7 @@ public:
         QList<quint32> listImportPositionHashes;
         XPE::EXPORT_HEADER exportHeader;
         QList<XPE::RESOURCE_RECORD> listResources;
-        QList<XPE::RICH_RECORD> listRichSignatures;
+        QList<XMSDOS::MS_RICH_RECORD> listRichSignatures;
         QString sResourceManifest;
         XPE::RESOURCE_VERSION resVersion;
 

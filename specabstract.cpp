@@ -603,7 +603,7 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENIGMA,                       "3.70+",            ""},                    0,              0x756476d1},
 };
 
-SpecAbstract::MSRICH_RECORD _PE_rich_records[]=
+SpecAbstract::MSRICH_RECORD _MS_rich_records[]=
 {
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "",                 ""},                    0x0001,         0},             // Linker generated import object version 0
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "5.10",             ""},                    0x0002,         (quint32)-1},   // LINK 5.10 (Visual Studio 97 SP3)
@@ -902,6 +902,8 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DOTFIXNICEPROTECT,            "",                 ""},                    ".dotfix"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DYAMAR,                       "1.3.5",            ""},                    ".dyamarC"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DYAMAR,                       "1.3.5",            ""},                    ".dyamarD"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "1.XX",             ""},                    "EPE0"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "1.XX",             ""},                    "EPE1"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EPROT,                        "0.01",             ""},                    "!eprot"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEPACK,                      "1.0",              ""},                    "!EPack"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEPACK,                      "1.4",              ""},                    ".!ep"},
@@ -1344,6 +1346,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_EMBARCADERODELPHIDOTNET:               sResult=QString("Embarcadero Delphi .NET");                     break;
         case RECORD_NAME_EMBARCADEROOBJECTPASCAL:               sResult=QString("Embarcadero Object Pascal");                   break;
         case RECORD_NAME_EMPTYFILE:                             sResult=QString("Empty File");                                  break;
+        case RECORD_NAME_ENCRYPTPE:                             sResult=QString("EncryptPE");                                   break;
         case RECORD_NAME_ENIGMA:                                sResult=QString("ENIGMA");                                      break;
         case RECORD_NAME_EPROT:                                 sResult=QString("!EProt");                                      break;
         case RECORD_NAME_EXE32PACK:                             sResult=QString("exe32pack");                                   break;
@@ -5164,7 +5167,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
 
         for(int i=0;i<nRichSignaturesCount;i++)
         {
-            listRichDescriptions.append(PE_richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_PE_rich_records,sizeof(_PE_rich_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE));
+            listRichDescriptions.append(PE_richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE));
         }
 
         int nRichDescriptionsCount=listRichDescriptions.count();
