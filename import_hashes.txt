@@ -15553,3 +15553,25 @@ kernel32.dll FreeLibrary
 kernel32.dll CreateProcessA
 kernel32.dll CreateFileA
 kernel32.dll CloseHandle
+
+Import hash: 4d37b2166 556688b8
+kernel32.dll GetSystemDirectoryA
+kernel32.dll CreateFileA
+kernel32.dll CreateFileMappingA
+kernel32.dll MapViewOfFile
+kernel32.dll UnmapViewOfFile
+kernel32.dll CloseHandle
+kernel32.dll LoadLibraryA
+kernel32.dll GetProcAddress
+kernel32.dll ExitProcess
+
+Import hash: 4e0ec6281 87857386
+kernel32.dll GetTempPathA
+kernel32.dll CreateFileA
+kernel32.dll CreateFileMappingA
+kernel32.dll MapViewOfFile
+kernel32.dll UnmapViewOfFile
+kernel32.dll CloseHandle
+kernel32.dll LoadLibraryA
+kernel32.dll GetProcAddress
+kernel32.dll ExitProcess

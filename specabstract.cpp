@@ -326,6 +326,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_YZPACK,                       "1.0-1.1",          ""},                    "6033C08D480750E2FD8BEC648B4030780C8B400C"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HIDEANDPROTECT,               "1.016",            ""},                    "909090E9D8..050095..5300954A5000"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPACK,                        "0.0.3",            ""},                    "558BEC83....33C08945F0B8........E867C4FFFF33C05568........64FF306489208D55F033C0E893C8FFFF"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "1.XX-2.XX",        ""},                    "609C64FF3500000000E8"},
 };
 
 SpecAbstract::CONST_RECORD _PE_importhash_records[]=
@@ -425,6 +426,8 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_NJOINER,                      "0.1",              ""},                    0x76b28c3da,    0x8c42943c},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HIDEANDPROTECT,               "1.016",            ""},                    0x26ff222837,   0xb136eb55},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPACK,                        "0.0.3",            ""},                    0x1d07e94aa3,   0x5c0a3750},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "1.XX-2.XX",        ""},                    0x4d37b2166,    0x556688b8},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "2.XX",             ""},                    0x4e0ec6281,    0x87857386},
     // VB cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 "TEST"},                0x608b5ca5f,    0x27f8d01f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 "TEST"},                0x21bae50da1,   0xab934456},
@@ -902,8 +905,8 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DOTFIXNICEPROTECT,            "",                 ""},                    ".dotfix"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DYAMAR,                       "1.3.5",            ""},                    ".dyamarC"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DYAMAR,                       "1.3.5",            ""},                    ".dyamarD"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "1.XX",             ""},                    "EPE0"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "1.XX",             ""},                    "EPE1"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "1.XX-2.XX",        ""},                    "EPE0"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "1.XX-2.XX",        ""},                    "EPE1"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EPROT,                        "0.01",             ""},                    "!eprot"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEPACK,                      "1.0",              ""},                    "!EPack"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEPACK,                      "1.4",              ""},                    ".!ep"},
@@ -2811,6 +2814,17 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                             recordEnigma.sVersion=pe.read_ansiString(nOffset+23).section(" ",0,0);
                             bDetect=true;
                         }
+
+                        if(!bDetect)
+                        {
+                            nOffset=pe.find_ansiString(nSectionOffset,nSectionSize,"The Enigma Protector version");
+
+                            if(nOffset!=-1)
+                            {
+                                recordEnigma.sVersion=pe.read_ansiString(nOffset+29,8).section("\r\n",0,0);
+                                bDetect=true;
+                            }
+                        }
                     }
 
                     //                    if((!bDetect)&&(nVariant==1))
@@ -3310,6 +3324,27 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_MPACK))
                     {
                         SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_MPACK);
+                        pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+
+                // EncryptPE
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ENCRYPTPE))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ENCRYPTPE))
+                    {
+                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_ENCRYPTPE);
+
+                        qint64 _nOffset=pPEInfo->osHeader.nOffset;
+                        qint64 _nSize=pPEInfo->osHeader.nSize;
+
+                        qint64 nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"EncryptPE V");
+
+                        if(nOffset_Version!=-1)
+                        {
+                            ss.sVersion=pe.read_ansiString(nOffset_Version+11).section(",",0,0);
+                        }
+
                         pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     }
                 }
