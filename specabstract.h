@@ -381,6 +381,7 @@ public:
         RECORD_NAME_PETITE,
         RECORD_NAME_PEX,
         RECORD_NAME_PFECX,
+        RECORD_NAME_PGMPAK,
         RECORD_NAME_PHOENIXPROTECTOR,
         RECORD_NAME_PHP,
         RECORD_NAME_PICRYPTOR,
@@ -407,7 +408,7 @@ public:
         RECORD_NAME_RENETPACK,
         RECORD_NAME_RESOURCE,
         RECORD_NAME_REVPROT,
-        RECORD_NAME_PGMPAK,
+        RECORD_NAME_RJCRUSH,
         RECORD_NAME_RLP,
         RECORD_NAME_RLPACK,
         RECORD_NAME_ROSASM,
@@ -594,6 +595,7 @@ public:
         qint64 nOffset;
         qint64 nSize;
         QString sHeaderSignature;
+        XBinary::_MEMORY_MAP memoryMap;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapHeaderDetects;
         QList<SpecAbstract::SCAN_STRUCT> listDetects;
         bool bIsDeepScan;

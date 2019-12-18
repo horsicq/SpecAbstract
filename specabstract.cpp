@@ -1040,6 +1040,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_header_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_WWPACK,                       "",                 ""},                    "'MZ'....................................................'WWP'"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LZEXE,                        "0.90",             ""},                    "'MZ'....................................................'LZ09'"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LZEXE,                        "0.91",             ""},                    "'MZ'....................................................'LZ91'"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_RJCRUSH,                      "1.00",             ""},                    "'MZ'....................................................'RJS1'"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_SFX,              SpecAbstract::RECORD_NAME_LHASSFX,                      "2.11S",            ""},                    "'MZ'....................................................................'LHA'27's SFX 2.11S (c) Yoshi, 1991'"},
 };
 
@@ -1061,6 +1062,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PGMPAK,                       "0.13",             ""},                    "FA1E1750B430CD213C..73..B44CCD21FCBE....BF....E8....E8....BB....BA....8AC38BF3"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PGMPAK,                       "0.15",             ""},                    "1E1750B430CD213C..73..B44CCD21FCBE....BF....E8....E8....BB....BA....8AC38BF3"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_TURBOCPP,                     "1988",             ""},                    "BA....2E8916....B430CD218B2E....8B1E....8EDAA3....8C06....891E....892E....C43E....8BC78BD8"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_RJCRUSH,                      "1.00",             ""},                    "06FC8CC8BA....03D052BA....52BA....03C28BD805....8EDB8EC033F633FFB9"},
 };
 
 SpecAbstract::SpecAbstract(QObject *parent)
@@ -1519,6 +1521,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PETITE:                                sResult=QString("Petite");                                      break;
         case RECORD_NAME_PEX:                                   sResult=QString("PeX");                                         break;
         case RECORD_NAME_PFECX:                                 sResult=QString("PFE CX");                                      break;
+        case RECORD_NAME_PGMPAK:                                sResult=QString("PGMPAK");                                      break;
         case RECORD_NAME_PHOENIXPROTECTOR:                      sResult=QString("Phoenix Protector");                           break;
         case RECORD_NAME_PHP:                                   sResult=QString("PHP");                                         break;
         case RECORD_NAME_PICRYPTOR:                             sResult=QString("PI Cryptor");                                  break;
@@ -1545,7 +1548,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_RENETPACK:                             sResult=QString("ReNET-pack");                                  break;
         case RECORD_NAME_RESOURCE:                              sResult=QString("Resource");                                    break;
         case RECORD_NAME_REVPROT:                               sResult=QString("REVProt");                                     break;
-        case RECORD_NAME_PGMPAK:                                sResult=QString("PGMPAK");                                      break;
+        case RECORD_NAME_RJCRUSH:                               sResult=QString("RJcrush");                                     break;
         case RECORD_NAME_RLP:                                   sResult=QString("RLP");                                         break;
         case RECORD_NAME_RLPACK:                                sResult=QString("RLPack");                                      break;
         case RECORD_NAME_ROSASM:                                sResult=QString("RosAsm");                                      break;
@@ -1806,6 +1809,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     result.basic_info.nSize=pDevice->size();
     result.basic_info.sHeaderSignature=binary.getSignature(0,150);
     result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+    result.basic_info.memoryMap=binary.getMemoryMap();
 
     // Scan Header
     signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_binary_records,sizeof(_binary_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_BINARY);
@@ -1903,6 +1907,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     result.basic_info.nSize=pDevice->size();
     result.basic_info.sHeaderSignature=msdos.getSignature(0,150);
     result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+    result.basic_info.memoryMap=msdos.getMemoryMap();
 
     result.nOverlayOffset=msdos.getOverlayOffset();
     result.nOverlaySize=msdos.getOverlaySize();
@@ -1973,6 +1978,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=elf.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.memoryMap=elf.getMemoryMap();
 
         result.sEntryPointSignature=elf.getSignature(elf.getEntryPointOffset(),150);
 
@@ -2043,6 +2049,7 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=mach.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.memoryMap=mach.getMemoryMap();
 
         result.sEntryPointSignature=mach.getSignature(mach.getEntryPointOffset(),150);
 
@@ -2101,6 +2108,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=pe.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.memoryMap=pe.getMemoryMap();
 
         result.sEntryPointSignature=pe.getSignature(pe.getEntryPointOffset(),150);
 
@@ -2928,7 +2936,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                         if(pPEInfo->listSectionRecords.count()>=2)
                         {
                             // TODO new versions
-                            if(pe.compareSignature("'kernel32.dll'00000000'VirtualAlloc'00000000",pPEInfo->listSectionRecords.at(1).nOffset))
+                            if(pe.compareSignature(&(pPEInfo->basic_info.memoryMap),"'kernel32.dll'00000000'VirtualAlloc'00000000",pPEInfo->listSectionRecords.at(1).nOffset))
                             {
                                 SpecAbstract::_SCANS_STRUCT recordZProtect=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_ZPROTECT,"1.3-1.4.4","",0);
                                 pPEInfo->mapResultProtectors.insert(recordZProtect.name,scansToScan(&(pPEInfo->basic_info),&recordZProtect));
@@ -6251,7 +6259,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
     if(pe.isValid())
     {
         // Visual Objects
-        if(pe.compareSignature("'This Visual Objects application cannot be run in DOS mode'",0x312))
+        if(pe.compareSignature(&(pPEInfo->basic_info.memoryMap),"'This Visual Objects application cannot be run in DOS mode'",0x312))
         {
             _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_COMPILER,RECORD_NAME_VISUALOBJECTS,"2.XX","",0);
             ss.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
@@ -7009,7 +7017,7 @@ void SpecAbstract::PE_handle_Signtools(QIODevice *pDevice, bool bIsImage, SpecAb
             // TODO image
             XPE_DEF::IMAGE_DATA_DIRECTORY dd=pe.getOptionalHeader_DataDirectory(XPE_DEF::S_IMAGE_DIRECTORY_ENTRY_SECURITY);
 
-            if(pe.compareSignature("........00020200",dd.VirtualAddress))
+            if(pe.compareSignature(&(pPEInfo->basic_info.memoryMap),"........00020200",dd.VirtualAddress))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_SIGNTOOL,RECORD_NAME_GENERIC,"2.0","PKCS #7",0);
                 pPEInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
@@ -7182,7 +7190,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                     qint64 nSectionOffset=pPEInfo->listSectionHeaders.at(pPEInfo->nResourceSection).PointerToRawData+
                             pPEInfo->listSectionHeaders.at(pPEInfo->nResourceSection).Misc.VirtualSize;
 
-                    qint64 nVersionOffset=pe.find_signature(nSectionOffset-0x600,0x600,"BD04EFFE00000100");
+                    qint64 nVersionOffset=pe.find_signature(&(pPEInfo->basic_info.memoryMap),nSectionOffset-0x600,0x600,"BD04EFFE00000100");
                     if(nVersionOffset!=-1)
                     {
                         ss.sVersion=QString("%1.%2.%3.%4")
@@ -9034,22 +9042,22 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice,bool bIsImage, SpecA
 
         qint64 nOffset=binary.read_uint32(72,true)+58;
 
-        if(binary.compareSignature("600A4C01",nOffset))
+        if(binary.compareSignature(&(pBinaryInfo->basic_info.memoryMap),"600A4C01",nOffset))
         {
             ss.sInfo="I386";
             bDetected=true;
         }
-        if(binary.compareSignature("600A6486",nOffset))
+        if(binary.compareSignature(&(pBinaryInfo->basic_info.memoryMap),"600A6486",nOffset))
         {
             ss.sInfo="AMD64";
             bDetected=true;
         }
-        if(binary.compareSignature("600A0000FFFF....4C01",nOffset))
+        if(binary.compareSignature(&(pBinaryInfo->basic_info.memoryMap),"600A0000FFFF....4C01",nOffset))
         {
             ss.sInfo="I386";
             bDetected=true;
         }
-        if(binary.compareSignature("600A0000FFFF....6486",nOffset))
+        if(binary.compareSignature(&(pBinaryInfo->basic_info.memoryMap),"600A0000FFFF....6486",nOffset))
         {
             ss.sInfo="AMD64";
             bDetected=true;
@@ -9715,6 +9723,32 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
             else if(bHeader)
             {
                 ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LZEXE);
+                ss.sInfo=append(ss.sInfo,"modified entrypoint");
+            }
+
+            pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+
+        if( pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RJCRUSH)||
+            pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_RJCRUSH))
+        {
+            bool bHeader=pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RJCRUSH);
+            bool bEP=pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_RJCRUSH);
+
+            _SCANS_STRUCT ss={};
+
+            if(bHeader&&bEP)
+            {
+                ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RJCRUSH);
+            }
+            else if(bEP)
+            {
+                ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_RJCRUSH);
+                ss.sInfo=append(ss.sInfo,"modified header");
+            }
+            else if(bHeader)
+            {
+                ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RJCRUSH);
                 ss.sInfo=append(ss.sInfo,"modified entrypoint");
             }
 
