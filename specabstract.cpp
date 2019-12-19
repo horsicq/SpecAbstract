@@ -1917,7 +1917,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
         result.sOverlaySignature=msdos.getSignature(result.nOverlayOffset,150);
     }
 
-    result.sEntryPointSignature=msdos.getSignature(msdos.getEntryPointOffset(),150);
+    result.sEntryPointSignature=msdos.getSignature(msdos.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
     signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_header_records,sizeof(_MSDOS_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS);
     signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_MSDOS_entrypoint_records,sizeof(_MSDOS_entrypoint_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS);
@@ -1980,7 +1980,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.memoryMap=elf.getMemoryMap();
 
-        result.sEntryPointSignature=elf.getSignature(elf.getEntryPointOffset(),150);
+        result.sEntryPointSignature=elf.getSignature(elf.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
         result.nStringTableSection=elf.getSectionStringTable(result.bIs64);
         result.baStringTable=elf.getSection(result.nStringTableSection);
@@ -2051,7 +2051,7 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.memoryMap=mach.getMemoryMap();
 
-        result.sEntryPointSignature=mach.getSignature(mach.getEntryPointOffset(),150);
+        result.sEntryPointSignature=mach.getSignature(mach.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
 
         result.listCommandRecords=mach.getCommandRecords();
@@ -2110,7 +2110,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.memoryMap=pe.getMemoryMap();
 
-        result.sEntryPointSignature=pe.getSignature(pe.getEntryPointOffset(),150);
+        result.sEntryPointSignature=pe.getSignature(pe.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
         result.dosHeader=pe.getDosHeaderEx();
         result.fileHeader=pe.getFileHeader();
@@ -2135,7 +2135,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.listSectionRecords=XPE::getSectionRecords(&result.listSectionHeaders,pe.isImage());
         result.listSectionNames=XPE::getSectionNames(&(result.listSectionRecords));
 
-        result.listImports=pe.getImports();
+        result.listImports=pe.getImports(&(result.basic_info.memoryMap));
         //        for(int i=0;i<result.listImports.count();i++)
         //        {
         //            qDebug(result.listImports.at(i).sName.toLatin1().data());
@@ -2144,9 +2144,9 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         //                qDebug("%d %s",j,result.listImports.at(i).listPositions.at(j).sFunction.toLatin1().data());
         //            }
         //        }
-        result.nImportHash64=pe.getImportHash64();
-        result.nImportHash32=pe.getImportHash32();
-        result.listImportPositionHashes=pe.getImportPositionHashes();
+        result.nImportHash64=pe.getImportHash64(); // TODO memoryMap
+        result.nImportHash32=pe.getImportHash32(); // TODO memoryMap
+        result.listImportPositionHashes=pe.getImportPositionHashes(); // TODO memoryMap
 
 #ifdef QT_DEBUG
         QString sDebugString=QString::number(result.nImportHash64,16)+" "+QString::number(result.nImportHash32,16);
@@ -2177,10 +2177,10 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
             }
         }
 #endif
-        result.exportHeader=pe.getExport();
-        result.listResources=pe.getResources();
-        result.listRichSignatures=pe.getRichSignatureRecords();
-        result.cliInfo=pe.getCliInfo(true);
+        result.exportHeader=pe.getExport(); // TODO memoryMap
+        result.listResources=pe.getResources(); // TODO memoryMap
+        result.listRichSignatures=pe.getRichSignatureRecords(); // TODO memoryMap
+        result.cliInfo=pe.getCliInfo(true); // TODO memoryMap
         result.sResourceManifest=pe.getResourceManifest(&result.listResources);
         result.resVersion=pe.getResourceVersion(&result.listResources);
 
@@ -2191,14 +2191,14 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.nMinorImageVersion=result.bIs64?result.optional_header.optionalHeader64.MinorImageVersion:result.optional_header.optionalHeader32.MinorImageVersion;
         result.nMajorImageVersion=result.bIs64?result.optional_header.optionalHeader64.MajorImageVersion:result.optional_header.optionalHeader32.MajorImageVersion;
 
-        result.nEntryPointSection=pe.getEntryPointSection(); // TODO optimize!
-        result.nResourceSection=pe.getResourcesSection();
-        result.nImportSection=pe.getImportSection();
-        result.nCodeSection=pe.getNormalCodeSection();
-        result.nDataSection=pe.getNormalDataSection();
-        result.nConstDataSection=pe.getConstDataSection();
-        result.nRelocsSection=pe.getRelocsSection();
-        result.nTLSSection=pe.getTLSSection();
+        result.nEntryPointSection=pe.getEntryPointSection(); // TODO optimize!  // TODO memoryMap
+        result.nResourceSection=pe.getResourcesSection(); // TODO memoryMap
+        result.nImportSection=pe.getImportSection(); // TODO memoryMap
+        result.nCodeSection=pe.getNormalCodeSection(); // TODO memoryMap
+        result.nDataSection=pe.getNormalDataSection(); // TODO memoryMap
+        result.nConstDataSection=pe.getConstDataSection(); // TODO memoryMap
+        result.nRelocsSection=pe.getRelocsSection(); // TODO memoryMap
+        result.nTLSSection=pe.getTLSSection(); // TODO memoryMap
 
         if(result.nEntryPointSection!=-1)
         {
