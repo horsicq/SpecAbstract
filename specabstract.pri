@@ -22,11 +22,6 @@ SOURCES += \
     include(../Formats/xle.pri)
 }
 
-!contains(XCONFIG, xlx) {
-    XCONFIG += xlx
-    include(../Formats/xlx.pri)
-}
-
 !contains(XCONFIG, xpe) {
     XCONFIG += xpe
     include(../Formats/xpe.pri)
