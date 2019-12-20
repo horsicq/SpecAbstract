@@ -247,6 +247,7 @@ public:
         RECORD_NAME_GHAZZACRYPTER,
         RECORD_NAME_GHOSTINSTALLER,
         RECORD_NAME_GKRIPTO,
+        RECORD_NAME_GKSETUPSFX,
         RECORD_NAME_GNULINKER,
         RECORD_NAME_GOASM,
         RECORD_NAME_GOLIATHNET,
@@ -698,6 +699,7 @@ public:
     struct PEINFO_STRUCT
     {
         BASIC_INFO basic_info;
+        qint64 nEntryPointOffset;
         QString sEntryPointSignature;
         QString sOverlaySignature;
         qint64 nOverlayOffset;
@@ -1009,6 +1011,8 @@ public:
     static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
     static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
     static void PE_richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
+
+    static void signatureExpScan(XBinary *pXBinary,XBinary::_MEMORY_MAP *pMemoryMap,QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,qint64 nOffset,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
 
     static QList<_SCANS_STRUCT> PE_richScan(quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
 

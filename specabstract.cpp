@@ -172,7 +172,6 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ANDPAKK2,                     "0.06",             ""},                    "60FCBE........BF........5783CDFF33C9F9EB05A402DB7505"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ANDPAKK2,                     "0.18",             ""},                    "FCBE........BF........5783CDFF33C9F9EB05A402DB7505"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASDPACK,                      "2.0",              ""},                    "8B442404565753E8CD010000C3"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PEX,                          "0.99",             ""},                    "E9"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_REVPROT,                      "0.1a",             ""},                    "E8........8B4C240CC701........C781................31C089411489411880A1..........C3"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_32LITE,                       "0.03a",            ""},                    "6006FC1E07BE........6A0468........68"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ACPROTECT,                    "2.0.X",            ""},                    "68........68........C3C3"},
@@ -327,6 +326,11 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HIDEANDPROTECT,               "1.016",            ""},                    "909090E9D8..050095..5300954A5000"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPACK,                        "0.0.3",            ""},                    "558BEC83....33C08945F0B8........E867C4FFFF33C05568........64FF306489208D55F033C0E893C8FFFF"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "1.XX-2.XX",        ""},                    "609C64FF3500000000E8"},
+};
+
+SpecAbstract::SIGNATURE_RECORD _PE_entrypointExp_records[]=
+{
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PEX,                          "0.99",             ""},                    "E9$$$$$$$$60E8$$$$$$$$83C404E8"},
 };
 
 SpecAbstract::CONST_RECORD _PE_importhash_records[]=
@@ -1387,6 +1391,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_GHAZZACRYPTER:                         sResult=QString("GhaZza CryPter");                              break; // st
         case RECORD_NAME_GHOSTINSTALLER:                        sResult=QString("Ghost Installer");                             break;
         case RECORD_NAME_GKRIPTO:                               sResult=QString("GKripto");                                     break;
+        case RECORD_NAME_GKSETUPSFX:                            sResult=QString("GkSetup SFX");                                 break;
         case RECORD_NAME_GNULINKER:                             sResult=QString("GNU ld");                                      break;
         case RECORD_NAME_GOASM:                                 sResult=QString("GoAsm");                                       break;
         case RECORD_NAME_GOLIATHNET:                            sResult=QString("Goliath .NET");                                break;
@@ -2110,7 +2115,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.memoryMap=pe.getMemoryMap();
 
-        result.sEntryPointSignature=pe.getSignature(pe.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
+        result.nEntryPointOffset=pe.getEntryPointOffset(&(result.basic_info.memoryMap));
+        result.sEntryPointSignature=pe.getSignature(result.nEntryPointOffset,150);
 
         result.dosHeader=pe.getDosHeaderEx();
         result.fileHeader=pe.getFileHeader();
@@ -2279,6 +2285,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         {
             constScan(&(result.mapImportDetects),i,result.listImportPositionHashes.at(i),_PE_importpositionhash_records,sizeof(_PE_importpositionhash_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
         }
+
+        signatureExpScan(&pe,&(result.basic_info.memoryMap),&result.mapEntryPointDetects,result.nEntryPointOffset,_PE_entrypointExp_records,sizeof(_PE_entrypointExp_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
 
         // Rich
 //        int nNumberOfRichSignatures=result.listRichSignatures.count();
@@ -3597,11 +3605,8 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     // TODO compare entryPoint and import sections
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PEX))
                     {
-                        if(pe.compareEntryPoint("E9$$$$$$$$60e8$$$$$$$$83c404e8"))
-                        {
-                            SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PEX);
-                            pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
-                        }
+                        SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PEX);
+                        pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
                     }
                 }
 
@@ -7690,6 +7695,14 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice,bool bIsImage, SpecAbstract:
                 ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion));
                 pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
+
+            // GkSetup SFX
+            if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("GkSetup Self extractor"))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_SFX,RECORD_NAME_GKSETUPSFX,"","",0);
+                ss.sVersion=XPE::getResourceVersionValue("ProductVersion",&(pPEInfo->resVersion));
+                pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
         }
     }
 }
@@ -10643,6 +10656,39 @@ void SpecAbstract::PE_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
             if(PE_compareRichRecord(&record,&(pRecords[i]),nID,nBuild,fileType1,fileType2))
             {
                 pMapRecords->insert(record.name,record);
+            }
+        }
+    }
+}
+
+void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemoryMap, QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, qint64 nOffset, SpecAbstract::SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2)
+{
+    int nSignaturesCount=nRecordsSize/(int)sizeof(SIGNATURE_RECORD);
+
+    for(int i=0; i<nSignaturesCount; i++)
+    {
+        if((pRecords[i].basicInfo.filetype==fileType1)||(pRecords[i].basicInfo.filetype==fileType2))
+        {
+            if(!pMapRecords->contains(pRecords[i].basicInfo.name))
+            {
+                if(pXBinary->compareSignature(pMemoryMap,pRecords[i].pszSignature,nOffset))
+                {
+                    SpecAbstract::_SCANS_STRUCT record={};
+                    record.nVariant=pRecords[i].basicInfo.nVariant;
+                    record.filetype=pRecords[i].basicInfo.filetype;
+                    record.type=pRecords[i].basicInfo.type;
+                    record.name=pRecords[i].basicInfo.name;
+                    record.sVersion=pRecords[i].basicInfo.pszVersion;
+                    record.sInfo=pRecords[i].basicInfo.pszInfo;
+
+                    record.nOffset=0;
+
+                    pMapRecords->insert(record.name,record);
+
+#ifdef QT_DEBUG
+                    qDebug("SIGNATURE EXP SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
+#endif
+                }
             }
         }
     }
