@@ -15575,3 +15575,7 @@ kernel32.dll CloseHandle
 kernel32.dll LoadLibraryA
 kernel32.dll GetProcAddress
 kernel32.dll ExitProcess
+
+Import hash: 13e215a53 381aae8d
+kernel32.dll GetProcAddress
+kernel32.dll LoadLibraryA

@@ -139,6 +139,8 @@ SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "1.00-1.20",        ""},                    "'MZ'....................................................................................................................600000000E1FBA0E00B409CD21B8014CCD21'Windows Program'0D0A24"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "1.30-1.32",        ""},                    "'MZ'....................................................................................................................40000000'PE'00004C01....'FSG!'"},
     {{1, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FSG,                          "1.33-2.00",        ""},                    "'MZ'....................'PE'00004C01....'FSG!'"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MEW10,                        "1.0",              ""},                    "'MZ'00000000000000000000'PE'00004C010200000000000000000000000000"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MEW11SE,                      "1.0",              ""},                    "'MZkernel32.dll'0000'PE'0000"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MEW11SE,                      "1.1-1.2",          ""},                    "'MZ'00000000000000000000'PE'00004C010200000000000000000000000000"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_BEROEXEPACKER,                "1.00",             ""},                    "'MZ'52C3'(C)BeRo!PE'0000"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_KKRUNCHY,                     "0.23",             "farbraush"},           "'MZfarbrauschPE'"},
@@ -332,6 +334,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypointExp_records[]=
 {
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PEX,                          "0.99",             ""},                    "E9$$$$$$$$60E8$$$$$$$$83C404E8"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE32,                     "1.1",              ""},                    "68........68........68........E8$$$$$$$$558BECA1"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MEW10,                        "1.0",              ""},                    "33C0E9$$$$$$$$BE........AC91AD95AD92AD515687F297FCB2..33DBA4B3..FF55"},
 };
 
 SpecAbstract::CONST_RECORD _PE_importhash_records[]=
@@ -349,6 +352,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASDPACK,                      "2.00",             ""},                    0xc3068d5e,     0x3f603725},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FISHPEPACKER,                 "1.02",             ""},                    0x1eb276f62,    0xdb8fbb75},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FISHPEPACKER,                 "1.03",             ""},                    0x13e215a53,    0xdf3c1e0},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MEW10,                        "1.0",              ""},                    0x13e215a53,    0x381aae8d},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MEW11SE,                      "",                 ""},                    0x13e215a53,    0xdf3c1e0},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_BEROEXEPACKER,                "1.00",             ""},                    0x13e215a53,    0xdf3c1e0},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEFOG,                       "1.1",              ""},                    0x13e215a53,    0xdf3c1e0},
@@ -933,6 +937,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KRYPTON,                      "0.2-0.5",          ""},                    "YADO"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE64,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LARP64,                       "1.0.3",            "TEST"},                ".LARP"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MOLEBOXULTRA,                 "",                 ""},                    ".ultra"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MEW10,                        "",                 ""},                    ".decode"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MEW11SE,                      "",                 ""},                    "MEW"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPRESS,                       "",                 ""},                    ".MPRESS1"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPRESS,                       "",                 ""},                    ".MPRESS2"},
@@ -1453,6 +1458,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MASM:                                  sResult=QString("MASM");                                        break;
         case RECORD_NAME_MASM32:                                sResult=QString("MASM32");                                      break;
         case RECORD_NAME_MAXTOCODE:                             sResult=QString("MaxtoCode");                                   break;
+        case RECORD_NAME_MEW10:                                 sResult=QString("MEW10");                                       break;
         case RECORD_NAME_MEW11SE:                               sResult=QString("MEW11 SE");                                    break;
         case RECORD_NAME_MFC:                                   sResult=QString("MFC");                                         break;
         case RECORD_NAME_MICROSOFTACCESS:                       sResult=QString("Microsoft Access");                            break;
@@ -3434,6 +3440,15 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 }
 
                 // MEW
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_MEW10))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_MEW10))
+                    {
+                        SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_MEW10);
+                        pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                    }
+                }
+
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_MEW11SE))
                 {
                     if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MEW11SE))
