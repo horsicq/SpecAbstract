@@ -15579,3 +15579,19 @@ kernel32.dll ExitProcess
 Import hash: 13e215a53 381aae8d
 kernel32.dll GetProcAddress
 kernel32.dll LoadLibraryA
+
+Import hash: 6704c9452 29aaa397
+KERNEL32.dll CloseHandle
+KERNEL32.dll CreateFileA
+KERNEL32.dll ExitProcess
+KERNEL32.dll GetFileSize
+KERNEL32.dll GetModuleFileNameA
+KERNEL32.dll GetTempPathA
+KERNEL32.dll GlobalAlloc
+KERNEL32.dll GlobalFree
+KERNEL32.dll ReadFile
+KERNEL32.dll SetFilePointer
+KERNEL32.dll WriteFile
+KERNEL32.dll lstrcatA
+KERNEL32.dll lstrlenA
+SHELL32.dll ShellExecuteA

@@ -328,6 +328,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HIDEANDPROTECT,               "1.016",            ""},                    "909090E9D8..050095..5300954A5000"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPACK,                        "0.0.3",            ""},                    "558BEC83....33C08945F0B8........E867C4FFFF33C05568........64FF306489208D55F033C0E893C8FFFF"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "1.XX-2.XX",        ""},                    "609C64FF3500000000E8"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_EXEJOINER,                    "1.0",              ""},                    "68........6804010000E83903000005........C6005C680401000068"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _PE_entrypointExp_records[]=
@@ -437,6 +438,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPACK,                        "0.0.3",            ""},                    0x1d07e94aa3,   0x5c0a3750},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "1.XX-2.XX",        ""},                    0x4d37b2166,    0x556688b8},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "2.XX",             ""},                    0x4e0ec6281,    0x87857386},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_EXEJOINER,                    "1.0",              ""},                    0x6704c9452,    0x29aaa397},
     // VB cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 "TEST"},                0x608b5ca5f,    0x27f8d01f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 "TEST"},                0x21bae50da1,   0xab934456},
@@ -1368,6 +1370,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_EXECRYPT:                              sResult=QString("EXECrypt");                                    break;
         case RECORD_NAME_EXECRYPTOR:                            sResult=QString("EXECryptor");                                  break;
         case RECORD_NAME_EXEFOG:                                sResult=QString("ExeFog");                                      break;
+        case RECORD_NAME_EXEJOINER:                             sResult=QString("ExeJoiner");                                   break;
         case RECORD_NAME_EXEMPLARINSTALLER:                     sResult=QString("Exemplar Installer");                          break;
         case RECORD_NAME_EXEPACK:                               sResult=QString("!EP(EXE Pack)");                               break;
         case RECORD_NAME_EXESAX:                                sResult=QString("ExeSax");                                      break;
@@ -8463,6 +8466,19 @@ void SpecAbstract::PE_handle_Joiners(QIODevice *pDevice, bool bIsImage, SpecAbst
                 if(pPEInfo->nOverlaySize)
                 {
                     SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_BLADEJOINER);
+                    pPEInfo->mapResultJoiners.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                }
+            }
+        }
+
+        // ExeJoiner
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_EXEJOINER))
+        {
+            if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EXEJOINER))
+            {
+                if(pPEInfo->nOverlaySize)
+                {
+                    SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EXEJOINER);
                     pPEInfo->mapResultJoiners.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
                 }
             }
