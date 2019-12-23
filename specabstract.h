@@ -515,6 +515,7 @@ public:
         RECORD_NAME_XCOMP,
         RECORD_NAME_XML,
         RECORD_NAME_XPACK,
+        RECORD_NAME_XTREMEPROTECTOR,
         RECORD_NAME_XVOLKOLAK,
         RECORD_NAME_YANDEX,
         RECORD_NAME_YANO,
@@ -603,6 +604,7 @@ public:
         QList<SpecAbstract::SCAN_STRUCT> listDetects;
         bool bIsDeepScan;
         bool bIsUnknown;
+        bool bIsTest;
     };
 
     struct BINARYINFO_STRUCT
@@ -789,6 +791,7 @@ public:
         bool bResultAsJSON;
         bool bSubdirectories;
         bool bIsImage;
+        bool bIsTest;
     };
 
     struct UNPACK_OPTIONS
