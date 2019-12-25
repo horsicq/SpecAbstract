@@ -525,6 +525,8 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_UNKOWNCRYPTER,                "1.0",              "TEST"},                0x19d3b4b92a,   0xeb51c252},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WINDOFCRYPT,                  "1.0",              "TEST"},                0x124c114b87,   0xf7c9cbe1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WLGROUPCRYPTER,               "",                 "TEST"},                0x13bf0f6720,   0xb0f58a0d},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DCRYPTPRIVATE,                "0.9b",             "TEST"},                0xde741440ed,   0x16bbbe82},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DALKRYPT,                     "1.0",              "TEST"},                0xde741440ed,   0x16bbbe82},
     // Armadillo
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2973050b33,   0x1a0c885c},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2f2f1df1d1,   0x8623cf54},
@@ -1370,6 +1372,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CVTRES:                                sResult=QString("CVTRES");                                      break;
         case RECORD_NAME_CWSDPMI:                               sResult=QString("CWSDPMI");                                     break;
         case RECORD_NAME_CYGWIN:                                sResult=QString("Cygwin");                                      break;
+        case RECORD_NAME_DALKRYPT:                              sResult=QString("DalKrypt");                                    break;
+        case RECORD_NAME_DCRYPTPRIVATE:                         sResult=QString("DCrypt Private");                              break;
         case RECORD_NAME_DEB:                                   sResult=QString("DEB");                                         break;
         case RECORD_NAME_DEEPSEA:                               sResult=QString("DeepSea");                                     break;
         case RECORD_NAME_DEPACK:                                sResult=QString("dePack");                                      break;
@@ -8522,6 +8526,20 @@ void SpecAbstract::PE_handle_DelphiCryptors(QIODevice *pDevice, bool bIsImage, S
         if(pPEInfo->mapImportDetects.contains(RECORD_NAME_WLGROUPCRYPTER)) // TODO more checks!
         {
             _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_WLGROUPCRYPTER);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_DCRYPTPRIVATE)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_DCRYPTPRIVATE);
+
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_DALKRYPT)) // TODO more checks!
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_DALKRYPT);
 
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
