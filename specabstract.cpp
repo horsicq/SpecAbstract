@@ -99,6 +99,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_ACTIVEMARK,                   "",                 ""},                    "00'TMSAMVOH"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 ""},                    "'<%*#%>'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 ""},                    "'@@##@@'"},
+    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_NOXCRYPT,                     "",                 ""},                    "'|||'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
@@ -477,7 +478,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LIGHTNINGCRYPTERSCANTIME,     "1.0",              "TEST"},                0x24bfbff151,   0xea84dab2},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LUCYPHER,                     "1.1",              "TEST"},                0x202da672fb,   0x3343405e},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MONEYCRYPTER,                 "1.0",              "TEST"},                0x353acba6b3,   0x53908533},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NOXCRYPT,                     "1.1",              "TEST"},                0x36d2a71d08,   0x9b536657},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NOXCRYPT,                     "1.1",              ""},                    0x36d2a71d08,   0x9b536657},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_RDGTEJONCRYPTER,              "0.1",              "TEST"},                0xFFFFFFFFFF,   0xFFFFFFFF}, // TODO
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_RDGTEJONCRYPTER,              "0.8",              "TEST"},                0x2c078d7e86,   0x3c328f0c},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SMOKESCREENCRYPTER,           "2.0",              "TEST"},                0x87606a2bd,    0xcfe4cd48},
@@ -1964,8 +1965,8 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     result.basic_info.bIsTest=pOptions->bIsTest;
     result.basic_info.memoryMap=msdos.getMemoryMap();
 
-    result.nOverlayOffset=msdos.getOverlayOffset();
-    result.nOverlaySize=msdos.getOverlaySize();
+    result.nOverlayOffset=msdos.getOverlayOffset(&(result.basic_info.memoryMap));
+    result.nOverlaySize=msdos.getOverlaySize(&(result.basic_info.memoryMap));
 
     if(result.nOverlaySize)
     {
@@ -2953,6 +2954,37 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
+            // nPack
+            // TODO Timestamp 'nPck'
+            // TODO Check 64
+            if(pPEInfo->mapImportDetects.contains(RECORD_NAME_NPACK))
+            {
+                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_NPACK))
+                {
+                    SpecAbstract::_SCANS_STRUCT recordNPACK=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_NPACK);
+
+                    if(XBinary::checkOffsetSize(pPEInfo->osEntryPointSection)&&(pPEInfo->basic_info.bIsDeepScan))
+                    {
+                        qint64 _nOffset=pPEInfo->osEntryPointSection.nOffset;
+                        qint64 _nSize=pPEInfo->osEntryPointSection.nSize;
+
+                        // TODO get max version
+                        qint64 nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"nPack v");
+
+                        if(nOffset_Version!=-1)
+                        {
+                            recordNPACK.sVersion=pe.read_ansiString(nOffset_Version+7).section(":",0,0);
+                        }
+                        else
+                        {
+                            recordNPACK.sVersion="1.1.200.2006";
+                        }
+                    }
+
+                    pPEInfo->mapResultPackers.insert(recordNPACK.name,scansToScan(&(pPEInfo->basic_info),&recordNPACK));
+                }
+            }
+
             if(!pPEInfo->bIs64)
             {
                 // YZPack
@@ -3754,36 +3786,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     {
                         SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER);
                         pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
-                    }
-                }
-
-                // nPack
-                // TODO Timestamp 'nPck'
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_NPACK))
-                {
-                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_NPACK))
-                    {
-                        SpecAbstract::_SCANS_STRUCT recordNPACK=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_NPACK);
-
-                        if(XBinary::checkOffsetSize(pPEInfo->osEntryPointSection)&&(pPEInfo->basic_info.bIsDeepScan))
-                        {
-                            qint64 _nOffset=pPEInfo->osEntryPointSection.nOffset;
-                            qint64 _nSize=pPEInfo->osEntryPointSection.nSize;
-
-                            // TODO get max version
-                            qint64 nOffset_Version=pe.find_ansiString(_nOffset,_nSize,"nPack v");
-
-                            if(nOffset_Version!=-1)
-                            {
-                                recordNPACK.sVersion=pe.read_ansiString(nOffset_Version+7).section(":",0,0);
-                            }
-                            else
-                            {
-                                recordNPACK.sVersion="1.1.200.2006";
-                            }
-                        }
-
-                        pPEInfo->mapResultPackers.insert(recordNPACK.name,scansToScan(&(pPEInfo->basic_info),&recordNPACK));
                     }
                 }
 
@@ -5136,6 +5138,26 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
     SpecAbstract::_SCANS_STRUCT recordMFC={};
     SpecAbstract::_SCANS_STRUCT recordNET={};
 
+    QMap<QString,QString> mapVersions;
+
+    mapVersions.insert("6.00","12.00");
+    mapVersions.insert("7.00","13.00");
+    mapVersions.insert("7.10","13.10");
+    mapVersions.insert("8.00","14.00");
+    mapVersions.insert("9.00","15.00");
+    mapVersions.insert("10.00","16.00");
+    mapVersions.insert("11.00","17.00");
+    mapVersions.insert("12.00","18.00");
+    mapVersions.insert("14.00","19.00");
+    mapVersions.insert("14.10","19.10");
+    mapVersions.insert("14.11","19.11");
+    mapVersions.insert("14.12","19.12");
+    mapVersions.insert("14.13","19.13");
+    mapVersions.insert("14.14","19.14");
+    mapVersions.insert("14.15","19.15");
+    mapVersions.insert("14.16","19.16");
+    mapVersions.insert("14.20","19.20");
+
     XPE pe(pDevice,bIsImage);
 
     if(pe.isValid())
@@ -5221,30 +5243,103 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
         }
 
+        // Rich
+        int nRichSignaturesCount=pPEInfo->listRichSignatures.count();
+
+        QList<SpecAbstract::_SCANS_STRUCT> listRichDescriptions;
+
+        for(int i=0;i<nRichSignaturesCount;i++)
+        {
+            listRichDescriptions.append(PE_richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE));
+        }
+
+        int nRichDescriptionsCount=listRichDescriptions.count();
+
+        bool bVB=false;
+        for(int i=nRichDescriptionsCount-1;i>=0;i--)
+        {
+            if(listRichDescriptions.at(i).type==SpecAbstract::RECORD_TYPE_LINKER)
+            {
+                recordLinker.name=listRichDescriptions.at(i).name;
+                recordLinker.sVersion=listRichDescriptions.at(i).sVersion;
+                recordLinker.sInfo=listRichDescriptions.at(i).sInfo;
+                recordLinker.type=listRichDescriptions.at(i).type;
+            }
+
+            if(listRichDescriptions.at(i).type==SpecAbstract::RECORD_TYPE_COMPILER)
+            {
+                if(!bVB)
+                {
+                    if(listRichDescriptions.at(i).name==RECORD_NAME_UNIVERSALTUPLECOMPILER)
+                    {
+                        if(listRichDescriptions.at(i).sInfo!="Basic")
+                        {
+                            recordCompiler.name=RECORD_NAME_VISUALCCPP;
+                            recordCompiler.sVersion=listRichDescriptions.at(i).sVersion;
+                            recordCompiler.sInfo=listRichDescriptions.at(i).sInfo;
+                            recordCompiler.type=listRichDescriptions.at(i).type;
+                        }
+                        else
+                        {
+                            recordCompiler.type=RECORD_TYPE_COMPILER;
+                            recordCompiler.name=RECORD_NAME_VISUALBASIC;
+                            recordCompiler.sVersion=listRichDescriptions.at(i).sVersion;
+
+                            QString _sVersion=recordCompiler.sVersion.section(".",0,1);
+                            QString _sVersionCompiler=mapVersions.key(_sVersion,"");
+
+                            if(_sVersionCompiler!="")
+                            {
+                                recordCompiler.sVersion=recordCompiler.sVersion.replace(_sVersion,_sVersionCompiler);
+                            }
+
+                            recordCompiler.sInfo="Native";
+                            bVB=true;
+                        }
+                    }
+                    else
+                    {
+                        recordCompiler.name=listRichDescriptions.at(i).name;
+                        recordCompiler.sVersion=listRichDescriptions.at(i).sVersion;
+                        recordCompiler.sInfo=listRichDescriptions.at(i).sInfo;
+                        recordCompiler.type=listRichDescriptions.at(i).type;
+                    }
+                }
+
+            }
+
+            if(listRichDescriptions.at(i).name==SpecAbstract::RECORD_NAME_IMPORT)
+            {
+                break;
+            }
+        }
+
         if(!pPEInfo->cliInfo.bInit)
         {
             // VB
             bool bVBnew=false;
 
+            SpecAbstract::_SCANS_STRUCT _recordCompiler={};
+
             if(XPE::isImportLibraryPresentI("VB40032.DLL",&(pPEInfo->listImports)))
             {
-                recordCompiler.type=RECORD_TYPE_COMPILER;
-                recordCompiler.name=RECORD_NAME_VISUALBASIC;
-                recordCompiler.sVersion="4.0";
+                _recordCompiler.type=RECORD_TYPE_COMPILER;
+                _recordCompiler.name=RECORD_NAME_VISUALBASIC;
+                _recordCompiler.sVersion="4.0";
             }
             else if(XPE::isImportLibraryPresentI("MSVBVM50.DLL",&(pPEInfo->listImports)))
             {
-                recordCompiler.type=RECORD_TYPE_COMPILER;
-                recordCompiler.name=RECORD_NAME_VISUALBASIC;
-                recordCompiler.sVersion="5.0";
+                _recordCompiler.type=RECORD_TYPE_COMPILER;
+                _recordCompiler.name=RECORD_NAME_VISUALBASIC;
+                _recordCompiler.sVersion="5.0";
                 bVBnew=true;
             }
 
             if(XPE::isImportLibraryPresentI("MSVBVM60.DLL",&(pPEInfo->listImports)))
             {
-                recordCompiler.type=RECORD_TYPE_COMPILER;
-                recordCompiler.name=RECORD_NAME_VISUALBASIC;
-                recordCompiler.sVersion="6.0";
+                _recordCompiler.type=RECORD_TYPE_COMPILER;
+                _recordCompiler.name=RECORD_NAME_VISUALBASIC;
+                _recordCompiler.sVersion="6.0";
                 bVBnew=true;
             }
 
@@ -5268,8 +5363,16 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
 
                         quint32 nOffsetOptions3=pe.addressToOffset(pe.getBaseAddress()+nOffsetOptions2);
                         quint32 nValue=pe.read_uint32(nOffsetOptions3+0x20);
-                        recordCompiler.sInfo=nValue?"P-Code":"Native";
+                        _recordCompiler.sInfo=nValue?"P-Code":"Native";
                     }
+                }
+            }
+
+            if(recordCompiler.name!=RECORD_NAME_VISUALBASIC)
+            {
+                if(_recordCompiler.name==RECORD_NAME_VISUALBASIC)
+                {
+                    recordCompiler=_recordCompiler;
                 }
             }
         }
@@ -5291,77 +5394,17 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
         }
 
-        // Rich
-        int nRichSignaturesCount=pPEInfo->listRichSignatures.count();
-
-        QList<SpecAbstract::_SCANS_STRUCT> listRichDescriptions;
-
-        for(int i=0;i<nRichSignaturesCount;i++)
-        {
-            listRichDescriptions.append(PE_richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE));
-        }
-
-        int nRichDescriptionsCount=listRichDescriptions.count();
-
-        for(int i=nRichDescriptionsCount-1;i>=0;i--)
-        {
-            if(listRichDescriptions.at(i).type==SpecAbstract::RECORD_TYPE_LINKER)
-            {
-                recordLinker.name=listRichDescriptions.at(i).name;
-                recordLinker.sVersion=listRichDescriptions.at(i).sVersion;
-                recordLinker.sInfo=listRichDescriptions.at(i).sInfo;
-                recordLinker.type=listRichDescriptions.at(i).type;
-            }
-
-            if(listRichDescriptions.at(i).type==SpecAbstract::RECORD_TYPE_COMPILER)
-            {
-                if(listRichDescriptions.at(i).name==RECORD_NAME_UNIVERSALTUPLECOMPILER)
-                {
-                    if(listRichDescriptions.at(i).sInfo!="Basic") // TODO
-                    {
-                        recordCompiler.name=RECORD_NAME_VISUALCCPP;
-                        recordCompiler.sVersion=listRichDescriptions.at(i).sVersion;
-                        recordCompiler.sInfo=listRichDescriptions.at(i).sInfo;
-                        recordCompiler.type=listRichDescriptions.at(i).type;
-                    }
-                }
-                else
-                {
-                    recordCompiler.name=listRichDescriptions.at(i).name;
-                    recordCompiler.sVersion=listRichDescriptions.at(i).sVersion;
-                    recordCompiler.sInfo=listRichDescriptions.at(i).sInfo;
-                    recordCompiler.type=listRichDescriptions.at(i).type;
-                }
-            }
-
-            if(listRichDescriptions.at(i).name==SpecAbstract::RECORD_NAME_IMPORT)
-            {
-                break;
-            }
-        }
-
         if((recordMFC.name==RECORD_NAME_MFC)&&(recordCompiler.type==RECORD_TYPE_UNKNOWN))
         {
             recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
             recordCompiler.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
 
-            if      (recordMFC.sVersion=="6.00")    recordCompiler.sVersion="12.00";
-            else if (recordMFC.sVersion=="7.00")    recordCompiler.sVersion="13.00";
-            else if (recordMFC.sVersion=="7.10")    recordCompiler.sVersion="13.10";
-            else if (recordMFC.sVersion=="8.00")    recordCompiler.sVersion="14.00";
-            else if (recordMFC.sVersion=="9.00")    recordCompiler.sVersion="15.00";
-            else if (recordMFC.sVersion=="10.00")   recordCompiler.sVersion="16.00";
-            else if (recordMFC.sVersion=="11.00")   recordCompiler.sVersion="17.00";
-            else if (recordMFC.sVersion=="12.00")   recordCompiler.sVersion="18.00";
-            else if (recordMFC.sVersion=="14.00")   recordCompiler.sVersion="19.00";
-            else if (recordMFC.sVersion=="14.10")   recordCompiler.sVersion="19.10";
-            else if (recordMFC.sVersion=="14.11")   recordCompiler.sVersion="19.11";
-            else if (recordMFC.sVersion=="14.12")   recordCompiler.sVersion="19.12";
-            else if (recordMFC.sVersion=="14.13")   recordCompiler.sVersion="19.13";
-            else if (recordMFC.sVersion=="14.14")   recordCompiler.sVersion="19.14";
-            else if (recordMFC.sVersion=="14.15")   recordCompiler.sVersion="19.15";
-            else if (recordMFC.sVersion=="14.16")   recordCompiler.sVersion="19.16";
-            else if (recordMFC.sVersion=="14.20")   recordCompiler.sVersion="19.20";
+            QString _sVersion=mapVersions.value(recordMFC.sVersion);
+
+            if(_sVersion!="")
+            {
+                recordCompiler.sVersion=_sVersion;
+            }
         }
 
         if(recordCompiler.name!=RECORD_NAME_VISUALCCPP)
@@ -5428,23 +5471,12 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
                     QString sLinkerVersion=recordLinker.sVersion;
                     QString sLinkerMajorVersion=sLinkerVersion.section(".",0,1);
 
-                    if      (sLinkerMajorVersion=="6.00")   recordCompiler.sVersion="12.00";
-                    else if (sLinkerMajorVersion=="7.00")   recordCompiler.sVersion="13.00";
-                    else if (sLinkerMajorVersion=="7.10")   recordCompiler.sVersion="13.10";
-                    else if (sLinkerMajorVersion=="8.00")   recordCompiler.sVersion="14.00";
-                    else if (sLinkerMajorVersion=="9.00")   recordCompiler.sVersion="15.00";
-                    else if (sLinkerMajorVersion=="10.00")  recordCompiler.sVersion="16.00";
-                    else if (sLinkerMajorVersion=="11.00")  recordCompiler.sVersion="17.00";
-                    else if (sLinkerMajorVersion=="12.00")  recordCompiler.sVersion="18.00";
-                    else if (sLinkerMajorVersion=="14.00")  recordCompiler.sVersion="19.00";
-                    else if (sLinkerMajorVersion=="14.10")  recordCompiler.sVersion="19.10";
-                    else if (sLinkerMajorVersion=="14.11")  recordCompiler.sVersion="19.11";
-                    else if (sLinkerMajorVersion=="14.12")  recordCompiler.sVersion="19.12";
-                    else if (sLinkerMajorVersion=="14.13")  recordCompiler.sVersion="19.13";
-                    else if (sLinkerMajorVersion=="14.14")  recordCompiler.sVersion="19.14";
-                    else if (sLinkerMajorVersion=="14.15")  recordCompiler.sVersion="19.15";
-                    else if (sLinkerMajorVersion=="14.16")  recordCompiler.sVersion="19.16";
-                    else if (sLinkerMajorVersion=="14.20")  recordCompiler.sVersion="19.20";
+                    QString _sVersion=mapVersions.value(sLinkerMajorVersion);
+
+                    if(_sVersion!="")
+                    {
+                        recordCompiler.sVersion=_sVersion;
+                    }
                 }
             }
         }
@@ -9411,6 +9443,11 @@ void SpecAbstract::Binary_handle_InstallerData(QIODevice *pDevice,bool bIsImage,
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ARCRYPT))&&(pBinaryInfo->basic_info.nSize>=8))
     {
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ARCRYPT);
+        pBinaryInfo->mapResultInstallerData.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_NOXCRYPT))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_NOXCRYPT);
         pBinaryInfo->mapResultInstallerData.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 }
