@@ -100,6 +100,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 ""},                    "'<%*#%>'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 ""},                    "'@@##@@'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_NOXCRYPT,                     "",                 ""},                    "'|||'"},
+    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_FASTFILECRYPT,                "",                 ""},                    "'(==#==)'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
@@ -459,13 +460,13 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PUSSYCRYPTER,                 "1.0",              "TEST"},                0x27e360241a,   0x69740a38},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ZELDACRYPT,                   "1.0",              "TEST"},                0x27e360241a,   0xffacb503},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BIOHAZARDCRYPTER,             "",                 "TEST"},                0x341d510008,   0x4c51ceec},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTABLESEDUCATION,          "1.0",              "TEST"},                0x379caa9586,   0x497a33ab},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTIC,                      "2.1",              "TEST"},                0x2551095bcf,   0x28ee87cc},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTABLESEDUCATION,          "1.0",              ""},                    0x379caa9586,   0x497a33ab},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTIC,                      "2.1",              ""},                    0x2551095bcf,   0x28ee87cc},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTOZ,                      "3",                "TEST"},                0x32a797d70b,   0x9ce9bc9d},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DIRTYCRYPTOR,                 "",                 "TEST"},                0x2d5043f921,   0x1278f5f4},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KIAMSCRYPTOR,                 "1.4",              "TEST"},                0x2d5043f921,   0x1278f5f4},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FAKUSCRYPTOR,                 "1.4",              "TEST"},                0x1c5896cc05,   0x660aa806},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FASTFILECRYPT,                "1.6",              "TEST"},                0x54fe70e1c,    0x12125e9a},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FASTFILECRYPT,                "1.6",              ""},                    0x54fe70e1c,    0x12125e9a},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FILESHIELD,                   "1.0",              "TEST"},                0x369ad56c1b,   0x907d472a},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_GHAZZACRYPTER,                "1.0",              "TEST"},                0x2de302f688,   0x1d13438c},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_H4CKY0UORGCRYPTER,            "",                 "TEST"},                0x68ec019f4,    0x182303e5},
@@ -9448,6 +9449,11 @@ void SpecAbstract::Binary_handle_InstallerData(QIODevice *pDevice,bool bIsImage,
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_NOXCRYPT))&&(pBinaryInfo->basic_info.nSize>=8))
     {
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_NOXCRYPT);
+        pBinaryInfo->mapResultInstallerData.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_FASTFILECRYPT))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_FASTFILECRYPT);
         pBinaryInfo->mapResultInstallerData.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 }
