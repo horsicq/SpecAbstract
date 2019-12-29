@@ -1003,6 +1003,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_XTREMEPROTECTOR,              "",                 ""},                    "CODE    "},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_XTREMEPROTECTOR,              "",                 ""},                    ".idata  "},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_XTREMEPROTECTOR,              "",                 ""},                    "XPROT   "},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_XTREAMLOK,                    "",                 ""},                    ".xlok"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PETOOL,           SpecAbstract::RECORD_NAME_XVOLKOLAK,                    "",                 ""},                    ".xvlk"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_YODASCRYPTER,                 "1.X",              ""},                    "yC"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_YODASPROTECTOR,               "1.0b",             ""},                    "yC"},
@@ -1708,6 +1709,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_XML:                                   sResult=QString("XML");                                         break;
         case RECORD_NAME_XPACK:                                 sResult=QString("XPack");                                       break;
         case RECORD_NAME_XTREMEPROTECTOR:                       sResult=QString("Xtreme-Protector");                            break;
+        case RECORD_NAME_XTREAMLOK:                             sResult=QString("Xtreamlok");                                   break;
         case RECORD_NAME_XVOLKOLAK:                             sResult=QString("XVolkolak");                                   break;
         case RECORD_NAME_YANDEX:                                sResult=QString("Yandex");                                      break;
         case RECORD_NAME_YANO:                                  sResult=QString("Yano");                                        break;
