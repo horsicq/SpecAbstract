@@ -451,6 +451,8 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "2.XX",             ""},                    0x4e0ec6281,    0x87857386},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_EXEJOINER,                    "1.0",              ""},                    0x6704c9452,    0x29aaa397},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_XTREMEPROTECTOR,              "1.06",             "TEST"},                0x12261bcdc,    0xa8689d85},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_CEXE,                         "1.0",              ""},                    0xcda93f5a0,    0x6ad5f3a1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_CEXE,                         "1.0",              ""},                    0xd97446c35,    0x95065b94},
     // VB cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 ""},                    0x608b5ca5f,    0x27f8d01f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 ""},                    0x21bae50da1,   0xab934456},
@@ -2383,7 +2385,6 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_import(pDevice,pOptions->bIsImage,&result);
 
         PE_handle_Protection(pDevice,pOptions->bIsImage,&result);
-        PE_handle_CExe(pDevice,pOptions->bIsImage,&result);
         PE_handle_SafeengineShielden(pDevice,pOptions->bIsImage,&result);
         PE_handle_VProtect(pDevice,pOptions->bIsImage,&result);
         PE_handle_TTProtect(pDevice,pOptions->bIsImage,&result);
@@ -4186,6 +4187,14 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
+                // CExe
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CEXE))
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CEXE);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
                 // ABC Cryptor
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ABCCRYPTOR))
                 {
@@ -4469,25 +4478,6 @@ void SpecAbstract::PE_handle_SafeengineShielden(QIODevice *pDevice, bool bIsImag
                         pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     }
                 }
-            }
-        }
-    }
-}
-
-void SpecAbstract::PE_handle_CExe(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
-{
-    XPE pe(pDevice,bIsImage);
-
-    if(pe.isValid())
-    {
-        if(!pPEInfo->cliInfo.bInit)
-        {
-            // TODO !!!
-            if( ((pPEInfo->nImportHash64==0xcda93f5a0)&&(pPEInfo->nImportHash32==0x6ad5f3a1))||
-                ((pPEInfo->nImportHash64==0xd97446c35)&&(pPEInfo->nImportHash32==0x95065b94)))
-            {
-                SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_CEXE,"1.0","",0);
-                pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
         }
     }
