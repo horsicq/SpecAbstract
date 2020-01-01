@@ -107,6 +107,8 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_WLCRYPT,                      "",                 ""},                    "'[Crypted Key]'"},
 };
 
+// TODO MSDOS COM!
+
 SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
 {
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",                 ""},                    "'MZ'50000200000004000F00FFFF0000B80000000000000040001A000000000000000000000000000000000000000000000000000000000000000000....0000BA10000E1FB409CD21B8014CCD219090'This program must be run under Win'....'\r\n$'370000000000"},
@@ -2394,7 +2396,6 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_Armadillo(pDevice,pOptions->bIsImage,&result);
         PE_handle_Obsidium(pDevice,pOptions->bIsImage,&result);
         PE_handle_Themida(pDevice,pOptions->bIsImage,&result);
-        PE_handle_eXPressor(pDevice,pOptions->bIsImage,&result);
         PE_handle_StarForce(pDevice,pOptions->bIsImage,&result);
         PE_handle_Petite(pDevice,pOptions->bIsImage,&result);
         PE_handle_NETProtection(pDevice,pOptions->bIsImage,&result);
@@ -2758,6 +2759,17 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                         pPEInfo->mapResultPackers.insert(recordUPX.name,scansToScan(&(pPEInfo->basic_info),&recordUPX));
                     }
+                }
+            }
+
+            // EXPRESSOR
+            if(pPEInfo->mapImportDetects.contains(RECORD_NAME_EXPRESSOR))
+            {
+                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EXPRESSOR))
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EXPRESSOR);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
             }
 
@@ -4699,28 +4711,6 @@ void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, bool bIsImage, SpecAbst
                 {
                     // TODO Version
                     SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_THEMIDAWINLICENSE,"","",0);
-
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-            }
-        }
-    }
-}
-
-void SpecAbstract::PE_handle_eXPressor(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo) // TODO move to protection
-{
-    // TODO new versions
-    XPE pe(pDevice,bIsImage);
-
-    if(pe.isValid())
-    {
-        if(!pPEInfo->cliInfo.bInit)
-        {
-            if(pPEInfo->mapImportDetects.contains(RECORD_NAME_EXPRESSOR))
-            {
-                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EXPRESSOR))
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EXPRESSOR);
 
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
