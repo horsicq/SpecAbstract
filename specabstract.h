@@ -1,4 +1,4 @@
-﻿// copyright (c) 2017-2019 hors<horsicq@gmail.com>
+﻿// copyright (c) 2017-2020 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,8 @@
 #include <QDataStream>
 #include <QElapsedTimer>
 #include <QUuid>
+#include "xle.h"
+#include "xne.h"
 #include "xpe.h"
 #include "xelf.h"
 #include "xmach.h"
@@ -41,6 +43,9 @@ public:
         RECORD_FILETYPE_UNKNOWN=0,
         RECORD_FILETYPE_BINARY,
         RECORD_FILETYPE_MSDOS,
+        RECORD_FILETYPE_LE,
+        RECORD_FILETYPE_LX,
+        RECORD_FILETYPE_NE,
         RECORD_FILETYPE_PE,
         RECORD_FILETYPE_PE32,
         RECORD_FILETYPE_PE64,
@@ -688,6 +693,38 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
     };
 
+    struct LEINFO_STRUCT
+    {
+        BASIC_INFO basic_info;
+        QString sEntryPointSignature;
+        QString sOverlaySignature;
+        qint64 nOverlayOffset;
+        qint64 nOverlaySize;
+
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
+
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
+
+        QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
+    };
+
+    struct NEINFO_STRUCT
+    {
+        BASIC_INFO basic_info;
+        QString sEntryPointSignature;
+        QString sOverlaySignature;
+        qint64 nOverlayOffset;
+        qint64 nOverlaySize;
+
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
+
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
+
+        QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
+    };
+
     struct MACHINFO_STRUCT
     {
         BASIC_INFO basic_info;
@@ -914,6 +951,8 @@ public:
     static MSDOSINFO_STRUCT getMSDOSInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);
     static ELFINFO_STRUCT getELFInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);
     static MACHINFO_STRUCT getMACHInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);
+    static LEINFO_STRUCT getLEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);
+    static NEINFO_STRUCT getNEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);
     static PEINFO_STRUCT getPEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);
 
     static _SCANS_STRUCT getScansStruct(quint32 nVariant,RECORD_FILETYPE filetype,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo,qint64 nOffset);

@@ -1,4 +1,4 @@
-// copyright (c) 2017-2019 hors<horsicq@gmail.com>
+// copyright (c) 2017-2020 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -1155,6 +1155,18 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
             pScanResult->listRecords.append(msdos_info.basic_info.listDetects);
         }
+        else if(stTypes.contains(XBinary::FT_LE)||stTypes.contains(XBinary::FT_LX))
+        {
+            SpecAbstract::LEINFO_STRUCT le_info=SpecAbstract::getLEInfo(&sd,parentId,pOptions,nOffset);
+
+            pScanResult->listRecords.append(le_info.basic_info.listDetects);
+        }
+        else if(stTypes.contains(XBinary::FT_NE))
+        {
+            SpecAbstract::NEINFO_STRUCT ne_info=SpecAbstract::getNEInfo(&sd,parentId,pOptions,nOffset);
+
+            pScanResult->listRecords.append(ne_info.basic_info.listDetects);
+        }
         else
         {
             SpecAbstract::BINARYINFO_STRUCT binary_info=SpecAbstract::getBinaryInfo(&sd,parentId,pOptions,nOffset);
@@ -1212,6 +1224,9 @@ QString SpecAbstract::recordFiletypeIdToString(RECORD_FILETYPE id)
         case RECORD_FILETYPE_UNKNOWN:                           sResult=QString("Unknown");                                     break;
         case RECORD_FILETYPE_BINARY:                            sResult=QString("Binary");                                      break;
         case RECORD_FILETYPE_MSDOS:                             sResult=QString("MSDOS");                                       break;
+        case RECORD_FILETYPE_LE:                                sResult=QString("LE");                                          break;
+        case RECORD_FILETYPE_LX:                                sResult=QString("LX");                                          break;
+        case RECORD_FILETYPE_NE:                                sResult=QString("NE");                                          break;
         case RECORD_FILETYPE_PE:                                sResult=QString("PE");                                          break;
         case RECORD_FILETYPE_PE32:                              sResult=QString("PE 32");                                       break;
         case RECORD_FILETYPE_PE64:                              sResult=QString("PE 64");                                       break;
@@ -2122,7 +2137,6 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
 
         result.sEntryPointSignature=mach.getSignature(mach.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
-
         result.listCommandRecords=mach.getCommandRecords();
 
         result.listLibraryRecords=mach.getLibraryRecords(&result.listCommandRecords);
@@ -2137,6 +2151,103 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
         result.basic_info.listDetects.append(result.mapResultProtectors.values());
+
+        if(!result.basic_info.listDetects.count())
+        {
+            _SCANS_STRUCT ssUnknown={};
+
+            ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
+            ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
+
+            result.basic_info.listDetects.append(scansToScan(&(result.basic_info),&ssUnknown));
+
+            result.basic_info.bIsUnknown=true;
+        }
+    }
+
+    result.basic_info.nElapsedTime=timer.elapsed();
+
+    return result;
+}
+
+SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    LEINFO_STRUCT result={};
+
+    XLE le(pDevice,pOptions->bIsImage);
+
+    if(le.isValid())
+    {
+        result.basic_info.parentId=parentId;
+
+        if(le.isLX()) // TODO bLX
+        {
+            result.basic_info.id.filetype=RECORD_FILETYPE_LX;
+        }
+        else
+        {
+            result.basic_info.id.filetype=RECORD_FILETYPE_LE;
+        }
+
+        result.basic_info.id.filepart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.nOffset=nOffset;
+        result.basic_info.nSize=pDevice->size();
+        result.basic_info.sHeaderSignature=le.getSignature(0,150);
+        result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.bIsTest=pOptions->bIsTest;
+        result.basic_info.memoryMap=le.getMemoryMap();
+
+        result.sEntryPointSignature=le.getSignature(le.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
+
+        result.basic_info.listDetects.append(result.mapResultCompilers.values());
+
+        if(!result.basic_info.listDetects.count())
+        {
+            _SCANS_STRUCT ssUnknown={};
+
+            ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
+            ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
+
+            result.basic_info.listDetects.append(scansToScan(&(result.basic_info),&ssUnknown));
+
+            result.basic_info.bIsUnknown=true;
+        }
+    }
+
+    result.basic_info.nElapsedTime=timer.elapsed();
+
+    return result;
+}
+
+SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    NEINFO_STRUCT result={};
+
+    XNE ne(pDevice,pOptions->bIsImage);
+
+    if(ne.isValid())
+    {
+        result.basic_info.parentId=parentId;
+        result.basic_info.id.filetype=RECORD_FILETYPE_NE;
+        result.basic_info.id.filepart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.nOffset=nOffset;
+        result.basic_info.nSize=pDevice->size();
+        result.basic_info.sHeaderSignature=ne.getSignature(0,150);
+        result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.bIsTest=pOptions->bIsTest;
+        result.basic_info.memoryMap=ne.getMemoryMap();
+
+        result.sEntryPointSignature=ne.getSignature(ne.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
+
+        result.basic_info.listDetects.append(result.mapResultCompilers.values());
 
         if(!result.basic_info.listDetects.count())
         {
