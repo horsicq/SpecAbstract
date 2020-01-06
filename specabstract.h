@@ -1057,11 +1057,11 @@ public:
     static void resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,RESOURCES_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2); // TODO Check
     static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
     static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
-    static void PE_richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
+    static void richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
 
     static void signatureExpScan(XBinary *pXBinary,XBinary::_MEMORY_MAP *pMemoryMap,QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,qint64 nOffset,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
 
-    static QList<_SCANS_STRUCT> PE_richScan(quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
+    static QList<_SCANS_STRUCT> richScan(quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
 
     static QByteArray serializeScanStruct(SCAN_STRUCT ssRecord,bool bIsHeader=false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData,bool *pbIsHeader=nullptr);

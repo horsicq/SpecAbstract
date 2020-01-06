@@ -2361,10 +2361,10 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
             }
         }
 #endif
-        result.exportHeader=pe.getExport(); // TODO memoryMap
-        result.listResources=pe.getResources(); // TODO memoryMap
-        result.listRichSignatures=pe.getRichSignatureRecords(); // TODO memoryMap
-        result.cliInfo=pe.getCliInfo(true); // TODO memoryMap
+        result.exportHeader=pe.getExport(&(result.basic_info.memoryMap));
+        result.listResources=pe.getResources(&(result.basic_info.memoryMap));
+        result.listRichSignatures=pe.getRichSignatureRecords();
+        result.cliInfo=pe.getCliInfo(true,&(result.basic_info.memoryMap));
         result.sResourceManifest=pe.getResourceManifest(&result.listResources);
         result.resVersion=pe.getResourceVersion(&result.listResources);
 
@@ -2375,14 +2375,14 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.nMinorImageVersion=result.bIs64?result.optional_header.optionalHeader64.MinorImageVersion:result.optional_header.optionalHeader32.MinorImageVersion;
         result.nMajorImageVersion=result.bIs64?result.optional_header.optionalHeader64.MajorImageVersion:result.optional_header.optionalHeader32.MajorImageVersion;
 
-        result.nEntryPointSection=pe.getEntryPointSection(); // TODO optimize!  // TODO memoryMap
-        result.nResourceSection=pe.getResourcesSection(); // TODO memoryMap
-        result.nImportSection=pe.getImportSection(); // TODO memoryMap
-        result.nCodeSection=pe.getNormalCodeSection(); // TODO memoryMap
-        result.nDataSection=pe.getNormalDataSection(); // TODO memoryMap
-        result.nConstDataSection=pe.getConstDataSection(); // TODO memoryMap
-        result.nRelocsSection=pe.getRelocsSection(); // TODO memoryMap
-        result.nTLSSection=pe.getTLSSection(); // TODO memoryMap
+        result.nEntryPointSection=pe.getEntryPointSection(&(result.basic_info.memoryMap));
+        result.nResourceSection=pe.getResourcesSection(&(result.basic_info.memoryMap));
+        result.nImportSection=pe.getImportSection(&(result.basic_info.memoryMap));
+        result.nCodeSection=pe.getNormalCodeSection(&(result.basic_info.memoryMap));
+        result.nDataSection=pe.getNormalDataSection(&(result.basic_info.memoryMap));
+        result.nConstDataSection=pe.getConstDataSection(&(result.basic_info.memoryMap));
+        result.nRelocsSection=pe.getRelocsSection(&(result.basic_info.memoryMap));
+        result.nTLSSection=pe.getTLSSection(&(result.basic_info.memoryMap));
 
         if(result.nEntryPointSection!=-1)
         {
@@ -5350,7 +5350,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
 
         for(int i=0;i<nRichSignaturesCount;i++)
         {
-            listRichDescriptions.append(PE_richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE));
+            listRichDescriptions.append(richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE));
         }
 
         int nRichDescriptionsCount=listRichDescriptions.count();
@@ -10938,7 +10938,7 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
     }
 }
 
-void SpecAbstract::PE_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2)
+void SpecAbstract::richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2)
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(MSRICH_RECORD);
 
@@ -10989,7 +10989,7 @@ void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMe
     }
 }
 
-QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::PE_richScan(quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2)
+QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::richScan(quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2)
 {
     QList<SpecAbstract::_SCANS_STRUCT> listResult;
 
