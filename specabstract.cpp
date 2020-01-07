@@ -2207,6 +2207,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
 
         LE_handle_Microsoft(pDevice,pOptions->bIsImage,&result);
 
+        result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
 
         if(!result.basic_info.listDetects.count())
@@ -10394,6 +10395,12 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO
         // Rich
         int nRichSignaturesCount=pLEInfo->listRichSignatures.count();
 
+        if(nRichSignaturesCount)
+        {
+            recordLinker.name=RECORD_NAME_MICROSOFTLINKER;
+            recordLinker.type=SpecAbstract::RECORD_TYPE_LINKER;
+        }
+
         QList<SpecAbstract::_SCANS_STRUCT> listRichDescriptions;
 
         for(int i=0;i<nRichSignaturesCount;i++)
@@ -10429,11 +10436,6 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO
                     recordCompiler.sInfo=listRichDescriptions.at(i).sInfo;
                     recordCompiler.type=listRichDescriptions.at(i).type;
                 }
-            }
-
-            if(listRichDescriptions.at(i).name==SpecAbstract::RECORD_NAME_IMPORT)
-            {
-                break;
             }
         }
 
