@@ -640,276 +640,276 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
 
 SpecAbstract::MSRICH_RECORD _MS_rich_records[]=
 {
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "",                 ""},                    0x0001,         0},             // Linker generated import object version 0
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "5.10",             ""},                    0x0002,         (quint32)-1},   // LINK 5.10 (Visual Studio 97 SP3)
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "5.10",             ""},                    0x0003,         (quint32)-1},   // LINK 5.10 (Visual Studio 97 SP3) OMF to COFF conversion
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.00",             ""},                    0x0004,         (quint32)-1},   // LINK 6.00 (Visual Studio 98)
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.00",             ""},                    0x0005,         (quint32)-1},   // LINK 6.00 (Visual Studio 98) OMF to COFF conversion
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "5.00",             ""},                    0x0006,         (quint32)-1},   // CVTRES 5.00
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "11.00",            "Basic"},               0x0007,         (quint32)-1},   // VB 5.0 native code
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "11.00",            "C/C++"},               0x0008,         (quint32)-1},   // VC++ 5.0 C/C++
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "Basic"},               0x0009,         (quint32)-1},   // VB 6.0 native code
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "C"},                   0x000a,         (quint32)-1},   // VC++ 6.0 C
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "C++"},                 0x000b,         (quint32)-1},   // VC++ 6.0 C++
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "6.00",             ""},                    0x000c,         (quint32)-1},   // ALIASOBJ.EXE (CRT Tool that builds OLDNAMES.LIB)
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALBASIC,                  "6.00",             ""},                    0x000d,         (quint32)-1},   // VB 6.0 generated object
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.13",             ""},                    0x000e,         (quint32)-1},   // MASM 6.13
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "7.01",             ""},                    0x000f,         (quint32)-1},   // MASM 7.01
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "5.11",             ""},                    0x0010,         (quint32)-1},   // LINK 5.11
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "5.11",             ""},                    0x0011,         (quint32)-1},   // LINK 5.11 OMF to COFF conversion
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.14",             "MMX2 support"},        0x0012,         (quint32)-1},   // MASM 6.14 (MMX2 support)
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "5.12",             ""},                    0x0013,         (quint32)-1},   // LINK 5.12
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "5.12",             ""},                    0x0014,         (quint32)-1},   // LINK 5.12 OMF to COFF conversion
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "C/std"},               0x0015,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "C++/std"},             0x0016,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "C/book"},              0x0017,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "C++/book"},            0x0018,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "7.00",             ""},                    0x0019,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "7.00",             ""},                    0x001a,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "Basic"},               0x001b,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "C"},                   0x001c,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "C++"},                 0x001d,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.10",             ""},                    0x001e,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.10",             ""},                    0x001f,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.01",             ""},                    0x0020,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.01",             ""},                    0x0021,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.10",            "Basic"},               0x0022,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.10",            "C"},                   0x0023,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.10",            "C++"},                 0x0024,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.20",             ""},                    0x0025,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.20",             ""},                    0x0026,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "7.00",             ""},                    0x0027,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.21",             ""},                    0x0028,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.21",             ""},                    0x0029,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.15",             ""},                    0x002a,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "LTCG/C"},              0x002b,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "LTCG/C++"},            0x002c,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.20",             ""},                    0x002d,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_ILASM,                        "1.00",             ""},                    0x002e,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.20",            "Basic"},               0x002f,         (quint32)-1}, // 6.20 ???
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.20",            "C"},                   0x0030,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.20",            "C++"},                 0x0031,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.20",            "C/std"},               0x0032,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.20",            "C++/std"},             0x0033,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.20",            "C/book"},              0x0034,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.20",            "C++/book"},            0x0035,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "6.22",             ""},                    0x0036,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.22",             ""},                    0x0037,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "5.01",             ""},                    0x0038,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "C/std"},               0x0039,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "C++/std"},             0x003a,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "13.00",            ""},                    0x003b,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.22",             ""},                    0x003c,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "7.00",             ""},                    0x003d,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "6.22",             ""},                    0x003e,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "7.00",             ""},                    0x003f,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "7.00",             ""},                    0x0040,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "POGO_I_C"},            0x0041,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "POGO_I_CPP"},          0x0042,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "POGO_O_C"},            0x0043,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "POGO_O_CPP"},          0x0044,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "7.00",             ""},                    0x0045,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "7.10p",            ""},                    0x0046,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "7.10p",            ""},                    0x0047,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "7.10p",            ""},                    0x0048,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "7.10p",            ""},                    0x0049,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "7.10p",            ""},                    0x004a,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "7.10p",            ""},                    0x004b,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "C"},                   0x004c,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "C++"},                 0x004d,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "C/std"},               0x004e,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "C++/std"},             0x004f,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "LTCG/C"},              0x0050,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "LTCG/C++"},            0x0051,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "POGO_I_C"},            0x0052,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "POGO_I_CPP"},          0x0053,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "POGO_O_C"},            0x0054,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "POGO_O_CPP"},          0x0055,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.24",             ""},                    0x0056,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.24",             ""},                    0x0057,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "6.24",             ""},                    0x0058,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "6.24",             ""},                    0x0059,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "7.10",             ""},                    0x005a,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "7.10",             ""},                    0x005b,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "7.10",             ""},                    0x005c,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "7.10",             ""},                    0x005d,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "7.10",             ""},                    0x005e,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "C"},                   0x005f,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "C++"},                 0x0060,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "C/std"},               0x0061,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "C++/std"},             0x0062,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "LTCG/C"},              0x0063,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "LTCG/C++"},            0x0064,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "POGO_I_C"},            0x0065,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "POGO_I_CPP"},          0x0066,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "POGO_O_C"},            0x0067,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "POGO_O_CPP"},          0x0068,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "7.10",             ""},                    0x0069,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "7.10p",            ""},                    0x006a,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "13.10",            ""},                    0x006b,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "13.10p",           ""},                    0x006c,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "C"},                   0x006d,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "C++"},                 0x006e,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "C/std"},               0x006f,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "C++/std"},             0x0070,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "LTCG/C"},              0x0071,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "LTCG/C++"},            0x0072,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "POGO_I_C"},            0x0073,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "POGO_I_CPP"},          0x0074,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "POGO_O_C"},            0x0075,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "POGO_O_CPP"},          0x0076,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "14.00",            ""},                    0x0077,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "8.00",             ""},                    0x0078,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "8.00",             ""},                    0x0079,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "8.00",             ""},                    0x007a,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "8.00",             ""},                    0x007b,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "8.00",             ""},                    0x007c,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "8.00",             ""},                    0x007d,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "8.00",             ""},                    0x007e,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "Prerelease",       ""},                    0x007f,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "CVTCIL/C"},            0x0080,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "CVTCIL/C++"},          0x0081,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "LTCG/MSIL"},           0x0082,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "C"},                   0x0083,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "C++"},                 0x0084,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "C/std"},               0x0085,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "C++/std"},             0x0086,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "CVTCIL/C"},            0x0087,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "CVTCIL/C++"},          0x0088,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "LTCG/C"},              0x0089,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "LTCG/C++"},            0x008a,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "LTCG/MSIL"},           0x008b,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "POGO_I_C"},            0x008c,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "POGO_I_CPP"},          0x008d,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "POGO_O_C"},            0x008e,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "POGO_O_CPP"},          0x008f,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "15.00",            ""},                    0x0090,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "9.00",             ""},                    0x0091,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "9.00",             ""},                    0x0092,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "9.00",             ""},                    0x0093,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "9.00",             ""},                    0x0094,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "9.00",             ""},                    0x0095,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "9.00",             ""},                    0x0096,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_RESOURCE,                     "9.00",             ""},                    0x0097,         (quint32)-1}, // Manifest
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "10.00",            ""},                    0x0098,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "16.00",            ""},                    0x0099,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "10.00",            ""},                    0x009a,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "10.00"             ""},                    0x009b,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "10.00"             ""},                    0x009c,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "10.00",            ""},                    0x009d,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "10.00",            ""},                    0x009e,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "C"},                   0x009f,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "C++"},                 0x00a0,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "CVTCIL/C"},            0x00a1,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "CVTCIL/C++"},          0x00a2,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "LTCG/C"},              0x00a3,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "LTCG/C++"},            0x00a4,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "LTCG/MSIL"},           0x00a5,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "POGO_I_C"},            0x00a6,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "POGO_I_CPP"},          0x00a7,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "POGO_O_C"},            0x00a8,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "POGO_O_CPP"},          0x00a9,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "C"},                   0x00aa,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "C++"},                 0x00ab,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "CVTCIL/C"},            0x00ac,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "CVTCIL/C++"},          0x00ad,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "LTCG/C"},              0x00ae,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "LTCG/C++"},            0x00af,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "LTCG/MSIL"},           0x00b0,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "POGO_I_C"},            0x00b1,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "POGO_I_CPP"},          0x00b2,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "POGO_O_C"},            0x00b3,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "POGO_O_CPP"},          0x00b4,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "10.10",            ""},                    0x00b5,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "16.10",            ""},                    0x00b6,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "10.10",            ""},                    0x00b7,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "10.10",            ""},                    0x00b8,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "10.10",            ""},                    0x00b9,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "10.10",            ""},                    0x00ba,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "10.10",            ""},                    0x00bb,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "C"},                   0x00bc,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "C++"},                 0x00bd,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "CVTCIL/C"},            0x00be,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "CVTCIL/C++"},          0x00bf,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "LTCG/C"},              0x00c0,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "LTCG/C++"},            0x00c1,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "LTCG/MSIL"},           0x00c2,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "POGO_I_C"},            0x00c3,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "POGO_I_CPP"},          0x00c4,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "POGO_O_C"},            0x00c5,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "POGO_O_CPP"},          0x00c6,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "11.00",            ""},                    0x00c7,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "17.00",            ""},                    0x00c8,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "11.00",            ""},                    0x00c9,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "11.00",            ""},                    0x00ca,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "11.00",            ""},                    0x00cb,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "11.00",            ""},                    0x00cc,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "11.00",            ""},                    0x00cd,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "C"},                   0x00ce,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "C++"},                 0x00cf,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "CVTCIL/C"},            0x00d0,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "CVTCIL/C++"},          0x00d1,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "LTCG/C"},              0x00d2,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "LTCG/C++"},            0x00d3,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "LTCG/MSIL"},           0x00d4,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "POGO_I_C"},            0x00d5,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "POGO_I_CPP"},          0x00d6,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "POGO_O_C"},            0x00d7,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "POGO_O_CPP"},          0x00d8,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "12.00",            ""},                    0x00d9,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "18.00",            ""},                    0x00da,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "12.00",            ""},                    0x00db,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "12.00",            ""},                    0x00dc,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "12.00",            ""},                    0x00dd,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "12.00",            ""},                    0x00de,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "12.00",            ""},                    0x00df,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "C"},                   0x00e0,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "C++"},                 0x00e1,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "CVTCIL/C"},            0x00e2,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "CVTCIL/C++"},          0x00e3,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "LTCG/C"},              0x00e4,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "LTCG/C++"},            0x00e5,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "LTCG/MSIL"},           0x00e6,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "POGO_I_C"},            0x00e7,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "POGO_I_CPP"},          0x00e8,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "POGO_O_C"},            0x00e9,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "POGO_O_CPP"},          0x00ea,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "12.10",            ""},                    0x00eb,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "18.10",            ""},                    0x00ec,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "12.10",            ""},                    0x00ed,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "12.10",            ""},                    0x00ee,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "12.10",            ""},                    0x00ef,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "12.10",            ""},                    0x00f0,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "12.10",            ""},                    0x00f1,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "C"},                   0x00f2,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "C++"},                 0x00f3,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "CVTCIL/C"},            0x00f4,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "CVTCIL/C++"},          0x00f5,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "LTCG/C"},              0x00f6,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "LTCG/C++"},            0x00f7,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "LTCG/MSIL"},           0x00f8,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "POGO_I_C"},            0x00f9,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "POGO_I_CPP"},          0x00fa,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "POGO_O_C"},            0x00fb,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "POGO_O_CPP"},          0x00fc,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "14.00",            ""},                    0x00fd,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "19.00",            ""},                    0x00fe,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "14.00",            ""},                    0x00ff,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "14.00",            ""},                    0x0100,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "14.00",            ""},                    0x0101,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "14.00",            ""},                    0x0102,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "14.00",            ""},                    0x0103,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "C"},                   0x0104,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "C++"},                 0x0105,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "CVTCIL/C"},            0x0106,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "CVTCIL/C++"},          0x0107,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "LTCG/C"},              0x0108,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "LTCG/C++"},            0x0109,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "LTCG/MSIL"},           0x010a,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "POGO_I_C"},            0x010b,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "POGO_I_CPP"},          0x010c,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "POGO_O_C"},            0x010d,         (quint32)-1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "POGO_O_CPP"},          0x010e,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "",                 ""},                    0x0001,         0},             // Linker generated import object version 0
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "5.10",             ""},                    0x0002,         (quint32)-1},   // LINK 5.10 (Visual Studio 97 SP3)
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "5.10",             ""},                    0x0003,         (quint32)-1},   // LINK 5.10 (Visual Studio 97 SP3) OMF to COFF conversion
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.00",             ""},                    0x0004,         (quint32)-1},   // LINK 6.00 (Visual Studio 98)
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.00",             ""},                    0x0005,         (quint32)-1},   // LINK 6.00 (Visual Studio 98) OMF to COFF conversion
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "5.00",             ""},                    0x0006,         (quint32)-1},   // CVTRES 5.00
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "11.00",            "Basic"},               0x0007,         (quint32)-1},   // VB 5.0 native code
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "11.00",            "C/C++"},               0x0008,         (quint32)-1},   // VC++ 5.0 C/C++
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "Basic"},               0x0009,         (quint32)-1},   // VB 6.0 native code
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "C"},                   0x000a,         (quint32)-1},   // VC++ 6.0 C
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "C++"},                 0x000b,         (quint32)-1},   // VC++ 6.0 C++
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "6.00",             ""},                    0x000c,         (quint32)-1},   // ALIASOBJ.EXE (CRT Tool that builds OLDNAMES.LIB)
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALBASIC,                  "6.00",             ""},                    0x000d,         (quint32)-1},   // VB 6.0 generated object
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.13",             ""},                    0x000e,         (quint32)-1},   // MASM 6.13
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "7.01",             ""},                    0x000f,         (quint32)-1},   // MASM 7.01
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "5.11",             ""},                    0x0010,         (quint32)-1},   // LINK 5.11
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "5.11",             ""},                    0x0011,         (quint32)-1},   // LINK 5.11 OMF to COFF conversion
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.14",             "MMX2 support"},        0x0012,         (quint32)-1},   // MASM 6.14 (MMX2 support)
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "5.12",             ""},                    0x0013,         (quint32)-1},   // LINK 5.12
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "5.12",             ""},                    0x0014,         (quint32)-1},   // LINK 5.12 OMF to COFF conversion
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "C/std"},               0x0015,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "C++/std"},             0x0016,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "C/book"},              0x0017,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.00",            "C++/book"},            0x0018,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "7.00",             ""},                    0x0019,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "7.00",             ""},                    0x001a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "Basic"},               0x001b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "C"},                   0x001c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "C++"},                 0x001d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.10",             ""},                    0x001e,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.10",             ""},                    0x001f,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.01",             ""},                    0x0020,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.01",             ""},                    0x0021,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.10",            "Basic"},               0x0022,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.10",            "C"},                   0x0023,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.10",            "C++"},                 0x0024,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.20",             ""},                    0x0025,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.20",             ""},                    0x0026,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "7.00",             ""},                    0x0027,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.21",             ""},                    0x0028,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.21",             ""},                    0x0029,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.15",             ""},                    0x002a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "LTCG/C"},              0x002b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "LTCG/C++"},            0x002c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "6.20",             ""},                    0x002d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_ILASM,                        "1.00",             ""},                    0x002e,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.20",            "Basic"},               0x002f,         (quint32)-1}, // 6.20 ???
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.20",            "C"},                   0x0030,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.20",            "C++"},                 0x0031,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.20",            "C/std"},               0x0032,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.20",            "C++/std"},             0x0033,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.20",            "C/book"},              0x0034,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "12.20",            "C++/book"},            0x0035,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "6.22",             ""},                    0x0036,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.22",             ""},                    0x0037,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "5.01",             ""},                    0x0038,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "C/std"},               0x0039,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "C++/std"},             0x003a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "13.00",            ""},                    0x003b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.22",             ""},                    0x003c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "7.00",             ""},                    0x003d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "6.22",             ""},                    0x003e,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "7.00",             ""},                    0x003f,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "7.00",             ""},                    0x0040,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "POGO_I_C"},            0x0041,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "POGO_I_CPP"},          0x0042,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "POGO_O_C"},            0x0043,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.00",            "POGO_O_CPP"},          0x0044,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "7.00",             ""},                    0x0045,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "7.10p",            ""},                    0x0046,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "7.10p",            ""},                    0x0047,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "7.10p",            ""},                    0x0048,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "7.10p",            ""},                    0x0049,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "7.10p",            ""},                    0x004a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "7.10p",            ""},                    0x004b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "C"},                   0x004c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "C++"},                 0x004d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "C/std"},               0x004e,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "C++/std"},             0x004f,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "LTCG/C"},              0x0050,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "LTCG/C++"},            0x0051,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "POGO_I_C"},            0x0052,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "POGO_I_CPP"},          0x0053,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "POGO_O_C"},            0x0054,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10p",           "POGO_O_CPP"},          0x0055,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "6.24",             ""},                    0x0056,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "6.24",             ""},                    0x0057,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "6.24",             ""},                    0x0058,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "6.24",             ""},                    0x0059,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "7.10",             ""},                    0x005a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "7.10",             ""},                    0x005b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "7.10",             ""},                    0x005c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "7.10",             ""},                    0x005d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "7.10",             ""},                    0x005e,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "C"},                   0x005f,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "C++"},                 0x0060,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "C/std"},               0x0061,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "C++/std"},             0x0062,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "LTCG/C"},              0x0063,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "LTCG/C++"},            0x0064,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "POGO_I_C"},            0x0065,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "POGO_I_CPP"},          0x0066,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "POGO_O_C"},            0x0067,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "13.10",            "POGO_O_CPP"},          0x0068,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "7.10",             ""},                    0x0069,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "7.10p",            ""},                    0x006a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "13.10",            ""},                    0x006b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "13.10p",           ""},                    0x006c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "C"},                   0x006d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "C++"},                 0x006e,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "C/std"},               0x006f,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "C++/std"},             0x0070,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "LTCG/C"},              0x0071,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "LTCG/C++"},            0x0072,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "POGO_I_C"},            0x0073,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "POGO_I_CPP"},          0x0074,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "POGO_O_C"},            0x0075,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "POGO_O_CPP"},          0x0076,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "14.00",            ""},                    0x0077,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "8.00",             ""},                    0x0078,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTOMF,                       "8.00",             ""},                    0x0079,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "8.00",             ""},                    0x007a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "8.00",             ""},                    0x007b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "8.00",             ""},                    0x007c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "8.00",             ""},                    0x007d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "8.00",             ""},                    0x007e,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "Prerelease",       ""},                    0x007f,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "CVTCIL/C"},            0x0080,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "CVTCIL/C++"},          0x0081,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "14.00",            "LTCG/MSIL"},           0x0082,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "C"},                   0x0083,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "C++"},                 0x0084,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "C/std"},               0x0085,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "C++/std"},             0x0086,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "CVTCIL/C"},            0x0087,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "CVTCIL/C++"},          0x0088,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "LTCG/C"},              0x0089,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "LTCG/C++"},            0x008a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "LTCG/MSIL"},           0x008b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "POGO_I_C"},            0x008c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "POGO_I_CPP"},          0x008d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "POGO_O_C"},            0x008e,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "15.00",            "POGO_O_CPP"},          0x008f,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "15.00",            ""},                    0x0090,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "9.00",             ""},                    0x0091,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "9.00",             ""},                    0x0092,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "9.00",             ""},                    0x0093,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "9.00",             ""},                    0x0094,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "9.00",             ""},                    0x0095,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "9.00",             ""},                    0x0096,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_RESOURCE,                     "9.00",             ""},                    0x0097,         (quint32)-1}, // Manifest
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "10.00",            ""},                    0x0098,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "16.00",            ""},                    0x0099,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "10.00",            ""},                    0x009a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "10.00"             ""},                    0x009b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "10.00"             ""},                    0x009c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "10.00",            ""},                    0x009d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "10.00",            ""},                    0x009e,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "C"},                   0x009f,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "C++"},                 0x00a0,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "CVTCIL/C"},            0x00a1,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "CVTCIL/C++"},          0x00a2,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "LTCG/C"},              0x00a3,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "LTCG/C++"},            0x00a4,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "LTCG/MSIL"},           0x00a5,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "POGO_I_C"},            0x00a6,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "POGO_I_CPP"},          0x00a7,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "POGO_O_C"},            0x00a8,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MICROSOFTPHOENIX,             "16.00",            "POGO_O_CPP"},          0x00a9,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "C"},                   0x00aa,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "C++"},                 0x00ab,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "CVTCIL/C"},            0x00ac,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "CVTCIL/C++"},          0x00ad,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "LTCG/C"},              0x00ae,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "LTCG/C++"},            0x00af,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "LTCG/MSIL"},           0x00b0,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "POGO_I_C"},            0x00b1,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "POGO_I_CPP"},          0x00b2,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "POGO_O_C"},            0x00b3,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.00",            "POGO_O_CPP"},          0x00b4,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "10.10",            ""},                    0x00b5,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "16.10",            ""},                    0x00b6,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "10.10",            ""},                    0x00b7,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "10.10",            ""},                    0x00b8,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "10.10",            ""},                    0x00b9,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "10.10",            ""},                    0x00ba,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "10.10",            ""},                    0x00bb,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "C"},                   0x00bc,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "C++"},                 0x00bd,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "CVTCIL/C"},            0x00be,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "CVTCIL/C++"},          0x00bf,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "LTCG/C"},              0x00c0,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "LTCG/C++"},            0x00c1,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "LTCG/MSIL"},           0x00c2,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "POGO_I_C"},            0x00c3,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "POGO_I_CPP"},          0x00c4,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "POGO_O_C"},            0x00c5,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "16.10",            "POGO_O_CPP"},          0x00c6,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "11.00",            ""},                    0x00c7,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "17.00",            ""},                    0x00c8,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "11.00",            ""},                    0x00c9,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "11.00",            ""},                    0x00ca,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "11.00",            ""},                    0x00cb,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "11.00",            ""},                    0x00cc,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "11.00",            ""},                    0x00cd,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "C"},                   0x00ce,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "C++"},                 0x00cf,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "CVTCIL/C"},            0x00d0,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "CVTCIL/C++"},          0x00d1,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "LTCG/C"},              0x00d2,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "LTCG/C++"},            0x00d3,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "LTCG/MSIL"},           0x00d4,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "POGO_I_C"},            0x00d5,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "POGO_I_CPP"},          0x00d6,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "POGO_O_C"},            0x00d7,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "17.00",            "POGO_O_CPP"},          0x00d8,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "12.00",            ""},                    0x00d9,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "18.00",            ""},                    0x00da,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "12.00",            ""},                    0x00db,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "12.00",            ""},                    0x00dc,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "12.00",            ""},                    0x00dd,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "12.00",            ""},                    0x00de,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "12.00",            ""},                    0x00df,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "C"},                   0x00e0,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "C++"},                 0x00e1,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "CVTCIL/C"},            0x00e2,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "CVTCIL/C++"},          0x00e3,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "LTCG/C"},              0x00e4,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "LTCG/C++"},            0x00e5,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "LTCG/MSIL"},           0x00e6,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "POGO_I_C"},            0x00e7,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "POGO_I_CPP"},          0x00e8,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "POGO_O_C"},            0x00e9,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.00",            "POGO_O_CPP"},          0x00ea,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "12.10",            ""},                    0x00eb,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "18.10",            ""},                    0x00ec,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "12.10",            ""},                    0x00ed,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "12.10",            ""},                    0x00ee,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "12.10",            ""},                    0x00ef,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "12.10",            ""},                    0x00f0,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "12.10",            ""},                    0x00f1,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "C"},                   0x00f2,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "C++"},                 0x00f3,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "CVTCIL/C"},            0x00f4,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "CVTCIL/C++"},          0x00f5,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "LTCG/C"},              0x00f6,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "LTCG/C++"},            0x00f7,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "LTCG/MSIL"},           0x00f8,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "POGO_I_C"},            0x00f9,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "POGO_I_CPP"},          0x00fa,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "POGO_O_C"},            0x00fb,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "18.10",            "POGO_O_CPP"},          0x00fc,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_ALIASOBJ,                     "14.00",            ""},                    0x00fd,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTPGD,                       "19.00",            ""},                    0x00fe,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_CVTRES,                       "14.00",            ""},                    0x00ff,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_EXPORT,                       "14.00",            ""},                    0x0100,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "14.00",            ""},                    0x0101,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "14.00",            ""},                    0x0102,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_MASM,                         "14.00",            ""},                    0x0103,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "C"},                   0x0104,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "C++"},                 0x0105,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "CVTCIL/C"},            0x0106,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "CVTCIL/C++"},          0x0107,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "LTCG/C"},              0x0108,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "LTCG/C++"},            0x0109,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "LTCG/MSIL"},           0x010a,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "POGO_I_C"},            0x010b,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "POGO_I_CPP"},          0x010c,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "POGO_O_C"},            0x010d,         (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_UNIVERSALTUPLECOMPILER,       "19.00",            "POGO_O_CPP"},          0x010e,         (quint32)-1},
 };
 
 // .snaker ??? tool
@@ -1149,12 +1149,6 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
             pScanResult->listRecords.append(mach_info.basic_info.listDetects);
         }
-        else if(stTypes.contains(XBinary::FT_MSDOS))
-        {
-            SpecAbstract::MSDOSINFO_STRUCT msdos_info=SpecAbstract::getMSDOSInfo(&sd,parentId,pOptions,nOffset);
-
-            pScanResult->listRecords.append(msdos_info.basic_info.listDetects);
-        }
         else if(stTypes.contains(XBinary::FT_LE)||stTypes.contains(XBinary::FT_LX))
         {
             SpecAbstract::LEINFO_STRUCT le_info=SpecAbstract::getLEInfo(&sd,parentId,pOptions,nOffset);
@@ -1166,6 +1160,12 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
             SpecAbstract::NEINFO_STRUCT ne_info=SpecAbstract::getNEInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(ne_info.basic_info.listDetects);
+        }
+        else if(stTypes.contains(XBinary::FT_MSDOS))
+        {
+            SpecAbstract::MSDOSINFO_STRUCT msdos_info=SpecAbstract::getMSDOSInfo(&sd,parentId,pOptions,nOffset);
+
+            pScanResult->listRecords.append(msdos_info.basic_info.listDetects);
         }
         else
         {
@@ -2201,9 +2201,11 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=le.getMemoryMap();
 
-        // TODO Microsoft Rich
-
         result.sEntryPointSignature=le.getSignature(le.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
+
+        result.listRichSignatures=le.getRichSignatureRecords();
+
+        LE_handle_Microsoft(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
 
@@ -2249,6 +2251,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbst
 
         result.sEntryPointSignature=ne.getSignature(ne.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
+        result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
 
         if(!result.basic_info.listDetects.count())
@@ -5350,7 +5353,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
 
         for(int i=0;i<nRichSignaturesCount;i++)
         {
-            listRichDescriptions.append(richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE));
+            listRichDescriptions.append(richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS));
         }
 
         int nRichDescriptionsCount=listRichDescriptions.count();
@@ -10375,6 +10378,73 @@ void SpecAbstract::MACH_handle_Protection(QIODevice *pDevice, bool bIsImage, Spe
             recordSS.name=SpecAbstract::RECORD_NAME_VMPROTECT;
 
             pMACHInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
+        }
+    }
+}
+
+void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO_STRUCT *pLEInfo)
+{
+    XLE le(pDevice,bIsImage);
+
+    if(le.isValid())
+    {
+        SpecAbstract::_SCANS_STRUCT recordLinker={};
+        SpecAbstract::_SCANS_STRUCT recordCompiler={};
+
+        // Rich
+        int nRichSignaturesCount=pLEInfo->listRichSignatures.count();
+
+        QList<SpecAbstract::_SCANS_STRUCT> listRichDescriptions;
+
+        for(int i=0;i<nRichSignaturesCount;i++)
+        {
+            listRichDescriptions.append(richScan(pLEInfo->listRichSignatures.at(i).nId,pLEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pLEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS));
+        }
+
+        int nRichDescriptionsCount=listRichDescriptions.count();
+
+        for(int i=nRichDescriptionsCount-1;i>=0;i--)
+        {
+            if(listRichDescriptions.at(i).type==SpecAbstract::RECORD_TYPE_LINKER)
+            {
+                recordLinker.name=listRichDescriptions.at(i).name;
+                recordLinker.sVersion=listRichDescriptions.at(i).sVersion;
+                recordLinker.sInfo=listRichDescriptions.at(i).sInfo;
+                recordLinker.type=listRichDescriptions.at(i).type;
+            }
+
+            if(listRichDescriptions.at(i).type==SpecAbstract::RECORD_TYPE_COMPILER)
+            {
+                if(listRichDescriptions.at(i).name==RECORD_NAME_UNIVERSALTUPLECOMPILER)
+                {
+                    recordCompiler.name=RECORD_NAME_VISUALCCPP;
+                    recordCompiler.sVersion=listRichDescriptions.at(i).sVersion;
+                    recordCompiler.sInfo=listRichDescriptions.at(i).sInfo;
+                    recordCompiler.type=listRichDescriptions.at(i).type;
+                }
+                else
+                {
+                    recordCompiler.name=listRichDescriptions.at(i).name;
+                    recordCompiler.sVersion=listRichDescriptions.at(i).sVersion;
+                    recordCompiler.sInfo=listRichDescriptions.at(i).sInfo;
+                    recordCompiler.type=listRichDescriptions.at(i).type;
+                }
+            }
+
+            if(listRichDescriptions.at(i).name==SpecAbstract::RECORD_NAME_IMPORT)
+            {
+                break;
+            }
+        }
+
+        if(recordLinker.type!=RECORD_TYPE_UNKNOWN)
+        {
+            pLEInfo->mapResultLinkers.insert(recordLinker.name,scansToScan(&(pLEInfo->basic_info),&recordLinker));
+        }
+
+        if(recordCompiler.type!=RECORD_TYPE_UNKNOWN)
+        {
+            pLEInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pLEInfo->basic_info),&recordCompiler));
         }
     }
 }
