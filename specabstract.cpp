@@ -2332,15 +2332,15 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         //                qDebug("%d %s",j,result.listImports.at(i).listPositions.at(j).sFunction.toLatin1().data());
         //            }
         //        }
-        result.nImportHash64=pe.getImportHash64(); // TODO memoryMap
-        result.nImportHash32=pe.getImportHash32(); // TODO memoryMap
-        result.listImportPositionHashes=pe.getImportPositionHashes(); // TODO memoryMap
+        result.nImportHash64=pe.getImportHash64(&(result.basic_info.memoryMap));
+        result.nImportHash32=pe.getImportHash32(&(result.basic_info.memoryMap));
+        result.listImportPositionHashes=pe.getImportPositionHashes(&(result.basic_info.memoryMap));
 
 #ifdef QT_DEBUG
         QString sDebugString=QString::number(result.nImportHash64,16)+" "+QString::number(result.nImportHash32,16);
         qDebug("Import hash: %s",sDebugString.toLatin1().data());
 
-        QList<XPE::IMPORT_RECORD> listImports=pe.getImportRecords();
+        QList<XPE::IMPORT_RECORD> listImports=pe.getImportRecords(&(result.basic_info.memoryMap));
 
         int nCount=listImports.count();
 
@@ -2353,7 +2353,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         qDebug("=====================================================================");
 
-        QList<XPE::IMPORT_HEADER> _listImports=pe.getImports();
+        QList<XPE::IMPORT_HEADER> _listImports=pe.getImports(&(result.basic_info.memoryMap));
 
         for(int i=0;i<_listImports.count();i++)
         {
@@ -2618,27 +2618,27 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
         {
             if(pPEInfo->listImports.at(0).listPositions.count()==2)
             {
-                if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetProcAddress")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(1).sName=="LoadLibraryA"))
+                if( (pPEInfo->listImports.at(0).listPositions.at(0).sName=="GetProcAddress")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(1).sName=="LoadLibraryA"))
                 {
                     stDetects.insert("kernel32_zprotect");
                 }
             }
             else if(pPEInfo->listImports.at(0).listPositions.count()==13)
             {
-                if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(2).sName=="VirtualAlloc")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(3).sName=="VirtualFree")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(4).sName=="ExitProcess")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(5).sName=="CreateFileA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(6).sName=="CloseHandle")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(7).sName=="WriteFile")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(8).sName=="GetSystemDirectoryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(9).sName=="GetFileTime")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(10).sName=="SetFileTime")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(11).sName=="GetWindowsDirectoryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(12).sName=="lstrcatA"))
+                if( (pPEInfo->listImports.at(0).listPositions.at(0).sName=="LoadLibraryA")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(2).sName=="VirtualAlloc")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(3).sName=="VirtualFree")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(4).sName=="ExitProcess")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(5).sName=="CreateFileA")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(6).sName=="CloseHandle")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(7).sName=="WriteFile")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(8).sName=="GetSystemDirectoryA")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(9).sName=="GetFileTime")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(10).sName=="SetFileTime")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(11).sName=="GetWindowsDirectoryA")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(12).sName=="lstrcatA"))
                 {
                     if(pPEInfo->listImports.count()==1)
                     {
@@ -2648,21 +2648,21 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
             }
             else if(pPEInfo->listImports.at(0).listPositions.count()==15)
             {
-                if((pPEInfo->listImports.at(0).listPositions.at(0).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(2).sName=="VirtualAlloc")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(3).sName=="VirtualFree")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(4).sName=="ExitProcess")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(5).sName=="CreateFileA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(6).sName=="CloseHandle")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(7).sName=="WriteFile")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(8).sName=="GetSystemDirectoryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(9).sName=="GetFileTime")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(10).sName=="SetFileTime")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(11).sName=="GetWindowsDirectoryA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(12).sName=="lstrcatA")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(13).sName=="FreeLibrary")&&
-                        (pPEInfo->listImports.at(0).listPositions.at(14).sName=="GetTempPathA"))
+                if( (pPEInfo->listImports.at(0).listPositions.at(0).sName=="LoadLibraryA")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(1).sName=="GetProcAddress")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(2).sName=="VirtualAlloc")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(3).sName=="VirtualFree")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(4).sName=="ExitProcess")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(5).sName=="CreateFileA")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(6).sName=="CloseHandle")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(7).sName=="WriteFile")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(8).sName=="GetSystemDirectoryA")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(9).sName=="GetFileTime")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(10).sName=="SetFileTime")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(11).sName=="GetWindowsDirectoryA")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(12).sName=="lstrcatA")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(13).sName=="FreeLibrary")&&
+                    (pPEInfo->listImports.at(0).listPositions.at(14).sName=="GetTempPathA"))
                 {
                     if(pPEInfo->listImports.count()==1)
                     {
@@ -2732,8 +2732,8 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
         {
             if(pPEInfo->listImports.at(2).listPositions.count()==2)
             {
-                if((pPEInfo->listImports.at(2).listPositions.at(0).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(2).listPositions.at(1).sName=="GetProcAddress"))
+                if( (pPEInfo->listImports.at(2).listPositions.at(0).sName=="LoadLibraryA")&&
+                    (pPEInfo->listImports.at(2).listPositions.at(1).sName=="GetProcAddress"))
                 {
                     if(pPEInfo->listImports.count()==3)
                     {
@@ -2743,10 +2743,10 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
             }
             else if(pPEInfo->listImports.at(2).listPositions.count()==4)
             {
-                if((pPEInfo->listImports.at(2).listPositions.at(0).sName=="LoadLibraryA")&&
-                        (pPEInfo->listImports.at(2).listPositions.at(1).sName=="GetProcAddress")&&
-                        (pPEInfo->listImports.at(2).listPositions.at(2).sName=="VirtualAlloc")&&
-                        (pPEInfo->listImports.at(2).listPositions.at(3).sName=="VirtualFree"))
+                if( (pPEInfo->listImports.at(2).listPositions.at(0).sName=="LoadLibraryA")&&
+                    (pPEInfo->listImports.at(2).listPositions.at(1).sName=="GetProcAddress")&&
+                    (pPEInfo->listImports.at(2).listPositions.at(2).sName=="VirtualAlloc")&&
+                    (pPEInfo->listImports.at(2).listPositions.at(3).sName=="VirtualFree"))
                 {
                     if(pPEInfo->listImports.count()==3)
                     {
