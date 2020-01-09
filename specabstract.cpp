@@ -109,14 +109,19 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
 
 // TODO MSDOS COM!
 
+// MSDOS,NE,LE,PE
+SpecAbstract::SIGNATURE_RECORD _MSDOS_linker_header_records[]=
+{
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",                 ""},                    "'MZ'50000200000004000F00FFFF0000B80000000000000040001A000000000000000000000000000000000000000000000000000000000000000000....0000BA10000E1FB409CD21B8014CCD219090'This program must be run under Win'....'\r\n$'370000000000"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",                 "Patched"},             "'MZ'............................................................................................................................BA10000E1FB409CD21B8014CCD219090'This program must be run under Win'....'\r\n$'370000000000"},
+    {{1, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",                 "MSDOS"},               "'MZ'........................................................FB..'jr'"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "",                 ""},                    "'MZ'90000300000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000....00000E1FBA0E00B409CD21B8014CCD21'This program cannot be run in DOS mode.\r\r\n$'00000000"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_GENERICLINKER,                "",                 ""},                    "'MZ'90000300000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000800000000E1FBA0E00B409CD21B8014CCD21'This program cannot be run in DOS mode.\r\r\n$'00000000"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "",                 "Patched"},             "'MZ'90000300000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000....000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"},
+};
+
 SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
 {
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",                 ""},                    "'MZ'50000200000004000F00FFFF0000B80000000000000040001A000000000000000000000000000000000000000000000000000000000000000000....0000BA10000E1FB409CD21B8014CCD219090'This program must be run under Win'....'\r\n$'370000000000"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",                 "Patched"},             "'MZ'............................................................................................................................BA10000E1FB409CD21B8014CCD219090'This program must be run under Win'....'\r\n$'370000000000"},
-    {{1, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",                 "MSDOS"},               "'MZ'........................................................FB..'jr'"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "",                 ""},                    "'MZ'90000300000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000....00000E1FBA0E00B409CD21B8014CCD21'This program cannot be run in DOS mode.\r\r\n$'00000000"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_GENERICLINKER,                "",                 ""},                    "'MZ'90000300000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000800000000E1FBA0E00B409CD21B8014CCD21'This program cannot be run in DOS mode.\r\r\n$'00000000"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_MICROSOFTLINKER,              "",                 "Patched"},             "'MZ'90000300000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000....000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_FASM,                         "",                 ""},                    "'MZ'80000100000004001000FFFF00004001000000000000400000000000000000000000000000000000000000000000000000000000000000000000800000000E1FBA0E00B409CD21B8014CCD21'This program cannot be run in DOS mode.\r\n$'0000000000000000'PE'0000"}, // TODO patched
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_DMD32D,                       "",                 ""},                    "'MZ'60000100000004001000FFFF0000FE0000001200000040000000000000000000000000000000000000000000000000000000000000000000000060000000'Requires Win32   $'161F33D2B409CD21B8014CCD2100'PE'0000"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_HXS,                          "",                 ""},                    "'MZ'0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040000000'PE'00004C010200000000000000000000000000E00001200B010000000000000000000000000000000000000000000000000000000040000000000000"},
@@ -2205,6 +2210,8 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
 
         result.listRichSignatures=le.getRichSignatureRecords();
 
+        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS);
+
         LE_handle_Microsoft(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
@@ -2452,6 +2459,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         //        memoryScan(&result.mapHeaderScanDetects,pDevice,0,qMin(result.basic_info.nSize,(qint64)1024),_headerscan_records,sizeof(_headerscan_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
 
+        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS);
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_PE_header_records,sizeof(_PE_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
         signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_PE_entrypoint_records,sizeof(_PE_entrypoint_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
         signatureScan(&result.mapOverlayDetects,result.sOverlaySignature,_binary_records,sizeof(_binary_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_BINARY);
