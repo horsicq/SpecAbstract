@@ -767,6 +767,7 @@ public:
         quint32 nImportHash32;
         QList<quint32> listImportPositionHashes;
         XPE::EXPORT_HEADER exportHeader;
+        QList<QString> listExportFunctionNames;
         QList<XPE::RESOURCE_RECORD> listResources;
         QList<XMSDOS::MS_RICH_RECORD> listRichSignatures;
         QString sResourceManifest;

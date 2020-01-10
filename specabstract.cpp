@@ -2373,6 +2373,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         }
 #endif
         result.exportHeader=pe.getExport(&(result.basic_info.memoryMap));
+        result.listExportFunctionNames=pe.getExportFunctionsList(&(result.exportHeader));
         result.listResources=pe.getResources(&(result.basic_info.memoryMap));
         result.listRichSignatures=pe.getRichSignatureRecords();
         result.cliInfo=pe.getCliInfo(true,&(result.basic_info.memoryMap));
@@ -5984,7 +5985,8 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
 
             QList<VCL_STRUCT> listVCL;
 
-            bool bCppExport=XPE::isExportFunctionPresent("__CPPdebugHook",&(pPEInfo->exportHeader));
+            bool bCppExport=    (XBinary::isStringInListPresent(&(pPEInfo->listExportFunctionNames),"__CPPdebugHook"))||
+                                (XBinary::isStringInListPresent(&(pPEInfo->listExportFunctionNames),"___CPPdebugHook"));
 
             if(XBinary::checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
             {
