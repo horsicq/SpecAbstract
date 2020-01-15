@@ -9083,13 +9083,11 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
         {
             // TODO deep scan
             _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ZIP);
-            quint8 nVersion=XBinary::hexToUint8(pBinaryInfo->basic_info.sHeaderSignature.mid(4*2,2));
-            quint8 nFlags=XBinary::hexToUint8(pBinaryInfo->basic_info.sHeaderSignature.mid(6*2,2));
 
-            ss.sVersion=QString("%1").arg((double)nVersion/10,0,'f',1);
+            ss.sVersion=xzip.getVersion();
             ss.sInfo=QString("%1 records").arg(xzip.getNumberOfRecords());
 
-            if(nFlags&0x1)
+            if(xzip.isEncrypted())
             {
                 ss.sInfo=append(ss.sInfo,"Encrypted");
             }
@@ -9098,7 +9096,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
             pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
         }
     }
-    // ZIP
+    // GZIP
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GZIP))&&(pBinaryInfo->basic_info.nSize>=9))
     {
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_GZIP);
@@ -9115,7 +9113,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
         quint8 nMinorVersion=binary.read_uint8(0x18);
         quint8 nMajorVersion=binary.read_uint8(0x19);
 
-        ss.sVersion=QString("%1.%2").arg(nMajorVersion).arg(nMinorVersion);
+        ss.sVersion=QString("%1.%2").arg(nMajorVersion).arg(nMinorVersion,2,10,QChar('0'));
 
         // TODO options
         // TODO files
