@@ -32,6 +32,7 @@
 #include "xelf.h"
 #include "xmach.h"
 #include "xzip.h"
+#include "xcab.h"
 
 class SpecAbstract : public QObject
 {

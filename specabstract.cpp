@@ -9108,16 +9108,18 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
     // CAB
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_CAB))&&(pBinaryInfo->basic_info.nSize>=30))
     {
-        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CAB);
+        XCab xcab(pDevice);
 
-        quint8 nMinorVersion=binary.read_uint8(0x18);
-        quint8 nMajorVersion=binary.read_uint8(0x19);
+        if(xcab.isValid())
+        {
+            _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CAB);
 
-        ss.sVersion=QString("%1.%2").arg(nMajorVersion).arg(nMinorVersion,2,10,QChar('0'));
+            ss.sVersion=xcab.getVersion();
 
-        // TODO options
-        // TODO files
-        pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+            // TODO options
+            // TODO files
+            pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        }
     }
     // RAR
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RAR))&&(pBinaryInfo->basic_info.nSize>=64))
