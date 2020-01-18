@@ -33,6 +33,7 @@
 #include "xmach.h"
 #include "xzip.h"
 #include "xcab.h"
+#include "xrar.h"
 
 class SpecAbstract : public QObject
 {

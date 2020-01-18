@@ -9124,24 +9124,18 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
     // RAR
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RAR))&&(pBinaryInfo->basic_info.nSize>=64))
     {
-        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RAR);
+        XRar xrar(pDevice);
 
-        if(ss.nVariant==1)
+        if(xrar.isValid())
         {
-            quint8 nVersion=XBinary::hexToUint8(pBinaryInfo->basic_info.sHeaderSignature.mid(6*2,2));
+            _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RAR);
 
-            if(nVersion==0)
-            {
-                ss.sVersion="4.X";
-            }
-            else if(nVersion==1)
-            {
-                ss.sVersion="5.X";
-            }
+            ss.sVersion=xrar.getVersion();
+
+            // TODO options
+            // TODO files
+            pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
         }
-        // TODO options
-        // TODO files
-        pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
     // zlib
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ZLIB))&&(pBinaryInfo->basic_info.nSize>=32))
