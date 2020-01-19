@@ -107,7 +107,15 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_WLCRYPT,                      "",                 ""},                    "'[Crypted Key]'"},
 };
 
-// TODO MSDOS COM!
+SpecAbstract::SIGNATURE_RECORD _COM_records[]=
+{
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "1.00, 1.03",       "exe2com"},             "B8....BA....8CDB03D83B1E....73..83EB..FA8ED3BC....FB83EB..8EC353B9....33FF57BE....FCF3A5CB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "1.00c",            ""},                    "BA....A1....2D....8CCB81C3....3BC377..05....3BC377..B4..BA....CD21CD20"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "1.12, 1.20",       ""},                    "B8....BA....3BC473..8BC42D....25....8BF8B9....BE....FCF3A58BD8B1..D3EB8CD903D95333DB53CB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "1.15",             ""},                    "B8....BA....3BC473..8BC42D....9025....8BF8B9....90BE....FCF3A58BD8B1..D3EB8CD903D95333DB53CB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "1.50",             ""},                    "50B8....BA....3BC473..8BC42D....25....8BF8B9....BE....FCF3A58BD8B1..D3EB8CD903D95333DB53CB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "1.1x",             ""},                    "BA....B8....05....3B06....73..2D....FA8ED0FB2D....8EC050B9....33FF57BE....FCF3A5CB"},
+};
 
 // MSDOS,NE,LE,PE
 SpecAbstract::SIGNATURE_RECORD _MSDOS_linker_header_records[]=
@@ -1230,6 +1238,7 @@ QString SpecAbstract::recordFiletypeIdToString(RECORD_FILETYPE id)
     {
         case RECORD_FILETYPE_UNKNOWN:                           sResult=QString("Unknown");                                     break;
         case RECORD_FILETYPE_BINARY:                            sResult=QString("Binary");                                      break;
+        case RECORD_FILETYPE_COM:                               sResult=QString("COM");                                         break;
         case RECORD_FILETYPE_MSDOS:                             sResult=QString("MSDOS");                                       break;
         case RECORD_FILETYPE_LE:                                sResult=QString("LE");                                          break;
         case RECORD_FILETYPE_LX:                                sResult=QString("LX");                                          break;
@@ -1901,6 +1910,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
 
     // Scan Header
     signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_binary_records,sizeof(_binary_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_BINARY);
+    signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_COM_records,sizeof(_COM_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_COM);
 
     result.bIsPlainText=binary.isPlainTextType();
     result.bIsUTF8=binary.isUTF8TextType();
@@ -1932,6 +1942,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     }
 
     Binary_handle_Texts(pDevice,pOptions->bIsImage,&result);
+    Binary_handle_COM(pDevice,pOptions->bIsImage,&result);
     Binary_handle_Formats(pDevice,pOptions->bIsImage,&result);
     Binary_handle_Databases(pDevice,pOptions->bIsImage,&result);
     Binary_handle_Images(pDevice,pOptions->bIsImage,&result);
@@ -1958,6 +1969,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     result.basic_info.listDetects.append(result.mapResultDatabases.values());
     result.basic_info.listDetects.append(result.mapResultImages.values());
     result.basic_info.listDetects.append(result.mapResultTools.values());
+    result.basic_info.listDetects.append(result.mapResultPackers.values());
 
     if(!result.basic_info.listDetects.count())
     {
@@ -9055,6 +9067,16 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
 
             pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
         }
+    }
+}
+
+void SpecAbstract::Binary_handle_COM(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
+{
+    if(pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PKLITE))
+    {
+        pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
+        SpecAbstract::_SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PKLITE);
+        pBinaryInfo->mapResultPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 }
 

@@ -44,6 +44,7 @@ public:
     {
         RECORD_FILETYPE_UNKNOWN=0,
         RECORD_FILETYPE_BINARY,
+        RECORD_FILETYPE_COM,
         RECORD_FILETYPE_MSDOS,
         RECORD_FILETYPE_LE,
         RECORD_FILETYPE_LX,
@@ -644,6 +645,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultDatabases;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultImages;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectorData;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
 
         QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
     };
@@ -1002,6 +1004,7 @@ public:
     static void PE_handle_Recursive(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo,SpecAbstract::SCAN_OPTIONS *pOptions);
 
     static void Binary_handle_Texts(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
+    static void Binary_handle_COM(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_Archives(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_Certificates(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_DebugData(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
