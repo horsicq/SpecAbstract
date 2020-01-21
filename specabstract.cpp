@@ -47,7 +47,8 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_DATABASE,         SpecAbstract::RECORD_NAME_MICROSOFTLINKERDATABASE,      "",                 ""},                    "'Microsoft Linker Database\n\n'071A"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_GZIP,                         "",                 ""},                    "1F8B08"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_RAR,                          "1.4",              ""},                    "'RE~^'"},
-    {{1, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_RAR,                          "4.X-5.X",          ""},                    "'Rar!'1A07"},
+    {{1, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_RAR,                          "4.X",              ""},                    "'Rar!'1A0700"},
+    {{1, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_RAR,                          "5.X",              ""},                    "'Rar!'1A070100"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_AVASTANTIVIRUS,               "",                 ""},                    "'ASWsetupFPkgFil3'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_OPERA,                        "",                 ""},                    "'OPR7z'BCAF271C"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_INSTALLANYWHERE,              "",                 ""},                    "5B3E"},
@@ -4858,9 +4859,55 @@ void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, bool bIsImage, SpecAbst
                 if(bKernel32&&bComctl32)
                 {
                     // TODO Version
-                    SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_THEMIDAWINLICENSE,"","",0);
+                    SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_THEMIDAWINLICENSE,"1.XX-2.XX","",0);
 
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
+
+            if(!pPEInfo->mapResultProtectors.contains(RECORD_NAME_THEMIDAWINLICENSE))
+            {
+                // New version
+                int nNumbersOfImport=pPEInfo->listImports.count();
+
+                bool bSuccess=true;
+
+                for(int i=0;i<nNumbersOfImport;i++)
+                {
+                    if(pPEInfo->listImports.at(i).listPositions.count()!=1)
+                    {
+                        bSuccess=false;
+                        break;
+                    }
+                }
+
+                if(bSuccess)
+                {
+                    if(pPEInfo->listSectionNames.count()>1)
+                    {
+                        if(pPEInfo->listSectionNames.at(0)=="        ")
+                        {
+                            bSuccess=false;
+
+                            SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_THEMIDAWINLICENSE,"3.XX","",0);
+
+                            if(XPE::isSectionNamePresent(".themida",&(pPEInfo->listSectionHeaders)))
+                            {
+                                ss.sInfo="Themida";
+                                bSuccess=true;
+                            }
+                            else if(XPE::isSectionNamePresent(".winlice",&(pPEInfo->listSectionHeaders)))
+                            {
+                                ss.sInfo="Winlicense";
+                                bSuccess=true;
+                            }
+
+                            if(bSuccess)
+                            {
+                                pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                            }
+                        }
+                    }
                 }
             }
         }
