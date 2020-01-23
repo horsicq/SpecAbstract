@@ -1940,7 +1940,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
 
     XZip xzip(pDevice);
 
-    result.bIsZip=xzip.isVaild();
+    result.bIsZip=xzip.isValid();
 
     if(result.bIsZip)
     {
@@ -9166,7 +9166,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
     {
         XZip xzip(pDevice);
 
-        if(xzip.isVaild())
+        if(xzip.isValid())
         {
             // TODO deep scan
             _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ZIP);
@@ -9728,7 +9728,7 @@ void SpecAbstract::Binary_handle_MicrosoftOffice(QIODevice *pDevice, bool bIsIma
     {
         XZip xzip(pDevice);
 
-        if(xzip.isVaild())
+        if(xzip.isValid())
         {
             XArchive::RECORD record=XArchive::getArchiveRecord("docProps/app.xml",&(pBinaryInfo->listArchiveRecords));
 
@@ -9775,7 +9775,7 @@ void SpecAbstract::Binary_handle_OpenOffice(QIODevice *pDevice, bool bIsImage, S
     {
         XZip xzip(pDevice);
 
-        if(xzip.isVaild())
+        if(xzip.isValid())
         {
             XArchive::RECORD record=XArchive::getArchiveRecord("meta.xml",&(pBinaryInfo->listArchiveRecords));
 
@@ -9806,7 +9806,7 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
     {
         XZip xzip(pDevice);
 
-        if(xzip.isVaild())
+        if(xzip.isValid())
         {
             XArchive::RECORD record=XArchive::getArchiveRecord("META-INF/MANIFEST.MF",&(pBinaryInfo->listArchiveRecords));
 
