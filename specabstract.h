@@ -34,7 +34,7 @@
 #include "xzip.h"
 #include "xcab.h"
 #include "xrar.h"
-#include "sevenzip.h"
+#include "xsevenzip.h"
 
 class SpecAbstract : public QObject
 {

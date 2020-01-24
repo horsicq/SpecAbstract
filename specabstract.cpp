@@ -9148,13 +9148,14 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
 //            pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
 //        }
 
-        SevenZip sevenzip(pDevice);
+        XSevenZip xsevenzip(pDevice);
 
-        if(sevenzip.isValid())
+        if(xsevenzip.isValid())
         {
             _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_7Z);
 
-            ss.sVersion=sevenzip.getVersion();
+            ss.sVersion=xsevenzip.getVersion();
+//            ss.sInfo=QString("%1 records").arg(xsevenzip.getNumberOfRecords());
 
             // TODO options
             // TODO files
