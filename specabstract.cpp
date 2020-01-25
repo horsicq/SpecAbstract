@@ -106,6 +106,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_ZELDACRYPT,                   "",                 ""},                    "2F232F2B5C235C"}, // '/#/+\#\'
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_WOUTHRSEXECRYPTER,            "",                 ""},                    "'<%>'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_WLCRYPT,                      "",                 ""},                    "'[Crypted Key]'"},
+    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_XAR,                          "",                 ""},                    "'xar!'001c00010000"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _COM_records[]=
@@ -1743,6 +1744,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WWPACK:                                sResult=QString("WWPack");                                      break;
         case RECORD_NAME_WWPACK32:                              sResult=QString("WWPack32");                                    break;
         case RECORD_NAME_WXWIDGETS:                             sResult=QString("wxWidgets");                                   break;
+        case RECORD_NAME_XAR:                                   sResult=QString("xar");                                         break;
         case RECORD_NAME_XENOCODE:                              sResult=QString("Xenocode");                                    break;
         case RECORD_NAME_XENOCODEPOSTBUILD:                     sResult=QString("Xenocode Postbuild");                          break;
         case RECORD_NAME_XENOCODEPOSTBUILD2009:                 sResult=QString("Xenocode Postbuild 2009");                     break;
@@ -9188,6 +9190,15 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GZIP))&&(pBinaryInfo->basic_info.nSize>=9))
     {
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_GZIP);
+
+        // TODO options
+        // TODO files
+        pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    // xar
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_XAR))&&(pBinaryInfo->basic_info.nSize>=9))
+    {
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_XAR);
 
         // TODO options
         // TODO files
