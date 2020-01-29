@@ -930,6 +930,7 @@ public:
 
     struct VI_STRUCT
     {
+        bool bValid;
         QString sVersion;
         QString sInfo;
     };
