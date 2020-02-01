@@ -62,6 +62,7 @@ public:
         RECORD_FILETYPE_TEXT,
 //        RECORD_FILETYPE_JAR,
         RECORD_FILETYPE_APK
+        // TODO ARCHIVE
     };
     enum RECORD_FILEPART
     {
