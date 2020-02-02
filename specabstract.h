@@ -36,6 +36,7 @@
 #include "xrar.h"
 #include "xsevenzip.h"
 
+// TODO move to own file
 class SpecAbstract : public QObject
 {
     Q_OBJECT
