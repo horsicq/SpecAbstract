@@ -22,6 +22,7 @@
 #include "specabstract.h"
 
 // TODO move to file
+// TODO Separate by type
 SpecAbstract::SIGNATURE_RECORD _binary_records[]=
 {
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_INNOSETUP,                    "",                 "Install"},             "'idska32'1A"},
