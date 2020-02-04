@@ -5,6 +5,7 @@ HEADERS += \
     $$PWD/specabstract.h
 
 SOURCES += \
+    $$PWD/signatures.cpp \
     $$PWD/specabstract.cpp
 
 !contains(XCONFIG, xmsdos) {
