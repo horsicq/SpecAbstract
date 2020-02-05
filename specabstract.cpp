@@ -8111,6 +8111,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
             _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CAB);
 
             ss.sVersion=xcab.getVersion();
+            ss.sInfo=QString("%1 records").arg(xcab.getNumberOfRecords());
 
             // TODO options
             // TODO files
