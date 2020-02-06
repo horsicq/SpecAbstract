@@ -451,6 +451,7 @@ public:
         RECORD_NAME_SOFTWARECOMPRESS,
         RECORD_NAME_SOFTWAREZATOR,
         RECORD_NAME_SPICESNET,
+        RECORD_NAME_SPIRIT,
         RECORD_NAME_SPOONINSTALLER,
         RECORD_NAME_SQUEEZSFX,
         RECORD_NAME_STARFORCE,
@@ -651,6 +652,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultImages;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectorData;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
 
         QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
     };

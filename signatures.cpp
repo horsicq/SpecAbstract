@@ -122,6 +122,14 @@ SpecAbstract::SIGNATURE_RECORD _COM_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "1.1x",             ""},                    "BA....B8....05....3B06....73..2D....FA8ED0FB2D....8EC050B9....33FF57BE....FCF3A5CB"},
 };
 
+SpecAbstract::SIGNATURE_RECORD _COM_Exp_records[]=
+{
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SPIRIT,                       "1.X",              ""},                    "E9$$$$B430CD21F6D12EA6E8....B462CD21E8....3636FB969034..C3"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SPIRIT,                       "1.5",              ""},                    "E9$$$$AEE8$$$$E4210C..FBE62190B8....FB5026509087C1"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SPIRIT,                       "1.5",              ""},                    "E9$$$$369F9F1C..E9$$$$E8$$$$E421F80C..E6218D06....FC505089C1FB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SPIRIT,                       "1.5",              ""},                    "E9$$$$F8D72606B435CD2107E8$$$$1C..1C..33D226F6DA12DDFCF905....F8F5F6EA"},
+};
+
 // MSDOS,NE,LE,PE
 SpecAbstract::SIGNATURE_RECORD _MSDOS_linker_header_records[]=
 {

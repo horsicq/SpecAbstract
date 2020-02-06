@@ -570,6 +570,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SOFTWARECOMPRESS:                      sResult=QString("Software Compress");                           break;
         case RECORD_NAME_SOFTWAREZATOR:                         sResult=QString("SoftwareZator");                               break;
         case RECORD_NAME_SPICESNET:                             sResult=QString("Spices.Net");                                  break;
+        case RECORD_NAME_SPIRIT:                                sResult=QString("$pirit");                                      break;
         case RECORD_NAME_SPOONINSTALLER:                        sResult=QString("Spoon Installer");                             break;
         case RECORD_NAME_SQUEEZSFX:                             sResult=QString("Squeez Self Extractor");                       break;
         case RECORD_NAME_STARFORCE:                             sResult=QString("StarForce");                                   break;
@@ -816,6 +817,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     // Scan Header
     signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_binary_records,sizeof(_binary_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_BINARY);
     signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_COM_records,sizeof(_COM_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_COM);
+    signatureExpScan(&binary,&(result.basic_info.memoryMap),&result.basic_info.mapHeaderDetects,0,_COM_Exp_records,sizeof(_COM_Exp_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_COM);
 
     result.bIsPlainText=binary.isPlainTextType();
     result.bIsUTF8=binary.isUTF8TextType();
@@ -875,6 +877,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     result.basic_info.listDetects.append(result.mapResultImages.values());
     result.basic_info.listDetects.append(result.mapResultTools.values());
     result.basic_info.listDetects.append(result.mapResultPackers.values());
+    result.basic_info.listDetects.append(result.mapResultProtectors.values());
 
     if(!result.basic_info.listDetects.count())
     {
@@ -8028,6 +8031,13 @@ void SpecAbstract::Binary_handle_COM(QIODevice *pDevice, bool bIsImage, SpecAbst
         pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
         SpecAbstract::_SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PKLITE);
         pBinaryInfo->mapResultPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+
+    if(pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SPIRIT))
+    {
+        pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
+        SpecAbstract::_SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SPIRIT);
+        pBinaryInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 }
 
