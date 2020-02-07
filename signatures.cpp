@@ -21,6 +21,7 @@
 #include "specabstract.h"
 
 // TODO separate
+// mb TODO protectordata/installerData only by parent
 SpecAbstract::SIGNATURE_RECORD _binary_records[]=
 {
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_INNOSETUP,                    "",                 "Install"},             "'idska32'1A"},
