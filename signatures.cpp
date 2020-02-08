@@ -121,6 +121,9 @@ SpecAbstract::SIGNATURE_RECORD _COM_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "1.15",             ""},                    "B8....BA....3BC473..8BC42D....9025....8BF8B9....90BE....FCF3A58BD8B1..D3EB8CD903D95333DB53CB"},
     {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "1.50",             ""},                    "50B8....BA....3BC473..8BC42D....25....8BF8B9....BE....FCF3A58BD8B1..D3EB8CD903D95333DB53CB"},
     {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "1.1x",             ""},                    "BA....B8....05....3B06....73..2D....FA8ED0FB2D....8EC050B9....33FF57BE....FCF3A5CB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HACKSTOP,                     "1.13cs",           ""},                    "FABD....FFE5"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HACKSTOP,                     "1.14s",            ""},                    "FABB....FFE3"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HACKSTOP,                     "1.17cr",           ""},                    "FABE....FFE6"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _COM_Exp_records[]=
