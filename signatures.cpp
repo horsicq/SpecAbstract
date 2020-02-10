@@ -124,6 +124,9 @@ SpecAbstract::SIGNATURE_RECORD _COM_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HACKSTOP,                     "1.13cs",           ""},                    "FABD....FFE5"},
     {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HACKSTOP,                     "1.14s",            ""},                    "FABB....FFE3"},
     {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HACKSTOP,                     "1.17cr",           ""},                    "FABE....FFE6"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.30-0.40",        ""},                    "B9....BE....BF....BD....FDF3A4FCF7E19387F783C6..57E9"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.50",             ""},                    "B9....BE....BF....FDF3A4FCF7E19387F783EE..19ED57"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.81-1.20",        ""},                    "81FC....77..CD20B9....BE....BF....BB....FDF3A4FC87F783EE"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _COM_Exp_records[]=
@@ -132,6 +135,7 @@ SpecAbstract::SIGNATURE_RECORD _COM_Exp_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SPIRIT,                       "1.5",              ""},                    "E9$$$$AEE8$$$$E4210C..FBE62190B8....FB5026509087C1"},
     {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SPIRIT,                       "1.5",              ""},                    "E9$$$$369F9F1C..E9$$$$E8$$$$E421F80C..E6218D06....FC505089C1FB"},
     {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SPIRIT,                       "1.5",              ""},                    "E9$$$$F8D72606B435CD2107E8$$$$1C..1C..33D226F6DA12DDFCF905....F8F5F6EA"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ICE,                          "1.0",              ""},                    "EB$$BE....8BFE8B0E....8B16....B8....50FCAD33C2AB8BD0E2"},
 };
 
 // MSDOS,NE,LE,PE

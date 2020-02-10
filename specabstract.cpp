@@ -401,6 +401,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_HTML:                                  sResult=QString("HTML");                                        break;
         case RECORD_NAME_HXS:                                   sResult=QString("HXS");                                         break;
         case RECORD_NAME_IBMPCPASCAL:                           sResult=QString("IBM PC Pascal");                               break;
+        case RECORD_NAME_ICE:                                   sResult=QString("ICE");                                         break;
         case RECORD_NAME_ICRYPT:                                sResult=QString("ICrypt");                                      break;
         case RECORD_NAME_ILASM:                                 sResult=QString("ILAsm");                                       break;
         case RECORD_NAME_IMPORT:                                sResult=QString("Import");                                      break;
@@ -8034,6 +8035,13 @@ void SpecAbstract::Binary_handle_COM(QIODevice *pDevice, bool bIsImage, SpecAbst
         pBinaryInfo->mapResultPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 
+    if(pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_UPX))
+    {
+        pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
+        SpecAbstract::_SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_UPX);
+        pBinaryInfo->mapResultPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+
     if(pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_HACKSTOP))
     {
         pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
@@ -8046,6 +8054,13 @@ void SpecAbstract::Binary_handle_COM(QIODevice *pDevice, bool bIsImage, SpecAbst
         pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
         SpecAbstract::_SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SPIRIT);
         pBinaryInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+
+    if(pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ICE))
+    {
+        pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
+        SpecAbstract::_SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ICE);
+        pBinaryInfo->mapResultPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 }
 
