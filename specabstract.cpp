@@ -266,6 +266,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BABELNET:                              sResult=QString("Babel .NET");                                  break;
         case RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR:           sResult=QString("Backdoor PE Compress Protector");              break;
         case RECORD_NAME_BAMBAM:                                sResult=QString("bambam");                                      break;
+        case RECORD_NAME_BAT2EXEC:                              sResult=QString("BAT2EXEC");                                    break;
         case RECORD_NAME_BEROEXEPACKER:                         sResult=QString("BeRoEXEPacker");                               break;
         case RECORD_NAME_BIOHAZARDCRYPTER:                      sResult=QString("Biohazard Crypter");                           break;
         case RECORD_NAME_BITROCKINSTALLER:                      sResult=QString("BitRock Installer");                           break;
