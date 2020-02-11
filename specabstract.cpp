@@ -590,6 +590,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_TPPPACK:                               sResult=QString("TTP Pack");                                    break;
         case RECORD_NAME_TSTCRYPTER:                            sResult=QString("TsT Crypter");                                 break;
         case RECORD_NAME_TTPROTECT:                             sResult=QString("TTprotect");                                   break;
+        case RECORD_NAME_TURBOBASIC:                            sResult=QString("Turbo Basic");                                 break;
         case RECORD_NAME_TURBOC:                                sResult=QString("Turbo C");                                     break;
         case RECORD_NAME_TURBOCPP:                              sResult=QString("Turbo C++");                                   break;
         case RECORD_NAME_TURBOLINKER:                           sResult=QString("Turbo linker");                                break;
