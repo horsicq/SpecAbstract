@@ -664,6 +664,7 @@ public:
     struct MSDOSINFO_STRUCT
     {
         BASIC_INFO basic_info;
+        qint64 nEntryPointOffset;
         QString sEntryPointSignature;
         QString sOverlaySignature;
         qint64 nOverlayOffset;
