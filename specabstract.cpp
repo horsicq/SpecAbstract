@@ -9302,6 +9302,20 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
             pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
         }
+        else if(XELF::isSectionNamePresent(".qtplugin",&(pELFInfo->listSectionRecords)))
+        {
+            XELF::SECTION_RECORD record=XELF::getSectionRecord(".qtplugin",&(pELFInfo->listSectionRecords));
+
+            SpecAbstract::_SCANS_STRUCT recordSS={};
+
+            recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
+            recordSS.name=SpecAbstract::RECORD_NAME_QT;
+
+            QString sVersionString=elf.read_ansiString(record.nOffset);
+            recordSS.sVersion=XBinary::regExp("version=(.*?)\\\n",sVersionString,1);
+
+            pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+        }
     }
 }
 
