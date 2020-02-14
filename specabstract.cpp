@@ -1191,6 +1191,8 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbst
 
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS);
 
+        NE_handle_Borland(pDevice,pOptions->bIsImage,&result);
+
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
 
@@ -9528,6 +9530,30 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO
         if(recordCompiler.type!=RECORD_TYPE_UNKNOWN)
         {
             pLEInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pLEInfo->basic_info),&recordCompiler));
+        }
+    }
+}
+
+void SpecAbstract::NE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbstract::NEINFO_STRUCT *pNEInfo)
+{
+    XNE ne(pDevice,bIsImage);
+
+    if(ne.isValid())
+    {
+        SpecAbstract::_SCANS_STRUCT recordLinker={};
+
+        if(pNEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_TURBOLINKER))
+        {
+            _SCANS_STRUCT ss=pNEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_TURBOLINKER);
+
+            ss.sVersion=QString::number((double)ne.read_uint8(0x1F)/16,'f',1); // TODO one function for MSDOS/LE/NE/PE
+
+            recordLinker=ss;
+        }
+
+        if(recordLinker.type!=RECORD_TYPE_UNKNOWN)
+        {
+            pNEInfo->mapResultLinkers.insert(recordLinker.name,scansToScan(&(pNEInfo->basic_info),&recordLinker));
         }
     }
 }
