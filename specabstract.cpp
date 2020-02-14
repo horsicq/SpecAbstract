@@ -1143,6 +1143,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS);
 
         LE_handle_Microsoft(pDevice,pOptions->bIsImage,&result);
+        LE_handle_Borland(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
@@ -4938,13 +4939,15 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
         {
             _SCANS_STRUCT recordTurboLinker=pPEInfo->basic_info.mapHeaderDetects.value(SpecAbstract::RECORD_NAME_TURBOLINKER);
 
-            if(recordTurboLinker.nVariant==0)
+            VI_STRUCT vi=get_TurboLinker_vi(pDevice,bIsImage);
+
+            if(vi.bValid)
+            {
+                recordTurboLinker.sVersion=vi.sVersion;
+            }
+            else
             {
                 recordTurboLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion,2,10,QChar('0'));
-            }
-            else if(recordTurboLinker.nVariant==1)
-            {
-                recordTurboLinker.sVersion=QString::number((double)pe.read_uint8(0x1F)/16,'f',1); // TODO PE-MSDOS
             }
 
             recordLinker=recordTurboLinker;
@@ -8917,7 +8920,12 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
         {
             _SCANS_STRUCT ss=pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_TURBOLINKER);
 
-            ss.sVersion=QString::number((double)msdos.read_uint8(0x1F)/16,'f',1);
+            VI_STRUCT vi=get_TurboLinker_vi(pDevice,bIsImage);
+
+            if(vi.bValid)
+            {
+                ss.sVersion=vi.sVersion;
+            }
 
             recordLinker=ss;
         }
@@ -9534,6 +9542,35 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO
     }
 }
 
+void SpecAbstract::LE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbstract::LEINFO_STRUCT *pLEInfo)
+{
+    XLE le(pDevice,bIsImage);
+
+    if(le.isValid())
+    {
+        SpecAbstract::_SCANS_STRUCT recordLinker={};
+
+        if(pLEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_TURBOLINKER))
+        {
+            _SCANS_STRUCT ss=pLEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_TURBOLINKER);
+
+            VI_STRUCT vi=get_TurboLinker_vi(pDevice,bIsImage);
+
+            if(vi.bValid)
+            {
+                ss.sVersion=vi.sVersion;
+            }
+
+            recordLinker=ss;
+        }
+
+        if(recordLinker.type!=RECORD_TYPE_UNKNOWN)
+        {
+            pLEInfo->mapResultLinkers.insert(recordLinker.name,scansToScan(&(pLEInfo->basic_info),&recordLinker));
+        }
+    }
+}
+
 void SpecAbstract::NE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbstract::NEINFO_STRUCT *pNEInfo)
 {
     XNE ne(pDevice,bIsImage);
@@ -9546,7 +9583,12 @@ void SpecAbstract::NE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbst
         {
             _SCANS_STRUCT ss=pNEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_TURBOLINKER);
 
-            ss.sVersion=QString::number((double)ne.read_uint8(0x1F)/16,'f',1); // TODO one function for MSDOS/LE/NE/PE
+            VI_STRUCT vi=get_TurboLinker_vi(pDevice,bIsImage);
+
+            if(vi.bValid)
+            {
+                ss.sVersion=vi.sVersion;
+            }
 
             recordLinker=ss;
         }
@@ -9850,6 +9892,22 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_WindowsInstaller_vi(QIODevice *pDevice
         {
             result.sVersion=sVersion;
         }
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::get_TurboLinker_vi(QIODevice *pDevice, bool bIsImage)
+{
+    VI_STRUCT result;
+
+    XBinary binary(pDevice,bIsImage);
+
+    if(binary.read_uint8(0x1E)==0xFB)
+    {
+        result.bValid=true;
+
+        result.sVersion=QString::number((double)binary.read_uint8(0x1F)/16,'f',1);
     }
 
     return result;
