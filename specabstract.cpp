@@ -3467,7 +3467,7 @@ void SpecAbstract::PE_handle_VProtect(QIODevice *pDevice, bool bIsImage, SpecAbs
         {
             if(pPEInfo->nEntryPointSection>0)
             {
-                if(pPEInfo->sEntryPointSectionName=="VProtect")
+                if(pPEInfo->sEntryPointSectionName=="VProtect") // TODO !!!
                 {
                     if(pe.checkOffsetSize(pPEInfo->osEntryPointSection)&&(pPEInfo->basic_info.bIsDeepScan))
                     {
@@ -3510,7 +3510,7 @@ void SpecAbstract::PE_handle_TTProtect(QIODevice *pDevice, bool bIsImage, SpecAb
                 {
                     if(pPEInfo->nEntryPointSection>0)
                     {
-                        if(pPEInfo->sEntryPointSectionName==".TTP")
+                        if(pPEInfo->sEntryPointSectionName==".TTP") // TODO !!!
                         {
                             SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_TTPROTECT,"","",0);
 
@@ -3535,7 +3535,7 @@ void SpecAbstract::PE_handle_SafeengineShielden(QIODevice *pDevice, bool bIsImag
             {
                 if(pPEInfo->nEntryPointSection>0)
                 {
-                    if(pPEInfo->sEntryPointSectionName==".sedata")
+                    if(pPEInfo->sEntryPointSectionName==".sedata") // TODO !!!
                     {
                         SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_SAFEENGINESHIELDEN,"2.XX","",0);
 
