@@ -1145,6 +1145,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_TURBOCPP,                     "1988",             ""},                    "BA....2E8916....B430CD218B2E....8B1E....8EDAA3....8C06....891E....892E....C43E....8BC78BD8"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_RJCRUSH,                      "1.00",             ""},                    "06FC8CC8BA....03D052BA....52BA....03C28BD805....8EDB8EC033F633FFB9"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_BAT2EXEC,                     "1.2",              ""},                    "FCBD....8B....8B......8B......B44ACD21A1....8986....8B9E....FFE3"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_JAM,                          "2.21",             ""},                    "50061607BE....8BFEB9....FDFAF32EA5FB06BD....55CB"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=
