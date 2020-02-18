@@ -1092,7 +1092,7 @@ SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_CONFUSER,                     "1.X",              ""},                    "ConfusedByAttribute"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_SPICESNET,                    "",                 ""},                    "NineRays.Obfuscator"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_OBFUSCATORNET2009,            "",                 ""},                    "Macrobject.Obfuscator"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_XENOCODEPOSTBUILD,            "",                 ""},                    "Xenocode.Client.Attributes.AssemblyAttributes"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_XENOCODEPOSTBUILD,            "2.X-3.X",          ""},                    "Xenocode.Client.Attributes.AssemblyAttributes"},
 };
 
 //// TODO
