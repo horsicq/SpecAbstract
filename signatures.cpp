@@ -1012,7 +1012,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PESHIELD,                     "0.25-0.26",        ""},                    "ANAKIN2K"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PETITE,                       "",                 ""},                    ".petite"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PUNISHER,                     "1.5 demo",         ""},                    "PUNiSHER"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_QT,                           "",                 ""},                    ".qtmetad"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_QT,                           "",                 ""},                    ".qtmetad"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_RCRYPTOR,                     "",                 ""},                    "RCryptor"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_RLP,                          "",                 ""},                    ".rlp"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_RLPACK,                       "",                 ""},                    ".packed"},

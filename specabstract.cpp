@@ -412,6 +412,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_INSTALLANYWHERE:                       sResult=QString("InstallAnywhere");                             break;
         case RECORD_NAME_INSTALLSHIELD:                         sResult=QString("InstallShield");                               break;
         case RECORD_NAME_IPBPROTECT:                            sResult=QString("iPB Protect");                                 break;
+        case RECORD_NAME_JAM:                                   sResult=QString("JAM");                                         break;
         case RECORD_NAME_JAR:                                   sResult=QString("JAR");                                         break;
         case RECORD_NAME_JAVA:                                  sResult=QString("Java");                                        break;
         case RECORD_NAME_JAVACOMPILEDCLASS:                     sResult=QString("Java compiled class");                         break;
@@ -5617,6 +5618,12 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_QT,"5.X","Debug",0);
                 pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
+            else if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_QT))
+            {
+                // TODO Version!
+                _SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_QT);;
+                pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
 
             if(pe.checkOffsetSize(pPEInfo->osDataSection)&&(pPEInfo->basic_info.bIsDeepScan))
             {
@@ -9146,6 +9153,12 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
         {
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_PGMPAK);
             pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+
+        if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_JAM))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_JAM);
+            pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
 }
