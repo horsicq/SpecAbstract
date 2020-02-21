@@ -4409,6 +4409,8 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
         }
 
+        // TODO Check MASM for .NET
+
         if(!pPEInfo->cliInfo.bInit)
         {
             // VB
