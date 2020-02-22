@@ -241,6 +241,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_AHPACKER:                              sResult=QString("AHPacker");                                    break;
         case RECORD_NAME_AHTEAMEPPROTECTOR:                     sResult=QString("AHTeam EP Protector");                         break;
         case RECORD_NAME_AINEXE:                                sResult=QString("AINEXE");                                      break;
+        case RECORD_NAME_ALCHEMYMINDWORKS:                      sResult=QString("Alchemy Mindworks");                           break;
         case RECORD_NAME_ALEXPROTECTOR:                         sResult=QString("Alex Protector");                              break;
         case RECORD_NAME_ALIASOBJ:                              sResult=QString("ALIASOBJ");                                    break;
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
@@ -6748,6 +6749,16 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
 
                     pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                }
+            }
+
+            // Alchemy Mindworks
+            if( XPE::isResourcePresent(XPE_DEF::S_RT_RCDATA,4001,&(pPEInfo->listResources))&&
+                XPE::isResourcePresent(XPE_DEF::S_RT_RCDATA,5001,&(pPEInfo->listResources)))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_ALCHEMYMINDWORKS,"","",0);
+                // TODO versions
+
+                pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
             if(!pPEInfo->mapResultInstallers.contains(RECORD_NAME_WINDOWSINSTALLER))
