@@ -554,6 +554,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ROGUEPACK:                             sResult=QString("RoguePack");                                   break;
         case RECORD_NAME_ROSASM:                                sResult=QString("RosAsm");                                      break;
         case RECORD_NAME_RTF:                                   sResult=QString("Rich Text Format");                            break;
+        case RECORD_NAME_RUBY:                                  sResult=QString("Ruby");                                        break;
         case RECORD_NAME_SAFEENGINESHIELDEN:                    sResult=QString("Safengine Shielden");                          break;
         case RECORD_NAME_SCPACK:                                sResult=QString("SC Pack");                                     break;
         case RECORD_NAME_SDPROTECTORPRO:                        sResult=QString("SDProtector Pro");                             break;
@@ -8021,6 +8022,11 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
             else if(sInterpreter=="sh")
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_TEXT,RECORD_TYPE_SOURCECODE,RECORD_NAME_SHELL,"","",0);
+                pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+            }
+            else if(sInterpreter=="ruby")
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_TEXT,RECORD_TYPE_SOURCECODE,RECORD_NAME_RUBY,"","",0);
                 pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
             }
         }
