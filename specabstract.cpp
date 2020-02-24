@@ -3664,6 +3664,11 @@ void SpecAbstract::PE_handle_Obsidium(QIODevice *pDevice, bool bIsImage, SpecAbs
 
     if(pe.isValid())
     {
+        // TODO x64
+        // KERNEL32.DLL
+        // USER32.DLL
+        // ADVAPI32.DLL
+        // SHEL32.DLL
         if(!pPEInfo->cliInfo.bInit)
         {
             int nNumberOfImports=pPEInfo->listImports.count();
