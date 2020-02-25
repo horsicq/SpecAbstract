@@ -3892,6 +3892,7 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
                 QString sVersion;
 
                 // TODO !!!
+                // TODO Petite 2.4 Check header
                 for(int i=0; i<pPEInfo->listImports.count(); i++)
                 {
                     if(pPEInfo->listImports.at(i).sName.toUpper()=="USER32.DLL")
@@ -3988,7 +3989,7 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
                         pPEInfo->mapResultPackers.insert(recordPETITE.name,scansToScan(&(pPEInfo->basic_info),&recordPETITE));
                     }
                 }
-                else if(XPE::isSectionNamePresent(".petite",&(pPEInfo->listSectionHeaders))) // TODO
+                else if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_PETITE)) // TODO
                 {
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PETITE))
                     {
