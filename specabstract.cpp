@@ -1455,7 +1455,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_Protection(pDevice,pOptions->bIsImage,&result);
         PE_handle_SafeengineShielden(pDevice,pOptions->bIsImage,&result);
         PE_handle_VProtect(pDevice,pOptions->bIsImage,&result);
-        PE_handle_TTProtect(pDevice,pOptions->bIsImage,&result);
+        PE_handle_TTProtect(pDevice,pOptions->bIsImage,&result); // TODO remove
         PE_handle_VMProtect(pDevice,pOptions->bIsImage,&result);
         PE_handle_tElock(pDevice,pOptions->bIsImage,&result);
         PE_handle_Armadillo(pDevice,pOptions->bIsImage,&result);
