@@ -410,6 +410,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_INFCRYPTOR:                            sResult=QString("INF Cryptor");                                 break;
         case RECORD_NAME_INNOSETUP:                             sResult=QString("Inno Setup");                                  break;
         case RECORD_NAME_INQUARTOSOBFUSCATOR:                   sResult=QString("Inquartos Obfuscator");                        break;
+        case RECORD_NAME_INSTALL4J:                             sResult=QString("install4j");                                   break;
         case RECORD_NAME_INSTALLANYWHERE:                       sResult=QString("InstallAnywhere");                             break;
         case RECORD_NAME_INSTALLSHIELD:                         sResult=QString("InstallShield");                               break;
         case RECORD_NAME_IPBPROTECT:                            sResult=QString("iPB Protect");                                 break;
@@ -6463,6 +6464,12 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
+            if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_INSTALL4J))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_INSTALL4J,"","",0);
+                pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
             if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_SMARTINSTALLMAKER))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_SMARTINSTALLMAKER,"","",0);
@@ -8617,6 +8624,16 @@ void SpecAbstract::Binary_handle_InstallerData(QIODevice *pDevice,bool bIsImage,
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SETUPFACTORY))&&(pBinaryInfo->basic_info.nSize>=8))
     {
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SETUPFACTORY);
+        pBinaryInfo->mapResultInstallerData.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ACTUALINSTALLER))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ACTUALINSTALLER);
+        pBinaryInfo->mapResultInstallerData.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_INSTALL4J))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_INSTALL4J);
         pBinaryInfo->mapResultInstallerData.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 }

@@ -63,7 +63,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{1, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_FISHNET,                      "1.X",              ""},                    "000800'FISH_NET'0100"},
     {{2, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_FISHNET,                      "1.X",              ""},                    "00000800'FISH_NET'0100"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_SMARTINSTALLMAKER,            "",                 ""},                    "'Smart Install Maker v'"},
-    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_TARMAINSTALLER,               "",                 "zlib"},                "'tiz1'........78da'"},
+    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_TARMAINSTALLER,               "",                 "zlib"},                "'tiz1'........78DA'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_CLICKTEAM,                    "",                 ""},                    "'wwgT)'"},
     {{1, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_CLICKTEAM,                    "",                 ""},                    "..120100....0000"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_SFXDATA,          SpecAbstract::RECORD_NAME_WINRAR,                       "",                 ""},                    "'***messages***'"},
@@ -107,11 +107,12 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_ZELDACRYPT,                   "",                 ""},                    "2F232F2B5C235C"}, // '/#/+\#\'
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_WOUTHRSEXECRYPTER,            "",                 ""},                    "'<%>'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_WLCRYPT,                      "",                 ""},                    "'[Crypted Key]'"},
-    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_XAR,                          "",                 ""},                    "'xar!'001c00010000"},
+    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_XAR,                          "",                 ""},                    "'xar!'001C00010000"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_SWF,                          "",                 "Uncompressed"},        "'FWS'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_SWF,                          "",                 "zlib"},                "'CWS'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_SWF,                          "",                 "LZMA"},                "'ZWS'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_MICROSOFTWINHELP,             "",                 ""},                    "3f5f0300"},
+    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_INSTALL4J,                    "",                 ""},                    "D513E4E801000000"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _COM_records[]=
