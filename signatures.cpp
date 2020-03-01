@@ -1149,6 +1149,8 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_RJCRUSH,                      "1.00",             ""},                    "06FC8CC8BA....03D052BA....52BA....03C28BD805....8EDB8EC033F633FFB9"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_BAT2EXEC,                     "1.2",              ""},                    "FCBD....8B....8B......8B......B44ACD21A1....8986....8B9E....FFE3"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_JAM,                          "2.21",             ""},                    "50061607BE....8BFEB9....FDFAF32EA5FB06BD....55CB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_SFX,              SpecAbstract::RECORD_NAME_PKZIPMINISFX,                 "1.1",              ""},                    "B8....A3....BF....B9....2BCF32C0F3AAB430CD21A3....A1....A3....E8....B8"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_SFX,              SpecAbstract::RECORD_NAME_PKZIPMINISFX,                 "2.04",             ""},                    "B9....BF....2BCF32C0F3AAB430CD21A3....8926....E8....B8....E8....E8"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=

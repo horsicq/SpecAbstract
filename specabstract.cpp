@@ -529,6 +529,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PICRYPTOR:                             sResult=QString("PI Cryptor");                                  break;
         case RECORD_NAME_PKLITE:                                sResult=QString("PKLITE");                                      break;
         case RECORD_NAME_PKLITE32:                              sResult=QString("PKLITE32");                                    break;
+        case RECORD_NAME_PKZIPMINISFX:                          sResult=QString("PKZIP mini-sfx");                              break;
         case RECORD_NAME_PLAIN:                                 sResult=QString("Plain");                                       break;
         case RECORD_NAME_PMODEW:                                sResult=QString("PMODE/W");                                     break;
         case RECORD_NAME_PNG:                                   sResult=QString("PNG");                                         break;
@@ -9226,6 +9227,11 @@ void SpecAbstract::MSDOS_handle_SFX(QIODevice *pDevice, bool bIsImage, SpecAbstr
         else if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_ICE))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_ICE);
+            pMSDOSInfo->mapResultSFX.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+        else if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_PKZIPMINISFX))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_PKZIPMINISFX);
             pMSDOSInfo->mapResultSFX.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
