@@ -6743,12 +6743,19 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Java")&&
-                    XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("Setup Launcher"))
+            if( XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Java")&&
+                XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("Setup Launcher"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_JAVA,"","",0);
                 ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
+                pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
+            if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_VMWARE)||XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("VMware installation"))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_VMWARE,"","",0);
+                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
