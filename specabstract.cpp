@@ -1486,7 +1486,6 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_DelphiCryptors(pDevice,pOptions->bIsImage,&result);
 
         PE_handle_Joiners(pDevice,pOptions->bIsImage,&result);
-
         PE_handle_PETools(pDevice,pOptions->bIsImage,&result);
 
         PE_handle_UnknownProtection(pDevice,pOptions->bIsImage,&result);
@@ -4941,6 +4940,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
 {
     // TODO Turbo Linker
     // https://delphi.fandom.com/wiki/Determine_Delphi_Application
+    // TODO if Delphi Linker -> 2.25
     XPE pe(pDevice,bIsImage);
 
     if(pe.isValid())
@@ -5612,6 +5612,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
         {
             // Qt
             // mb TODO upper
+            // TODO Find Strings QObject
             if(XPE::isImportLibraryPresentI("QtCore4.dll",&(pPEInfo->listImports)))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_QT,"4.X","",0);
