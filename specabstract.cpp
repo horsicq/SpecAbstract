@@ -4519,22 +4519,13 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
         {
             // TODO Check mb MS Linker only
 
-            if(!pPEInfo->bIs64)
+            if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_VISUALCCPP))
             {
-                if(pe.compareEntryPoint("E8......00E9$$$$$$$$6A..68........E8"))
-                {
-                    recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                    recordCompiler.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
-                }
-            }
-            else
-            {
-                if( pe.compareEntryPoint("4883EC28E8........4883C428E9$$$$$$$$48895C24")||
-                    pe.compareEntryPoint("4883EC28E8........4883C428E9$$$$$$$$488BC44889580848897010488978184C896020"))
-                {
-                    recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                    recordCompiler.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
-                }
+                _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_VISUALCCPP);
+
+                recordCompiler.type=ss.type;
+                recordCompiler.name=ss.name;
+                recordCompiler.sVersion=ss.sVersion;
             }
         }
 
