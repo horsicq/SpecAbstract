@@ -634,6 +634,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WATCOMC:                               sResult=QString("Watcom C");                                    break;
         case RECORD_NAME_WATCOMCCPP:                            sResult=QString("Watcom C/C++");                                break;
         case RECORD_NAME_WATCOMLINKER:                          sResult=QString("Watcom linker");                               break;
+        case RECORD_NAME_WAV:                                   sResult=QString("WAV");                                         break;
         case RECORD_NAME_WDOSX:                                 sResult=QString("WDOSX");                                       break;
         case RECORD_NAME_WHITELLCRYPT:                          sResult=QString("Whitell Crypt");                               break;
         case RECORD_NAME_WINACE:                                sResult=QString("WinACE");                                      break;
@@ -8463,6 +8464,13 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice,bool bIsImage, SpecA
     {
         // MP4
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MP4);
+        // TODO Version
+        pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WAV))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        // VAW
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WAV);
         // TODO Version
         pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
