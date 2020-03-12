@@ -259,6 +259,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ASPROTECT:                             sResult=QString("ASProtect");                                   break;
         case RECORD_NAME_ASSCRYPTER:                            sResult=QString("Ass Crypter");                                 break;
         case RECORD_NAME_ASSEMBLYINVOKE:                        sResult=QString("AssemblyInvoke");                              break;
+        case RECORD_NAME_AU:                                    sResult=QString("AU");                                          break;
         case RECORD_NAME_AUTOIT:                                sResult=QString("AutoIt");                                      break;
         case RECORD_NAME_AVASTANTIVIRUS:                        sResult=QString("Avast Antivirus");                             break;
         case RECORD_NAME_AVERCRYPTOR:                           sResult=QString("AverCryptor");                                 break;
@@ -8476,6 +8477,13 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice,bool bIsImage, SpecA
     {
         // VAW
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WAV);
+        // TODO Version
+        pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_AU))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        // AU
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_AU);
         // TODO Version
         pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
