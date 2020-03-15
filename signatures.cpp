@@ -72,6 +72,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{1, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_RAR,                          "4.X",              ""},                    "'Rar!'1A0700"},
     {{1, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_RAR,                          "5.X",              ""},                    "'Rar!'1A070100"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_AU,                           "",                 ""},                    "'.snd'"},
+    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_DEB,                          "",                 ""},                    "'!<arch>'0a'debian-binary'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _PE_overlay_records[]=
