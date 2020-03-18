@@ -599,6 +599,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_TOTALCOMMANDERINSTALLER:               sResult=QString("Total Commander Installer");                   break;
         case RECORD_NAME_TPPPACK:                               sResult=QString("TTP Pack");                                    break;
         case RECORD_NAME_TSTCRYPTER:                            sResult=QString("TsT Crypter");                                 break;
+        case RECORD_NAME_TTF:                                   sResult=QString("True Type Font");                              break;
         case RECORD_NAME_TTPROTECT:                             sResult=QString("TTprotect");                                   break;
         case RECORD_NAME_TURBOBASIC:                            sResult=QString("Turbo Basic");                                 break;
         case RECORD_NAME_TURBOC:                                sResult=QString("Turbo C");                                     break;
@@ -8505,6 +8506,13 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice,bool bIsImage, SpecA
     {
         // DEB
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_AVI);
+        // TODO Version
+        pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_TTF))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        // TTF
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_TTF);
         // TODO Version
         pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
