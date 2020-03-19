@@ -1179,6 +1179,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_JAM,                          "2.21",             ""},                    "50061607BE....8BFEB9....FDFAF32EA5FB06BD....55CB"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_SFX,              SpecAbstract::RECORD_NAME_PKZIPMINISFX,                 "1.1",              ""},                    "B8....A3....BF....B9....2BCF32C0F3AAB430CD21A3....A1....A3....E8....B8"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_SFX,              SpecAbstract::RECORD_NAME_PKZIPMINISFX,                 "2.04",             ""},                    "B9....BF....2BCF32C0F3AAB430CD21A3....8926....E8....B8....E8....E8"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_AVPACK,                       "1.20",             ""},                    "501E0E1F160733F68BFEB9....FCF3A506BB....53CB"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=
