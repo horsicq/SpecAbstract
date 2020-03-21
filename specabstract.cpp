@@ -436,6 +436,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LAZARUS:                               sResult=QString("Lazarus");                                     break;
         case RECORD_NAME_LCCLNK:                                sResult=QString("lcclnk");                                      break;
         case RECORD_NAME_LCCWIN:                                sResult=QString("lcc-win");                                     break;
+        case RECORD_NAME_LGLZ:                                  sResult=QString("LGLZ");                                        break;
         case RECORD_NAME_LHA:                                   sResult=QString("LHA");                                         break;
         case RECORD_NAME_LHASSFX:                               sResult=QString("LHA's SFX");                                   break;
         case RECORD_NAME_LIGHTNINGCRYPTERPRIVATE:               sResult=QString("Lightning Crypter Private");                   break;
@@ -9297,6 +9298,12 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
         {
             // TODO Check
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_AVPACK);
+            pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+
+        if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_LGLZ))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_LGLZ);
             pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
