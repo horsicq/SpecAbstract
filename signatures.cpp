@@ -1181,6 +1181,8 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_SFX,              SpecAbstract::RECORD_NAME_PKZIPMINISFX,                 "2.04",             ""},                    "B9....BF....2BCF32C0F3AAB430CD21A3....8926....E8....B8....E8....E8"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_AVPACK,                       "1.20",             ""},                    "501E0E1F160733F68BFEB9....FCF3A506BB....53CB"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LGLZ,                         "1.04",             ""},                    "FC1E060E8CC80106....BA....03C28BD805....8EDB8EC033F633FFB9....F3A54B484A79..8EC38ED8BE....AD95B2..EA"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PROPACK,                      "2.08",             ""},                    "8CD38EC38CCA8EDA8B0E....8BF183EE..8BFED1..FDF3A553B8....508B......CB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PROPACK,                      "2.13-2.14",        ""},                    "0E8CD38EC38CCA8EDA8B......8BF183....8BFED1..FDF3A553B8....508B......03......CB"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=
