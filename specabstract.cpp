@@ -555,6 +555,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_RAR:                                   sResult=QString("RAR");                                         break;
         case RECORD_NAME_RCRYPTOR:                              sResult=QString("RCryptor(Russian Cryptor)");                   break;
         case RECORD_NAME_RDGTEJONCRYPTER:                       sResult=QString("RDG Tejon Crypter");                           break;
+        case RECORD_NAME_RELPACK:                               sResult=QString("Relpack");                                     break;
         case RECORD_NAME_RENETPACK:                             sResult=QString("ReNET-pack");                                  break;
         case RECORD_NAME_RESOURCE:                              sResult=QString("Resource");                                    break;
         case RECORD_NAME_REVPROT:                               sResult=QString("REVProt");                                     break;
@@ -9311,6 +9312,12 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
         if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_PROPACK))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_PROPACK);
+            pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+
+        if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_RELPACK))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_RELPACK);
             pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
