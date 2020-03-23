@@ -1190,4 +1190,5 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_BAT2EXEC,                     "1.5",              ""},                    "EB$$FCBD....8B....8B......8B......B44ACD21A1....8986....8B9E....FFE3"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_SFX,              SpecAbstract::RECORD_NAME_ICE,                          "1.0",              ""},                    "EB$$BE....8BFE8B0E....8B16....B8....50FCAD33C2AB8BD0E2"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_RELPACK,                      "1.0",              ""},                    "EB$$2E8C1E....2E8C06....8CC383C3..8CC88ED8BE....FCAD3D....75..AD3D....74..03C38EC0AD8BF826011DEB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_SCRNCH,                       "1.02",             ""},                    "EB$$BB....B44ACD2181EB....73..BA....B9....E9$$$$0E1FB440BB....CD21B8....CD21"},
 };
