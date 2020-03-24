@@ -1183,6 +1183,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_LGLZ,                         "1.04",             ""},                    "FC1E060E8CC80106....BA....03C28BD805....8EDB8EC033F633FFB9....F3A54B484A79..8EC38ED8BE....AD95B2..EA"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PROPACK,                      "2.08",             ""},                    "8CD38EC38CCA8EDA8B0E....8BF183EE..8BFED1..FDF3A553B8....508B......CB"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PROPACK,                      "2.13-2.14",        ""},                    "0E8CD38EC38CCA8EDA8B......8BF183....8BFED1..FDF3A553B8....508B......03......CB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_TINYPROG,                     "3.X",              ""},                    "83EC..83E4..8BEC50BE....0336....8CD28CD803....33C275..FC8EC233FF"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=
@@ -1191,4 +1192,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_SFX,              SpecAbstract::RECORD_NAME_ICE,                          "1.0",              ""},                    "EB$$BE....8BFE8B0E....8B16....B8....50FCAD33C2AB8BD0E2"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_RELPACK,                      "1.0",              ""},                    "EB$$2E8C1E....2E8C06....8CC383C3..8CC88ED8BE....FCAD3D....75..AD3D....74..03C38EC0AD8BF826011DEB"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_SCRNCH,                       "1.02",             ""},                    "EB$$BB....B44ACD2181EB....73..BA....B9....E9$$$$0E1FB440BB....CD21B8....CD21"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_TINYPROG,                     "3.X",              ""},                    "E9$$$$EB$$83EC..83E4..8BEC50BE....0336....8CD28CD803....33C275..FC8EC233FF"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_TINYPROG,                     "3.X",              ""},                    "EB$$83EC..83E4..8BEC50BE....0336....8CD28CD803....33C275..FC8EC233FF"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_TINYPROG,                     "3.X",              ""},                    "E9$$$$2EC606......E9$$$$83EC..83E4..8BEC50BE............8CD28CD803....33C275..FC8EC233FF"},
 };
