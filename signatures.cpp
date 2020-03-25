@@ -1184,6 +1184,9 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PROPACK,                      "2.08",             ""},                    "8CD38EC38CCA8EDA8B0E....8BF183EE..8BFED1..FDF3A553B8....508B......CB"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PROPACK,                      "2.13-2.14",        ""},                    "0E8CD38EC38CCA8EDA8B......8BF183....8BFED1..FDF3A553B8....508B......03......CB"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_TINYPROG,                     "3.X",              ""},                    "83EC..83E4..8BEC50BE....0336....8CD28CD803....33C275..FC8EC233FF"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UCEXE,                        "2.3",              ""},                    "501E0E1FFC33F6E8....160733F633FFB9....F3A506B8....50CB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UCEXE,                        "2.4",              ""},                    "501E0E1FFC2BF6E8....16072BF68BFEB9....F3A406B8....50CB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UCEXE,                        "3.0",              ""},                    "501E0E1FFC160733F633FFB9....F3A506B8....50CB"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=

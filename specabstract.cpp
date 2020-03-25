@@ -613,6 +613,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_TURBOLINKER:                           sResult=QString("Turbo linker");                                break;
         case RECORD_NAME_TURKISHCYBERSIGNATURE:                 sResult=QString("Turkish Cyber Signature");                     break;
         case RECORD_NAME_TURKOJANCRYPTER:                       sResult=QString("Turkojan Crypter");                            break;
+        case RECORD_NAME_UCEXE:                                 sResult=QString("UCEXE");                                       break;
         case RECORD_NAME_UNDERGROUNDCRYPTER:                    sResult=QString("UnderGround Crypter");                         break;
         case RECORD_NAME_UNDOCRYPTER:                           sResult=QString("UnDo Crypter");                                break;
         case RECORD_NAME_UNICODE:                               sResult=QString("Unicode");                                     break;
@@ -9332,6 +9333,12 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
         if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_TINYPROG))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_TINYPROG);
+            pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+
+        if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_UCEXE))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_UCEXE);
             pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
