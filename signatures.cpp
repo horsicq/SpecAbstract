@@ -21,7 +21,6 @@
 #include "specabstract.h"
 
 // TODO separate
-// mb TODO protectordata/installerData only by parent
 SpecAbstract::SIGNATURE_RECORD _binary_records[]=
 {
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_ARCHIVE,          SpecAbstract::RECORD_NAME_7Z,                           "",                 ""},                    "'7z'BCAF271C"},
