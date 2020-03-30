@@ -8103,6 +8103,8 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
 
 void SpecAbstract::Binary_handle_COM(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
 {
+    XBinary binary(pDevice,bIsImage);
+
     if(pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PKLITE))
     {
         pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
