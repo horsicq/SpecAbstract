@@ -1029,7 +1029,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         result.baStringTable=elf.getSection(result.nStringTableSection);
 
         result.listTags=elf.getTagStructs();
-        result.listLibraries=elf.getLibraries(&result.listTags);
+        result.listLibraries=elf.getLibraries(&(result.basic_info.memoryMap),&result.listTags);
 
         result.listSectionHeaders=elf.getElf_ShdrList();
         result.listProgramHeaders=elf.getElf_PhdrList();
