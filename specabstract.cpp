@@ -9345,6 +9345,12 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_UCEXE);
             pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
+
+        if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_CCBYVORONTSOV))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_CCBYVORONTSOV);
+            pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
     }
 }
 

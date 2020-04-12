@@ -1186,6 +1186,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UCEXE,                        "2.3",              ""},                    "501E0E1FFC33F6E8....160733F633FFB9....F3A506B8....50CB"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UCEXE,                        "2.4",              ""},                    "501E0E1FFC2BF6E8....16072BF68BFEB9....F3A406B8....50CB"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UCEXE,                        "3.0",              ""},                    "501E0E1FFC160733F633FFB9....F3A506B8....50CB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CCBYVORONTSOV,                "1.00",             ""},                    "B8....BA....3BE073..B409BA....CD21B8....CD218BDC81EB....83E3..FCBE....8BFBB9....F3A48BC3B1..D3E88CC903C15033C050CB"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=
