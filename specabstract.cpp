@@ -287,6 +287,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CAB:                                   sResult=QString("CAB");                                         break;
         case RECORD_NAME_CARBON:                                sResult=QString("Carbon");                                      break;
         case RECORD_NAME_CAUSEWAY:                              sResult=QString("CauseWay");                                    break;
+        case RECORD_NAME_CCBYVORONTSOV:                         sResult=QString("CC by Vorontsov");                             break;
+        case RECORD_NAME_CCBYUNIHACKERS:                        sResult=QString("CC by UniHackers");                            break;
         case RECORD_NAME_CCPP:                                  sResult=QString("C/C++");                                       break;
         case RECORD_NAME_CELESTYFILEBINDER:                     sResult=QString("Celesty File Binder");                         break;
         case RECORD_NAME_CEXE:                                  sResult=QString("CExe");                                        break;
