@@ -1187,6 +1187,9 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UCEXE,                        "2.4",              ""},                    "501E0E1FFC2BF6E8....16072BF68BFEB9....F3A406B8....50CB"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UCEXE,                        "3.0",              ""},                    "501E0E1FFC160733F633FFB9....F3A506B8....50CB"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CCBYVORONTSOV,                "1.00",             ""},                    "B8....BA....3BE073..B409BA....CD21B8....CD218BDC81EB....83E3..FCBE....8BFBB9....F3A48BC3B1..D3E88CC903C15033C050CB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTORBYDISMEMBER,           "1.3",              ""},                    "1E8CDA83....8EDA8EC2BB....BA....85D274..B4..33FF33F6B9....AC32C4C0....02..2E........AAE2"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTORBYDISMEMBER,           "1.7",              ""},                    "0E179C58F6....74..E9....1EB0..E6..8CDA83....8EDA8EC2BB....BA....85D274..B4..33FF33F6B9"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTORBYDISMEMBER,           "2.0",              ""},                    "FA061E8CDD83C5..2E012E....2E012E....E8....E8....1F072E8E16....2E8B26....FB2EFF2E"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=
@@ -1199,4 +1202,6 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_TINYPROG,                     "3.X",              ""},                    "EB$$83EC..83E4..8BEC50BE....0336....8CD28CD803....33C275..FC8EC233FF"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_TINYPROG,                     "3.X",              ""},                    "E9$$$$2EC606......E9$$$$83EC..83E4..8BEC50BE............8CD28CD803....33C275..FC8EC233FF"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTCOM,                     "2.0",              ""},                    "E9$$$$BE....56B9....C704....C644....8134....4646E2..31F631C9C3"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTORBYDISMEMBER,           "1.7",              ""},                    "0E179C58F6....74..EB$$B0..E6..33C9E2..B430CD213C..73..33C00650CB"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTORBYDISMEMBER,           "2.0",              ""},                    "E9$$$$BF....8BF7ACAD918AE157AC32C4F6D0D0C412E1AAE2"},
 };

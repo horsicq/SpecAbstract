@@ -317,6 +317,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CRYPTIC:                               sResult=QString("Cryptic");                                     break;
         case RECORD_NAME_CRYPTOCRACKPEPROTECTOR:                sResult=QString("CrypToCrack Pe Protector");                    break;
         case RECORD_NAME_CRYPTOOBFUSCATORFORNET:                sResult=QString("Crypto Obfuscator For .Net");                  break;
+        case RECORD_NAME_CRYPTORBYDISMEMBER:                    sResult=QString("Cryptor by Dismember");                        break;
         case RECORD_NAME_CRYPTOZ:                               sResult=QString("CRyptOZ");                                     break;
         case RECORD_NAME_CRYPTRROADS:                           sResult=QString("Crypt R.roads");                               break;
         case RECORD_NAME_CVTOMF:                                sResult=QString("CVTOMF");                                      break;
@@ -9356,6 +9357,12 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
         if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_CRYPTCOM))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_CRYPTCOM);
+            pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+
+        if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_CRYPTORBYDISMEMBER))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_CRYPTORBYDISMEMBER);
             pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
