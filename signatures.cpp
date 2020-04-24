@@ -1198,4 +1198,5 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_TINYPROG,                     "3.X",              ""},                    "E9$$$$EB$$83EC..83E4..8BEC50BE....0336....8CD28CD803....33C275..FC8EC233FF"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_TINYPROG,                     "3.X",              ""},                    "EB$$83EC..83E4..8BEC50BE....0336....8CD28CD803....33C275..FC8EC233FF"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_TINYPROG,                     "3.X",              ""},                    "E9$$$$2EC606......E9$$$$83EC..83E4..8BEC50BE............8CD28CD803....33C275..FC8EC233FF"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTCOM,                     "2.0",              ""},                    "E9$$$$BE....56B9....C704....C644....8134....4646E2..31F631C9C3"},
 };

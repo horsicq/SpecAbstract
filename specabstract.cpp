@@ -312,6 +312,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CRUNCH:                                sResult=QString("Crunch");                                      break;
         case RECORD_NAME_CRYEXE:                                sResult=QString("CryEXE");                                      break;
         case RECORD_NAME_CRYPTABLESEDUCATION:                   sResult=QString("Cryptable Seduction");                         break;
+        case RECORD_NAME_CRYPTCOM:                              sResult=QString("CryptCom");                                    break;
         case RECORD_NAME_CRYPTER:                               sResult=QString("Crypter");                                     break;
         case RECORD_NAME_CRYPTIC:                               sResult=QString("Cryptic");                                     break;
         case RECORD_NAME_CRYPTOCRACKPEPROTECTOR:                sResult=QString("CrypToCrack Pe Protector");                    break;
@@ -9349,6 +9350,12 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
         if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_CCBYVORONTSOV))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_CCBYVORONTSOV);
+            pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+
+        if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_CRYPTCOM))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_CRYPTCOM);
             pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
