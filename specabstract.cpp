@@ -796,10 +796,9 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::createHeaderScanStruct(const SpecAbstrac
     return result;
 }
 
-// TODO VI
-QString SpecAbstract::findEnigmaVersion(QIODevice *pDevice,bool bIsImage, qint64 nOffset, qint64 nSize)
+SpecAbstract::VI_STRUCT SpecAbstract::get_Enigma_vi(QIODevice *pDevice,bool bIsImage, qint64 nOffset, qint64 nSize)
 {
-    QString sResult;
+    VI_STRUCT result={};
 
     XBinary binary(pDevice,bIsImage);
 
@@ -807,6 +806,8 @@ QString SpecAbstract::findEnigmaVersion(QIODevice *pDevice,bool bIsImage, qint64
 
     if(_nOffset!=-1)
     {
+        result.bIsValid=true;
+
         quint8 nMajor=binary.read_uint8(_nOffset+9);
         quint8 nMinor=binary.read_uint8(_nOffset+10);
         quint16 nYear=binary.read_uint16(_nOffset+11);
@@ -816,10 +817,10 @@ QString SpecAbstract::findEnigmaVersion(QIODevice *pDevice,bool bIsImage, qint64
         quint16 nMin=binary.read_uint16(_nOffset+19);
         quint16 nSec=binary.read_uint16(_nOffset+21);
 
-        sResult=QString("%1.%2 build %3.%4.%5 %6:%7:%8").arg(nMajor).arg(nMinor,2,10,QChar('0')).arg(nYear,4,10,QChar('0')).arg(nMonth,2,10,QChar('0')).arg(nDay,2,10,QChar('0')).arg(nHour,2,10,QChar('0')).arg(nMin,2,10,QChar('0')).arg(nSec,2,10,QChar('0'));
+        result.sVersion=QString("%1.%2 build %3.%4.%5 %6:%7:%8").arg(nMajor).arg(nMinor,2,10,QChar('0')).arg(nYear,4,10,QChar('0')).arg(nMonth,2,10,QChar('0')).arg(nDay,2,10,QChar('0')).arg(nHour,2,10,QChar('0')).arg(nMin,2,10,QChar('0')).arg(nSec,2,10,QChar('0'));
     }
 
-    return sResult;
+    return result;
 }
 
 SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset)
@@ -2010,11 +2011,11 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     //                    if((!bDetect)&&(nVariant==1))
                     if(!bDetect)
                     {
-                        QString sEnigmaVersion=findEnigmaVersion(pDevice,bIsImage,nSectionOffset,nSectionSize);
+                        VI_STRUCT viEngima=get_Enigma_vi(pDevice,bIsImage,nSectionOffset,nSectionSize);
 
-                        if(sEnigmaVersion!="")
+                        if(viEngima.bIsValid)
                         {
-                            recordEnigma.sVersion=sEnigmaVersion;
+                            recordEnigma.sVersion=viEngima.sVersion;
                             bDetect=true;
                         }
                     }
@@ -4043,11 +4044,11 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 qint64 nSectionOffset=pPEInfo->osCodeSection.nOffset;
                 qint64 nSectionSize=pPEInfo->osCodeSection.nSize;
 
-                QString sEnigmaVersion=findEnigmaVersion(pDevice,bIsImage,nSectionOffset,nSectionSize);
+                VI_STRUCT viEnigma=get_Enigma_vi(pDevice,bIsImage,nSectionOffset,nSectionSize);
 
-                if(sEnigmaVersion!="")
+                if(viEnigma.bIsValid)
                 {
-                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_ENIGMA,sEnigmaVersion,".NET",0);
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_ENIGMA,viEnigma.sVersion,".NET",0);
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
             }
@@ -4970,7 +4971,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
 
             VI_STRUCT vi=get_TurboLinker_vi(pDevice,bIsImage);
 
-            if(vi.bValid)
+            if(vi.bIsValid)
             {
                 recordTurboLinker.sVersion=vi.sVersion;
             }
@@ -9073,7 +9074,7 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
 
             VI_STRUCT vi=get_TurboLinker_vi(pDevice,bIsImage);
 
-            if(vi.bValid)
+            if(vi.bIsValid)
             {
                 ss.sVersion=vi.sVersion;
             }
@@ -9601,7 +9602,7 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         VI_STRUCT viUPX1=get_UPX_vi(pDevice,bIsImage,pELFInfo->basic_info.nSize-0x24,0x24);
         VI_STRUCT viUPX2=get_UPX_vi(pDevice,bIsImage,0,pELFInfo->basic_info.nSize);
 
-        if((viUPX1.bValid)||(viUPX2.bValid))
+        if((viUPX1.bIsValid)||(viUPX2.bIsValid))
         {
             SpecAbstract::_SCANS_STRUCT recordUPX={};
 
@@ -9784,7 +9785,7 @@ void SpecAbstract::LE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbst
 
             VI_STRUCT vi=get_TurboLinker_vi(pDevice,bIsImage);
 
-            if(vi.bValid)
+            if(vi.bIsValid)
             {
                 ss.sVersion=vi.sVersion;
             }
@@ -9813,7 +9814,7 @@ void SpecAbstract::NE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbst
 
             VI_STRUCT vi=get_TurboLinker_vi(pDevice,bIsImage);
 
-            if(vi.bValid)
+            if(vi.bIsValid)
             {
                 ss.sVersion=vi.sVersion;
             }
@@ -9938,7 +9939,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_UPX_vi(QIODevice *pDevice, bool bIsIma
 
     if(nStringOffset1!=-1)
     {
-        result.bValid=true;
+        result.bIsValid=true;
 
         result.sVersion=binary.read_ansiString(nStringOffset1+9,10);
         result.sVersion=result.sVersion.section(" ",0,0);
@@ -9965,7 +9966,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_UPX_vi(QIODevice *pDevice, bool bIsIma
 
     if(nStringOffset2!=-1)
     {
-        result.bValid=true;
+        result.bIsValid=true;
         // TODO 1 function
         if(result.sVersion=="")
         {
@@ -10036,7 +10037,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi1(QIODevice *pDevice, bool bIsIm
 
     if(nOffset_Version!=-1)
     {
-        result.bValid=true;
+        result.bIsValid=true;
 
         QString sVersionString=binary.read_ansiString(nOffset_Version);
 
@@ -10087,7 +10088,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi2(QIODevice *pDevice,bool bIsIma
 
     if(nOffset_Version!=-1)
     {
-        result.bValid=true;
+        result.bIsValid=true;
         QString sVersionString=binary.read_ansiString(nOffset_Version);
         result.sVersion=sVersionString.section("-",1,1).section("/",0,0);
     }
@@ -10105,7 +10106,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_WindowsInstaller_vi(QIODevice *pDevice
 
     if(nStringOffset!=-1)
     {
-        result.bValid=true;
+        result.bIsValid=true;
 
         QString _sString=binary.read_ansiString(nStringOffset);
 
@@ -10133,7 +10134,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_TurboLinker_vi(QIODevice *pDevice, boo
 
     if(binary.read_uint8(0x1E)==0xFB)
     {
-        result.bValid=true;
+        result.bIsValid=true;
 
         result.sVersion=QString::number((double)binary.read_uint8(0x1F)/16,'f',1);
     }
