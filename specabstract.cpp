@@ -1831,7 +1831,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_UPX))
                 {
-                    if((viUPX.sVersion!=""))
+                    if((viUPX.sVersion!="")) // TODO isValid
                     {
                         SpecAbstract::_SCANS_STRUCT recordUPX={};
 
@@ -9365,6 +9365,25 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
         {
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_CRYPTORBYDISMEMBER);
             pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+
+        if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_UPX))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_UPX);
+
+            VI_STRUCT viUPX=get_UPX_vi(pDevice,bIsImage,0,pMSDOSInfo->basic_info.nSize);
+
+            if(viUPX.bIsValid)
+            {
+                if(viUPX.sVersion!="")
+                {
+                    ss.sVersion=viUPX.sVersion;
+                }
+
+                ss.sInfo=viUPX.sInfo;
+            }
+
+            pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
     }
 }

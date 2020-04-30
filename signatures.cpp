@@ -1190,6 +1190,8 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTORBYDISMEMBER,           "1.3",              ""},                    "1E8CDA83....8EDA8EC2BB....BA....85D274..B4..33FF33F6B9....AC32C4C0....02..2E........AAE2"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTORBYDISMEMBER,           "1.7",              ""},                    "0E179C58F6....74..E9....1EB0..E6..8CDA83....8EDA8EC2BB....BA....85D274..B4..33FF33F6B9"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTORBYDISMEMBER,           "2.0",              ""},                    "FA061E8CDD83C5..2E012E....2E012E....E8....E8....1F072E8E16....2E8B26....FB2EFF2E"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.20-0.60",        ""},                    "8CCBB9....BE....89F71EA9....8D......8ED805....8EC0FDF3A5FC"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.82-3.XX",        ""},                    "B9....BE....89F71EA9....8CC805....8ED805....8EC0FDF3A5FC2E........73..92AFAD0E0E"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=
