@@ -445,6 +445,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LHASSFX:                               sResult=QString("LHA's SFX");                                   break;
         case RECORD_NAME_LIGHTNINGCRYPTERPRIVATE:               sResult=QString("Lightning Crypter Private");                   break;
         case RECORD_NAME_LIGHTNINGCRYPTERSCANTIME:              sResult=QString("Lightning Crypter ScanTime");                  break;
+        case RECORD_NAME_LOCKTITE:                              sResult=QString("LockTite+");                                   break;
         case RECORD_NAME_LSCRYPRT:                              sResult=QString("LSCRYPT");                                     break;
         case RECORD_NAME_LUACOMPILED:                           sResult=QString("Lua compiled");                                break;
         case RECORD_NAME_LUCYPHER:                              sResult=QString("LuCypher");                                    break;
@@ -9303,6 +9304,12 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
         if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_JAM))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_JAM);
+            pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+
+        if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_LOCKTITE))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_LOCKTITE);
             pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
 

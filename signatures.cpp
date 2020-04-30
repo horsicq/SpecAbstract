@@ -1192,6 +1192,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTORBYDISMEMBER,           "2.0",              ""},                    "FA061E8CDD83C5..2E012E....2E012E....E8....E8....1F072E8E16....2E8B26....FB2EFF2E"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.20-0.60",        ""},                    "8CCBB9....BE....89F71EA9....8D......8ED805....8EC0FDF3A5FC"},
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.82-3.XX",        ""},                    "B9....BE....89F71EA9....8CC805....8ED805....8EC0FDF3A5FC2E........73..92AFAD0E0E"},
+    {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LOCKTITE,                     "",                 ""},                    "8CC88ED88CC381C3....8BC30306....8EC08B0E....8BF14E8BFEFDF3A450B8....50CB"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=
