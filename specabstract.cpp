@@ -517,6 +517,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PACKWIN:                               sResult=QString("PACKWIN");                                     break;
         case RECORD_NAME_PANDORA:                               sResult=QString("Pandora");                                     break;
         case RECORD_NAME_PCGUARD:                               sResult=QString("PC Guard");                                    break;
+        case RECORD_NAME_PCOM:                                  sResult=QString("PCOM");                                        break;
         case RECORD_NAME_PDB:                                   sResult=QString("PDB");                                         break;
         case RECORD_NAME_PDBFILELINK:                           sResult=QString("PDB file link");                               break;
         case RECORD_NAME_PDF:                                   sResult=QString("PDF");                                         break;
@@ -9316,6 +9317,12 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
         if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_LOCKTITE))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_LOCKTITE);
+            pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+
+        if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_PCOM))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_PCOM);
             pMSDOSInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
 
