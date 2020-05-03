@@ -981,7 +981,7 @@ public:
     static QString recordTypeIdToString(RECORD_TYPE id);
     static QString recordNameIdToString(RECORD_NAME id);
 
-    static SpecAbstract::UNPACK_OPTIONS getPossibleUnpackOptions(QIODevice *pDevice, bool bIsImage);
+    static SpecAbstract::UNPACK_OPTIONS getPossibleUnpackOptions(QIODevice *pDevice, bool bIsImage); // TODO Check
 
     static QString _SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct);
 
