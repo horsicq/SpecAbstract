@@ -550,6 +550,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_POWERBASIC:                            sResult=QString("PowerBASIC");                                  break;
         case RECORD_NAME_PRIVATEEXEPROTECTOR:                   sResult=QString("Private EXE Protector");                       break;
         case RECORD_NAME_PROPACK:                               sResult=QString("PRO-PACK");                                    break;
+        case RECORD_NAME_PROTECTEXE:                            sResult=QString("PROTECT! EXE");                                break;
         case RECORD_NAME_PUBCRYPTER:                            sResult=QString("Pub Crypter");                                 break;
         case RECORD_NAME_PUNISHER:                              sResult=QString("PUNiSHER");                                    break;
         case RECORD_NAME_PUREBASIC:                             sResult=QString("PureBasic");                                   break;
