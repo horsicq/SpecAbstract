@@ -826,6 +826,24 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Enigma_vi(QIODevice *pDevice,bool bIsI
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::get_SmartAssembly_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+{
+    VI_STRUCT result={};
+
+    XBinary binary(pDevice,bIsImage);
+
+    qint64 _nOffset=binary.find_ansiString(nOffset,nSize,"Powered by SmartAssembly ");
+
+    if(_nOffset!=-1)
+    {
+        // TODO Info eval
+        result.bIsValid=true;
+        result.sVersion=binary.read_ansiString(_nOffset+25);
+    }
+
+    return result;
+}
+
 SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset)
 {
     QElapsedTimer timer;
