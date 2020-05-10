@@ -340,6 +340,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DOTFIXNICEPROTECT:                     sResult=QString("DotFix Nice Protect");                         break;
         case RECORD_NAME_DOTFUSCATOR:                           sResult=QString("Dotfuscator");                                 break;
         case RECORD_NAME_DOTNET:                                sResult=QString(".NET");                                        break;
+        case RECORD_NAME_DOTNETREACTOR:                         sResult=QString(".NET Reactor");                                break;
         case RECORD_NAME_DOTNETZ:                               sResult=QString(".NETZ");                                       break;
         case RECORD_NAME_DROPBOX:                               sResult=QString("Dropbox");                                     break;
         case RECORD_NAME_DVCLAL:                                sResult=QString("DVCLAL");                                      break;
