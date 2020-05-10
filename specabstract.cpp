@@ -4241,13 +4241,17 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
                 qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
-                qint64 nOffset_Confuser=pe.find_ansiString(_nOffset,_nSize,"Powered by SmartAssembly ");
+                qint64 nOffset_Confuser1=pe.find_ansiString(_nOffset,_nSize,"Powered by SmartAssembly ");
+                qint64 nOffset_Confuser2=pe.find_ansiString(_nOffset,_nSize,"Powered by {smartassembly}");
 
-                if(nOffset_Confuser!=-1)
+                if((nOffset_Confuser1!=-1)||(nOffset_Confuser2!=-1))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_SMARTASSEMBLY,"","",0);
 
-                    ss.sVersion=pe.read_ansiString(nOffset_Confuser+25);
+                    if(nOffset_Confuser1!=-1)
+                    {
+                        ss.sVersion=pe.read_ansiString(nOffset_Confuser1+25);
+                    }
 
                     pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
