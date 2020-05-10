@@ -827,24 +827,6 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Enigma_vi(QIODevice *pDevice,bool bIsI
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::get_SmartAssembly_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
-{
-    VI_STRUCT result={};
-
-    XBinary binary(pDevice,bIsImage);
-
-    qint64 _nOffset=binary.find_ansiString(nOffset,nSize,"Powered by SmartAssembly ");
-
-    if(_nOffset!=-1)
-    {
-        // TODO Info eval
-        result.bIsValid=true;
-        result.sVersion=binary.read_ansiString(_nOffset+25);
-    }
-
-    return result;
-}
-
 SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset)
 {
     QElapsedTimer timer;
@@ -4231,30 +4213,26 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_SMARTASSEMBLY))
+            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan)||pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_SMARTASSEMBLY))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_SMARTASSEMBLY);
+                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
-                if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+                qint64 nOffset_Confuser=pe.find_ansiString(_nOffset,_nSize,"Powered by SmartAssembly ");
+
+                if(nOffset_Confuser!=-1)
                 {
-                    qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
-                    qint64 _nSize=pPEInfo->osCodeSection.nSize;
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_SMARTASSEMBLY,"","",0);
 
-                    qint64 nOffset_Confuser=pe.find_ansiString(_nOffset,_nSize,"Powered by SmartAssembly ");
+                    ss.sVersion=pe.read_ansiString(nOffset_Confuser+25);
 
-                    if(nOffset_Confuser!=-1)
-                    {
-                        ss.sVersion=pe.read_ansiString(nOffset_Confuser+25);
-                    }
+                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
-
-                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
             if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_CONFUSER))
             {
                 _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_CONFUSER);
-
 
                 if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
                 {
@@ -4282,6 +4260,50 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
 
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
+
+            // Xenocode Postbuild
+            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_XENOCODEPOSTBUILD))
+            {
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_XENOCODEPOSTBUILD);
+                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+            // CodeVeil
+            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_CODEVEIL))
+            {
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_CODEVEIL);
+                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+            // CodeWall
+            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            {
+                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                qint64 _nSize=pPEInfo->osCodeSection.nSize;
+
+                qint64 nOffset_CodeWall=pe.find_signature(_nOffset,_nSize,"9161D281........11..175813..11..11..32..28........11..6F........13..7E........2D..73");
+
+                if(nOffset_CodeWall!=-1)
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_CODEWALL,"4.X","",0);
+
+                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
+            // Crypto Obfuscator for .NET
+            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            {
+                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                qint64 _nSize=pPEInfo->osCodeSection.nSize;
+
+                qint64 nOffset_detect1=pe.find_signature(_nOffset,_nSize,"000220....000A20FFFFFF0028........2A");
+                qint64 nOffset_detect2=pe.find_signature(_nOffset,_nSize,"0291203FFFFFFF5F1F18620A067E........021758911F1062600A067E");
+
+                if((nOffset_detect1!=-1)||(nOffset_detect2!=-1))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_CRYPTOOBFUSCATORFORNET,"5.X","",0);
+
+                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
         }
 
         // Xenocode Virtual Application Studio 2009
@@ -4289,12 +4311,6 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
         {
             _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_XENOCODEPOSTBUILD2009,"","",0);
             ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
-            pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-        }
-        // Xenocode Postbuild
-        if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_XENOCODEPOSTBUILD))
-        {
-            _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_XENOCODEPOSTBUILD);
             pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
     }
