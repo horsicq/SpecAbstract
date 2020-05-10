@@ -4357,6 +4357,21 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                     pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
             }
+            // Sixxpack
+            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            {
+                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                qint64 _nSize=pPEInfo->osCodeSection.nSize;
+
+                qint64 nOffset_detect=pe.find_signature(_nOffset,_nSize,"0021......'xpack!'00................'xpack'00");
+
+                if(nOffset_detect!=-1)
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_SIXXPACK,"2.4","",0);
+
+                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
         }
 
         // Xenocode Virtual Application Studio 2009
