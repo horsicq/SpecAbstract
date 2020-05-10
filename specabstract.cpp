@@ -4082,7 +4082,6 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 {
                     qint64 _nOffset=pPEInfo->listSectionRecords.at(1).nOffset;
                     qint64 _nSize=pPEInfo->listSectionRecords.at(1).nSize;
-                    // TODO FPC Version in Major and Minor linker
 
                     qint64 nOffset_NetReactor=pe.find_signature(_nOffset,_nSize,"5266686E204D182276B5331112330C6D0A204D18229EA129611C76B505190158");
 
