@@ -4144,6 +4144,30 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
+            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan)||pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DEEPSEA))
+            {
+                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                qint64 _nSize=pPEInfo->osCodeSection.nSize;
+
+                qint64 nOffset_Confuser=pe.find_ansiString(_nOffset,_nSize,"DeepSeaObfuscator");
+
+                if(nOffset_Confuser!=-1)
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_DEEPSEA,"","",0);
+
+                    QString sFullString=pe.read_ansiString(nOffset_Confuser+18);
+
+                    if(sFullString.contains("Evaluation"))
+                    {
+                        ss.sVersion="4.X";
+                        ss.sInfo="Evaluation";
+                    }
+
+                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
+
+
             // cliSecure
             if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_CLISECURE))
             {
