@@ -4167,7 +4167,6 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 }
             }
 
-
             // cliSecure
             if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_CLISECURE))
             {
@@ -4324,6 +4323,36 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 if((nOffset_detect1!=-1)||(nOffset_detect2!=-1))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_CRYPTOOBFUSCATORFORNET,"5.X","",0);
+
+                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
+            // Eazfuscator
+            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            {
+                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                qint64 _nSize=pPEInfo->osCodeSection.nSize;
+
+                qint64 nOffset_detect=pe.find_signature(_nOffset,_nSize,"2072FFFF0F5F20841A000061");
+
+                if(nOffset_detect!=-1)
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_EAZFUSCATOR,"","",0);
+
+                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
+            // Phoenix Protector
+            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            {
+                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                qint64 _nSize=pPEInfo->osCodeSection.nSize;
+
+                qint64 nOffset_detect=pe.find_signature(_nOffset,_nSize,"0000010B160C..........0208..........0D0906085961D21304091E630861D21305070811051E62110460D19D081758");
+
+                if(nOffset_detect!=-1)
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_PHOENIXPROTECTOR,"1.7-1.8","",0);
 
                     pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
