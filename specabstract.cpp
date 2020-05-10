@@ -4241,16 +4241,17 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
                 qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
-                qint64 nOffset_Confuser1=pe.find_ansiString(_nOffset,_nSize,"Powered by SmartAssembly ");
-                qint64 nOffset_Confuser2=pe.find_ansiString(_nOffset,_nSize,"Powered by {smartassembly}");
+                qint64 nOffset_detect1=pe.find_ansiString(_nOffset,_nSize,"Powered by SmartAssembly ");
+                qint64 nOffset_detect2=pe.find_ansiString(_nOffset,_nSize,"Powered by {smartassembly}");
+                bool bDetect=pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_SMARTASSEMBLY);
 
-                if((nOffset_Confuser1!=-1)||(nOffset_Confuser2!=-1))
+                if((nOffset_detect1!=-1)||(nOffset_detect2!=-1)||bDetect)
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_SMARTASSEMBLY,"","",0);
 
-                    if(nOffset_Confuser1!=-1)
+                    if(nOffset_detect1!=-1)
                     {
-                        ss.sVersion=pe.read_ansiString(nOffset_Confuser1+25);
+                        ss.sVersion=pe.read_ansiString(nOffset_detect1+25);
                     }
 
                     pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
@@ -4266,14 +4267,14 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                     qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
                     qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
-                    qint64 nOffset_Confuser=pe.find_ansiString(_nOffset,_nSize,"Confuser v");
+                    qint64 nOffset_detect=pe.find_ansiString(_nOffset,_nSize,"Confuser v");
 
-                    if(nOffset_Confuser!=-1)
+                    if(nOffset_detect!=-1)
                     {
-                        ss.sVersion=pe.read_ansiString(nOffset_Confuser+10);
+                        ss.sVersion=pe.read_ansiString(nOffset_detect+10);
                     }
 
-                    if(nOffset_Confuser==-1)
+                    if(nOffset_detect==-1)
                     {
                         qint64 nOffset_ConfuserEx=pe.find_ansiString(_nOffset,_nSize,"ConfuserEx v");
 
