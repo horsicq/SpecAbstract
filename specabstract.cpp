@@ -1399,7 +1399,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         if(result.nCodeSection!=-1)
         {
-            result.osCodeSection.nOffset=result.listSectionRecords.at(result.nCodeSection).nOffset; // mb TODO for image
+            result.osCodeSection.nOffset=result.listSectionRecords.at(result.nCodeSection).nOffset;
             result.osCodeSection.nSize=result.listSectionRecords.at(result.nCodeSection).nSize; // TODO limit?
         }
 
@@ -4072,6 +4072,25 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_ENIGMA,viEnigma.sVersion,".NET",0);
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
+
+            // .Net reactor
+            if(pPEInfo->listSectionRecords.count()>=2)
+            {
+                if(pPEInfo->basic_info.bIsDeepScan)
+                {
+                    qint64 _nOffset=pPEInfo->listSectionRecords.at(1).nOffset;
+                    qint64 _nSize=pPEInfo->listSectionRecords.at(1).nSize;
+                    // TODO FPC Version in Major and Minor linker
+
+                    qint64 nOffset_NetReactor=pe.find_signature(_nOffset,_nSize,"5266686E204D182276B5331112330C6D0A204D18229EA129611C76B505190158");
+
+                    if(nOffset_NetReactor!=-1)
+                    {
+                        _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_DOTNETREACTOR,"4.8-4.9","",0);
+                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
                 }
             }
 
