@@ -4422,10 +4422,25 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
     if(pe.isValid())
     {
         // Linker
-        if((pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTLINKER))&&(!pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER)))
+        if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTLINKER))
         {
             recordLinker.type=RECORD_TYPE_LINKER;
             recordLinker.name=RECORD_NAME_MICROSOFTLINKER;
+        }
+        else if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER))
+        {
+            bool bMicrosoftLinker=false;
+
+            if((pPEInfo->nMajorLinkerVersion==8)&&(pPEInfo->nMinorImageVersion==0)) // 8.0
+            {
+                bMicrosoftLinker=true;
+            }
+
+            if(bMicrosoftLinker)
+            {
+                recordLinker.type=RECORD_TYPE_LINKER;
+                recordLinker.name=RECORD_NAME_MICROSOFTLINKER;
+            }
         }
         else if((pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTLINKER))&&(pPEInfo->cliInfo.bInit))
         {
