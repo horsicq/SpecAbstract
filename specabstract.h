@@ -609,6 +609,7 @@ public:
         RECORD_NAME name;
         QString sVersion;
         QString sInfo;
+        bool bIsHeuristic;
     };
 
     struct SCAN_RESULT
@@ -627,6 +628,7 @@ public:
         QString sVersion;
         QString sInfo;
         qint64 nOffset;
+        bool bIsHeuristic;
     };
 
     struct SCAN_RECORD
@@ -655,6 +657,7 @@ public:
         QMap<RECORD_NAME,_SCANS_STRUCT> mapHeaderDetects;
         QList<SpecAbstract::SCAN_STRUCT> listDetects;
         bool bIsDeepScan;
+        bool bIsHeuristicScan;
         bool bIsUnknown;
         bool bIsTest;
     };
@@ -875,8 +878,9 @@ public:
     struct SCAN_OPTIONS
     {
         //        bool bEmulate;
-        bool bRecursive;
+        bool bRecursiveScan;
         bool bDeepScan;
+        bool bHeuristicScan;
         bool bResultAsXML;
         bool bResultAsJSON;
         bool bSubdirectories;
@@ -1039,6 +1043,7 @@ public:
 
     static void PE_handle_Joiners(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 
+    static bool PE_isProtectionPresent(PEINFO_STRUCT *pPEInfo);
     static void PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 
     static void PE_handle_FixDetects(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);

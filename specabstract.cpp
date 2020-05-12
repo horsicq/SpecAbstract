@@ -732,17 +732,42 @@ SpecAbstract::UNPACK_OPTIONS SpecAbstract::getPossibleUnpackOptions(QIODevice *p
 
 QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct)
 {
-    return QString("%1: %2(%3)[%4]").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type)).arg(SpecAbstract::recordNameIdToString(pScanStruct->name)).arg(pScanStruct->sVersion).arg(pScanStruct->sInfo);
+    QString sResult;
+
+    if(pScanStruct->bIsHeuristic)
+    {
+        sResult+="(Heuristic)";
+    }
+
+    sResult+=QString("%1: %2(%3)[%4]").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type)).arg(SpecAbstract::recordNameIdToString(pScanStruct->name)).arg(pScanStruct->sVersion).arg(pScanStruct->sInfo);
+
+    return sResult;
 }
 
 QString SpecAbstract::createResultString(const SpecAbstract::SCAN_STRUCT *pScanStruct)
 {
-    return QString("%1: %2(%3)[%4]").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type)).arg(SpecAbstract::recordNameIdToString(pScanStruct->name)).arg(pScanStruct->sVersion).arg(pScanStruct->sInfo);
+    QString sResult;
+
+    if(pScanStruct->bIsHeuristic)
+    {
+        sResult+="(Heuristic)";
+    }
+
+    sResult+=QString("%1: %2(%3)[%4]").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type)).arg(SpecAbstract::recordNameIdToString(pScanStruct->name)).arg(pScanStruct->sVersion).arg(pScanStruct->sInfo);
+
+    return sResult;
 }
 
 QString SpecAbstract::createResultString2(const SpecAbstract::SCAN_STRUCT *pScanStruct)
 {
-    QString sResult=QString("%1: %2").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type)).arg(SpecAbstract::recordNameIdToString(pScanStruct->name));
+    QString sResult;
+
+    if(pScanStruct->bIsHeuristic)
+    {
+        sResult+="(Heuristic)";
+    }
+
+    sResult+=QString("%1: %2").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type)).arg(SpecAbstract::recordNameIdToString(pScanStruct->name));
 
     if(pScanStruct->sVersion!="")
     {
@@ -759,12 +784,30 @@ QString SpecAbstract::createResultString2(const SpecAbstract::SCAN_STRUCT *pScan
 
 QString SpecAbstract::createFullResultString(const SpecAbstract::SCAN_STRUCT *pScanStruct)
 {
-    return QString("%1: %2").arg(createTypeString(pScanStruct)).arg(createResultString(pScanStruct));
+    QString sResult;
+
+    if(pScanStruct->bIsHeuristic)
+    {
+        sResult+="(Heuristic)";
+    }
+
+    sResult+=QString("%1: %2").arg(createTypeString(pScanStruct)).arg(createResultString(pScanStruct));
+
+    return sResult;
 }
 
 QString SpecAbstract::createFullResultString2(const SpecAbstract::SCAN_STRUCT *pScanStruct)
 {
-    return QString("%1: %2").arg(createTypeString(pScanStruct)).arg(createResultString2(pScanStruct));
+    QString sResult;
+
+    if(pScanStruct->bIsHeuristic)
+    {
+        sResult+="(Heuristic)";
+    }
+
+    sResult+=QString("%1: %2").arg(createTypeString(pScanStruct)).arg(createResultString2(pScanStruct));
+
+    return sResult;
 }
 
 QString SpecAbstract::createTypeString(const SpecAbstract::SCAN_STRUCT *pScanStruct)
@@ -844,6 +887,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     result.basic_info.nSize=pDevice->size();
     result.basic_info.sHeaderSignature=binary.getSignature(0,150);
     result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+    result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
     result.basic_info.bIsTest=pOptions->bIsTest;
     result.basic_info.memoryMap=binary.getMemoryMap();
 
@@ -953,6 +997,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     result.basic_info.nSize=pDevice->size();
     result.basic_info.sHeaderSignature=msdos.getSignature(0,150);
     result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+    result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
     result.basic_info.bIsTest=pOptions->bIsTest;
     result.basic_info.memoryMap=msdos.getMemoryMap();
 
@@ -1029,6 +1074,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=elf.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=elf.getMemoryMap();
 
@@ -1101,6 +1147,7 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=mach.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=mach.getMemoryMap();
 
@@ -1167,6 +1214,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=le.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=le.getMemoryMap();
 
@@ -1219,6 +1267,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=ne.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=ne.getMemoryMap();
 
@@ -1270,6 +1319,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=pe.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=pe.getMemoryMap();
 
@@ -1516,7 +1566,10 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_handle_Joiners(pDevice,pOptions->bIsImage,&result);
         PE_handle_PETools(pDevice,pOptions->bIsImage,&result);
 
-        PE_handle_UnknownProtection(pDevice,pOptions->bIsImage,&result);
+        if(pOptions->bHeuristicScan)
+        {
+            PE_handle_UnknownProtection(pDevice,pOptions->bIsImage,&result);
+        }
 
         PE_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
@@ -1559,6 +1612,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
 SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStruct(quint32 nVariant, SpecAbstract::RECORD_FILETYPE filetype, SpecAbstract::RECORD_TYPE type, SpecAbstract::RECORD_NAME name, QString sVersion, QString sInfo, qint64 nOffset)
 {
+    // TODO bIsHeuristic;
     _SCANS_STRUCT result={};
 
     result.nVariant=nVariant;
@@ -7933,124 +7987,66 @@ void SpecAbstract::PE_handle_Joiners(QIODevice *pDevice, bool bIsImage, SpecAbst
     }
 }
 
+bool SpecAbstract::PE_isProtectionPresent(SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    return (pPEInfo->mapResultPackers.count()||
+            pPEInfo->mapResultProtectors.count()||
+            pPEInfo->mapResultSFX.count()||
+            pPEInfo->mapResultInstallers.count()||
+            pPEInfo->mapResultNETObfuscators.count()||
+            pPEInfo->mapResultDongleProtection.count());
+}
+
 void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     XPE pe(pDevice,bIsImage);
 
     if(pe.isValid())
     {
-        if((pPEInfo->mapResultPackers.count()==0)&&
-                (pPEInfo->mapResultProtectors.count()==0)&&
-                (pPEInfo->mapResultSFX.count()==0)&&
-                (pPEInfo->mapResultInstallers.count()==0)&&
-                (pPEInfo->mapResultNETObfuscators.count()==0)&&
-                (pPEInfo->mapResultDongleProtection.count()==0))
+        if(!PE_isProtectionPresent(pPEInfo))
         {
             if(pPEInfo->listSectionRecords.count())
             {
                 if(pPEInfo->listSectionRecords.at(0).nSize==0)
                 {
-                    if(pPEInfo->mapImportDetects.contains(RECORD_NAME_UPX)&&
-                            (pPEInfo->mapImportDetects.value(RECORD_NAME_UPX).nVariant==0))
+                    if( pPEInfo->mapImportDetects.contains(RECORD_NAME_UPX)&&
+                        (pPEInfo->mapImportDetects.value(RECORD_NAME_UPX).nVariant==0))
                     {
                         SpecAbstract::_SCANS_STRUCT recordSS={};
 
                         recordSS.type=RECORD_TYPE_PACKER;
                         recordSS.name=RECORD_NAME_UNK_UPXLIKE;
+                        recordSS.bIsHeuristic=true;
 
                         pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
                     }
                 }
+            }
+        }
 
-//            qint64 nSize=pPEInfo->basic_info.nSize;
+        if(!PE_isProtectionPresent(pPEInfo))
+        {
+            QMapIterator<RECORD_NAME,_SCANS_STRUCT> i(pPEInfo->mapEntryPointDetects);
 
-//            if(pPEInfo->nOverlaySize)
-//            {
-//                nSize-=pPEInfo->nOverlaySize;
-//            }
+            while(i.hasNext())
+            {
+                i.next();
 
-//            qint64 nProtect=pe.find_ansiString(0,nSize,"Protected");
+                _SCANS_STRUCT recordSS=i.value();
 
-//            if(nProtect==-1)
-//            {
-//                nProtect=pe.find_ansiString(0,nSize,"protected");
-//            }
+                if(recordSS.name!=RECORD_NAME_GENERIC)
+                {
+                    recordSS.bIsHeuristic=true;
 
-//            if(nProtect==-1)
-//            {
-//                nProtect=pe.find_ansiString(0,nSize,"protect");
-//            }
-
-//            if(nProtect==-1)
-//            {
-//                nProtect=pe.find_ansiString(0,nSize,"Protector");
-//            }
-
-//            if(nProtect==-1)
-//            {
-//                nProtect=pe.find_ansiString(0,nSize,"protector");
-//            }
-
-//            if(nProtect!=-1)
-//            {
-//                SpecAbstract::_SCANS_STRUCT recordSS={};
-
-//                recordSS.type=RECORD_TYPE_PACKER;
-//                recordSS.name=RECORD_NAME_UNKNOWN;
-//                recordSS.sVersion=QString("%1").arg(pe.read_ansiString(nProtect,32));
-//                recordSS.sInfo=QString("%1").arg(pPEInfo->nImportHash32);
-
-//                pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
-//            }
-
-
-
-    //            if(pPEInfo->nEntryPointSection!=0)
-    //            {
-    //                if(pPEInfo->listImports.count()>0)
-    //                {
-    //                    if(pPEInfo->nEntryPointSection<pPEInfo->listSectionNames.count())
-    //                    {
-    //                        SpecAbstract::_SCANS_STRUCT recordSS={};
-    //                        recordSS.type=RECORD_TYPE_PACKER;
-    //                        recordSS.name=RECORD_NAME_UNKNOWN0;
-    //                        recordSS.sVersion=pPEInfo->listSectionNames.at(pPEInfo->nEntryPointSection);
-    //                        recordSS.sInfo=QString("%1").arg(pPEInfo->nImportHash32);
-
-    //                        pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
-    //                    }
-    //                }
-    //            }
-
-    //            if(pPEInfo->nEntryPointSection!=0)
-    //            {
-    //                if(pPEInfo->listImports.count()==1)
-    //                {
-    //                    SpecAbstract::_SCANS_STRUCT recordSS={};
-
-    //                    recordSS.type=RECORD_TYPE_PACKER;
-    //                    recordSS.name=RECORD_NAME_UNKNOWN;
-    //                    recordSS.sVersion=QString("%1").arg(pPEInfo->nImportHash32);
-
-    //                    pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
-    //                }
-    //            }
-    //            QList<QString> list=pPEInfo->listSectionNames.toSet().toList();
-
-    //            for(int i=0;i<list.count();i++)
-    //            {
-    //                if(i>9)
-    //                {
-    //                    break;
-    //                }
-
-    //                SpecAbstract::_SCANS_STRUCT recordSS={};
-    //                recordSS.type=RECORD_TYPE_PACKER;
-    //                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN0+i);
-    //                recordSS.sVersion=list.at(i);
-
-    //                pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
-    //            }
+                    if(recordSS.type==RECORD_TYPE_PACKER)
+                    {
+                        pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                    }
+                    else if(recordSS.type==RECORD_TYPE_PROTECTOR)
+                    {
+                        pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                    }
+                }
             }
         }
     }
@@ -8103,7 +8099,7 @@ void SpecAbstract::PE_handle_FixDetects(QIODevice *pDevice,bool bIsImage, SpecAb
 
 void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo, SpecAbstract::SCAN_OPTIONS *pOptions)
 {
-    if(pOptions->bRecursive)
+    if(pOptions->bRecursiveScan)
     {
         XPE pe(pDevice,bIsImage);
 
@@ -9105,7 +9101,7 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
                         pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
                     }
 
-                    if((bIsAPK)&&(pOptions->bRecursive))
+                    if((bIsAPK)&&(pOptions->bRecursiveScan))
                     {
                         XArchive::RECORD recordClasses=XArchive::getArchiveRecord("classes.dex",&(pBinaryInfo->listArchiveRecords));
 
@@ -9662,7 +9658,7 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, bool bIsImage, 
 
 void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,SpecAbstract::SCAN_OPTIONS *pOptions)
 {
-    if(pOptions->bRecursive)
+    if(pOptions->bRecursiveScan)
     {
         XMSDOS msdos(pDevice,bIsImage);
 
@@ -10354,6 +10350,7 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::scansToScan(SpecAbstract::BASIC_INFO *pB
     result.name=pScansStruct->name;
     result.sVersion=pScansStruct->sVersion;
     result.sInfo=pScansStruct->sInfo;
+    result.bIsHeuristic=pScansStruct->bIsHeuristic;
 
     return result;
 }
