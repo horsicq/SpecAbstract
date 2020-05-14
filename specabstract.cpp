@@ -1415,6 +1415,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.nRelocsSection=pe.getRelocsSection(&(result.basic_info.memoryMap));
         result.nTLSSection=pe.getTLSSection(&(result.basic_info.memoryMap));
 
+        result.bIsNetPresent=((result.cliInfo.bInit)||(pe.isNETPresent()&&(result.basic_info.bIsDeepScan)));
+
         if(result.nEntryPointSection!=-1)
         {
             result.sEntryPointSectionName=result.listSectionRecords.at(result.nEntryPointSection).sName;
@@ -1521,7 +1523,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         //        resourcesScan(&result.mapResourcesDetects,&result.listResources,_resources_records,sizeof(_resources_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
 
 
-        if(result.cliInfo.bInit)
+        if(result.bIsNetPresent)
         {
             stringScan(&result.mapDotAnsistringsDetects,&result.cliInfo.listAnsiStrings,_PE_dot_ansistrings_records,sizeof(_PE_dot_ansistrings_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
 
@@ -4093,7 +4095,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
 
     if(pe.isValid())
     {
-        if(pPEInfo->cliInfo.bInit)
+        if(pPEInfo->bIsNetPresent)
         {
             // .NET
             // Enigma
@@ -8034,7 +8036,7 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,
 
                 _SCANS_STRUCT recordSS=i.value();
 
-                if(recordSS.name!=RECORD_NAME_GENERIC)
+                if((recordSS.name!=RECORD_NAME_GENERIC)&&(recordSS.name!=RECORD_NAME_PESHIELD))
                 {
                     recordSS.bIsHeuristic=true;
 

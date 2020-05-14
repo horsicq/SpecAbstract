@@ -850,6 +850,8 @@ public:
         quint16 nMajorImageVersion;
         bool bIs64;
 
+        bool bIsNetPresent;
+
         XBinary::OFFSETSIZE osHeader;
         XBinary::OFFSETSIZE osEntryPointSection;
         XBinary::OFFSETSIZE osCodeSection;
