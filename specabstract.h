@@ -645,8 +645,14 @@ public:
         quint32 nEntryPoint;
     };
 
+    enum HEURTYPE
+    {
+        HEURTYPE_HEADERSIGANTURE=0
+    };
+
     struct HEUR_RECORD
     {
+        HEURTYPE heurType;
         RECORD_FILETYPE filetype;
         RECORD_FILEPART filepart;
         RECORD_TYPE type;
