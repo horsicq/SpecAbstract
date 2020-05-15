@@ -645,6 +645,17 @@ public:
         quint32 nEntryPoint;
     };
 
+    struct HEUR_RECORD
+    {
+        RECORD_FILETYPE filetype;
+        RECORD_FILEPART filepart;
+        RECORD_TYPE type;
+        RECORD_NAME name;
+        QString sVersion;
+        QString sInfo;
+        QString sValue;
+    };
+
     struct BASIC_INFO
     {
         qint64 nElapsedTime;
@@ -660,6 +671,7 @@ public:
         bool bIsHeuristicScan;
         bool bIsUnknown;
         bool bIsTest;
+        QList<HEUR_RECORD> listHeur;
     };
 
     struct BINARYINFO_STRUCT
