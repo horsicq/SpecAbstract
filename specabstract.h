@@ -91,6 +91,7 @@ public:
         RECORD_TYPE_JOINER,
         RECORD_TYPE_LIBRARY,
         RECORD_TYPE_LINKER,
+        RECORD_TYPE_NETCOMPRESSOR,
         RECORD_TYPE_NETOBFUSCATOR,
         RECORD_TYPE_PACKER,
         RECORD_TYPE_PETOOL,
@@ -890,6 +891,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultInstallers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultSFX;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultNETObfuscators;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultNETCompressors;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultDongleProtection;
 
         QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;

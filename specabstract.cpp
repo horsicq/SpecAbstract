@@ -200,6 +200,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_JOINER:                                sResult=tr("Joiner");                                           break;
         case RECORD_TYPE_LIBRARY:                               sResult=tr("Library");                                          break;
         case RECORD_TYPE_LINKER:                                sResult=tr("Linker");                                           break;
+        case RECORD_TYPE_NETCOMPRESSOR:                         sResult=tr(".NET compressor");                                  break;
         case RECORD_TYPE_NETOBFUSCATOR:                         sResult=tr(".NET obfuscator");                                  break;
         case RECORD_TYPE_PACKER:                                sResult=tr("Packer");                                           break;
         case RECORD_TYPE_PETOOL:                                sResult=tr("PE tool");                                          break;
@@ -1587,6 +1588,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.listDetects.append(result.mapResultNETObfuscators.values());
         result.basic_info.listDetects.append(result.mapResultDongleProtection.values());
         result.basic_info.listDetects.append(result.mapResultPackers.values());
+        result.basic_info.listDetects.append(result.mapResultNETCompressors.values());
         result.basic_info.listDetects.append(result.mapResultJoiners.values());
         result.basic_info.listDetects.append(result.mapResultSFX.values());
         result.basic_info.listDetects.append(result.mapResultInstallers.values());
@@ -4268,10 +4270,21 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DOTNETZ))
+            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan)||pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DOTNETZ))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DOTNETZ);
-                pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                qint64 _nSize=pPEInfo->osCodeSection.nSize;
+
+                qint64 nOffset_detect=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"00'NetzStarter'00'netz'00");
+
+                bool bDetect=pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DOTNETZ);
+
+                if((nOffset_detect!=-1)||bDetect)
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETCOMPRESSOR,RECORD_NAME_DOTNETZ,"","",0);
+
+                    pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
             }
 
             if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_MAXTOCODE))
