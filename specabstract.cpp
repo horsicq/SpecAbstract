@@ -889,6 +889,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     result.basic_info.sHeaderSignature=binary.getSignature(0,150);
     result.basic_info.bIsDeepScan=pOptions->bDeepScan;
     result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+    result.basic_info.bShowHeuristic=pOptions->bShowHeuristic;
     result.basic_info.bIsTest=pOptions->bIsTest;
     result.basic_info.memoryMap=binary.getMemoryMap();
 
@@ -999,6 +1000,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     result.basic_info.sHeaderSignature=msdos.getSignature(0,150);
     result.basic_info.bIsDeepScan=pOptions->bDeepScan;
     result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+    result.basic_info.bShowHeuristic=pOptions->bShowHeuristic;
     result.basic_info.bIsTest=pOptions->bIsTest;
     result.basic_info.memoryMap=msdos.getMemoryMap();
 
@@ -1076,6 +1078,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         result.basic_info.sHeaderSignature=elf.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bShowHeuristic=pOptions->bShowHeuristic;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=elf.getMemoryMap();
 
@@ -1149,6 +1152,7 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
         result.basic_info.sHeaderSignature=mach.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bShowHeuristic=pOptions->bShowHeuristic;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=mach.getMemoryMap();
 
@@ -1216,6 +1220,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.sHeaderSignature=le.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bShowHeuristic=pOptions->bShowHeuristic;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=le.getMemoryMap();
 
@@ -1269,6 +1274,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.sHeaderSignature=ne.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bShowHeuristic=pOptions->bShowHeuristic;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=ne.getMemoryMap();
 
@@ -1321,6 +1327,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.sHeaderSignature=pe.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bShowHeuristic=pOptions->bShowHeuristic;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=pe.getMemoryMap();
 

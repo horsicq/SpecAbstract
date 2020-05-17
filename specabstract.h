@@ -677,6 +677,7 @@ public:
         QList<SpecAbstract::SCAN_STRUCT> listDetects;
         bool bIsDeepScan;
         bool bIsHeuristicScan;
+        bool bShowHeuristic;
         bool bIsUnknown;
         bool bIsTest;
         QList<HEUR_RECORD> listHeur;
@@ -904,6 +905,7 @@ public:
         bool bRecursiveScan;
         bool bDeepScan;
         bool bHeuristicScan;
+        bool bShowHeuristic;
         bool bResultAsXML;
         bool bResultAsJSON;
         bool bSubdirectories;
