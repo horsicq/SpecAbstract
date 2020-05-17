@@ -648,7 +648,8 @@ public:
 
     enum HEURTYPE
     {
-        HEURTYPE_HEADERSIGANTURE=0
+        HEURTYPE_UNKNOWN=0,
+        HEURTYPE_HEADERSIGNATURE
     };
 
     struct HEUR_RECORD
