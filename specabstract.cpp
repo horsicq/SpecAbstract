@@ -4123,7 +4123,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                     qint64 _nOffset=pPEInfo->listSectionRecords.at(1).nOffset;
                     qint64 _nSize=pPEInfo->listSectionRecords.at(1).nSize;
 
-                    qint64 nOffset_NetReactor=pe.find_signature(_nOffset,_nSize,"5266686E204D182276B5331112330C6D0A204D18229EA129611C76B505190158");
+                    qint64 nOffset_NetReactor=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"5266686E204D182276B5331112330C6D0A204D18229EA129611C76B505190158");
 
                     if(nOffset_NetReactor!=-1)
                     {
@@ -4376,7 +4376,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
                 qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
-                qint64 nOffset_CodeWall=pe.find_signature(_nOffset,_nSize,"9161D281........11..175813..11..11..32..28........11..6F........13..7E........2D..73");
+                qint64 nOffset_CodeWall=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"9161D281........11..175813..11..11..32..28........11..6F........13..7E........2D..73");
 
                 if(nOffset_CodeWall!=-1)
                 {
@@ -4391,8 +4391,8 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
                 qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
-                qint64 nOffset_detect1=pe.find_signature(_nOffset,_nSize,"000220....000A20FFFFFF0028........2A");
-                qint64 nOffset_detect2=pe.find_signature(_nOffset,_nSize,"0291203FFFFFFF5F1F18620A067E........021758911F1062600A067E");
+                qint64 nOffset_detect1=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"000220....000A20FFFFFF0028........2A");
+                qint64 nOffset_detect2=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"0291203FFFFFFF5F1F18620A067E........021758911F1062600A067E");
 
                 if((nOffset_detect1!=-1)||(nOffset_detect2!=-1))
                 {
@@ -4407,7 +4407,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
                 qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
-                qint64 nOffset_detect=pe.find_signature(_nOffset,_nSize,"2072FFFF0F5F20841A000061");
+                qint64 nOffset_detect=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"2072FFFF0F5F20841A000061");
 
                 if(nOffset_detect!=-1)
                 {
@@ -4422,7 +4422,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
                 qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
-                qint64 nOffset_detect=pe.find_signature(_nOffset,_nSize,"0000010B160C..........0208..........0D0906085961D21304091E630861D21305070811051E62110460D19D081758");
+                qint64 nOffset_detect=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"0000010B160C..........0208..........0D0906085961D21304091E630861D21305070811051E62110460D19D081758");
 
                 if(nOffset_detect!=-1)
                 {
@@ -4437,7 +4437,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
                 qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
-                qint64 nOffset_detect=pe.find_signature(_nOffset,_nSize,"0021......'xpack!'00................'xpack'00");
+                qint64 nOffset_detect=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"0021......'xpack!'00................'xpack'00");
 
                 if(nOffset_detect!=-1)
                 {
