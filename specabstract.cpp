@@ -4423,6 +4423,21 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                     pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
             }
+            // Obfuscar
+            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            {
+                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                qint64 _nSize=pPEInfo->osCodeSection.nSize;
+
+                qint64 nOffset_detect=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"0691066120AA00000061D29C0617580A");
+
+                if(nOffset_detect!=-1)
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_OBFUSCAR,"1.0","",0);
+
+                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
             // Phoenix Protector
             if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
             {
