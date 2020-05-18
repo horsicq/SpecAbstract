@@ -342,6 +342,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DOTFUSCATOR:                           sResult=QString("Dotfuscator");                                 break;
         case RECORD_NAME_DOTNET:                                sResult=QString(".NET");                                        break;
         case RECORD_NAME_DOTNETREACTOR:                         sResult=QString(".NET Reactor");                                break;
+        case RECORD_NAME_DOTNETSPIDER:                          sResult=QString(".NET Spider");                                 break;
         case RECORD_NAME_DOTNETZ:                               sResult=QString(".NETZ");                                       break;
         case RECORD_NAME_DROPBOX:                               sResult=QString("Dropbox");                                     break;
         case RECORD_NAME_DVCLAL:                                sResult=QString("DVCLAL");                                      break;
@@ -4434,6 +4435,21 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 if(nOffset_detect!=-1)
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_OBFUSCAR,"1.0","",0);
+
+                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
+            // .NET Spider
+            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            {
+                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
+                qint64 _nSize=pPEInfo->osCodeSection.nSize;
+
+                qint64 nOffset_detect=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"'Protected_By_Attribute'00'NETSpider.Attribute'");
+
+                if(nOffset_detect!=-1)
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_DOTNETSPIDER,"0.5-1.3","",0);
 
                     pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
