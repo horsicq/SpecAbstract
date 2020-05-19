@@ -1543,7 +1543,13 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
             if(result.basic_info.bIsDeepScan)
             {
+                if(pe.checkOffsetSize(result.osCodeSection))
+                {
+                    qint64 nSectionOffset=result.osCodeSection.nOffset;
+                    qint64 nSectionSize=result.osCodeSection.nSize;
 
+                    memoryScan(&result.mapDotCodeSectionDetects,pDevice,pOptions->bIsImage,nSectionOffset,nSectionSize,_PE_dot_codesection_records,sizeof(_PE_dot_codesection_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info));
+                }
             }
         }
 
@@ -2061,6 +2067,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     recordEnigma.name=SpecAbstract::RECORD_NAME_ENIGMA;
 
                     // mb TODO ENIGMA string
+                    // TODO add to get_Enigma_vi
                     if((!bDetect)&&(nVariant==0))
                     {
                         qint64 nOffset=pe.find_array(nSectionOffset,nSectionSize," *** Enigma protector v",23);
