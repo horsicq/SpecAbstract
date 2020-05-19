@@ -1135,7 +1135,7 @@ SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
 //};
 SpecAbstract::SIGNATURE_RECORD _PE_dot_codesection_records[]=
 {
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_DOTFUSCATOR,                  "",                 ""},                    "'DotfuscatorAttribute'"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_OBFUSCAR,                     "1.0",              ""},                    "0691066120AA00000061D29C0617580A"},
 };
 
 SpecAbstract::STRING_RECORD _TEXT_records[]=
