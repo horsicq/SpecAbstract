@@ -655,6 +655,7 @@ public:
 
     struct HEUR_RECORD
     {
+        qint64 nOffset; // memory scan
         HEURTYPE heurType;
         RECORD_FILETYPE filetype;
         RECORD_FILEPART filepart;
