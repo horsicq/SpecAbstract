@@ -1133,7 +1133,10 @@ SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
 //SpecAbstract::SIGNATURE_RECORD _dot_unicodestrings_records[]={
 //    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,    SpecAbstract::RECORD_NAME_DOTFUSCATOR,                  "",             ""},                    "'DotfuscatorAttribute'"}
 //};
-
+SpecAbstract::STRING_RECORD _PE_dot_code_records[]=
+{
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_DOTFUSCATOR,                  "",                 ""},                    "DotfuscatorAttribute"},
+};
 
 SpecAbstract::STRING_RECORD _TEXT_records[]=
 {

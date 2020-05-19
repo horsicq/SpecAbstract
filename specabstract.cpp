@@ -1540,6 +1540,11 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
             //            {
             //                signatureScan(&result.mapDotUnicodestringsDetects,QBinary::stringToHex(result.cliInfo.listUnicodeStrings.at(i)),_dot_unicodestrings_records,sizeof(_dot_unicodestrings_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
             //            }
+
+            if(result.basic_info.bIsDeepScan)
+            {
+
+            }
         }
 
         PE_handle_import(pDevice,pOptions->bIsImage,&result);
@@ -10444,7 +10449,7 @@ SpecAbstract::BASIC_PE_INFO SpecAbstract::_ArrayToBasicPEInfo(const QByteArray *
     return result;
 }
 
-void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize, SpecAbstract::SCANMEMORY_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2)
+void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize, SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2, BASIC_INFO *pBasicInfo)
 {
     if(nSize)
     {
@@ -10456,22 +10461,30 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
         {
             if((pRecords[i].basicInfo.filetype==fileType1)||(pRecords[i].basicInfo.filetype==fileType2))
             {
-                if(!pMmREcords->contains(pRecords[i].basicInfo.name))
+                if((!pMmREcords->contains(pRecords[i].basicInfo.name))||(pBasicInfo->bShowHeuristic))
                 {
-                    qint64 _nOffset=binary.find_array(nOffset,nSize,(char *)pRecords[i].pData,pRecords[i].nSize);
+                    qint64 _nOffset=binary.find_signature(&(pBasicInfo->memoryMap),nOffset,nSize,(char *)pRecords[i].pszSignature);
 
                     if(_nOffset!=-1)
                     {
-                        SpecAbstract::_SCANS_STRUCT record={};
-                        record.nVariant=pRecords[i].basicInfo.nVariant;
-                        record.filetype=pRecords[i].basicInfo.filetype;
-                        record.type=pRecords[i].basicInfo.type;
-                        record.name=pRecords[i].basicInfo.name;
-                        record.sVersion=pRecords[i].basicInfo.pszVersion;
-                        record.sInfo=pRecords[i].basicInfo.pszInfo;
-                        record.nOffset=_nOffset;
+                        if(!pMmREcords->contains(pRecords[i].basicInfo.name))
+                        {
+                            SpecAbstract::_SCANS_STRUCT record={};
+                            record.nVariant=pRecords[i].basicInfo.nVariant;
+                            record.filetype=pRecords[i].basicInfo.filetype;
+                            record.type=pRecords[i].basicInfo.type;
+                            record.name=pRecords[i].basicInfo.name;
+                            record.sVersion=pRecords[i].basicInfo.pszVersion;
+                            record.sInfo=pRecords[i].basicInfo.pszInfo;
+                            record.nOffset=_nOffset;
 
-                        pMmREcords->insert(record.name,record);
+                            pMmREcords->insert(record.name,record);
+                        }
+
+                        if(pBasicInfo->bShowHeuristic)
+                        {
+                            // TODO
+                        }
                     }
                 }
             }

@@ -942,13 +942,6 @@ public:
         const char *pszString;
     };
 
-    struct SCANMEMORY_RECORD
-    {
-        _BASICINFO basicInfo;
-        const char *pData;
-        int nSize;
-    };
-
     struct RESOURCES_RECORD
     {
         _BASICINFO basicInfo;
@@ -1138,7 +1131,8 @@ public:
     static QByteArray _BasicPEInfoToArray(BASIC_PE_INFO *pInfo);
     static BASIC_PE_INFO _ArrayToBasicPEInfo(const QByteArray *pbaArray);
 
-    static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SCANMEMORY_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2); // TODO Check
+    // TODO BasicInfo as parameter for heur scan
+    static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo); // TODO Check
     static void signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
     static void resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,RESOURCES_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2); // TODO Check
     static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
