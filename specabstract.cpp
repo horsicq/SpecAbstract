@@ -4178,18 +4178,10 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
             //                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             //            }
 
-            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_SKATER))
             {
-                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
-                qint64 _nSize=pPEInfo->osCodeSection.nSize;
-
-                qint64 nOffset_String=pe.find_ansiString(_nOffset,_nSize,"RustemSoft.Skater");
-
-                if(nOffset_String!=-1)
-                {
-                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_SKATER,"","",0);
-                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
+                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_SKATER);
+                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
             if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_BABELNET))
@@ -4406,20 +4398,10 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 }
             }
             // Crypto Obfuscator for .NET
-            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_CRYPTOOBFUSCATORFORNET))
             {
-                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
-                qint64 _nSize=pPEInfo->osCodeSection.nSize;
-
-                qint64 nOffset_detect1=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"000220....000A20FFFFFF0028........2A");
-                qint64 nOffset_detect2=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"0291203FFFFFFF5F1F18620A067E........021758911F1062600A067E");
-
-                if((nOffset_detect1!=-1)||(nOffset_detect2!=-1))
-                {
-                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_CRYPTOOBFUSCATORFORNET,"5.X","",0);
-
-                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
+                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_CRYPTOOBFUSCATORFORNET);
+                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // Eazfuscator
             if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))

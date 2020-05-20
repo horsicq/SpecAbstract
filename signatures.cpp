@@ -1136,6 +1136,9 @@ SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
 SpecAbstract::SIGNATURE_RECORD _PE_dot_codesection_records[]=
 {
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_OBFUSCAR,                     "1.0",              ""},                    "0691066120AA00000061D29C0617580A"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_SKATER,                       "",                 ""},                    "'RustemSoft.Skater'"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_CRYPTOOBFUSCATORFORNET,       "5.X",              ""},                    "000220....000A20FFFFFF0028........2A"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_CRYPTOOBFUSCATORFORNET,       "5.X",              ""},                    "0291203FFFFFFF5F1F18620A067E........021758911F1062600A067E"},
 };
 
 SpecAbstract::STRING_RECORD _TEXT_records[]=
