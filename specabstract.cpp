@@ -168,10 +168,10 @@ QString SpecAbstract::recordFilepartIdToString(SpecAbstract::RECORD_FILEPART id)
 
     switch(id)
     {
-        case RECORD_FILEPART_UNKNOWN:                           sResult=QString("Unknown");                                     break;
-        case RECORD_FILEPART_HEADER:                            sResult=QString("Header");                                      break;
-        case RECORD_FILEPART_OVERLAY:                           sResult=QString("Overlay");                                     break;
-        case RECORD_FILEPART_ARCHIVERECORD:                     sResult=QString("Archive record");                              break;
+        case RECORD_FILEPART_UNKNOWN:                           sResult=tr("Unknown");                                          break;
+        case RECORD_FILEPART_HEADER:                            sResult=tr("Header");                                           break;
+        case RECORD_FILEPART_OVERLAY:                           sResult=tr("Overlay");                                          break;
+        case RECORD_FILEPART_ARCHIVERECORD:                     sResult=tr("Archive record");                                   break;
     }
 
     return sResult;
@@ -200,8 +200,8 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_JOINER:                                sResult=tr("Joiner");                                           break;
         case RECORD_TYPE_LIBRARY:                               sResult=tr("Library");                                          break;
         case RECORD_TYPE_LINKER:                                sResult=tr("Linker");                                           break;
-        case RECORD_TYPE_NETCOMPRESSOR:                         sResult=tr(".NET compressor");                                  break;
-        case RECORD_TYPE_NETOBFUSCATOR:                         sResult=tr(".NET obfuscator");                                  break;
+        case RECORD_TYPE_NETCOMPRESSOR:                         sResult=QString(".NET %1").arg(tr("compressor"));               break;
+        case RECORD_TYPE_NETOBFUSCATOR:                         sResult=QString(".NET %1").arg(tr("obfuscator"));               break;
         case RECORD_TYPE_PACKER:                                sResult=tr("Packer");                                           break;
         case RECORD_TYPE_PETOOL:                                sResult=tr("PE tool");                                          break;
         case RECORD_TYPE_PROTECTOR:                             sResult=tr("Protector");                                        break;
