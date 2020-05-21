@@ -4395,19 +4395,10 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // Eazfuscator
-            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_EAZFUSCATOR))
             {
-                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
-                qint64 _nSize=pPEInfo->osCodeSection.nSize;
-
-                qint64 nOffset_detect=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"2072FFFF0F5F20841A000061");
-
-                if(nOffset_detect!=-1)
-                {
-                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_EAZFUSCATOR,"","",0);
-
-                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
+                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_EAZFUSCATOR);
+                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // Obfuscar
             if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_OBFUSCAR))
@@ -4431,19 +4422,10 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 }
             }
             // Phoenix Protector
-            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_PHOENIXPROTECTOR))
             {
-                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
-                qint64 _nSize=pPEInfo->osCodeSection.nSize;
-
-                qint64 nOffset_detect=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"0000010B160C..........0208..........0D0906085961D21304091E630861D21305070811051E62110460D19D081758");
-
-                if(nOffset_detect!=-1)
-                {
-                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_PHOENIXPROTECTOR,"1.7-1.8","",0);
-
-                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
+                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_PHOENIXPROTECTOR);
+                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // Sixxpack
             if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
