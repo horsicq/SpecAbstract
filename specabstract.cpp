@@ -342,6 +342,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DOTFUSCATOR:                           sResult=QString("Dotfuscator");                                 break;
         case RECORD_NAME_DOTNET:                                sResult=QString(".NET");                                        break;
         case RECORD_NAME_DOTNETREACTOR:                         sResult=QString(".NET Reactor");                                break;
+        case RECORD_NAME_DOTNETSHRINK:                          sResult=QString(".netshrink");                                  break;
         case RECORD_NAME_DOTNETSPIDER:                          sResult=QString(".NET Spider");                                 break;
         case RECORD_NAME_DOTNETZ:                               sResult=QString(".NETZ");                                       break;
         case RECORD_NAME_DROPBOX:                               sResult=QString("Dropbox");                                     break;
@@ -4436,7 +4437,13 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
             if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_RENETPACK))
             {
                 _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_RENETPACK);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+            // .netshrink
+            if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_DOTNETSHRINK))
+            {
+                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_DOTNETSHRINK);
+                pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
         }
 
