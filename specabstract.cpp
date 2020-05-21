@@ -852,22 +852,48 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Enigma_vi(QIODevice *pDevice,bool bIsI
 
     XBinary binary(pDevice,bIsImage);
 
-    qint64 _nOffset=binary.find_array(nOffset,nSize,"\x00\x00\x00\x45\x4e\x49\x47\x4d\x41",9); // \x00\x00\x00ENIGMA
-
-    if(_nOffset!=-1)
+    if(!result.bIsValid)
     {
-        result.bIsValid=true;
+        qint64 _nOffset=binary.find_array(nOffset,nSize,"\x00\x00\x00\x45\x4e\x49\x47\x4d\x41",9); // \x00\x00\x00ENIGMA
 
-        quint8 nMajor=binary.read_uint8(_nOffset+9);
-        quint8 nMinor=binary.read_uint8(_nOffset+10);
-        quint16 nYear=binary.read_uint16(_nOffset+11);
-        quint16 nMonth=binary.read_uint16(_nOffset+13);
-        quint16 nDay=binary.read_uint16(_nOffset+15);
-        quint16 nHour=binary.read_uint16(_nOffset+17);
-        quint16 nMin=binary.read_uint16(_nOffset+19);
-        quint16 nSec=binary.read_uint16(_nOffset+21);
+        if(_nOffset!=-1)
+        {
+            quint8 nMajor=binary.read_uint8(_nOffset+9);
+            quint8 nMinor=binary.read_uint8(_nOffset+10);
+            quint16 nYear=binary.read_uint16(_nOffset+11);
+            quint16 nMonth=binary.read_uint16(_nOffset+13);
+            quint16 nDay=binary.read_uint16(_nOffset+15);
+            quint16 nHour=binary.read_uint16(_nOffset+17);
+            quint16 nMin=binary.read_uint16(_nOffset+19);
+            quint16 nSec=binary.read_uint16(_nOffset+21);
 
-        result.sVersion=QString("%1.%2 build %3.%4.%5 %6:%7:%8").arg(nMajor).arg(nMinor,2,10,QChar('0')).arg(nYear,4,10,QChar('0')).arg(nMonth,2,10,QChar('0')).arg(nDay,2,10,QChar('0')).arg(nHour,2,10,QChar('0')).arg(nMin,2,10,QChar('0')).arg(nSec,2,10,QChar('0'));
+            result.sVersion=QString("%1.%2 build %3.%4.%5 %6:%7:%8").arg(nMajor).arg(nMinor,2,10,QChar('0')).arg(nYear,4,10,QChar('0')).arg(nMonth,2,10,QChar('0')).arg(nDay,2,10,QChar('0')).arg(nHour,2,10,QChar('0')).arg(nMin,2,10,QChar('0')).arg(nSec,2,10,QChar('0'));
+
+            result.bIsValid=true;
+        }
+    }
+
+    // 0 variant
+    if(!result.bIsValid)
+    {
+        qint64 _nOffset=binary.find_ansiString(nOffset,nSize," *** Enigma protector v");
+
+        if(_nOffset!=-1)
+        {
+            result.sVersion=binary.read_ansiString(_nOffset+23).section(" ",0,0);
+            result.bIsValid=true;
+        }
+    }
+
+    if(!result.bIsValid)
+    {
+        qint64 _nOffset=binary.find_ansiString(nOffset,nSize,"The Enigma Protector version");
+
+        if(_nOffset!=-1)
+        {
+            result.sVersion=binary.read_ansiString(_nOffset+23).section(" ",0,0);
+            result.bIsValid=true;
+        }
     }
 
     return result;
@@ -2053,8 +2079,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
             // ENIGMA
             if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ENIGMA))
             {
-                int nVariant=pPEInfo->mapImportDetects.value(RECORD_NAME_ENIGMA).nVariant;
-
                 if(pe.checkOffsetSize(pPEInfo->osImportSection)&&(pPEInfo->basic_info.bIsDeepScan))
                 {
                     qint64 nSectionOffset=pPEInfo->osImportSection.nOffset;
@@ -2067,31 +2091,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     recordEnigma.type=SpecAbstract::RECORD_TYPE_PROTECTOR;
                     recordEnigma.name=SpecAbstract::RECORD_NAME_ENIGMA;
 
-                    // mb TODO ENIGMA string
-                    // TODO add to get_Enigma_vi
-                    if((!bDetect)&&(nVariant==0))
-                    {
-                        qint64 nOffset=pe.find_array(nSectionOffset,nSectionSize," *** Enigma protector v",23);
-
-                        if(nOffset!=-1)
-                        {
-                            recordEnigma.sVersion=pe.read_ansiString(nOffset+23).section(" ",0,0);
-                            bDetect=true;
-                        }
-
-                        if(!bDetect)
-                        {
-                            nOffset=pe.find_ansiString(nSectionOffset,nSectionSize,"The Enigma Protector version");
-
-                            if(nOffset!=-1)
-                            {
-                                recordEnigma.sVersion=pe.read_ansiString(nOffset+29,8).section("\r\n",0,0);
-                                bDetect=true;
-                            }
-                        }
-                    }
-
-                    //                    if((!bDetect)&&(nVariant==1))
                     if(!bDetect)
                     {
                         VI_STRUCT viEngima=get_Enigma_vi(pDevice,bIsImage,nSectionOffset,nSectionSize);
