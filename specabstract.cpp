@@ -4402,19 +4402,15 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // .NET Spider
-            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DOTNETSPIDER))
             {
-                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
-                qint64 _nSize=pPEInfo->osCodeSection.nSize;
-
-                qint64 nOffset_detect=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"'Protected_By_Attribute'00'NETSpider.Attribute'");
-
-                if(nOffset_detect!=-1)
-                {
-                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_DOTNETSPIDER,"0.5-1.3","",0);
-
-                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DOTNETSPIDER);
+                pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+            else if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_DOTNETSPIDER))
+            {
+                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_DOTNETSPIDER);
+                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // Phoenix Protector
             if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_PHOENIXPROTECTOR))

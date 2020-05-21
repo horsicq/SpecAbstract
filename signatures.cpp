@@ -1126,7 +1126,7 @@ SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_OBFUSCATORNET2009,            "",                 ""},                    "Macrobject.Obfuscator"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_XENOCODEPOSTBUILD,            "2.X-3.X",          ""},                    "Xenocode.Client.Attributes.AssemblyAttributes"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_CODEVEIL,                     "4.X",              ""},                    "____KILL"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_DOTNETSPIDER,                 "",                 ""},                    "NETSpider.Attribute"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_DOTNETSPIDER,                 "0.5-1.3",          ""},                    "NETSpider.Attribute"},
 };
 
 //// TODO
@@ -1148,6 +1148,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_dot_codesection_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETCOMPRESSOR,    SpecAbstract::RECORD_NAME_DOTNETSHRINK,                 "2.01 Demo",        "Password"},            "20AD65133228........13..206866133228........13..11..11..161F4028........26"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETCOMPRESSOR,    SpecAbstract::RECORD_NAME_DOTNETSHRINK,                 "2.01 Demo",        ""},                    "20B9059F0728........13..2066059F0728........13..11..11..161F4028........26"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETCOMPRESSOR,    SpecAbstract::RECORD_NAME_DOTNETSHRINK,                 "2.01 Demo",        ""},                    "20E6EA19BE28........13..2039EA19BE28........13..11..11..161F4028........26"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_DOTNETSPIDER,                 "0.5-1.3",          ""},                    "'NETSpider.Attribute'"},
 };
 
 SpecAbstract::STRING_RECORD _TEXT_records[]=
