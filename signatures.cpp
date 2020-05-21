@@ -1143,6 +1143,8 @@ SpecAbstract::SIGNATURE_RECORD _PE_dot_codesection_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_EAZFUSCATOR,                  "",                 ""},                    "2072FFFF0F5F20841A000061"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_PHOENIXPROTECTOR,             "1.7-1.8",          ""},                    "0000010B160C..........0208..........0D0906085961D21304091E630861D21305070811051E62110460D19D081758"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_SIXXPACK,                     "2.4",              ""},                    "0021......'xpack!'00................'xpack'00"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETCOMPRESSOR,    SpecAbstract::RECORD_NAME_RENETPACK,                    "2.0-3.X",          ""},                    "'Protected/Packed with ReNET-Pack by stx'"},
+
 };
 
 SpecAbstract::STRING_RECORD _TEXT_records[]=
