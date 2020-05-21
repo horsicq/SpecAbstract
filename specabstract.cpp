@@ -2236,10 +2236,10 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 {
                     SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_EXEFOG);
 
-                    if((pPEInfo->fileHeader.TimeDateStamp==0)&&
-                            (pPEInfo->optional_header.optionalHeader32.MajorLinkerVersion==0)&&
-                            (pPEInfo->optional_header.optionalHeader32.MinorLinkerVersion==0)&&
-                            (pPEInfo->optional_header.optionalHeader32.BaseOfData==0x1000))
+                    if( (pPEInfo->fileHeader.TimeDateStamp==0)&&
+                        (pPEInfo->optional_header.optionalHeader32.MajorLinkerVersion==0)&&
+                        (pPEInfo->optional_header.optionalHeader32.MinorLinkerVersion==0)&&
+                        (pPEInfo->optional_header.optionalHeader32.BaseOfData==0x1000))
                     {
                         if(pPEInfo->listSectionHeaders.count())
                         {
