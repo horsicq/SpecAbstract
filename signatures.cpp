@@ -1142,6 +1142,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_dot_codesection_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_CODEWALL,                     "4.X",              ""},                    "9161D281........11..175813..11..11..32..28........11..6F........13..7E........2D..73"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_EAZFUSCATOR,                  "",                 ""},                    "2072FFFF0F5F20841A000061"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_PHOENIXPROTECTOR,             "1.7-1.8",          ""},                    "0000010B160C..........0208..........0D0906085961D21304091E630861D21305070811051E62110460D19D081758"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_SIXXPACK,                     "2.4",              ""},                    "0021......'xpack!'00................'xpack'00"},
 };
 
 SpecAbstract::STRING_RECORD _TEXT_records[]=
