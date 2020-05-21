@@ -4383,19 +4383,10 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // CodeWall
-            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_CODEWALL))
             {
-                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
-                qint64 _nSize=pPEInfo->osCodeSection.nSize;
-
-                qint64 nOffset_CodeWall=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"9161D281........11..175813..11..11..32..28........11..6F........13..7E........2D..73");
-
-                if(nOffset_CodeWall!=-1)
-                {
-                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_CODEWALL,"4.X","",0);
-
-                    pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
+                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_CODEWALL);
+                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // Crypto Obfuscator for .NET
             if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_CRYPTOOBFUSCATORFORNET))
