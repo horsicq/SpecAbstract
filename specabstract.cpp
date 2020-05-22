@@ -4172,12 +4172,6 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            //            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_SKATERNET))
-            //            {
-            //                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_SKATERNET);
-            //                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-            //            }
-
             if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_SKATER))
             {
                 _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_SKATER);
@@ -4282,21 +4276,16 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan)||pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DOTNETZ))
+            // .NETZ
+            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DOTNETZ))
             {
-                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
-                qint64 _nSize=pPEInfo->osCodeSection.nSize;
-
-                qint64 nOffset_detect=pe.find_signature(&(pPEInfo->basic_info.memoryMap),_nOffset,_nSize,"00'NetzStarter'00'netz'00");
-
-                bool bDetect=pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DOTNETZ);
-
-                if((nOffset_detect!=-1)||bDetect)
-                {
-                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETCOMPRESSOR,RECORD_NAME_DOTNETZ,"","",0);
-
-                    pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DOTNETZ);
+                pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+            else if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_DOTNETZ))
+            {
+                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_DOTNETZ);
+                pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
             if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_MAXTOCODE))
@@ -4404,7 +4393,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
             if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DOTNETSPIDER))
             {
                 _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DOTNETSPIDER);
-                pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             else if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_DOTNETSPIDER))
             {
@@ -4421,12 +4410,12 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
             if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_SIXXPACK))
             {
                 _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_SIXXPACK);
-                pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             else if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_SIXXPACK))
             {
                 _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_SIXXPACK);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // ReNET-Pack
             if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_RENETPACK))
