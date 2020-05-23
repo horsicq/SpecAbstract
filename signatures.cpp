@@ -1151,6 +1151,8 @@ SpecAbstract::SIGNATURE_RECORD _PE_dot_codesection_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_DOTNETSPIDER,                 "0.5-1.3",          ""},                    "'NETSpider.Attribute'"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETCOMPRESSOR,    SpecAbstract::RECORD_NAME_DOTNETZ,                      "",                 ""},                    "00'NetzStarter'00'netz'00"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_DEEPSEA,                      "4.X",              ""},                    "'DeepSeaObfuscator'"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_SMARTASSEMBLY,                "",                 ""},                    "'Powered by SmartAssembly '"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_SMARTASSEMBLY,                "",                 ""},                    "'Powered by {smartassembly}'"},
 };
 
 SpecAbstract::STRING_RECORD _TEXT_records[]=

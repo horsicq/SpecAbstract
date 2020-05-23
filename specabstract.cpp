@@ -4351,22 +4351,32 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan)||pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_SMARTASSEMBLY))
             {
-                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
-                qint64 _nSize=pPEInfo->osCodeSection.nSize;
+                bool bDetect=false;
+                _SCANS_STRUCT ss={};
 
-                qint64 nOffset_detect1=pe.find_ansiString(_nOffset,_nSize,"Powered by SmartAssembly ");
-                qint64 nOffset_detect2=pe.find_ansiString(_nOffset,_nSize,"Powered by {smartassembly}");
-                bool bDetect=pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_SMARTASSEMBLY);
-
-                if((nOffset_detect1!=-1)||(nOffset_detect2!=-1)||bDetect)
+                if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_SMARTASSEMBLY))
                 {
-                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_SMARTASSEMBLY,"","",0);
+                    ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_SMARTASSEMBLY);
+                    bDetect=true;
+                }
+                else if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_SMARTASSEMBLY))
+                {
+                    ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_SMARTASSEMBLY);
+                    bDetect=true;
+                }
 
-                    if(nOffset_detect1!=-1)
+                if(bDetect)
+                {
+                    qint64 nSectionOffset=pPEInfo->osCodeSection.nOffset;
+                    qint64 nSectionSize=pPEInfo->osCodeSection.nSize;
+
+                    VI_STRUCT vi=get_SmartAssembly_vi(pDevice,bIsImage,nSectionOffset,nSectionSize);
+
+                    if(vi.bIsValid)
                     {
-                        ss.sVersion=pe.read_ansiString(nOffset_detect1+25);
+                        ss.sVersion=vi.sVersion;
+                        ss.sInfo=vi.sInfo;
                     }
 
                     pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
