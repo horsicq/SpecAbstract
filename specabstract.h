@@ -1118,6 +1118,7 @@ public:
     static VI_STRUCT get_WindowsInstaller_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_TurboLinker_vi(QIODevice *pDevice,bool bIsImage);
     static VI_STRUCT get_Enigma_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
+    static VI_STRUCT get_DeepSea_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
 
     static bool PE_isValid_UPX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 

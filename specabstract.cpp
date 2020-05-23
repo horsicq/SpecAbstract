@@ -899,6 +899,31 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Enigma_vi(QIODevice *pDevice,bool bIsI
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::get_DeepSea_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+{
+    VI_STRUCT result={};
+
+    XBinary binary(pDevice,bIsImage);
+
+    qint64 _nOffset=binary.find_ansiString(nOffset,nSize,"DeepSeaObfuscator");
+
+    if(_nOffset!=-1)
+    {
+        result.bIsValid=true;
+        result.sVersion="4.X";
+
+        QString sFullString=binary.read_ansiString(_nOffset+18);
+
+        if(sFullString.contains("Evaluation"))
+        {
+
+            result.sInfo="Evaluation";
+        }
+    }
+
+    return result;
+}
+
 SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset)
 {
     QElapsedTimer timer;
