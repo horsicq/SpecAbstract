@@ -1150,6 +1150,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_dot_codesection_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETCOMPRESSOR,    SpecAbstract::RECORD_NAME_DOTNETSHRINK,                 "2.01 Demo",        ""},                    "20E6EA19BE28........13..2039EA19BE28........13..11..11..161F4028........26"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_DOTNETSPIDER,                 "0.5-1.3",          ""},                    "'NETSpider.Attribute'"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETCOMPRESSOR,    SpecAbstract::RECORD_NAME_DOTNETZ,                      "",                 ""},                    "00'NetzStarter'00'netz'00"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_DEEPSEA,                      "4.X",              ""},                    "'DeepSeaObfuscator'"},
 };
 
 SpecAbstract::STRING_RECORD _TEXT_records[]=

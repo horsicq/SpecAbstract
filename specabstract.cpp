@@ -4146,7 +4146,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
         {
             // .NET
             // Enigma
-            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan)) // TODO
             {
                 qint64 nSectionOffset=pPEInfo->osCodeSection.nOffset;
                 qint64 nSectionSize=pPEInfo->osCodeSection.nSize;
@@ -4233,23 +4233,32 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan)||pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DEEPSEA))
             {
-                qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
-                qint64 _nSize=pPEInfo->osCodeSection.nSize;
+                bool bDetect=false;
+                _SCANS_STRUCT ss={};
 
-                qint64 nOffset_Confuser=pe.find_ansiString(_nOffset,_nSize,"DeepSeaObfuscator");
-
-                if(nOffset_Confuser!=-1)
+                if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DEEPSEA))
                 {
-                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_DEEPSEA,"","",0);
+                    ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DEEPSEA);
+                    bDetect=true;
+                }
+                else if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_DEEPSEA))
+                {
+                    ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_DEEPSEA);
+                    bDetect=true;
+                }
 
-                    QString sFullString=pe.read_ansiString(nOffset_Confuser+18);
+                if(bDetect)
+                {
+                    qint64 nSectionOffset=pPEInfo->osCodeSection.nOffset;
+                    qint64 nSectionSize=pPEInfo->osCodeSection.nSize;
 
-                    if(sFullString.contains("Evaluation"))
+                    VI_STRUCT vi=get_DeepSea_vi(pDevice,bIsImage,nSectionOffset,nSectionSize);
+
+                    if(vi.bIsValid)
                     {
-                        ss.sVersion="4.X";
-                        ss.sInfo="Evaluation";
+                        ss.sVersion=vi.sVersion;
+                        ss.sInfo=vi.sInfo;
                     }
 
                     pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
