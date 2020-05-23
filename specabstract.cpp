@@ -916,9 +916,26 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_DeepSea_vi(QIODevice *pDevice, bool bI
 
         if(sFullString.contains("Evaluation"))
         {
-
             result.sInfo="Evaluation";
         }
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::get_SmartAssembly_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+{
+    VI_STRUCT result={};
+
+    XBinary binary(pDevice,bIsImage);
+
+    qint64 _nOffset=binary.find_ansiString(nOffset,nSize,"Powered by SmartAssembly ");
+
+    if(_nOffset!=-1)
+    {
+        result.bIsValid=true;
+        result.sVersion=binary.read_ansiString(_nOffset+25);
+        // TODO more checks!
     }
 
     return result;
