@@ -4769,7 +4769,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
         {
             recordNET.type=SpecAbstract::RECORD_TYPE_LIBRARY;
             recordNET.name=SpecAbstract::RECORD_NAME_DOTNET;
-            recordNET.sVersion=pPEInfo->cliInfo.cliMetadata.header.sCLI_MetaData_Version;
+            recordNET.sVersion=pPEInfo->cliInfo.cliMetadata.header.sVersion;
 
             if(pPEInfo->cliInfo.bHidden)
             {
