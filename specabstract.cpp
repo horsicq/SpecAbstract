@@ -2857,7 +2857,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
-
                 // PolyCrypt PE
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_POLYCRYPTPE))
                 {
@@ -3078,6 +3077,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                             }
                         }
 
+                        // TODO create SpecAbstract::SIGNATURE_RECORD aray
                         if(XBinary::compareSignatureStrings(_sSignature,"60E8000000005D81ED........B8........03C5"))
                         {
                             _sVersion="1.00b-1.07b";
