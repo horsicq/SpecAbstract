@@ -10476,7 +10476,11 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
 
                         if(pBasicInfo->bShowHeuristic)
                         {
+                            HEUR_RECORD heurRecord={};
+
                             // TODO
+
+                            pBasicInfo->listHeurs.append(heurRecord);
                         }
                     }
                 }

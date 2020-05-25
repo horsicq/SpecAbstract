@@ -623,6 +623,7 @@ public:
     struct HEUR_RECORD
     {
         qint64 nOffset; // memory scan
+        quint32 nVariant;
         HEURTYPE heurType;
         RECORD_FILETYPE filetype;
         RECORD_FILEPART filepart;
@@ -643,13 +644,13 @@ public:
 
     struct _SCANS_STRUCT
     {
+        qint64 nOffset;
         quint32 nVariant;
         RECORD_FILETYPE filetype;
         RECORD_TYPE type;
         RECORD_NAME name;
         QString sVersion;
         QString sInfo;
-        qint64 nOffset;
         bool bIsHeuristic;
     };
 
