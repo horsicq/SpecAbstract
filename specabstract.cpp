@@ -53,42 +53,49 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
             SpecAbstract::PEINFO_STRUCT pe_info=SpecAbstract::getPEInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(pe_info.basic_info.listDetects);
+            pScanResult->listHeurs.append(pe_info.basic_info.listHeurs);
         }
         else if(stTypes.contains(XBinary::FT_ELF32)||stTypes.contains(XBinary::FT_ELF64))
         {
             SpecAbstract::ELFINFO_STRUCT elf_info=SpecAbstract::getELFInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(elf_info.basic_info.listDetects);
+            pScanResult->listHeurs.append(elf_info.basic_info.listHeurs);
         }
         else if(stTypes.contains(XBinary::FT_MACH32)||stTypes.contains(XBinary::FT_MACH64))
         {
             SpecAbstract::MACHINFO_STRUCT mach_info=SpecAbstract::getMACHInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(mach_info.basic_info.listDetects);
+            pScanResult->listHeurs.append(mach_info.basic_info.listHeurs);
         }
         else if(stTypes.contains(XBinary::FT_LE)||stTypes.contains(XBinary::FT_LX))
         {
             SpecAbstract::LEINFO_STRUCT le_info=SpecAbstract::getLEInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(le_info.basic_info.listDetects);
+            pScanResult->listHeurs.append(le_info.basic_info.listHeurs);
         }
         else if(stTypes.contains(XBinary::FT_NE))
         {
             SpecAbstract::NEINFO_STRUCT ne_info=SpecAbstract::getNEInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(ne_info.basic_info.listDetects);
+            pScanResult->listHeurs.append(ne_info.basic_info.listHeurs);
         }
         else if(stTypes.contains(XBinary::FT_MSDOS))
         {
             SpecAbstract::MSDOSINFO_STRUCT msdos_info=SpecAbstract::getMSDOSInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(msdos_info.basic_info.listDetects);
+            pScanResult->listHeurs.append(msdos_info.basic_info.listHeurs);
         }
         else
         {
             SpecAbstract::BINARYINFO_STRUCT binary_info=SpecAbstract::getBinaryInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(binary_info.basic_info.listDetects);
+            pScanResult->listHeurs.append(binary_info.basic_info.listHeurs);
         }
 
         sd.close();

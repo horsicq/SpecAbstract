@@ -614,11 +614,31 @@ public:
         bool bIsHeuristic;
     };
 
+    enum HEURTYPE
+    {
+        HEURTYPE_UNKNOWN=0,
+        HEURTYPE_HEADERSIGNATURE
+    };
+
+    struct HEUR_RECORD
+    {
+        qint64 nOffset; // memory scan
+        HEURTYPE heurType;
+        RECORD_FILETYPE filetype;
+        RECORD_FILEPART filepart;
+        RECORD_TYPE type;
+        RECORD_NAME name;
+        QString sVersion;
+        QString sInfo;
+        QString sValue;
+    };
+
     struct SCAN_RESULT
     {
         qint64 nScanTime;
         QString sFileName;
         QList<SCAN_STRUCT> listRecords;
+        QList<HEUR_RECORD> listHeurs;
     };
 
     struct _SCANS_STRUCT
@@ -647,25 +667,6 @@ public:
         quint32 nEntryPoint;
     };
 
-    enum HEURTYPE
-    {
-        HEURTYPE_UNKNOWN=0,
-        HEURTYPE_HEADERSIGNATURE
-    };
-
-    struct HEUR_RECORD
-    {
-        qint64 nOffset; // memory scan
-        HEURTYPE heurType;
-        RECORD_FILETYPE filetype;
-        RECORD_FILEPART filepart;
-        RECORD_TYPE type;
-        RECORD_NAME name;
-        QString sVersion;
-        QString sInfo;
-        QString sValue;
-    };
-
     struct BASIC_INFO
     {
         qint64 nElapsedTime;
@@ -682,7 +683,7 @@ public:
         bool bShowHeuristic;
         bool bIsUnknown;
         bool bIsTest;
-        QList<HEUR_RECORD> listHeur;
+        QList<HEUR_RECORD> listHeurs;
     };
 
     struct BINARYINFO_STRUCT
