@@ -10478,7 +10478,16 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
                         {
                             HEUR_RECORD heurRecord={};
 
-                            // TODO
+                            heurRecord.nVariant=pRecords[i].basicInfo.nVariant;
+                            heurRecord.filetype=pRecords[i].basicInfo.filetype;
+                            heurRecord.type=pRecords[i].basicInfo.type;
+                            heurRecord.name=pRecords[i].basicInfo.name;
+                            heurRecord.sVersion=pRecords[i].basicInfo.pszVersion;
+                            heurRecord.sInfo=pRecords[i].basicInfo.pszInfo;
+                            heurRecord.nOffset=_nOffset;
+                            heurRecord.filepart=pBasicInfo->id.filepart;
+                            heurRecord.heurType=HEURTYPE_MEMORYSCANSIGNATURE;
+                            heurRecord.sValue=pRecords[i].pszSignature;
 
                             pBasicInfo->listHeurs.append(heurRecord);
                         }

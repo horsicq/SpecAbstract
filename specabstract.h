@@ -617,21 +617,22 @@ public:
     enum HEURTYPE
     {
         HEURTYPE_UNKNOWN=0,
-        HEURTYPE_HEADERSIGNATURE
+        HEURTYPE_HEADERSIGNATURE,
+        HEURTYPE_MEMORYSCANSIGNATURE
     };
 
     struct HEUR_RECORD
     {
         qint64 nOffset; // memory scan
-        quint32 nVariant;
-        HEURTYPE heurType;
-        RECORD_FILETYPE filetype;
         RECORD_FILEPART filepart;
+        HEURTYPE heurType;
+        QString sValue; // mb TODO variant
+        quint32 nVariant;
+        RECORD_FILETYPE filetype;
         RECORD_TYPE type;
         RECORD_NAME name;
         QString sVersion;
         QString sInfo;
-        QString sValue;
     };
 
     struct SCAN_RESULT
