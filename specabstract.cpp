@@ -2310,7 +2310,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
-                // AHPacker
+                // 12311134
                 if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_12311134))
                 {
                     SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_12311134);
