@@ -949,6 +949,53 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_SmartAssembly_vi(QIODevice *pDevice, b
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::get_Go_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+{
+    VI_STRUCT result={};
+
+    XBinary binary(pDevice,bIsImage);
+
+    qint64 _nOffset=nOffset;
+    qint64 _nSize=nSize;
+
+    QString sVersion;
+
+    qint64 nMaxVersion=0;
+
+    while(_nSize>0)
+    {
+        _nOffset=binary.find_ansiString(_nOffset,_nSize,"go1.");
+
+        if(_nOffset==-1)
+        {
+            break;
+        }
+
+        QString _sVersion=XBinary::getVersionString(binary.read_ansiString(_nOffset+2,10));
+
+        qint64 nVersionValue=XBinary::getVersionIntValue(_sVersion);
+
+        if(nVersionValue>nMaxVersion)
+        {
+            nMaxVersion=nVersionValue;
+
+            sVersion=_sVersion;
+        }
+
+        _nOffset++;
+
+        _nSize=nSize-(_nOffset-nOffset)-1;
+    }
+
+    if(sVersion!="")
+    {
+        result.bIsValid=true;
+        result.sVersion=sVersion;
+    }
+
+    return result;
+}
+
 SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset)
 {
     QElapsedTimer timer;
@@ -5784,6 +5831,18 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
         if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_GO)||pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_GO))
         {
             _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_COMPILER,RECORD_NAME_GO,"1.X","",0);
+
+            if(pe.checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            {
+                VI_STRUCT viStruct=get_Go_vi(pDevice,bIsImage,pPEInfo->osConstDataSection.nOffset,pPEInfo->osConstDataSection.nSize);
+
+                if(viStruct.bIsValid)
+                {
+                    ss.sVersion=viStruct.sVersion;
+                    ss.sInfo=viStruct.sInfo;
+                }
+            }
+
             pPEInfo->mapResultTools.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
