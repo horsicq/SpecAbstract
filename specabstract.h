@@ -275,6 +275,7 @@ public:
         RECORD_NAME_GKRIPTO,
         RECORD_NAME_GKSETUPSFX,
         RECORD_NAME_GNULINKER,
+        RECORD_NAME_GO,
         RECORD_NAME_GOASM,
         RECORD_NAME_GOLIATHNET,
         RECORD_NAME_GOLINK,
@@ -853,7 +854,7 @@ public:
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapImportDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapDotAnsistringsDetects;
-        QMap<RECORD_NAME,_SCANS_STRUCT> mapDotCodeSectionDetects;
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapCodeSectionDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapDotUnicodestringsDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapSectionNamesDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapRichDetects;

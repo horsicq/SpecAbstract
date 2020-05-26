@@ -197,8 +197,8 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_CONVERTER:                             sResult=tr("Converter");                                        break;
         case RECORD_TYPE_DATABASE:                              sResult=tr("Database");                                         break;
         case RECORD_TYPE_DEBUGDATA:                             sResult=tr("Debug data");                                       break;
-        case RECORD_TYPE_DONGLEPROTECTION:                      sResult=tr("Dongle protection");                                break;
-        case RECORD_TYPE_DOSEXTENDER:                           sResult=tr("DOS extender");                                     break;
+        case RECORD_TYPE_DONGLEPROTECTION:                      sResult=QString("Dongle %1").arg(tr("protection"));             break;
+        case RECORD_TYPE_DOSEXTENDER:                           sResult=QString("DOS %1").arg(tr("extender"));                  break;
         case RECORD_TYPE_FORMAT:                                sResult=tr("Format");                                           break;
         case RECORD_TYPE_GENERIC:                               sResult=tr("Generic");                                          break;
         case RECORD_TYPE_IMAGE:                                 sResult=tr("Image");                                            break;
@@ -213,8 +213,8 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_PETOOL:                                sResult=tr("PE tool");                                          break;
         case RECORD_TYPE_PROTECTOR:                             sResult=tr("Protector");                                        break;
         case RECORD_TYPE_PROTECTORDATA:                         sResult=tr("Protector data");                                   break;
-        case RECORD_TYPE_SFX:                                   sResult=tr("SFX");                                              break;
-        case RECORD_TYPE_SFXDATA:                               sResult=tr("SFX data");                                         break;
+        case RECORD_TYPE_SFX:                                   sResult=QString("SFX");                                         break;
+        case RECORD_TYPE_SFXDATA:                               sResult=QString("SFX %1").arg(tr("data"));                      break;
         case RECORD_TYPE_SIGNTOOL:                              sResult=tr("Sign tool");                                        break;
         case RECORD_TYPE_SOURCECODE:                            sResult=tr("Source code");                                      break;
         case RECORD_TYPE_STUB:                                  sResult=tr("Stub");                                             break;
@@ -401,6 +401,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_GKRIPTO:                               sResult=QString("GKripto");                                     break;
         case RECORD_NAME_GKSETUPSFX:                            sResult=QString("GkSetup SFX");                                 break;
         case RECORD_NAME_GNULINKER:                             sResult=QString("GNU ld");                                      break;
+        case RECORD_NAME_GO:                                    sResult=QString("Go");                                          break;
         case RECORD_NAME_GOASM:                                 sResult=QString("GoAsm");                                       break;
         case RECORD_NAME_GOLIATHNET:                            sResult=QString("Goliath .NET");                                break;
         case RECORD_NAME_GOLINK:                                sResult=QString("GoLink");                                      break;
@@ -1624,8 +1625,19 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
                     qint64 nSectionOffset=result.osCodeSection.nOffset;
                     qint64 nSectionSize=result.osCodeSection.nSize;
 
-                    memoryScan(&result.mapDotCodeSectionDetects,pDevice,pOptions->bIsImage,nSectionOffset,nSectionSize,_PE_dot_codesection_records,sizeof(_PE_dot_codesection_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info));
+                    memoryScan(&result.mapCodeSectionDetects,pDevice,pOptions->bIsImage,nSectionOffset,nSectionSize,_PE_dot_codesection_records,sizeof(_PE_dot_codesection_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info));
                 }
+            }
+        }
+
+        if(result.basic_info.bIsDeepScan)
+        {
+            if(pe.checkOffsetSize(result.osCodeSection))
+            {
+                qint64 nSectionOffset=result.osCodeSection.nOffset;
+                qint64 nSectionSize=result.osCodeSection.nSize;
+
+                memoryScan(&result.mapCodeSectionDetects,pDevice,pOptions->bIsImage,nSectionOffset,nSectionSize,_PE_codesection_records,sizeof(_PE_codesection_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info));
             }
         }
 
@@ -4221,9 +4233,9 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_SKATER))
+            if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_SKATER))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_SKATER);
+                _SCANS_STRUCT ss=pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_SKATER);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
@@ -4266,9 +4278,9 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                     ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DEEPSEA);
                     bDetect=true;
                 }
-                else if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_DEEPSEA))
+                else if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_DEEPSEA))
                 {
-                    ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_DEEPSEA);
+                    ss=pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_DEEPSEA);
                     bDetect=true;
                 }
 
@@ -4340,9 +4352,9 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DOTNETZ);
                 pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
-            else if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_DOTNETZ))
+            else if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_DOTNETZ))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_DOTNETZ);
+                _SCANS_STRUCT ss=pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_DOTNETZ);
                 pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
@@ -4367,9 +4379,9 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                     ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_SMARTASSEMBLY);
                     bDetect=true;
                 }
-                else if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_SMARTASSEMBLY))
+                else if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_SMARTASSEMBLY))
                 {
-                    ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_SMARTASSEMBLY);
+                    ss=pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_SMARTASSEMBLY);
                     bDetect=true;
                 }
 
@@ -4434,27 +4446,27 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // CodeWall
-            if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_CODEWALL))
+            if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_CODEWALL))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_CODEWALL);
+                _SCANS_STRUCT ss=pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_CODEWALL);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // Crypto Obfuscator for .NET
-            if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_CRYPTOOBFUSCATORFORNET))
+            if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_CRYPTOOBFUSCATORFORNET))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_CRYPTOOBFUSCATORFORNET);
+                _SCANS_STRUCT ss=pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_CRYPTOOBFUSCATORFORNET);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // Eazfuscator
-            if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_EAZFUSCATOR))
+            if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_EAZFUSCATOR))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_EAZFUSCATOR);
+                _SCANS_STRUCT ss=pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_EAZFUSCATOR);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // Obfuscar
-            if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_OBFUSCAR))
+            if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_OBFUSCAR))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_OBFUSCAR);
+                _SCANS_STRUCT ss=pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_OBFUSCAR);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // .NET Spider
@@ -4463,15 +4475,15 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DOTNETSPIDER);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
-            else if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_DOTNETSPIDER))
+            else if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_DOTNETSPIDER))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_DOTNETSPIDER);
+                _SCANS_STRUCT ss=pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_DOTNETSPIDER);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // Phoenix Protector
-            if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_PHOENIXPROTECTOR))
+            if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_PHOENIXPROTECTOR))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_PHOENIXPROTECTOR);
+                _SCANS_STRUCT ss=pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_PHOENIXPROTECTOR);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // Sixxpack
@@ -4480,21 +4492,21 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_SIXXPACK);
                 pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
-            else if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_SIXXPACK))
+            else if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_SIXXPACK))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_SIXXPACK);
+                _SCANS_STRUCT ss=pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_SIXXPACK);
                 pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // ReNET-Pack
-            if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_RENETPACK))
+            if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_RENETPACK))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_RENETPACK);
+                _SCANS_STRUCT ss=pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_RENETPACK);
                 pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // .netshrink
-            if(pPEInfo->mapDotCodeSectionDetects.contains(RECORD_NAME_DOTNETSHRINK))
+            if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_DOTNETSHRINK))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotCodeSectionDetects.value(RECORD_NAME_DOTNETSHRINK);
+                _SCANS_STRUCT ss=pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_DOTNETSHRINK);
                 pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
         }
@@ -5769,6 +5781,12 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
     if(pe.isValid())
     {
+        if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_GO)||pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_GO))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_COMPILER,RECORD_NAME_GO,"1.X","",0);
+            pPEInfo->mapResultTools.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
         // Visual Objects
         if(pe.compareSignature(&(pPEInfo->basic_info.memoryMap),"'This Visual Objects application cannot be run in DOS mode'",0x312))
         {
