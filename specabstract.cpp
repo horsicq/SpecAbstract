@@ -210,7 +210,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_NETCOMPRESSOR:                         sResult=QString(".NET %1").arg(tr("compressor"));               break;
         case RECORD_TYPE_NETOBFUSCATOR:                         sResult=QString(".NET %1").arg(tr("obfuscator"));               break;
         case RECORD_TYPE_PACKER:                                sResult=tr("Packer");                                           break;
-        case RECORD_TYPE_PETOOL:                                sResult=tr("PE tool");                                          break;
+        case RECORD_TYPE_PETOOL:                                sResult=QString("PE %1").arg(tr("tool"));                       break;
         case RECORD_TYPE_PROTECTOR:                             sResult=tr("Protector");                                        break;
         case RECORD_TYPE_PROTECTORDATA:                         sResult=tr("Protector data");                                   break;
         case RECORD_TYPE_SFX:                                   sResult=QString("SFX");                                         break;
