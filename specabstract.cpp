@@ -10778,16 +10778,16 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
                         {
                             HEUR_RECORD heurRecord={};
 
-                            heurRecord.nVariant=pRecords[i].basicInfo.nVariant;
-                            heurRecord.filetype=pRecords[i].basicInfo.filetype;
-                            heurRecord.type=pRecords[i].basicInfo.type;
-                            heurRecord.name=pRecords[i].basicInfo.name;
-                            heurRecord.sVersion=pRecords[i].basicInfo.pszVersion;
-                            heurRecord.sInfo=pRecords[i].basicInfo.pszInfo;
+                            heurRecord.nVariant=pRecords[j].basicInfo.nVariant;
+                            heurRecord.filetype=pRecords[j].basicInfo.filetype;
+                            heurRecord.type=pRecords[j].basicInfo.type;
+                            heurRecord.name=pRecords[j].basicInfo.name;
+                            heurRecord.sVersion=pRecords[j].basicInfo.pszVersion;
+                            heurRecord.sInfo=pRecords[j].basicInfo.pszInfo;
                             heurRecord.nOffset=0;
                             heurRecord.filepart=pBasicInfo->id.filepart;
                             heurRecord.heurType=heurType;
-                            heurRecord.sValue="TODO";
+                            heurRecord.sValue=pRecords[j].pszString;
 
                             pBasicInfo->listHeurs.append(heurRecord);
                         }
@@ -10847,7 +10847,7 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
                         heurRecord.nOffset=0;
                         heurRecord.filepart=pBasicInfo->id.filepart;
                         heurRecord.heurType=heurType;
-                        heurRecord.sValue="TODO";
+                        heurRecord.sValue=QString("%1 %2").arg(XBinary::valueToHex(pRecords[i].nConst1)).arg(XBinary::valueToHex(pRecords[i].nConst2));
 
                         pBasicInfo->listHeurs.append(heurRecord);
                     }
@@ -10887,7 +10887,7 @@ void SpecAbstract::richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS
                     heurRecord.nOffset=0;
                     heurRecord.filepart=pBasicInfo->id.filepart;
                     heurRecord.heurType=heurType;
-                    heurRecord.sValue="TODO";
+                    heurRecord.sValue=QString("%1 %2").arg(XBinary::valueToHex(pRecords[i].nID)).arg(XBinary::valueToHex(pRecords[i].nBuild));
 
                     pBasicInfo->listHeurs.append(heurRecord);
                 }
