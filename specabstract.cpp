@@ -719,6 +719,25 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
     return sResult;
 }
 
+QString SpecAbstract::heurTypeIdToString(SpecAbstract::HEURTYPE id)
+{
+    QString sResult=tr("Unknown");
+
+    switch(id)
+    {
+        case HEURTYPE_UNKNOWN:                          sResult=tr("Unknown");                                      break;
+        case HEURTYPE_HEADER:                           sResult=tr("Header");                                       break;
+        case HEURTYPE_OVERLAY:                          sResult=tr("Overlay");                                      break;
+        case HEURTYPE_ENTRYPOINT:                       sResult=tr("Entry point");                                  break;
+        case HEURTYPE_SECTIONNAME:                      sResult=tr("Section name");                                 break;
+        case HEURTYPE_IMPORTHASH:                       sResult=QString("Import hash");                             break;
+        case HEURTYPE_CODESECTION:                      sResult=tr("Code section");                                 break;
+        case HEURTYPE_NETANSISTRING:                    sResult=QString(".NET ANSI %1").arg(tr("string"));          break;
+    }
+
+    return sResult;
+}
+
 SpecAbstract::UNPACK_OPTIONS SpecAbstract::getPossibleUnpackOptions(QIODevice *pDevice,bool bIsImage)
 {
     UNPACK_OPTIONS result={};

@@ -1016,6 +1016,7 @@ public:
     static QString recordFilepartIdToString(RECORD_FILEPART id);
     static QString recordTypeIdToString(RECORD_TYPE id);
     static QString recordNameIdToString(RECORD_NAME id);
+    static QString heurTypeIdToString(HEURTYPE id);
 
     static SpecAbstract::UNPACK_OPTIONS getPossibleUnpackOptions(QIODevice *pDevice, bool bIsImage); // TODO Check
 
