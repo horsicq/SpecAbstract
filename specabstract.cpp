@@ -1019,13 +1019,13 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     result.basic_info.memoryMap=binary.getMemoryMap();
 
     // Scan Header
-    signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_binary_records,sizeof(_binary_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_BINARY,&(result.basic_info));
-    signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_COM_records,sizeof(_COM_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_COM,&(result.basic_info));
-    signatureExpScan(&binary,&(result.basic_info.memoryMap),&result.basic_info.mapHeaderDetects,0,_COM_Exp_records,sizeof(_COM_Exp_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_COM,&(result.basic_info));
+    signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_binary_records,sizeof(_binary_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_BINARY,&(result.basic_info),HEURTYPE_HEADERSIGNATURE);
+    signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_COM_records,sizeof(_COM_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_COM,&(result.basic_info),HEURTYPE_HEADERSIGNATURE);
+    signatureExpScan(&binary,&(result.basic_info.memoryMap),&result.basic_info.mapHeaderDetects,0,_COM_Exp_records,sizeof(_COM_Exp_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_COM,&(result.basic_info),HEURTYPE_HEADERSIGNATURE);
 
     if(result.basic_info.parentId.filetype!=RECORD_FILETYPE_UNKNOWN)
     {
-        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_PE_overlay_records,sizeof(_PE_overlay_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_BINARY,&(result.basic_info));
+        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_PE_overlay_records,sizeof(_PE_overlay_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_BINARY,&(result.basic_info),HEURTYPE_HEADERSIGNATURE);
     }
 
     result.bIsPlainText=binary.isPlainTextType();
@@ -1140,11 +1140,11 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     result.nEntryPointOffset=msdos.getEntryPointOffset(&(result.basic_info.memoryMap));
     result.sEntryPointSignature=msdos.getSignature(msdos.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
-    signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info));
-    signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_header_records,sizeof(_MSDOS_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info));
-    signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_MSDOS_entrypoint_records,sizeof(_MSDOS_entrypoint_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info));
+    signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_HEADERSIGNATURE);
+    signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_header_records,sizeof(_MSDOS_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_HEADERSIGNATURE);
+    signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_MSDOS_entrypoint_records,sizeof(_MSDOS_entrypoint_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_ENTRYPOINTSIGNATURE);
 
-    signatureExpScan(&msdos,&(result.basic_info.memoryMap),&result.mapEntryPointDetects,result.nEntryPointOffset,_MSDOS_entrypointExp_records,sizeof(_MSDOS_entrypointExp_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info));
+    signatureExpScan(&msdos,&(result.basic_info.memoryMap),&result.mapEntryPointDetects,result.nEntryPointOffset,_MSDOS_entrypointExp_records,sizeof(_MSDOS_entrypointExp_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_ENTRYPOINTSIGNATURE);
 
     MSDOS_handle_Borland(pDevice,pOptions->bIsImage,&result);
     MSDOS_handle_Tools(pDevice,pOptions->bIsImage,&result);
@@ -1353,7 +1353,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
 
         result.listRichSignatures=le.getRichSignatureRecords();
 
-        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info));
+        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_HEADERSIGNATURE);
 
         LE_handle_Microsoft(pDevice,pOptions->bIsImage,&result);
         LE_handle_Borland(pDevice,pOptions->bIsImage,&result);
@@ -1405,7 +1405,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbst
 
         result.sEntryPointSignature=ne.getSignature(ne.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
-        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info));
+        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_HEADERSIGNATURE);
 
         NE_handle_Borland(pDevice,pOptions->bIsImage,&result);
 
@@ -1614,25 +1614,25 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         //        memoryScan(&result.mapHeaderScanDetects,pDevice,0,qMin(result.basic_info.nSize,(qint64)1024),_headerscan_records,sizeof(_headerscan_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE);
 
-        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info));
-        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_PE_header_records,sizeof(_PE_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info));
-        signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_PE_entrypoint_records,sizeof(_PE_entrypoint_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info));
-        signatureScan(&result.mapOverlayDetects,result.sOverlaySignature,_binary_records,sizeof(_binary_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_BINARY,&(result.basic_info));
-        signatureScan(&result.mapOverlayDetects,result.sOverlaySignature,_PE_overlay_records,sizeof(_PE_overlay_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_BINARY,&(result.basic_info));
+        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_HEADERSIGNATURE);
+        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_PE_header_records,sizeof(_PE_header_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_HEADERSIGNATURE);
+        signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_PE_entrypoint_records,sizeof(_PE_entrypoint_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_ENTRYPOINTSIGNATURE);
+        signatureScan(&result.mapOverlayDetects,result.sOverlaySignature,_binary_records,sizeof(_binary_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_BINARY,&(result.basic_info),HEURTYPE_OVERLAYSIGNATURE);
+        signatureScan(&result.mapOverlayDetects,result.sOverlaySignature,_PE_overlay_records,sizeof(_PE_overlay_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_BINARY,&(result.basic_info),HEURTYPE_OVERLAYSIGNATURE);
 
-        stringScan(&result.mapSectionNamesDetects,&result.listSectionNames,_PE_sectionNames_records,sizeof(_PE_sectionNames_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info));
+        stringScan(&result.mapSectionNamesDetects,&result.listSectionNames,_PE_sectionNames_records,sizeof(_PE_sectionNames_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_SECTIONNAME);
 
         // Import
-        constScan(&(result.mapImportDetects),result.nImportHash64,result.nImportHash32,_PE_importhash_records,sizeof(_PE_importhash_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info));
+        constScan(&(result.mapImportDetects),result.nImportHash64,result.nImportHash32,_PE_importhash_records,sizeof(_PE_importhash_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_IMPORTHASH);
 
         int nNumberOfImports=result.listImportPositionHashes.count();
 
         for(int i=0;i<nNumberOfImports;i++)
         {
-            constScan(&(result.mapImportDetects),i,result.listImportPositionHashes.at(i),_PE_importpositionhash_records,sizeof(_PE_importpositionhash_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info));
+            constScan(&(result.mapImportDetects),i,result.listImportPositionHashes.at(i),_PE_importpositionhash_records,sizeof(_PE_importpositionhash_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_IMPORTHASH);
         }
 
-        signatureExpScan(&pe,&(result.basic_info.memoryMap),&result.mapEntryPointDetects,result.nEntryPointOffset,_PE_entrypointExp_records,sizeof(_PE_entrypointExp_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info));
+        signatureExpScan(&pe,&(result.basic_info.memoryMap),&result.mapEntryPointDetects,result.nEntryPointOffset,_PE_entrypointExp_records,sizeof(_PE_entrypointExp_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_ENTRYPOINTSIGNATURE);
 
         // Rich
 //        int nNumberOfRichSignatures=result.listRichSignatures.count();
@@ -1658,7 +1658,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         if(result.bIsNetPresent)
         {
-            stringScan(&result.mapDotAnsistringsDetects,&result.cliInfo.cliMetadata.listAnsiStrings,_PE_dot_ansistrings_records,sizeof(_PE_dot_ansistrings_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info));
+            stringScan(&result.mapDotAnsistringsDetects,&result.cliInfo.cliMetadata.listAnsiStrings,_PE_dot_ansistrings_records,sizeof(_PE_dot_ansistrings_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_NETANSISTRING);
 
             //            for(int i=0;i<result.cliInfo.listUnicodeStrings.count();i++)
             //            {
@@ -1672,7 +1672,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
                     qint64 nSectionOffset=result.osCodeSection.nOffset;
                     qint64 nSectionSize=result.osCodeSection.nSize;
 
-                    memoryScan(&result.mapCodeSectionDetects,pDevice,pOptions->bIsImage,nSectionOffset,nSectionSize,_PE_dot_codesection_records,sizeof(_PE_dot_codesection_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info));
+                    memoryScan(&result.mapCodeSectionDetects,pDevice,pOptions->bIsImage,nSectionOffset,nSectionSize,_PE_dot_codesection_records,sizeof(_PE_dot_codesection_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_CODESECTIONSIGNATURE);
                 }
             }
         }
@@ -1684,7 +1684,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
                 qint64 nSectionOffset=result.osCodeSection.nOffset;
                 qint64 nSectionSize=result.osCodeSection.nSize;
 
-                memoryScan(&result.mapCodeSectionDetects,pDevice,pOptions->bIsImage,nSectionOffset,nSectionSize,_PE_codesection_records,sizeof(_PE_codesection_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info));
+                memoryScan(&result.mapCodeSectionDetects,pDevice,pOptions->bIsImage,nSectionOffset,nSectionSize,_PE_codesection_records,sizeof(_PE_codesection_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_CODESECTIONSIGNATURE);
             }
         }
 
@@ -10519,7 +10519,7 @@ SpecAbstract::BASIC_PE_INFO SpecAbstract::_ArrayToBasicPEInfo(const QByteArray *
     return result;
 }
 
-void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize, SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2, BASIC_INFO *pBasicInfo)
+void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize, SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2, BASIC_INFO *pBasicInfo, HEURTYPE heurType)
 {
     if(nSize)
     {
@@ -10563,7 +10563,7 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
                             heurRecord.sInfo=pRecords[i].basicInfo.pszInfo;
                             heurRecord.nOffset=_nOffset;
                             heurRecord.filepart=pBasicInfo->id.filepart;
-                            heurRecord.heurType=HEURTYPE_MEMORYSCANSIGNATURE;
+                            heurRecord.heurType=heurType;
                             heurRecord.sValue=pRecords[i].pszSignature;
 
                             pBasicInfo->listHeurs.append(heurRecord);
@@ -10575,7 +10575,7 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
     }
 }
 
-void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QString sSignature, SpecAbstract::SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo)
+void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QString sSignature, SpecAbstract::SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType)
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(SIGNATURE_RECORD);
 
@@ -10587,24 +10587,41 @@ void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, 
             {
                 if(XBinary::compareSignatureStrings(sSignature,pRecords[i].pszSignature))
                 {
-                    SpecAbstract::_SCANS_STRUCT record={};
-                    record.nVariant=pRecords[i].basicInfo.nVariant;
-                    record.filetype=pRecords[i].basicInfo.filetype;
-                    record.type=pRecords[i].basicInfo.type;
-                    record.name=pRecords[i].basicInfo.name;
-                    record.sVersion=pRecords[i].basicInfo.pszVersion;
-                    record.sInfo=pRecords[i].basicInfo.pszInfo;
+                    if(!pMapRecords->contains(pRecords[i].basicInfo.name))
+                    {
+                        SpecAbstract::_SCANS_STRUCT record={};
+                        record.nVariant=pRecords[i].basicInfo.nVariant;
+                        record.filetype=pRecords[i].basicInfo.filetype;
+                        record.type=pRecords[i].basicInfo.type;
+                        record.name=pRecords[i].basicInfo.name;
+                        record.sVersion=pRecords[i].basicInfo.pszVersion;
+                        record.sInfo=pRecords[i].basicInfo.pszInfo;
 
-                    record.nOffset=0;
+                        record.nOffset=0;
 
-                    pMapRecords->insert(record.name,record);
+                        pMapRecords->insert(record.name,record);
 
 #ifdef QT_DEBUG
-                    qDebug("SIGNATURE SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
+                        qDebug("SIGNATURE SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
 #endif
+                    }
+
                     if(pBasicInfo->bShowHeuristic)
                     {
-                        // TODO
+                        HEUR_RECORD heurRecord={};
+
+                        heurRecord.nVariant=pRecords[i].basicInfo.nVariant;
+                        heurRecord.filetype=pRecords[i].basicInfo.filetype;
+                        heurRecord.type=pRecords[i].basicInfo.type;
+                        heurRecord.name=pRecords[i].basicInfo.name;
+                        heurRecord.sVersion=pRecords[i].basicInfo.pszVersion;
+                        heurRecord.sInfo=pRecords[i].basicInfo.pszInfo;
+                        heurRecord.nOffset=0;
+                        heurRecord.filepart=pBasicInfo->id.filepart;
+                        heurRecord.heurType=heurType;
+                        heurRecord.sValue=pRecords[i].pszSignature;
+
+                        pBasicInfo->listHeurs.append(heurRecord);
                     }
                 }
             }
@@ -10612,7 +10629,7 @@ void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, 
     }
 }
 
-void SpecAbstract::resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources, SpecAbstract::RESOURCES_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2, BASIC_INFO *pBasicInfo)
+void SpecAbstract::resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources, SpecAbstract::RESOURCES_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2, BASIC_INFO *pBasicInfo, HEURTYPE heurType)
 {
     int nSignaturesCount=nRecordsSize/sizeof(RESOURCES_RECORD);
 
@@ -10649,28 +10666,44 @@ void SpecAbstract::resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_
 
                 if(bSuccess)
                 {
-                    SpecAbstract::_SCANS_STRUCT record={};
-                    record.nVariant=pRecords[i].basicInfo.nVariant;
-                    record.filetype=pRecords[i].basicInfo.filetype;
-                    record.type=pRecords[i].basicInfo.type;
-                    record.name=pRecords[i].basicInfo.name;
-                    record.sVersion=pRecords[i].basicInfo.pszVersion;
-                    record.sInfo=pRecords[i].basicInfo.pszInfo;
-                    record.nOffset=0;
+                    if(!pMapRecords->contains(pRecords[i].basicInfo.name))
+                    {
+                        SpecAbstract::_SCANS_STRUCT record={};
+                        record.nVariant=pRecords[i].basicInfo.nVariant;
+                        record.filetype=pRecords[i].basicInfo.filetype;
+                        record.type=pRecords[i].basicInfo.type;
+                        record.name=pRecords[i].basicInfo.name;
+                        record.sVersion=pRecords[i].basicInfo.pszVersion;
+                        record.sInfo=pRecords[i].basicInfo.pszInfo;
+                        record.nOffset=0;
 
-                    pMapRecords->insert(record.name,record);
-                }
+                        pMapRecords->insert(record.name,record);
+                    }
 
-                if(pBasicInfo->bShowHeuristic)
-                {
-                    // TODO
+                    if(pBasicInfo->bShowHeuristic)
+                    {
+                        HEUR_RECORD heurRecord={};
+
+                        heurRecord.nVariant=pRecords[i].basicInfo.nVariant;
+                        heurRecord.filetype=pRecords[i].basicInfo.filetype;
+                        heurRecord.type=pRecords[i].basicInfo.type;
+                        heurRecord.name=pRecords[i].basicInfo.name;
+                        heurRecord.sVersion=pRecords[i].basicInfo.pszVersion;
+                        heurRecord.sInfo=pRecords[i].basicInfo.pszInfo;
+                        heurRecord.nOffset=0;
+                        heurRecord.filepart=pBasicInfo->id.filepart;
+                        heurRecord.heurType=heurType;
+                        heurRecord.sValue="TODO";
+
+                        pBasicInfo->listHeurs.append(heurRecord);
+                    }
                 }
             }
         }
     }
 }
 
-void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<QString> *pListStrings, SpecAbstract::STRING_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo)
+void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<QString> *pListStrings, SpecAbstract::STRING_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType)
 {
     QList<quint32> listStringCRC;
     QList<quint32> listSignatureCRC;
@@ -10703,24 +10736,41 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
 
                     if(nCRC1==nCRC2)
                     {
-                        SpecAbstract::_SCANS_STRUCT record={};
-                        record.nVariant=pRecords[j].basicInfo.nVariant;
-                        record.filetype=pRecords[j].basicInfo.filetype;
-                        record.type=pRecords[j].basicInfo.type;
-                        record.name=pRecords[j].basicInfo.name;
-                        record.sVersion=pRecords[j].basicInfo.pszVersion;
-                        record.sInfo=pRecords[j].basicInfo.pszInfo;
+                        if(!pMapRecords->contains(pRecords[j].basicInfo.name))
+                        {
+                            SpecAbstract::_SCANS_STRUCT record={};
+                            record.nVariant=pRecords[j].basicInfo.nVariant;
+                            record.filetype=pRecords[j].basicInfo.filetype;
+                            record.type=pRecords[j].basicInfo.type;
+                            record.name=pRecords[j].basicInfo.name;
+                            record.sVersion=pRecords[j].basicInfo.pszVersion;
+                            record.sInfo=pRecords[j].basicInfo.pszInfo;
 
-                        record.nOffset=0;
+                            record.nOffset=0;
 
-                        pMapRecords->insert(record.name,record);
+                            pMapRecords->insert(record.name,record);
 
 #ifdef QT_DEBUG
-                        qDebug("STRING SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
+                            qDebug("STRING SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
 #endif
+                        }
+
                         if(pBasicInfo->bShowHeuristic)
                         {
-                            // TODO
+                            HEUR_RECORD heurRecord={};
+
+                            heurRecord.nVariant=pRecords[i].basicInfo.nVariant;
+                            heurRecord.filetype=pRecords[i].basicInfo.filetype;
+                            heurRecord.type=pRecords[i].basicInfo.type;
+                            heurRecord.name=pRecords[i].basicInfo.name;
+                            heurRecord.sVersion=pRecords[i].basicInfo.pszVersion;
+                            heurRecord.sInfo=pRecords[i].basicInfo.pszInfo;
+                            heurRecord.nOffset=0;
+                            heurRecord.filepart=pBasicInfo->id.filepart;
+                            heurRecord.heurType=heurType;
+                            heurRecord.sValue="TODO";
+
+                            pBasicInfo->listHeurs.append(heurRecord);
                         }
                     }
                 }
@@ -10729,7 +10779,7 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
     }
 }
 
-void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, SpecAbstract::CONST_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2, BASIC_INFO *pBasicInfo)
+void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, SpecAbstract::CONST_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2, BASIC_INFO *pBasicInfo, HEURTYPE heurType)
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(CONST_RECORD);
 
@@ -10739,31 +10789,48 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
         {
             if((!pMapRecords->contains(pRecords[i].basicInfo.name))||(pBasicInfo->bShowHeuristic))
             {
-                bool bCheck=false;
+                bool bSuccess=false;
 
-                bCheck= ((pRecords[i].nConst1==nCost1)||(pRecords[i].nConst1==0xFFFFFFFF))&&
-                        ((pRecords[i].nConst2==nCost2)||(pRecords[i].nConst2==0xFFFFFFFF));
+                bSuccess=   ((pRecords[i].nConst1==nCost1)||(pRecords[i].nConst1==0xFFFFFFFF))&&
+                            ((pRecords[i].nConst2==nCost2)||(pRecords[i].nConst2==0xFFFFFFFF));
 
-                if(bCheck)
+                if(bSuccess)
                 {
-                    SpecAbstract::_SCANS_STRUCT record={};
-                    record.nVariant=pRecords[i].basicInfo.nVariant;
-                    record.filetype=pRecords[i].basicInfo.filetype;
-                    record.type=pRecords[i].basicInfo.type;
-                    record.name=pRecords[i].basicInfo.name;
-                    record.sVersion=pRecords[i].basicInfo.pszVersion;
-                    record.sInfo=pRecords[i].basicInfo.pszInfo;
+                    if(!pMapRecords->contains(pRecords[i].basicInfo.name))
+                    {
+                        SpecAbstract::_SCANS_STRUCT record={};
+                        record.nVariant=pRecords[i].basicInfo.nVariant;
+                        record.filetype=pRecords[i].basicInfo.filetype;
+                        record.type=pRecords[i].basicInfo.type;
+                        record.name=pRecords[i].basicInfo.name;
+                        record.sVersion=pRecords[i].basicInfo.pszVersion;
+                        record.sInfo=pRecords[i].basicInfo.pszInfo;
 
-                    record.nOffset=0;
+                        record.nOffset=0;
 
-                    pMapRecords->insert(record.name,record);
+                        pMapRecords->insert(record.name,record);
 
 #ifdef QT_DEBUG
-                    qDebug("CONST SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
+                        qDebug("CONST SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
 #endif
+                    }
+
                     if(pBasicInfo->bShowHeuristic)
                     {
-                        // TODO
+                        HEUR_RECORD heurRecord={};
+
+                        heurRecord.nVariant=pRecords[i].basicInfo.nVariant;
+                        heurRecord.filetype=pRecords[i].basicInfo.filetype;
+                        heurRecord.type=pRecords[i].basicInfo.type;
+                        heurRecord.name=pRecords[i].basicInfo.name;
+                        heurRecord.sVersion=pRecords[i].basicInfo.pszVersion;
+                        heurRecord.sInfo=pRecords[i].basicInfo.pszInfo;
+                        heurRecord.nOffset=0;
+                        heurRecord.filepart=pBasicInfo->id.filepart;
+                        heurRecord.heurType=heurType;
+                        heurRecord.sValue="TODO";
+
+                        pBasicInfo->listHeurs.append(heurRecord);
                     }
                 }
             }
@@ -10771,7 +10838,7 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
     }
 }
 
-void SpecAbstract::richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo)
+void SpecAbstract::richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType)
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(MSRICH_RECORD);
 
@@ -10783,18 +10850,34 @@ void SpecAbstract::richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS
 
             if(PE_compareRichRecord(&record,&(pRecords[i]),nID,nBuild,fileType1,fileType2))
             {
-                pMapRecords->insert(record.name,record);
+                if(!pMapRecords->contains(pRecords[i].basicInfo.name))
+                {
+                    pMapRecords->insert(record.name,record);
+                }
 
                 if(pBasicInfo->bShowHeuristic)
                 {
-                    // TODO
+                    HEUR_RECORD heurRecord={};
+
+                    heurRecord.nVariant=pRecords[i].basicInfo.nVariant;
+                    heurRecord.filetype=pRecords[i].basicInfo.filetype;
+                    heurRecord.type=pRecords[i].basicInfo.type;
+                    heurRecord.name=pRecords[i].basicInfo.name;
+                    heurRecord.sVersion=pRecords[i].basicInfo.pszVersion;
+                    heurRecord.sInfo=pRecords[i].basicInfo.pszInfo;
+                    heurRecord.nOffset=0;
+                    heurRecord.filepart=pBasicInfo->id.filepart;
+                    heurRecord.heurType=heurType;
+                    heurRecord.sValue="TODO";
+
+                    pBasicInfo->listHeurs.append(heurRecord);
                 }
             }
         }
     }
 }
 
-void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemoryMap, QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, qint64 nOffset, SpecAbstract::SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo)
+void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemoryMap, QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, qint64 nOffset, SpecAbstract::SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType)
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(SIGNATURE_RECORD);
 
@@ -10806,24 +10889,41 @@ void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMe
             {
                 if(pXBinary->compareSignature(pMemoryMap,pRecords[i].pszSignature,nOffset))
                 {
-                    SpecAbstract::_SCANS_STRUCT record={};
-                    record.nVariant=pRecords[i].basicInfo.nVariant;
-                    record.filetype=pRecords[i].basicInfo.filetype;
-                    record.type=pRecords[i].basicInfo.type;
-                    record.name=pRecords[i].basicInfo.name;
-                    record.sVersion=pRecords[i].basicInfo.pszVersion;
-                    record.sInfo=pRecords[i].basicInfo.pszInfo;
+                    if(!pMapRecords->contains(pRecords[i].basicInfo.name))
+                    {
+                        SpecAbstract::_SCANS_STRUCT record={};
+                        record.nVariant=pRecords[i].basicInfo.nVariant;
+                        record.filetype=pRecords[i].basicInfo.filetype;
+                        record.type=pRecords[i].basicInfo.type;
+                        record.name=pRecords[i].basicInfo.name;
+                        record.sVersion=pRecords[i].basicInfo.pszVersion;
+                        record.sInfo=pRecords[i].basicInfo.pszInfo;
 
-                    record.nOffset=0;
+                        record.nOffset=0;
 
-                    pMapRecords->insert(record.name,record);
+                        pMapRecords->insert(record.name,record);
 
 #ifdef QT_DEBUG
-                    qDebug("SIGNATURE EXP SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
+                        qDebug("SIGNATURE EXP SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
 #endif
+                    }
+
                     if(pBasicInfo->bShowHeuristic)
                     {
-                        // TODO
+                        HEUR_RECORD heurRecord={};
+
+                        heurRecord.nVariant=pRecords[i].basicInfo.nVariant;
+                        heurRecord.filetype=pRecords[i].basicInfo.filetype;
+                        heurRecord.type=pRecords[i].basicInfo.type;
+                        heurRecord.name=pRecords[i].basicInfo.name;
+                        heurRecord.sVersion=pRecords[i].basicInfo.pszVersion;
+                        heurRecord.sInfo=pRecords[i].basicInfo.pszInfo;
+                        heurRecord.nOffset=0;
+                        heurRecord.filepart=pBasicInfo->id.filepart;
+                        heurRecord.heurType=heurType;
+                        heurRecord.sValue=pRecords[i].pszSignature;
+
+                        pBasicInfo->listHeurs.append(heurRecord);
                     }
                 }
             }

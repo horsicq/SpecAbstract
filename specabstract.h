@@ -619,7 +619,12 @@ public:
     {
         HEURTYPE_UNKNOWN=0,
         HEURTYPE_HEADERSIGNATURE,
-        HEURTYPE_MEMORYSCANSIGNATURE
+        HEURTYPE_ENTRYPOINTSIGNATURE,
+        HEURTYPE_OVERLAYSIGNATURE,
+        HEURTYPE_SECTIONNAME,
+        HEURTYPE_IMPORTHASH,
+        HEURTYPE_CODESECTIONSIGNATURE,
+        HEURTYPE_NETANSISTRING
     };
 
     struct HEUR_RECORD
@@ -1140,14 +1145,14 @@ public:
     static BASIC_PE_INFO _ArrayToBasicPEInfo(const QByteArray *pbaArray);
 
     // TODO BasicInfo as parameter for heur scan
-    static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo); // TODO Check
-    static void signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo);
-    static void resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,RESOURCES_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo); // TODO Check
-    static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo);
-    static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo);
-    static void richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo);
+    static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,RESOURCES_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
-    static void signatureExpScan(XBinary *pXBinary,XBinary::_MEMORY_MAP *pMemoryMap,QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,qint64 nOffset,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo);
+    static void signatureExpScan(XBinary *pXBinary,XBinary::_MEMORY_MAP *pMemoryMap,QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,qint64 nOffset,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
     static QList<_SCANS_STRUCT> richScan(quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, int nRecordsSize, RECORD_FILETYPE fileType1, RECORD_FILETYPE fileType2);
 
