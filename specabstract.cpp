@@ -10660,15 +10660,21 @@ void SpecAbstract::resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_
             {
                 bool bSuccess=false;
 
+                QString sValue;
+
                 if(pRecords[i].bIsString1)
                 {
                     if(pRecords[i].bIsString2)
                     {
                         bSuccess=XPE::isResourcePresent(pRecords[i].pszName1,pRecords[i].pszName2,pListResources);
+
+                        sValue=QString("%1 %2").arg(pRecords[i].pszName1).arg(pRecords[i].pszName2);
                     }
                     else
                     {
                         bSuccess=XPE::isResourcePresent(pRecords[i].pszName1,pRecords[i].nID2,pListResources);
+
+                        sValue=QString("%1 %2").arg(pRecords[i].pszName1).arg(pRecords[i].nID2);
                     }
                 }
                 else
@@ -10676,10 +10682,14 @@ void SpecAbstract::resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_
                     if(pRecords[i].bIsString2)
                     {
                         bSuccess=XPE::isResourcePresent(pRecords[i].nID1,pRecords[i].pszName2,pListResources);
+
+                        sValue=QString("%1 %2").arg(pRecords[i].nID1).arg(pRecords[i].pszName2);
                     }
                     else
                     {
                         bSuccess=XPE::isResourcePresent(pRecords[i].nID1,pRecords[i].nID2,pListResources);
+
+                        sValue=QString("%1 %2").arg(pRecords[i].nID1).arg(pRecords[i].nID2);
                     }
                 }
 
@@ -10712,7 +10722,7 @@ void SpecAbstract::resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_
                         heurRecord.nOffset=0;
                         heurRecord.filepart=pBasicInfo->id.filepart;
                         heurRecord.heurType=heurType;
-                        heurRecord.sValue="TODO";
+                        heurRecord.sValue=sValue;
 
                         pBasicInfo->listHeurs.append(heurRecord);
                     }
