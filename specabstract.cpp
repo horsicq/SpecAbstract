@@ -732,6 +732,7 @@ QString SpecAbstract::heurTypeIdToString(SpecAbstract::HEURTYPE id)
         case HEURTYPE_SECTIONNAME:                      sResult=tr("Section name");                                 break;
         case HEURTYPE_IMPORTHASH:                       sResult=QString("Import hash");                             break;
         case HEURTYPE_CODESECTION:                      sResult=tr("Code section");                                 break;
+        case HEURTYPE_ENTRYPOINTSECTION:                sResult=tr("Entry point section");                          break;
         case HEURTYPE_NETANSISTRING:                    sResult=QString(".NET ANSI %1").arg(tr("string"));          break;
     }
 
@@ -1705,6 +1706,14 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
                 memoryScan(&result.mapCodeSectionDetects,pDevice,pOptions->bIsImage,nSectionOffset,nSectionSize,_PE_codesection_records,sizeof(_PE_codesection_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_CODESECTION);
             }
+
+            if(pe.checkOffsetSize(result.osEntryPointSection))
+            {
+                qint64 nSectionOffset=result.osEntryPointSection.nOffset;
+                qint64 nSectionSize=result.osEntryPointSection.nSize;
+
+                memoryScan(&result.mapEntryPointSectionDetects,pDevice,pOptions->bIsImage,nSectionOffset,nSectionSize,_PE_entrypointsection_records,sizeof(_PE_entrypointsection_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_ENTRYPOINTSECTION);
+            }
         }
 
         PE_handle_import(pDevice,pOptions->bIsImage,&result);
@@ -2307,6 +2316,16 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
             if(!pPEInfo->bIs64)
             {
+                // MaskPE
+                if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_MASKPE))
+                {
+                    if(pPEInfo->mapEntryPointSectionDetects.contains(RECORD_NAME_MASKPE))
+                    {
+                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointSectionDetects.value(RECORD_NAME_MASKPE);
+                        pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+
                 // YZPack
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_YZPACK))
                 {
