@@ -1169,6 +1169,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_dot_codesection_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_DEEPSEA,                      "4.X",              ""},                    "'DeepSeaObfuscator'"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_SMARTASSEMBLY,                "",                 ""},                    "'Powered by SmartAssembly '"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_SMARTASSEMBLY,                "",                 ""},                    "'Powered by {smartassembly}'"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_FISHNET,                      "",                 ""},                    "0800'FISH_NET'"},
 };
 
 SpecAbstract::STRING_RECORD _TEXT_records[]=

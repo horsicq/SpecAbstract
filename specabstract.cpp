@@ -4413,7 +4413,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 }
             }
 
-            if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_FISHNET))
+            if((pPEInfo->mapOverlayDetects.contains(RECORD_NAME_FISHNET))||(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_FISHNET)))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_FISHNET,"1.X","",0); // TODO
                 pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss)); // TODO obfuscator?
