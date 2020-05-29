@@ -16084,3 +16084,8 @@ OLEAUT32.dll 150
 OLEAUT32.dll 2
 OLEAUT32.dll 10
 OLEAUT32.dll 418
+
+Import hash: 177c840f4 48ffd359
+KERNEL32.dll GetProcAddress
+KERNEL32.dll LoadModule
+USER32.dll MessageBoxA
