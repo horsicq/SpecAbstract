@@ -625,7 +625,8 @@ public:
         HEURTYPE_IMPORTHASH,
         HEURTYPE_CODESECTION,
         HEURTYPE_ENTRYPOINTSECTION,
-        HEURTYPE_NETANSISTRING
+        HEURTYPE_NETANSISTRING,
+        HEURTYPE_RICH
     };
 
     struct HEUR_RECORD
@@ -1157,7 +1158,7 @@ public:
 
     static void signatureExpScan(XBinary *pXBinary,XBinary::_MEMORY_MAP *pMemoryMap,QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,qint64 nOffset,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
-    static QList<_SCANS_STRUCT> richScan(quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, int nRecordsSize, RECORD_FILETYPE fileType1, RECORD_FILETYPE fileType2);
+    static QList<_SCANS_STRUCT> richScan(quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, int nRecordsSize, RECORD_FILETYPE fileType1, RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
     static QByteArray serializeScanStruct(SCAN_STRUCT ssRecord,bool bIsHeader=false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData,bool *pbIsHeader=nullptr);

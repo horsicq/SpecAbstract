@@ -734,6 +734,7 @@ QString SpecAbstract::heurTypeIdToString(SpecAbstract::HEURTYPE id)
         case HEURTYPE_CODESECTION:                      sResult=tr("Code section");                                 break;
         case HEURTYPE_ENTRYPOINTSECTION:                sResult=tr("Entry point section");                          break;
         case HEURTYPE_NETANSISTRING:                    sResult=QString(".NET ANSI %1").arg(tr("string"));          break;
+        case HEURTYPE_RICH:                             sResult=QString("RICH");                                    break;
     }
 
     return sResult;
@@ -4741,7 +4742,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
 
         for(int i=0;i<nRichSignaturesCount;i++)
         {
-            listRichDescriptions.append(richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS));
+            listRichDescriptions.append(richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(pPEInfo->basic_info),HEURTYPE_RICH));
         }
 
         int nRichDescriptionsCount=listRichDescriptions.count();
@@ -10083,7 +10084,7 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO
 
         for(int i=0;i<nRichSignaturesCount;i++)
         {
-            listRichDescriptions.append(richScan(pLEInfo->listRichSignatures.at(i).nId,pLEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pLEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS));
+            listRichDescriptions.append(richScan(pLEInfo->listRichSignatures.at(i).nId,pLEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pLEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(pLEInfo->basic_info),HEURTYPE_RICH));
         }
 
         int nRichDescriptionsCount=listRichDescriptions.count();
@@ -10979,7 +10980,7 @@ void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMe
     }
 }
 
-QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::richScan(quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2)
+QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::richScan(quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType)
 {
     QList<SpecAbstract::_SCANS_STRUCT> listResult;
 
@@ -10992,6 +10993,24 @@ QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::richScan(quint16 nID, quint32 n
         if(PE_compareRichRecord(&record,&(pRecords[i]),nID,nBuild,fileType1,fileType2))
         {
             listResult.append(record);
+
+            if(pBasicInfo->bShowHeuristic)
+            {
+                HEUR_RECORD heurRecord={};
+
+                heurRecord.nVariant=pRecords[i].basicInfo.nVariant;
+                heurRecord.filetype=pRecords[i].basicInfo.filetype;
+                heurRecord.type=pRecords[i].basicInfo.type;
+                heurRecord.name=pRecords[i].basicInfo.name;
+                heurRecord.sVersion=pRecords[i].basicInfo.pszVersion;
+                heurRecord.sInfo=pRecords[i].basicInfo.pszInfo;
+                heurRecord.nOffset=0;
+                heurRecord.filepart=pBasicInfo->id.filepart;
+                heurRecord.heurType=heurType;
+                heurRecord.sValue=QString("%1 %2").arg(XBinary::valueToHex(pRecords[i].nID)).arg(XBinary::valueToHex(pRecords[i].nBuild));
+
+                pBasicInfo->listHeurs.append(heurRecord);
+            }
         }
     }
 
