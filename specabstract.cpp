@@ -2527,7 +2527,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                         case 0x38:  ss.sVersion="0.38 beta";    break;
                         case 0x39:  ss.sVersion="0.39 final";   break;
                         case 0x3A:  ss.sVersion="0.399";        break;
-                        default:    ss.sVersion="";
                     }
 
                     pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
