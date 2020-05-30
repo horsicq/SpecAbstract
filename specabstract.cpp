@@ -210,7 +210,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_NETCOMPRESSOR:                         sResult=QString(".NET %1").arg(tr("compressor"));               break;
         case RECORD_TYPE_NETOBFUSCATOR:                         sResult=QString(".NET %1").arg(tr("obfuscator"));               break;
         case RECORD_TYPE_PACKER:                                sResult=tr("Packer");                                           break;
-        case RECORD_TYPE_PETOOL:                                sResult=QString("PE %1").arg(tr("tool"));                       break;
+        case RECORD_TYPE_PETOOL:                                sResult=QString("PE %1").arg(tr("Tool"));                       break;
         case RECORD_TYPE_PROTECTOR:                             sResult=tr("Protector");                                        break;
         case RECORD_TYPE_PROTECTORDATA:                         sResult=tr("Protector data");                                   break;
         case RECORD_TYPE_SFX:                                   sResult=QString("SFX");                                         break;
@@ -733,7 +733,7 @@ QString SpecAbstract::heurTypeIdToString(SpecAbstract::HEURTYPE id)
         case HEURTYPE_IMPORTHASH:                       sResult=QString("Import hash");                             break;
         case HEURTYPE_CODESECTION:                      sResult=tr("Code section");                                 break;
         case HEURTYPE_ENTRYPOINTSECTION:                sResult=tr("Entry point section");                          break;
-        case HEURTYPE_NETANSISTRING:                    sResult=QString(".NET ANSI %1").arg(tr("string"));          break;
+        case HEURTYPE_NETANSISTRING:                    sResult=QString(".NET ANSI %1").arg(tr("String"));          break;
         case HEURTYPE_RICH:                             sResult=QString("RICH");                                    break;
     }
 
