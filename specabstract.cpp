@@ -3181,62 +3181,10 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                             }
                         }
 
-                        // TODO create SpecAbstract::SIGNATURE_RECORD aray
-                        if(XBinary::compareSignatureStrings(_sSignature,"60E8000000005D81ED........B8........03C5"))
+                        if(_nOffset)
                         {
-                            _sVersion="1.00b-1.07b";
-                        }
-                        else if(XBinary::compareSignatureStrings(_sSignature,"60EB..5DEB..FF..........E9"))
-                        {
-                            _sVersion="1.08.01-1.08.02";
-                        }
-                        else if(XBinary::compareSignatureStrings(_sSignature,"60E8000000005D............BB........03DD"))
-                        {
-                            _sVersion="1.08.03";
-                        }
-                        else if(XBinary::compareSignatureStrings(_sSignature,"60E8000000005D81ed........BB........01eb"))
-                        {
-                            _sVersion="1.08.X";
-                        }
-                        else if(XBinary::compareSignatureStrings(_sSignature,"60E841060000EB41"))
-                        {
-                            _sVersion="1.08.04";
-                        }
-                        else if(XBinary::compareSignatureStrings(_sSignature,"60EB..5DFFE5E8........81ED........BB........03DD2B9D"))
-                        {
-                            _sVersion="1.08.X";
-                        }
-                        else if(XBinary::compareSignatureStrings(_sSignature,"60E870050000EB4C"))
-                        {
-                            _sVersion="2.000";
-                        }
-                        else if(XBinary::compareSignatureStrings(_sSignature,"60E872050000EB4C"))
-                        {
-                            _sVersion="2.001";
-                        }
-                        else if(XBinary::compareSignatureStrings(_sSignature,"60E872050000EB3387DB9000"))
-                        {
-                            _sVersion="2.1";
-                        }
-                        else if(XBinary::compareSignatureStrings(_sSignature,"60E93D040000"))
-                        {
-                            _sVersion="2.11";
-                        }
-                        else if(XBinary::compareSignatureStrings(_sSignature,"60E802000000EB095D5581ED39394400C3E93D040000"))
-                        {
-                            _sVersion="2.11b";
-                        }
-                        else if(XBinary::compareSignatureStrings(_sSignature,"60E802000000EB095D5581ED39394400C3E959040000"))
-                        {
-                            _sVersion="2.11c-2.11d";
-                        }
-                        else if(XBinary::compareSignatureStrings(_sSignature,"60E802000000EB095D55"))
-                        {
-                            _sVersion="2.11d";
-                        }
-                        else if(XBinary::compareSignatureStrings(_sSignature,"60E803000000E9EB045D4555C3E801"))
-                        {
-                            _sVersion="2.12-2.42";
+                            signatureScan(&(pPEInfo->mapEntryPointDetects),_sSignature,_PE_entrypoint_records,sizeof(_PE_entrypoint_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(pPEInfo->basic_info),HEURTYPE_ENTRYPOINT);
+                            signatureExpScan(&pe,&(pPEInfo->basic_info.memoryMap),&(pPEInfo->mapEntryPointDetects),pPEInfo->nEntryPointOffset+_nOffset,_PE_entrypointExp_records,sizeof(_PE_entrypointExp_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(pPEInfo->basic_info),HEURTYPE_ENTRYPOINT);
                         }
 
                         if(_nOffset>20)
@@ -3249,22 +3197,16 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                             break;
                         }
 
-                        if(_sVersion!="")
+                        if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ASPACK))
                         {
                             break;
                         }
                     }
 
-                    if(_sVersion!="")
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ASPACK))
                     {
-                        SpecAbstract::_SCANS_STRUCT recordASPack={};
-
-                        recordASPack.type=RECORD_TYPE_PACKER;
-                        recordASPack.name=RECORD_NAME_ASPACK;
-                        recordASPack.sVersion=_sVersion;
-                        //recordAndpakk.sInfo;
-
-                        pPEInfo->mapResultPackers.insert(recordASPack.name,scansToScan(&(pPEInfo->basic_info),&recordASPack));
+                        SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ASPACK);
+                        pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
                     }
                 }
 
