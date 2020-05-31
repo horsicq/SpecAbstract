@@ -16089,3 +16089,6 @@ Import hash: 177c840f4 48ffd359
 KERNEL32.dll GetProcAddress
 KERNEL32.dll LoadModule
 USER32.dll MessageBoxA
+
+Import hash: b0e1fbf
+lz32.dll 4

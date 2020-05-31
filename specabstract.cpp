@@ -2611,6 +2611,16 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
+                // Crinkler
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CRINKLER))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_CRINKLER))
+                    {
+                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_CRINKLER);
+                        pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+
                 // EZIP
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EZIP))
                 {
