@@ -6772,8 +6772,8 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
 
                 if(pe.checkOffsetSize(pPEInfo->osResourceSection)&&(pPEInfo->basic_info.bIsDeepScan))
                 {
-                    qint64 nSectionOffset=pPEInfo->listSectionHeaders.at(pPEInfo->nResourceSection).PointerToRawData+
-                            pPEInfo->listSectionHeaders.at(pPEInfo->nResourceSection).Misc.VirtualSize;
+                    qint64 nSectionOffset=  pPEInfo->listSectionHeaders.at(pPEInfo->nResourceSection).PointerToRawData+
+                                            pPEInfo->listSectionHeaders.at(pPEInfo->nResourceSection).Misc.VirtualSize;
 
                     qint64 nVersionOffset=pe.find_signature(&(pPEInfo->basic_info.memoryMap),nSectionOffset-0x600,0x600,"BD04EFFE00000100");
                     if(nVersionOffset!=-1)
