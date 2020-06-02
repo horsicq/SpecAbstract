@@ -341,6 +341,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DEPLOYMASTER:                          sResult=QString("DeployMaster");                                break;
         case RECORD_NAME_DEX:                                   sResult=QString("DEX");                                         break;
         case RECORD_NAME_DJVU:                                  sResult=QString("DjVu");                                        break;
+        case RECORD_NAME_DIET:                              	sResult=QString("DIET");                                        break;
         case RECORD_NAME_DIRTYCRYPTOR:                          sResult=QString("DirTy Cryptor");                               break;
         case RECORD_NAME_DMD32D:                                sResult=QString("DMD32 D");                                     break;
         case RECORD_NAME_DNGUARD:                               sResult=QString("DNGuard");                                     break;
