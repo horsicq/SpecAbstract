@@ -621,6 +621,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_THEBESTCRYPTORBYFSK:                   sResult=QString("The Best Cryptor [by FsK]");                   break;
         case RECORD_NAME_THEMIDAWINLICENSE:                     sResult=QString("Themida/Winlicense");                          break;
         case RECORD_NAME_THEZONECRYPTER:                        sResult=QString("The Zone Crypter");                            break;
+        case RECORD_NAME_THINSTALL:                             sResult=QString("Thinstall(VMware ThinApp)");                   break;
         case RECORD_NAME_TINYPROG:                              sResult=QString("TinyProg");                                    break;
         case RECORD_NAME_TOTALCOMMANDERINSTALLER:               sResult=QString("Total Commander Installer");                   break;
         case RECORD_NAME_TPPPACK:                               sResult=QString("TTP Pack");                                    break;
