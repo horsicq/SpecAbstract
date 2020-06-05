@@ -16092,3 +16092,7 @@ USER32.dll MessageBoxA
 
 Import hash: b0e1fbf
 lz32.dll 4
+
+Import hash: b5c121dc 4dbf4081
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll ExitProcess

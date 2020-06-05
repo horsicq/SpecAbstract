@@ -442,6 +442,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_JPEG:                                  sResult=QString("JPEG");                                        break;
         case RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER:         sResult=QString("KaOs PE-DLL eXecutable Undetecter");           break;
         case RECORD_NAME_KBYS:                                  sResult=QString("KByS");                                        break;
+        case RECORD_NAME_KCRYPTOR:                              sResult=QString("K!Cryptor");                                   break;
         case RECORD_NAME_KGBCRYPTER:                            sResult=QString("KGB Crypter");                                 break;
         case RECORD_NAME_KIAMSCRYPTOR:                          sResult=QString("KiAms Cryptor");                               break;
         case RECORD_NAME_KKRUNCHY:                              sResult=QString("kkrunchy");                                    break;
@@ -3479,6 +3480,17 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_CEXE);
 
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // K!Cryptor
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_KCRYPTOR))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_KCRYPTOR))
+                    {
+                        _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_KCRYPTOR);
+
+                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
                 }
 
                 // Crypter

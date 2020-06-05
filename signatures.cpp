@@ -429,6 +429,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_CRINKLER,                     "0.3-0.4",          ""},                    "B8........31DB43EB58"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTER,                      "3.1",              ""},                    "68FF6424F06858585858FFD4508B40F205B095F6950F850181BBFF68"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_THINSTALL,                    "2.5XX",            ""},                    "558BECB8........BB........50E800000000582D..1A0000B9..1A0000BA..1B0000BE00100000BF..530000BD..1A000003E8817500..........7504........817508........81750C........817510"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KCRYPTOR,                     "0.11",             ""},                    "558BEC83EC..53565733DB53FF15........8B3D........8945..B8........FF30BE........56E8........68........6A..E8........83C4..6A..68........5753FFD0"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _PE_entrypointExp_records[]=
@@ -449,6 +450,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypointExp_records[]=
 // TODO separate Armadillo
 SpecAbstract::CONST_RECORD _PE_importhash_records[]=
 {
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KCRYPTOR,                     "0.11",             ""},                    0x0b5c121dc,    0x4dbf4081},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_KKRUNCHY,                     "",                 ""},                    0x134c8cd1e,    0x29188619},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ANDPAKK2,                     "0.18",             ""},                    0x134c8cd1e,    0x29188619},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_WINUPACK,                     "",                 ""},                    0x134c8cd1e,    0x29188619},
