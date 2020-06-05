@@ -8087,9 +8087,16 @@ void SpecAbstract::PE_handle_DelphiCryptors(QIODevice *pDevice, bool bIsImage, S
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
-        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_DALKRYPT)) // TODO more checks!
+//        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_DALKRYPT)) // TODO more checks!
+//        {
+//            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_DALKRYPT);
+
+//            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+//        }
+
+        if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_DALKRYPT)) // TODO more checks!
         {
-            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_DALKRYPT);
+            _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_DALKRYPT);
 
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
@@ -8253,7 +8260,7 @@ void SpecAbstract::PE_handle_FixDetects(QIODevice *pDevice,bool bIsImage, SpecAb
         pPEInfo->mapResultTools.remove(RECORD_NAME_BORLANDDELPHI);
     }
 
-    if( pPEInfo->mapResultPackers.contains(RECORD_NAME_SIMPLEPACK)||
+    if( pPEInfo->mapResultPackers.contains(RECORD_NAME_SIMPLEPACK)&&
         pPEInfo->mapResultCompilers.contains(RECORD_NAME_FASM))
     {
         pPEInfo->mapResultCompilers.remove(RECORD_NAME_FASM);
