@@ -365,6 +365,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_EMPTYFILE:                             sResult=QString("Empty File");                                  break;
         case RECORD_NAME_ENCRYPTPE:                             sResult=QString("EncryptPE");                                   break;
         case RECORD_NAME_ENIGMA:                                sResult=QString("ENIGMA");                                      break;
+        case RECORD_NAME_EPEXEPACK:                             sResult=QString("!EP(EXE Pack)");                               break;
         case RECORD_NAME_EPROT:                                 sResult=QString("!EProt");                                      break;
         case RECORD_NAME_EXE32PACK:                             sResult=QString("exe32pack");                                   break;
         case RECORD_NAME_EXECRYPT:                              sResult=QString("EXECrypt");                                    break;
@@ -372,7 +373,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_EXEFOG:                                sResult=QString("ExeFog");                                      break;
         case RECORD_NAME_EXEJOINER:                             sResult=QString("ExeJoiner");                                   break;
         case RECORD_NAME_EXEMPLARINSTALLER:                     sResult=QString("Exemplar Installer");                          break;
-        case RECORD_NAME_EPEXEPACK:                             sResult=QString("!EP(EXE Pack)");                               break;
+        case RECORD_NAME_EXEPACK:                                sResult=QString("EXEPACK");                                    break;
         case RECORD_NAME_EXESAX:                                sResult=QString("ExeSax");                                      break;
         case RECORD_NAME_EXESHIELD:                             sResult=QString("Exe Shield");                                  break;
         case RECORD_NAME_EXPORT:                                sResult=QString("Export");                                      break;
