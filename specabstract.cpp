@@ -372,7 +372,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_EXEFOG:                                sResult=QString("ExeFog");                                      break;
         case RECORD_NAME_EXEJOINER:                             sResult=QString("ExeJoiner");                                   break;
         case RECORD_NAME_EXEMPLARINSTALLER:                     sResult=QString("Exemplar Installer");                          break;
-        case RECORD_NAME_EXEPACK:                               sResult=QString("!EP(EXE Pack)");                               break;
+        case RECORD_NAME_EPEXEPACK:                             sResult=QString("!EP(EXE Pack)");                               break;
         case RECORD_NAME_EXESAX:                                sResult=QString("ExeSax");                                      break;
         case RECORD_NAME_EXESHIELD:                             sResult=QString("Exe Shield");                                  break;
         case RECORD_NAME_EXPORT:                                sResult=QString("Export");                                      break;
@@ -3239,17 +3239,17 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 }
 
                 // EXE Pack
-                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_EXEPACK))
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_EPEXEPACK))
                 {
-                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EXEPACK))
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EPEXEPACK))
                     {
-                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EXEPACK);
+                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EPEXEPACK);
 
                         pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     }
-                    else if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EXEPACK))
+                    else if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EPEXEPACK))
                     {
-                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_EXEPACK);
+                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_EPEXEPACK);
 
                         pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     }
@@ -8236,7 +8236,7 @@ void SpecAbstract::PE_handle_FixDetects(QIODevice *pDevice,bool bIsImage, SpecAb
     }
 
     if( pPEInfo->mapResultPackers.contains(RECORD_NAME_AHPACKER)||
-        pPEInfo->mapResultPackers.contains(RECORD_NAME_EXEPACK))
+        pPEInfo->mapResultPackers.contains(RECORD_NAME_EPEXEPACK))
     {
         pPEInfo->mapResultPackers.remove(RECORD_NAME_AHPACKER);
     }
