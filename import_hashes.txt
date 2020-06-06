@@ -16096,3 +16096,8 @@ lz32.dll 4
 Import hash: b5c121dc 4dbf4081
 KERNEL32.dll GetModuleHandleA
 KERNEL32.dll ExitProcess
+
+Import hash: 142446410 b033da06
+KERNEL32.dll GetProcAddress
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll GetModuleHandleA

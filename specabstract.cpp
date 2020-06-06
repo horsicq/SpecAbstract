@@ -2331,6 +2331,24 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
+                // PE-Armor
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_PEARMOR))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PEARMOR))
+                    {
+                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PEARMOR);
+                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+
+                // DalCrypt
+                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_DALKRYPT)) // TODO more checks!
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_DALKRYPT);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
                 // YZPack
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_YZPACK))
                 {
@@ -8094,13 +8112,6 @@ void SpecAbstract::PE_handle_DelphiCryptors(QIODevice *pDevice, bool bIsImage, S
 
 //            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
 //        }
-
-        if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_DALKRYPT)) // TODO more checks!
-        {
-            _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_DALKRYPT);
-
-            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-        }
     }
 }
 
