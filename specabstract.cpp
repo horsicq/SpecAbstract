@@ -2122,6 +2122,14 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
             }
 
+            // PE-Quake
+            if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PEQUAKE))
+            {
+                SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PEQUAKE);
+
+                pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+            }
+
             // PECompact
             if(pPEInfo->mapImportDetects.contains(RECORD_NAME_PECOMPACT))
             {

@@ -444,9 +444,10 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypointExp_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE64,    SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "",                 ""},                    "4883EC28E8........4883C428E9$$$$$$$$488BC44889580848897010488978184C896020"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_XPACK,                        "0.97-0.98",        ""},                    "68........9C60E8$$$$$$$$E8$$$$$$$$5B5D833B00"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_XCOMP,                        "0.97-0.98",        ""},                    "68........9C60E8$$$$$$$$E8$$$$$$$$5B5D833B00"},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXPRESSOR,                    "1.6.1",            ""},                    "68########eb$$eb$$558bec83ec..535657eb$$833d..........74"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXPRESSOR,                    "1.6.1",            ""},                    "68########EB$$EB$$558BEC83EC..535657EB$$833D..........74"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASPACK,                       "2.12b",            ""},                    "60E8$$$$$$$$5D4555C3"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASPACK,                       "2.1x-2.39",        ""},                    "60E8$$$$$$$$8B2C2481ED........C3"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEQUAKE,                      "0.06",             ""},                    "E8$$$$$$$$5D81ED........8D75..56FF55..8DB5........5650FF55..8985........6A..68"},
 };
 
 // TODO separate Armadillo
