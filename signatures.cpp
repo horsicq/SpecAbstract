@@ -160,6 +160,11 @@ SpecAbstract::SIGNATURE_RECORD _COM_Exp_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SPIRIT,                       "1.5",              ""},                    "E9$$$$369F9F1C..E9$$$$E8$$$$E421F80C..E6218D06....FC505089C1FB"},
     {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SPIRIT,                       "1.5",              ""},                    "E9$$$$F8D72606B435CD2107E8$$$$1C..1C..33D226F6DA12DDFCF905....F8F5F6EA"},
     {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ICE,                          "1.0",              ""},                    "EB$$BE....8BFE8B0E....8B16....B8....50FCAD33C2AB8BD0E2"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_DIET,                         "1.00",             ""},                    "BF....3BFC72$$FDBE....B9....F3A5FC8BF7BF....ADAD8BE8B2..E9"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_DIET,                         "1.00, 1.00d",      ""},                    "BF....3BFC72$$BE....B9....FDF3A5FC8BF7BF....ADAD8BE8B2..E9"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_DIET,                         "1.02b, 1.10a",     ""},                    "......BF....B9....3BFC72$$FDF3A5FC8BF7BF....ADAD8BE8B2..E9"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_DIET,                         "1.20",             ""},                    "......BF....B9....3BFC72$$31DBEB$$FDF3A5FC8BF7BF....ADAD8BE8B2..E9"},
+    {{0, SpecAbstract::RECORD_FILETYPE_COM,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_DIET,                         "1.44-1.45",        ""},                    "F99CEB$$55061E575652515350E8$$$$59B1..D3E98CC803C18ED88EC0"},
 };
 
 // MSDOS,NE,LE,PE

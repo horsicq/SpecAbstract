@@ -8476,6 +8476,13 @@ void SpecAbstract::Binary_handle_COM(QIODevice *pDevice, bool bIsImage, SpecAbst
         SpecAbstract::_SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ICE);
         pBinaryInfo->mapResultPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
+
+    if(pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DIET))
+    {
+        pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
+        SpecAbstract::_SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_DIET);
+        pBinaryInfo->mapResultPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
 }
 
 void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
