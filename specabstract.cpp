@@ -282,6 +282,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BIOHAZARDCRYPTER:                      sResult=QString("Biohazard Crypter");                           break;
         case RECORD_NAME_BITROCKINSTALLER:                      sResult=QString("BitRock Installer");                           break;
         case RECORD_NAME_BITSHAPEPECRYPT:                       sResult=QString("BitShape PE Crypt");                           break;
+        case RECORD_NAME_BJFNT:                                 sResult=QString(".BJFnt");                                      break;
         case RECORD_NAME_BLADEJOINER:                           sResult=QString("Blade Joiner");                                break;
         case RECORD_NAME_BORLANDCCPP:                           sResult=QString("Borland C/C++");                               break;
         case RECORD_NAME_BORLANDCPP:                            sResult=QString("Borland C++");                                 break;
