@@ -8,6 +8,11 @@ SOURCES += \
     $$PWD/signatures.cpp \
     $$PWD/specabstract.cpp
 
+!contains(XCONFIG, xcom) {
+    XCONFIG += xcom
+    include($$PWD/../Formats/xcom.pri)
+}
+
 !contains(XCONFIG, xmsdos) {
     XCONFIG += xmsdos
     include($$PWD/../Formats/xmsdos.pri)
