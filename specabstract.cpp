@@ -315,6 +315,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_COFF:                                  sResult=QString("COFF");                                        break;
         case RECORD_NAME_CONFUSER:                              sResult=QString("Confuser");                                    break;
         case RECORD_NAME_CONFUSEREX:                            sResult=QString("ConfuserEx");                                  break;
+        case RECORD_NAME_COPYMINDER:                            sResult=QString("CopyMinder");                                  break;
         case RECORD_NAME_CPP:                                   sResult=QString("C++");                                         break;
         case RECORD_NAME_CREATEINSTALL:                         sResult=QString("CreateInstall");                               break;
         case RECORD_NAME_CRINKLER:                              sResult=QString("Crinkler");                                    break;
