@@ -6421,6 +6421,33 @@ LZ32.dll LZOpenFileA
 LZ32.dll LZClose
 USER32.dll MessageBoxA
 
+Import hash: c45e50e8a 55e66552
+KERNEL32.dll lstrcatA
+KERNEL32.dll LoadResource
+KERNEL32.dll SizeofResource
+KERNEL32.dll FindResourceA
+KERNEL32.dll CloseHandle
+KERNEL32.dll WriteFile
+KERNEL32.dll CreateFileA
+KERNEL32.dll GetTempFileNameA
+KERNEL32.dll DeleteFileA
+KERNEL32.dll Sleep
+KERNEL32.dll GetExitCodeProcess
+KERNEL32.dll WaitForSingleObject
+KERNEL32.dll CreateProcessA
+KERNEL32.dll GetStartupInfoA
+KERNEL32.dll LockResource
+KERNEL32.dll lstrcpyA
+KERNEL32.dll GetCommandLineA
+KERNEL32.dll FreeLibrary
+KERNEL32.dll GetProcAddress
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll GetWindowsDirectoryA
+KERNEL32.dll GetModuleFileNameA
+LZ32.dll LZCopy
+LZ32.dll LZOpenFileA
+LZ32.dll LZClose
+
 Import hash: 4c0ed4e9ea ccda289c
 KERNEL32.dll GetTickCount
 KERNEL32.dll GlobalAddAtomA
