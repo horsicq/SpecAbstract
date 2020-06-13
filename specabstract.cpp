@@ -2361,6 +2361,14 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
+                // N-Code
+                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_NCODE))
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_NCODE);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
                 // YZPack
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_YZPACK))
                 {
