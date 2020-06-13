@@ -509,6 +509,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MSYS2:                                 sResult=QString("MSYS2");                                       break;
         case RECORD_NAME_MZ0OPE:                                sResult=QString("MZ0oPE");                                      break;
         case RECORD_NAME_NAKEDPACKER:                           sResult=QString("NakedPacker");                                 break;
+        case RECORD_NAME_NCODE:                                 sResult=QString("N-Code");                                      break;
         case RECORD_NAME_NEOLITE:                               sResult=QString("NeoLite");                                     break;
         case RECORD_NAME_NIDHOGG:                               sResult=QString("Nidhogg");                                     break;
         case RECORD_NAME_NJOINER:                               sResult=QString("N-Joiner");                                    break;
