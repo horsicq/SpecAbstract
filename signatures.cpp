@@ -233,7 +233,6 @@ SpecAbstract::SIGNATURE_RECORD _PE_header_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_WATCOMLINKER,                 "",                 "Win95/exe"},           "'MZ'80000100000004000000FFFF0000B800000000000000400000000000000000000000000000000000000000000000000000000000000000000000700000000E1FBA0E00B409CD21B8014CCD21'This is a Windows 95 executable\r\n'24"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_STUB,             SpecAbstract::RECORD_NAME_VALVE,                        "",                 ""},                    "'MZ'............................................................................................................................'VLV'"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_UNILINK,                      "",                 ""},                    "'MZ'....................................................'UniLink!'"},
-
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_CRINKLER,                     "",                 ""},                    "'MZ'B80000420031DB43EB58'PE'0000"},
 };
 

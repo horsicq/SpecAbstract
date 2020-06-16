@@ -29,6 +29,7 @@ SpecAbstract::SpecAbstract(QObject *parent)
 
 void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, bool bInit)
 {
+    // TODO forced file type
     QElapsedTimer scanTimer;
 
     if(bInit)
@@ -49,7 +50,6 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
         if(stTypes.contains(XBinary::FT_PE32)||stTypes.contains(XBinary::FT_PE64))
         {
-            // TODO PE-MSDOS
             SpecAbstract::PEINFO_STRUCT pe_info=SpecAbstract::getPEInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(pe_info.basic_info.listDetects);
