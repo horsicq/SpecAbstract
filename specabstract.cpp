@@ -596,6 +596,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_RTF:                                   sResult=QString("Rich Text Format");                            break;
         case RECORD_NAME_RUBY:                                  sResult=QString("Ruby");                                        break;
         case RECORD_NAME_SAFEENGINESHIELDEN:                    sResult=QString("Safengine Shielden");                          break;
+        case RECORD_NAME_SCOBFUSCATOR:                          sResult=QString("SC Obfuscator");                               break;
         case RECORD_NAME_SCPACK:                                sResult=QString("SC Pack");                                     break;
         case RECORD_NAME_SCRNCH:                                sResult=QString("SCRNCH");                                      break;
         case RECORD_NAME_SDPROTECTORPRO:                        sResult=QString("SDProtector Pro");                             break;
