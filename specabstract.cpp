@@ -553,6 +553,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PESHIELD:                              sResult=QString("PE-SHiELD");                                   break;
         case RECORD_NAME_PESPIN:                                sResult=QString("PESpin");                                      break;
         case RECORD_NAME_PETITE:                                sResult=QString("Petite");                                      break;
+        case RECORD_NAME_PETITE_KERNEL32:                       sResult=QString("Petite.kernel32");                             break;
+        case RECORD_NAME_PETITE_USER32:                         sResult=QString("Petite.user32");                               break;
         case RECORD_NAME_PEX:                                   sResult=QString("PeX");                                         break;
         case RECORD_NAME_PFECX:                                 sResult=QString("PFE CX");                                      break;
         case RECORD_NAME_PGMPAK:                                sResult=QString("PGMPAK");                                      break;
