@@ -456,6 +456,9 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypointExp_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASPACK,                       "2.12b",            ""},                    "60E8$$$$$$$$5D4555C3"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASPACK,                       "2.1x-2.39",        ""},                    "60E8$$$$$$$$8B2C2481ED........C3"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEQUAKE,                      "0.06",             ""},                    "E8$$$$$$$$5D81ED........8D75..56FF55..8DB5........5650FF55..8985........6A..68"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MORPHNAH,                     "1.0.2",            ""},                    "60E8$$$$$$$$5D81ED........8BBD........8B8D........B8........01E88030..83F9..74..817F..........75..8B57"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MORPHNAH,                     "1.0.3",            ""},                    "60E8$$$$$$$$5D81ED........31C04083F0..403D........75..BE........EB..EB..8B85........83F8..75..31C001EE3D"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MORPHNAH,                     "1.0.7",            ""},                    "558BEC87E55DE9$$$$$$$$558BEC83EC..5356576064A1........8B40..8945..64A1........C740"},
 };
 
 // TODO separate Armadillo
