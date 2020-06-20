@@ -7044,6 +7044,15 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
+            // Spoon Studio
+            if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Spoon Studio"))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_SPOONSTUDIO,"","",0);
+                ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion.replace(", ",".");
+                pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+
             if(pPEInfo->sResourceManifest.contains("DeployMaster Installer"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_DEPLOYMASTER,"","",0);
