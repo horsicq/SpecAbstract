@@ -620,6 +620,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SPICESNET:                             sResult=QString("Spices.Net");                                  break;
         case RECORD_NAME_SPIRIT:                                sResult=QString("$pirit");                                      break;
         case RECORD_NAME_SPOONINSTALLER:                        sResult=QString("Spoon Installer");                             break;
+        case RECORD_NAME_SPOONSTUDIO:                           sResult=QString("Spoon Studio");                                break;
         case RECORD_NAME_SQUEEZSFX:                             sResult=QString("Squeez Self Extractor");                       break;
         case RECORD_NAME_STARFORCE:                             sResult=QString("StarForce");                                   break;
         case RECORD_NAME_STASFODIDOCRYPTOR:                     sResult=QString("StasFodidoCryptor");                           break;
