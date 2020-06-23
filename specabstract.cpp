@@ -537,6 +537,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PANDORA:                               sResult=QString("Pandora");                                     break;
         case RECORD_NAME_PCGUARD:                               sResult=QString("PC Guard");                                    break;
         case RECORD_NAME_PCOM:                                  sResult=QString("PCOM");                                        break;
+        case RECORD_NAME_PCSHRINK:                              sResult=QString("PCShrink");                                    break;
         case RECORD_NAME_PDB:                                   sResult=QString("PDB");                                         break;
         case RECORD_NAME_PDBFILELINK:                           sResult=QString("PDB file link");                               break;
         case RECORD_NAME_PDF:                                   sResult=QString("PDF");                                         break;
