@@ -2391,6 +2391,16 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
+                // PCShrink
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_PCSHRINK))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PCSHRINK))
+                    {
+                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PCSHRINK);
+                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+
                 // YZPack
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_YZPACK))
                 {
