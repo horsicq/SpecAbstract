@@ -576,6 +576,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEARMOR,                      "0.7X",             ""},                    0x142446410,    0xb033da06},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MORPHNAH,                     "1.0.7",            ""},                    0x15a6ef8c3,    0x3434f1fd},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PCSHRINK,                     "0.71",             ""},                    0x186ad3682,    0xbea416d1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEDIMINISHER,                 "0.1",             ""},                     0x142446410,    0xbac6c7d8},
     // VB cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 ""},                    0x608b5ca5f,    0x27f8d01f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 ""},                    0x21bae50da1,   0xab934456},

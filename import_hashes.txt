@@ -16133,3 +16133,8 @@ Import hash: 15a6ef8c3 3434f1fd
 KERNEL32 GetProcAddress
 KERNEL32 LoadLibraryA
 KERNEL32 VirtualProtect
+
+Import hash: 142446410 bac6c7d8
+KERNEL32.dll GetProcAddress
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll LoadLibraryA
