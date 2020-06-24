@@ -426,6 +426,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NCODE,                        "0.2",              ""},                    "9066BE....6683FE..74..66B8....66BE....6683FE..74..6683E8..66BB....6683C3..66436681FB....74..6683F8"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SCOBFUSCATOR,                 "",                 ""},                    "6033C98B1D........031D........8A041984C074..3C..74..34..880419413B0D........75..A1........0105........61FF25"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PCSHRINK,                     "0.71",             ""},                    "9C60BD........01AD........FF..........6A..FF..........50502D........89..........5F8D"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEDIMINISHER,                 "0.1",              ""},                    "535152565755E8000000005D8BD581ED........2B95........81EA0B0000008995........80BD"},
 
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FAKESIGNATURE,                "",                 "ASPacker 2.12"},       "60E803000000E9EB045D4555C3E801"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FAKESIGNATURE,                "",                 "BJFNT 1.3"},           "EB033A4D3A1EEB02CD209CEB02CD20EB02CD2060"},
@@ -576,7 +577,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEARMOR,                      "0.7X",             ""},                    0x142446410,    0xb033da06},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MORPHNAH,                     "1.0.7",            ""},                    0x15a6ef8c3,    0x3434f1fd},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PCSHRINK,                     "0.71",             ""},                    0x186ad3682,    0xbea416d1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEDIMINISHER,                 "0.1",             ""},                     0x142446410,    0xbac6c7d8},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEDIMINISHER,                 "0.1",              ""},                    0x142446410,    0xbac6c7d8},
     // VB cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 ""},                    0x608b5ca5f,    0x27f8d01f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 ""},                    0x21bae50da1,   0xab934456},
