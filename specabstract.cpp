@@ -545,6 +545,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PEBUNDLE:                              sResult=QString("PEBundle");                                    break;
         case RECORD_NAME_PECRYPT32:                             sResult=QString("PECRYPT32");                                   break;
         case RECORD_NAME_PECOMPACT:                             sResult=QString("PECompact");                                   break;
+        case RECORD_NAME_PEDIMINISHER:                          sResult=QString("PE Diminisher");                               break;
         case RECORD_NAME_PEENCRYPT:                             sResult=QString("PE Encrypt");                                  break;
         case RECORD_NAME_PELOCK:                                sResult=QString("PELock");                                      break;
         case RECORD_NAME_PEPACK:                                sResult=QString("PE-PACK");                                     break;
