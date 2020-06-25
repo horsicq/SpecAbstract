@@ -452,6 +452,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_KRATOSCRYPTER:                         sResult=QString("Kratos Crypter");                              break;
         case RECORD_NAME_KRYPTON:                               sResult=QString("Krypton");                                     break;
         case RECORD_NAME_KUR0KX2TO:                             sResult=QString("Kur0k.X2.to");                                 break;
+        case RECORD_NAME_LAMECRYPT:                             sResult=QString("LameCrypt");                                   break;
         case RECORD_NAME_LARP64:                                sResult=QString("lARP64");                                      break;
         case RECORD_NAME_LAYHEYFORTRAN90:                       sResult=QString("Lahey Fortran 90");                            break;
         case RECORD_NAME_LAZARUS:                               sResult=QString("Lazarus");                                     break;
