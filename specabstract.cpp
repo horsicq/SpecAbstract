@@ -2092,7 +2092,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_UPX))
                 {
-                    if((viUPX.sVersion!="")) // TODO isValid
+                    if((viUPX.bIsValid))
                     {
                         SpecAbstract::_SCANS_STRUCT recordUPX={};
 
