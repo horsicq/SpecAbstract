@@ -8302,6 +8302,39 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,
                 }
             }
         }
+
+        if((!pPEInfo->mapResultPackers.contains(RECORD_NAME_UPX))&&(!pPEInfo->mapResultPackers.contains(RECORD_NAME_UNK_UPXLIKE)))
+        {
+            VI_STRUCT viUPX=get_UPX_vi(pDevice,bIsImage,pPEInfo->osHeader.nOffset,pPEInfo->osHeader.nSize);
+
+            if((viUPX.bIsValid))
+            {
+                SpecAbstract::_SCANS_STRUCT recordSS={};
+
+                recordSS.type=RECORD_TYPE_PACKER;
+                recordSS.name=RECORD_NAME_UPX;
+                recordSS.sVersion=viUPX.sVersion;
+                recordSS.sInfo=viUPX.sInfo;
+                recordSS.bIsHeuristic=true;
+
+                pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+            }
+        }
+
+        if(!pPEInfo->mapResultPackers.contains(RECORD_NAME_ASPACK))
+        {
+            if(XPE::isSectionNamePresent(".aspack",&(pPEInfo->listSectionHeaders))&&XPE::isSectionNamePresent(".adata",&(pPEInfo->listSectionHeaders)))
+            {
+                SpecAbstract::_SCANS_STRUCT recordSS={};
+
+                recordSS.type=RECORD_TYPE_PACKER;
+                recordSS.name=RECORD_NAME_ASPACK;
+                recordSS.sVersion="2.12-2.XX";
+                recordSS.bIsHeuristic=true;
+
+                pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+            }
+        }
     }
 }
 
