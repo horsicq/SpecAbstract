@@ -16138,3 +16138,26 @@ Import hash: 142446410 bac6c7d8
 KERNEL32.dll GetProcAddress
 KERNEL32.dll GetModuleHandleA
 KERNEL32.dll LoadLibraryA
+
+Import hash: 9f62dc5b3 1c8c807a
+ADVAPI32.DLL ReportEventA
+ADVAPI32.DLL RegisterEventSourceA
+ADVAPI32.DLL RegSetValueExA
+ADVAPI32.DLL RegCreateKeyExA
+ADVAPI32.DLL RegCloseKey
+ADVAPI32.DLL DeregisterEventSource
+KERNEL32.DLL WriteFile
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL HeapFree
+KERNEL32.DLL HeapAlloc
+KERNEL32.DLL GetStdHandle
+KERNEL32.DLL GetProcessHeap
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL GetModuleHandleA
+KERNEL32.DLL GetModuleFileNameA
+KERNEL32.DLL GetEnvironmentVariableA
+KERNEL32.DLL FindFirstFileA
+KERNEL32.DLL FindClose
+KERNEL32.DLL ExitProcess
+KERNEL32.DLL DisableThreadLibraryCalls
+USER32.DLL OemToCharA
