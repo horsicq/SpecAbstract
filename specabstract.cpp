@@ -369,13 +369,14 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ENIGMA:                                sResult=QString("ENIGMA");                                      break;
         case RECORD_NAME_EPEXEPACK:                             sResult=QString("!EP(EXE Pack)");                               break;
         case RECORD_NAME_EPROT:                                 sResult=QString("!EProt");                                      break;
+        case RECORD_NAME_EXCELSIORJET:                          sResult=QString("Excelsior JET");                               break;
         case RECORD_NAME_EXE32PACK:                             sResult=QString("exe32pack");                                   break;
         case RECORD_NAME_EXECRYPT:                              sResult=QString("EXECrypt");                                    break;
         case RECORD_NAME_EXECRYPTOR:                            sResult=QString("EXECryptor");                                  break;
         case RECORD_NAME_EXEFOG:                                sResult=QString("ExeFog");                                      break;
         case RECORD_NAME_EXEJOINER:                             sResult=QString("ExeJoiner");                                   break;
         case RECORD_NAME_EXEMPLARINSTALLER:                     sResult=QString("Exemplar Installer");                          break;
-        case RECORD_NAME_EXEPACK:                                sResult=QString("EXEPACK");                                    break;
+        case RECORD_NAME_EXEPACK:                               sResult=QString("EXEPACK");                                     break;
         case RECORD_NAME_EXESAX:                                sResult=QString("ExeSax");                                      break;
         case RECORD_NAME_EXESHIELD:                             sResult=QString("Exe Shield");                                  break;
         case RECORD_NAME_EXPORT:                                sResult=QString("Export");                                      break;
@@ -387,7 +388,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_FASTFILECRYPT:                         sResult=QString("Fast File Crypt");                             break;
         case RECORD_NAME_FEARZCRYPTER:                          sResult=QString("fEaRz Crypter");                               break;
         case RECORD_NAME_FEARZPACKER:                           sResult=QString("fEaRz Packer");                                break;
-        case RECORD_NAME_FILESHIELD:                            sResult=QString("FileShield");                                   break;
+        case RECORD_NAME_FILESHIELD:                            sResult=QString("FileShield");                                  break;
         case RECORD_NAME_FISHNET:                               sResult=QString("FISH .NET");                                   break;
         case RECORD_NAME_FISHPEPACKER:                          sResult=QString("Fish PE Packer");                              break;
         case RECORD_NAME_FISHPESHIELD:                          sResult=QString("Fish PE Shield");                              break;
@@ -5955,6 +5956,16 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
     if(pe.isValid())
     {
+        if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EXCELSIORJET))
+        {
+            _SCANS_STRUCT ssLibrary=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_JAVA,"1.X","Native",0);
+            pPEInfo->mapResultLibraries.insert(ssLibrary.name,scansToScan(&(pPEInfo->basic_info),&ssLibrary));
+
+            // TODO Version
+            _SCANS_STRUCT ssCompiler=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_COMPILER,RECORD_NAME_EXCELSIORJET,"","",0); // mb Tool
+            pPEInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pPEInfo->basic_info),&ssCompiler));
+        }
+
         if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_GO)||pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_GO))
         {
             _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_COMPILER,RECORD_NAME_GO,"1.X","",0);
