@@ -5958,7 +5958,8 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
     {
         if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EXCELSIORJET))
         {
-            _SCANS_STRUCT ssLibrary=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_JAVA,"1.X","Native",0);
+            // TODO Version
+            _SCANS_STRUCT ssLibrary=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_JAVA,"","Native",0);
             pPEInfo->mapResultLibraries.insert(ssLibrary.name,scansToScan(&(pPEInfo->basic_info),&ssLibrary));
 
             // TODO Version
