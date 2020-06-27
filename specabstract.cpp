@@ -2462,6 +2462,32 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
+                if(!pPEInfo->mapResultProtectors.contains(RECORD_NAME_ZPROTECT))
+                {
+                    if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_NOSTUBLINKER))
+                    {
+                        if(pPEInfo->listSectionRecords.count()>=2)
+                        {
+                            if( (pPEInfo->listSectionHeaders.at(0).PointerToRawData==0)&&
+                                (pPEInfo->listSectionHeaders.at(0).SizeOfRawData==0)&&
+                                (pPEInfo->listSectionHeaders.at(0).Characteristics==0xe00000a0))
+                            {
+                                qint64 nOffset=pPEInfo->listSectionRecords.at(1).nOffset;
+                                qint64 nSize=qMin(pPEInfo->listSectionRecords.at(1).nSize,(qint64)0x100);
+
+                                bool bDetect1=pe.isSignaturePresent(&(pPEInfo->basic_info.memoryMap),nOffset,nSize,"'PE'");
+                                bool bDetect2=(pPEInfo->listSectionNames.at(0)==".textbss");
+
+                                if(bDetect1||bDetect2)
+                                {
+                                    SpecAbstract::_SCANS_STRUCT recordZProtect=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_ZPROTECT,"1.XX","",0);
+                                    pPEInfo->mapResultProtectors.insert(recordZProtect.name,scansToScan(&(pPEInfo->basic_info),&recordZProtect));
+                                }
+                            }
+                        }
+                    }
+                }
+
                 // ExeFog
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_EXEFOG))
                 {
