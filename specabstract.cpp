@@ -3765,13 +3765,17 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
             {
                 if(pPEInfo->nEntryPointSection>=3)
                 {
+                    bSuccess=true;
+
                     for(int i=0; i<pPEInfo->listSectionHeaders.count(); i++)
                     {
                         if( (i==pPEInfo->nEntryPointSection)||
                             (i==pPEInfo->nResourceSection)||
                             (i==pPEInfo->nTLSSection)||
                             (i==pPEInfo->nRelocsSection)||
-                            (QString((char *)pPEInfo->listSectionHeaders.at(i).Name)==".tls")
+                            (QString((char *)pPEInfo->listSectionHeaders.at(i).Name)==".INIT")||
+                            (QString((char *)pPEInfo->listSectionHeaders.at(i).Name)==".tls")||
+                            (QString((char *)pPEInfo->listSectionHeaders.at(i).Name).contains("0"))
                           )
                         {
                             continue;
@@ -3790,7 +3794,8 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
             {
                 if( pe.compareEntryPoint("68........E8")||
                     pe.compareEntryPoint("68........E9")||
-                    pe.compareEntryPoint("EB$$E9$$$$$$$$68........E8"))
+                    pe.compareEntryPoint("EB$$E9$$$$$$$$68........E8")||
+                    pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_VMPROTECT))
                 {
                     // TODO more checks
                     SpecAbstract::_SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_VMPROTECT,"","",0);
