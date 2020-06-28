@@ -3759,7 +3759,7 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
             // Import
             if(!bSuccess)
             {
-                bSuccess=XPE::isSectionNamePresent(".vmp0",&(pPEInfo->listSectionHeaders));
+                bSuccess=pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_VMPROTECT);
             }
 
             if(!bSuccess)
