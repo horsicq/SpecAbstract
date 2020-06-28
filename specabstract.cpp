@@ -3708,6 +3708,7 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
 
             int nImportCount=pPEInfo->listImports.count();
 
+            // TODO Check!
             if(nImportCount>=2)
             {
                 if(pPEInfo->listImports.at(nImportCount-2).sName.toUpper()=="KERNEL32.DLL")
