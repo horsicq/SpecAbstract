@@ -2473,11 +2473,8 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                                 (pPEInfo->listSectionHeaders.at(0).SizeOfRawData==0)&&
                                 (pPEInfo->listSectionHeaders.at(0).Characteristics==0xe00000a0))
                             {
-                                qint64 nOffset=pPEInfo->listSectionRecords.at(1).nOffset;
-                                qint64 nSize=qMin(pPEInfo->listSectionRecords.at(1).nSize,(qint64)0x100);
-
-                                bool bDetect1=pe.isSignaturePresent(&(pPEInfo->basic_info.memoryMap),nOffset,nSize,"'PE'");
-                                bool bDetect2=(pPEInfo->listSectionNames.at(0)==".textbss");
+                                bool bDetect1=(pPEInfo->nEntryPointSection==1);
+                                bool bDetect2=(pe.getEntropy(pPEInfo->listSectionRecords.at(2).nOffset,pPEInfo->listSectionRecords.at(2).nSize)>7.6);
 
                                 if(bDetect1||bDetect2)
                                 {
