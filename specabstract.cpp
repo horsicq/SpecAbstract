@@ -2453,7 +2453,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     {
                         if(pPEInfo->listSectionRecords.count()>=2)
                         {
-                            // TODO new versions
                             if(pe.compareSignature(&(pPEInfo->basic_info.memoryMap),"'kernel32.dll'00000000'VirtualAlloc'00000000",pPEInfo->listSectionRecords.at(1).nOffset))
                             {
                                 SpecAbstract::_SCANS_STRUCT recordZProtect=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_ZPROTECT,"1.3-1.4.4","",0);
