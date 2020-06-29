@@ -8323,6 +8323,24 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,
                 pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
             }
         }
+
+        if(!pPEInfo->mapResultPackers.contains(RECORD_NAME_PECOMPACT))
+        {
+            VI_STRUCT viPECompact=PE_get_PECompact_vi(pDevice,bIsImage,pPEInfo);
+
+            if(viPECompact.bIsValid)
+            {
+                SpecAbstract::_SCANS_STRUCT recordSS={};
+
+                recordSS.type=RECORD_TYPE_PACKER;
+                recordSS.name=RECORD_NAME_PECOMPACT;
+                recordSS.sVersion=viPECompact.sVersion;
+                recordSS.sInfo=viPECompact.sInfo;
+                recordSS.bIsHeuristic=true;
+
+                pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+            }
+        }
     }
 }
 
