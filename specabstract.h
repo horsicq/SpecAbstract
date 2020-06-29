@@ -1154,6 +1154,8 @@ public:
 
     static bool PE_isValid_UPX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 
+    static VI_STRUCT PE_get_PECompact_vi(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+
     static QList<VCL_STRUCT> PE_getVCLstruct(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,bool bIs64);
     static VCL_PACKAGEINFO PE_getVCLPackageInfo(QIODevice *pDevice,bool bIsImage,QList<XPE::RESOURCE_RECORD> *pListResources);
     static SpecAbstract::_SCANS_STRUCT PE_getRichSignatureDescription(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo,quint32 nRichID);

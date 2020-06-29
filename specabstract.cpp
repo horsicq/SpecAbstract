@@ -2166,67 +2166,14 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 }
                 else
                 {
-                    if(pPEInfo->listSectionHeaders.count()>=2)
+                    VI_STRUCT viPECompact=PE_get_PECompact_vi(pDevice,bIsImage,pPEInfo);
+
+                    if(viPECompact.bIsValid)
                     {
-                        if(pPEInfo->listSectionHeaders.at(0).PointerToRelocations==0x32434550)
-                        {
-                            quint32 nBuildNumber=pPEInfo->listSectionHeaders.at(0).PointerToLinenumbers;
+                        recordPC.sVersion=viPECompact.sVersion;
+                        recordPC.sInfo=viPECompact.sInfo;
 
-                            // TODO !!! more build versions
-                            switch(nBuildNumber)
-                            {
-                                case 20206:     recordPC.sVersion="2.70";       break;
-                                case 20240:     recordPC.sVersion="2.78a";      break;
-                                case 20243:     recordPC.sVersion="2.79b1";     break;
-                                case 20245:     recordPC.sVersion="2.79bB";     break;
-                                case 20247:     recordPC.sVersion="2.79bD";     break;
-                                case 20252:     recordPC.sVersion="2.80b1";     break;
-                                case 20256:     recordPC.sVersion="2.80b5";     break;
-                                case 20261:     recordPC.sVersion="2.82";       break;
-                                case 20285:     recordPC.sVersion="2.92.0";     break;
-                                case 20288:     recordPC.sVersion="2.93b3";     break;
-                                case 20294:     recordPC.sVersion="2.96.2";     break;
-                                case 20295:     recordPC.sVersion="2.97b1";     break;
-                                case 20296:     recordPC.sVersion="2.98";       break;
-                                case 20300:     recordPC.sVersion="2.98.04";    break;
-                                case 20301:     recordPC.sVersion="2.98.05";    break;
-                                case 20302:     recordPC.sVersion="2.98.06";    break;
-                                case 20303:     recordPC.sVersion="2.99b";      break;
-                                case 20308:     recordPC.sVersion="3.00.2";     break;
-                                case 20312:     recordPC.sVersion="3.01.3";     break;
-                                case 20317:     recordPC.sVersion="3.02.1";     break;
-                                case 20318:     recordPC.sVersion="3.02.2";     break;
-                                case 20323:     recordPC.sVersion="3.03.5b";    break;
-                                case 20327:     recordPC.sVersion="3.03.9b";    break;
-                                case 20329:     recordPC.sVersion="3.03.10b";   break;
-                                case 20334:     recordPC.sVersion="3.03.12b";   break;
-                                case 20342:     recordPC.sVersion="3.03.18b";   break;
-                                case 20343:     recordPC.sVersion="3.03.19b";   break;
-                                case 20344:     recordPC.sVersion="3.03.20b";   break;
-                                case 20345:     recordPC.sVersion="3.03.21b";   break;
-                                case 20348:     recordPC.sVersion="3.03.23b";   break;
-                                default:
-                                {
-                                    if(nBuildNumber>20308)
-                                    {
-                                        recordPC.sVersion=QString("3.X(build %1)").arg(nBuildNumber);
-                                    }
-                                    else if(nBuildNumber==0)
-                                    {
-                                        recordPC.sVersion="2.20-2.68";
-                                    }
-                                    else
-                                    {
-                                        recordPC.sVersion=QString("2.X(build %1)").arg(nBuildNumber);
-                                    }
-                                }
-                            }
-
-                            //                            qDebug("nVersion: %d",nVersion);
-
-                            // TODO more versions
-                            pPEInfo->mapResultPackers.insert(recordPC.name,scansToScan(&(pPEInfo->basic_info),&recordPC));
-                        }
+                        pPEInfo->mapResultPackers.insert(recordPC.name,scansToScan(&(pPEInfo->basic_info),&recordPC));
                     }
                 }
             }
@@ -10619,7 +10566,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi2(QIODevice *pDevice,bool bIsIma
 
 SpecAbstract::VI_STRUCT SpecAbstract::get_WindowsInstaller_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
 {
-    VI_STRUCT result;
+    VI_STRUCT result={};
 
     XBinary binary(pDevice,bIsImage);
 
@@ -10649,7 +10596,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_WindowsInstaller_vi(QIODevice *pDevice
 
 SpecAbstract::VI_STRUCT SpecAbstract::get_TurboLinker_vi(QIODevice *pDevice, bool bIsImage)
 {
-    VI_STRUCT result;
+    VI_STRUCT result={};
 
     XBinary binary(pDevice,bIsImage);
 
@@ -10680,6 +10627,75 @@ bool SpecAbstract::PE_isValid_UPX(QIODevice *pDevice,bool bIsImage, SpecAbstract
     }
 
     return bResult;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::PE_get_PECompact_vi(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    VI_STRUCT result={};
+
+    if(pPEInfo->listSectionHeaders.count()>=2)
+    {
+        if(pPEInfo->listSectionHeaders.at(0).PointerToRelocations==0x32434550)
+        {
+            result.bIsValid=true;
+
+            quint32 nBuildNumber=pPEInfo->listSectionHeaders.at(0).PointerToLinenumbers;
+
+            // TODO !!! more build versions
+            switch(nBuildNumber)
+            {
+                case 20206:     result.sVersion="2.70";       break;
+                case 20240:     result.sVersion="2.78a";      break;
+                case 20243:     result.sVersion="2.79b1";     break;
+                case 20245:     result.sVersion="2.79bB";     break;
+                case 20247:     result.sVersion="2.79bD";     break;
+                case 20252:     result.sVersion="2.80b1";     break;
+                case 20256:     result.sVersion="2.80b5";     break;
+                case 20261:     result.sVersion="2.82";       break;
+                case 20285:     result.sVersion="2.92.0";     break;
+                case 20288:     result.sVersion="2.93b3";     break;
+                case 20294:     result.sVersion="2.96.2";     break;
+                case 20295:     result.sVersion="2.97b1";     break;
+                case 20296:     result.sVersion="2.98";       break;
+                case 20300:     result.sVersion="2.98.04";    break;
+                case 20301:     result.sVersion="2.98.05";    break;
+                case 20302:     result.sVersion="2.98.06";    break;
+                case 20303:     result.sVersion="2.99b";      break;
+                case 20308:     result.sVersion="3.00.2";     break;
+                case 20312:     result.sVersion="3.01.3";     break;
+                case 20317:     result.sVersion="3.02.1";     break;
+                case 20318:     result.sVersion="3.02.2";     break;
+                case 20323:     result.sVersion="3.03.5b";    break;
+                case 20327:     result.sVersion="3.03.9b";    break;
+                case 20329:     result.sVersion="3.03.10b";   break;
+                case 20334:     result.sVersion="3.03.12b";   break;
+                case 20342:     result.sVersion="3.03.18b";   break;
+                case 20343:     result.sVersion="3.03.19b";   break;
+                case 20344:     result.sVersion="3.03.20b";   break;
+                case 20345:     result.sVersion="3.03.21b";   break;
+                case 20348:     result.sVersion="3.03.23b";   break;
+                default:
+                {
+                    if(nBuildNumber>20308)
+                    {
+                        result.sVersion=QString("3.X(build %1)").arg(nBuildNumber);
+                    }
+                    else if(nBuildNumber==0)
+                    {
+                        result.sVersion="2.20-2.68";
+                    }
+                    else
+                    {
+                        result.sVersion=QString("2.X(build %1)").arg(nBuildNumber);
+                    }
+                }
+            }
+
+            //                            qDebug("nVersion: %d",nVersion);
+        }
+    }
+
+    return result;
 }
 
 SpecAbstract::SCAN_STRUCT SpecAbstract::scansToScan(SpecAbstract::BASIC_INFO *pBasicInfo, SpecAbstract::_SCANS_STRUCT *pScansStruct)
