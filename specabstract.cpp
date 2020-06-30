@@ -955,6 +955,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_DeepSea_vi(QIODevice *pDevice, bool bI
 
     if(_nOffset!=-1)
     {
+        // TODO Check
         result.bIsValid=true;
         result.sVersion="4.X";
 
