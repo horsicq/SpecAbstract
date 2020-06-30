@@ -63,7 +63,9 @@ public:
 //        RECORD_FILETYPE_JAR,
         RECORD_FILETYPE_APK
         // TODO ARCHIVE
+        // TODO DEX
     };
+
     enum RECORD_FILEPART
     {
         RECORD_FILEPART_UNKNOWN=0,
@@ -71,6 +73,7 @@ public:
         RECORD_FILEPART_OVERLAY,
         RECORD_FILEPART_ARCHIVERECORD
     };
+
     enum RECORD_TYPE
     {
         RECORD_TYPE_UNKNOWN=0,
@@ -103,6 +106,7 @@ public:
         RECORD_TYPE_STUB,
         RECORD_TYPE_TOOL
     };
+
     enum RECORD_NAME
     {
         RECORD_NAME_UNKNOWN=0,
