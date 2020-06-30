@@ -408,6 +408,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_GNULINKER:                             sResult=QString("GNU ld");                                      break;
         case RECORD_NAME_GO:                                    sResult=QString("Go");                                          break;
         case RECORD_NAME_GOASM:                                 sResult=QString("GoAsm");                                       break;
+        case RECORD_NAME_GOATSPEMUTILATOR:                      sResult=QString("Goat's PE Mutilator");                         break;
         case RECORD_NAME_GOLIATHNET:                            sResult=QString("Goliath .NET");                                break;
         case RECORD_NAME_GOLINK:                                sResult=QString("GoLink");                                      break;
         case RECORD_NAME_GOOGLE:                                sResult=QString("Google");                                      break;
