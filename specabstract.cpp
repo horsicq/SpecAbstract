@@ -884,6 +884,7 @@ QString SpecAbstract::createTypeString(const SpecAbstract::SCAN_STRUCT *pScanStr
 SpecAbstract::SCAN_STRUCT SpecAbstract::createHeaderScanStruct(const SpecAbstract::SCAN_STRUCT *pScanStruct)
 {
     SCAN_STRUCT result=*pScanStruct;
+
     result.id.uuid=QUuid::createUuid();
     result.type=RECORD_TYPE_GENERIC;
     result.name=RECORD_NAME_GENERIC;
