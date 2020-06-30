@@ -16161,3 +16161,36 @@ KERNEL32.DLL FindClose
 KERNEL32.DLL ExitProcess
 KERNEL32.DLL DisableThreadLibraryCalls
 USER32.DLL OemToCharA
+
+Import hash: 31e74a003 8f480699
+KERNEL32.DLL GetModuleHandleA
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL ExitProcess
+KERNEL32.DLL VirtualAlloc
+USER32.DLL MessageBoxA
+
+Import hash: 4c2802b46 a18f1089
+KERNEL32.DLL GetModuleHandleA
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL ExitProcess
+KERNEL32.DLL VirtualAlloc
+KERNEL32.DLL GetVersionExA
+USER32.DLL MessageBoxA
+SHELL32.DLL ShellExecuteA
+
+Import hash: 5a169c7a
+KERNEL32.DLL GetModuleHandleA
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL ExitProcess
+KERNEL32.DLL VirtualAlloc
+KERNEL32.DLL GetVersionExA
+
+Import hash: 5aa42950
+KERNEL32.DLL GetModuleHandleA
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL ExitProcess
+KERNEL32.DLL VirtualAlloc

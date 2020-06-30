@@ -768,6 +768,8 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENIGMA,                       "1.00-3.60",        ""},                    0,              0x45d48065},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENIGMA,                       "3.70+",            ""},                    0,              0x756476d1},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_CRINKLER,                     "",                 ""},                    0,              0x0b0e1fbf},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PCGUARD,                      "5.04-5.05",        ""},                    0,              0x5a169c7a}, // TODO Check version
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PCGUARD,                      "5.04-5.05",        ""},                    0,              0x5aa42950}, // TODO Check version
 };
 
 SpecAbstract::MSRICH_RECORD _MS_rich_records[]=
