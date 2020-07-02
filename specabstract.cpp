@@ -629,6 +629,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SQUEEZSFX:                             sResult=QString("Squeez Self Extractor");                       break;
         case RECORD_NAME_STARFORCE:                             sResult=QString("StarForce");                                   break;
         case RECORD_NAME_STASFODIDOCRYPTOR:                     sResult=QString("StasFodidoCryptor");                           break;
+        case RECORD_NAME_STONESPEENCRYPTOR:                     sResult=QString("Stone's PE Encryptor");                        break;
         case RECORD_NAME_SVKPROTECTOR:                          sResult=QString("SVK Protector");                               break;
         case RECORD_NAME_SWF:                                   sResult=QString("SWF");                                         break;
         case RECORD_NAME_TARMAINSTALLER:                        sResult=QString("Tarma Installer");                             break;
