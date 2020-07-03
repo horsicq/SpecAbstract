@@ -836,7 +836,6 @@ public:
     {
         BASIC_INFO basic_info;
         QString sEntryPointSignature;
-        // TODO
         bool bIs64;
         bool bIsBigEndian;
         QList<XMACH::COMMAND_RECORD> listCommandRecords;
