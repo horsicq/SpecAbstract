@@ -710,6 +710,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_XENOCODEPOSTBUILD2009:                 sResult=QString("Xenocode Postbuild 2009");                     break;
         case RECORD_NAME_XENOCODEPOSTBUILD2010FORDOTNET:        sResult=QString("Xenocode Postbuild 2010 for .NET");            break;
         case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2009:  sResult=QString("Xenocode Virtual Application Studio 2009");    break;
+        case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010:  sResult=QString("Xenocode Virtual Application Studio 2010");    break;
+        case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010ISVEDITION: sResult=QString("Xenocode Virtual Application Studio 2010 ISV Edition"); break;
         case RECORD_NAME_XCOMP:                                 sResult=QString("XComp");                                       break;
         case RECORD_NAME_XML:                                   sResult=QString("XML");                                         break;
         case RECORD_NAME_XPACK:                                 sResult=QString("XPack");                                       break;
@@ -2065,6 +2067,20 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
         if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2009"))
         {
             _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2009,"","",0);
+            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // Xenocode Virtual Application Studio 2010 (ISV Edition)
+        if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2010 ISV Edition"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010ISVEDITION,"","",0);
+            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+        else if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2010"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010,"","",0);
             ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
