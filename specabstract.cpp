@@ -707,7 +707,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_XAR:                                   sResult=QString("xar");                                         break;
         case RECORD_NAME_XENOCODE:                              sResult=QString("Xenocode");                                    break;
         case RECORD_NAME_XENOCODEPOSTBUILD:                     sResult=QString("Xenocode Postbuild");                          break;
-        case RECORD_NAME_XENOCODEPOSTBUILD2009:                 sResult=QString("Xenocode Postbuild 2009");                     break;
+        case RECORD_NAME_XENOCODEPOSTBUILD2009FORDOTNET:        sResult=QString("Xenocode Postbuild 2009 for .NET");            break;
         case RECORD_NAME_XENOCODEPOSTBUILD2010FORDOTNET:        sResult=QString("Xenocode Postbuild 2010 for .NET");            break;
         case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2009:  sResult=QString("Xenocode Virtual Application Studio 2009");    break;
         case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010:  sResult=QString("Xenocode Virtual Application Studio 2010");    break;
@@ -2081,14 +2081,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
         else if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2010"))
         {
             _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010,"","",0);
-            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
-            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-        }
-
-        // Xenocode Postbuild 2010 for .NET
-        if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Postbuild 2010 for .NET"))
-        {
-            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_XENOCODEPOSTBUILD2010FORDOTNET,"","",0);
             ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
@@ -4678,9 +4670,27 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
         // Xenocode Virtual Application Studio 2009
         if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Postbuild 2009 for .NET"))
         {
-            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_XENOCODEPOSTBUILD2009,"","",0);
+            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_XENOCODEPOSTBUILD2009FORDOTNET,"","",0);
             ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // Xenocode Postbuild 2010 for .NET
+        if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Postbuild 2010 for .NET"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_XENOCODEPOSTBUILD2010FORDOTNET,"","",0);
+            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(!pPEInfo->mapResultProtectors.contains(RECORD_NAME_DOTNETREACTOR))
+        {
+            if( pPEInfo->mapImportDetects.contains(RECORD_NAME_DOTNETREACTOR)&&
+                XPE::isResourcePresent(XPE_DEF::S_RT_RCDATA,"__",&(pPEInfo->listResources)))
+            {
+                _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_DOTNETREACTOR);
+                pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
         }
     }
 }
