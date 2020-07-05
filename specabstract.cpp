@@ -282,7 +282,6 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BIOHAZARDCRYPTER:                      sResult=QString("Biohazard Crypter");                           break;
         case RECORD_NAME_BITROCKINSTALLER:                      sResult=QString("BitRock Installer");                           break;
         case RECORD_NAME_BITSHAPEPECRYPT:                       sResult=QString("BitShape PE Crypt");                           break;
-        case RECORD_NAME_BJFNT:                                 sResult=QString(".BJFnt");                                      break;
         case RECORD_NAME_BLADEJOINER:                           sResult=QString("Blade Joiner");                                break;
         case RECORD_NAME_BORLANDCCPP:                           sResult=QString("Borland C/C++");                               break;
         case RECORD_NAME_BORLANDCPP:                            sResult=QString("Borland C++");                                 break;
@@ -348,6 +347,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DMD32D:                                sResult=QString("DMD32 D");                                     break;
         case RECORD_NAME_DNGUARD:                               sResult=QString("DNGuard");                                     break;
         case RECORD_NAME_DOS16M:                                sResult=QString("DOS/16M");                                     break;
+        case RECORD_NAME_DOTBJFNT:                              sResult=QString(".BJFnt");                                      break;
         case RECORD_NAME_DOTFIXNICEPROTECT:                     sResult=QString("DotFix Nice Protect");                         break;
         case RECORD_NAME_DOTFUSCATOR:                           sResult=QString("Dotfuscator");                                 break;
         case RECORD_NAME_DOTNET:                                sResult=QString(".NET");                                        break;
