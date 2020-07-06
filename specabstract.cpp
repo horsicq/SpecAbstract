@@ -1134,8 +1134,8 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     result.basic_info.listDetects.append(result.mapResultDatabases.values());
     result.basic_info.listDetects.append(result.mapResultImages.values());
     result.basic_info.listDetects.append(result.mapResultTools.values());
-    result.basic_info.listDetects.append(result.mapResultPackers.values());
-    result.basic_info.listDetects.append(result.mapResultProtectors.values());
+    result.basic_info.listDetects.append(result.mapResultCOMPackers.values());
+    result.basic_info.listDetects.append(result.mapResultCOMProtectors.values());
 
     if(!result.basic_info.listDetects.count())
     {
@@ -8599,42 +8599,42 @@ void SpecAbstract::Binary_handle_COM(QIODevice *pDevice, bool bIsImage, SpecAbst
     {
         pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
         SpecAbstract::_SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PKLITE);
-        pBinaryInfo->mapResultPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        pBinaryInfo->mapResultCOMPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 
     if(pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_UPX))
     {
         pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
         SpecAbstract::_SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_UPX);
-        pBinaryInfo->mapResultPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        pBinaryInfo->mapResultCOMPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 
     if(pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_HACKSTOP))
     {
         pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
         SpecAbstract::_SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_HACKSTOP);
-        pBinaryInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        pBinaryInfo->mapResultCOMProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 
     if(pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SPIRIT))
     {
         pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
         SpecAbstract::_SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SPIRIT);
-        pBinaryInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        pBinaryInfo->mapResultCOMProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 
     if(pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ICE))
     {
         pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
         SpecAbstract::_SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ICE);
-        pBinaryInfo->mapResultPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        pBinaryInfo->mapResultCOMPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 
     if(pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DIET))
     {
         pBinaryInfo->basic_info.id.filetype=RECORD_FILETYPE_COM;
         SpecAbstract::_SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_DIET);
-        pBinaryInfo->mapResultPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        pBinaryInfo->mapResultCOMPackers.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 }
 

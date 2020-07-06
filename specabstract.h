@@ -751,8 +751,8 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultImages;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectorData;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraryData;
-        QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
-        QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultCOMPackers;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultCOMProtectors;
 
         QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
     };
