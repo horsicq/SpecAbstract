@@ -11196,6 +11196,82 @@ void SpecAbstract::richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS
     }
 }
 
+void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, SpecAbstract::STRING_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2, SpecAbstract::BASIC_INFO *pBasicInfo, SpecAbstract::HEURTYPE heurType)
+{
+    QList<quint32> listStringCRC;
+    QList<quint32> listSignatureCRC;
+
+    int nCount=pListArchiveRecords->count();
+    int nSignaturesCount=nRecordsSize/sizeof(STRING_RECORD);
+
+    for(int i=0; i<nCount; i++)
+    {
+        quint32 nCRC=XBinary::getStringCustomCRC32(pListArchiveRecords->at(i).sFileName);
+        listStringCRC.append(nCRC);
+    }
+
+    for(int i=0; i<nSignaturesCount; i++)
+    {
+        quint32 nCRC=XBinary::getStringCustomCRC32(pRecords[i].pszString);
+        listSignatureCRC.append(nCRC);
+    }
+
+    for(int i=0; i<nCount; i++)
+    {
+        for(int j=0; j<nSignaturesCount; j++)
+        {
+            if((pRecords[j].basicInfo.filetype==fileType1)||(pRecords[j].basicInfo.filetype==fileType2))
+            {
+                if((!pMapRecords->contains(pRecords[j].basicInfo.name))||(pBasicInfo->bShowHeuristic))
+                {
+                    quint32 nCRC1=listStringCRC[i];
+                    quint32 nCRC2=listSignatureCRC[j];
+
+                    if(nCRC1==nCRC2)
+                    {
+                        if(!pMapRecords->contains(pRecords[j].basicInfo.name))
+                        {
+                            SpecAbstract::_SCANS_STRUCT record={};
+                            record.nVariant=pRecords[j].basicInfo.nVariant;
+                            record.filetype=pRecords[j].basicInfo.filetype;
+                            record.type=pRecords[j].basicInfo.type;
+                            record.name=pRecords[j].basicInfo.name;
+                            record.sVersion=pRecords[j].basicInfo.pszVersion;
+                            record.sInfo=pRecords[j].basicInfo.pszInfo;
+
+                            record.nOffset=0;
+
+                            pMapRecords->insert(record.name,record);
+
+#ifdef QT_DEBUG
+                            qDebug("ARCHIVE SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
+#endif
+                        }
+
+                        if(pBasicInfo->bShowHeuristic)
+                        {
+                            HEUR_RECORD heurRecord={};
+
+                            heurRecord.nVariant=pRecords[j].basicInfo.nVariant;
+                            heurRecord.filetype=pRecords[j].basicInfo.filetype;
+                            heurRecord.type=pRecords[j].basicInfo.type;
+                            heurRecord.name=pRecords[j].basicInfo.name;
+                            heurRecord.sVersion=pRecords[j].basicInfo.pszVersion;
+                            heurRecord.sInfo=pRecords[j].basicInfo.pszInfo;
+                            heurRecord.nOffset=0;
+                            heurRecord.filepart=pBasicInfo->id.filepart;
+                            heurRecord.heurType=heurType;
+                            heurRecord.sValue=pRecords[j].pszString;
+
+                            pBasicInfo->listHeurs.append(heurRecord);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemoryMap, QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, qint64 nOffset, SpecAbstract::SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType)
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(SIGNATURE_RECORD);

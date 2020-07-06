@@ -1187,6 +1187,8 @@ public:
     static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
     static void richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
+    static void archiveScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XArchive::RECORD> *pListArchiveRecords,STRING_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+
     static void signatureExpScan(XBinary *pXBinary,XBinary::_MEMORY_MAP *pMemoryMap,QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,qint64 nOffset,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
     static QList<_SCANS_STRUCT> richScan(quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, int nRecordsSize, RECORD_FILETYPE fileType1, RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
