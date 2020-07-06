@@ -9529,7 +9529,11 @@ void SpecAbstract::Binary_handle_APK(QIODevice *pDevice, bool bIsImage, SpecAbst
 {
     XBinary binary(pDevice,bIsImage);
 
-    // TODO
+    if(pBinaryInfo->mapArchiveDetects.contains(RECORD_NAME_SECSHELL))
+    {
+        _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_SECSHELL,"","",0);
+        pBinaryInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
 }
 
 void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
