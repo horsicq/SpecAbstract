@@ -737,6 +737,7 @@ public:
         QList<XArchive::RECORD> listArchiveRecords;
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapTextHeaderDetects;
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapArchiveDetects;
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTexts;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;

@@ -9467,6 +9467,8 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
                         }
                         // TODO 1.7.0_79 (Oracle Corporation)
 
+                        archiveScan(&(pBinaryInfo->mapArchiveDetects),&(pBinaryInfo->listArchiveRecords),_APK_file_records,sizeof(STRING_RECORD),pBinaryInfo->basic_info.id.filetype,RECORD_FILETYPE_APK,&(pBinaryInfo->basic_info),HEURTYPE_ARCHIVE);
+
                         Binary_handle_APK(pDevice,bIsImage,pBinaryInfo);
                     }
                     else
