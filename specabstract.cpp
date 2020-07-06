@@ -496,6 +496,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MINGW:                                 sResult=QString("MinGW");                                       break;
         case RECORD_NAME_MINKE:                                 sResult=QString("Minke");                                       break;
         case RECORD_NAME_MKFPACK:                               sResult=QString("MKFPack");                                     break;
+        case RECORD_NAME_MOBILETENCENTPROTECT:                  sResult=QString("Mobile Tencent Protect");                      break;
         case RECORD_NAME_MOLEBOX:                               sResult=QString("MoleBox");                                     break;
         case RECORD_NAME_MOLEBOXULTRA:                          sResult=QString("MoleBox Ultra");                               break;
         case RECORD_NAME_MONEYCRYPTER:                          sResult=QString("Money Crypter");                               break;
