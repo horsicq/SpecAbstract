@@ -16378,3 +16378,11 @@ KERNEL32.dll LCMapStringW
 KERNEL32.dll GetStringTypeA
 KERNEL32.dll GetStringTypeW
 KERNEL32.dll SetEndOfFile
+
+Import hash: dd92de10
+kernel32 VirtualAlloc
+kernel32 VirtualFree
+kernel32 GetModuleHandleA
+kernel32 GetProcAddress
+kernel32 ExitProcess
+kernel32 LoadLibraryA
