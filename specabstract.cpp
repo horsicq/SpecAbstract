@@ -758,6 +758,7 @@ QString SpecAbstract::heurTypeIdToString(SpecAbstract::HEURTYPE id)
         case HEURTYPE_ENTRYPOINTSECTION:                sResult=tr("Entry point section");                          break;
         case HEURTYPE_NETANSISTRING:                    sResult=QString(".NET ANSI %1").arg(tr("String"));          break;
         case HEURTYPE_RICH:                             sResult=QString("RICH");                                    break;
+        case HEURTYPE_ARCHIVE:                          sResult=tr("Archive");                                      break;
     }
 
     return sResult;
