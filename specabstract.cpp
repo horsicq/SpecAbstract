@@ -622,6 +622,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SMARTINSTALLMAKER:                     sResult=QString("Smart Install Maker");                         break;
         case RECORD_NAME_SMOKESCREENCRYPTER:                    sResult=QString("SmokeScreen Crypter");                         break;
         case RECORD_NAME_SNOOPCRYPT:                            sResult=QString("Snoop Crypt");                                 break;
+        case RECORD_NAME_SOFTDEFENDER:                          sResult=QString("Soft Defender");                               break;
         case RECORD_NAME_SOFTWARECOMPRESS:                      sResult=QString("Software Compress");                           break;
         case RECORD_NAME_SOFTWAREZATOR:                         sResult=QString("SoftwareZator");                               break;
         case RECORD_NAME_SPICESNET:                             sResult=QString("Spices.Net");                                  break;
