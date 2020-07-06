@@ -605,6 +605,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SCPACK:                                sResult=QString("SC Pack");                                     break;
         case RECORD_NAME_SCRNCH:                                sResult=QString("SCRNCH");                                      break;
         case RECORD_NAME_SDPROTECTORPRO:                        sResult=QString("SDProtector Pro");                             break;
+        case RECORD_NAME_SECSHELL                               sResult=QString("SecShell");                                    break;
         case RECORD_NAME_SECURESHADE:                           sResult=QString("Secure Shade");                                break;
         case RECORD_NAME_SETUPFACTORY:                          sResult=QString("Setup Factory");                               break;
         case RECORD_NAME_SEXECRYPTER:                           sResult=QString("Sexe Crypter");                                break;
