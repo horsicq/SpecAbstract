@@ -136,6 +136,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_overlay_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_PDBFILELINK,                  "2.0",              ""},                    "'NB10'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_PDBFILELINK,                  "7.0",              ""},                    "'RSDS'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_DOTNETSHRINK,                 "2.01",             ""},                    "5D00000002"},
+    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_SHELL,                        "",                 ""},                    "'#!'"}, // "'#!c:\python\python.exe'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _COM_records[]=

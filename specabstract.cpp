@@ -1113,6 +1113,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     Binary_handle_InstallerData(pDevice,pOptions->bIsImage,&result);
     Binary_handle_SFXData(pDevice,pOptions->bIsImage,&result);
     Binary_handle_ProtectorData(pDevice,pOptions->bIsImage,&result);
+    Binary_handle_LibraryData(pDevice,pOptions->bIsImage,&result);
     Binary_handle_MicrosoftOffice(pDevice,pOptions->bIsImage,&result);
     Binary_handle_OpenOffice(pDevice,pOptions->bIsImage,&result);
     Binary_handle_JAR(pDevice,pOptions->bIsImage,&result,pOptions);
@@ -1127,6 +1128,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     result.basic_info.listDetects.append(result.mapResultInstallerData.values());
     result.basic_info.listDetects.append(result.mapResultSFXData.values());
     result.basic_info.listDetects.append(result.mapResultProtectorData.values());
+    result.basic_info.listDetects.append(result.mapResultLibraryData.values());
     result.basic_info.listDetects.append(result.mapResultDatabases.values());
     result.basic_info.listDetects.append(result.mapResultImages.values());
     result.basic_info.listDetects.append(result.mapResultTools.values());
@@ -9330,6 +9332,22 @@ void SpecAbstract::Binary_handle_ProtectorData(QIODevice *pDevice,bool bIsImage,
     }
 }
 
+void SpecAbstract::Binary_handle_LibraryData(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
+{
+    XBinary binary(pDevice,bIsImage);
+
+    if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SHELL))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        QString sString=binary.read_ansiString(0);
+
+        if(sString.contains("python"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_BINARY,RECORD_TYPE_LIBRARY,RECORD_NAME_PYTHON,"","",0);
+            pBinaryInfo->mapResultLibraryData.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        }
+    }
+}
+
 void SpecAbstract::Binary_handle_MicrosoftOffice(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
 {
     XBinary binary(pDevice,bIsImage);
@@ -9445,10 +9463,9 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
                             ss.sVersion=XBinary::regExp("Android Gradle (.*?)$",sCreatedBy,1);
                             pBinaryInfo->mapResultTools.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
                         }
+                        // TODO 1.7.0_79 (Oracle Corporation)
 
-//                        _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_APK,RECORD_TYPE_TOOL,RECORD_NAME_APK,"","",0);
-//                        ss.sVersion=sVersion;
-//                        pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+                        Binary_handle_APK(pDevice,bIsImage,pBinaryInfo);
                     }
                     else
                     {
@@ -9501,6 +9518,13 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
             }
         }
     }
+}
+
+void SpecAbstract::Binary_handle_APK(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
+{
+    XBinary binary(pDevice,bIsImage);
+
+    // TODO
 }
 
 void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)

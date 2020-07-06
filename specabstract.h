@@ -747,6 +747,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultDatabases;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultImages;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectorData;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraryData;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
 
@@ -1118,9 +1119,11 @@ public:
     static void Binary_handle_InstallerData(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_SFXData(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_ProtectorData(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
+    static void Binary_handle_LibraryData(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_MicrosoftOffice(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, BINARYINFO_STRUCT *pBinaryInfo,SpecAbstract::SCAN_OPTIONS *pOptions);
+    static void Binary_handle_APK(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
 
     static void Binary_handle_FixDetects(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
 
