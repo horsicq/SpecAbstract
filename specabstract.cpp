@@ -1136,6 +1136,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     result.basic_info.listDetects.append(result.mapResultTools.values());
     result.basic_info.listDetects.append(result.mapResultCOMPackers.values());
     result.basic_info.listDetects.append(result.mapResultCOMProtectors.values());
+    result.basic_info.listDetects.append(result.mapResultAPKProtectors.values());
 
     if(!result.basic_info.listDetects.count())
     {

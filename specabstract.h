@@ -753,6 +753,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraryData;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCOMPackers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCOMProtectors;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultAPKProtectors;
 
         QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
     };
