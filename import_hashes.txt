@@ -16386,3 +16386,8 @@ kernel32 GetModuleHandleA
 kernel32 GetProcAddress
 kernel32 ExitProcess
 kernel32 LoadLibraryA
+
+Import hash: 16410b804 9d19c97a
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL GetModuleHandleA
+KERNEL32.DLL LoadLibraryA
