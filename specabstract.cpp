@@ -2407,6 +2407,17 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
+                // PECRYPT32
+                // TODO Check!!!
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_PECRYPT32))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PECRYPT32))
+                    {
+                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PECRYPT32);
+                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+
                 // YZPack
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_YZPACK))
                 {

@@ -470,7 +470,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypointExp_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MORPHNAH,                     "1.0.7",            ""},                    "558BEC87E55DE9$$$$$$$$558BEC83EC..5356576064A1........8B40..8945..64A1........C740"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PCGUARD,                      "5.04-5.05",        ""},                    "FC5550E8000000005D60E8$$$$$$$$EB$$58EB$$40EB$$FFE0"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SOFTDEFENDER,                 "1.X",              ""},                    "74$$74$$78$$68A2AF470159E8"},
-
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PECRYPT32,                    "1.02",             ""},                    "E8000000005B83EB..EB$$85C073..F705................58EB$$56575550E8"},
     // VMProtect
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "E9$$$$$$$$E9$$$$$$$$68........0F..$$$$$$$$E9$$$$$$$$68........E9$$$$$$$$E9"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "E9$$$$$$$$E9$$$$$$$$68........E9$$$$$$$$E9$$$$$$$$68........E9$$$$$$$$E9"},
