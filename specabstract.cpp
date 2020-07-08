@@ -2397,6 +2397,16 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
+                // Soft Defender
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_SOFTDEFENDER))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_SOFTDEFENDER))
+                    {
+                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_SOFTDEFENDER);
+                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+
                 // YZPack
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_YZPACK))
                 {
