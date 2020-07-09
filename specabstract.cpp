@@ -10779,6 +10779,9 @@ bool SpecAbstract::PE_isValid_UPX(QIODevice *pDevice,bool bIsImage, SpecAbstract
 
 SpecAbstract::VI_STRUCT SpecAbstract::PE_get_PECompact_vi(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
+    Q_UNUSED(pDevice)
+    Q_UNUSED(bIsImage)
+
     VI_STRUCT result={};
 
     if(pPEInfo->listSectionHeaders.count()>=2)
