@@ -759,6 +759,7 @@ QString SpecAbstract::heurTypeIdToString(SpecAbstract::HEURTYPE id)
         case HEURTYPE_CODESECTION:                      sResult=tr("Code section");                                 break;
         case HEURTYPE_ENTRYPOINTSECTION:                sResult=tr("Entry point section");                          break;
         case HEURTYPE_NETANSISTRING:                    sResult=QString(".NET ANSI %1").arg(tr("String"));          break;
+        case HEURTYPE_NETUNICODESTRING:                 sResult=QString(".NET Unicode %1").arg(tr("String"));       break;
         case HEURTYPE_RICH:                             sResult=QString("RICH");                                    break;
         case HEURTYPE_ARCHIVE:                          sResult=tr("Archive");                                      break;
     }
@@ -1710,7 +1711,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         if(result.bIsNetPresent)
         {
-            stringScan(&result.mapDotAnsistringsDetects,&result.cliInfo.cliMetadata.listAnsiStrings,_PE_dot_ansistrings_records,sizeof(_PE_dot_ansistrings_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_NETANSISTRING);
+            stringScan(&result.mapDotAnsiStringsDetects,&result.cliInfo.cliMetadata.listAnsiStrings,_PE_dot_ansistrings_records,sizeof(_PE_dot_ansistrings_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_NETANSISTRING);
+            stringScan(&result.mapDotUnicodeStringsDetects,&result.cliInfo.cliMetadata.listUnicodeStrings,_PE_dot_unicodestrings_records,sizeof(_PE_dot_unicodestrings_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_NETUNICODESTRING);
 
             //            for(int i=0;i<result.cliInfo.listUnicodeStrings.count();i++)
             //            {
@@ -2416,6 +2418,13 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                         SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PECRYPT32);
                         pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     }
+                }
+
+                // EXECryptor
+                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EXECRYPTOR))
+                {
+                    SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EXECRYPTOR);
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
                 // YZPack
@@ -4399,21 +4408,21 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
             }
 
             // TODO
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_YANO))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_YANO))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_YANO);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_YANO);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DOTFUSCATOR))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_DOTFUSCATOR))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DOTFUSCATOR);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_DOTFUSCATOR);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_AGILENET))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_AGILENET))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_AGILENET);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_AGILENET);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
@@ -4423,33 +4432,33 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_BABELNET))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_BABELNET))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_BABELNET);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_BABELNET);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_GOLIATHNET))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_GOLIATHNET))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_GOLIATHNET);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_GOLIATHNET);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_SPICESNET))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_SPICESNET))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_SPICESNET);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_SPICESNET);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_OBFUSCATORNET2009))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_OBFUSCATORNET2009))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_OBFUSCATORNET2009);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_OBFUSCATORNET2009);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DEEPSEA))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_DEEPSEA))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DEEPSEA);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_DEEPSEA);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
@@ -4457,9 +4466,9 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 bool bDetect=false;
                 _SCANS_STRUCT ss={};
 
-                if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DEEPSEA))
+                if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_DEEPSEA))
                 {
-                    ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DEEPSEA);
+                    ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_DEEPSEA);
                     bDetect=true;
                 }
                 else if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_DEEPSEA))
@@ -4486,9 +4495,9 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
             }
 
             // cliSecure
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_CLISECURE))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_CLISECURE))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_CLISECURE);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_CLISECURE);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             else
@@ -4518,22 +4527,22 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss)); // TODO obfuscator?
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_NSPACK))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_NSPACK))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_NSPACK);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_NSPACK);
                 pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DNGUARD))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_DNGUARD))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DNGUARD);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_DNGUARD);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
             // .NETZ
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DOTNETZ))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_DOTNETZ))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DOTNETZ);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_DOTNETZ);
                 pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             else if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_DOTNETZ))
@@ -4542,15 +4551,15 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_MAXTOCODE))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_MAXTOCODE))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_MAXTOCODE);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_MAXTOCODE);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_PHOENIXPROTECTOR))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_PHOENIXPROTECTOR))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_PHOENIXPROTECTOR);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_PHOENIXPROTECTOR);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
@@ -4558,9 +4567,9 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 bool bDetect=false;
                 _SCANS_STRUCT ss={};
 
-                if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_SMARTASSEMBLY))
+                if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_SMARTASSEMBLY))
                 {
-                    ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_SMARTASSEMBLY);
+                    ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_SMARTASSEMBLY);
                     bDetect=true;
                 }
                 else if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_SMARTASSEMBLY))
@@ -4586,9 +4595,9 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 }
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_CONFUSER))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_CONFUSER))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_CONFUSER);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_CONFUSER);
 
                 if(pe.checkOffsetSize(pPEInfo->osCodeSection)&&(pPEInfo->basic_info.bIsDeepScan))
                 {
@@ -4618,15 +4627,20 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
             }
 
             // Xenocode Postbuild
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_XENOCODEPOSTBUILD))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_XENOCODEPOSTBUILD))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_XENOCODEPOSTBUILD);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_XENOCODEPOSTBUILD);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // CodeVeil
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_CODEVEIL))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_CODEVEIL))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_CODEVEIL);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_CODEVEIL);
+                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+            else if(pPEInfo->mapDotUnicodeStringsDetects.contains(RECORD_NAME_CODEVEIL))
+            {
+                _SCANS_STRUCT ss=pPEInfo->mapDotUnicodeStringsDetects.value(RECORD_NAME_CODEVEIL);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // CodeWall
@@ -4654,9 +4668,9 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // .NET Spider
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_DOTNETSPIDER))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_DOTNETSPIDER))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_DOTNETSPIDER);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_DOTNETSPIDER);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             else if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_DOTNETSPIDER))
@@ -4671,9 +4685,9 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             // Sixxpack
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_SIXXPACK))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_SIXXPACK))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_SIXXPACK);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_SIXXPACK);
                 pPEInfo->mapResultNETCompressors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
             else if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_SIXXPACK))
@@ -4718,6 +4732,17 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
             {
                 _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_DOTNETREACTOR);
                 pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+        }
+        if(!pPEInfo->mapResultProtectors.contains(RECORD_NAME_CODEVEIL))
+        {
+            if(pPEInfo->mapImportDetects.contains(RECORD_NAME_CODEVEIL))
+            {
+                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_CODEVEIL))
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_CODEVEIL);
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
             }
         }
     }
@@ -4997,7 +5022,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
                 recordNET.sInfo="Hidden";
             }
 
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_VBNET))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_VBNET))
             {
                 recordCompiler.type=RECORD_TYPE_COMPILER;
                 recordCompiler.name=RECORD_NAME_VBNET;
@@ -5902,9 +5927,9 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
         else
         {
             // .NET TODO: Check!!!!
-            if(pPEInfo->mapDotAnsistringsDetects.contains(RECORD_NAME_EMBARCADERODELPHIDOTNET))
+            if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_EMBARCADERODELPHIDOTNET))
             {
-                _SCANS_STRUCT ss=pPEInfo->mapDotAnsistringsDetects.value(RECORD_NAME_EMBARCADERODELPHIDOTNET);
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_EMBARCADERODELPHIDOTNET);
                 recordTool=ss;
             }
         }
@@ -8235,12 +8260,12 @@ void SpecAbstract::PE_handle_DelphiCryptors(QIODevice *pDevice, bool bIsImage, S
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
-        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_DCRYPTPRIVATE)) // TODO more checks!
-        {
-            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_DCRYPTPRIVATE);
+//        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_DCRYPTPRIVATE)) // TODO more checks!
+//        {
+//            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_DCRYPTPRIVATE);
 
-            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-        }
+//            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+//        }
 
 //        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_DALKRYPT)) // TODO more checks!
 //        {

@@ -16391,3 +16391,15 @@ Import hash: 16410b804 9d19c97a
 KERNEL32.DLL GetProcAddress
 KERNEL32.DLL GetModuleHandleA
 KERNEL32.DLL LoadLibraryA
+
+Import hash: 2bf67e8e3 f219fb92
+kernel32.dll GetModuleHandleA
+kernel32.dll LoadLibraryA
+kernel32.dll GetProcAddress
+kernel32.dll ExitProcess
+kernel32.dll VirtualAlloc
+kernel32.dll VirtualFree
+user32.dll MessageBoxA
+
+Import hash: 16931477 fcb11e9f
+kernel32.dll 173

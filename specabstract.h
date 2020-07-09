@@ -655,6 +655,7 @@ public:
         HEURTYPE_CODESECTION,
         HEURTYPE_ENTRYPOINTSECTION,
         HEURTYPE_NETANSISTRING,
+        HEURTYPE_NETUNICODESTRING,
         HEURTYPE_RICH,
         HEURTYPE_ARCHIVE
     };
@@ -892,10 +893,10 @@ public:
         QMap<RECORD_NAME,_SCANS_STRUCT> mapOverlayDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapImportDetects;
-        QMap<RECORD_NAME,_SCANS_STRUCT> mapDotAnsistringsDetects;
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapDotAnsiStringsDetects;
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapDotUnicodeStringsDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapCodeSectionDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointSectionDetects;
-        QMap<RECORD_NAME,_SCANS_STRUCT> mapDotUnicodestringsDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapSectionNamesDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapRichDetects;
 
