@@ -2156,7 +2156,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 }
             }
 
-            // ASProtect
+            // ASProtect TODO import
             if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ASPROTECT))
             {
                 SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ASPROTECT);
