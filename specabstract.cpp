@@ -355,6 +355,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DOTNETSHRINK:                          sResult=QString(".netshrink");                                  break;
         case RECORD_NAME_DOTNETSPIDER:                          sResult=QString(".NET Spider");                                 break;
         case RECORD_NAME_DOTNETZ:                               sResult=QString(".NETZ");                                       break;
+        case RECORD_NAME_DRAGONARMOR:                           sResult=QString("DragonArmor");                                 break;
         case RECORD_NAME_DROPBOX:                               sResult=QString("Dropbox");                                     break;
         case RECORD_NAME_DVCLAL:                                sResult=QString("DVCLAL");                                      break;
         case RECORD_NAME_DYAMAR:                                sResult=QString("DYAMAR");                                      break;
