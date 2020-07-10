@@ -2156,12 +2156,15 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 }
             }
 
-            // ASProtect TODO import
-            if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ASPROTECT))
+            // ASProtect
+            if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ASPROTECT))
             {
-                SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ASPROTECT);
+                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ASPROTECT))
+                {
+                    SpecAbstract::_SCANS_STRUCT recordSS=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ASPROTECT);
 
-                pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                    pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                }
             }
 
             // PE-Quake
