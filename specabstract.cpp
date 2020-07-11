@@ -521,6 +521,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_NJOY:                                  sResult=QString("N-Joy");                                       break;
         case RECORD_NAME_NME:                                   sResult=QString("NME");                                         break;
         case RECORD_NAME_NOOBYPROTECT:                          sResult=QString("NoobyProtect");                                break;
+        case RECORD_NAME_NOODLECRYPT:                           sResult=QString("NoodleCrypt");                                 break;
         case RECORD_NAME_NORTHSTARPESHRINKER:                   sResult=QString("North Star PE Shrinker");                      break;
         case RECORD_NAME_NOSTUBLINKER:                          sResult=QString("NOSTUBLINKER");                                break;
         case RECORD_NAME_NOXCRYPT:                              sResult=QString("noX Crypt");                                   break;
