@@ -3446,6 +3446,14 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     pPEInfo->mapResultPackers.insert(recordEP.name,scansToScan(&(pPEInfo->basic_info),&recordEP));
                 }
 
+                // MoleBox
+                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_MOLEBOX))
+                {
+                    SpecAbstract::_SCANS_STRUCT recordEP=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_MOLEBOX);
+
+                    pPEInfo->mapResultPackers.insert(recordEP.name,scansToScan(&(pPEInfo->basic_info),&recordEP));
+                }
+
                 // XComp
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_XCOMP))
                 {
