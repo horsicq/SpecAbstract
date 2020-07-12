@@ -2781,20 +2781,20 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 // KKrunchy
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_KKRUNCHY))
                 {
-                    if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_KKRUNCHY))
+                    if( pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_KKRUNCHY)||
+                        pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERIC))
                     {
-                        SpecAbstract::_SCANS_STRUCT ss={};
-
                         if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_KKRUNCHY))
                         {
-                            ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_KKRUNCHY);
-                        }
-                        else
-                        {
-                            ss=pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_KKRUNCHY);
-                        }
+                            SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_KKRUNCHY);
 
-                        pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                            if(!pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_KKRUNCHY))
+                            {
+                                ss.sInfo="Patched";
+                            }
+
+                            pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                        }
                     }
                 }
 
