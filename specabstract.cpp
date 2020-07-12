@@ -2556,7 +2556,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 }
 
                 // 12311134
-                if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_12311134))
+                if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_12311134)) // TODO Check!
                 {
                     SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_12311134);
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
