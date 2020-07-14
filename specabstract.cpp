@@ -3441,17 +3441,24 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 // PKLITE32
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PKLITE32))
                 {
-                    SpecAbstract::_SCANS_STRUCT recordEP=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PKLITE32);
+                    SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PKLITE32);
 
-                    pPEInfo->mapResultPackers.insert(recordEP.name,scansToScan(&(pPEInfo->basic_info),&recordEP));
+                    pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
                 // MoleBox
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_MOLEBOX))
                 {
-                    SpecAbstract::_SCANS_STRUCT recordEP=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_MOLEBOX);
+                    SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_MOLEBOX);
 
-                    pPEInfo->mapResultPackers.insert(recordEP.name,scansToScan(&(pPEInfo->basic_info),&recordEP));
+                    QString sComment=XPE::getResourceVersionValue("Comments",&(pPEInfo->resVersion));
+
+                    if(sComment.contains("MoleBox "))
+                    {
+                        ss.sVersion=sComment.section("MoleBox ",1,-1);
+                    }
+
+                    pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
                 // XComp
