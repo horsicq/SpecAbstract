@@ -16403,3 +16403,19 @@ user32.dll MessageBoxA
 
 Import hash: 16931477 fcb11e9f
 kernel32.dll 173
+
+Import hash: 5707cc91
+kernel32.dll GetModuleHandleA
+kernel32.dll LoadLibraryA
+kernel32.dll LocalAlloc
+kernel32.dll LocalFree
+kernel32.dll GetModuleFileNameA
+kernel32.dll ExitProcess
+
+Import hash: 2063eed2
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll LocalAlloc
+KERNEL32.dll LocalFree
+KERNEL32.dll GetModuleFileNameA
+KERNEL32.dll ExitProcess

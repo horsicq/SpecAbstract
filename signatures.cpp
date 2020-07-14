@@ -488,6 +488,10 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypointExp_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "E9$$$$$$$$E9$$$$$$$$68........E9$$$$$$$$E9$$$$$$$$68........E9$$$$$$$$0F"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "0F..$$$$$$$$E9$$$$$$$$68........E9$$$$$$$$68........E9$$$$$$$$E9"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "E9$$$$$$$$68........E9$$$$$$$$9CE9"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "9CE9$$$$$$$$C70424........E9$$$$$$$$E9$$$$$$$$68........9C"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "E9$$$$$$$$9CC70424........60E8$$$$$$$$E8"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "54E8$$$$$$$$60C70424........C7442424........9CC74424..........609C9C9C"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "9C55C74424..........E8$$$$$$$$C70424........9CC74424"},
 };
 
 // TODO separate Armadillo
@@ -799,6 +803,8 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_CRINKLER,                     "",                 ""},                    0,              0x0b0e1fbf},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PCGUARD,                      "5.04-5.05",        ""},                    0,              0x5a169c7a}, // TODO Check version
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PCGUARD,                      "5.04-5.05",        ""},                    0,              0x5aa42950}, // TODO Check version
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "",                 ""},                    0xFFFFFFFF,     0x5707cc91}, // kernel32.dll
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "",                 ""},                    0xFFFFFFFF,     0x2063eed2}, // KERNEL32.dll
 };
 
 SpecAbstract::MSRICH_RECORD _MS_rich_records[]=
