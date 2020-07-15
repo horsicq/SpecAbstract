@@ -559,7 +559,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PEPACKSPROTECT:                        sResult=QString("pepack's Protect");                            break;
         case RECORD_NAME_PEQUAKE:                               sResult=QString("PE Quake");                                    break;
         case RECORD_NAME_PERL:                                  sResult=QString("Perl");                                        break;
-        case RECORD_NAME_PESHIELD:                              sResult=QString("PE-SHiELD");                                   break;
+        case RECORD_NAME_PESHIELD:                              sResult=QString("PE-SHiELD");                                   break; // TODO Check name
         case RECORD_NAME_PESPIN:                                sResult=QString("PESpin");                                      break;
         case RECORD_NAME_PETITE:                                sResult=QString("Petite");                                      break;
         case RECORD_NAME_PETITE_KERNEL32:                       sResult=QString("Petite.kernel32");                             break;
