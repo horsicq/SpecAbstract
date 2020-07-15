@@ -391,7 +391,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_FEARZPACKER:                           sResult=QString("fEaRz Packer");                                break;
         case RECORD_NAME_FILESHIELD:                            sResult=QString("FileShield");                                  break;
         case RECORD_NAME_FISHNET:                               sResult=QString("FISH .NET");                                   break;
-        case RECORD_NAME_FISHPEPACKER:                          sResult=QString("Fish PE Packer");                              break;
+        case RECORD_NAME_FISHPEPACKER:                          sResult=QString("Fish PE Packer");                              break; // TODO Check name
         case RECORD_NAME_FISHPESHIELD:                          sResult=QString("FishPE Shield");                               break;
         case RECORD_NAME_FLEXLM:                                sResult=QString("Flex License Manager");                        break;
         case RECORD_NAME_FLEXNET:                               sResult=QString("FlexNet Licensing");                           break;
