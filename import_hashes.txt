@@ -10003,6 +10003,10 @@ Import hash: c485c9e2 ff2d65f9
 kernel32.dll Beep
 kernel32.dll Sleep
 
+Import hash: c485c9e2 860b9cf0
+kernel32.dll Sleep
+kernel32.dll Beep
+
 Import hash: 50b93d55a 3c705cae
 KERNEL32.dll VirtualFree
 KERNEL32.dll VirtualAlloc
