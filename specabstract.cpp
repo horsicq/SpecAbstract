@@ -2407,6 +2407,16 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
+                // PEnguinCrypt
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_PENGUINCRYPT))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PENGUINCRYPT))
+                    {
+                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PENGUINCRYPT);
+                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+
                 // PE Diminisher
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PEDIMINISHER))
                 {

@@ -436,6 +436,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MEW11SE,                      "1.0",              ""},                    "E9........000000020000000C"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DRAGONARMOR,                  "0.0.4.1",          ""},                    "BF........83C9FF33C068........F2AEF7D1495168........E8110A000083C40C68"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NOODLECRYPT,                  "2.0",              ""},                    "EB019AE8..000000EB019AE8....0000EB019AE8....0000EB01"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PENGUINCRYPT,                 "1.0",              ""},                    "B8........55506764FF360000676489260000BD4B484342B804000000CC"},
 
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FAKESIGNATURE,                "",                 "ASPacker 2.12"},       "60E803000000E9EB045D4555C3E801"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FAKESIGNATURE,                "",                 "BJFNT 1.3"},           "EB033A4D3A1EEB02CD209CEB02CD20EB02CD2060"},
@@ -620,6 +621,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXECRYPTOR,                   "2.1",              ""},                    0x21261d3d4,    0xddadcc96},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXECRYPTOR,                   "2.2-2.4",          ""},                    0x2bf67e8e3,    0xf219fb92},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CODEVEIL,                     "1.2",              ""},                    0x16931477,     0xfcb11e9f},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PENGUINCRYPT,                 "1.0",              ""},                    0x22224caef,    0xb65bfd43},
 
     // VB cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 ""},                    0x608b5ca5f,    0x27f8d01f},
@@ -1167,6 +1169,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEBUNDLE,                     "",                 ""},                    "pebundle"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PECRYPT32,                    "1.02",             ""},                    ".ficken"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEDIMINISHER,                 "0.1",              ""},                    ".teraphy"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PENGUINCRYPT,                 "1.0",              ""},                    "Pingvin"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEPACKSPROTECT,               "2.3",              ""},                    "okpack"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PESHIELD,                     "0.25-0.26",        ""},                    "PESHiELD"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PESHIELD,                     "0.25-0.26",        ""},                    "ANAKIN2K"},
