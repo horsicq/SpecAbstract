@@ -502,6 +502,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypointExp_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "9C55C74424..........E8$$$$$$$$C70424........9CC74424"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "60C74424..........E9$$$$$$$$E8$$$$$$$$C74424..........FF7424..8D6424..E9"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "53C70424........68........E8$$$$$$$$9C"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "9CE9$$$$$$$$C70424........68........53C74424..........9CC70424"},
 };
 
 // TODO separate Armadillo
