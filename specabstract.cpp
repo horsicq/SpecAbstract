@@ -2512,6 +2512,12 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                         }
                     }
                 }
+                else if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ZPROTECT))
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ZPROTECT);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
 
                 if(!pPEInfo->mapResultProtectors.contains(RECORD_NAME_ZPROTECT))
                 {
@@ -3830,6 +3836,11 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
 
             if(!bSuccess)
             {
+                bSuccess=pPEInfo->mapImportDetects.contains(RECORD_NAME_VMPROTECT);
+            }
+
+            if(!bSuccess)
+            {
                 if(pPEInfo->nEntryPointSection>=3)
                 {
                     bSuccess=true;
@@ -3862,6 +3873,7 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
             {
                 if( pe.compareEntryPoint("68........E8")||
                     pe.compareEntryPoint("68........E9")||
+                    pe.compareEntryPoint("9C60")||
                     pe.compareEntryPoint("EB$$E9$$$$$$$$68........E8")||
                     pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_VMPROTECT))
                 {

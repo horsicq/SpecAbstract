@@ -484,6 +484,11 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypointExp_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MOLEBOX,                      "2.36",             ""},                    "EB$$B8........8338..74..50FF70..FF3050830424..E8$$$$$$$$558BECA1........53568B75..85C0578BDE75..6A..68........68........FF15"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MOLEBOX,                      "4.XX",             ""},                    "6A2868........E8$$$$$$$$68........64A100000000508B442410896C24108D6C24102BE05356578B45F88965E8"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FISHPESHIELD,                 "2.0.1",            ""},                    "60E8$$$$$$$$558BEC81C470FFFFFF535657"},
+//    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ZPROTECT,                     "",                 ""},                    "E8$$$$$$$$87..248D..........87..24E9$$$$$$$$60E9$$$$$$$$54E9$$$$$$$$E8$$$$$$$$87..24"},
+//    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ZPROTECT,                     "",                 ""},                    "E8$$$$$$$$87..248D..........87..24E9$$$$$$$$60EB$$54E9$$$$$$$$E8$$$$$$$$87..24"},
+//    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ZPROTECT,                     "",                 ""},                    "E9$$$$$$$$E8$$$$$$$$87..248D..........87..24E9$$$$$$$$60E9$$$$$$$$54E9$$$$$$$$E8$$$$$$$$87..24"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ZPROTECT,                     "",                 ""},                    "E8$$$$$$$$87..248D..........87..24E9"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ZPROTECT,                     "",                 ""},                    "E9$$$$$$$$E8$$$$$$$$87..248D..........87..24E9"},
     // VMProtect
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "E9$$$$$$$$E9$$$$$$$$68........0F..$$$$$$$$E9$$$$$$$$68........E9$$$$$$$$E9"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "E9$$$$$$$$E9$$$$$$$$68........E9$$$$$$$$E9$$$$$$$$68........E9$$$$$$$$E9"},
@@ -494,6 +499,8 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypointExp_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "E9$$$$$$$$9CC70424........60E8$$$$$$$$E8"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "54E8$$$$$$$$60C70424........C7442424........9CC74424..........609C9C9C"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "9C55C74424..........E8$$$$$$$$C70424........9CC74424"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "60C74424..........E9$$$$$$$$E8$$$$$$$$C74424..........FF7424..8D6424..E9"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "53C70424........68........E8$$$$$$$$9C"},
 };
 
 // TODO separate Armadillo
@@ -809,6 +816,7 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PCGUARD,                      "5.04-5.05",        ""},                    0,              0x5aa42950}, // TODO Check version
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "",                 ""},                    0xFFFFFFFF,     0x5707cc91}, // kernel32.dll
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "",                 ""},                    0xFFFFFFFF,     0x2063eed2}, // KERNEL32.dll
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "",                 ""},                    0xFFFFFFFF,     0x8c357aef}, // KERNEL32.DLL
 };
 
 SpecAbstract::MSRICH_RECORD _MS_rich_records[]=
