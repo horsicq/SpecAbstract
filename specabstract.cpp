@@ -378,6 +378,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_EXEJOINER:                             sResult=QString("ExeJoiner");                                   break;
         case RECORD_NAME_EXEMPLARINSTALLER:                     sResult=QString("Exemplar Installer");                          break;
         case RECORD_NAME_EXEPACK:                               sResult=QString("EXEPACK");                                     break;
+        case RECORD_NAME_EXEPASSWORDPROTECTOR:                  sResult=QString("Exe Password Protector");                      break;
         case RECORD_NAME_EXESAX:                                sResult=QString("ExeSax");                                      break;
         case RECORD_NAME_EXESHIELD:                             sResult=QString("Exe Shield");                                  break;
         case RECORD_NAME_EXPORT:                                sResult=QString("Export");                                      break;
