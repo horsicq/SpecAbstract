@@ -1174,6 +1174,7 @@ public:
     static VI_STRUCT get_Go_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
 
     static bool PE_isValid_UPX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+    static void PE_x86Emul(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 
     static VI_STRUCT PE_get_PECompact_vi(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 

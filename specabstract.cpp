@@ -1690,6 +1690,9 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         signatureExpScan(&pe,&(result.basic_info.memoryMap),&result.mapEntryPointDetects,result.nEntryPointOffset,_PE_entrypointExp_records,sizeof(_PE_entrypointExp_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_ENTRYPOINT);
 
+
+        PE_x86Emul(pDevice,pOptions->bIsImage,&result);
+
         // Rich
 //        int nNumberOfRichSignatures=result.listRichSignatures.count();
 
@@ -10838,6 +10841,162 @@ bool SpecAbstract::PE_isValid_UPX(QIODevice *pDevice,bool bIsImage, SpecAbstract
     }
 
     return bResult;
+}
+
+void SpecAbstract::PE_x86Emul(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    XBinary binary(pDevice,bIsImage);
+
+    qint64 nAddress=pPEInfo->nImageBaseAddress+pPEInfo->nEntryPointAddress;
+
+    QString sSignature;
+
+    bool bSuccess=true;
+    bool bVMProtect=true;
+
+    int nCount=10;
+
+    for(int i=0;i<nCount;i++)
+    {
+        qint64 nOffset=XBinary::addressToOffset(&(pPEInfo->basic_info.memoryMap),nAddress);
+
+        if(nOffset==-1)
+        {
+            bSuccess=false;
+            break;
+        }
+
+        quint8 nByte=binary.read_uint8(nOffset);
+        nAddress++;
+        nOffset++;
+
+        if(nByte==0x9c) // pushf
+        {
+            sSignature+="9C";
+        }
+        else if(nByte==0x60) // pusha
+        {
+            sSignature+="60";
+        }
+        else if(nByte==0xe9) // jmp ..
+        {
+            sSignature+="E9$$$$$$$$";
+            nAddress+=(4+binary.read_int32(nOffset));
+        }
+        else if(nByte==0xe8) // call ..
+        {
+            sSignature+="E8$$$$$$$$";
+            nAddress+=(4+binary.read_int32(nOffset));
+        }
+        else if(nByte==0x68) // push ..
+        {
+            sSignature+="68........";
+            nAddress+=4;
+        }
+        else if(nByte==0x53) // push ebx
+        {
+            sSignature+="53";
+        }
+        else if(nByte==0xC7) // mov DWORD PTR [reg+],imm
+        {
+            sSignature+="C7";
+            quint8 nMODRM=binary.read_uint8(nOffset);
+
+            nAddress++;
+            nOffset++;
+
+            if((nMODRM==0x04)||(nMODRM==0x44))
+            {
+                sSignature+=XBinary::valueToHex(nMODRM).toUpper();
+                quint8 nSIB=binary.read_uint8(nOffset);
+
+                nAddress++;
+                nOffset++;
+
+                if(nSIB==0x24) // ESP+
+                {
+                    sSignature+="24";
+
+                    if(nMODRM==0x44)
+                    {
+//                        quint8 nDISP=binary.read_uint8(nOffset);
+
+                        sSignature+="..";
+
+                        nAddress++;
+                        nOffset++;
+                    }
+
+                    sSignature+="........";
+
+                    nAddress+=4;
+                    nOffset+=4;
+                }
+                else
+                {
+                    bVMProtect=false;
+                }
+            }
+            else
+            {
+                bVMProtect=false;
+            }
+        }
+        else if(nByte==0x8D) // lea esp,dword ptr[esp+]
+        {
+            sSignature+="8D";
+            quint8 nMODRM=binary.read_uint8(nOffset);
+
+            nAddress++;
+            nOffset++;
+
+            if((nMODRM==0x64))
+            {
+                sSignature+=XBinary::valueToHex(nMODRM).toUpper();
+                quint8 nSIB=binary.read_uint8(nOffset);
+
+                nAddress++;
+                nOffset++;
+
+                if(nSIB==0x24) // ESP+
+                {
+                    sSignature+="24";
+
+                    if(nMODRM==0x64)
+                    {
+//                        quint8 nDISP=binary.read_uint8(nOffset);
+
+                        sSignature+="..";
+
+                        nAddress++;
+                        nOffset++;
+                    }
+                }
+                else
+                {
+                    bVMProtect=false;
+                }
+            }
+            else
+            {
+                bVMProtect=false;
+            }
+        }
+        else
+        {
+            bVMProtect=false;
+        }
+
+        if(!bVMProtect)
+        {
+            break;
+        }
+    }
+
+    if(!bSuccess)
+    {
+        bVMProtect=false;
+    }
 }
 
 SpecAbstract::VI_STRUCT SpecAbstract::PE_get_PECompact_vi(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
