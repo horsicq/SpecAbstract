@@ -493,6 +493,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypointExp_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ZPROTECT,                     "",                 ""},                    "E8$$$$$$$$87..248D..........87..24E9"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ZPROTECT,                     "",                 ""},                    "E9$$$$$$$$E8$$$$$$$$87..248D..........87..24E9"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_YODASCRYPTER,                 "1.01",             ""},                    "558BEC535657E8$$$$$$$$E8$$$$$$$$33C064FF30648920CCC3"},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_QRYPT0R,                      "1.0",              ""},                    "EB$$E8$$$$$$$$64FF3500000000"},
     // VMProtect TODO Emul dynamic create signature
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "E9$$$$$$$$E9$$$$$$$$68........0F..$$$$$$$$E9$$$$$$$$68........E9$$$$$$$$E9"},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "E9$$$$$$$$E9$$$$$$$$68........E9$$$$$$$$E9$$$$$$$$68........E9$$$$$$$$E9"},
@@ -636,6 +637,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CODEVEIL,                     "1.2",              ""},                    0x16931477,     0xfcb11e9f},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PENGUINCRYPT,                 "1.0",              ""},                    0x22224caef,    0xb65bfd43},
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXEPASSWORDPROTECTOR,         "1.1",              ""},                    0x30309e68ce,   0x56ce963e},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_QRYPT0R,                      "1.0",              ""},                    0x0,            0xffffffff}, // no import
 
     // VB cryptors
     {{0, SpecAbstract::RECORD_FILETYPE_PE32,    SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARCRYPT,                      "",                 ""},                    0x608b5ca5f,    0x27f8d01f},

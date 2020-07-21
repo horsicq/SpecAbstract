@@ -588,6 +588,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PUREBASIC:                             sResult=QString("PureBasic");                                   break;
         case RECORD_NAME_PUSSYCRYPTER:                          sResult=QString("PussyCrypter");                                break;
         case RECORD_NAME_PYTHON:                                sResult=QString("Python");                                      break;
+        case RECORD_NAME_QRYPT0R:                               sResult=QString("QrYPt0r");                                     break;
         case RECORD_NAME_QT:                                    sResult=QString("Qt");                                          break;
         case RECORD_NAME_QTINSTALLER:                           sResult=QString("Qt Installer");                                break;
         case RECORD_NAME_QUICKPACKNT:                           sResult=QString("QuickPack NT");                                break;
@@ -3618,6 +3619,17 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_YODASCRYPTER))
                     {
                         _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_YODASCRYPTER);
+
+                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+
+                // QrYPt0r
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_QRYPT0R))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_QRYPT0R))
+                    {
+                        _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_QRYPT0R);
 
                         pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     }
