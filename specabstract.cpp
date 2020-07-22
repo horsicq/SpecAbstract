@@ -425,6 +425,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_HIDEPE:                                sResult=QString("HidePE");                                      break;
         case RECORD_NAME_HMIMYSPACKER:                          sResult=QString("Hmimys Packer");                               break;
         case RECORD_NAME_HMIMYSPROTECTOR:                       sResult=QString("Hmimys's Protector");                          break;
+        case RECORD_NAME_HOODLUM:                               sResult=QString("HOODLUM");                                     break;
         case RECORD_NAME_HOUNDHACKCRYPTER:                      sResult=QString("Hound Hack Crypter");                          break;
         case RECORD_NAME_HTML:                                  sResult=QString("HTML");                                        break;
         case RECORD_NAME_HXS:                                   sResult=QString("HXS");                                         break;
@@ -6490,6 +6491,13 @@ void SpecAbstract::PE_handle_PETools(QIODevice *pDevice, bool bIsImage, SpecAbst
         if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_XVOLKOLAK))
         {
             _SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_XVOLKOLAK);
+
+            pPEInfo->mapResultPETools.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_HOODLUM))
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_HOODLUM);
 
             pPEInfo->mapResultPETools.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
