@@ -335,6 +335,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CWSDPMI:                               sResult=QString("CWSDPMI");                                     break;
         case RECORD_NAME_CYGWIN:                                sResult=QString("Cygwin");                                      break;
         case RECORD_NAME_DALKRYPT:                              sResult=QString("DalKrypt");                                    break;
+        case RECORD_NAME_DBPE:                                  sResult=QString("DBPE");                                        break;
         case RECORD_NAME_DCRYPTPRIVATE:                         sResult=QString("DCrypt Private");                              break;
         case RECORD_NAME_DEB:                                   sResult=QString("DEB");                                         break;
         case RECORD_NAME_DEEPSEA:                               sResult=QString("DeepSea");                                     break;
@@ -3631,6 +3632,17 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_QRYPT0R))
                     {
                         _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_QRYPT0R);
+
+                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+
+                // DBPE
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_DBPE))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_DBPE))
+                    {
+                        _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_DBPE);
 
                         pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     }

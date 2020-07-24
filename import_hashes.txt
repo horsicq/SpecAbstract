@@ -16538,3 +16538,11 @@ USER32.dll IsWindow
 USER32.dll ShowWindow
 USER32.dll IsDialogMessageA
 COMCTL32.dll 17
+
+Import hash: 35cf072d7 28aa164
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll GetVersionExA
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll GetProcAddress
+KERNEL32.dll ExitProcess
