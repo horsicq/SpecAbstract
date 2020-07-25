@@ -406,6 +406,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_GENTEEINSTALLER:                       sResult=QString("Gentee Installer");                            break;
         case RECORD_NAME_GHAZZACRYPTER:                         sResult=QString("GhaZza CryPter");                              break; // st
         case RECORD_NAME_GHOSTINSTALLER:                        sResult=QString("Ghost Installer");                             break;
+        case RECORD_NAME_GIXPROTECTOR:                          sResult=QString("G!X Protector");                               break;
         case RECORD_NAME_GKRIPTO:                               sResult=QString("GKripto");                                     break;
         case RECORD_NAME_GKSETUPSFX:                            sResult=QString("GkSetup SFX");                                 break;
         case RECORD_NAME_GNULINKER:                             sResult=QString("GNU ld");                                      break;
@@ -513,6 +514,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MPACK:                                 sResult=QString("mPack");                                       break;
         case RECORD_NAME_MPRESS:                                sResult=QString("MPRESS");                                      break;
         case RECORD_NAME_MRUNDECTETABLE:                        sResult=QString("Mr Undectetable");                             break;
+        case RECORD_NAME_MSLRH:                                 sResult=QString("MSLRH");                                       break;
         case RECORD_NAME_MSYS:                                  sResult=QString("Msys");                                        break;
         case RECORD_NAME_MSYS2:                                 sResult=QString("MSYS2");                                       break;
         case RECORD_NAME_MZ0OPE:                                sResult=QString("MZ0oPE");                                      break;
@@ -2449,6 +2451,14 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PEDIMINISHER))
                 {
                     _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PEDIMINISHER);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
+                // G!X Protector
+                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_GIXPROTECTOR))
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_GIXPROTECTOR);
 
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
