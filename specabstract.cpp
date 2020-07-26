@@ -4224,11 +4224,27 @@ void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, bool bIsImage, SpecAbst
     {
         if(!pPEInfo->cliInfo.bInit)
         {
-            if(pPEInfo->listImports.count()==2)
+            if(pPEInfo->listImports.count()==1)
+            {
+                if(pPEInfo->listImports.at(0).sName=="kernel32.dll")
+                {
+                    if(pPEInfo->listImports.at(0).listPositions.count()==1)
+                    {
+                        if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_THEMIDAWINLICENSE))
+                        {
+                            _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_THEMIDAWINLICENSE);
+
+                            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                        }
+                    }
+                }
+            }
+            else if(pPEInfo->listImports.count()==2)
             {
                 bool bKernel32=false;
                 bool bComctl32=false;
 
+                // TODO
                 if(pPEInfo->listImports.at(0).sName=="KERNEL32.dll")
                 {
                     if(pPEInfo->listImports.at(0).listPositions.count()==2)
@@ -4240,7 +4256,7 @@ void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, bool bIsImage, SpecAbst
                         }
                     }
                 }
-                else if(pPEInfo->listImports.at(0).sName=="kernel32.dll")
+                else if(pPEInfo->listImports.at(0).sName=="kernel32.dll") // TODO Check
                 {
                     if(pPEInfo->listImports.at(0).listPositions.count()==1)
                     {
