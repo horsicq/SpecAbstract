@@ -26,11 +26,7 @@
 #include <QDataStream>
 #include <QElapsedTimer>
 #include <QUuid>
-#include "xle.h"
-#include "xne.h"
-#include "xpe.h"
-#include "xelf.h"
-#include "xmach.h"
+#include "xformats.h"
 #include "xzip.h"
 #include "xcab.h"
 #include "xrar.h"
@@ -968,6 +964,7 @@ public:
         bool bSubdirectories;
         bool bIsImage;
         bool bIsTest;
+        XBinary::FT fileType; // Optional
     };
 
     struct UNPACK_OPTIONS

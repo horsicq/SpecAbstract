@@ -29,7 +29,6 @@ SpecAbstract::SpecAbstract(QObject *pParent)
 
 void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, bool bInit)
 {
-    // TODO forced file type
     QElapsedTimer scanTimer;
 
     if(bInit)
@@ -46,44 +45,49 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
     if(sd.open(QIODevice::ReadOnly))
     {
-        QSet<XBinary::FT> stTypes=XBinary::getFileTypes(&sd);
+        QSet<XBinary::FT> stFT=XBinary::getFileTypes(&sd);
 
-        if(stTypes.contains(XBinary::FT_PE32)||stTypes.contains(XBinary::FT_PE64))
+        if(pOptions->fileType!=XBinary::FT_UNKNOWN)
+        {
+            XFormats::filterFileTypes(&stFT,pOptions->fileType);
+        }
+
+        if(stFT.contains(XBinary::FT_PE32)||stFT.contains(XBinary::FT_PE64))
         {
             SpecAbstract::PEINFO_STRUCT pe_info=SpecAbstract::getPEInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(pe_info.basic_info.listDetects);
             pScanResult->listHeurs.append(pe_info.basic_info.listHeurs);
         }
-        else if(stTypes.contains(XBinary::FT_ELF32)||stTypes.contains(XBinary::FT_ELF64))
+        else if(stFT.contains(XBinary::FT_ELF32)||stFT.contains(XBinary::FT_ELF64))
         {
             SpecAbstract::ELFINFO_STRUCT elf_info=SpecAbstract::getELFInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(elf_info.basic_info.listDetects);
             pScanResult->listHeurs.append(elf_info.basic_info.listHeurs);
         }
-        else if(stTypes.contains(XBinary::FT_MACH32)||stTypes.contains(XBinary::FT_MACH64))
+        else if(stFT.contains(XBinary::FT_MACH32)||stFT.contains(XBinary::FT_MACH64))
         {
             SpecAbstract::MACHINFO_STRUCT mach_info=SpecAbstract::getMACHInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(mach_info.basic_info.listDetects);
             pScanResult->listHeurs.append(mach_info.basic_info.listHeurs);
         }
-        else if(stTypes.contains(XBinary::FT_LE)||stTypes.contains(XBinary::FT_LX))
+        else if(stFT.contains(XBinary::FT_LE)||stFT.contains(XBinary::FT_LX))
         {
             SpecAbstract::LEINFO_STRUCT le_info=SpecAbstract::getLEInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(le_info.basic_info.listDetects);
             pScanResult->listHeurs.append(le_info.basic_info.listHeurs);
         }
-        else if(stTypes.contains(XBinary::FT_NE))
+        else if(stFT.contains(XBinary::FT_NE))
         {
             SpecAbstract::NEINFO_STRUCT ne_info=SpecAbstract::getNEInfo(&sd,parentId,pOptions,nOffset);
 
             pScanResult->listRecords.append(ne_info.basic_info.listDetects);
             pScanResult->listHeurs.append(ne_info.basic_info.listHeurs);
         }
-        else if(stTypes.contains(XBinary::FT_MSDOS))
+        else if(stFT.contains(XBinary::FT_MSDOS))
         {
             SpecAbstract::MSDOSINFO_STRUCT msdos_info=SpecAbstract::getMSDOSInfo(&sd,parentId,pOptions,nOffset);
 
