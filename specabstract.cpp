@@ -2382,6 +2382,14 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
+                // LameCrypt
+                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_LAMECRYPT))
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_LAMECRYPT);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+
                 // SC Obfuscator
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_SCOBFUSCATOR))
                 {
