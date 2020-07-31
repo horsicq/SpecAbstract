@@ -8535,7 +8535,7 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,
 
                 _SCANS_STRUCT recordSS=i.value();
 
-                if((recordSS.name!=RECORD_NAME_GENERIC)&&(recordSS.name!=RECORD_NAME_PESHIELD))
+                if(recordSS.name!=RECORD_NAME_GENERIC)
                 {
                     recordSS.bIsHeuristic=true;
 
