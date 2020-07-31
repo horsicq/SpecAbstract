@@ -11042,7 +11042,7 @@ void SpecAbstract::PE_x86Emul(QIODevice *pDevice, bool bIsImage, SpecAbstract::P
             nAddress++;
             nOffset++;
 
-            if((nMODRM==0x64))
+            if(nMODRM==0x64)
             {
                 sSignature+=XBinary::valueToHex(nMODRM).toUpper();
                 quint8 nSIB=binary.read_uint8(nOffset);
