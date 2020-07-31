@@ -9824,6 +9824,11 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
             qint64 _nOffset=0;
             qint64 _nSize=pMSDOSInfo->basic_info.nSize;
 
+            if(pMSDOSInfo->nOverlayOffset!=-1)
+            {
+                _nSize=pMSDOSInfo->nOverlayOffset;
+            }
+
             qint64 nOffsetTurboC=-1;
             qint64 nOffsetTurboCPP=-1;
             qint64 nOffsetBorlandCPP=-1;
