@@ -49,7 +49,7 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
         if(pOptions->fileType!=XBinary::FT_UNKNOWN)
         {
-            XFormats::filterFileTypes(&stFT,pOptions->fileType);
+            XBinary::filterFileTypes(&stFT,pOptions->fileType);
         }
 
         if(stFT.contains(XBinary::FT_PE32)||stFT.contains(XBinary::FT_PE64))
