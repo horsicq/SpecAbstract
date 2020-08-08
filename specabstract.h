@@ -662,7 +662,8 @@ public:
         HEURTYPE_NETANSISTRING,
         HEURTYPE_NETUNICODESTRING,
         HEURTYPE_RICH,
-        HEURTYPE_ARCHIVE
+        HEURTYPE_ARCHIVE,
+        HEURTYPE_RESOURCES
     };
 
     struct HEUR_RECORD
@@ -996,7 +997,7 @@ public:
         const char *pszString;
     };
 
-    struct RESOURCES_RECORD
+    struct PE_RESOURCES_RECORD
     {
         _BASICINFO basicInfo;
         bool bIsString1;
@@ -1196,16 +1197,16 @@ public:
     // TODO BasicInfo as parameter for heur scan
     static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
     static void signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
-    static void resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,RESOURCES_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void PE_resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,PE_RESOURCES_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
     static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
     static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
-    static void richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void MSDOS_richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
     static void archiveScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XArchive::RECORD> *pListArchiveRecords,STRING_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
     static void signatureExpScan(XBinary *pXBinary,XBinary::_MEMORY_MAP *pMemoryMap,QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,qint64 nOffset,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
-    static QList<_SCANS_STRUCT> richScan(quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, int nRecordsSize, RECORD_FILETYPE fileType1, RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, int nRecordsSize, RECORD_FILETYPE fileType1, RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
     static QByteArray serializeScanStruct(SCAN_STRUCT ssRecord,bool bIsHeader=false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData,bool *pbIsHeader=nullptr);

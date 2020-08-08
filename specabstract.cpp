@@ -775,6 +775,7 @@ QString SpecAbstract::heurTypeIdToString(SpecAbstract::HEURTYPE id)
         case HEURTYPE_NETUNICODESTRING:                 sResult=QString(".NET Unicode %1").arg(tr("String"));       break;
         case HEURTYPE_RICH:                             sResult=QString("RICH");                                    break;
         case HEURTYPE_ARCHIVE:                          sResult=tr("Archive");                                      break;
+        case HEURTYPE_RESOURCES:                        sResult=tr("Resources");                                    break;
     }
 
     return sResult;
@@ -1701,6 +1702,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         signatureExpScan(&pe,&(result.basic_info.memoryMap),&result.mapEntryPointDetects,result.nEntryPointOffset,_PE_entrypointExp_records,sizeof(_PE_entrypointExp_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_ENTRYPOINT);
 
         // TODO Resources scan
+        PE_resourcesScan(&(result.mapImportDetects),&(result.listResources),_PE_resorces_records,sizeof(_PE_resorces_records),result.basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_RESOURCES);
 
         PE_x86Emul(pDevice,pOptions->bIsImage,&result);
 
@@ -5035,7 +5037,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
 
         for(int i=0;i<nRichSignaturesCount;i++)
         {
-            listRichDescriptions.append(richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(pPEInfo->basic_info),HEURTYPE_RICH));
+            listRichDescriptions.append(MSDOS_richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pPEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(pPEInfo->basic_info),HEURTYPE_RICH));
         }
 
         int nRichDescriptionsCount=listRichDescriptions.count();
@@ -10505,7 +10507,7 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO
 
         for(int i=0;i<nRichSignaturesCount;i++)
         {
-            listRichDescriptions.append(richScan(pLEInfo->listRichSignatures.at(i).nId,pLEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pLEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(pLEInfo->basic_info),HEURTYPE_RICH));
+            listRichDescriptions.append(MSDOS_richScan(pLEInfo->listRichSignatures.at(i).nId,pLEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pLEInfo->basic_info.id.filetype,SpecAbstract::RECORD_FILETYPE_MSDOS,&(pLEInfo->basic_info),HEURTYPE_RICH));
         }
 
         int nRichDescriptionsCount=listRichDescriptions.count();
@@ -11317,9 +11319,9 @@ void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, 
     }
 }
 
-void SpecAbstract::resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources, SpecAbstract::RESOURCES_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2, BASIC_INFO *pBasicInfo, HEURTYPE heurType)
+void SpecAbstract::PE_resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources, PE_RESOURCES_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2, BASIC_INFO *pBasicInfo, HEURTYPE heurType)
 {
-    int nSignaturesCount=nRecordsSize/sizeof(RESOURCES_RECORD);
+    int nSignaturesCount=nRecordsSize/sizeof(PE_RESOURCES_RECORD);
 
     for(int i=0; i<nSignaturesCount; i++)
     {
@@ -11536,7 +11538,7 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
     }
 }
 
-void SpecAbstract::richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType)
+void SpecAbstract::MSDOS_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType)
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(MSRICH_RECORD);
 
@@ -11705,7 +11707,7 @@ void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMe
     }
 }
 
-QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::richScan(quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType)
+QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType)
 {
     QList<SpecAbstract::_SCANS_STRUCT> listResult;
 
