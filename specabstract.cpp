@@ -11378,6 +11378,10 @@ void SpecAbstract::PE_resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract
                         record.nOffset=0;
 
                         pMapRecords->insert(record.name,record);
+
+#ifdef QT_DEBUG
+                        qDebug("RESOURCES SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
+#endif
                     }
 
                     if(pBasicInfo->bShowHeuristic)
