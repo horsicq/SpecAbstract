@@ -7512,7 +7512,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                     {
                         QString sSignature=pe.getSignature(_nOffset,_nSignatureSize);
 
-                        if(sSignature=="D0CF11E0A1B11AE1") // DOC File
+                        if(sSignature=="D0CF11E0A1B11AE1") // DOC File TODO move to signatures
                         {
                             VI_STRUCT vi=get_WindowsInstaller_vi(pDevice,bIsImage,_nOffset,_nSize);
 
