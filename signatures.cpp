@@ -836,7 +836,8 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
 
 SpecAbstract::PE_RESOURCES_RECORD _PE_resorces_records[]=
 {
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_VCL,                          "",                 ""},                    false,      "",     0,      true,   "",     0},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_VCL,                          "",                 ""},                    false,      "",     XPE_DEF::S_RT_RCDATA,       true,   "PACKAGEINFO",      0},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_VCL,                          "",                 ""},                    false,      "",     XPE_DEF::S_RT_RCDATA,       true,   "DVCLAL",           0},
 };
 
 SpecAbstract::MSRICH_RECORD _MS_rich_records[]=
