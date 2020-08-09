@@ -843,8 +843,8 @@ SpecAbstract::PE_RESOURCES_RECORD _PE_resorces_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_INSTALLER,        SpecAbstract::RECORD_NAME_GENTEEINSTALLER,              "",                 ""},                    false,      "",     XPE_DEF::S_RT_RCDATA,       true,   "SETUP_TEMP",       0},    // TODO Version
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_SFX,              SpecAbstract::RECORD_NAME_WINRAR,                       "",                 ""},                    false,      "",     XPE_DEF::S_RT_RCDATA,       true,   "STARTDLG",         0},    // TODO Version
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_SFX,              SpecAbstract::RECORD_NAME_WINRAR,                       "",                 ""},                    false,      "",     XPE_DEF::S_RT_RCDATA,       true,   "LICENSEDLG",       0},    // TODO Version
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_INSTALLER,        SpecAbstract::RECORD_NAME_ALCHEMYMINDWORKS,             "",                 ""},                    false,      "",     XPE_DEF::S_RT_RCDATA,       false,  "",                 4001},    // TODO Version
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_INSTALLER,        SpecAbstract::RECORD_NAME_ALCHEMYMINDWORKS,             "",                 ""},                    false,      "",     XPE_DEF::S_RT_RCDATA,       false,  "",                 5001},    // TODO Version
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_INSTALLER,        SpecAbstract::RECORD_NAME_ALCHEMYMINDWORKS,             "",                 ""},                    false,      "",     XPE_DEF::S_RT_RCDATA,       false,  "",                 4001},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_INSTALLER,        SpecAbstract::RECORD_NAME_ALCHEMYMINDWORKS,             "",                 ""},                    false,      "",     XPE_DEF::S_RT_RCDATA,       false,  "",                 5001},
 };
 
 // TODO Resource version
