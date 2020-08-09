@@ -841,6 +841,8 @@ SpecAbstract::PE_RESOURCES_RECORD _PE_resorces_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DOTNETREACTOR,                "",                 ""},                    false,      "",     XPE_DEF::S_RT_RCDATA,       true,   "__",               0},    // TODO Version
 };
 
+// TODO Resource version
+
 SpecAbstract::MSRICH_RECORD _MS_rich_records[]=
 {
     {{0, SpecAbstract::RECORD_FILETYPE_MSDOS,   SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "",                 ""},                    0x0001,         0},             // Linker generated import object version 0
