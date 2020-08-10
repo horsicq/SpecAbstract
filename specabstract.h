@@ -1087,7 +1087,7 @@ public:
     static void PE_handle_Protection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_VProtect(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo); // TODO move to protection
-    static void PE_handle_TTProtect(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_TTProtect(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo); // TODO move to protection
     static void PE_handle_SafeengineShielden(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_tElock(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
