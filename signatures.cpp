@@ -847,8 +847,8 @@ SpecAbstract::PE_RESOURCES_RECORD _PE_resorces_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_INSTALLER,        SpecAbstract::RECORD_NAME_ALCHEMYMINDWORKS,             "",                 ""},                    false,      "",         XPE_DEF::S_RT_RCDATA,       false,  "",                 4001},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_INSTALLER,        SpecAbstract::RECORD_NAME_ALCHEMYMINDWORKS,             "",                 ""},                    false,      "",         XPE_DEF::S_RT_RCDATA,       false,  "",                 5001},
     {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_INSTALLER,        SpecAbstract::RECORD_NAME_INNOSETUP,                    "",                 ""},                    false,      "",         XPE_DEF::S_RT_RCDATA,       false,  "",                 11111},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_CELESTYFILEBINDER,            "",                 ""},                    true,       "RBIND",    0,                          false,  "",                 -1},
-    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_NJOINER,                      "",                 ""},                    true,       "NJ",       0,                          false,  "",                 -1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_CELESTYFILEBINDER,            "",                 ""},                    true,       "RBIND",    0,                          false,  "",                 (quint32)-1},
+    {{0, SpecAbstract::RECORD_FILETYPE_PE,      SpecAbstract::RECORD_TYPE_JOINER,           SpecAbstract::RECORD_NAME_NJOINER,                      "",                 ""},                    true,       "NJ",       0,                          false,  "",                 (quint32)-1},
 };
 
 // TODO Resource version
