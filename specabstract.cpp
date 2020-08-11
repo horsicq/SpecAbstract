@@ -132,11 +132,7 @@ QString SpecAbstract::append(QString sResult, QString sString)
 {
     if(sString!="")
     {
-        if(sResult!="")
-        {
-            sResult+=",";
-        }
-
+        if(sResult!="") sResult+=",";
         sResult+=sString;
     }
 
