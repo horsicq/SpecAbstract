@@ -906,7 +906,7 @@ public:
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointSectionDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapSectionNamesDetects;
 //        QMap<RECORD_NAME,_SCANS_STRUCT> mapRichDetects;
-//        QMap<RECORD_NAME,_SCANS_STRUCT> mapResourcesDetects;
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapResourcesDetects;
 
         qint32 nEntryPointSection;
         qint32 nResourceSection;
