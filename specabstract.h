@@ -894,7 +894,6 @@ public:
         QList<XMSDOS::MS_RICH_RECORD> listRichSignatures;
         QString sResourceManifest;
         XPE::RESOURCE_VERSION resVersion;
-
         XPE::CLI_INFO cliInfo;
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapOverlayDetects;
@@ -916,9 +915,7 @@ public:
         qint32 nConstDataSection;
         qint32 nRelocsSection;
         qint32 nTLSSection;
-
         QString sEntryPointSectionName;
-
         qint64 nEntryPointAddress;
         qint64 nImageBaseAddress;
         quint8 nMinorLinkerVersion;
