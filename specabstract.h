@@ -795,7 +795,7 @@ public:
         QString sEntryPointSignature;
 
         bool bIs64;
-        bool bIsBigEndian;
+        bool bIsBigEndian; // TODO move to basic
 
         QList<XELF::TAG_STRUCT> listTags;
         QList<QString> listLibraries;
@@ -926,7 +926,6 @@ public:
         quint16 nMinorImageVersion;
         quint16 nMajorImageVersion;
         bool bIs64;
-
         bool bIsNetPresent;
 
         XBinary::OFFSETSIZE osHeader;
