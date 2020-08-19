@@ -6514,11 +6514,11 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
                 if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER))
                 {
-                    SpecAbstract::_SCANS_STRUCT recordLinker={};
-                    recordLinker.name=RECORD_NAME_LCCLNK;
-                    recordLinker.type=RECORD_TYPE_LINKER;
-                    recordLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
-                    pPEInfo->mapResultLinkers.insert(recordLinker.name,scansToScan(&(pPEInfo->basic_info),&recordLinker));
+                    SpecAbstract::_SCANS_STRUCT ssLinker={};
+                    ssLinker.name=RECORD_NAME_LCCLNK;
+                    ssLinker.type=RECORD_TYPE_LINKER;
+                    ssLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
+                    pPEInfo->mapResultLinkers.insert(ssLinker.name,scansToScan(&(pPEInfo->basic_info),&ssLinker));
                 }
             }
         }
