@@ -9802,8 +9802,8 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
 
     if(msdos.isValid())
     {
-        SpecAbstract::_SCANS_STRUCT recordLinker={};
-        SpecAbstract::_SCANS_STRUCT recordCompiler={};
+        SpecAbstract::_SCANS_STRUCT ssLinker={};
+        SpecAbstract::_SCANS_STRUCT ssCompiler={};
 
         if(pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_TURBOLINKER))
         {
@@ -9816,7 +9816,7 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
                 ss.sVersion=vi.sVersion;
             }
 
-            recordLinker=ss;
+            ssLinker=ss;
         }
 
         if(pMSDOSInfo->basic_info.bIsDeepScan)
@@ -9904,19 +9904,19 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
             }
         }
 
-        if(recordCompiler.type==RECORD_TYPE_UNKNOWN)
+        if(ssCompiler.type==RECORD_TYPE_UNKNOWN)
         {
             if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_TURBOCPP))
             {
-                recordCompiler=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_TURBOCPP);
+                ssCompiler=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_TURBOCPP);
             }
         }
 
-        if(recordLinker.type==RECORD_TYPE_UNKNOWN)
+        if(ssLinker.type==RECORD_TYPE_UNKNOWN)
         {
-            if( (recordCompiler.name==RECORD_NAME_TURBOC)||
-                (recordCompiler.name==RECORD_NAME_TURBOCPP)||
-                (recordCompiler.name==RECORD_NAME_BORLANDCPP))
+            if( (ssCompiler.name==RECORD_NAME_TURBOC)||
+                (ssCompiler.name==RECORD_NAME_TURBOCPP)||
+                (ssCompiler.name==RECORD_NAME_BORLANDCPP))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_MSDOS,RECORD_TYPE_LINKER,RECORD_NAME_TURBOLINKER,"","",0);
 
@@ -9925,18 +9925,18 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecA
                 // Turbo-C 1988 2.0
                 // Borland C++ 1991 3.0-7.00?
 
-                recordLinker=ss;
+                ssLinker=ss;
             }
         }
 
-        if(recordLinker.type!=RECORD_TYPE_UNKNOWN)
+        if(ssLinker.type!=RECORD_TYPE_UNKNOWN)
         {
-            pMSDOSInfo->mapResultLinkers.insert(recordLinker.name,scansToScan(&(pMSDOSInfo->basic_info),&recordLinker));
+            pMSDOSInfo->mapResultLinkers.insert(ssLinker.name,scansToScan(&(pMSDOSInfo->basic_info),&ssLinker));
         }
 
-        if(recordCompiler.type!=RECORD_TYPE_UNKNOWN)
+        if(ssCompiler.type!=RECORD_TYPE_UNKNOWN)
         {
-            pMSDOSInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pMSDOSInfo->basic_info),&recordCompiler));
+            pMSDOSInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pMSDOSInfo->basic_info),&ssCompiler));
         }
     }
 }
