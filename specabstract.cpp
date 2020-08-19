@@ -8513,13 +8513,13 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,
                     if( pPEInfo->mapImportDetects.contains(RECORD_NAME_UPX)&&
                         (pPEInfo->mapImportDetects.value(RECORD_NAME_UPX).nVariant==0))
                     {
-                        SpecAbstract::_SCANS_STRUCT recordSS={};
+                        SpecAbstract::_SCANS_STRUCT ss={};
 
-                        recordSS.type=RECORD_TYPE_PACKER;
-                        recordSS.name=RECORD_NAME_UNK_UPXLIKE;
-                        recordSS.bIsHeuristic=true;
+                        ss.type=RECORD_TYPE_PACKER;
+                        ss.name=RECORD_NAME_UNK_UPXLIKE;
+                        ss.bIsHeuristic=true;
 
-                        pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+                        pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     }
                 }
             }
