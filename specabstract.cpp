@@ -11745,24 +11745,24 @@ QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, qui
     return listResult;
 }
 
-QByteArray SpecAbstract::serializeScanStruct(SCAN_STRUCT ssRecord, bool bIsHeader)
+QByteArray SpecAbstract::serializeScanStruct(SCAN_STRUCT scanStruct, bool bIsHeader)
 {
     QByteArray baResult;
 
     QDataStream ds(baResult);
 
-    ds << ssRecord.nSize;
-    ds << ssRecord.nOffset;
-    ds << ssRecord.id.uuid;
-    ds << (quint32)ssRecord.id.filetype;
-    ds << (quint32)ssRecord.id.filepart;
-    ds << ssRecord.parentId.uuid;
-    ds << (quint32)ssRecord.parentId.filetype;
-    ds << (quint32)ssRecord.parentId.filepart;
-    ds << (quint32)ssRecord.type;
-    ds << (quint32)ssRecord.name;
-    ds << ssRecord.sVersion;
-    ds << ssRecord.sInfo;
+    ds << scanStruct.nSize;
+    ds << scanStruct.nOffset;
+    ds << scanStruct.id.uuid;
+    ds << (quint32)scanStruct.id.filetype;
+    ds << (quint32)scanStruct.id.filepart;
+    ds << scanStruct.parentId.uuid;
+    ds << (quint32)scanStruct.parentId.filetype;
+    ds << (quint32)scanStruct.parentId.filepart;
+    ds << (quint32)scanStruct.type;
+    ds << (quint32)scanStruct.name;
+    ds << scanStruct.sVersion;
+    ds << scanStruct.sInfo;
     ds << bIsHeader;
 
     return baResult;

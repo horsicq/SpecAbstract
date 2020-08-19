@@ -1204,7 +1204,7 @@ public:
 
     static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, int nRecordsSize, RECORD_FILETYPE fileType1, RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
-    static QByteArray serializeScanStruct(SCAN_STRUCT ssRecord,bool bIsHeader=false);
+    static QByteArray serializeScanStruct(SCAN_STRUCT scanStruct,bool bIsHeader=false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData,bool *pbIsHeader=nullptr);
 
 private:
