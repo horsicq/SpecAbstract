@@ -1058,6 +1058,27 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Go_vi(QIODevice *pDevice, bool bIsImag
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::get_ObfuscatorLLVM_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+{
+    VI_STRUCT result={};
+
+    XBinary binary(pDevice,bIsImage);
+
+    // TODO get max version
+    qint64 nOffset_Version=binary.find_ansiString(nOffset,nSize,"Obfuscator-clang");
+
+    if(nOffset_Version!=-1)
+    {
+        result.bIsValid=true;
+
+        QString sVersionString=binary.read_ansiString(nOffset_Version);
+
+        result.sVersion=sVersionString.section(" ",2,2);
+    }
+
+    return result;
+}
+
 SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset)
 {
     QElapsedTimer timer;
@@ -1300,6 +1321,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
         result.basic_info.listDetects.append(result.mapResultPackers.values());
+        result.basic_info.listDetects.append(result.mapResultProtectors.values());
 
         if(!result.basic_info.listDetects.count())
         {
@@ -10356,7 +10378,7 @@ void SpecAbstract::ELF_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstrac
         {
             VI_STRUCT viStruct=get_GCC_vi1(pDevice,bIsImage,pELFInfo->osCommentSection.nOffset,pELFInfo->osCommentSection.nSize);
 
-            if(viStruct.sVersion!="")
+            if(viStruct.bIsValid)
             {
                 recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
                 recordCompiler.name=SpecAbstract::RECORD_NAME_GCC;
@@ -10379,23 +10401,41 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
 
     if(elf.isValid())
     {
+        // UPX
         VI_STRUCT viUPX1=get_UPX_vi(pDevice,bIsImage,pELFInfo->basic_info.nSize-0x24,0x24);
         VI_STRUCT viUPX2=get_UPX_vi(pDevice,bIsImage,0,pELFInfo->basic_info.nSize);
 
         if((viUPX1.bIsValid)||(viUPX2.bIsValid))
         {
-            SpecAbstract::_SCANS_STRUCT recordUPX={};
+            SpecAbstract::_SCANS_STRUCT recordSS={};
 
-            recordUPX.type=RECORD_TYPE_PACKER;
-            recordUPX.name=RECORD_NAME_UPX;
+            recordSS.type=RECORD_TYPE_PACKER;
+            recordSS.name=RECORD_NAME_UPX;
 
-            if(viUPX1.sVersion!="") recordUPX.sVersion=viUPX1.sVersion;
-            if(viUPX2.sVersion!="") recordUPX.sVersion=viUPX2.sVersion;
+            if(viUPX1.sVersion!="") recordSS.sVersion=viUPX1.sVersion;
+            if(viUPX2.sVersion!="") recordSS.sVersion=viUPX2.sVersion;
 
-            if(viUPX1.sInfo!="") recordUPX.sInfo=viUPX1.sInfo;
-            if(viUPX2.sInfo!="") recordUPX.sInfo=viUPX2.sInfo;
+            if(viUPX1.sInfo!="") recordSS.sInfo=viUPX1.sInfo;
+            if(viUPX2.sInfo!="") recordSS.sInfo=viUPX2.sInfo;
 
-            pELFInfo->mapResultPackers.insert(recordUPX.name,scansToScan(&(pELFInfo->basic_info),&recordUPX));
+            pELFInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+        }
+
+        // Obfuscator-LLVM
+        if(elf.checkOffsetSize(pELFInfo->osCommentSection))
+        {
+            VI_STRUCT viStruct=get_ObfuscatorLLVM_vi(pDevice,bIsImage,pELFInfo->osCommentSection.nOffset,pELFInfo->osCommentSection.nSize);
+
+            if(viStruct.bIsValid)
+            {
+                SpecAbstract::_SCANS_STRUCT recordSS={};
+
+                recordSS.type=RECORD_TYPE_PROTECTOR;
+                recordSS.name=RECORD_NAME_OBFUSCATORLLVM;
+                recordSS.sVersion=viStruct.sVersion;
+
+                pELFInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+            }
         }
     }
 }
@@ -10835,8 +10875,8 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi1(QIODevice *pDevice, bool bIsIm
             result.sInfo="Cygwin";
         }
 
-        if((sVersionString.contains("(experimental)"))||
-                (sVersionString.contains("(prerelease)")))
+        if( (sVersionString.contains("(experimental)"))||
+            (sVersionString.contains("(prerelease)")))
         {
             result.sVersion=sVersionString.section(" ",-3,-1); // TODO Check
         }

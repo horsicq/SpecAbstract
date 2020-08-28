@@ -815,6 +815,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
     };
 
     struct LEINFO_STRUCT
@@ -1175,6 +1176,7 @@ public:
     static VI_STRUCT get_DeepSea_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_SmartAssembly_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_Go_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
+    static VI_STRUCT get_ObfuscatorLLVM_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
 
     static bool PE_isValid_UPX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_x86Emul(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
