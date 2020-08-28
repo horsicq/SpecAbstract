@@ -1612,7 +1612,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.nRelocsSection=pe.getRelocsSection(&(result.basic_info.memoryMap));
         result.nTLSSection=pe.getTLSSection(&(result.basic_info.memoryMap));
 
-        result.bIsNetPresent=((result.cliInfo.bInit)||(pe.isNETPresent()&&(result.basic_info.bIsDeepScan)));
+        result.bIsNetPresent=((result.cliInfo.bValid)||(pe.isNETPresent()&&(result.basic_info.bIsDeepScan)));
 
         if(result.nEntryPointSection!=-1)
         {
@@ -2127,7 +2127,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             // TODO MPRESS import
 
@@ -3844,7 +3844,7 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
 
     if(pe.isValid())
     {
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             bool bSuccess=false;
 
@@ -3964,7 +3964,7 @@ void SpecAbstract::PE_handle_VProtect(QIODevice *pDevice, bool bIsImage, SpecAbs
 
     if(pe.isValid())
     {
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             if(pPEInfo->nEntryPointSection>0)
             {
@@ -4003,7 +4003,7 @@ void SpecAbstract::PE_handle_TTProtect(QIODevice *pDevice, bool bIsImage, SpecAb
 
     if(pe.isValid())
     {
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             if(pPEInfo->listImportPositionHashes.count()>=1)
             {
@@ -4030,7 +4030,7 @@ void SpecAbstract::PE_handle_SafeengineShielden(QIODevice *pDevice, bool bIsImag
 
     if(pe.isValid())
     {
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_SAFEENGINESHIELDEN))
             {
@@ -4064,7 +4064,7 @@ void SpecAbstract::PE_handle_tElock(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
     if(pe.isValid())
     {
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             if(pPEInfo->listImports.count()==2)
             {
@@ -4113,7 +4113,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
 
     if(pe.isValid())
     {
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             bool bImportDetect=false;
 
@@ -4167,7 +4167,7 @@ void SpecAbstract::PE_handle_Obsidium(QIODevice *pDevice, bool bIsImage, SpecAbs
         // USER32.DLL
         // ADVAPI32.DLL
         // SHEL32.DLL
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             int nNumberOfImports=pPEInfo->listImports.count();
 
@@ -4234,7 +4234,7 @@ void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, bool bIsImage, SpecAbst
 
     if(pe.isValid())
     {
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             if(pPEInfo->listImports.count()==1)
             {
@@ -4397,7 +4397,7 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
 
     if(pe.isValid())
     {
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             if(!pPEInfo->bIs64)
             {
@@ -4952,7 +4952,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
                 ssLinker.name=RECORD_NAME_MICROSOFTLINKER;
             }
         }
-        else if((pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTLINKER))&&(pPEInfo->cliInfo.bInit))
+        else if((pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTLINKER))&&(pPEInfo->cliInfo.bValid))
         {
             ssLinker.type=RECORD_TYPE_LINKER;
             ssLinker.name=RECORD_NAME_MICROSOFTLINKER;
@@ -5100,7 +5100,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
 
         // TODO Check MASM for .NET
 
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             // VB
             bool bVBnew=false;
@@ -5637,7 +5637,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
             recordLinker=recordTurboLinker;
         }
 
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             qint64 nOffset_string=-1;
             qint64 nOffset_Boolean=-1;
@@ -6306,7 +6306,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             }
         }
 
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             // Qt
             // mb TODO upper
@@ -6560,7 +6560,7 @@ void SpecAbstract::PE_handle_wxWidgets(QIODevice *pDevice, bool bIsImage, SpecAb
 
     if(pe.isValid())
     {
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             bool bDynamic=false;
             bool bStatic=false;
@@ -6671,7 +6671,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
 
     if(pe.isValid())
     {
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             bool bDetectGCC=false;
             bool bHeurGCC=false;
@@ -6976,7 +6976,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
 
     if(pe.isValid())
     {
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             // Inno Setup
             if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_INNOSETUP)||pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_INNOSETUP))
@@ -7572,7 +7572,7 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice,bool bIsImage, SpecAbstract:
 
     if(pe.isValid())
     {
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_RAR))
             {
@@ -7725,7 +7725,7 @@ void SpecAbstract::PE_handle_NeoLite(QIODevice *pDevice, bool bIsImage, SpecAbst
 
     if(pe.isValid())
     {
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             if(pPEInfo->nEntryPointSection!=0)
             {
@@ -7753,7 +7753,7 @@ void SpecAbstract::PE_handle_PrivateEXEProtector(QIODevice *pDevice, bool bIsIma
 
     if(pe.isValid())
     {
-        if(!pPEInfo->cliInfo.bInit)
+        if(!pPEInfo->cliInfo.bValid)
         {
             bool bKernel32ExitProcess=false;
             bool bKernel32=false;
