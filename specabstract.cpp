@@ -109,9 +109,9 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
     {
         QList<SpecAbstract::SCAN_STRUCT> _listDetects;
 
-        int nCount=pScanResult->listRecords.count();
+        int nNumberOfRecords=pScanResult->listRecords.count();
 
-        for(int i=0;i<nCount;i++)
+        for(int i=0;i<nNumberOfRecords;i++)
         {
             if(pScanResult->listRecords.at(i).sInfo=="TEST")
             {
