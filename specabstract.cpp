@@ -1588,9 +1588,9 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         QList<XPE::IMPORT_RECORD> listImports=pe.getImportRecords(&(result.basic_info.memoryMap));
 
-        int nCount=listImports.count();
+        int nNUmberOfImports=listImports.count();
 
-        for(int i=0;i<nCount; i++)
+        for(int i=0;i<nNUmberOfImports; i++)
         {
             QString sRecord=listImports.at(i).sLibrary+" "+listImports.at(i).sFunction;
 
