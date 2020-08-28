@@ -534,6 +534,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_NSIS:                                  sResult=QString("Nullsoft Scriptable Install System");          break;
         case RECORD_NAME_NSPACK:                                sResult=QString("NsPack");                                      break;
         case RECORD_NAME_OBFUSCAR:                              sResult=QString("Obfuscar");                                    break;
+        case RECORD_NAME_OBFUSCATORLLVM:                        sResult=QString("Obfuscator-LLVM");                             break;
         case RECORD_NAME_OBFUSCATORNET2009:                     sResult=QString("Obfuscator.NET 2009");                         break;
         case RECORD_NAME_OBJECTPASCAL:                          sResult=QString("Object Pascal");                               break;
         case RECORD_NAME_OBSIDIUM:                              sResult=QString("Obsidium");                                    break;
