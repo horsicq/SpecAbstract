@@ -6462,7 +6462,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             }
 
             // Perl
-            for(int i=0; i<pPEInfo->listImports.count(); i++)
+            for(int i=0; nNumberOfImports; i++)
             {
                 if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^PERL")))
                 {
@@ -6594,7 +6594,9 @@ void SpecAbstract::PE_handle_wxWidgets(QIODevice *pDevice, bool bIsImage, SpecAb
             QString sVersion;
             QString sInfo;
 
-            for(int i=0; i<pPEInfo->listImports.count(); i++)
+            int nNumberOfImports=pPEInfo->listImports.count();
+
+            for(int i=0; i<nNumberOfImports; i++)
             {
                 if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^WX")))
                 {
@@ -7529,7 +7531,9 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
 
             if(!pPEInfo->mapResultInstallers.contains(RECORD_NAME_WINDOWSINSTALLER))
             {
-                for(int i=0; i<pPEInfo->listResources.count(); i++)
+                int nNumberOfResources=pPEInfo->listResources.count();
+
+                for(int i=0; i<nNumberOfResources; i++)
                 {
                     qint64 _nOffset=pPEInfo->listResources.at(i).nOffset;
                     qint64 _nSize=pPEInfo->listResources.at(i).nSize;
