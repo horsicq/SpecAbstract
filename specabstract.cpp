@@ -5001,7 +5001,9 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
         }
 
-        for(int i=0; i<pPEInfo->listImports.count(); i++)
+        int nNumberOfImports=pPEInfo->listImports.count();
+
+        for(int i=0; i<nNumberOfImports; i++)
         {
             // https://en.wikipedia.org/wiki/Microsoft_Foundation_Class_Library
             // TODO eMbedded Visual C++ 4.0 		mfcce400.dll 	MFC 6.0
@@ -6434,7 +6436,9 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             }
 
             // Python
-            for(int i=0; i<pPEInfo->listImports.count(); i++)
+            int nNumberOfImports=pPEInfo->listImports.count();
+
+            for(int i=0; i<nNumberOfImports; i++)
             {
                 if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^PYTHON")))
                 {
