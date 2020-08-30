@@ -1338,6 +1338,10 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         ELF_handle_Tools(pDevice,pOptions->bIsImage,&result);
         ELF_handle_Protection(pDevice,pOptions->bIsImage,&result);
 
+#ifdef QT_DEBUG
+        ELF_handle_UnknownProtection(pDevice,pOptions->bIsImage,&result);
+#endif
+
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
         result.basic_info.listDetects.append(result.mapResultPackers.values());
@@ -6482,7 +6486,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             }
 
             // Perl
-            for(int i=0; nNumberOfImports; i++)
+            for(int i=0; i<nNumberOfImports; i++)
             {
                 if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^PERL")))
                 {
@@ -10461,6 +10465,36 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
                 recordSS.type=RECORD_TYPE_PROTECTOR;
                 recordSS.name=RECORD_NAME_OBFUSCATORLLVM;
                 recordSS.sVersion=viStruct.sVersion;
+
+                pELFInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+            }
+        }
+    }
+}
+
+void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImage, SpecAbstract::ELFINFO_STRUCT *pELFInfo)
+{
+    Q_UNUSED(pELFInfo)
+
+    XELF elf(pDevice,bIsImage);
+
+    if(elf.isValid())
+    {
+        QList<QString> listStrings=elf.getCommentStrings();
+
+        int nNumberOfStrings=listStrings.count();
+
+        for(int i=0;i<nNumberOfStrings;i++)
+        {
+            QString sString=listStrings.at(i);
+
+            if(sString!="")
+            {
+                SpecAbstract::_SCANS_STRUCT recordSS={};
+
+                recordSS.type=RECORD_TYPE_PROTECTOR;
+                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+(RECORD_NAME)(i+1));
+                recordSS.sVersion=sString;
 
                 pELFInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
             }
