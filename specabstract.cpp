@@ -251,6 +251,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALCHEMYMINDWORKS:                      sResult=QString("Alchemy Mindworks");                           break;
         case RECORD_NAME_ALEXPROTECTOR:                         sResult=QString("Alex Protector");                              break;
         case RECORD_NAME_ALIASOBJ:                              sResult=QString("ALIASOBJ");                                    break;
+        case RECORD_NAME_ALIPAY:                                sResult=QString("Alipay");                                      break;
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
         case RECORD_NAME_ANDPAKK2:                              sResult=QString("ANDpakk2");                                    break;
         case RECORD_NAME_ANDROIDGRADLE:                         sResult=QString("Android Gradle");                              break;
@@ -1065,15 +1066,34 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_ObfuscatorLLVM_vi(QIODevice *pDevice, 
     XBinary binary(pDevice,bIsImage);
 
     // TODO get max version
-    qint64 nOffset_Version=binary.find_ansiString(nOffset,nSize,"Obfuscator-clang");
+    qint64 nOffset_Version=-1;
 
-    if(nOffset_Version!=-1)
+    if(nOffset_Version==-1)
     {
-        result.bIsValid=true;
+        nOffset_Version=binary.find_ansiString(nOffset,nSize,"Obfuscator- clang version"); // 3.4 - 3.5.0
 
-        QString sVersionString=binary.read_ansiString(nOffset_Version);
+        if(nOffset_Version!=-1)
+        {
+            result.bIsValid=true;
 
-        result.sVersion=sVersionString.section(" ",2,2);
+            QString sVersionString=binary.read_ansiString(nOffset_Version);
+
+            result.sVersion=sVersionString.section(" ",3,3);
+        }
+    }
+
+    if(nOffset_Version==-1)
+    {
+        nOffset_Version=binary.find_ansiString(nOffset,nSize,"Obfuscator-LLVM clang version"); // 3.6.1 - 6.0.0
+
+        if(nOffset_Version!=-1)
+        {
+            result.bIsValid=true;
+
+            QString sVersionString=binary.read_ansiString(nOffset_Version);
+
+            result.sVersion=sVersionString.section(" ",3,3);
+        }
     }
 
     return result;
