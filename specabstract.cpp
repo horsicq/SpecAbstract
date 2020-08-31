@@ -3918,39 +3918,39 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
 
             QSet<QString> stDetects;
 
-            int nImportCount=pPEInfo->listImports.count();
+            int nNumberOfImports=pPEInfo->listImports.count();
 
             // TODO Check!
-            if(nImportCount>=2)
+            if(nNumberOfImports>=2)
             {
-                if(pPEInfo->listImports.at(nImportCount-2).sName.toUpper()=="KERNEL32.DLL")
+                if(pPEInfo->listImports.at(nNumberOfImports-2).sName.toUpper()=="KERNEL32.DLL")
                 {
-                    if(pPEInfo->listImports.at(nImportCount-2).listPositions.count()==12)
+                    if(pPEInfo->listImports.at(nNumberOfImports-2).listPositions.count()==12)
                     {
-                        if((pPEInfo->listImports.at(nImportCount-2).listPositions.at(0).sName=="LocalAlloc")&&
-                                (pPEInfo->listImports.at(nImportCount-2).listPositions.at(1).sName=="LocalFree")&&
-                                (pPEInfo->listImports.at(nImportCount-2).listPositions.at(2).sName=="GetModuleFileNameW")&&
-                                (pPEInfo->listImports.at(nImportCount-2).listPositions.at(3).sName=="GetProcessAffinityMask")&&
-                                (pPEInfo->listImports.at(nImportCount-2).listPositions.at(4).sName=="SetProcessAffinityMask")&&
-                                (pPEInfo->listImports.at(nImportCount-2).listPositions.at(5).sName=="SetThreadAffinityMask")&&
-                                (pPEInfo->listImports.at(nImportCount-2).listPositions.at(6).sName=="Sleep")&&
-                                (pPEInfo->listImports.at(nImportCount-2).listPositions.at(7).sName=="ExitProcess")&&
-                                (pPEInfo->listImports.at(nImportCount-2).listPositions.at(8).sName=="FreeLibrary")&&
-                                (pPEInfo->listImports.at(nImportCount-2).listPositions.at(9).sName=="LoadLibraryA")&&
-                                (pPEInfo->listImports.at(nImportCount-2).listPositions.at(10).sName=="GetModuleHandleA")&&
-                                (pPEInfo->listImports.at(nImportCount-2).listPositions.at(11).sName=="GetProcAddress"))
+                        if((pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(0).sName=="LocalAlloc")&&
+                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(1).sName=="LocalFree")&&
+                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(2).sName=="GetModuleFileNameW")&&
+                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(3).sName=="GetProcessAffinityMask")&&
+                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(4).sName=="SetProcessAffinityMask")&&
+                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(5).sName=="SetThreadAffinityMask")&&
+                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(6).sName=="Sleep")&&
+                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(7).sName=="ExitProcess")&&
+                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(8).sName=="FreeLibrary")&&
+                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(9).sName=="LoadLibraryA")&&
+                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(10).sName=="GetModuleHandleA")&&
+                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(11).sName=="GetProcAddress"))
                         {
                             stDetects.insert("kernel32_3");
                         }
                     }
                 }
 
-                if(pPEInfo->listImports.at(nImportCount-1).sName.toUpper()=="USER32.DLL")
+                if(pPEInfo->listImports.at(nNumberOfImports-1).sName.toUpper()=="USER32.DLL")
                 {
-                    if(pPEInfo->listImports.at(nImportCount-1).listPositions.count()==2)
+                    if(pPEInfo->listImports.at(nNumberOfImports-1).listPositions.count()==2)
                     {
-                        if((pPEInfo->listImports.at(nImportCount-1).listPositions.at(0).sName=="GetProcessWindowStation")&&
-                                (pPEInfo->listImports.at(nImportCount-1).listPositions.at(1).sName=="GetUserObjectInformationW"))
+                        if((pPEInfo->listImports.at(nNumberOfImports-1).listPositions.at(0).sName=="GetProcessWindowStation")&&
+                                (pPEInfo->listImports.at(nNumberOfImports-1).listPositions.at(1).sName=="GetUserObjectInformationW"))
                         {
                             stDetects.insert("user32_3");
                         }
