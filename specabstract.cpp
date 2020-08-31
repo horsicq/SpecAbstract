@@ -3927,18 +3927,18 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
                 {
                     if(pPEInfo->listImports.at(nNumberOfImports-2).listPositions.count()==12)
                     {
-                        if((pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(0).sName=="LocalAlloc")&&
-                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(1).sName=="LocalFree")&&
-                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(2).sName=="GetModuleFileNameW")&&
-                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(3).sName=="GetProcessAffinityMask")&&
-                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(4).sName=="SetProcessAffinityMask")&&
-                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(5).sName=="SetThreadAffinityMask")&&
-                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(6).sName=="Sleep")&&
-                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(7).sName=="ExitProcess")&&
-                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(8).sName=="FreeLibrary")&&
-                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(9).sName=="LoadLibraryA")&&
-                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(10).sName=="GetModuleHandleA")&&
-                                (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(11).sName=="GetProcAddress"))
+                        if( (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(0).sName=="LocalAlloc")&&
+                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(1).sName=="LocalFree")&&
+                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(2).sName=="GetModuleFileNameW")&&
+                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(3).sName=="GetProcessAffinityMask")&&
+                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(4).sName=="SetProcessAffinityMask")&&
+                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(5).sName=="SetThreadAffinityMask")&&
+                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(6).sName=="Sleep")&&
+                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(7).sName=="ExitProcess")&&
+                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(8).sName=="FreeLibrary")&&
+                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(9).sName=="LoadLibraryA")&&
+                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(10).sName=="GetModuleHandleA")&&
+                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(11).sName=="GetProcAddress"))
                         {
                             stDetects.insert("kernel32_3");
                         }
@@ -3949,8 +3949,8 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
                 {
                     if(pPEInfo->listImports.at(nNumberOfImports-1).listPositions.count()==2)
                     {
-                        if((pPEInfo->listImports.at(nNumberOfImports-1).listPositions.at(0).sName=="GetProcessWindowStation")&&
-                                (pPEInfo->listImports.at(nNumberOfImports-1).listPositions.at(1).sName=="GetUserObjectInformationW"))
+                        if( (pPEInfo->listImports.at(nNumberOfImports-1).listPositions.at(0).sName=="GetProcessWindowStation")&&
+                            (pPEInfo->listImports.at(nNumberOfImports-1).listPositions.at(1).sName=="GetUserObjectInformationW"))
                         {
                             stDetects.insert("user32_3");
                         }
@@ -7865,9 +7865,9 @@ void SpecAbstract::PE_handle_PrivateEXEProtector(QIODevice *pDevice, bool bIsIma
                 }
             }
 
-            int nCount=pPEInfo->listSectionHeaders.count();
+            int nNumberOfSections=pPEInfo->listSectionHeaders.count();
 
-            for(int i=0;i<nCount;i++)
+            for(int i=0;i<nNumberOfSections;i++)
             {
                 if((pPEInfo->listSectionHeaders.at(i).Characteristics&0xFFFF)==0)
                 {
