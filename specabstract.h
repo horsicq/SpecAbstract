@@ -129,6 +129,7 @@ public:
         RECORD_NAME_ALIPAY,
         RECORD_NAME_ALLOY,
         RECORD_NAME_ANDPAKK2,
+        RECORD_NAME_ANDROIDCLANG,
         RECORD_NAME_ANDROIDGRADLE,
         RECORD_NAME_ANSKYAPOLYMORPHICPACKER,
         RECORD_NAME_ANSLYMPACKER,
@@ -1179,6 +1180,7 @@ public:
     static VI_STRUCT get_SmartAssembly_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_Go_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_ObfuscatorLLVM_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
+    static VI_STRUCT get_AndroidClang_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
 
     static bool PE_isValid_UPX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_x86Emul(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);

@@ -254,6 +254,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALIPAY:                                sResult=QString("Alipay");                                      break;
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
         case RECORD_NAME_ANDPAKK2:                              sResult=QString("ANDpakk2");                                    break;
+        case RECORD_NAME_ANDROIDCLANG:                          sResult=QString("Android clang");                               break;
         case RECORD_NAME_ANDROIDGRADLE:                         sResult=QString("Android Gradle");                              break;
         case RECORD_NAME_ANSKYAPOLYMORPHICPACKER:               sResult=QString("Anskya Polymorphic Packer");                   break;
         case RECORD_NAME_ANSLYMPACKER:                          sResult=QString("AnslymPacker");                                break;
@@ -1094,6 +1095,26 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_ObfuscatorLLVM_vi(QIODevice *pDevice, 
 
             result.sVersion=sVersionString.section(" ",3,3);
         }
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::get_AndroidClang_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+{
+    VI_STRUCT result={};
+
+    XBinary binary(pDevice,bIsImage);
+
+    qint64 nOffset_Version=binary.find_ansiString(nOffset,nSize,"Android clang");
+
+    if(nOffset_Version!=-1)
+    {
+        result.bIsValid=true;
+
+        QString sVersionString=binary.read_ansiString(nOffset_Version);
+
+        result.sVersion=sVersionString.section(" ",3,3);
     }
 
     return result;
@@ -10388,6 +10409,23 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
             recordSS.sVersion=XBinary::regExp("version=(.*?)\\\n",sVersionString,1);
 
             pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+        }
+
+        // Android clang
+        if(elf.checkOffsetSize(pELFInfo->osCommentSection))
+        {
+            VI_STRUCT viStruct=get_AndroidClang_vi(pDevice,bIsImage,pELFInfo->osCommentSection.nOffset,pELFInfo->osCommentSection.nSize);
+
+            if(viStruct.bIsValid)
+            {
+                SpecAbstract::_SCANS_STRUCT recordSS={};
+
+                recordSS.type=RECORD_TYPE_COMPILER;
+                recordSS.name=RECORD_NAME_ANDROIDCLANG;
+                recordSS.sVersion=viStruct.sVersion;
+
+                pELFInfo->mapResultCompilers.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+            }
         }
     }
 }
