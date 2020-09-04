@@ -633,8 +633,8 @@ public:
     struct ID
     {
         QUuid uuid;
-        RECORD_FILETYPE filetype;
-        RECORD_FILEPART filepart;
+        RECORD_FILETYPE fileType;
+        RECORD_FILEPART filePart;
         QString sInfo;
         bool bVirtual;
     };
@@ -646,6 +646,7 @@ public:
         qint64 nOffset;
         ID id;
         ID parentId;
+        QString sArch;
         RECORD_TYPE type;
         RECORD_NAME name;
         QString sVersion;
@@ -1057,8 +1058,8 @@ public:
     static void scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions,bool bInit=false);
 
     static QString append(QString sResult,QString sString);
-    static QString recordFiletypeIdToString(RECORD_FILETYPE id);
-    static QString recordFilepartIdToString(RECORD_FILEPART id);
+    static QString recordFileTypeIdToString(RECORD_FILETYPE id);
+    static QString recordFilePartIdToString(RECORD_FILEPART id);
     static QString recordTypeIdToString(RECORD_TYPE id);
     static QString recordNameIdToString(RECORD_NAME id);
     static QString heurTypeIdToString(HEURTYPE id);
