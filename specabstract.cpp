@@ -1633,9 +1633,9 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         QList<XPE::IMPORT_RECORD> listImports=pe.getImportRecords(&(result.basic_info.memoryMap));
 
-        int nNUmberOfImports=listImports.count();
+        int _nNumberOfImports=listImports.count();
 
-        for(int i=0;i<nNUmberOfImports; i++)
+        for(int i=0;i<_nNumberOfImports; i++)
         {
             QString sRecord=listImports.at(i).sLibrary+" "+listImports.at(i).sFunction;
 
@@ -1644,15 +1644,15 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         qDebug("=====================================================================");
 
-        QList<XPE::IMPORT_HEADER> _listImports=pe.getImports(&(result.basic_info.memoryMap));
+        QList<XPE::IMPORT_HEADER> listImportHeaders=pe.getImports(&(result.basic_info.memoryMap));
 
-        for(int i=0;i<_listImports.count();i++)
+        for(int i=0;i<listImportHeaders.count();i++)
         {
             qDebug("Import hash: %x",result.listImportPositionHashes.at(i));
-            for(int j=0;j<_listImports.at(i).listPositions.count();j++)
+            for(int j=0;j<listImportHeaders.at(i).listPositions.count();j++)
             {
-                qDebug("%s %s",_listImports.at(i).sName.toLatin1().data(),
-                       _listImports.at(i).listPositions.at(j).sFunction.toLatin1().data());
+                qDebug("%s %s",listImportHeaders.at(i).sName.toLatin1().data(),
+                       listImportHeaders.at(i).listPositions.at(j).sFunction.toLatin1().data());
             }
         }
 #endif
