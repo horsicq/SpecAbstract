@@ -4475,7 +4475,10 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
 
                 // TODO !!!
                 // TODO Petite 2.4 Check header
-                for(int i=0; i<pPEInfo->listImports.count(); i++)
+
+                int nNumberOfImports=pPEInfo->listImports.count();
+
+                for(int i=0; i<nNumberOfImports; i++)
                 {
                     if(pPEInfo->listImports.at(i).sName.toUpper()=="USER32.DLL")
                     {
@@ -10802,13 +10805,15 @@ bool SpecAbstract::isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pList, 
 {
     bool bResult=false;
 
-    for(int i=0; i<pList->count(); i++)
+    int nNumberOfRecords=pList->count();
+
+    for(int i=0; i<nNumberOfRecords; i++)
     {
-        if((pList->at(i).id.fileType==filetype)
-                &&(pList->at(i).type==type)
-                &&(pList->at(i).name==name)
-                &&(pList->at(i).sVersion==sVersion)
-                &&(pList->at(i).sInfo==sInfo))
+        if( (pList->at(i).id.fileType==filetype)
+            &&(pList->at(i).type==type)
+            &&(pList->at(i).name==name)
+            &&(pList->at(i).sVersion==sVersion)
+            &&(pList->at(i).sInfo==sInfo))
         {
             bResult=true;
             break;
