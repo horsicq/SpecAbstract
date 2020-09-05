@@ -3985,7 +3985,9 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
                 {
                     bSuccess=true;
 
-                    for(int i=0; i<pPEInfo->listSectionHeaders.count(); i++)
+                    int nNumberOfSections=pPEInfo->listSectionHeaders.count();
+
+                    for(int i=0; i<nNumberOfSections; i++)
                     {
                         // TODO init section
                         if( (i==pPEInfo->nEntryPointSection)||
