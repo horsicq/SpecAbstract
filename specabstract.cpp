@@ -10827,8 +10827,10 @@ bool SpecAbstract::checkVersionString(QString sVersion)
 {
     bool bResult=true;
 
+    int nStringSize=sVersion.size();
+
     // TODO
-    for(int i=0; i<sVersion.size(); i++)
+    for(int i=0; i<nStringSize; i++)
     {
         QChar _char=sVersion.at(i);
 
@@ -11556,24 +11558,24 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
     QList<quint32> listStringCRC;
     QList<quint32> listSignatureCRC;
 
-    int nCount=pListStrings->count();
-    int nSignaturesCount=nRecordsSize/sizeof(STRING_RECORD);
+    int nNumberOfStrings=pListStrings->count();
+    int nNumberOfSignatures=nRecordsSize/sizeof(STRING_RECORD);
 
-    for(int i=0; i<nCount; i++)
+    for(int i=0; i<nNumberOfStrings; i++)
     {
         quint32 nCRC=XBinary::getStringCustomCRC32(pListStrings->at(i));
         listStringCRC.append(nCRC);
     }
 
-    for(int i=0; i<nSignaturesCount; i++)
+    for(int i=0; i<nNumberOfSignatures; i++)
     {
         quint32 nCRC=XBinary::getStringCustomCRC32(pRecords[i].pszString);
         listSignatureCRC.append(nCRC);
     }
 
-    for(int i=0; i<nCount; i++)
+    for(int i=0; i<nNumberOfStrings; i++)
     {
-        for(int j=0; j<nSignaturesCount; j++)
+        for(int j=0; j<nNumberOfSignatures; j++)
         {
             if((pRecords[j].basicInfo.filetype==fileType1)||(pRecords[j].basicInfo.filetype==fileType2))
             {
