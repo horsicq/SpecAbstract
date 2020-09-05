@@ -11732,24 +11732,24 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
     QList<quint32> listStringCRC;
     QList<quint32> listSignatureCRC;
 
-    int nCount=pListArchiveRecords->count();
-    int nSignaturesCount=nRecordsSize/sizeof(STRING_RECORD);
+    int nNumberOfArchives=pListArchiveRecords->count();
+    int nNumberOfSignatures=nRecordsSize/sizeof(STRING_RECORD);
 
-    for(int i=0; i<nCount; i++)
+    for(int i=0; i<nNumberOfArchives; i++)
     {
         quint32 nCRC=XBinary::getStringCustomCRC32(pListArchiveRecords->at(i).sFileName);
         listStringCRC.append(nCRC);
     }
 
-    for(int i=0; i<nSignaturesCount; i++)
+    for(int i=0; i<nNumberOfSignatures; i++)
     {
         quint32 nCRC=XBinary::getStringCustomCRC32(pRecords[i].pszString);
         listSignatureCRC.append(nCRC);
     }
 
-    for(int i=0; i<nCount; i++)
+    for(int i=0; i<nNumberOfArchives; i++)
     {
-        for(int j=0; j<nSignaturesCount; j++)
+        for(int j=0; j<nNumberOfSignatures; j++)
         {
             if((pRecords[j].basicInfo.filetype==fileType1)||(pRecords[j].basicInfo.filetype==fileType2))
             {
