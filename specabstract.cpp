@@ -6901,7 +6901,9 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
                 }
             }
 
-            for(int i=0; i<pPEInfo->listImports.count(); i++)
+            int nNumberOfImports=pPEInfo->listImports.count();
+
+            for(int i=0; i<nNumberOfImports; i++)
             {
                 if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^CYGWIN")))
                 {
