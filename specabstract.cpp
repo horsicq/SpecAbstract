@@ -10968,41 +10968,9 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi1(QIODevice *pDevice, bool bIsIm
 
     if(nOffset_Version!=-1)
     {
-        result.bIsValid=true;
-
         QString sVersionString=binary.read_ansiString(nOffset_Version);
 
-        // TODO MinGW-w64
-        if(sVersionString.contains("MinGW"))
-        {
-            result.sInfo="MinGW";
-        }
-        else if(sVersionString.contains("MSYS2"))
-        {
-            result.sInfo="MSYS2";
-        }
-        else if(sVersionString.contains("Cygwin"))
-        {
-            result.sInfo="Cygwin";
-        }
-
-        if( (sVersionString.contains("(experimental)"))||
-            (sVersionString.contains("(prerelease)")))
-        {
-            result.sVersion=sVersionString.section(" ",-3,-1); // TODO Check
-        }
-        else if(sVersionString.contains("GNU"))
-        {
-            result.sVersion=sVersionString.section(" ",2,-1);
-        }
-        else if(sVersionString.contains("Rev1, Built by MSYS2 project"))
-        {
-            result.sVersion=sVersionString.section(" ",-2,-1);
-        }
-        else
-        {
-            result.sVersion=sVersionString.section(" ",-1,-1);
-        }
+        result=_get_GCC_string(sVersionString);
     }
 
     return result;
@@ -11022,6 +10990,50 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi2(QIODevice *pDevice,bool bIsIma
         result.bIsValid=true;
         QString sVersionString=binary.read_ansiString(nOffset_Version);
         result.sVersion=sVersionString.section("-",1,1).section("/",0,0);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_GCC_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("GCC:"))
+    {
+        result.bIsValid=true;
+
+        // TODO MinGW-w64
+        if(sString.contains("MinGW"))
+        {
+            result.sInfo="MinGW";
+        }
+        else if(sString.contains("MSYS2"))
+        {
+            result.sInfo="MSYS2";
+        }
+        else if(sString.contains("Cygwin"))
+        {
+            result.sInfo="Cygwin";
+        }
+
+        if( (sString.contains("(experimental)"))||
+            (sString.contains("(prerelease)")))
+        {
+            result.sVersion=sString.section(" ",-3,-1); // TODO Check
+        }
+        else if(sString.contains("GNU"))
+        {
+            result.sVersion=sString.section(" ",2,-1);
+        }
+        else if(sString.contains("Rev1, Built by MSYS2 project"))
+        {
+            result.sVersion=sString.section(" ",-2,-1);
+        }
+        else
+        {
+            result.sVersion=sString.section(" ",-1,-1);
+        }
     }
 
     return result;

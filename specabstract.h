@@ -1174,6 +1174,7 @@ public:
     static VI_STRUCT get_UPX_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_GCC_vi1(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize); // TODO Check
     static VI_STRUCT get_GCC_vi2(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
+    static VI_STRUCT _get_GCC_string(QString sString);
     static VI_STRUCT get_WindowsInstaller_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_TurboLinker_vi(QIODevice *pDevice,bool bIsImage);
     static VI_STRUCT get_Enigma_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
