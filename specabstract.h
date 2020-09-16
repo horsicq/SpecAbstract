@@ -609,6 +609,7 @@ public:
         RECORD_NAME_XTREMEPROTECTOR,
         RECORD_NAME_XTREAMLOK,
         RECORD_NAME_XVOLKOLAK,
+        RECORD_NAME_XZ,
         RECORD_NAME_YANDEX,
         RECORD_NAME_YANO,
         RECORD_NAME_YODASCRYPTER,
@@ -729,7 +730,7 @@ public:
         QString sHeaderSignature;
         XBinary::_MEMORY_MAP memoryMap;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapHeaderDetects;
-        QList<SpecAbstract::SCAN_STRUCT> listDetects;
+        QList<SCAN_STRUCT> listDetects;
         bool bIsDeepScan;
         bool bIsHeuristicScan;
         bool bShowHeuristic;
@@ -769,7 +770,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCOMProtectors;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultAPKProtectors;
 
-        QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
+        QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct MSDOSINFO_STRUCT
@@ -790,7 +791,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultSFX;
 
-        QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
+        QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct ELFINFO_STRUCT
@@ -803,6 +804,7 @@ public:
 
         QList<XELF::TAG_STRUCT> listTags;
         QList<QString> listLibraries;
+        QList<QString> listComments;
 
         QList<XELF_DEF::Elf_Shdr> listSectionHeaders;
         QList<XELF_DEF::Elf_Phdr> listProgramHeaders;
@@ -836,7 +838,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
 
-        QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
+        QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct NEINFO_STRUCT
@@ -852,7 +854,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
 
-        QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
+        QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct MACHINFO_STRUCT
@@ -953,7 +955,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultNETCompressors;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultDongleProtection;
 
-        QList<SpecAbstract::SCAN_STRUCT> listRecursiveDetects;
+        QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct SCAN_OPTIONS
@@ -1055,7 +1057,7 @@ public:
 
     explicit SpecAbstract(QObject *pParent=nullptr);
 
-    static void scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions,bool bInit=false);
+    static void scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions,bool bInit=false,bool *pbIsStop=nullptr);
 
     static QString append(QString sResult,QString sString);
     static QString recordFileTypeIdToString(RECORD_FILETYPE id);
@@ -1075,13 +1077,13 @@ public:
     static QString createTypeString(const SCAN_STRUCT *pScanStruct);
     static SCAN_STRUCT createHeaderScanStruct(const SCAN_STRUCT *pScanStruct);
 
-    static BINARYINFO_STRUCT getBinaryInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);
-    static MSDOSINFO_STRUCT getMSDOSInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);
-    static ELFINFO_STRUCT getELFInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);
-    static MACHINFO_STRUCT getMACHInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);
-    static LEINFO_STRUCT getLEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);
-    static NEINFO_STRUCT getNEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);
-    static PEINFO_STRUCT getPEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset);
+    static BINARYINFO_STRUCT getBinaryInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
+    static MSDOSINFO_STRUCT getMSDOSInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
+    static ELFINFO_STRUCT getELFInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
+    static MACHINFO_STRUCT getMACHInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
+    static LEINFO_STRUCT getLEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
+    static NEINFO_STRUCT getNEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
+    static PEINFO_STRUCT getPEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
 
     static _SCANS_STRUCT getScansStruct(quint32 nVariant,RECORD_FILETYPE filetype,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo,qint64 nOffset);
 
@@ -1123,7 +1125,7 @@ public:
 
     static void PE_handle_FixDetects(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 
-    static void PE_handle_Recursive(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo,SpecAbstract::SCAN_OPTIONS *pOptions);
+    static void PE_handle_Recursive(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
 
     static void Binary_handle_Texts(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_COM(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
@@ -1139,7 +1141,7 @@ public:
     static void Binary_handle_LibraryData(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_MicrosoftOffice(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
-    static void Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, BINARYINFO_STRUCT *pBinaryInfo,SpecAbstract::SCAN_OPTIONS *pOptions);
+    static void Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, BINARYINFO_STRUCT *pBinaryInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
     static void Binary_handle_APK(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
 
     static void Binary_handle_FixDetects(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
@@ -1149,8 +1151,9 @@ public:
     static void MSDOS_handle_Protection(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_SFX(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_DosExtenders(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
-    static void MSDOS_handle_Recursive(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo,SpecAbstract::SCAN_OPTIONS *pOptions);
+    static void MSDOS_handle_Recursive(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
 
+    static void ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, ELFINFO_STRUCT *pELFInfo);
     static void ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, ELFINFO_STRUCT *pELFInfo);
     static void ELF_handle_GCC(QIODevice *pDevice,bool bIsImage, ELFINFO_STRUCT *pELFInfo);
     static void ELF_handle_Protection(QIODevice *pDevice,bool bIsImage, ELFINFO_STRUCT *pELFInfo);
@@ -1182,7 +1185,9 @@ public:
     static VI_STRUCT get_SmartAssembly_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_Go_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_ObfuscatorLLVM_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
+    static VI_STRUCT _get_ObfuscatorLLVM_string(QString sString);
     static VI_STRUCT get_AndroidClang_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
+    static VI_STRUCT _get_AndroidClang_string(QString sString);
 
     static bool PE_isValid_UPX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_x86Emul(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);

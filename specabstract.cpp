@@ -27,8 +27,15 @@ SpecAbstract::SpecAbstract(QObject *pParent)
     Q_UNUSED(pParent)
 }
 
-void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, bool bInit)
+void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, bool bInit, bool *pbIsStop)
 {
+    bool __bIsStop=false;
+
+    if(pbIsStop==nullptr)
+    {
+        pbIsStop=&__bIsStop;
+    }
+
     QElapsedTimer scanTimer;
 
     if(bInit)
@@ -43,7 +50,7 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
     SubDevice sd(pDevice,nOffset,nSize);
 
-    if(sd.open(QIODevice::ReadOnly))
+    if(sd.open(QIODevice::ReadOnly)&&(!(*pbIsStop)))
     {
         QSet<XBinary::FT> stFT=XBinary::getFileTypes(&sd);
 
@@ -54,49 +61,49 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
         if(stFT.contains(XBinary::FT_PE32)||stFT.contains(XBinary::FT_PE64))
         {
-            SpecAbstract::PEINFO_STRUCT pe_info=SpecAbstract::getPEInfo(&sd,parentId,pOptions,nOffset);
+            SpecAbstract::PEINFO_STRUCT pe_info=SpecAbstract::getPEInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
             pScanResult->listRecords.append(pe_info.basic_info.listDetects);
             pScanResult->listHeurs.append(pe_info.basic_info.listHeurs);
         }
         else if(stFT.contains(XBinary::FT_ELF32)||stFT.contains(XBinary::FT_ELF64))
         {
-            SpecAbstract::ELFINFO_STRUCT elf_info=SpecAbstract::getELFInfo(&sd,parentId,pOptions,nOffset);
+            SpecAbstract::ELFINFO_STRUCT elf_info=SpecAbstract::getELFInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
             pScanResult->listRecords.append(elf_info.basic_info.listDetects);
             pScanResult->listHeurs.append(elf_info.basic_info.listHeurs);
         }
         else if(stFT.contains(XBinary::FT_MACH32)||stFT.contains(XBinary::FT_MACH64))
         {
-            SpecAbstract::MACHINFO_STRUCT mach_info=SpecAbstract::getMACHInfo(&sd,parentId,pOptions,nOffset);
+            SpecAbstract::MACHINFO_STRUCT mach_info=SpecAbstract::getMACHInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
             pScanResult->listRecords.append(mach_info.basic_info.listDetects);
             pScanResult->listHeurs.append(mach_info.basic_info.listHeurs);
         }
         else if(stFT.contains(XBinary::FT_LE)||stFT.contains(XBinary::FT_LX))
         {
-            SpecAbstract::LEINFO_STRUCT le_info=SpecAbstract::getLEInfo(&sd,parentId,pOptions,nOffset);
+            SpecAbstract::LEINFO_STRUCT le_info=SpecAbstract::getLEInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
             pScanResult->listRecords.append(le_info.basic_info.listDetects);
             pScanResult->listHeurs.append(le_info.basic_info.listHeurs);
         }
         else if(stFT.contains(XBinary::FT_NE))
         {
-            SpecAbstract::NEINFO_STRUCT ne_info=SpecAbstract::getNEInfo(&sd,parentId,pOptions,nOffset);
+            SpecAbstract::NEINFO_STRUCT ne_info=SpecAbstract::getNEInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
             pScanResult->listRecords.append(ne_info.basic_info.listDetects);
             pScanResult->listHeurs.append(ne_info.basic_info.listHeurs);
         }
         else if(stFT.contains(XBinary::FT_MSDOS))
         {
-            SpecAbstract::MSDOSINFO_STRUCT msdos_info=SpecAbstract::getMSDOSInfo(&sd,parentId,pOptions,nOffset);
+            SpecAbstract::MSDOSINFO_STRUCT msdos_info=SpecAbstract::getMSDOSInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
             pScanResult->listRecords.append(msdos_info.basic_info.listDetects);
             pScanResult->listHeurs.append(msdos_info.basic_info.listHeurs);
         }
         else
         {
-            SpecAbstract::BINARYINFO_STRUCT binary_info=SpecAbstract::getBinaryInfo(&sd,parentId,pOptions,nOffset);
+            SpecAbstract::BINARYINFO_STRUCT binary_info=SpecAbstract::getBinaryInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
             pScanResult->listRecords.append(binary_info.basic_info.listDetects);
             pScanResult->listHeurs.append(binary_info.basic_info.listHeurs);
@@ -734,6 +741,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_XTREMEPROTECTOR:                       sResult=QString("Xtreme-Protector");                            break;
         case RECORD_NAME_XTREAMLOK:                             sResult=QString("Xtreamlok");                                   break;
         case RECORD_NAME_XVOLKOLAK:                             sResult=QString("XVolkolak");                                   break;
+        case RECORD_NAME_XZ:                                    sResult=QString("XZ");                                          break;
         case RECORD_NAME_YANDEX:                                sResult=QString("Yandex");                                      break;
         case RECORD_NAME_YANO:                                  sResult=QString("Yano");                                        break;
         case RECORD_NAME_YODASCRYPTER:                          sResult=QString("Yoda's Crypter");                              break;
@@ -1075,11 +1083,9 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_ObfuscatorLLVM_vi(QIODevice *pDevice, 
 
         if(nOffset_Version!=-1)
         {
-            result.bIsValid=true;
-
             QString sVersionString=binary.read_ansiString(nOffset_Version);
 
-            result.sVersion=sVersionString.section(" ",3,3);
+            result=_get_ObfuscatorLLVM_string(sVersionString);
         }
     }
 
@@ -1089,12 +1095,24 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_ObfuscatorLLVM_vi(QIODevice *pDevice, 
 
         if(nOffset_Version!=-1)
         {
-            result.bIsValid=true;
-
             QString sVersionString=binary.read_ansiString(nOffset_Version);
 
-            result.sVersion=sVersionString.section(" ",3,3);
+            result=_get_ObfuscatorLLVM_string(sVersionString);
         }
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ObfuscatorLLVM_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("Obfuscator- clang version")||sString.contains("Obfuscator-LLVM clang version"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",3,3);
     }
 
     return result;
@@ -1110,17 +1128,29 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_AndroidClang_vi(QIODevice *pDevice, bo
 
     if(nOffset_Version!=-1)
     {
-        result.bIsValid=true;
-
         QString sVersionString=binary.read_ansiString(nOffset_Version);
 
-        result.sVersion=sVersionString.section(" ",3,3);
+        result=_get_AndroidClang_string(sVersionString);
     }
 
     return result;
 }
 
-SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_AndroidClang_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("Android clang"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",3,3);
+    }
+
+    return result;
+}
+
+SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -1129,112 +1159,115 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
 
     XBinary binary(pDevice,pOptions->bIsImage);
 
-    result.basic_info.parentId=parentId;
-    result.basic_info.id.fileType=RECORD_FILETYPE_BINARY;
-    result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
-    result.basic_info.id.uuid=QUuid::createUuid();
-    result.basic_info.nOffset=nOffset;
-    result.basic_info.nSize=pDevice->size();
-    result.basic_info.sHeaderSignature=binary.getSignature(0,150);
-    result.basic_info.bIsDeepScan=pOptions->bDeepScan;
-    result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
-    result.basic_info.bShowHeuristic=pOptions->bShowHeuristic;
-    result.basic_info.bIsTest=pOptions->bIsTest;
-    result.basic_info.memoryMap=binary.getMemoryMap();
-
-    // Scan Header
-    signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_binary_records,sizeof(_binary_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_BINARY,&(result.basic_info),HEURTYPE_HEADER);
-    signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_COM_records,sizeof(_COM_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_COM,&(result.basic_info),HEURTYPE_HEADER);
-    signatureExpScan(&binary,&(result.basic_info.memoryMap),&result.basic_info.mapHeaderDetects,0,_COM_Exp_records,sizeof(_COM_Exp_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_COM,&(result.basic_info),HEURTYPE_HEADER);
-
-    if(result.basic_info.parentId.fileType!=RECORD_FILETYPE_UNKNOWN)
+    if(binary.isValid()&&(!(*pbIsStop)))
     {
-        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_PE_overlay_records,sizeof(_PE_overlay_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_BINARY,&(result.basic_info),HEURTYPE_HEADER);
+        result.basic_info.parentId=parentId;
+        result.basic_info.id.fileType=RECORD_FILETYPE_BINARY;
+        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.nOffset=nOffset;
+        result.basic_info.nSize=pDevice->size();
+        result.basic_info.sHeaderSignature=binary.getSignature(0,150);
+        result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bShowHeuristic=pOptions->bShowHeuristic;
+        result.basic_info.bIsTest=pOptions->bIsTest;
+        result.basic_info.memoryMap=binary.getMemoryMap();
+
+        // Scan Header
+        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_binary_records,sizeof(_binary_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_BINARY,&(result.basic_info),HEURTYPE_HEADER);
+        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_COM_records,sizeof(_COM_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_COM,&(result.basic_info),HEURTYPE_HEADER);
+        signatureExpScan(&binary,&(result.basic_info.memoryMap),&result.basic_info.mapHeaderDetects,0,_COM_Exp_records,sizeof(_COM_Exp_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_COM,&(result.basic_info),HEURTYPE_HEADER);
+
+        if(result.basic_info.parentId.fileType!=RECORD_FILETYPE_UNKNOWN)
+        {
+            signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_PE_overlay_records,sizeof(_PE_overlay_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_BINARY,&(result.basic_info),HEURTYPE_HEADER);
+        }
+
+        result.bIsPlainText=binary.isPlainTextType();
+        result.bIsUTF8=binary.isUTF8TextType();
+        result.unicodeType=binary.getUnicodeType();
+
+        if(result.unicodeType!=XBinary::UNICODE_TYPE_NONE)
+        {
+            result.sHeaderText=binary.read_unicodeString(2,qMin(result.basic_info.nSize,(qint64)0x1000),(result.unicodeType==XBinary::UNICODE_TYPE_BE));
+            result.basic_info.id.fileType=RECORD_FILETYPE_TEXT;
+        }
+        else if(result.bIsUTF8)
+        {
+            result.sHeaderText=binary.read_utf8String(3,qMin(result.basic_info.nSize,(qint64)0x1000));
+            result.basic_info.id.fileType=RECORD_FILETYPE_TEXT;
+        }
+        else if(result.bIsPlainText)
+        {
+            result.sHeaderText=binary.read_ansiString(0,qMin(result.basic_info.nSize,(qint64)0x1000));
+            result.basic_info.id.fileType=RECORD_FILETYPE_TEXT;
+        }
+
+        XZip xzip(pDevice);
+
+        result.bIsZip=xzip.isValid();
+
+        if(result.bIsZip)
+        {
+            result.listArchiveRecords=xzip.getRecords(100000);
+        }
+
+        Binary_handle_Texts(pDevice,pOptions->bIsImage,&result);
+        Binary_handle_COM(pDevice,pOptions->bIsImage,&result);
+        Binary_handle_Formats(pDevice,pOptions->bIsImage,&result);
+        Binary_handle_Databases(pDevice,pOptions->bIsImage,&result);
+        Binary_handle_Images(pDevice,pOptions->bIsImage,&result);
+        Binary_handle_Archives(pDevice,pOptions->bIsImage,&result);
+        Binary_handle_Certificates(pDevice,pOptions->bIsImage,&result);
+        Binary_handle_DebugData(pDevice,pOptions->bIsImage,&result);
+        Binary_handle_InstallerData(pDevice,pOptions->bIsImage,&result);
+        Binary_handle_SFXData(pDevice,pOptions->bIsImage,&result);
+        Binary_handle_ProtectorData(pDevice,pOptions->bIsImage,&result);
+        Binary_handle_LibraryData(pDevice,pOptions->bIsImage,&result);
+        Binary_handle_MicrosoftOffice(pDevice,pOptions->bIsImage,&result);
+        Binary_handle_OpenOffice(pDevice,pOptions->bIsImage,&result);
+        Binary_handle_JAR(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
+
+        Binary_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
+
+        result.basic_info.listDetects.append(result.mapResultTexts.values());
+        result.basic_info.listDetects.append(result.mapResultArchives.values());
+        result.basic_info.listDetects.append(result.mapResultCertificates.values());
+        result.basic_info.listDetects.append(result.mapResultDebugData.values());
+        result.basic_info.listDetects.append(result.mapResultFormats.values());
+        result.basic_info.listDetects.append(result.mapResultInstallerData.values());
+        result.basic_info.listDetects.append(result.mapResultSFXData.values());
+        result.basic_info.listDetects.append(result.mapResultProtectorData.values());
+        result.basic_info.listDetects.append(result.mapResultLibraryData.values());
+        result.basic_info.listDetects.append(result.mapResultDatabases.values());
+        result.basic_info.listDetects.append(result.mapResultImages.values());
+        result.basic_info.listDetects.append(result.mapResultTools.values());
+        result.basic_info.listDetects.append(result.mapResultCOMPackers.values());
+        result.basic_info.listDetects.append(result.mapResultCOMProtectors.values());
+        result.basic_info.listDetects.append(result.mapResultAPKProtectors.values());
+
+        if(!result.basic_info.listDetects.count())
+        {
+            _SCANS_STRUCT ssUnknown={};
+
+            ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
+            ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
+
+            result.basic_info.listDetects.append(scansToScan(&(result.basic_info),&ssUnknown));
+
+            result.basic_info.bIsUnknown=true;
+        }
+
+        result.basic_info.listDetects.append(result.listRecursiveDetects);
     }
-
-    result.bIsPlainText=binary.isPlainTextType();
-    result.bIsUTF8=binary.isUTF8TextType();
-    result.unicodeType=binary.getUnicodeType();
-
-    if(result.unicodeType!=XBinary::UNICODE_TYPE_NONE)
-    {
-        result.sHeaderText=binary.read_unicodeString(2,qMin(result.basic_info.nSize,(qint64)0x1000),(result.unicodeType==XBinary::UNICODE_TYPE_BE));
-        result.basic_info.id.fileType=RECORD_FILETYPE_TEXT;
-    }
-    else if(result.bIsUTF8)
-    {
-        result.sHeaderText=binary.read_utf8String(3,qMin(result.basic_info.nSize,(qint64)0x1000));
-        result.basic_info.id.fileType=RECORD_FILETYPE_TEXT;
-    }
-    else if(result.bIsPlainText)
-    {
-        result.sHeaderText=binary.read_ansiString(0,qMin(result.basic_info.nSize,(qint64)0x1000));
-        result.basic_info.id.fileType=RECORD_FILETYPE_TEXT;
-    }
-
-    XZip xzip(pDevice);
-
-    result.bIsZip=xzip.isValid();
-
-    if(result.bIsZip)
-    {
-        result.listArchiveRecords=xzip.getRecords(100000);
-    }
-
-    Binary_handle_Texts(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_COM(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_Formats(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_Databases(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_Images(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_Archives(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_Certificates(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_DebugData(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_InstallerData(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_SFXData(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_ProtectorData(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_LibraryData(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_MicrosoftOffice(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_OpenOffice(pDevice,pOptions->bIsImage,&result);
-    Binary_handle_JAR(pDevice,pOptions->bIsImage,&result,pOptions);
-
-    Binary_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
-
-    result.basic_info.listDetects.append(result.mapResultTexts.values());
-    result.basic_info.listDetects.append(result.mapResultArchives.values());
-    result.basic_info.listDetects.append(result.mapResultCertificates.values());
-    result.basic_info.listDetects.append(result.mapResultDebugData.values());
-    result.basic_info.listDetects.append(result.mapResultFormats.values());
-    result.basic_info.listDetects.append(result.mapResultInstallerData.values());
-    result.basic_info.listDetects.append(result.mapResultSFXData.values());
-    result.basic_info.listDetects.append(result.mapResultProtectorData.values());
-    result.basic_info.listDetects.append(result.mapResultLibraryData.values());
-    result.basic_info.listDetects.append(result.mapResultDatabases.values());
-    result.basic_info.listDetects.append(result.mapResultImages.values());
-    result.basic_info.listDetects.append(result.mapResultTools.values());
-    result.basic_info.listDetects.append(result.mapResultCOMPackers.values());
-    result.basic_info.listDetects.append(result.mapResultCOMProtectors.values());
-    result.basic_info.listDetects.append(result.mapResultAPKProtectors.values());
-
-    if(!result.basic_info.listDetects.count())
-    {
-        _SCANS_STRUCT ssUnknown={};
-
-        ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
-        ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
-
-        result.basic_info.listDetects.append(scansToScan(&(result.basic_info),&ssUnknown));
-
-        result.basic_info.bIsUnknown=true;
-    }
-
-    result.basic_info.listDetects.append(result.listRecursiveDetects);
 
     result.basic_info.nElapsedTime=timer.elapsed();
 
     return result;
 }
 
-SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset)
+SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -1243,71 +1276,74 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
 
     XMSDOS msdos(pDevice,pOptions->bIsImage);
 
-    result.basic_info.parentId=parentId;
-    result.basic_info.id.fileType=RECORD_FILETYPE_MSDOS;
-    result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
-    result.basic_info.id.uuid=QUuid::createUuid();
-    result.basic_info.nOffset=nOffset;
-    result.basic_info.nSize=pDevice->size();
-    result.basic_info.sHeaderSignature=msdos.getSignature(0,150);
-    result.basic_info.bIsDeepScan=pOptions->bDeepScan;
-    result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
-    result.basic_info.bShowHeuristic=pOptions->bShowHeuristic;
-    result.basic_info.bIsTest=pOptions->bIsTest;
-    result.basic_info.memoryMap=msdos.getMemoryMap();
-
-    result.nOverlayOffset=msdos.getOverlayOffset(&(result.basic_info.memoryMap));
-    result.nOverlaySize=msdos.getOverlaySize(&(result.basic_info.memoryMap));
-
-    if(result.nOverlaySize)
+    if(msdos.isValid()&&(!(*pbIsStop)))
     {
-        result.sOverlaySignature=msdos.getSignature(result.nOverlayOffset,150);
+        result.basic_info.parentId=parentId;
+        result.basic_info.id.fileType=RECORD_FILETYPE_MSDOS;
+        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.nOffset=nOffset;
+        result.basic_info.nSize=pDevice->size();
+        result.basic_info.sHeaderSignature=msdos.getSignature(0,150);
+        result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bShowHeuristic=pOptions->bShowHeuristic;
+        result.basic_info.bIsTest=pOptions->bIsTest;
+        result.basic_info.memoryMap=msdos.getMemoryMap();
+
+        result.nOverlayOffset=msdos.getOverlayOffset(&(result.basic_info.memoryMap));
+        result.nOverlaySize=msdos.getOverlaySize(&(result.basic_info.memoryMap));
+
+        if(result.nOverlaySize)
+        {
+            result.sOverlaySignature=msdos.getSignature(result.nOverlayOffset,150);
+        }
+
+        result.nEntryPointOffset=msdos.getEntryPointOffset(&(result.basic_info.memoryMap));
+        result.sEntryPointSignature=msdos.getSignature(msdos.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
+
+        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_HEADER);
+        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_header_records,sizeof(_MSDOS_header_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_HEADER);
+        signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_MSDOS_entrypoint_records,sizeof(_MSDOS_entrypoint_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_ENTRYPOINT);
+
+        signatureExpScan(&msdos,&(result.basic_info.memoryMap),&result.mapEntryPointDetects,result.nEntryPointOffset,_MSDOS_entrypointExp_records,sizeof(_MSDOS_entrypointExp_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_ENTRYPOINT);
+
+        MSDOS_handle_Borland(pDevice,pOptions->bIsImage,&result);
+        MSDOS_handle_Tools(pDevice,pOptions->bIsImage,&result);
+        MSDOS_handle_Protection(pDevice,pOptions->bIsImage,&result);
+        MSDOS_handle_SFX(pDevice,pOptions->bIsImage,&result);
+        MSDOS_handle_DosExtenders(pDevice,pOptions->bIsImage,&result);
+
+        MSDOS_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
+
+        result.basic_info.listDetects.append(result.mapResultDosExtenders.values());
+        result.basic_info.listDetects.append(result.mapResultLinkers.values());
+        result.basic_info.listDetects.append(result.mapResultCompilers.values());
+        result.basic_info.listDetects.append(result.mapResultPackers.values());
+        result.basic_info.listDetects.append(result.mapResultSFX.values());
+        result.basic_info.listDetects.append(result.mapResultProtectors.values());
+
+        if(!result.basic_info.listDetects.count())
+        {
+            _SCANS_STRUCT ssUnknown={};
+
+            ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
+            ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
+
+            result.basic_info.listDetects.append(scansToScan(&(result.basic_info),&ssUnknown));
+
+            result.basic_info.bIsUnknown=true;
+        }
+
+        result.basic_info.listDetects.append(result.listRecursiveDetects);
     }
-
-    result.nEntryPointOffset=msdos.getEntryPointOffset(&(result.basic_info.memoryMap));
-    result.sEntryPointSignature=msdos.getSignature(msdos.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
-
-    signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_HEADER);
-    signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_header_records,sizeof(_MSDOS_header_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_HEADER);
-    signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_MSDOS_entrypoint_records,sizeof(_MSDOS_entrypoint_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_ENTRYPOINT);
-
-    signatureExpScan(&msdos,&(result.basic_info.memoryMap),&result.mapEntryPointDetects,result.nEntryPointOffset,_MSDOS_entrypointExp_records,sizeof(_MSDOS_entrypointExp_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_MSDOS,&(result.basic_info),HEURTYPE_ENTRYPOINT);
-
-    MSDOS_handle_Borland(pDevice,pOptions->bIsImage,&result);
-    MSDOS_handle_Tools(pDevice,pOptions->bIsImage,&result);
-    MSDOS_handle_Protection(pDevice,pOptions->bIsImage,&result);
-    MSDOS_handle_SFX(pDevice,pOptions->bIsImage,&result);
-    MSDOS_handle_DosExtenders(pDevice,pOptions->bIsImage,&result);
-
-    MSDOS_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions);
-
-    result.basic_info.listDetects.append(result.mapResultDosExtenders.values());
-    result.basic_info.listDetects.append(result.mapResultLinkers.values());
-    result.basic_info.listDetects.append(result.mapResultCompilers.values());
-    result.basic_info.listDetects.append(result.mapResultPackers.values());
-    result.basic_info.listDetects.append(result.mapResultSFX.values());
-    result.basic_info.listDetects.append(result.mapResultProtectors.values());
-
-    if(!result.basic_info.listDetects.count())
-    {
-        _SCANS_STRUCT ssUnknown={};
-
-        ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
-        ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
-
-        result.basic_info.listDetects.append(scansToScan(&(result.basic_info),&ssUnknown));
-
-        result.basic_info.bIsUnknown=true;
-    }
-
-    result.basic_info.listDetects.append(result.listRecursiveDetects);
 
     result.basic_info.nElapsedTime=timer.elapsed();
 
     return result;
 }
 
-SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset)
+SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -1316,7 +1352,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
 
     XELF elf(pDevice,pOptions->bIsImage);
 
-    if(elf.isValid())
+    if(elf.isValid()&&(!(*pbIsStop)))
     {
         result.bIs64=elf.is64();
         result.bIsBigEndian=elf.isBigEndian();
@@ -1353,7 +1389,13 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         {
             result.osCommentSection.nOffset=result.listSectionRecords.at(result.nCommentSection).nOffset;
             result.osCommentSection.nSize=result.listSectionRecords.at(result.nCommentSection).nSize;
+
+            result.listComments=elf.getStringsFromSection(result.nCommentSection).values();
         }
+
+        // TODO function for .comment detects;
+
+        ELF_handle_CommentSection(pDevice,pOptions->bIsImage,&result);
 
         ELF_handle_GCC(pDevice,pOptions->bIsImage,&result);
         ELF_handle_Tools(pDevice,pOptions->bIsImage,&result);
@@ -1386,7 +1428,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
     return result;
 }
 
-SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset)
+SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -1395,7 +1437,7 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
 
     XMACH mach(pDevice,pOptions->bIsImage);
 
-    if(mach.isValid())
+    if(mach.isValid()&&(!(*pbIsStop)))
     {
         result.bIs64=mach.is64();
         result.bIsBigEndian=mach.isBigEndian();
@@ -1448,7 +1490,7 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
     return result;
 }
 
-SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset)
+SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -1457,7 +1499,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
 
     XLE le(pDevice,pOptions->bIsImage);
 
-    if(le.isValid())
+    if(le.isValid()&&(!(*pbIsStop)))
     {
         result.basic_info.parentId=parentId;
 
@@ -1511,7 +1553,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
     return result;
 }
 
-SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset)
+SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -1520,7 +1562,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbst
 
     XNE ne(pDevice,pOptions->bIsImage);
 
-    if(ne.isValid())
+    if(ne.isValid()&&(!(*pbIsStop)))
     {
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=RECORD_FILETYPE_NE;
@@ -1562,7 +1604,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbst
     return result;
 }
 
-SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset)
+SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -1571,7 +1613,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
     XPE pe(pDevice,pOptions->bIsImage);
 
-    if(pe.isValid())
+    if(pe.isValid()&&(!(*pbIsStop)))
     {
         result.bIs64=pe.is64();
 
@@ -1876,7 +1918,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         PE_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
-        PE_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions);
+        PE_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
 
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
@@ -2132,6 +2174,9 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     //    {
     //        pPEInfo->mapImportDetects.insert(RECORD_NAME_PECOMPACT,getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PACKER,RECORD_NAME_PECOMPACT,"2.X","",0));
     //    }
+
+    // TODO
+    // Import
 }
 
 void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
@@ -5005,7 +5050,8 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
     if(pe.isValid())
     {
         // Linker
-        if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTLINKER))
+        if( (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTLINKER))&&
+            (!pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER)))
         {
             ssLinker.type=RECORD_TYPE_LINKER;
             ssLinker.name=RECORD_NAME_MICROSOFTLINKER;
@@ -6384,7 +6430,6 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
         if(!pPEInfo->cliInfo.bValid)
         {
             // Qt
-            // mb TODO upper
             // TODO Find Strings QObject
             if(XPE::isImportLibraryPresentI("QtCore4.dll",&(pPEInfo->listImports)))
             {
@@ -8732,7 +8777,7 @@ void SpecAbstract::PE_handle_FixDetects(QIODevice *pDevice,bool bIsImage, SpecAb
     }
 }
 
-void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo, SpecAbstract::SCAN_OPTIONS *pOptions)
+void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo, SpecAbstract::SCAN_OPTIONS *pOptions, bool *pbIsStop)
 {
     if(pOptions->bRecursiveScan)
     {
@@ -8746,7 +8791,7 @@ void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAb
 
                 SpecAbstract::ID _parentId=pPEInfo->basic_info.id;
                 _parentId.filePart=SpecAbstract::RECORD_FILEPART_OVERLAY;
-                scan(pDevice,&scanResult,pPEInfo->nOverlayOffset,pPEInfo->nOverlaySize,_parentId,pOptions);
+                scan(pDevice,&scanResult,pPEInfo->nOverlayOffset,pPEInfo->nOverlaySize,_parentId,pOptions,pbIsStop);
 
                 pPEInfo->listRecursiveDetects.append(scanResult.listRecords);
             }
@@ -9035,6 +9080,15 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ZLIB))&&(pBinaryInfo->basic_info.nSize>=32))
     {
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ZLIB);
+
+        // TODO options
+        // TODO files
+        pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    // XZ
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_XZ))&&(pBinaryInfo->basic_info.nSize>=32))
+    {
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_XZ);
 
         // TODO options
         // TODO files
@@ -9718,7 +9772,7 @@ void SpecAbstract::Binary_handle_OpenOffice(QIODevice *pDevice, bool bIsImage, S
     }
 }
 
-void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo,SpecAbstract::SCAN_OPTIONS *pOptions)
+void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo, SpecAbstract::SCAN_OPTIONS *pOptions, bool *pbIsStop)
 {
     XBinary binary(pDevice,bIsImage);
 
@@ -9726,7 +9780,7 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
     {
         XZip xzip(pDevice);
 
-        if(xzip.isValid())
+        if(xzip.isValid()&&(!(*pbIsStop)))
         {
             XArchive::RECORD record=XArchive::getArchiveRecord("META-INF/MANIFEST.MF",&(pBinaryInfo->listArchiveRecords));
 
@@ -9756,7 +9810,6 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
                             pBinaryInfo->mapResultTools.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
                         }
                         // TODO 1.7.0_79 (Oracle Corporation)
-
                         archiveScan(&(pBinaryInfo->mapArchiveDetects),&(pBinaryInfo->listArchiveRecords),_APK_file_records,sizeof(STRING_RECORD),pBinaryInfo->basic_info.id.fileType,RECORD_FILETYPE_APK,&(pBinaryInfo->basic_info),HEURTYPE_ARCHIVE);
 
                         Binary_handle_APK(pDevice,bIsImage,pBinaryInfo);
@@ -9786,7 +9839,7 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
                             _parentId.filePart=SpecAbstract::RECORD_FILEPART_ARCHIVERECORD;
                             _parentId.sInfo=QString("classes.dex");
                             _parentId.bVirtual=true; // TODO Check
-                            scan(&buffer,&scanResult,0,buffer.size(),_parentId,pOptions);
+                            scan(&buffer,&scanResult,0,buffer.size(),_parentId,pOptions,pbIsStop);
 
                             pBinaryInfo->listRecursiveDetects.append(scanResult.listRecords);
 
@@ -9829,13 +9882,13 @@ void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, bool bIsImage, S
 {
     XBinary binary(pDevice,bIsImage);
 
-    if(     (pBinaryInfo->basic_info.id.fileType==RECORD_FILETYPE_APK)||
-            (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTOFFICE))||
-            (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTOFFICEWORD))||
-            (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTEXCEL))||
-            (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTVISIO))||
-            (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_OPENDOCUMENT))||
-            (pBinaryInfo->mapResultArchives.contains(RECORD_NAME_JAR)))
+    if( (pBinaryInfo->basic_info.id.fileType==RECORD_FILETYPE_APK)||
+        (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTOFFICE))||
+        (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTOFFICEWORD))||
+        (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTEXCEL))||
+        (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTVISIO))||
+        (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_OPENDOCUMENT))||
+        (pBinaryInfo->mapResultArchives.contains(RECORD_NAME_JAR)))
     {
         pBinaryInfo->mapResultArchives.remove(RECORD_NAME_ZIP);
     }
@@ -10341,7 +10394,7 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, bool bIsImage, 
     }
 }
 
-void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,SpecAbstract::SCAN_OPTIONS *pOptions)
+void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop)
 {
     if(pOptions->bRecursiveScan)
     {
@@ -10355,9 +10408,35 @@ void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, bool bIsImage, Spe
 
                 SpecAbstract::ID _parentId=pMSDOSInfo->basic_info.id;
                 _parentId.filePart=SpecAbstract::RECORD_FILEPART_OVERLAY;
-                scan(pDevice,&scanResult,pMSDOSInfo->nOverlayOffset,pMSDOSInfo->nOverlaySize,_parentId,pOptions);
+                scan(pDevice,&scanResult,pMSDOSInfo->nOverlayOffset,pMSDOSInfo->nOverlaySize,_parentId,pOptions,pbIsStop);
 
                 pMSDOSInfo->listRecursiveDetects.append(scanResult.listRecords);
+            }
+        }
+    }
+}
+
+void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, SpecAbstract::ELFINFO_STRUCT *pELFInfo)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(bIsImage)
+
+    int nNumberOfComments=pELFInfo->listComments.count();
+
+    for(int i=0;i<nNumberOfComments;i++)
+    {
+        QString sComment=pELFInfo->listComments.at(i);
+
+        VI_STRUCT vi={};
+        _SCANS_STRUCT ss={};
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_GCC_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_GCC,"","",0);
             }
         }
     }
