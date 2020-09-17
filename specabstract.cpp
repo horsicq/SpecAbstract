@@ -1079,19 +1079,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_ObfuscatorLLVM_vi(QIODevice *pDevice, 
 
     if(nOffset_Version==-1)
     {
-        nOffset_Version=binary.find_ansiString(nOffset,nSize,"Obfuscator- clang version"); // 3.4 - 3.5.0
-
-        if(nOffset_Version!=-1)
-        {
-            QString sVersionString=binary.read_ansiString(nOffset_Version);
-
-            result=_get_ObfuscatorLLVM_string(sVersionString);
-        }
-    }
-
-    if(nOffset_Version==-1)
-    {
-        nOffset_Version=binary.find_ansiString(nOffset,nSize,"Obfuscator-LLVM clang version"); // 3.6.1 - 6.0.0
+        nOffset_Version=binary.find_ansiString(nOffset,nSize,"Obfuscator-"); // 3.4 - 6.0.0
 
         if(nOffset_Version!=-1)
         {
@@ -1108,11 +1096,14 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_ObfuscatorLLVM_string(QString sString
 {
     VI_STRUCT result={};
 
-    if(sString.contains("Obfuscator- clang version")||sString.contains("Obfuscator-LLVM clang version"))
+    if( sString.contains("Obfuscator-clang version")||      // 3.4
+        sString.contains("Obfuscator- clang version")||     // 3.51
+        sString.contains("Obfuscator-LLVM clang version"))  // 3.6.1 - 6.0.0
     {
         result.bIsValid=true;
 
-        result.sVersion=sString.section(" ",3,3);
+        result.sVersion=sString.section("version ",1,1).section("(",0,0).section(" ",0,0);
+//        result.sVersion=sString.section("version ",1,1);
     }
 
     return result;
@@ -6132,6 +6123,10 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                             {
                                sDelphiVersion="10.3 Rio";
                             }
+                            else if(sMajorVersion=="34.0")
+                            {
+                               sDelphiVersion="10.4 Sydney";
+                            }
                         }
                     }
                 }
@@ -10436,7 +10431,21 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
             if(vi.bIsValid)
             {
-                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_GCC,"","",0);
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_GCC,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_ObfuscatorLLVM_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_OBFUSCATORLLVM,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
             }
         }
     }
@@ -10530,16 +10539,11 @@ void SpecAbstract::ELF_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstrac
             recordCompiler.name=SpecAbstract::RECORD_NAME_GCC;
         }
 
-        if(elf.checkOffsetSize(pELFInfo->osCommentSection))
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_GCC))
         {
-            VI_STRUCT viStruct=get_GCC_vi1(pDevice,bIsImage,pELFInfo->osCommentSection.nOffset,pELFInfo->osCommentSection.nSize);
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_GCC);
 
-            if(viStruct.bIsValid)
-            {
-                recordCompiler.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                recordCompiler.name=SpecAbstract::RECORD_NAME_GCC;
-                recordCompiler.sVersion=viStruct.sVersion;
-            }
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
         if(recordCompiler.type!=SpecAbstract::RECORD_TYPE_UNKNOWN)
@@ -10578,20 +10582,11 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         }
 
         // Obfuscator-LLVM
-        if(elf.checkOffsetSize(pELFInfo->osCommentSection))
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_OBFUSCATORLLVM))
         {
-            VI_STRUCT viStruct=get_ObfuscatorLLVM_vi(pDevice,bIsImage,pELFInfo->osCommentSection.nOffset,pELFInfo->osCommentSection.nSize);
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_OBFUSCATORLLVM);
 
-            if(viStruct.bIsValid)
-            {
-                SpecAbstract::_SCANS_STRUCT recordSS={};
-
-                recordSS.type=RECORD_TYPE_PROTECTOR;
-                recordSS.name=RECORD_NAME_OBFUSCATORLLVM;
-                recordSS.sVersion=viStruct.sVersion;
-
-                pELFInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
-            }
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
     }
 }
@@ -10604,25 +10599,25 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
 
     if(elf.isValid())
     {
-        QList<QString> listStrings=elf.getCommentStrings();
+//        QList<QString> listStrings=elf.getCommentStrings();
 
-        int nNumberOfStrings=listStrings.count();
+//        int nNumberOfStrings=listStrings.count();
 
-        for(int i=0;i<nNumberOfStrings;i++)
-        {
-            QString sString=listStrings.at(i);
+//        for(int i=0;i<nNumberOfStrings;i++)
+//        {
+//            QString sString=listStrings.at(i);
 
-            if(sString!="")
-            {
-                SpecAbstract::_SCANS_STRUCT recordSS={};
+//            if(sString!="")
+//            {
+//                SpecAbstract::_SCANS_STRUCT recordSS={};
 
-                recordSS.type=RECORD_TYPE_PROTECTOR;
-                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+(RECORD_NAME)(i+1));
-                recordSS.sVersion=sString;
+//                recordSS.type=RECORD_TYPE_PROTECTOR;
+//                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+(RECORD_NAME)(i+1));
+//                recordSS.sVersion=sString;
 
-                pELFInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
-            }
-        }
+//                pELFInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+//            }
+//        }
     }
 }
 

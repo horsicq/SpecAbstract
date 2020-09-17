@@ -816,6 +816,7 @@ public:
 
         XBinary::OFFSETSIZE osCommentSection;
 
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapCommentSectionDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
