@@ -1828,8 +1828,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         if(result.bIsNetPresent)
         {
-            stringScan(&result.mapDotAnsiStringsDetects,&result.cliInfo.cliMetadata.listAnsiStrings,_PE_dot_ansistrings_records,sizeof(_PE_dot_ansistrings_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_NETANSISTRING);
-            stringScan(&result.mapDotUnicodeStringsDetects,&result.cliInfo.cliMetadata.listUnicodeStrings,_PE_dot_unicodestrings_records,sizeof(_PE_dot_unicodestrings_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_NETUNICODESTRING);
+            stringScan(&result.mapDotAnsiStringsDetects,&result.cliInfo.metaData.listAnsiStrings,_PE_dot_ansistrings_records,sizeof(_PE_dot_ansistrings_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_NETANSISTRING);
+            stringScan(&result.mapDotUnicodeStringsDetects,&result.cliInfo.metaData.listUnicodeStrings,_PE_dot_unicodestrings_records,sizeof(_PE_dot_unicodestrings_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_PE,&(result.basic_info),HEURTYPE_NETUNICODESTRING);
 
             //            for(int i=0;i<result.cliInfo.listUnicodeStrings.count();i++)
             //            {
@@ -5278,7 +5278,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage, SpecAbs
         {
             ssNET.type=SpecAbstract::RECORD_TYPE_LIBRARY;
             ssNET.name=SpecAbstract::RECORD_NAME_DOTNET;
-            ssNET.sVersion=pPEInfo->cliInfo.cliMetadata.header.sVersion;
+            ssNET.sVersion=pPEInfo->cliInfo.metaData.header.sVersion;
 
             if(pPEInfo->cliInfo.bHidden)
             {
