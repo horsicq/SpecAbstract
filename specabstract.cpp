@@ -258,7 +258,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALCHEMYMINDWORKS:                      sResult=QString("Alchemy Mindworks");                           break;
         case RECORD_NAME_ALEXPROTECTOR:                         sResult=QString("Alex Protector");                              break;
         case RECORD_NAME_ALIASOBJ:                              sResult=QString("ALIASOBJ");                                    break;
-        case RECORD_NAME_ALIPAY:                                sResult=QString("Alipay");                                      break;
+        case RECORD_NAME_ALIPAYOBFUSCATOR:                      sResult=QString("Alipay Obfuscator");                           break;
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
         case RECORD_NAME_ANDPAKK2:                              sResult=QString("ANDpakk2");                                    break;
         case RECORD_NAME_ANDROIDCLANG:                          sResult=QString("Android clang");                               break;
@@ -266,6 +266,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ANSKYAPOLYMORPHICPACKER:               sResult=QString("Anskya Polymorphic Packer");                   break;
         case RECORD_NAME_ANSLYMPACKER:                          sResult=QString("AnslymPacker");                                break;
         case RECORD_NAME_ANTIDOTE:                              sResult=QString("AntiDote");                                    break;
+        case RECORD_NAME_APPLELLVM:                             sResult=QString("Apple LLVM");                                  break;
+        case RECORD_NAME_APPORTABLECLANG:                       sResult=QString("Apportable clang");                            break;
         case RECORD_NAME_ARCRYPT:                               sResult=QString("AR Crypt");                                    break;
         case RECORD_NAME_ARJ:                                   sResult=QString("ARJ");                                         break;
         case RECORD_NAME_ARMADILLO:                             sResult=QString("Armadillo");                                   break;
@@ -443,6 +445,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_IBMPCPASCAL:                           sResult=QString("IBM PC Pascal");                               break;
         case RECORD_NAME_ICE:                                   sResult=QString("ICE");                                         break;
         case RECORD_NAME_ICRYPT:                                sResult=QString("ICrypt");                                      break;
+        case RECORD_NAME_IJIAMILLVM:                            sResult=QString("iJiami LLVM");                                 break;
         case RECORD_NAME_ILASM:                                 sResult=QString("ILAsm");                                       break;
         case RECORD_NAME_IMPORT:                                sResult=QString("Import");                                      break;
         case RECORD_NAME_INFCRYPTOR:                            sResult=QString("INF Cryptor");                                 break;
@@ -527,6 +530,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MSYS:                                  sResult=QString("Msys");                                        break;
         case RECORD_NAME_MSYS2:                                 sResult=QString("MSYS2");                                       break;
         case RECORD_NAME_MZ0OPE:                                sResult=QString("MZ0oPE");                                      break;
+        case RECORD_NAME_NAGAINLLVM:                            sResult=QString("Nagain LLVM");                                 break;
         case RECORD_NAME_NAKEDPACKER:                           sResult=QString("NakedPacker");                                 break;
         case RECORD_NAME_NCODE:                                 sResult=QString("N-Code");                                      break;
         case RECORD_NAME_NEOLITE:                               sResult=QString("NeoLite");                                     break;
@@ -621,6 +625,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_RTF:                                   sResult=QString("Rich Text Format");                            break;
         case RECORD_NAME_RUBY:                                  sResult=QString("Ruby");                                        break;
         case RECORD_NAME_SAFEENGINESHIELDEN:                    sResult=QString("Safengine Shielden");                          break;
+        case RECORD_NAME_SAFEENGINELLVM:                        sResult=QString("Safengine LLVM");                              break;
         case RECORD_NAME_SCOBFUSCATOR:                          sResult=QString("SC Obfuscator");                               break;
         case RECORD_NAME_SCPACK:                                sResult=QString("SC Pack");                                     break;
         case RECORD_NAME_SCRNCH:                                sResult=QString("SCRNCH");                                      break;
@@ -1141,6 +1146,95 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AndroidClang_string(QString sString)
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::_get_AlipayObfuscator_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("Alipay"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",3,3);
+
+        if(sString.contains("Trial"))
+        {
+            result.sInfo="Trial";
+        }
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_SafeengineLLVM_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("Safengine clang version"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",3,3);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_NagainLLVM_string(QString sString)
+{
+    VI_STRUCT result={};
+    // http://www.nagain.com/
+    if(sString.contains("Nagain-LLVM clang version"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",3,3);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_iJiami_string(QString sString)
+{
+    VI_STRUCT result={};
+    // https://www.ijiami.cn/
+    if(sString.contains("ijiami LLVM Compiler- clang version"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",5,5);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_AppleLLVM_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("Apple LLVM version"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",3,3);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ApportableClang_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("Apportable clang version"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",3,3);
+    }
+
+    return result;
+}
+
 SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
@@ -1395,9 +1489,11 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
 #ifdef QT_DEBUG
         ELF_handle_UnknownProtection(pDevice,pOptions->bIsImage,&result);
 #endif
+        ELF_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
+        result.basic_info.listDetects.append(result.mapResultTools.values());
         result.basic_info.listDetects.append(result.mapResultPackers.values());
         result.basic_info.listDetects.append(result.mapResultProtectors.values());
 
@@ -10435,6 +10531,54 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
                 pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
             }
+        }        
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_AppleLLVM_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_APPLELLVM,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_AndroidClang_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_ANDROIDCLANG,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_ApportableClang_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_APPORTABLECLANG,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_AlipayObfuscator_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_ALIPAYOBFUSCATOR,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
         }
 
         if(!vi.bIsValid)
@@ -10444,6 +10588,30 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
             if(vi.bIsValid)
             {
                 ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_OBFUSCATORLLVM,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_NagainLLVM_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_NAGAINLLVM,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_iJiami_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_IJIAMILLVM,vi.sVersion,vi.sInfo,0);
 
                 pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
             }
@@ -10506,21 +10674,27 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
             pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
         }
 
-        // Android clang
-        if(elf.checkOffsetSize(pELFInfo->osCommentSection))
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_APPLELLVM))
         {
-            VI_STRUCT viStruct=get_AndroidClang_vi(pDevice,bIsImage,pELFInfo->osCommentSection.nOffset,pELFInfo->osCommentSection.nSize);
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_APPLELLVM);
 
-            if(viStruct.bIsValid)
-            {
-                SpecAbstract::_SCANS_STRUCT recordSS={};
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
 
-                recordSS.type=RECORD_TYPE_COMPILER;
-                recordSS.name=RECORD_NAME_ANDROIDCLANG;
-                recordSS.sVersion=viStruct.sVersion;
+        // Android clang
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ANDROIDCLANG))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ANDROIDCLANG);
 
-                pELFInfo->mapResultCompilers.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
-            }
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Apportable clang
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_APPORTABLECLANG))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_APPORTABLECLANG);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
     }
 }
@@ -10588,6 +10762,38 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
 
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
+
+        // Alipay Obfuscator
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ALIPAYOBFUSCATOR))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ALIPAYOBFUSCATOR);
+
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Safeengine LLVM
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SAFEENGINELLVM))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SAFEENGINELLVM);
+
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Nagain LLVM
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_NAGAINLLVM))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_NAGAINLLVM);
+
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // iJiami LLVM
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_IJIAMILLVM))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_IJIAMILLVM);
+
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
     }
 }
 
@@ -10618,6 +10824,21 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
 //                pELFInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
 //            }
 //        }
+    }
+}
+
+void SpecAbstract::ELF_handle_FixDetects(QIODevice *pDevice, bool bIsImage, SpecAbstract::ELFINFO_STRUCT *pELFInfo)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(bIsImage)
+
+    if( pELFInfo->mapResultCompilers.contains(RECORD_NAME_GCC)||
+        pELFInfo->mapResultCompilers.contains(RECORD_NAME_APPORTABLECLANG))
+    {
+        if(pELFInfo->mapResultCompilers.value(RECORD_NAME_GCC).sVersion=="")
+        {
+            pELFInfo->mapResultCompilers.remove(RECORD_NAME_GCC);
+        }
     }
 }
 

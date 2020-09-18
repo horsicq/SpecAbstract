@@ -126,7 +126,7 @@ public:
         RECORD_NAME_ALCHEMYMINDWORKS,
         RECORD_NAME_ALEXPROTECTOR,
         RECORD_NAME_ALIASOBJ,
-        RECORD_NAME_ALIPAY,
+        RECORD_NAME_ALIPAYOBFUSCATOR,
         RECORD_NAME_ALLOY,
         RECORD_NAME_ANDPAKK2,
         RECORD_NAME_ANDROIDCLANG,
@@ -134,6 +134,8 @@ public:
         RECORD_NAME_ANSKYAPOLYMORPHICPACKER,
         RECORD_NAME_ANSLYMPACKER,
         RECORD_NAME_ANTIDOTE,
+        RECORD_NAME_APPLELLVM,
+        RECORD_NAME_APPORTABLECLANG,
         RECORD_NAME_ARCRYPT,
         RECORD_NAME_ARJ,
         RECORD_NAME_ARMADILLO,
@@ -311,6 +313,7 @@ public:
         RECORD_NAME_IBMPCPASCAL,
         RECORD_NAME_ICE,
         RECORD_NAME_ICRYPT,
+        RECORD_NAME_IJIAMILLVM,
         RECORD_NAME_ILASM,
         RECORD_NAME_IMPORT,
         RECORD_NAME_INFCRYPTOR,
@@ -395,6 +398,7 @@ public:
         RECORD_NAME_MSYS,
         RECORD_NAME_MSYS2,
         RECORD_NAME_MZ0OPE,
+        RECORD_NAME_NAGAINLLVM,
         RECORD_NAME_NAKEDPACKER,
         RECORD_NAME_NCODE,
         RECORD_NAME_NEOLITE,
@@ -489,6 +493,7 @@ public:
         RECORD_NAME_RTF,
         RECORD_NAME_RUBY,
         RECORD_NAME_SAFEENGINESHIELDEN,
+        RECORD_NAME_SAFEENGINELLVM,
         RECORD_NAME_SCOBFUSCATOR,
         RECORD_NAME_SCPACK,
         RECORD_NAME_SCRNCH,
@@ -822,6 +827,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
     };
 
     struct LEINFO_STRUCT
@@ -1160,6 +1166,8 @@ public:
     static void ELF_handle_Protection(QIODevice *pDevice,bool bIsImage, ELFINFO_STRUCT *pELFInfo);
     static void ELF_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,ELFINFO_STRUCT *pELFInfo);
 
+    static void ELF_handle_FixDetects(QIODevice *pDevice,bool bIsImage,ELFINFO_STRUCT *pELFInfo);
+
     static void MACH_handle_Tools(QIODevice *pDevice,bool bIsImage, MACHINFO_STRUCT *pMACHInfo);
     static void MACH_handle_Protection(QIODevice *pDevice,bool bIsImage, MACHINFO_STRUCT *pMACHInfo);
 
@@ -1189,6 +1197,12 @@ public:
     static VI_STRUCT _get_ObfuscatorLLVM_string(QString sString);
     static VI_STRUCT get_AndroidClang_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT _get_AndroidClang_string(QString sString);
+    static VI_STRUCT _get_AlipayObfuscator_string(QString sString);
+    static VI_STRUCT _get_SafeengineLLVM_string(QString sString);
+    static VI_STRUCT _get_NagainLLVM_string(QString sString);
+    static VI_STRUCT _get_iJiami_string(QString sString);
+    static VI_STRUCT _get_AppleLLVM_string(QString sString);
+    static VI_STRUCT _get_ApportableClang_string(QString sString);
 
     static bool PE_isValid_UPX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_x86Emul(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
