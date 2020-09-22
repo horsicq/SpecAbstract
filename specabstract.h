@@ -139,7 +139,14 @@ public:
         RECORD_NAME_ARCRYPT,
         RECORD_NAME_ARJ,
         RECORD_NAME_ARMADILLO,
+        RECORD_NAME_ARMASSEMBLER,
+        RECORD_NAME_ARMC,
+        RECORD_NAME_ARMCCPP,
+        RECORD_NAME_ARMLINKER,
+        RECORD_NAME_ARMNEONCCPP,
         RECORD_NAME_ARMPROTECTOR,
+        RECORD_NAME_ARMTHUMBCCPP,
+        RECORD_NAME_ARMTHUMBMACROASSEMBLER,
         RECORD_NAME_ASDPACK,
         RECORD_NAME_ASM,
         RECORD_NAME_ASPACK,
@@ -181,6 +188,7 @@ public:
         RECORD_NAME_CEXE,
         RECORD_NAME_CIGICIGICRYPTER,
         RECORD_NAME_CIL,
+        RECORD_NAME_CLANG,
         RECORD_NAME_CLICKTEAM,
         RECORD_NAME_CLISECURE,
         RECORD_NAME_COCOA,
@@ -535,6 +543,7 @@ public:
         RECORD_NAME_THEMIDAWINLICENSE,
         RECORD_NAME_THEZONECRYPTER,
         RECORD_NAME_THINSTALL,
+        RECORD_NAME_THUMBC,
         RECORD_NAME_TINYPROG,
         RECORD_NAME_TOTALCOMMANDERINSTALLER,
         RECORD_NAME_TPPPACK,
@@ -823,6 +832,8 @@ public:
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapCommentSectionDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
+
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultPackers;
@@ -1203,6 +1214,15 @@ public:
     static VI_STRUCT _get_iJiami_string(QString sString);
     static VI_STRUCT _get_AppleLLVM_string(QString sString);
     static VI_STRUCT _get_ApportableClang_string(QString sString);
+    static VI_STRUCT _get_ARMAssembler_string(QString sString);
+    static VI_STRUCT _get_ARMLinker_string(QString sString);
+    static VI_STRUCT _get_ARMC_string(QString sString);
+    static VI_STRUCT _get_ARMCCPP_string(QString sString);
+    static VI_STRUCT _get_ARMNEONCCPP_string(QString sString);
+    static VI_STRUCT _get_ARMThumbCCPP_string(QString sString);
+    static VI_STRUCT _get_ARMThumbMacroAssembler_string(QString sString);
+    static VI_STRUCT _get_ThumbC_string(QString sString);
+    static VI_STRUCT _get_clang_string(QString sString);
 
     static bool PE_isValid_UPX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_x86Emul(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);

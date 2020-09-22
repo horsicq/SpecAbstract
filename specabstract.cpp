@@ -271,7 +271,14 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ARCRYPT:                               sResult=QString("AR Crypt");                                    break;
         case RECORD_NAME_ARJ:                                   sResult=QString("ARJ");                                         break;
         case RECORD_NAME_ARMADILLO:                             sResult=QString("Armadillo");                                   break;
+        case RECORD_NAME_ARMASSEMBLER:                          sResult=QString("ARM Assembler");                               break;
+        case RECORD_NAME_ARMC:                                  sResult=QString("ARM C");                                       break;
+        case RECORD_NAME_ARMCCPP:                               sResult=QString("ARM C/C++");                                   break;
+        case RECORD_NAME_ARMLINKER:                             sResult=QString("ARM Linker");                                  break;
+        case RECORD_NAME_ARMNEONCCPP:                           sResult=QString("ARM NEON C/C++");                              break;
         case RECORD_NAME_ARMPROTECTOR:                          sResult=QString("ARM Protector");                               break;
+        case RECORD_NAME_ARMTHUMBCCPP:                          sResult=QString("ARM/Thumb C/C++");                             break;
+        case RECORD_NAME_ARMTHUMBMACROASSEMBLER:                sResult=QString("ARM/Thumb Macro Assembler");                   break;
         case RECORD_NAME_ASDPACK:                               sResult=QString("ASDPack");                                     break;
         case RECORD_NAME_ASM:                                   sResult=QString("Asm");                                         break;
         case RECORD_NAME_ASPACK:                                sResult=QString("ASPack");                                      break;
@@ -313,6 +320,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CEXE:                                  sResult=QString("CExe");                                        break;
         case RECORD_NAME_CIGICIGICRYPTER:                       sResult=QString("Cigicigi Crypter");                            break;
         case RECORD_NAME_CIL:                                   sResult=QString("cil");                                         break;
+        case RECORD_NAME_CLANG:                                 sResult=QString("clang");                                       break;
         case RECORD_NAME_CLICKTEAM:                             sResult=QString("ClickTeam");                                   break;
         case RECORD_NAME_CLISECURE:                             sResult=QString("CliSecure");                                   break;
         case RECORD_NAME_COCOA:                                 sResult=QString("Cocoa");                                       break;
@@ -667,6 +675,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_THEMIDAWINLICENSE:                     sResult=QString("Themida/Winlicense");                          break;
         case RECORD_NAME_THEZONECRYPTER:                        sResult=QString("The Zone Crypter");                            break;
         case RECORD_NAME_THINSTALL:                             sResult=QString("Thinstall(VMware ThinApp)");                   break;
+        case RECORD_NAME_THUMBC:                                sResult=QString("Thumb C");                                     break;
         case RECORD_NAME_TINYPROG:                              sResult=QString("TinyProg");                                    break;
         case RECORD_NAME_TOTALCOMMANDERINSTALLER:               sResult=QString("Total Commander Installer");                   break;
         case RECORD_NAME_TPPPACK:                               sResult=QString("TTP Pack");                                    break;
@@ -1235,6 +1244,132 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_ApportableClang_string(QString sStrin
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMAssembler_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("ARM Assembler,"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(", ",1,-1);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMLinker_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("ARM Linker,"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(", ",1,-1).section("]",0,0)+"]";
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMC_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("ARM C Compiler,"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(", ",1,-1);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMCCPP_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("ARM C/C++ Compiler,"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(", ",1,-1);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMNEONCCPP_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("ARM NEON C/C++ Compiler,"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(", ",1,-1);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMThumbCCPP_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("ARM/Thumb C/C++ Compiler,"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(", ",1,-1);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMThumbMacroAssembler_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("ARM/Thumb Macro Assembler"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section("vsn ",1,-1);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ThumbC_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("Thumb C Compiler,"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(", ",1,-1);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_clang_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains(QRegExp("^clang version")))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",2,2);
+    }
+
+    return result;
+}
+
 SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
@@ -1491,6 +1626,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
 #endif
         ELF_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
+        result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
@@ -10523,7 +10659,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
         if(!vi.bIsValid)
         {
-            vi=_get_GCC_string(sComment);
+            vi=_get_GCC_string(sComment); // TODO Max version
 
             if(vi.bIsValid)
             {
@@ -10564,6 +10700,114 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
             if(vi.bIsValid)
             {
                 ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_APPORTABLECLANG,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_ARMAssembler_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_ARMASSEMBLER,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_ARMLinker_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_LINKER,RECORD_NAME_ARMLINKER,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_ARMC_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_ARMC,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_ARMCCPP_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_ARMCCPP,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_ARMNEONCCPP_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_ARMNEONCCPP,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_ARMThumbCCPP_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_ARMTHUMBCCPP,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_ARMThumbMacroAssembler_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_ARMTHUMBMACROASSEMBLER,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_ThumbC_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_THUMBC,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_clang_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_CLANG,vi.sVersion,vi.sInfo,0);
 
                 pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
             }
@@ -10693,6 +10937,78 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_APPORTABLECLANG))
         {
             SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_APPORTABLECLANG);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // ARM Assembler
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ARMASSEMBLER))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ARMASSEMBLER);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // ARM C
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ARMC))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ARMC);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // ARM C/C++
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ARMCCPP))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ARMCCPP);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // ARM NEON C/C++
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ARMNEONCCPP))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ARMNEONCCPP);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // ARM/Thumb C/C++
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ARMTHUMBCCPP))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ARMTHUMBCCPP);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Thumb C
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_THUMBC))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_THUMBC);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // ARM/Thumb Macro Assembler
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ARMTHUMBMACROASSEMBLER))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ARMTHUMBMACROASSEMBLER);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // ARM Linker
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ARMLINKER))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ARMLINKER);
+
+            pELFInfo->mapResultLinkers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // clang
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_CLANG))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_CLANG);
 
             pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
