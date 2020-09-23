@@ -379,6 +379,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DROPBOX:                               sResult=QString("Dropbox");                                     break;
         case RECORD_NAME_DVCLAL:                                sResult=QString("DVCLAL");                                      break;
         case RECORD_NAME_DYAMAR:                                sResult=QString("DYAMAR");                                      break;
+        case RECORD_NAME_DYNASM:                                sResult=QString("DynASM");                                      break;
         case RECORD_NAME_EAZFUSCATOR:                           sResult=QString("Eazfuscator");                                 break;
         case RECORD_NAME_EMBARCADEROCPP:                        sResult=QString("Embarcadero C++");                             break;
         case RECORD_NAME_EMBARCADEROCPPBUILDER:                 sResult=QString("Embarcadero C++ Builder");                     break;
@@ -1365,6 +1366,80 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_clang_string(QString sString)
         result.bIsValid=true;
 
         result.sVersion=sString.section(" ",2,2);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_DynASM_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("DynASM"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",1,1);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_Delphi_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    // Embarcadero Delphi for Android compiler version
+    if(sString.contains(QRegExp("^Embarcadero Delphi for")))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section("version ",1,1);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_DelphiVersionFromCompiler(QString sString)
+{
+    VI_STRUCT result={};
+
+    sString=sString.section(" ",0,0);
+
+    if(sString!="")
+    {
+        result.bIsValid=true;
+
+        result.sVersion="XE7+";
+
+        if(sString=="28.0")
+        {
+            result.sVersion="XE7";
+        }
+        else if(sString=="29.0")
+        {
+            result.sVersion="XE8";
+        }
+        else if(sString=="30.0")
+        {
+            result.sVersion="10 Seattle";
+        }
+        else if(sString=="31.0")
+        {
+            result.sVersion="10.1 Berlin";
+        }
+        else if(sString=="32.0")
+        {
+            result.sVersion="10.2 Tokyo";
+        }
+        else if(sString=="33.0")
+        {
+            result.sVersion="10.3 Rio";
+        }
+        else if(sString=="34.0")
+        {
+            result.sVersion="10.4 Sydney";
+        }
     }
 
     return result;
@@ -6327,38 +6402,8 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                             company=COMPANY_EMBARCADERO;
 
                             sObjectPascalCompilerVersion=pe.read_ansiString(nOffset_Version+46);
-                            sDelphiVersion="XE7+";
 
-                            QString sMajorVersion=sObjectPascalCompilerVersion.section(" ",0,0);
-
-                            if(sMajorVersion=="28.0")
-                            {
-                               sDelphiVersion="XE7";
-                            }
-                            else if(sMajorVersion=="29.0")
-                            {
-                               sDelphiVersion="XE8";
-                            }
-                            else if(sMajorVersion=="30.0")
-                            {
-                               sDelphiVersion="10 Seattle";
-                            }
-                            else if(sMajorVersion=="31.0")
-                            {
-                               sDelphiVersion="10.1 Berlin";
-                            }
-                            else if(sMajorVersion=="32.0")
-                            {
-                               sDelphiVersion="10.2 Tokyo";
-                            }
-                            else if(sMajorVersion=="33.0")
-                            {
-                               sDelphiVersion="10.3 Rio";
-                            }
-                            else if(sMajorVersion=="34.0")
-                            {
-                               sDelphiVersion="10.4 Sydney";
-                            }
+                            sDelphiVersion=_get_DelphiVersionFromCompiler(sObjectPascalCompilerVersion).sVersion;
                         }
                     }
                 }
@@ -10815,6 +10860,30 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
         if(!vi.bIsValid)
         {
+            vi=_get_DynASM_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_DYNASM,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_Delphi_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_EMBARCADEROOBJECTPASCAL,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
             vi=_get_AlipayObfuscator_string(sComment);
 
             if(vi.bIsValid)
@@ -11011,6 +11080,26 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
             SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_CLANG);
 
             pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // DynASM
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_DYNASM))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_DYNASM);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Delphi
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_EMBARCADEROOBJECTPASCAL))
+        {
+            SpecAbstract::_SCANS_STRUCT ssCompiler=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_EMBARCADEROOBJECTPASCAL);
+
+            pELFInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pELFInfo->basic_info),&ssCompiler));
+
+            SpecAbstract::_SCANS_STRUCT ssTool=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_TOOL,RECORD_NAME_EMBARCADERODELPHI,_get_DelphiVersionFromCompiler(ssCompiler.sVersion).sVersion,"",0);
+
+            pELFInfo->mapResultTools.insert(ssTool.name,scansToScan(&(pELFInfo->basic_info),&ssTool));
         }
     }
 }

@@ -247,6 +247,7 @@ public:
         RECORD_NAME_DROPBOX,
         RECORD_NAME_DVCLAL,
         RECORD_NAME_DYAMAR,
+        RECORD_NAME_DYNASM,
         RECORD_NAME_EAZFUSCATOR,
         RECORD_NAME_EMBARCADEROCPP,
         RECORD_NAME_EMBARCADEROCPPBUILDER,
@@ -1223,6 +1224,10 @@ public:
     static VI_STRUCT _get_ARMThumbMacroAssembler_string(QString sString);
     static VI_STRUCT _get_ThumbC_string(QString sString);
     static VI_STRUCT _get_clang_string(QString sString);
+    static VI_STRUCT _get_DynASM_string(QString sString);
+    static VI_STRUCT _get_Delphi_string(QString sString);
+
+    static VI_STRUCT _get_DelphiVersionFromCompiler(QString sString);
 
     static bool PE_isValid_UPX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_x86Emul(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
