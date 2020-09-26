@@ -52,49 +52,49 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
     if(sd.open(QIODevice::ReadOnly)&&(!(*pbIsStop)))
     {
-        QSet<XBinary::FT> stFT=XBinary::getFileTypes(&sd);
+        QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(&sd);
 
         if(pOptions->fileType!=XBinary::FT_UNKNOWN)
         {
-            XBinary::filterFileTypes(&stFT,pOptions->fileType);
+            XBinary::filterFileTypes(&stFileTypes,pOptions->fileType);
         }
 
-        if(stFT.contains(XBinary::FT_PE32)||stFT.contains(XBinary::FT_PE64))
+        if(stFileTypes.contains(XBinary::FT_PE32)||stFileTypes.contains(XBinary::FT_PE64))
         {
             SpecAbstract::PEINFO_STRUCT pe_info=SpecAbstract::getPEInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
             pScanResult->listRecords.append(pe_info.basic_info.listDetects);
             pScanResult->listHeurs.append(pe_info.basic_info.listHeurs);
         }
-        else if(stFT.contains(XBinary::FT_ELF32)||stFT.contains(XBinary::FT_ELF64))
+        else if(stFileTypes.contains(XBinary::FT_ELF32)||stFileTypes.contains(XBinary::FT_ELF64))
         {
             SpecAbstract::ELFINFO_STRUCT elf_info=SpecAbstract::getELFInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
             pScanResult->listRecords.append(elf_info.basic_info.listDetects);
             pScanResult->listHeurs.append(elf_info.basic_info.listHeurs);
         }
-        else if(stFT.contains(XBinary::FT_MACH32)||stFT.contains(XBinary::FT_MACH64))
+        else if(stFileTypes.contains(XBinary::FT_MACH32)||stFileTypes.contains(XBinary::FT_MACH64))
         {
             SpecAbstract::MACHINFO_STRUCT mach_info=SpecAbstract::getMACHInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
             pScanResult->listRecords.append(mach_info.basic_info.listDetects);
             pScanResult->listHeurs.append(mach_info.basic_info.listHeurs);
         }
-        else if(stFT.contains(XBinary::FT_LE)||stFT.contains(XBinary::FT_LX))
+        else if(stFileTypes.contains(XBinary::FT_LE)||stFileTypes.contains(XBinary::FT_LX))
         {
             SpecAbstract::LEINFO_STRUCT le_info=SpecAbstract::getLEInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
             pScanResult->listRecords.append(le_info.basic_info.listDetects);
             pScanResult->listHeurs.append(le_info.basic_info.listHeurs);
         }
-        else if(stFT.contains(XBinary::FT_NE))
+        else if(stFileTypes.contains(XBinary::FT_NE))
         {
             SpecAbstract::NEINFO_STRUCT ne_info=SpecAbstract::getNEInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
             pScanResult->listRecords.append(ne_info.basic_info.listDetects);
             pScanResult->listHeurs.append(ne_info.basic_info.listHeurs);
         }
-        else if(stFT.contains(XBinary::FT_MSDOS))
+        else if(stFileTypes.contains(XBinary::FT_MSDOS))
         {
             SpecAbstract::MSDOSINFO_STRUCT msdos_info=SpecAbstract::getMSDOSInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
