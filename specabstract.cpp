@@ -4161,9 +4161,16 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 }
 
                 // Thinstall
-                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_THINSTALL))
+                if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_THINSTALL)) // TODO Imports EP
                 {
                     _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_THINSTALL);
+
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+                else if(XPE::getResourceVersionValue("ThinAppVersion",&(pPEInfo->resVersion))!="")
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_THINSTALL,"","",0);
+                    ss.sVersion=XPE::getResourceVersionValue("ThinAppVersion",&(pPEInfo->resVersion)).trimmed();
 
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
