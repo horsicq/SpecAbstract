@@ -8904,6 +8904,26 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,
 
     if(pe.isValid())
     {
+#ifdef QT_DEBUG
+//        int i=pPEInfo->listImportPositionHashes.count()-1;
+
+//        if(i>0)
+//        {
+//            if(pPEInfo->listImports.at(i).listPositions.count()>1)
+//            {
+//                SpecAbstract::_SCANS_STRUCT ss={};
+
+//                ss.type=RECORD_TYPE_PROTECTOR;
+//                ss.name=(SpecAbstract::RECORD_NAME)(RECORD_NAME_UNKNOWN0+i);
+//                ss.sVersion=QString("%1").arg(pPEInfo->listImportPositionHashes.at(i),0,16);
+//                ss.bIsHeuristic=true;
+
+//                pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+//            }
+//        }
+
+#endif
+
         if(!PE_isProtectionPresent(pPEInfo))
         {
             if(pPEInfo->listSectionRecords.count())
@@ -11505,19 +11525,19 @@ void SpecAbstract::updateVersionAndInfo(QMap<SpecAbstract::RECORD_NAME, SpecAbst
     }
 }
 
-bool SpecAbstract::isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pList, SpecAbstract::RECORD_FILETYPE filetype, SpecAbstract::RECORD_TYPE type, SpecAbstract::RECORD_NAME name, QString sVersion, QString sInfo)
+bool SpecAbstract::isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListScanStructs, SpecAbstract::RECORD_FILETYPE filetype, SpecAbstract::RECORD_TYPE type, SpecAbstract::RECORD_NAME name, QString sVersion, QString sInfo)
 {
     bool bResult=false;
 
-    int nNumberOfRecords=pList->count();
+    int nNumberOfRecords=pListScanStructs->count();
 
     for(int i=0; i<nNumberOfRecords; i++)
     {
-        if( (pList->at(i).id.fileType==filetype)
-            &&(pList->at(i).type==type)
-            &&(pList->at(i).name==name)
-            &&(pList->at(i).sVersion==sVersion)
-            &&(pList->at(i).sInfo==sInfo))
+        if( (pListScanStructs->at(i).id.fileType==filetype)
+            &&(pListScanStructs->at(i).type==type)
+            &&(pListScanStructs->at(i).name==name)
+            &&(pListScanStructs->at(i).sVersion==sVersion)
+            &&(pListScanStructs->at(i).sInfo==sInfo))
         {
             bResult=true;
             break;

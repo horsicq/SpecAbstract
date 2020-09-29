@@ -1192,7 +1192,7 @@ public:
     static void updateInfo(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sInfo);
     static void updateVersionAndInfo(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sVersion,QString sInfo);
 
-    static bool isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pList,RECORD_FILETYPE filetype,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo);
+    static bool isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListScanStructs,RECORD_FILETYPE filetype,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo);
 
     static bool checkVersionString(QString sVersion);
     static VI_STRUCT get_UPX_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
