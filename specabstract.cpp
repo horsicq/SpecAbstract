@@ -678,6 +678,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_THEZONECRYPTER:                        sResult=QString("The Zone Crypter");                            break;
         case RECORD_NAME_THINSTALL:                             sResult=QString("Thinstall(VMware ThinApp)");                   break;
         case RECORD_NAME_THUMBC:                                sResult=QString("Thumb C");                                     break;
+        case RECORD_NAME_TIFF:                                  sResult=QString("TIFF");                                        break;
         case RECORD_NAME_TINYPROG:                              sResult=QString("TinyProg");                                    break;
         case RECORD_NAME_TOTALCOMMANDERINSTALLER:               sResult=QString("Total Commander Installer");                   break;
         case RECORD_NAME_TPPPACK:                               sResult=QString("TTP Pack");                                    break;
@@ -9734,6 +9735,13 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, bool bIsImage, SpecA
         // GIF
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_GIF);
         // TODO Version
+        pBinaryInfo->mapResultImages.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_TIFF))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        // TIFF
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_TIFF);
+        // More information
         pBinaryInfo->mapResultImages.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINDOWSICON))&&(pBinaryInfo->basic_info.nSize>=40))
