@@ -1479,10 +1479,12 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
             signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_PE_overlay_records,sizeof(_PE_overlay_records),result.basic_info.id.fileType,SpecAbstract::RECORD_FILETYPE_BINARY,&(result.basic_info),HEURTYPE_HEADER);
         }
 
+        // TODO header data!
         result.bIsPlainText=binary.isPlainTextType();
         result.bIsUTF8=binary.isUTF8TextType();
         result.unicodeType=binary.getUnicodeType();
 
+        // TODO Try QTextStream functions!
         if(result.unicodeType!=XBinary::UNICODE_TYPE_NONE)
         {
             result.sHeaderText=binary.read_unicodeString(2,qMin(result.basic_info.nSize,(qint64)0x1000),(result.unicodeType==XBinary::UNICODE_TYPE_BE));
@@ -11636,29 +11638,21 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_UPX_vi(QIODevice *pDevice, bool bIsIma
 
         switch(nMethod) // From http://sourceforge.net/p/upx/code/ci/default/tree/src/conf.h
         {
-            case 2:
-            case 3:
-            case 4:
-            case 5:
-            case 6:
-            case 7:
-            case 8:
-            case 9:
-            case 10:
-                if(result.sInfo=="")
-                {
-                    result.sInfo="NRV";
-                }
 
-                break;
-
-            case 14:
-                result.sInfo="LZMA";
-                break;
-
-            case 15:
-                result.sInfo="zlib";
-                break;
+            //#define M_CL1B_LE32     11
+            //#define M_CL1B_8        12
+            //#define M_CL1B_LE16     13
+            case 2:     result.sInfo=append(result.sInfo,"NRV2B_LE32");         break;
+            case 3:     result.sInfo=append(result.sInfo,"NRV2B_8");            break;
+            case 4:     result.sInfo=append(result.sInfo,"NRV2B_LE16");         break;
+            case 5:     result.sInfo=append(result.sInfo,"NRV2D_LE32");         break;
+            case 6:     result.sInfo=append(result.sInfo,"NRV2D_8");            break;
+            case 7:     result.sInfo=append(result.sInfo,"NRV2D_LE16");         break;
+            case 8:     result.sInfo=append(result.sInfo,"NRV2E_LE32");         break;
+            case 9:     result.sInfo=append(result.sInfo,"NRV2E_8");            break;
+            case 10:    result.sInfo=append(result.sInfo,"NRV2E_LE16");         break;
+            case 14:    result.sInfo=append(result.sInfo,"LZMA");               break;
+            case 15:    result.sInfo=append(result.sInfo,"zlib");               break;
         }
 
         if(result.sInfo!="")
