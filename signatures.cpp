@@ -63,6 +63,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_WAV,                          "",                 ""},                    "................'WAVEfmt'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_IMAGE,            SpecAbstract::RECORD_NAME_DJVU,                         "",                 ""},                    "'AT&T'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_IMAGE,            SpecAbstract::RECORD_NAME_JPEG,                         "",                 ""},                    "FFD8FFE0....'JFIF'00"},
+    {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_IMAGE,            SpecAbstract::RECORD_NAME_GIF,                          "",                 ""},                    "'GIF8'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_IMAGE,            SpecAbstract::RECORD_NAME_PNG,                          "",                 ""},                    "89'PNG\r\n'1A0A........'IHDR'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_IMAGE,            SpecAbstract::RECORD_NAME_WINDOWSBITMAP,                "",                 ""},                    "'BM'"},
     {{0, SpecAbstract::RECORD_FILETYPE_BINARY,  SpecAbstract::RECORD_TYPE_IMAGE,            SpecAbstract::RECORD_NAME_WINDOWSICON,                  "",                 ""},                    "00000100"},

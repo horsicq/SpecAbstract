@@ -426,6 +426,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_GENTEEINSTALLER:                       sResult=QString("Gentee Installer");                            break;
         case RECORD_NAME_GHAZZACRYPTER:                         sResult=QString("GhaZza CryPter");                              break; // st
         case RECORD_NAME_GHOSTINSTALLER:                        sResult=QString("Ghost Installer");                             break;
+        case RECORD_NAME_GIF:                                   sResult=QString("GIF");                                         break;
         case RECORD_NAME_GIXPROTECTOR:                          sResult=QString("G!X Protector");                               break;
         case RECORD_NAME_GKRIPTO:                               sResult=QString("GKripto");                                     break;
         case RECORD_NAME_GKSETUPSFX:                            sResult=QString("GkSetup SFX");                                 break;
@@ -9726,6 +9727,13 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, bool bIsImage, SpecA
         quint32 nMajor=pBinaryInfo->basic_info.sHeaderSignature.mid(11*2,2).toUInt(nullptr,16);
         quint32 nMinor=pBinaryInfo->basic_info.sHeaderSignature.mid(12*2,2).toUInt(nullptr,16);
         ss.sVersion=QString("%1.%2").arg(nMajor).arg(nMinor,2,10,QChar('0'));
+        pBinaryInfo->mapResultImages.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GIF))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        // GIF
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_GIF);
+        // TODO Version
         pBinaryInfo->mapResultImages.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINDOWSICON))&&(pBinaryInfo->basic_info.nSize>=40))
