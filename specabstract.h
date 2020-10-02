@@ -360,6 +360,7 @@ public:
         RECORD_NAME_LHASSFX,
         RECORD_NAME_LIGHTNINGCRYPTERPRIVATE,
         RECORD_NAME_LIGHTNINGCRYPTERSCANTIME,
+        RECORD_NAME_LLD,
         RECORD_NAME_LOCKTITE,
         RECORD_NAME_LSCRYPRT,
         RECORD_NAME_LUACOMPILED,
@@ -1228,6 +1229,7 @@ public:
     static VI_STRUCT _get_clang_string(QString sString);
     static VI_STRUCT _get_DynASM_string(QString sString);
     static VI_STRUCT _get_Delphi_string(QString sString);
+    static VI_STRUCT _get_LLD_string(QString sString);
 
     static VI_STRUCT _get_DelphiVersionFromCompiler(QString sString);
 

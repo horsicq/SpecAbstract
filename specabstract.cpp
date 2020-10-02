@@ -492,6 +492,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LHASSFX:                               sResult=QString("LHA's SFX");                                   break;
         case RECORD_NAME_LIGHTNINGCRYPTERPRIVATE:               sResult=QString("Lightning Crypter Private");                   break;
         case RECORD_NAME_LIGHTNINGCRYPTERSCANTIME:              sResult=QString("Lightning Crypter ScanTime");                  break;
+        case RECORD_NAME_LLD:                                   sResult=QString("LDD");                                         break;
         case RECORD_NAME_LOCKTITE:                              sResult=QString("LockTite+");                                   break;
         case RECORD_NAME_LSCRYPRT:                              sResult=QString("LSCRYPT");                                     break;
         case RECORD_NAME_LUACOMPILED:                           sResult=QString("Lua compiled");                                break;
@@ -1397,6 +1398,20 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_Delphi_string(QString sString)
         result.bIsValid=true;
 
         result.sVersion=sString.section("version ",1,1);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_LLD_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains(QRegExp("^Linker: LLD")))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section("Linker: LLD ",1,1);
     }
 
     return result;
@@ -10929,6 +10944,18 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
         if(!vi.bIsValid)
         {
+            vi=_get_LLD_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_LINKER,RECORD_NAME_LLD,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
             vi=_get_AlipayObfuscator_string(sComment);
 
             if(vi.bIsValid)
@@ -11145,6 +11172,14 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
             SpecAbstract::_SCANS_STRUCT ssTool=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_TOOL,RECORD_NAME_EMBARCADERODELPHI,_get_DelphiVersionFromCompiler(ssCompiler.sVersion).sVersion,"",0);
 
             pELFInfo->mapResultTools.insert(ssTool.name,scansToScan(&(pELFInfo->basic_info),&ssTool));
+        }
+
+        // LLD
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_LLD))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_LLD);
+
+            pELFInfo->mapResultLinkers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
     }
 }
