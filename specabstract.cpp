@@ -11001,6 +11001,18 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
                 pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
             }
         }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_SafeengineLLVM_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_SAFEENGINELLVM,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
     }
 }
 
