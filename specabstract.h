@@ -524,6 +524,7 @@ public:
         RECORD_NAME_SMARTASSEMBLY,
         RECORD_NAME_SMARTINSTALLMAKER,
         RECORD_NAME_SMOKESCREENCRYPTER,
+        RECORD_NAME_SNAPDRAGONLLVMARM,
         RECORD_NAME_SNOOPCRYPT,
         RECORD_NAME_SOFTDEFENDER,
         RECORD_NAME_SOFTSENTRY,
@@ -1230,6 +1231,7 @@ public:
     static VI_STRUCT _get_DynASM_string(QString sString);
     static VI_STRUCT _get_Delphi_string(QString sString);
     static VI_STRUCT _get_LLD_string(QString sString);
+    static VI_STRUCT _get_SnapdragonLLVMARM_string(QString sString);
 
     static VI_STRUCT _get_DelphiVersionFromCompiler(QString sString);
 

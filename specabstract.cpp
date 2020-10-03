@@ -656,6 +656,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SMARTASSEMBLY:                         sResult=QString("Smart Assembly");                              break;
         case RECORD_NAME_SMARTINSTALLMAKER:                     sResult=QString("Smart Install Maker");                         break;
         case RECORD_NAME_SMOKESCREENCRYPTER:                    sResult=QString("SmokeScreen Crypter");                         break;
+        case RECORD_NAME_SNAPDRAGONLLVMARM:                     sResult=QString("Snapdragon LLVM ARM");                         break;
         case RECORD_NAME_SNOOPCRYPT:                            sResult=QString("Snoop Crypt");                                 break;
         case RECORD_NAME_SOFTDEFENDER:                          sResult=QString("Soft Defender");                               break;
         case RECORD_NAME_SOFTSENTRY:                            sResult=QString("SoftSentry");                                  break;
@@ -1412,6 +1413,20 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_LLD_string(QString sString)
         result.bIsValid=true;
 
         result.sVersion=sString.section("Linker: LLD ",1,1);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_SnapdragonLLVMARM_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains(QRegExp("^Snapdragon LLVM ARM Compiler")))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",4,4);
     }
 
     return result;
@@ -10956,6 +10971,18 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
         if(!vi.bIsValid)
         {
+            vi=_get_SnapdragonLLVMARM_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_SNAPDRAGONLLVMARM,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
             vi=_get_AlipayObfuscator_string(sComment);
 
             if(vi.bIsValid)
@@ -11192,6 +11219,14 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
             SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_LLD);
 
             pELFInfo->mapResultLinkers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Snapdragon LLVM ARM
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SNAPDRAGONLLVMARM))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SNAPDRAGONLLVMARM);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
     }
 }
