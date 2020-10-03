@@ -411,6 +411,7 @@ public:
         RECORD_NAME_MZ0OPE,
         RECORD_NAME_NAGAINLLVM,
         RECORD_NAME_NAKEDPACKER,
+        RECORD_NAME_NASM, // The Netwide Assembler
         RECORD_NAME_NCODE,
         RECORD_NAME_NEOLITE,
         RECORD_NAME_NJOINER,

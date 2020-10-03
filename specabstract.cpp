@@ -543,6 +543,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MZ0OPE:                                sResult=QString("MZ0oPE");                                      break;
         case RECORD_NAME_NAGAINLLVM:                            sResult=QString("Nagain LLVM");                                 break;
         case RECORD_NAME_NAKEDPACKER:                           sResult=QString("NakedPacker");                                 break;
+        case RECORD_NAME_NASM:                                  sResult=QString("NASM");                                        break;
         case RECORD_NAME_NCODE:                                 sResult=QString("N-Code");                                      break;
         case RECORD_NAME_NEOLITE:                               sResult=QString("NeoLite");                                     break;
         case RECORD_NAME_NIDHOGG:                               sResult=QString("Nidhogg");                                     break;
