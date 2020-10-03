@@ -1233,6 +1233,7 @@ public:
     static VI_STRUCT _get_Delphi_string(QString sString);
     static VI_STRUCT _get_LLD_string(QString sString);
     static VI_STRUCT _get_SnapdragonLLVMARM_string(QString sString);
+    static VI_STRUCT _get_NASM_string(QString sString);
 
     static VI_STRUCT _get_DelphiVersionFromCompiler(QString sString);
 

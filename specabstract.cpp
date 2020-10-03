@@ -1433,6 +1433,20 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SnapdragonLLVMARM_string(QString sStr
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::_get_NASM_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains(QRegExp("^The Netwide Assembler")))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section("The Netwide Assembler ",1,1);
+    }
+
+    return result;
+}
+
 SpecAbstract::VI_STRUCT SpecAbstract::_get_DelphiVersionFromCompiler(QString sString)
 {
     VI_STRUCT result={};
@@ -10984,6 +10998,18 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
         if(!vi.bIsValid)
         {
+            vi=_get_NASM_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_NASM,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
             vi=_get_AlipayObfuscator_string(sComment);
 
             if(vi.bIsValid)
@@ -11226,6 +11252,14 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SNAPDRAGONLLVMARM))
         {
             SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SNAPDRAGONLLVMARM);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // NASM
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_NASM))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_NASM);
 
             pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
