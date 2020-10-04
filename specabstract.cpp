@@ -308,6 +308,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BORLANDDELPHIDOTNET:                   sResult=QString("Borland Delphi .NET");                         break;
         case RECORD_NAME_BORLANDOBJECTPASCAL:                   sResult=QString("Borland Object Pascal");                       break;
         case RECORD_NAME_BREAKINTOPATTERN:                      sResult=QString("Break Into Pattern");                          break;
+        case RECORD_NAME_BYTEGUARD:                             sResult=QString("ByteGuard");                                   break;
         case RECORD_NAME_BZIP2:                                 sResult=QString("bzip2");                                       break;
         case RECORD_NAME_C:                                     sResult=QString("C");                                           break;
         case RECORD_NAME_CAB:                                   sResult=QString("CAB");                                         break;
@@ -722,6 +723,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_VMUNPACKER:                            sResult=QString("VMUnpacker");                                  break;
         case RECORD_NAME_VMWARE:                                sResult=QString("VMware");                                      break;
         case RECORD_NAME_VPACKER:                               sResult=QString("VPacker");                                     break;
+        case RECORD_NAME_WANGZEHUALLVM:                         sResult=QString("wangzehua LLVM");                              break;
         case RECORD_NAME_WATCOMC:                               sResult=QString("Watcom C");                                    break;
         case RECORD_NAME_WATCOMCCPP:                            sResult=QString("Watcom C/C++");                                break;
         case RECORD_NAME_WATCOMLINKER:                          sResult=QString("Watcom linker");                               break;
@@ -1175,6 +1177,34 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AlipayObfuscator_string(QString sStri
         {
             result.sInfo="Trial";
         }
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_wangzehuaLLVM_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("wangzehua  clang version"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section("wangzehua  clang version",1,1);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ByteGuard_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("ByteGuard"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section("ByteGuard ",1,1).section("-",0,0);
     }
 
     return result;
@@ -10792,6 +10822,19 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
         VI_STRUCT vi={};
         _SCANS_STRUCT ss={};
 
+        // Apple LLVM / clang
+        if(!vi.bIsValid)
+        {
+            vi=_get_ByteGuard_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_BYTEGUARD,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
         if(!vi.bIsValid)
         {
             vi=_get_GCC_string(sComment); // TODO Max version
@@ -11015,6 +11058,18 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
             if(vi.bIsValid)
             {
                 ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_ALIPAYOBFUSCATOR,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_wangzehuaLLVM_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,RECORD_FILETYPE_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_WANGZEHUALLVM,vi.sVersion,vi.sInfo,0);
 
                 pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
             }
@@ -11326,6 +11381,22 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_OBFUSCATORLLVM))
         {
             SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_OBFUSCATORLLVM);
+
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // wangzehua LLVM
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_WANGZEHUALLVM))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_WANGZEHUALLVM);
+
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Byteguard
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_BYTEGUARD))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_BYTEGUARD);
 
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }

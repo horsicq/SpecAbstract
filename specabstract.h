@@ -176,6 +176,7 @@ public:
         RECORD_NAME_BORLANDDELPHIDOTNET,
         RECORD_NAME_BORLANDOBJECTPASCAL,
         RECORD_NAME_BREAKINTOPATTERN,
+        RECORD_NAME_BYTEGUARD,
         RECORD_NAME_BZIP2,
         RECORD_NAME_C,
         RECORD_NAME_CAB,
@@ -590,6 +591,7 @@ public:
         RECORD_NAME_VMUNPACKER,
         RECORD_NAME_VMWARE,
         RECORD_NAME_VPACKER,
+        RECORD_NAME_WANGZEHUALLVM,
         RECORD_NAME_WATCOMC,
         RECORD_NAME_WATCOMCCPP,
         RECORD_NAME_WATCOMLINKER,
@@ -1215,6 +1217,8 @@ public:
     static VI_STRUCT get_AndroidClang_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT _get_AndroidClang_string(QString sString);
     static VI_STRUCT _get_AlipayObfuscator_string(QString sString);
+    static VI_STRUCT _get_wangzehuaLLVM_string(QString sString);
+    static VI_STRUCT _get_ByteGuard_string(QString sString);
     static VI_STRUCT _get_SafeengineLLVM_string(QString sString);
     static VI_STRUCT _get_NagainLLVM_string(QString sString);
     static VI_STRUCT _get_iJiami_string(QString sString);
