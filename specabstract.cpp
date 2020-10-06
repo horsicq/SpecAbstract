@@ -212,6 +212,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_INSTALLER:                             sResult=tr("Installer");                                        break;
         case RECORD_TYPE_INSTALLERDATA:                         sResult=tr("Installer data");                                   break;
         case RECORD_TYPE_JOINER:                                sResult=tr("Joiner");                                           break;
+        case RECORD_TYPE_LANGUAGE:                              sResult=tr("Language");                                         break;
         case RECORD_TYPE_LIBRARY:                               sResult=tr("Library");                                          break;
         case RECORD_TYPE_LINKER:                                sResult=tr("Linker");                                           break;
         case RECORD_TYPE_NETCOMPRESSOR:                         sResult=QString(".NET %1").arg(tr("compressor"));               break;
@@ -262,6 +263,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
         case RECORD_NAME_ANDPAKK2:                              sResult=QString("ANDpakk2");                                    break;
         case RECORD_NAME_ANDROIDCLANG:                          sResult=QString("Android clang");                               break;
+        case RECORD_NAME_ANDROIDJETPACK:                        sResult=QString("Android Jetpack");                                 break;
         case RECORD_NAME_ANDROIDGRADLE:                         sResult=QString("Android Gradle");                              break;
         case RECORD_NAME_ANSKYAPOLYMORPHICPACKER:               sResult=QString("Anskya Polymorphic Packer");                   break;
         case RECORD_NAME_ANSLYMPACKER:                          sResult=QString("AnslymPacker");                                break;
@@ -1617,6 +1619,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         result.basic_info.listDetects.append(result.mapResultDatabases.values());
         result.basic_info.listDetects.append(result.mapResultImages.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
+        result.basic_info.listDetects.append(result.mapResultLibraries.values());
         result.basic_info.listDetects.append(result.mapResultCOMPackers.values());
         result.basic_info.listDetects.append(result.mapResultCOMProtectors.values());
         result.basic_info.listDetects.append(result.mapResultAPKProtectors.values());
@@ -10174,20 +10177,20 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
 
         if(xzip.isValid()&&(!(*pbIsStop)))
         {
-            XArchive::RECORD record=XArchive::getArchiveRecord("META-INF/MANIFEST.MF",&(pBinaryInfo->listArchiveRecords));
+            XArchive::RECORD recordManifest=XArchive::getArchiveRecord("META-INF/MANIFEST.MF",&(pBinaryInfo->listArchiveRecords));
 
-            if(!record.sFileName.isEmpty())
+            if(!recordManifest.sFileName.isEmpty())
             {
-                if(record.nUncompressedSize)
+                if(recordManifest.nUncompressedSize)
                 {
-                    QString sData=xzip.decompress(&record).data();
+                    QString sDataManifest=xzip.decompress(&recordManifest).data();
 
-                    QString sVendor=XBinary::regExp("Specification-Vendor: (.*?)\n",sData,1).remove("\r");
-                    QString sVersion=XBinary::regExp("Specification-Version: (.*?)\n",sData,1).remove("\r");
-                    QString sImpVendor=XBinary::regExp("Implementation-Vendor: (.*?)\n",sData,1).remove("\r");
-                    QString sImpVersion=XBinary::regExp("Implementation-Version: (.*?)\n",sData,1).remove("\r");
-                    QString sBuildBy=XBinary::regExp("Built-By: (.*?)\n",sData,1).remove("\r");
-                    QString sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sData,1).remove("\r");
+                    QString sVendor=XBinary::regExp("Specification-Vendor: (.*?)\n",sDataManifest,1).remove("\r");
+                    QString sVersion=XBinary::regExp("Specification-Version: (.*?)\n",sDataManifest,1).remove("\r");
+                    QString sImpVendor=XBinary::regExp("Implementation-Vendor: (.*?)\n",sDataManifest,1).remove("\r");
+                    QString sImpVersion=XBinary::regExp("Implementation-Version: (.*?)\n",sDataManifest,1).remove("\r");
+                    QString sBuildBy=XBinary::regExp("Built-By: (.*?)\n",sDataManifest,1).remove("\r");
+                    QString sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sDataManifest,1).remove("\r");
 
                     bool bIsAPK=XArchive::isArchiveRecordPresent("classes.dex",&(pBinaryInfo->listArchiveRecords));
 
@@ -10203,6 +10206,23 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
                         }
                         // TODO 1.7.0_79 (Oracle Corporation)
                         archiveScan(&(pBinaryInfo->mapArchiveDetects),&(pBinaryInfo->listArchiveRecords),_APK_file_records,sizeof(STRING_RECORD),pBinaryInfo->basic_info.id.fileType,RECORD_FILETYPE_APK,&(pBinaryInfo->basic_info),HEURTYPE_ARCHIVE);
+
+                        XArchive::RECORD recordJetpack=XArchive::getArchiveRecord("META-INF/androidx.core_core.version",&(pBinaryInfo->listArchiveRecords));
+
+                        if(!recordJetpack.sFileName.isEmpty())
+                        {
+                            if(recordJetpack.nUncompressedSize)
+                            {
+                                QString sDataJetpack=xzip.decompress(&recordJetpack).data();
+                                QString sJetpackVersion=XBinary::regExp("(.*?)\n",sDataJetpack,1).remove("\r");
+
+                                _SCANS_STRUCT ss=getScansStruct(0,RECORD_FILETYPE_APK,RECORD_TYPE_LIBRARY,RECORD_NAME_ANDROIDJETPACK,"","",0);
+                                ss.sVersion=sJetpackVersion;
+                                pBinaryInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+                            }
+                        }
+
+                        // TODO androidx.core:core-ktx Kotlin
 
                         Binary_handle_APK(pDevice,bIsImage,pBinaryInfo);
                     }
