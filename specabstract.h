@@ -349,6 +349,7 @@ public:
         RECORD_NAME_KGBCRYPTER,
         RECORD_NAME_KIAMSCRYPTOR,
         RECORD_NAME_KKRUNCHY,
+        RECORD_NAME_KOTLIN,
         RECORD_NAME_KRATOSCRYPTER,
         RECORD_NAME_KRYPTON,
         RECORD_NAME_KUR0KX2TO,
@@ -780,6 +781,7 @@ public:
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTexts;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultLanguages;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultArchives;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCertificates;
