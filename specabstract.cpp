@@ -11517,6 +11517,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
 
     if(elf.isValid())
     {
+#ifdef QT_DEBUG
         QList<QString> listStrings=elf.getCommentStrings();
 
         int nNumberOfStrings=listStrings.count();
@@ -11536,6 +11537,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
                 pELFInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
             }
         }
+#endif
     }
 }
 
