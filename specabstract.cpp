@@ -173,6 +173,7 @@ QString SpecAbstract::recordFileTypeIdToString(RECORD_FILETYPE id)
         case RECORD_FILETYPE_TEXT:                              sResult=QString("Text");                                        break;
 //        case RECORD_FILETYPE_JAR:                               sResult=QString("JAR");                                         break;
         case RECORD_FILETYPE_APK:                               sResult=QString("APK");                                         break;
+        case RECORD_FILETYPE_DEX:                               sResult=QString("DEX");                                         break;
     }
 
     return sResult;
@@ -2336,6 +2337,38 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         }
 
         result.basic_info.listDetects.append(result.listRecursiveDetects);
+    }
+
+    result.basic_info.nElapsedTime=timer.elapsed();
+
+    return result;
+}
+
+SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    DEXINFO_STRUCT result={};
+
+    XDEX dex(pDevice);
+
+    if(dex.isValid()&&(!(*pbIsStop)))
+    {
+        result.basic_info.parentId=parentId;
+        result.basic_info.id.fileType=RECORD_FILETYPE_DEX;
+        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.nOffset=nOffset;
+        result.basic_info.nSize=pDevice->size();
+        result.basic_info.sHeaderSignature=dex.getSignature(0,150);
+        result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bShowHeuristic=pOptions->bShowHeuristic;
+        result.basic_info.bIsTest=pOptions->bIsTest;
+        result.basic_info.memoryMap=dex.getMemoryMap();
+        // TODO
+        result.basic_info.listDetects.append(result.mapResultCompilers.values());
     }
 
     result.basic_info.nElapsedTime=timer.elapsed();

@@ -13,6 +13,11 @@ SOURCES += \
     include($$PWD/../Formats/xformats.pri)
 }
 
+!contains(XCONFIG, xdex) {
+    XCONFIG += xdex
+    include($$PWD/../XDEX/xdex.pri)
+}
+
 !contains(XCONFIG, xarchive) {
     XCONFIG += xarchive
     include($$PWD/../XArchive/xarchive.pri)
