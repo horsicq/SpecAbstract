@@ -1,4 +1,4 @@
-﻿// copyright (c) 2017-2020 hors<horsicq@gmail.com>
+// copyright (c) 2017-2020 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,6 +31,7 @@
 #include "xcab.h"
 #include "xrar.h"
 #include "xsevenzip.h"
+#include "xdex.h"
 
 class SpecAbstract : public QObject
 {
@@ -56,6 +57,7 @@ public:
         RECORD_FILETYPE_MACH32,
         RECORD_FILETYPE_MACH64,
         RECORD_FILETYPE_TEXT,
+        RECORD_FILETYPE_DEX,
 //        RECORD_FILETYPE_JAR,
         RECORD_FILETYPE_APK
         // TODO ARCHIVE
@@ -803,6 +805,13 @@ public:
         QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
+    struct DEXINFO_STRUCT
+    {
+        BASIC_INFO basic_info;
+
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
+    };
+
     struct MSDOSINFO_STRUCT
     {
         BASIC_INFO basic_info;
@@ -1118,6 +1127,7 @@ public:
     static LEINFO_STRUCT getLEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
     static NEINFO_STRUCT getNEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
     static PEINFO_STRUCT getPEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
+    static DEXINFO_STRUCT getDEXInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
 
     static _SCANS_STRUCT getScansStruct(quint32 nVariant,RECORD_FILETYPE filetype,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo,qint64 nOffset);
 
