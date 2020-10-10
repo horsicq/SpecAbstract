@@ -50,10 +50,12 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
     SubDevice sd(pDevice,nOffset,nSize);
 
+
     if(sd.open(QIODevice::ReadOnly)&&(!(*pbIsStop)))
     {
         QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(&sd);
 
+        // TODO DEX
         if(pOptions->fileType!=XBinary::FT_UNKNOWN)
         {
             XBinary::filterFileTypes(&stFileTypes,pOptions->fileType);
