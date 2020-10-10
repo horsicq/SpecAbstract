@@ -409,6 +409,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_EXEPASSWORDPROTECTOR:                  sResult=QString("EXE Password Protector");                      break;
         case RECORD_NAME_EXESAX:                                sResult=QString("ExeSax");                                      break;
         case RECORD_NAME_EXESHIELD:                             sResult=QString("Exe Shield");                                  break;
+        case RECORD_NAME_EXESTEALTH:                            sResult=QString("ExeStealth");                                  break;
         case RECORD_NAME_EXPORT:                                sResult=QString("Export");                                      break;
         case RECORD_NAME_EXPRESSOR:                             sResult=QString("eXPressor");                                   break;
         case RECORD_NAME_EZIP:                                  sResult=QString("EZIP");                                        break;
@@ -11516,25 +11517,25 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
 
     if(elf.isValid())
     {
-//        QList<QString> listStrings=elf.getCommentStrings();
+        QList<QString> listStrings=elf.getCommentStrings();
 
-//        int nNumberOfStrings=listStrings.count();
+        int nNumberOfStrings=listStrings.count();
 
-//        for(int i=0;i<nNumberOfStrings;i++)
-//        {
-//            QString sString=listStrings.at(i);
+        for(int i=0;i<nNumberOfStrings;i++)
+        {
+            QString sString=listStrings.at(i);
 
-//            if(sString!="")
-//            {
-//                SpecAbstract::_SCANS_STRUCT recordSS={};
+            if(sString!="")
+            {
+                SpecAbstract::_SCANS_STRUCT recordSS={};
 
-//                recordSS.type=RECORD_TYPE_PROTECTOR;
-//                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+(RECORD_NAME)(i+1));
-//                recordSS.sVersion=sString;
+                recordSS.type=RECORD_TYPE_PROTECTOR;
+                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+(RECORD_NAME)(i+1));
+                recordSS.sVersion=sString;
 
-//                pELFInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
-//            }
-//        }
+                pELFInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+            }
+        }
     }
 }
 
