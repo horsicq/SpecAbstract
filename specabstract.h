@@ -38,31 +38,6 @@ class SpecAbstract : public QObject
     Q_OBJECT
 
 public:
-    enum RECORD_FILETYPE
-    {
-        RECORD_FILETYPE_UNKNOWN=0,
-        RECORD_FILETYPE_BINARY,
-        RECORD_FILETYPE_COM,
-        RECORD_FILETYPE_MSDOS,
-        RECORD_FILETYPE_LE,
-        RECORD_FILETYPE_LX,
-        RECORD_FILETYPE_NE,
-        RECORD_FILETYPE_PE,
-        RECORD_FILETYPE_PE32,
-        RECORD_FILETYPE_PE64,
-        RECORD_FILETYPE_ELF,
-        RECORD_FILETYPE_ELF32,
-        RECORD_FILETYPE_ELF64,
-        RECORD_FILETYPE_MACH,
-        RECORD_FILETYPE_MACH32,
-        RECORD_FILETYPE_MACH64,
-        RECORD_FILETYPE_TEXT,
-        RECORD_FILETYPE_DEX,
-//        RECORD_FILETYPE_JAR,
-        RECORD_FILETYPE_APK
-        // TODO ARCHIVE
-        // TODO DEX
-    };
 
     enum RECORD_FILEPART
     {
@@ -664,7 +639,7 @@ public:
     struct ID
     {
         QUuid uuid;
-        RECORD_FILETYPE fileType;
+        XBinary::FT fileType;
         RECORD_FILEPART filePart;
         QString sInfo;
         bool bVirtual;
@@ -709,7 +684,7 @@ public:
         HEURTYPE heurType;
         QString sValue; // mb TODO variant
         quint32 nVariant;
-        RECORD_FILETYPE filetype;
+        XBinary::FT fileType;
         RECORD_TYPE type;
         RECORD_NAME name;
         QString sVersion;
@@ -728,7 +703,7 @@ public:
     {
         qint64 nOffset;
         quint32 nVariant;
-        RECORD_FILETYPE filetype;
+        XBinary::FT fileType;
         RECORD_TYPE type;
         RECORD_NAME name;
         QString sVersion;
@@ -738,7 +713,7 @@ public:
 
     struct SCAN_RECORD
     {
-        RECORD_FILETYPE filetype;
+        XBinary::FT fileType;
         RECORD_TYPE type;
         RECORD_NAME name;
         QString sVersion;
@@ -1025,7 +1000,7 @@ public:
     struct _BASICINFO
     {
         quint32 nVariant;
-        const RECORD_FILETYPE filetype;
+        const XBinary::FT fileType;
         const RECORD_TYPE type;
         const RECORD_NAME name;
         const char *pszVersion;
@@ -1103,7 +1078,6 @@ public:
     static void scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions,bool bInit=false,bool *pbIsStop=nullptr);
 
     static QString append(QString sResult,QString sString);
-    static QString recordFileTypeIdToString(RECORD_FILETYPE id);
     static QString recordFilePartIdToString(RECORD_FILEPART id);
     static QString recordTypeIdToString(RECORD_TYPE id);
     static QString recordNameIdToString(RECORD_NAME id);
@@ -1129,7 +1103,7 @@ public:
     static PEINFO_STRUCT getPEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
     static DEXINFO_STRUCT getDEXInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
 
-    static _SCANS_STRUCT getScansStruct(quint32 nVariant,RECORD_FILETYPE filetype,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo,qint64 nOffset);
+    static _SCANS_STRUCT getScansStruct(quint32 nVariant,XBinary::FT fileType,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo,qint64 nOffset);
 
     static void PE_handle_import(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Protection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
@@ -1217,7 +1191,7 @@ public:
     static void updateInfo(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sInfo);
     static void updateVersionAndInfo(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sVersion,QString sInfo);
 
-    static bool isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListScanStructs,RECORD_FILETYPE filetype,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo);
+    static bool isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListScanStructs,XBinary::FT fileType,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo);
 
     static bool checkVersionString(QString sVersion);
     static VI_STRUCT get_UPX_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
@@ -1275,24 +1249,24 @@ public:
     static QByteArray _BasicPEInfoToArray(BASIC_PE_INFO *pInfo);
     static BASIC_PE_INFO _ArrayToBasicPEInfo(const QByteArray *pbaArray);
 
-    static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SIGNATURE_RECORD *pRecords, int nRecordsSize, SpecAbstract::RECORD_FILETYPE fileType1, SpecAbstract::RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
-    static void signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
-    static void PE_resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,PE_RESOURCES_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
-    static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
-    static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
-    static void MSDOS_richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SIGNATURE_RECORD *pRecords, int nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SIGNATURE_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void PE_resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,PE_RESOURCES_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void MSDOS_richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
-    static void archiveScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XArchive::RECORD> *pListArchiveRecords,STRING_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void archiveScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XArchive::RECORD> *pListArchiveRecords,STRING_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
-    static void signatureExpScan(XBinary *pXBinary,XBinary::_MEMORY_MAP *pMemoryMap,QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,qint64 nOffset,SIGNATURE_RECORD *pRecords,int nRecordsSize,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void signatureExpScan(XBinary *pXBinary,XBinary::_MEMORY_MAP *pMemoryMap,QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,qint64 nOffset,SIGNATURE_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
-    static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, int nRecordsSize, RECORD_FILETYPE fileType1, RECORD_FILETYPE fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, int nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
     static QByteArray serializeScanStruct(SCAN_STRUCT scanStruct,bool bIsHeader=false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData,bool *pbIsHeader=nullptr);
 
 private:
-    static bool PE_compareRichRecord(_SCANS_STRUCT *pResult,MSRICH_RECORD *pRecord,quint16 nID,quint32 nBuild,RECORD_FILETYPE fileType1,RECORD_FILETYPE fileType2);
+    static bool PE_compareRichRecord(_SCANS_STRUCT *pResult,MSRICH_RECORD *pRecord,quint16 nID,quint32 nBuild,XBinary::FT fileType1,XBinary::FT fileType2);
 
 protected:
     void _errorMessage(QString sMessage);
