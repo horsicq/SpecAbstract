@@ -1269,12 +1269,12 @@ private:
     static bool PE_compareRichRecord(_SCANS_STRUCT *pResult,MSRICH_RECORD *pRecord,quint16 nID,quint32 nBuild,XBinary::FT fileType1,XBinary::FT fileType2);
 
 protected:
-    void _errorMessage(QString sMessage);
-    void _infoMessage(QString sMessage);
+    void _errorMessage(QString sErrorMessage);
+    void _infoMessage(QString sInfoMessage);
 
 signals:
-    void errorMessage(QString sMessage);
-    void infoMessage(QString sMessage);
+    void errorMessage(QString sErrorMessage);
+    void infoMessage(QString sInfoMessage);
 };
 
 #endif // SPECABSTRACT_H

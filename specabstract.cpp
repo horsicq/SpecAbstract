@@ -13495,18 +13495,18 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::PE_getRichSignatureDescription(QIODevi
     return result;
 }
 
-void SpecAbstract::_errorMessage(QString sMessage)
+void SpecAbstract::_errorMessage(QString sErrorMessage)
 {
 #ifdef QT_DEBUG
-    qDebug("Error: %s",sMessage.toLatin1().data());
+    qDebug("Error: %s",sErrorMessage.toLatin1().data());
 #endif
-    emit errorMessage(sMessage);
+    emit errorMessage(sErrorMessage);
 }
 
-void SpecAbstract::_infoMessage(QString sMessage)
+void SpecAbstract::_infoMessage(QString sInfoMessage)
 {
 #ifdef QT_DEBUG
-    qDebug("Info: %s",sMessage.toLatin1().data());
+    qDebug("Info: %s",sInfoMessage.toLatin1().data());
 #endif
-    emit infoMessage(sMessage);
+    emit infoMessage(sInfoMessage);
 }
