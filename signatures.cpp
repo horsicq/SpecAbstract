@@ -449,6 +449,15 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_GIXPROTECTOR,                 "1.2",              ""},                    "60EB05E8EB044000EBFAE80A000000"}, // CHECK MSLRH
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_THEMIDAWINLICENSE,            "2.0.1.0-2.1.8.0",  ""},                    "83EC045053E801000000CC588BD840"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LAMECRYPT,                    "1.0",              ""},                    "60669CBB........80B3........904B83FBFF75F3669D61"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXESTEALTH,                   "1.1",              ""},                    "60E8000000005D81ED........B97B0900008BF7AC"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXESTEALTH,                   "2.5",              ""},                    "6090EB22'ExeStealth'"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXESTEALTH,                   "2.70-2.71",        ""},                    "EB0060EB00E8000000005D81ED"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXESTEALTH,                   "2.72-2.73",        "Shareware"},           "EB00EB2F'Shareware - ExeStealth'00"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXESTEALTH,                   "2.74",             "Shareware"},           "EB00EB17'Shareware - ExeStealth'00"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXESTEALTH,                   "2.75",             ""},                    "906090E8000000005D81ED........B915000000"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXESTEALTH,                   "2.75a",            "Shareware"},           "EB58'Shareware-Version ExeStealth'"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXESTEALTH,                   "2.76",             ""},                    "EB65'ExeStealth V2 - www'"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXESTEALTH,                   "2.76",             "Shareware"},           "EB..'ExeStealth V2 Shareware '"},
 
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FAKESIGNATURE,                "",                 "ASPacker 2.12"},       "60E803000000E9EB045D4555C3E801"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FAKESIGNATURE,                "",                 "BJFNT 1.3"},           "EB033A4D3A1EEB02CD209CEB02CD20EB02CD2060"},
@@ -542,6 +551,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MEW11SE,                      "",                 ""},                    0x13e215a53,    0xdf3c1e0},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_BEROEXEPACKER,                "1.00",             ""},                    0x13e215a53,    0xdf3c1e0},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXECRYPT,                     "1.0",              ""},                    0x13e215a53,    0xdf3c1e0},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXESTEALTH,                   "",                 ""},                    0x13e215a53,    0xdf3c1e0},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEFOG,                       "1.1",              ""},                    0x13e215a53,    0xdf3c1e0},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXEFOG,                       "1.2",              ""},                    0x134c8cd1e,    0x29188619},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ALEXPROTECTOR,                "1.0",              ""},                    0x1d6f34b26,    0x63fe4ff9},

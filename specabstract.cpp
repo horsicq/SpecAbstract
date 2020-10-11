@@ -2961,6 +2961,15 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_EXESTEALTH))
+                {
+                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EXESTEALTH))
+                    {
+                        SpecAbstract::_SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EXESTEALTH);
+                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    }
+                }
+
                 // PE Diminisher
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PEDIMINISHER))
                 {
