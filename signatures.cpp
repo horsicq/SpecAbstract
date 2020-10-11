@@ -1181,6 +1181,8 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EPEXEPACK,                    "1.4",              ""},                    ".!ep"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_EXCELSIORJET,                 "",                 ""},                    ".jidata"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_EXCELSIORJET,                 "",                 ""},                    ".jedata"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXESTEALTH,                   "2.70-2.75",        ""},                    "ExeS"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXESTEALTH,                   "2.76",             ""},                    "rsrr"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXPRESSOR,                    "",                 ""},                    ".ex_cod"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXPRESSOR,                    "",                 ""},                    ".ex_rsc"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FISHPEPACKER,                 "1.02-1.04",        ""},                    ".FISHPEP"},
