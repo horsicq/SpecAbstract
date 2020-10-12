@@ -10369,7 +10369,7 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
                         if( stFileTypes.contains(XBinary::FT_ELF32)||
                             stFileTypes.contains(XBinary::FT_ELF64))
                         {
-                            // TODO filter
+                            filterResult(&scanResult.listRecords,QSet<RECORD_TYPE>()<<RECORD_TYPE_PACKER<<RECORD_TYPE_PROTECTOR);
                         }
 
                         pBinaryInfo->listRecursiveDetects.append(scanResult.listRecords);
@@ -13102,6 +13102,11 @@ bool SpecAbstract::PE_compareRichRecord(_SCANS_STRUCT *pResult,SpecAbstract::MSR
     }
 
     return bResult;
+}
+
+void SpecAbstract::filterResult(QList<SpecAbstract::SCAN_STRUCT> *pListRecords, QSet<SpecAbstract::RECORD_TYPE> stRecordTypes)
+{
+    // TODO
 }
 
 QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,bool bIs64)

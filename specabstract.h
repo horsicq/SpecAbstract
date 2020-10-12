@@ -1271,6 +1271,7 @@ public:
 
 private:
     static bool PE_compareRichRecord(_SCANS_STRUCT *pResult,MSRICH_RECORD *pRecord,quint16 nID,quint32 nBuild,XBinary::FT fileType1,XBinary::FT fileType2);
+    static void filterResult(QList<SCAN_STRUCT> *pListRecords,QSet<RECORD_TYPE> stRecordTypes);
 
 protected:
     void _errorMessage(QString sErrorMessage);
