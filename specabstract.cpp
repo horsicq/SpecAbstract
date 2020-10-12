@@ -53,9 +53,8 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
     if(sd.open(QIODevice::ReadOnly)&&(!(*pbIsStop)))
     {
-        QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(&sd);
+        QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(&sd,true);
 
-        // TODO DEX
         if(pOptions->fileType!=XBinary::FT_UNKNOWN)
         {
             XBinary::filterFileTypes(&stFileTypes,pOptions->fileType);
@@ -102,6 +101,13 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
             pScanResult->listRecords.append(msdos_info.basic_info.listDetects);
             pScanResult->listHeurs.append(msdos_info.basic_info.listHeurs);
+        }
+        else if(stFileTypes.contains(XBinary::FT_DEX))
+        {
+            SpecAbstract::DEXINFO_STRUCT dex_info=SpecAbstract::getDEXInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
+
+            pScanResult->listRecords.append(dex_info.basic_info.listDetects);
+            pScanResult->listHeurs.append(dex_info.basic_info.listHeurs);
         }
         else
         {
