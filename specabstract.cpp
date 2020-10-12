@@ -244,6 +244,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ANDROIDCLANG:                          sResult=QString("Android clang");                               break;
         case RECORD_NAME_ANDROIDJETPACK:                        sResult=QString("Android Jetpack");                             break;
         case RECORD_NAME_ANDROIDGRADLE:                         sResult=QString("Android Gradle");                              break;
+        case RECORD_NAME_ANDROIDSDK:                            sResult=QString("Android SDK");                                 break;
         case RECORD_NAME_ANDROIDXML:                            sResult=QString("Android XML");                                 break;
         case RECORD_NAME_ANSKYAPOLYMORPHICPACKER:               sResult=QString("Anskya Polymorphic Packer");                   break;
         case RECORD_NAME_ANSLYMPACKER:                          sResult=QString("AnslymPacker");                                break;
