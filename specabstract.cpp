@@ -1568,7 +1568,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
 
         if(result.bIsZip)
         {
-            result.listArchiveRecords=xzip.getRecords(100000);
+            result.listArchiveRecords=xzip.getRecords();
         }
 
         Binary_handle_Texts(pDevice,pOptions->bIsImage,&result);
