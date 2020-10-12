@@ -10312,25 +10312,68 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
 
             if((bIsAPK)&&(pOptions->bRecursiveScan))
             {
-                XArchive::RECORD recordClasses=XArchive::getArchiveRecord("classes.dex",&(pBinaryInfo->listArchiveRecords));
+                int nNumberOfRecords=pBinaryInfo->listArchiveRecords.count();
 
-                QByteArray baData=xzip.decompress(&recordClasses);
-
-                QBuffer buffer(&baData);
-
-                if(buffer.open(QIODevice::ReadOnly))
+                for(int i=0;(i<nNumberOfRecords)&&(!(*pbIsStop));i++)
                 {
-                    SpecAbstract::SCAN_RESULT scanResult={0};
+                    QByteArray baRecordData=xzip.decompress(&(pBinaryInfo->listArchiveRecords.at(i)),true);
 
-                    SpecAbstract::ID _parentId=pBinaryInfo->basic_info.id;
-                    _parentId.filePart=SpecAbstract::RECORD_FILEPART_ARCHIVERECORD;
-                    _parentId.sInfo=QString("classes.dex");
-                    _parentId.bVirtual=true; // TODO Check
-                    scan(&buffer,&scanResult,0,buffer.size(),_parentId,pOptions,pbIsStop);
+                    QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(&baRecordData,true);
 
-                    pBinaryInfo->listRecursiveDetects.append(scanResult.listRecords);
+                    if( stFileTypes.contains(XBinary::FT_DEX)||
+                        stFileTypes.contains(XBinary::FT_ELF32)||
+                        stFileTypes.contains(XBinary::FT_ELF64))
+                    {
+                        SpecAbstract::SCAN_RESULT scanResult={0};
 
-                    buffer.close();
+                        SpecAbstract::ID _parentId=pBinaryInfo->basic_info.id;
+                        _parentId.filePart=SpecAbstract::RECORD_FILEPART_ARCHIVERECORD;
+                        _parentId.sInfo=pBinaryInfo->listArchiveRecords.at(i).sFileName;
+                        _parentId.bVirtual=true; // TODO Check
+
+                        if(pBinaryInfo->listArchiveRecords.at(i).nUncompressedSize>baRecordData.size())
+                        {
+                            QTemporaryFile fileTemp;
+
+                            if(fileTemp.open())
+                            {
+                                QString sTempFileName=fileTemp.fileName();
+
+                                if(xzip.decompressToFile(&(pBinaryInfo->listArchiveRecords.at(i)),sTempFileName))
+                                {
+                                    QFile file;
+
+                                    file.setFileName(sTempFileName);
+
+                                    if(file.open(QIODevice::ReadOnly))
+                                    {
+                                        scan(&file,&scanResult,0,file.size(),_parentId,pOptions,pbIsStop);
+
+                                        file.close();
+                                    }
+                                }
+                            }
+                        }
+                        else
+                        {
+                            QBuffer buffer(&baRecordData);
+
+                            if(buffer.open(QIODevice::ReadOnly))
+                            {
+                                scan(&buffer,&scanResult,0,buffer.size(),_parentId,pOptions,pbIsStop);
+
+                                buffer.close();
+                            }
+                        }
+
+                        if( stFileTypes.contains(XBinary::FT_ELF32)||
+                            stFileTypes.contains(XBinary::FT_ELF64))
+                        {
+                            // TODO filter
+                        }
+
+                        pBinaryInfo->listRecursiveDetects.append(scanResult.listRecords);
+                    }
                 }
             }
         }
@@ -11798,7 +11841,23 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         // https://source.android.com/devices/tech/dalvik/dex-format
         if(sDDEXVersion=="035")
         {
-
+            recordAndroidSDK.sVersion="API 14-23(Android 4.0+)";
+        }
+        else if(sDDEXVersion=="037")
+        {
+            recordAndroidSDK.sVersion="API 24-25(Android 7.0+)";
+        }
+        else if(sDDEXVersion=="038")
+        {
+            recordAndroidSDK.sVersion="API 26-27(Android 8.0+)";
+        }
+        else if(sDDEXVersion=="039")
+        {
+            recordAndroidSDK.sVersion="API 28-30(Android 9.0+)";
+        }
+        else
+        {
+            recordAndroidSDK.sVersion=sDDEXVersion;
         }
 
         pDEXInfo->mapResultTools.insert(recordAndroidSDK.name,scansToScan(&(pDEXInfo->basic_info),&recordAndroidSDK));
