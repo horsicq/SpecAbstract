@@ -50,7 +50,6 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
     SubDevice sd(pDevice,nOffset,nSize);
 
-
     if(sd.open(QIODevice::ReadOnly)&&(!(*pbIsStop)))
     {
         QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(&sd,true);
@@ -2343,7 +2342,9 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
         result.basic_info.bShowHeuristic=pOptions->bShowHeuristic;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=dex.getMemoryMap();
-        // TODO
+
+        DEX_handle_Tools(pDevice,&result);
+
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
     }
@@ -11781,6 +11782,26 @@ void SpecAbstract::NE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbst
         {
             pNEInfo->mapResultLinkers.insert(recordLinker.name,scansToScan(&(pNEInfo->basic_info),&recordLinker));
         }
+    }
+}
+
+void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_STRUCT *pDEXInfo)
+{
+    XDEX dex(pDevice);
+
+    if(dex.isValid())
+    {
+        SpecAbstract::_SCANS_STRUCT recordAndroidSDK=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDSDK,"","",0);;
+
+        QString sDDEXVersion=dex.getVersion();
+
+        // https://source.android.com/devices/tech/dalvik/dex-format
+        if(sDDEXVersion=="035")
+        {
+
+        }
+
+        pDEXInfo->mapResultTools.insert(recordAndroidSDK.name,scansToScan(&(pDEXInfo->basic_info),&recordAndroidSDK));
     }
 }
 

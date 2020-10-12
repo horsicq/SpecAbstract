@@ -1189,6 +1189,8 @@ public:
 
     static void NE_handle_Borland(QIODevice *pDevice, bool bIsImage, NEINFO_STRUCT *pNEInfo);
 
+    static void DEX_handle_Tools(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo);
+
     static void updateVersion(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sVersion);
     static void updateInfo(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sInfo);
     static void updateVersionAndInfo(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sVersion,QString sInfo);
