@@ -13106,7 +13106,18 @@ bool SpecAbstract::PE_compareRichRecord(_SCANS_STRUCT *pResult,SpecAbstract::MSR
 
 void SpecAbstract::filterResult(QList<SpecAbstract::SCAN_STRUCT> *pListRecords, QSet<SpecAbstract::RECORD_TYPE> stRecordTypes)
 {
-    // TODO
+    QList<SpecAbstract::SCAN_STRUCT> listRecords;
+    int nNumberOfRecords=pListRecords->count();
+
+    for(int i=0;i<nNumberOfRecords;i++)
+    {
+        if(stRecordTypes.contains(pListRecords->at(i).type))
+        {
+            listRecords.append(pListRecords->at(i));
+        }
+    }
+
+    *pListRecords=listRecords;
 }
 
 QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,bool bIs64)
