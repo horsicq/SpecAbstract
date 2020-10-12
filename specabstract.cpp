@@ -2345,6 +2345,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
         result.basic_info.memoryMap=dex.getMemoryMap();
         // TODO
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
+        result.basic_info.listDetects.append(result.mapResultTools.values());
     }
 
     result.basic_info.nElapsedTime=timer.elapsed();

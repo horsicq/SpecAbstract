@@ -786,6 +786,7 @@ public:
         BASIC_INFO basic_info;
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
     };
 
     struct MSDOSINFO_STRUCT
