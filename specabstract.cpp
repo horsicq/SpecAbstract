@@ -344,6 +344,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DEPACK:                                sResult=QString("dePack");                                      break;
         case RECORD_NAME_DEPLOYMASTER:                          sResult=QString("DeployMaster");                                break;
         case RECORD_NAME_DEX:                                   sResult=QString("DEX");                                         break;
+        case RECORD_NAME_DEXPROTECTOR:                          sResult=QString("DexProtector");                                break;
         case RECORD_NAME_DJVU:                                  sResult=QString("DjVu");                                        break;
         case RECORD_NAME_DIET:                              	sResult=QString("DIET");                                        break;
         case RECORD_NAME_DIRTYCRYPTOR:                          sResult=QString("DirTy Cryptor");                               break;
@@ -455,6 +456,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_JAVA:                                  sResult=QString("Java");                                        break;
         case RECORD_NAME_JAVACOMPILEDCLASS:                     sResult=QString("Java compiled class");                         break;
         case RECORD_NAME_JDPACK:                                sResult=QString("JDPack");                                      break;
+        case RECORD_NAME_JIAGU:                                 sResult=QString("jiagu");                                       break;
         case RECORD_NAME_JPEG:                                  sResult=QString("JPEG");                                        break;
         case RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER:         sResult=QString("KaOs PE-DLL eXecutable Undetecter");           break;
         case RECORD_NAME_KBYS:                                  sResult=QString("KByS");                                        break;
@@ -10237,21 +10239,12 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
             bool bIsAPK=false;
             QString sCreatedBy;
 
-            XArchive::RECORD recordManifest=XArchive::getArchiveRecord("META-INF/MANIFEST.MF",&(pBinaryInfo->listArchiveRecords));
+            QString sDataManifest=xzip.decompress(&(pBinaryInfo->listArchiveRecords),"META-INF/MANIFEST.MF").data();
 
-            if(!recordManifest.sFileName.isEmpty())
+            if(sDataManifest!="")
             {
-                if(recordManifest.nUncompressedSize)
-                {
-                    QString sDataManifest=xzip.decompress(&recordManifest).data();
-//                    QString sVendor=XBinary::regExp("Specification-Vendor: (.*?)\n",sDataManifest,1).remove("\r");
-//                    QString sVersion=XBinary::regExp("Specification-Version: (.*?)\n",sDataManifest,1).remove("\r");
-//                    QString sImpVendor=XBinary::regExp("Implementation-Vendor: (.*?)\n",sDataManifest,1).remove("\r");
-//                    QString sImpVersion=XBinary::regExp("Implementation-Version: (.*?)\n",sDataManifest,1).remove("\r");
-//                    QString sBuildBy=XBinary::regExp("Built-By: (.*?)\n",sDataManifest,1).remove("\r");
-                    sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sDataManifest,1).remove("\r");
-                    bIsJAR=true;
-                }
+                sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sDataManifest,1).remove("\r");
+                bIsJAR=true;
             }
 
             bIsAPK=XArchive::isArchiveRecordPresent("classes.dex",&(pBinaryInfo->listArchiveRecords));
@@ -10267,7 +10260,7 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
                     pBinaryInfo->mapResultTools.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
                 }
                 // TODO 1.7.0_79 (Oracle Corporation)
-                archiveScan(&(pBinaryInfo->mapArchiveDetects),&(pBinaryInfo->listArchiveRecords),_APK_file_records,sizeof(STRING_RECORD),pBinaryInfo->basic_info.id.fileType,XBinary::FT_APK,&(pBinaryInfo->basic_info),HEURTYPE_ARCHIVE);
+                archiveScan(&(pBinaryInfo->mapArchiveDetects),&(pBinaryInfo->listArchiveRecords),_APK_file_records,sizeof(_APK_file_records),pBinaryInfo->basic_info.id.fileType,XBinary::FT_APK,&(pBinaryInfo->basic_info),HEURTYPE_ARCHIVE);
 
                 XArchive::RECORD recordJetpack=XArchive::getArchiveRecord("META-INF/androidx.core_core.version",&(pBinaryInfo->listArchiveRecords));
 
@@ -10398,19 +10391,42 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
 
 void SpecAbstract::Binary_handle_APK(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
 {
-    XBinary binary(pDevice,bIsImage);
+    Q_UNUSED(bIsImage)
 
-    if(pBinaryInfo->mapArchiveDetects.contains(RECORD_NAME_SECSHELL))
+    XZip xzip(pDevice);
+
+    if(xzip.isValid())
     {
-        _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_SECSHELL,"","",0);
-        pBinaryInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        if(pBinaryInfo->mapArchiveDetects.contains(RECORD_NAME_SECSHELL))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_SECSHELL,"","",0);
+            pBinaryInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        }
+        else if(pBinaryInfo->mapArchiveDetects.contains(RECORD_NAME_JIAGU))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_JIAGU,"","",0);
+            pBinaryInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        }
+        else if(pBinaryInfo->mapArchiveDetects.contains(RECORD_NAME_DEXPROTECTOR))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_DEXPROTECTOR,"","",0);
+
+            QString sDataManifest=xzip.decompress(&(pBinaryInfo->listArchiveRecords),"META-INF/MANIFEST.MF").data();
+
+            QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
+
+            if(sProtectedBy.contains("DexProtector"))
+            {
+                ss.sVersion=sProtectedBy.section(" ",0,0);
+            }
+
+            pBinaryInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        }
     }
 }
 
 void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
 {
-    XBinary binary(pDevice,bIsImage);
-
     if( (pBinaryInfo->basic_info.id.fileType==XBinary::FT_APK)||
         (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTOFFICE))||
         (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTOFFICEWORD))||
@@ -10429,6 +10445,32 @@ void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, bool bIsImage, S
         pBinaryInfo->mapResultFormats[RECORD_NAME_PDF].id.fileType=XBinary::FT_BINARY;
         pBinaryInfo->basic_info.id.fileType=XBinary::FT_BINARY;
     }
+
+#ifdef QT_DEBUG
+
+    if(pBinaryInfo->basic_info.id.fileType==XBinary::FT_APK)
+    {
+        XZip xzip(pDevice);
+
+        if(xzip.isValid())
+        {
+            QString sDataManifest=xzip.decompress("META-INF/MANIFEST.MF").data();
+
+            QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
+
+            if(sProtectedBy!="")
+            {
+                SpecAbstract::_SCANS_STRUCT recordSS={};
+
+                recordSS.type=RECORD_TYPE_PROTECTOR;
+                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN);
+                recordSS.sVersion=sProtectedBy;
+
+                pBinaryInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pBinaryInfo->basic_info),&recordSS));
+            }
+        }
+    }
+#endif
 }
 
 void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
@@ -12853,12 +12895,14 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
 
     for(int i=0; i<nNumberOfArchives; i++)
     {
+//        qDebug("%s", pListArchiveRecords->at(i).sFileName.toLatin1().data());
         quint32 nCRC=XBinary::getStringCustomCRC32(pListArchiveRecords->at(i).sFileName);
         listStringCRC.append(nCRC);
     }
 
     for(int i=0; i<nNumberOfSignatures; i++)
     {
+//        qDebug("%s", pRecords[i].pszString);
         quint32 nCRC=XBinary::getStringCustomCRC32(pRecords[i].pszString);
         listSignatureCRC.append(nCRC);
     }
