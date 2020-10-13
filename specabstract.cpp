@@ -1763,9 +1763,8 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         ELF_handle_Tools(pDevice,pOptions->bIsImage,&result);
         ELF_handle_Protection(pDevice,pOptions->bIsImage,&result);
 
-#ifdef QT_DEBUG
         ELF_handle_UnknownProtection(pDevice,pOptions->bIsImage,&result);
-#endif
+
         ELF_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
@@ -10428,6 +10427,8 @@ void SpecAbstract::Binary_handle_APK(QIODevice *pDevice, bool bIsImage, SpecAbst
 
 void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
 {
+    Q_UNUSED(bIsImage)
+
     if( (pBinaryInfo->basic_info.id.fileType==XBinary::FT_APK)||
         (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTOFFICE))||
         (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTOFFICEWORD))||
@@ -10447,31 +10448,31 @@ void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, bool bIsImage, S
         pBinaryInfo->basic_info.id.fileType=XBinary::FT_BINARY;
     }
 
-#ifdef QT_DEBUG
-
-    if(pBinaryInfo->basic_info.id.fileType==XBinary::FT_APK)
+    if(pBinaryInfo->basic_info.bIsTest)
     {
-        XZip xzip(pDevice);
-
-        if(xzip.isValid())
+        if(pBinaryInfo->basic_info.id.fileType==XBinary::FT_APK)
         {
-            QString sDataManifest=xzip.decompress("META-INF/MANIFEST.MF").data();
+            XZip xzip(pDevice);
 
-            QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
-
-            if(sProtectedBy!="")
+            if(xzip.isValid())
             {
-                SpecAbstract::_SCANS_STRUCT recordSS={};
+                QString sDataManifest=xzip.decompress("META-INF/MANIFEST.MF").data();
 
-                recordSS.type=RECORD_TYPE_PROTECTOR;
-                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN);
-                recordSS.sVersion=sProtectedBy;
+                QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
 
-                pBinaryInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pBinaryInfo->basic_info),&recordSS));
+                if(sProtectedBy!="")
+                {
+                    SpecAbstract::_SCANS_STRUCT recordSS={};
+
+                    recordSS.type=RECORD_TYPE_PROTECTOR;
+                    recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN);
+                    recordSS.sVersion=sProtectedBy;
+
+                    pBinaryInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pBinaryInfo->basic_info),&recordSS));
+                }
             }
         }
     }
-#endif
 }
 
 void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
@@ -11623,27 +11624,28 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
 
     if(elf.isValid())
     {
-#ifdef QT_DEBUG
-        QList<QString> listStrings=elf.getCommentStrings();
-
-        int nNumberOfStrings=listStrings.count();
-
-        for(int i=0;i<nNumberOfStrings;i++)
+        if(pELFInfo->basic_info.bIsTest)
         {
-            QString sString=listStrings.at(i);
+            QList<QString> listStrings=elf.getCommentStrings();
 
-            if(sString!="")
+            int nNumberOfStrings=listStrings.count();
+
+            for(int i=0;i<nNumberOfStrings;i++)
             {
-                SpecAbstract::_SCANS_STRUCT recordSS={};
+                QString sString=listStrings.at(i);
 
-                recordSS.type=RECORD_TYPE_PROTECTOR;
-                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+(RECORD_NAME)(i+1));
-                recordSS.sVersion=sString;
+                if(sString!="")
+                {
+                    SpecAbstract::_SCANS_STRUCT recordSS={};
 
-                pELFInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+                    recordSS.type=RECORD_TYPE_PROTECTOR;
+                    recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+(RECORD_NAME)(i+1));
+                    recordSS.sVersion=sString;
+
+                    pELFInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+                }
             }
         }
-#endif
     }
 }
 
