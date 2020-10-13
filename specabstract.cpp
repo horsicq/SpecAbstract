@@ -10279,7 +10279,8 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
 
                 bool bIsKotlin=false;
 
-                bIsKotlin=XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version",&(pBinaryInfo->listArchiveRecords));
+                bIsKotlin=  XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version",&(pBinaryInfo->listArchiveRecords))||
+                            XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins",&(pBinaryInfo->listArchiveRecords));
 
                 if(bIsKotlin)
                 {
