@@ -11888,6 +11888,11 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         {
             recordAndroidSDK.sVersion="API 14-23(Android 4.0+)";
         }
+//        else if (sDDEXVersion=="036")
+//        {
+//            // Due to a Dalvik bug present in older versions of Android, Dex version 036 has been skipped.
+//            // Dex version 036 is not valid for any version of Android and never will be.
+//        }
         else if(sDDEXVersion=="037")
         {
             recordAndroidSDK.sVersion="API 24-25(Android 7.0+)";
