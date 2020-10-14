@@ -2346,8 +2346,11 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
 
         QList<XDEX_DEF::MAP_ITEM> mapItems=dex.getMapItems();
 
-        result.listStrings=dex.getStrings(&mapItems,pbIsStop);
-        result.listTypeItemStrings=dex.getTypeItemStrings(&mapItems,&result.listStrings);
+        if(pOptions->bDeepScan)
+        {
+            result.listStrings=dex.getStrings(&mapItems,pbIsStop);
+            result.listTypeItemStrings=dex.getTypeItemStrings(&mapItems,&result.listStrings);
+        }
 
         // TODO Check Strings
 
@@ -10312,67 +10315,70 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
 
             if((bIsAPK)&&(pOptions->bRecursiveScan))
             {
-                int nNumberOfRecords=pBinaryInfo->listArchiveRecords.count();
-
-                for(int i=0;(i<nNumberOfRecords)&&(!(*pbIsStop));i++)
+                if(pOptions->bDeepScan)
                 {
-                    QByteArray baRecordData=xzip.decompress(&(pBinaryInfo->listArchiveRecords.at(i)),true);
+                    int nNumberOfRecords=pBinaryInfo->listArchiveRecords.count();
 
-                    QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(&baRecordData,true);
-
-                    if( stFileTypes.contains(XBinary::FT_DEX)||
-                        stFileTypes.contains(XBinary::FT_ELF32)||
-                        stFileTypes.contains(XBinary::FT_ELF64))
+                    for(int i=0;(i<nNumberOfRecords)&&(!(*pbIsStop));i++)
                     {
-                        SpecAbstract::SCAN_RESULT scanResult={0};
+                        QByteArray baRecordData=xzip.decompress(&(pBinaryInfo->listArchiveRecords.at(i)),true);
 
-                        SpecAbstract::ID _parentId=pBinaryInfo->basic_info.id;
-                        _parentId.filePart=SpecAbstract::RECORD_FILEPART_ARCHIVERECORD;
-                        _parentId.sInfo=pBinaryInfo->listArchiveRecords.at(i).sFileName;
-                        _parentId.bVirtual=true; // TODO Check
+                        QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(&baRecordData,true);
 
-                        if(pBinaryInfo->listArchiveRecords.at(i).nUncompressedSize>baRecordData.size())
+                        if( stFileTypes.contains(XBinary::FT_DEX)||
+                            stFileTypes.contains(XBinary::FT_ELF32)||
+                            stFileTypes.contains(XBinary::FT_ELF64))
                         {
-                            QTemporaryFile fileTemp;
+                            SpecAbstract::SCAN_RESULT scanResult={0};
 
-                            if(fileTemp.open())
+                            SpecAbstract::ID _parentId=pBinaryInfo->basic_info.id;
+                            _parentId.filePart=SpecAbstract::RECORD_FILEPART_ARCHIVERECORD;
+                            _parentId.sInfo=pBinaryInfo->listArchiveRecords.at(i).sFileName;
+                            _parentId.bVirtual=true; // TODO Check
+
+                            if(pBinaryInfo->listArchiveRecords.at(i).nUncompressedSize>baRecordData.size())
                             {
-                                QString sTempFileName=fileTemp.fileName();
+                                QTemporaryFile fileTemp;
 
-                                if(xzip.decompressToFile(&(pBinaryInfo->listArchiveRecords.at(i)),sTempFileName))
+                                if(fileTemp.open())
                                 {
-                                    QFile file;
+                                    QString sTempFileName=fileTemp.fileName();
 
-                                    file.setFileName(sTempFileName);
-
-                                    if(file.open(QIODevice::ReadOnly))
+                                    if(xzip.decompressToFile(&(pBinaryInfo->listArchiveRecords.at(i)),sTempFileName))
                                     {
-                                        scan(&file,&scanResult,0,file.size(),_parentId,pOptions,pbIsStop);
+                                        QFile file;
 
-                                        file.close();
+                                        file.setFileName(sTempFileName);
+
+                                        if(file.open(QIODevice::ReadOnly))
+                                        {
+                                            scan(&file,&scanResult,0,file.size(),_parentId,pOptions,pbIsStop);
+
+                                            file.close();
+                                        }
                                     }
                                 }
                             }
-                        }
-                        else
-                        {
-                            QBuffer buffer(&baRecordData);
-
-                            if(buffer.open(QIODevice::ReadOnly))
+                            else
                             {
-                                scan(&buffer,&scanResult,0,buffer.size(),_parentId,pOptions,pbIsStop);
+                                QBuffer buffer(&baRecordData);
 
-                                buffer.close();
+                                if(buffer.open(QIODevice::ReadOnly))
+                                {
+                                    scan(&buffer,&scanResult,0,buffer.size(),_parentId,pOptions,pbIsStop);
+
+                                    buffer.close();
+                                }
                             }
-                        }
 
-                        if( stFileTypes.contains(XBinary::FT_ELF32)||
-                            stFileTypes.contains(XBinary::FT_ELF64))
-                        {
-                            filterResult(&scanResult.listRecords,QSet<RECORD_TYPE>()<<RECORD_TYPE_PACKER<<RECORD_TYPE_PROTECTOR);
-                        }
+                            if( stFileTypes.contains(XBinary::FT_ELF32)||
+                                stFileTypes.contains(XBinary::FT_ELF64))
+                            {
+                                filterResult(&scanResult.listRecords,QSet<RECORD_TYPE>()<<RECORD_TYPE_PACKER<<RECORD_TYPE_PROTECTOR);
+                            }
 
-                        pBinaryInfo->listRecursiveDetects.append(scanResult.listRecords);
+                            pBinaryInfo->listRecursiveDetects.append(scanResult.listRecords);
+                        }
                     }
                 }
             }
