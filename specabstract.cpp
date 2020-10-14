@@ -2349,6 +2349,8 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
         result.listStrings=dex.getStrings(&mapItems,pbIsStop);
         result.listTypeItemStrings=dex.getTypeItemStrings(&mapItems,&result.listStrings);
 
+        // TODO Check Strings
+
         DEX_handle_Tools(pDevice,&result);
 
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
