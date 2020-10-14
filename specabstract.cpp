@@ -119,22 +119,22 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
         sd.close();
     }
 
-    if(pOptions->bIsTest)
-    {
-        QList<SpecAbstract::SCAN_STRUCT> _listDetects;
+//    if(pOptions->bIsTest)
+//    {
+//        QList<SpecAbstract::SCAN_STRUCT> _listDetects;
 
-        int nNumberOfRecords=pScanResult->listRecords.count();
+//        int nNumberOfRecords=pScanResult->listRecords.count();
 
-        for(int i=0;i<nNumberOfRecords;i++)
-        {
-            if(pScanResult->listRecords.at(i).sInfo=="TEST")
-            {
-                _listDetects.append(pScanResult->listRecords.at(i));
-            }
-        }
+//        for(int i=0;i<nNumberOfRecords;i++)
+//        {
+//            if(pScanResult->listRecords.at(i).sInfo=="TEST")
+//            {
+//                _listDetects.append(pScanResult->listRecords.at(i));
+//            }
+//        }
 
-        pScanResult->listRecords=_listDetects;
-    }
+//        pScanResult->listRecords=_listDetects;
+//    }
 
     if(bInit)
     {
