@@ -788,7 +788,7 @@ public:
         BASIC_INFO basic_info;
 
         QList<QString> listStrings;
-        QList<QString> listTypes;
+        QList<QString> listTypeItemStrings;
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;

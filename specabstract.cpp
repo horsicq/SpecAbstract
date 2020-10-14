@@ -2344,6 +2344,11 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=dex.getMemoryMap();
 
+        QList<XDEX_DEF::MAP_ITEM> mapItems=dex.getMapItems();
+
+        result.listStrings=dex.getStrings(&mapItems,pbIsStop);
+        result.listTypeItemStrings=dex.getTypeItemStrings(&mapItems,&result.listStrings);
+
         DEX_handle_Tools(pDevice,&result);
 
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
@@ -11886,7 +11891,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         // https://source.android.com/devices/tech/dalvik/dex-format
         if(sDDEXVersion=="035")
         {
-            recordAndroidSDK.sVersion="API 14-23(Android 4.0+)";
+            recordAndroidSDK.sVersion="API 14+(Android 4.0+)";
         }
 //        else if (sDDEXVersion=="036")
 //        {
@@ -11895,15 +11900,15 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
 //        }
         else if(sDDEXVersion=="037")
         {
-            recordAndroidSDK.sVersion="API 24-25(Android 7.0+)";
+            recordAndroidSDK.sVersion="API 24+(Android 7.0+)";
         }
         else if(sDDEXVersion=="038")
         {
-            recordAndroidSDK.sVersion="API 26-27(Android 8.0+)";
+            recordAndroidSDK.sVersion="API 26+(Android 8.0+)";
         }
         else if(sDDEXVersion=="039")
         {
-            recordAndroidSDK.sVersion="API 28-30(Android 9.0+)";
+            recordAndroidSDK.sVersion="API 28+(Android 9.0+)";
         }
         else
         {
