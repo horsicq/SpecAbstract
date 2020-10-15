@@ -463,7 +463,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_JAR:                                   sResult=QString("JAR");                                         break;
         case RECORD_NAME_JAVA:                                  sResult=QString("Java");                                        break;
         case RECORD_NAME_JAVACOMPILEDCLASS:                     sResult=QString("Java compiled class");                         break;
-        case RECORD_NAME_JAVASDK:                               sResult=QString("Java SDK");                                    break;
+        case RECORD_NAME_JDK:                                   sResult=QString("Java Development Kit(JDK)");                   break;
         case RECORD_NAME_JDPACK:                                sResult=QString("JDPack");                                      break;
         case RECORD_NAME_JIAGU:                                 sResult=QString("jiagu");                                       break;
         case RECORD_NAME_JPEG:                                  sResult=QString("JPEG");                                        break;
@@ -2411,7 +2411,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
             archiveScan(&(result.mapArchiveDetects),&(result.listArchiveRecords),_APK_file_records,sizeof(_APK_file_records),result.basic_info.id.fileType,XBinary::FT_APK,&(result.basic_info),HEURTYPE_ARCHIVE);
         }
 
-        Zip_handle_Manifest(pDevice,pOptions->bIsImage,&result);
+        Zip_handle_Metainfos(pDevice,pOptions->bIsImage,&result);
         Zip_handle_Microsoftoffice(pDevice,pOptions->bIsImage,&result);
         Zip_handle_OpenOffice(pDevice,pOptions->bIsImage,&result);
         Zip_handle_JAR(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
@@ -10322,7 +10322,7 @@ void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice, bool bIsImage, ZIPI
     }
 }
 
-void SpecAbstract::Zip_handle_Manifest(QIODevice *pDevice, bool bIsImage, SpecAbstract::ZIPINFO_STRUCT *pZipInfo)
+void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecAbstract::ZIPINFO_STRUCT *pZipInfo)
 {
     Q_UNUSED(bIsImage)
 
@@ -10347,6 +10347,19 @@ void SpecAbstract::Zip_handle_Manifest(QIODevice *pDevice, bool bIsImage, SpecAb
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDGRADLE,"","",0);
                     ss.sVersion=XBinary::regExp("Android Gradle (.*?)$",sCreatedBy,1);
+                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                }
+                else if(sCreatedBy.contains("(Sun Microsystems Inc.)"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_JDK,"","",0);
+                    ss.sVersion=XBinary::regExp("(.*?) \\(Sun Microsystems Inc.\\)",sCreatedBy,1);
+                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                }
+
+                if(sAntVersion.contains("Apache Ant"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_APACHEANT,"","",0);
+                    ss.sVersion=XBinary::regExp("Apache Ant (.*?)$",sAntVersion,1);
                     pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
                 }
             }

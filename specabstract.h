@@ -116,6 +116,7 @@ public:
         RECORD_NAME_ANSKYAPOLYMORPHICPACKER,
         RECORD_NAME_ANSLYMPACKER,
         RECORD_NAME_ANTIDOTE,
+        RECORD_NAME_APACHEANT,
         RECORD_NAME_APPLELLVM,
         RECORD_NAME_APPORTABLECLANG,
         RECORD_NAME_ARCRYPT,
@@ -323,7 +324,7 @@ public:
         RECORD_NAME_JAR,
         RECORD_NAME_JAVA,
         RECORD_NAME_JAVACOMPILEDCLASS,
-        RECORD_NAME_JAVASDK,
+        RECORD_NAME_JDK,
         RECORD_NAME_JDPACK,
         RECORD_NAME_JIAGU,
         RECORD_NAME_JPEG,
@@ -1215,7 +1216,7 @@ public:
 
     static void Zip_handle_Microsoftoffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
-    static void Zip_handle_Manifest(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
+    static void Zip_handle_Metainfos(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_JAR(QIODevice *pDevice, bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
     static void Zip_handle_APK(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
