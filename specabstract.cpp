@@ -2390,9 +2390,32 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
 
         result.listArchiveRecords=xzip.getRecords();
 
+        result.bIsJAR=XArchive::isArchiveRecordPresent("META-INF/MANIFEST.MF",&(result.listArchiveRecords));
+        result.bIsAPK=XArchive::isArchiveRecordPresent("classes.dex",&(result.listArchiveRecords));
+        result.bIsKotlin=   XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version",&(result.listArchiveRecords))||
+                            XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins",&(result.listArchiveRecords));
+
+        if((result.bIsJAR)&&(!(result.bIsAPK)))
+        {
+            result.basic_info.id.fileType=XBinary::FT_JAR;
+        }
+        else if(result.bIsAPK)
+        {
+            result.basic_info.id.fileType=XBinary::FT_APK;
+        }
+
+        if(result.bIsAPK)
+        {
+            archiveScan(&(result.mapArchiveDetects),&(result.listArchiveRecords),_APK_file_records,sizeof(_APK_file_records),result.basic_info.id.fileType,XBinary::FT_APK,&(result.basic_info),HEURTYPE_ARCHIVE);
+        }
+
         Zip_handle_Microsoftoffice(pDevice,pOptions->bIsImage,&result);
         Zip_handle_OpenOffice(pDevice,pOptions->bIsImage,&result);
         Zip_handle_JAR(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
+        Zip_handle_APK(pDevice,pOptions->bIsImage,&result);
+
+        Zip_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
+
         Zip_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultArchives.values());
@@ -10298,14 +10321,12 @@ void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice, bool bIsImage, ZIPI
 
 void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, bool bIsImage, ZIPINFO_STRUCT *pZipInfo, SpecAbstract::SCAN_OPTIONS *pOptions, bool *pbIsStop)
 {
+    Q_UNUSED(bIsImage)
+
     XZip xzip(pDevice);
 
     if(xzip.isValid()&&(!(*pbIsStop)))
     {
-        bool bIsJAR=false;
-        bool bIsAPK=false;
-        bool bIsJava=false;
-        bool bIsKotlin=false;
         QString sCreatedBy;
 
         QString sDataManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/MANIFEST.MF").data();
@@ -10313,12 +10334,9 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
         if(sDataManifest!="")
         {
             sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sDataManifest,1).remove("\r");
-            bIsJAR=true;
         }
 
-        bIsAPK=XArchive::isArchiveRecordPresent("classes.dex",&(pZipInfo->listArchiveRecords));
-
-        if(bIsAPK)
+        if(pZipInfo->bIsAPK)
         {
             pZipInfo->basic_info.id.fileType=XBinary::FT_APK;
 
@@ -10329,7 +10347,6 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
             // TODO 1.7.0_79 (Oracle Corporation)
-            archiveScan(&(pZipInfo->mapArchiveDetects),&(pZipInfo->listArchiveRecords),_APK_file_records,sizeof(_APK_file_records),pZipInfo->basic_info.id.fileType,XBinary::FT_APK,&(pZipInfo->basic_info),HEURTYPE_ARCHIVE);
 
             XArchive::RECORD recordJetpack=XArchive::getArchiveRecord("META-INF/androidx.core_core.version",&(pZipInfo->listArchiveRecords));
 
@@ -10345,22 +10362,94 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                     pZipInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
                 }
             }
-
-            bIsKotlin=  XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version",&(pZipInfo->listArchiveRecords))||
-                        XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins",&(pZipInfo->listArchiveRecords));
-
-            Zip_handle_APK(pDevice,bIsImage,pZipInfo);
         }
-        else if(bIsJAR)
+
+
+
+//        if(bIsAPK)
+//        {
+//            if(bIsKotlin)
+//            {
+//                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LANGUAGE,RECORD_NAME_KOTLIN,"","",0);
+//                pZipInfo->mapResultLanguages.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+//            }
+//            else if(bIsJava)
+//            {
+//                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LANGUAGE,RECORD_NAME_JAVA,"","",0);
+//                pZipInfo->mapResultLanguages.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+//            }
+//        }
+    }
+
+//        if((sVersion=="")&&sCreatedBy.contains("JetBrains"))
+//        {
+//            sVersion=sCreatedBy;
+//        }
+
+//        if((sVersion=="")&&(sImpVendor!="")&&(sImpVersion!=""))
+//        {
+//            sVersion=sImpVendor+"-"+sImpVersion;
+//        }
+
+//        if((sVersion=="")&&(sVendor!="")&&(sImpVersion!=""))
+//        {
+//            sVersion=sVendor+"-"+sImpVersion;
+//        }
+
+}
+
+void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STRUCT *pZipInfo)
+{
+    Q_UNUSED(bIsImage)
+
+    if(pZipInfo->bIsAPK)
+    {
+        XZip xzip(pDevice);
+
+        if(xzip.isValid())
         {
-//                        pBinaryInfo->basic_info.id.filetype=XBinary::FT_JAR;
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SECSHELL))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_SECSHELL,"","",0);
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+            else if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_JIAGU))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_JIAGU,"","",0);
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+            else if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_DEXPROTECTOR))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_DEXPROTECTOR,"","",0);
 
-            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_BINARY,RECORD_TYPE_ARCHIVE,RECORD_NAME_JAR,"","",0);
-            ss.sVersion=sCreatedBy;
-            pZipInfo->mapResultArchives.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                QString sDataManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/MANIFEST.MF").data();
+
+                QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
+
+                if(sProtectedBy.section(" ",0,0)=="DexProtector")
+                {
+                    ss.sVersion=sProtectedBy.section(" ",1,1).remove(")").remove("(");
+                }
+                else if(sProtectedBy.section(" ",1,1)=="DexProtector")
+                {
+                    ss.sVersion=sProtectedBy.section(" ",0,0);
+                }
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
         }
+    }
+}
 
-        if((bIsAPK)&&(pOptions->bRecursiveScan))
+void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAbstract::ZIPINFO_STRUCT *pZipInfo, SpecAbstract::SCAN_OPTIONS *pOptions, bool *pbIsStop)
+{
+    Q_UNUSED(bIsImage)
+
+    XZip xzip(pDevice);
+
+    if(xzip.isValid())
+    {
+        if((pZipInfo->bIsAPK)&&(pOptions->bRecursiveScan))
         {
             if(pOptions->bDeepScan)
             {
@@ -10435,76 +10524,6 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                     }
                 }
             }
-        }
-
-        if(bIsAPK)
-        {
-            if(bIsKotlin)
-            {
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LANGUAGE,RECORD_NAME_KOTLIN,"","",0);
-                pZipInfo->mapResultLanguages.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
-            }
-            else if(bIsJava)
-            {
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LANGUAGE,RECORD_NAME_JAVA,"","",0);
-                pZipInfo->mapResultLanguages.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
-            }
-        }
-    }
-
-//        if((sVersion=="")&&sCreatedBy.contains("JetBrains"))
-//        {
-//            sVersion=sCreatedBy;
-//        }
-
-//        if((sVersion=="")&&(sImpVendor!="")&&(sImpVersion!=""))
-//        {
-//            sVersion=sImpVendor+"-"+sImpVersion;
-//        }
-
-//        if((sVersion=="")&&(sVendor!="")&&(sImpVersion!=""))
-//        {
-//            sVersion=sVendor+"-"+sImpVersion;
-//        }
-
-}
-
-void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STRUCT *pZipInfo)
-{
-    Q_UNUSED(bIsImage)
-
-    XZip xzip(pDevice);
-
-    if(xzip.isValid())
-    {
-        if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SECSHELL))
-        {
-            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_SECSHELL,"","",0);
-            pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
-        }
-        else if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_JIAGU))
-        {
-            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_JIAGU,"","",0);
-            pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
-        }
-        else if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_DEXPROTECTOR))
-        {
-            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_DEXPROTECTOR,"","",0);
-
-            QString sDataManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/MANIFEST.MF").data();
-
-            QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
-
-            if(sProtectedBy.section(" ",0,0)=="DexProtector")
-            {
-                ss.sVersion=sProtectedBy.section(" ",1,1).remove(")").remove("(");
-            }
-            else if(sProtectedBy.section(" ",1,1)=="DexProtector")
-            {
-                ss.sVersion=sProtectedBy.section(" ",0,0);
-            }
-
-            pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
         }
     }
 }

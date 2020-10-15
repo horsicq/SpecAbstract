@@ -785,6 +785,11 @@ public:
 
         QList<XArchive::RECORD> listArchiveRecords;
 
+        bool bIsJAR=false;
+        bool bIsAPK=false;
+        bool bIsJava=false;
+        bool bIsKotlin=false;
+
         QMap<RECORD_NAME,_SCANS_STRUCT> mapArchiveDetects;
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
@@ -1211,6 +1216,7 @@ public:
     static void Zip_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_JAR(QIODevice *pDevice, bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
     static void Zip_handle_APK(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
+    static void Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
     static void Zip_handle_FixDetects(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
 
     static void updateVersion(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sVersion);
