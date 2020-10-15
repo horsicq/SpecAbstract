@@ -2409,6 +2409,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
             archiveScan(&(result.mapArchiveDetects),&(result.listArchiveRecords),_APK_file_records,sizeof(_APK_file_records),result.basic_info.id.fileType,XBinary::FT_APK,&(result.basic_info),HEURTYPE_ARCHIVE);
         }
 
+        Zip_handle_Manifest(pDevice,pOptions->bIsImage,&result);
         Zip_handle_Microsoftoffice(pDevice,pOptions->bIsImage,&result);
         Zip_handle_OpenOffice(pDevice,pOptions->bIsImage,&result);
         Zip_handle_JAR(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
@@ -10319,6 +10320,46 @@ void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice, bool bIsImage, ZIPI
     }
 }
 
+void SpecAbstract::Zip_handle_Manifest(QIODevice *pDevice, bool bIsImage, SpecAbstract::ZIPINFO_STRUCT *pZipInfo)
+{
+    Q_UNUSED(bIsImage)
+
+    if((pZipInfo->bIsJAR)||(pZipInfo->bIsAPK))
+    {
+        XZip xzip(pDevice);
+
+        if(xzip.isValid())
+        {
+            QString sDataManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/MANIFEST.MF").data();
+            QString sJetpack=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/androidx.core_core.version").data();
+            // TODO 1.7.0_79 (Oracle Corporation)
+            // TODO JetBrains
+
+            if(sDataManifest!="")
+            {
+                QString sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sDataManifest,1).remove("\r");
+                QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
+
+                if(sCreatedBy.contains("Android Gradle"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDGRADLE,"","",0);
+                    ss.sVersion=XBinary::regExp("Android Gradle (.*?)$",sCreatedBy,1);
+                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                }
+            }
+
+            if(sJetpack!="")
+            {
+                QString sJetpackVersion=XBinary::regExp("(.*?)\n",sJetpack,1).remove("\r");
+
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LIBRARY,RECORD_NAME_ANDROIDJETPACK,"","",0);
+                ss.sVersion=sJetpackVersion;
+                pZipInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+        }
+    }
+}
+
 void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, bool bIsImage, ZIPINFO_STRUCT *pZipInfo, SpecAbstract::SCAN_OPTIONS *pOptions, bool *pbIsStop)
 {
     Q_UNUSED(bIsImage)
@@ -10327,75 +10368,8 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
 
     if(xzip.isValid()&&(!(*pbIsStop)))
     {
-        QString sCreatedBy;
-
-        QString sDataManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/MANIFEST.MF").data();
-
-        if(sDataManifest!="")
-        {
-            sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sDataManifest,1).remove("\r");
-        }
-
-        if(pZipInfo->bIsAPK)
-        {
-            pZipInfo->basic_info.id.fileType=XBinary::FT_APK;
-
-            if(sCreatedBy.contains("Android Gradle"))
-            {
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDGRADLE,"","",0);
-                ss.sVersion=XBinary::regExp("Android Gradle (.*?)$",sCreatedBy,1);
-                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
-            }
-            // TODO 1.7.0_79 (Oracle Corporation)
-
-            XArchive::RECORD recordJetpack=XArchive::getArchiveRecord("META-INF/androidx.core_core.version",&(pZipInfo->listArchiveRecords));
-
-            if(!recordJetpack.sFileName.isEmpty())
-            {
-                if(recordJetpack.nUncompressedSize)
-                {
-                    QString sDataJetpack=xzip.decompress(&recordJetpack).data();
-                    QString sJetpackVersion=XBinary::regExp("(.*?)\n",sDataJetpack,1).remove("\r");
-
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LIBRARY,RECORD_NAME_ANDROIDJETPACK,"","",0);
-                    ss.sVersion=sJetpackVersion;
-                    pZipInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
-                }
-            }
-        }
-
-
-
-//        if(bIsAPK)
-//        {
-//            if(bIsKotlin)
-//            {
-//                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LANGUAGE,RECORD_NAME_KOTLIN,"","",0);
-//                pZipInfo->mapResultLanguages.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
-//            }
-//            else if(bIsJava)
-//            {
-//                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LANGUAGE,RECORD_NAME_JAVA,"","",0);
-//                pZipInfo->mapResultLanguages.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
-//            }
-//        }
+        // TODO
     }
-
-//        if((sVersion=="")&&sCreatedBy.contains("JetBrains"))
-//        {
-//            sVersion=sCreatedBy;
-//        }
-
-//        if((sVersion=="")&&(sImpVendor!="")&&(sImpVersion!=""))
-//        {
-//            sVersion=sImpVendor+"-"+sImpVersion;
-//        }
-
-//        if((sVersion=="")&&(sVendor!="")&&(sImpVersion!=""))
-//        {
-//            sVersion=sVendor+"-"+sImpVersion;
-//        }
-
 }
 
 void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STRUCT *pZipInfo)

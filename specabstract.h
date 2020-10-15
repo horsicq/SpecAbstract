@@ -1214,6 +1214,7 @@ public:
 
     static void Zip_handle_Microsoftoffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
+    static void Zip_handle_Manifest(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_JAR(QIODevice *pDevice, bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
     static void Zip_handle_APK(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
