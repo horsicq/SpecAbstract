@@ -101,6 +101,13 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
             pScanResult->listRecords.append(msdos_info.basic_info.listDetects);
             pScanResult->listHeurs.append(msdos_info.basic_info.listHeurs);
         }
+        else if(stFileTypes.contains(XBinary::FT_ZIP))
+        {
+            SpecAbstract::ZIPINFO_STRUCT zip_info=SpecAbstract::getZIPInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
+
+            pScanResult->listRecords.append(zip_info.basic_info.listDetects);
+            pScanResult->listHeurs.append(zip_info.basic_info.listHeurs);
+        }
         else if(stFileTypes.contains(XBinary::FT_DEX))
         {
             SpecAbstract::DEXINFO_STRUCT dex_info=SpecAbstract::getDEXInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
@@ -907,9 +914,14 @@ QString SpecAbstract::createTypeString(const SpecAbstract::SCAN_STRUCT *pScanStr
     {
         sResult+=SpecAbstract::recordFilePartIdToString(pScanStruct->parentId.filePart);
 
+        if(pScanStruct->parentId.sVersion!="")
+        {
+            sResult+=QString("(%1)").arg(pScanStruct->parentId.sVersion);
+        }
+
         if(pScanStruct->parentId.sInfo!="")
         {
-            sResult+=QString("(%1)").arg(pScanStruct->parentId.sInfo);
+            sResult+=QString("[%1]").arg(pScanStruct->parentId.sInfo);
         }
 
         sResult+=": ";
@@ -1564,15 +1576,6 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
             result.basic_info.id.fileType=XBinary::FT_TEXT;
         }
 
-        XZip xzip(pDevice);
-
-        result.bIsZip=xzip.isValid();
-
-        if(result.bIsZip)
-        {
-            result.listArchiveRecords=xzip.getRecords();
-        }
-
         Binary_handle_Texts(pDevice,pOptions->bIsImage,&result);
         Binary_handle_COM(pDevice,pOptions->bIsImage,&result);
         Binary_handle_Formats(pDevice,pOptions->bIsImage,&result);
@@ -1585,9 +1588,6 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         Binary_handle_SFXData(pDevice,pOptions->bIsImage,&result);
         Binary_handle_ProtectorData(pDevice,pOptions->bIsImage,&result);
         Binary_handle_LibraryData(pDevice,pOptions->bIsImage,&result);
-        Binary_handle_MicrosoftOffice(pDevice,pOptions->bIsImage,&result);
-        Binary_handle_OpenOffice(pDevice,pOptions->bIsImage,&result);
-        Binary_handle_JAR(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
 
         Binary_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
@@ -1607,7 +1607,6 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         result.basic_info.listDetects.append(result.mapResultLanguages.values());
         result.basic_info.listDetects.append(result.mapResultCOMPackers.values());
         result.basic_info.listDetects.append(result.mapResultCOMProtectors.values());
-        result.basic_info.listDetects.append(result.mapResultAPKProtectors.values());
 
         if(!result.basic_info.listDetects.count())
         {
@@ -2358,6 +2357,64 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
 
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
+    }
+
+    result.basic_info.nElapsedTime=timer.elapsed();
+
+    return result;
+}
+
+SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    ZIPINFO_STRUCT result={};
+
+    XZip xzip(pDevice);
+
+    if(xzip.isValid()&&(!(*pbIsStop)))
+    {
+        result.basic_info.parentId=parentId;
+        result.basic_info.id.fileType=XBinary::FT_ZIP;
+        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.nOffset=nOffset;
+        result.basic_info.nSize=pDevice->size();
+        result.basic_info.sHeaderSignature=xzip.getSignature(0,150);
+        result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bShowHeuristic=pOptions->bShowHeuristic;
+        result.basic_info.bIsTest=pOptions->bIsTest;
+        result.basic_info.memoryMap=xzip.getMemoryMap();
+
+        result.listArchiveRecords=xzip.getRecords();
+
+        Zip_handle_Microsoftoffice(pDevice,pOptions->bIsImage,&result);
+        Zip_handle_OpenOffice(pDevice,pOptions->bIsImage,&result);
+        Zip_handle_JAR(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
+        Zip_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
+
+        result.basic_info.listDetects.append(result.mapResultArchives.values());
+        result.basic_info.listDetects.append(result.mapResultFormats.values());
+        result.basic_info.listDetects.append(result.mapResultTools.values());
+        result.basic_info.listDetects.append(result.mapResultLanguages.values());
+        result.basic_info.listDetects.append(result.mapResultLibraries.values());
+        result.basic_info.listDetects.append(result.mapResultAPKProtectors.values());
+
+        if(!result.basic_info.listDetects.count())
+        {
+            _SCANS_STRUCT ssUnknown={};
+
+            ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
+            ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
+
+            result.basic_info.listDetects.append(scansToScan(&(result.basic_info),&ssUnknown));
+
+            result.basic_info.bIsUnknown=true;
+        }
+
+        result.basic_info.listDetects.append(result.listRecursiveDetects);
     }
 
     result.basic_info.nElapsedTime=timer.elapsed();
@@ -9859,6 +9916,7 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, bool bIsImage, SpecA
     if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_JPEG))&&(pBinaryInfo->basic_info.nSize>=8))
     {
         // JPEG
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_IMAGE;
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_JPEG);
         quint32 nMajor=pBinaryInfo->basic_info.sHeaderSignature.mid(11*2,2).toUInt(nullptr,16);
         quint32 nMinor=pBinaryInfo->basic_info.sHeaderSignature.mid(12*2,2).toUInt(nullptr,16);
@@ -9868,6 +9926,7 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, bool bIsImage, SpecA
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GIF))&&(pBinaryInfo->basic_info.nSize>=8))
     {
         // GIF
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_IMAGE;
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_GIF);
         // TODO Version
         pBinaryInfo->mapResultImages.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
@@ -9875,6 +9934,7 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, bool bIsImage, SpecA
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_TIFF))&&(pBinaryInfo->basic_info.nSize>=8))
     {
         // TIFF
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_IMAGE;
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_TIFF);
         // More information
         pBinaryInfo->mapResultImages.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
@@ -9883,6 +9943,7 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, bool bIsImage, SpecA
     {
         // Windows Icon
         // TODO more information
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_IMAGE;
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINDOWSICON);
         pBinaryInfo->mapResultImages.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
@@ -9890,6 +9951,7 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, bool bIsImage, SpecA
     {
         // Windows Bitmap
         // TODO more information
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_IMAGE;
         quint32 _nSize=qFromBigEndian(pBinaryInfo->basic_info.sHeaderSignature.mid(2*2,8).toUInt(nullptr,16));
         if(pBinaryInfo->basic_info.nSize>=_nSize)
         {
@@ -9914,6 +9976,7 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, bool bIsImage, SpecA
     {
         // PNG
         // TODO options
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_IMAGE;
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PNG);
 
         ss.sInfo=QString("%1x%2").arg(binary.read_uint32(16,true)).arg(binary.read_uint32(20,true));
@@ -9924,6 +9987,7 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, bool bIsImage, SpecA
     {
         // DJVU
         // TODO options
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_IMAGE;
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_DJVU);
         pBinaryInfo->mapResultImages.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
@@ -10156,231 +10220,234 @@ void SpecAbstract::Binary_handle_LibraryData(QIODevice *pDevice, bool bIsImage, 
     }
 }
 
-void SpecAbstract::Binary_handle_MicrosoftOffice(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
+void SpecAbstract::Zip_handle_Microsoftoffice(QIODevice *pDevice, bool bIsImage, ZIPINFO_STRUCT *pZipInfo)
 {
-    XBinary binary(pDevice,bIsImage);
+    Q_UNUSED(bIsImage)
 
-    if(pBinaryInfo->bIsZip)
+    XZip xzip(pDevice);
+
+    if(xzip.isValid())
     {
-        XZip xzip(pDevice);
+        XArchive::RECORD record=XArchive::getArchiveRecord("docProps/app.xml",&(pZipInfo->listArchiveRecords));
 
-        if(xzip.isValid())
+        if(!record.sFileName.isEmpty())
         {
-            XArchive::RECORD record=XArchive::getArchiveRecord("docProps/app.xml",&(pBinaryInfo->listArchiveRecords));
-
-            if(!record.sFileName.isEmpty())
+            if((record.nUncompressedSize)&&(record.nUncompressedSize<=0x4000))
             {
-                if((record.nUncompressedSize)&&(record.nUncompressedSize<=0x4000))
+                pZipInfo->basic_info.id.fileType=XBinary::FT_DOCUMENT;
+
+                QString sData=xzip.decompress(&record).data();
+                QString sApplication=XBinary::regExp("<Application>(.*?)</Application>",sData,1);
+
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_BINARY,RECORD_TYPE_FORMAT,RECORD_NAME_MICROSOFTOFFICE,"","",0);
+
+                if(sApplication=="Microsoft Office Word")
                 {
-                    QString sData=xzip.decompress(&record).data();
-                    QString sApplication=XBinary::regExp("<Application>(.*?)</Application>",sData,1);
+                    ss.name=RECORD_NAME_MICROSOFTOFFICEWORD;
+                }
+                else if(sApplication=="Microsoft Excel")
+                {
+                    ss.name=RECORD_NAME_MICROSOFTEXCEL;
+                }
+                else if(sApplication=="Microsoft Visio")
+                {
+                    ss.name=RECORD_NAME_MICROSOFTVISIO;
+                }
+                else if(sApplication=="SheetJS")
+                {
+                    ss.name=RECORD_NAME_MICROSOFTEXCEL;
+                    ss.sInfo="SheetJS";
+                }
 
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_BINARY,RECORD_TYPE_FORMAT,RECORD_NAME_MICROSOFTOFFICE,"","",0);
+                ss.sVersion=XBinary::regExp("<AppVersion>(.*?)</AppVersion>",sData,1);
+                pZipInfo->mapResultFormats.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+        }
+    }
+}
 
-                    if(sApplication=="Microsoft Office Word")
-                    {
-                        ss.name=RECORD_NAME_MICROSOFTOFFICEWORD;
-                    }
-                    else if(sApplication=="Microsoft Excel")
-                    {
-                        ss.name=RECORD_NAME_MICROSOFTEXCEL;
-                    }
-                    else if(sApplication=="Microsoft Visio")
-                    {
-                        ss.name=RECORD_NAME_MICROSOFTVISIO;
-                    }
-                    else if(sApplication=="SheetJS")
-                    {
-                        ss.name=RECORD_NAME_MICROSOFTEXCEL;
-                        ss.sInfo="SheetJS";
-                    }
+void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice, bool bIsImage, ZIPINFO_STRUCT *pZipInfo)
+{
+    Q_UNUSED(bIsImage)
 
-                    ss.sVersion=XBinary::regExp("<AppVersion>(.*?)</AppVersion>",sData,1);
-                    pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    XZip xzip(pDevice);
+
+    if(xzip.isValid())
+    {
+        XArchive::RECORD record=XArchive::getArchiveRecord("meta.xml",&(pZipInfo->listArchiveRecords));
+
+        if(!record.sFileName.isEmpty())
+        {
+            if((record.nUncompressedSize)&&(record.nUncompressedSize<=0x4000))
+            {
+                QString sData=xzip.decompress(&record).data();
+
+                // TODO
+                if(sData.contains(":opendocument:"))
+                {
+                    pZipInfo->basic_info.id.fileType=XBinary::FT_DOCUMENT;
+
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_BINARY,RECORD_TYPE_FORMAT,RECORD_NAME_OPENDOCUMENT,"","",0);
+
+                    pZipInfo->mapResultFormats.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
                 }
             }
         }
     }
 }
 
-void SpecAbstract::Binary_handle_OpenOffice(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
+void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, bool bIsImage, ZIPINFO_STRUCT *pZipInfo, SpecAbstract::SCAN_OPTIONS *pOptions, bool *pbIsStop)
 {
-    XBinary binary(pDevice,bIsImage);
+    XZip xzip(pDevice);
 
-    if(pBinaryInfo->bIsZip)
+    if(xzip.isValid()&&(!(*pbIsStop)))
     {
-        XZip xzip(pDevice);
+        bool bIsJAR=false;
+        bool bIsAPK=false;
+        bool bIsJava=false;
+        bool bIsKotlin=false;
+        QString sCreatedBy;
 
-        if(xzip.isValid())
+        QString sDataManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/MANIFEST.MF").data();
+
+        if(sDataManifest!="")
         {
-            XArchive::RECORD record=XArchive::getArchiveRecord("meta.xml",&(pBinaryInfo->listArchiveRecords));
-
-            if(!record.sFileName.isEmpty())
-            {
-                if((record.nUncompressedSize)&&(record.nUncompressedSize<=0x4000))
-                {
-                    QString sData=xzip.decompress(&record).data();
-
-                    // TODO
-                    if(sData.contains(":opendocument:"))
-                    {
-                        _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_BINARY,RECORD_TYPE_FORMAT,RECORD_NAME_OPENDOCUMENT,"","",0);
-
-                        pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
-                    }
-                }
-            }
+            sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sDataManifest,1).remove("\r");
+            bIsJAR=true;
         }
-    }
-}
 
-void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo, SpecAbstract::SCAN_OPTIONS *pOptions, bool *pbIsStop)
-{
-    XBinary binary(pDevice,bIsImage);
+        bIsAPK=XArchive::isArchiveRecordPresent("classes.dex",&(pZipInfo->listArchiveRecords));
 
-    if(pBinaryInfo->bIsZip)
-    {
-        XZip xzip(pDevice);
-
-        if(xzip.isValid()&&(!(*pbIsStop)))
+        if(bIsAPK)
         {
-            bool bIsJAR=false;
-            bool bIsAPK=false;
-            QString sCreatedBy;
+            pZipInfo->basic_info.id.fileType=XBinary::FT_APK;
 
-            QString sDataManifest=xzip.decompress(&(pBinaryInfo->listArchiveRecords),"META-INF/MANIFEST.MF").data();
-
-            if(sDataManifest!="")
+            if(sCreatedBy.contains("Android Gradle"))
             {
-                sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sDataManifest,1).remove("\r");
-                bIsJAR=true;
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDGRADLE,"","",0);
+                ss.sVersion=XBinary::regExp("Android Gradle (.*?)$",sCreatedBy,1);
+                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+            // TODO 1.7.0_79 (Oracle Corporation)
+            archiveScan(&(pZipInfo->mapArchiveDetects),&(pZipInfo->listArchiveRecords),_APK_file_records,sizeof(_APK_file_records),pZipInfo->basic_info.id.fileType,XBinary::FT_APK,&(pZipInfo->basic_info),HEURTYPE_ARCHIVE);
+
+            XArchive::RECORD recordJetpack=XArchive::getArchiveRecord("META-INF/androidx.core_core.version",&(pZipInfo->listArchiveRecords));
+
+            if(!recordJetpack.sFileName.isEmpty())
+            {
+                if(recordJetpack.nUncompressedSize)
+                {
+                    QString sDataJetpack=xzip.decompress(&recordJetpack).data();
+                    QString sJetpackVersion=XBinary::regExp("(.*?)\n",sDataJetpack,1).remove("\r");
+
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LIBRARY,RECORD_NAME_ANDROIDJETPACK,"","",0);
+                    ss.sVersion=sJetpackVersion;
+                    pZipInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                }
             }
 
-            bIsAPK=XArchive::isArchiveRecordPresent("classes.dex",&(pBinaryInfo->listArchiveRecords));
+            bIsKotlin=  XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version",&(pZipInfo->listArchiveRecords))||
+                        XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins",&(pZipInfo->listArchiveRecords));
 
-            if(bIsAPK)
-            {
-                pBinaryInfo->basic_info.id.fileType=XBinary::FT_APK;
-
-                if(sCreatedBy.contains("Android Gradle"))
-                {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDGRADLE,"","",0);
-                    ss.sVersion=XBinary::regExp("Android Gradle (.*?)$",sCreatedBy,1);
-                    pBinaryInfo->mapResultTools.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
-                }
-                // TODO 1.7.0_79 (Oracle Corporation)
-                archiveScan(&(pBinaryInfo->mapArchiveDetects),&(pBinaryInfo->listArchiveRecords),_APK_file_records,sizeof(_APK_file_records),pBinaryInfo->basic_info.id.fileType,XBinary::FT_APK,&(pBinaryInfo->basic_info),HEURTYPE_ARCHIVE);
-
-                XArchive::RECORD recordJetpack=XArchive::getArchiveRecord("META-INF/androidx.core_core.version",&(pBinaryInfo->listArchiveRecords));
-
-                if(!recordJetpack.sFileName.isEmpty())
-                {
-                    if(recordJetpack.nUncompressedSize)
-                    {
-                        QString sDataJetpack=xzip.decompress(&recordJetpack).data();
-                        QString sJetpackVersion=XBinary::regExp("(.*?)\n",sDataJetpack,1).remove("\r");
-
-                        _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LIBRARY,RECORD_NAME_ANDROIDJETPACK,"","",0);
-                        ss.sVersion=sJetpackVersion;
-                        pBinaryInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
-                    }
-                }
-
-                bool bIsKotlin=false;
-
-                bIsKotlin=  XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version",&(pBinaryInfo->listArchiveRecords))||
-                            XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins",&(pBinaryInfo->listArchiveRecords));
-
-                if(bIsKotlin)
-                {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LANGUAGE,RECORD_NAME_KOTLIN,"","",0);
-                    pBinaryInfo->mapResultLanguages.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
-                }
-                else
-                {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LANGUAGE,RECORD_NAME_JAVA,"","",0);
-                    pBinaryInfo->mapResultLanguages.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
-                }
-
-                Binary_handle_APK(pDevice,bIsImage,pBinaryInfo);
-            }
-            else if(bIsJAR)
-            {
+            Zip_handle_APK(pDevice,bIsImage,pZipInfo);
+        }
+        else if(bIsJAR)
+        {
 //                        pBinaryInfo->basic_info.id.filetype=XBinary::FT_JAR;
 
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_BINARY,RECORD_TYPE_ARCHIVE,RECORD_NAME_JAR,"","",0);
-                ss.sVersion=sCreatedBy;
-                pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
-            }
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_BINARY,RECORD_TYPE_ARCHIVE,RECORD_NAME_JAR,"","",0);
+            ss.sVersion=sCreatedBy;
+            pZipInfo->mapResultArchives.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+        }
 
-            if((bIsAPK)&&(pOptions->bRecursiveScan))
+        if((bIsAPK)&&(pOptions->bRecursiveScan))
+        {
+            if(pOptions->bDeepScan)
             {
-                if(pOptions->bDeepScan)
+                int nNumberOfRecords=pZipInfo->listArchiveRecords.count();
+
+                for(int i=0;(i<nNumberOfRecords)&&(!(*pbIsStop));i++)
                 {
-                    int nNumberOfRecords=pBinaryInfo->listArchiveRecords.count();
+                    QByteArray baRecordData=xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)),true);
 
-                    for(int i=0;(i<nNumberOfRecords)&&(!(*pbIsStop));i++)
+                    QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(&baRecordData,true);
+
+                    if( stFileTypes.contains(XBinary::FT_DEX)||
+                        stFileTypes.contains(XBinary::FT_ELF32)||
+                        stFileTypes.contains(XBinary::FT_ELF64))
                     {
-                        QByteArray baRecordData=xzip.decompress(&(pBinaryInfo->listArchiveRecords.at(i)),true);
+                        SpecAbstract::SCAN_RESULT scanResult={0};
 
-                        QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(&baRecordData,true);
+                        SpecAbstract::ID _parentId=pZipInfo->basic_info.id;
+                        _parentId.filePart=SpecAbstract::RECORD_FILEPART_ARCHIVERECORD;
+                        _parentId.sInfo=pZipInfo->listArchiveRecords.at(i).sFileName;
+                        _parentId.bVirtual=true; // TODO Check
 
-                        if( stFileTypes.contains(XBinary::FT_DEX)||
-                            stFileTypes.contains(XBinary::FT_ELF32)||
-                            stFileTypes.contains(XBinary::FT_ELF64))
+                        if(pZipInfo->listArchiveRecords.at(i).nUncompressedSize>baRecordData.size())
                         {
-                            SpecAbstract::SCAN_RESULT scanResult={0};
+                            QTemporaryFile fileTemp;
 
-                            SpecAbstract::ID _parentId=pBinaryInfo->basic_info.id;
-                            _parentId.filePart=SpecAbstract::RECORD_FILEPART_ARCHIVERECORD;
-                            _parentId.sInfo=pBinaryInfo->listArchiveRecords.at(i).sFileName;
-                            _parentId.bVirtual=true; // TODO Check
-
-                            if(pBinaryInfo->listArchiveRecords.at(i).nUncompressedSize>baRecordData.size())
+                            if(fileTemp.open())
                             {
-                                QTemporaryFile fileTemp;
+                                QString sTempFileName=fileTemp.fileName();
 
-                                if(fileTemp.open())
+                                if(xzip.decompressToFile(&(pZipInfo->listArchiveRecords.at(i)),sTempFileName))
                                 {
-                                    QString sTempFileName=fileTemp.fileName();
+                                    QFile file;
 
-                                    if(xzip.decompressToFile(&(pBinaryInfo->listArchiveRecords.at(i)),sTempFileName))
+                                    file.setFileName(sTempFileName);
+
+                                    if(file.open(QIODevice::ReadOnly))
                                     {
-                                        QFile file;
+                                        scan(&file,&scanResult,0,file.size(),_parentId,pOptions,pbIsStop);
 
-                                        file.setFileName(sTempFileName);
-
-                                        if(file.open(QIODevice::ReadOnly))
-                                        {
-                                            scan(&file,&scanResult,0,file.size(),_parentId,pOptions,pbIsStop);
-
-                                            file.close();
-                                        }
+                                        file.close();
                                     }
                                 }
                             }
-                            else
-                            {
-                                QBuffer buffer(&baRecordData);
-
-                                if(buffer.open(QIODevice::ReadOnly))
-                                {
-                                    scan(&buffer,&scanResult,0,buffer.size(),_parentId,pOptions,pbIsStop);
-
-                                    buffer.close();
-                                }
-                            }
-
-                            if( stFileTypes.contains(XBinary::FT_ELF32)||
-                                stFileTypes.contains(XBinary::FT_ELF64))
-                            {
-                                filterResult(&scanResult.listRecords,QSet<RECORD_TYPE>()<<RECORD_TYPE_PACKER<<RECORD_TYPE_PROTECTOR);
-                            }
-
-                            pBinaryInfo->listRecursiveDetects.append(scanResult.listRecords);
                         }
+                        else
+                        {
+                            QBuffer buffer(&baRecordData);
+
+                            if(buffer.open(QIODevice::ReadOnly))
+                            {
+                                scan(&buffer,&scanResult,0,buffer.size(),_parentId,pOptions,pbIsStop);
+
+                                buffer.close();
+                            }
+                        }
+
+                        if(stFileTypes.contains(XBinary::FT_DEX))
+                        {
+                            // TODO get language(Java/Kotlin) from DEX
+                            // bIsKotlin
+                            // bIsJava
+                        }
+
+                        if( stFileTypes.contains(XBinary::FT_ELF32)||
+                            stFileTypes.contains(XBinary::FT_ELF64))
+                        {
+                            filterResult(&scanResult.listRecords,QSet<RECORD_TYPE>()<<RECORD_TYPE_PACKER<<RECORD_TYPE_PROTECTOR);
+                        }
+
+                        pZipInfo->listRecursiveDetects.append(scanResult.listRecords);
                     }
                 }
+            }
+        }
+
+        if(bIsAPK)
+        {
+            if(bIsKotlin)
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LANGUAGE,RECORD_NAME_KOTLIN,"","",0);
+                pZipInfo->mapResultLanguages.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+            else if(bIsJava)
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LANGUAGE,RECORD_NAME_JAVA,"","",0);
+                pZipInfo->mapResultLanguages.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
         }
     }
@@ -10402,7 +10469,7 @@ void SpecAbstract::Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, SpecAbst
 
 }
 
-void SpecAbstract::Binary_handle_APK(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
+void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STRUCT *pZipInfo)
 {
     Q_UNUSED(bIsImage)
 
@@ -10410,48 +10477,100 @@ void SpecAbstract::Binary_handle_APK(QIODevice *pDevice, bool bIsImage, SpecAbst
 
     if(xzip.isValid())
     {
-        if(pBinaryInfo->mapArchiveDetects.contains(RECORD_NAME_SECSHELL))
+        if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SECSHELL))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_SECSHELL,"","",0);
-            pBinaryInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+            pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
         }
-        else if(pBinaryInfo->mapArchiveDetects.contains(RECORD_NAME_JIAGU))
+        else if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_JIAGU))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_JIAGU,"","",0);
-            pBinaryInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+            pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
         }
-        else if(pBinaryInfo->mapArchiveDetects.contains(RECORD_NAME_DEXPROTECTOR))
+        else if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_DEXPROTECTOR))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_DEXPROTECTOR,"","",0);
 
-            QString sDataManifest=xzip.decompress(&(pBinaryInfo->listArchiveRecords),"META-INF/MANIFEST.MF").data();
+            QString sDataManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/MANIFEST.MF").data();
 
             QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
 
-            if(sProtectedBy.contains("DexProtector"))
+            if(sProtectedBy.section(" ",0,0)=="DexProtector")
+            {
+                ss.sVersion=sProtectedBy.section(" ",1,1).remove(")").remove("(");
+            }
+            else if(sProtectedBy.section(" ",1,1)=="DexProtector")
             {
                 ss.sVersion=sProtectedBy.section(" ",0,0);
             }
 
-            pBinaryInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+            pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+        }
+    }
+}
+
+void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, bool bIsImage, SpecAbstract::ZIPINFO_STRUCT *pZipInfo)
+{
+    Q_UNUSED(bIsImage)
+
+    XZip xzip(pDevice);
+
+    if(xzip.isValid())
+    {
+        if( pZipInfo->basic_info.id.fileType==XBinary::FT_ZIP)
+        {
+            pZipInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
+            // TODO deep scan
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_ZIP,"","",0);
+
+            ss.sVersion=xzip.getVersion();
+            ss.sInfo=QString("%1 records").arg(xzip.getNumberOfRecords());
+
+            if(xzip.isEncrypted())
+            {
+                ss.sInfo=append(ss.sInfo,"Encrypted");
+            }
+
+            // TODO files
+            pZipInfo->mapResultArchives.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+        }
+
+        if(pZipInfo->basic_info.bIsTest)
+        {
+            QString sDataManifest=xzip.decompress("META-INF/MANIFEST.MF").data();
+
+            QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
+            QString sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sDataManifest,1).remove("\r");
+
+//            if(sProtectedBy!="")
+//            {
+//                SpecAbstract::_SCANS_STRUCT recordSS={};
+
+//                recordSS.type=RECORD_TYPE_PROTECTOR;
+//                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN);
+//                recordSS.sVersion="Protected: "+sProtectedBy;
+
+//                pZipInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pZipInfo->basic_info),&recordSS));
+//            }
+
+            if(sCreatedBy!="")
+            {
+                SpecAbstract::_SCANS_STRUCT recordSS={};
+
+                recordSS.type=RECORD_TYPE_PROTECTOR;
+                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN);
+                recordSS.sVersion="Created: "+sCreatedBy;
+
+                pZipInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pZipInfo->basic_info),&recordSS));
+            }
         }
     }
 }
 
 void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
 {
+    Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
-
-    if( (pBinaryInfo->basic_info.id.fileType==XBinary::FT_APK)||
-        (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTOFFICE))||
-        (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTOFFICEWORD))||
-        (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTEXCEL))||
-        (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_MICROSOFTVISIO))||
-        (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_OPENDOCUMENT))||
-        (pBinaryInfo->mapResultArchives.contains(RECORD_NAME_JAR)))
-    {
-        pBinaryInfo->mapResultArchives.remove(RECORD_NAME_ZIP);
-    }
 
     if(pBinaryInfo->mapResultFormats.contains(RECORD_NAME_PDF))
     {
@@ -10459,32 +10578,6 @@ void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, bool bIsImage, S
 
         pBinaryInfo->mapResultFormats[RECORD_NAME_PDF].id.fileType=XBinary::FT_BINARY;
         pBinaryInfo->basic_info.id.fileType=XBinary::FT_BINARY;
-    }
-
-    if(pBinaryInfo->basic_info.bIsTest)
-    {
-        if(pBinaryInfo->basic_info.id.fileType==XBinary::FT_APK)
-        {
-            XZip xzip(pDevice);
-
-            if(xzip.isValid())
-            {
-                QString sDataManifest=xzip.decompress("META-INF/MANIFEST.MF").data();
-
-                QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
-
-                if(sProtectedBy!="")
-                {
-                    SpecAbstract::_SCANS_STRUCT recordSS={};
-
-                    recordSS.type=RECORD_TYPE_PROTECTOR;
-                    recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN);
-                    recordSS.sVersion=sProtectedBy;
-
-                    pBinaryInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pBinaryInfo->basic_info),&recordSS));
-                }
-            }
-        }
     }
 }
 

@@ -644,6 +644,7 @@ public:
         QUuid uuid;
         XBinary::FT fileType;
         RECORD_FILEPART filePart;
+        QString sVersion;
         QString sInfo;
         bool bVirtual;
     };
@@ -756,11 +757,7 @@ public:
         XBinary::UNICODE_TYPE unicodeType;
         QString sHeaderText;
 
-        bool bIsZip;
-        QList<XArchive::RECORD> listArchiveRecords;
-
         QMap<RECORD_NAME,_SCANS_STRUCT> mapTextHeaderDetects;
-        QMap<RECORD_NAME,_SCANS_STRUCT> mapArchiveDetects;
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTexts;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
@@ -778,7 +775,24 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraryData;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCOMPackers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCOMProtectors;
+
+        QList<SCAN_STRUCT> listRecursiveDetects;
+    };
+
+    struct ZIPINFO_STRUCT
+    {
+        BASIC_INFO basic_info;
+
+        QList<XArchive::RECORD> listArchiveRecords;
+
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapArchiveDetects;
+
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultLanguages;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultArchives;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultFormats;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultAPKProtectors;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
 
         QList<SCAN_STRUCT> listRecursiveDetects;
     };
@@ -1109,6 +1123,7 @@ public:
     static NEINFO_STRUCT getNEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
     static PEINFO_STRUCT getPEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
     static DEXINFO_STRUCT getDEXInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
+    static ZIPINFO_STRUCT getZIPInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
 
     static _SCANS_STRUCT getScansStruct(quint32 nVariant,XBinary::FT fileType,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo,qint64 nOffset);
 
@@ -1164,10 +1179,6 @@ public:
     static void Binary_handle_SFXData(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_ProtectorData(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_LibraryData(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
-    static void Binary_handle_MicrosoftOffice(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
-    static void Binary_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
-    static void Binary_handle_JAR(QIODevice *pDevice, bool bIsImage, BINARYINFO_STRUCT *pBinaryInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
-    static void Binary_handle_APK(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
 
     static void Binary_handle_FixDetects(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
 
@@ -1195,6 +1206,12 @@ public:
     static void NE_handle_Borland(QIODevice *pDevice, bool bIsImage, NEINFO_STRUCT *pNEInfo);
 
     static void DEX_handle_Tools(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo);
+
+    static void Zip_handle_Microsoftoffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
+    static void Zip_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
+    static void Zip_handle_JAR(QIODevice *pDevice, bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
+    static void Zip_handle_APK(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
+    static void Zip_handle_FixDetects(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
 
     static void updateVersion(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sVersion);
     static void updateInfo(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sInfo);
