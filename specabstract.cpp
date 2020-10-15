@@ -10358,6 +10358,12 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                     ss.sVersion=XBinary::regExp("(.*?) \\(Sun Microsystems Inc.\\)",sCreatedBy,1);
                     pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
                 }
+                else if(sCreatedBy.contains("(Oracle Corporation)"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_JDK,"","",0);
+                    ss.sVersion=XBinary::regExp("(.*?) \\(Oracle Corporation\\)",sCreatedBy,1);
+                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                }
                 else if(sCreatedBy.contains("(JetBrains s.r.o)"))
                 {
                     _SCANS_STRUCT ssJetBrains=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_JETBRAINS,"","",0);
@@ -10568,6 +10574,7 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Spec
 
             QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
             QString sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sDataManifest,1).remove("\r");
+            QString sBuiltBy=XBinary::regExp("Built-By: (.*?)\n",sDataManifest,1).remove("\r");
 
 //            if(sProtectedBy!="")
 //            {
@@ -10587,6 +10594,17 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Spec
                 recordSS.type=RECORD_TYPE_PROTECTOR;
                 recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN);
                 recordSS.sVersion="Created: "+sCreatedBy;
+
+                pZipInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pZipInfo->basic_info),&recordSS));
+            }
+
+            if(sBuiltBy!="")
+            {
+                SpecAbstract::_SCANS_STRUCT recordSS={};
+
+                recordSS.type=RECORD_TYPE_PROTECTOR;
+                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN);
+                recordSS.sVersion="Built: "+sBuiltBy;
 
                 pZipInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pZipInfo->basic_info),&recordSS));
             }
