@@ -373,6 +373,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DYAMAR:                                sResult=QString("DYAMAR");                                      break;
         case RECORD_NAME_DYNASM:                                sResult=QString("DynASM");                                      break;
         case RECORD_NAME_EAZFUSCATOR:                           sResult=QString("Eazfuscator");                                 break;
+        case RECORD_NAME_ECLIPSE:                               sResult=QString("Eclipse");                                     break;
         case RECORD_NAME_EMBARCADEROCPP:                        sResult=QString("Embarcadero C++");                             break;
         case RECORD_NAME_EMBARCADEROCPPBUILDER:                 sResult=QString("Embarcadero C++ Builder");                     break;
         case RECORD_NAME_EMBARCADERODELPHI:                     sResult=QString("Embarcadero Delphi");                          break;
@@ -463,8 +464,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_JAR:                                   sResult=QString("JAR");                                         break;
         case RECORD_NAME_JAVA:                                  sResult=QString("Java");                                        break;
         case RECORD_NAME_JAVACOMPILEDCLASS:                     sResult=QString("Java compiled class");                         break;
-        case RECORD_NAME_JDK:                                   sResult=QString("Java Development Kit(JDK)");                   break;
+        case RECORD_NAME_JDK:                                   sResult=QString("JDK");                                         break;
         case RECORD_NAME_JDPACK:                                sResult=QString("JDPack");                                      break;
+        case RECORD_NAME_JETBRAINS:                             sResult=QString("JetBrains");                                   break;
         case RECORD_NAME_JIAGU:                                 sResult=QString("jiagu");                                       break;
         case RECORD_NAME_JPEG:                                  sResult=QString("JPEG");                                        break;
         case RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER:         sResult=QString("KaOs PE-DLL eXecutable Undetecter");           break;
@@ -10342,6 +10344,7 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                 QString sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sDataManifest,1).remove("\r");
                 QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
                 QString sAntVersion=XBinary::regExp("Ant-Version: (.*?)\n",sDataManifest,1).remove("\r");
+                QString sBuiltBy=XBinary::regExp("Built-By: (.*?)\n",sDataManifest,1).remove("\r");
 
                 if(sCreatedBy.contains("Android Gradle"))
                 {
@@ -10355,11 +10358,26 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                     ss.sVersion=XBinary::regExp("(.*?) \\(Sun Microsystems Inc.\\)",sCreatedBy,1);
                     pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
                 }
+                else if(sCreatedBy.contains("(JetBrains s.r.o)"))
+                {
+                    _SCANS_STRUCT ssJetBrains=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_JETBRAINS,"","",0);
+                    pZipInfo->mapResultTools.insert(ssJetBrains.name,scansToScan(&(pZipInfo->basic_info),&ssJetBrains));
+
+                    _SCANS_STRUCT ssJDK=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_JDK,"","",0);
+                    ssJDK.sVersion=XBinary::regExp("(.*?) \\(JetBrains s.r.o\\)",sCreatedBy,1);
+                    pZipInfo->mapResultTools.insert(ssJDK.name,scansToScan(&(pZipInfo->basic_info),&ssJDK));
+                }
 
                 if(sAntVersion.contains("Apache Ant"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_APACHEANT,"","",0);
                     ss.sVersion=XBinary::regExp("Apache Ant (.*?)$",sAntVersion,1);
+                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                }
+
+                if(sBuiltBy.contains("Generated-by-ADT"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ECLIPSE,"","ADT",0);
                     pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
                 }
             }
