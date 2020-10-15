@@ -1466,4 +1466,9 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_JIAGU,                        "",                 ""},                    "assets/libjiagu_ls.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_JIAGU,                        "",                 ""},                    "assets/libjiagu_x64.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_JIAGU,                        "",                 ""},                    "assets/libjiagu_x86.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "",                 ""},                    "assets/ijiami.ajm"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "",                 ""},                    "assets/ijm_lib/armeabi/libexec.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "",                 ""},                    "assets/ijm_lib/armeabi/libexecmain.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "",                 ""},                    "assets/ijm_lib/x86/libexec.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "",                 ""},                    "assets/ijm_lib/x86/libexecmain.so"},
 };

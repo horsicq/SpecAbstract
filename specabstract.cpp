@@ -449,6 +449,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_IBMPCPASCAL:                           sResult=QString("IBM PC Pascal");                               break;
         case RECORD_NAME_ICE:                                   sResult=QString("ICE");                                         break;
         case RECORD_NAME_ICRYPT:                                sResult=QString("ICrypt");                                      break;
+        case RECORD_NAME_IJIAMI:                                sResult=QString("iJiami");                                      break;
         case RECORD_NAME_IJIAMILLVM:                            sResult=QString("iJiami LLVM");                                 break;
         case RECORD_NAME_ILASM:                                 sResult=QString("ILAsm");                                       break;
         case RECORD_NAME_IMPORT:                                sResult=QString("Import");                                      break;
@@ -10430,6 +10431,11 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             else if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_JIAGU))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_JIAGU,"","",0);
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+            else if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_IJIAMI))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_IJIAMI,"","",0);
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
             else if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_DEXPROTECTOR))
