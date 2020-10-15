@@ -1447,7 +1447,6 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypointExp_records[]=
     {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTORBYDISMEMBER,           "2.0",              ""},                    "E9$$$$BF....8BF7ACAD918AE157AC32C4F6D0D0C412E1AAE2"},
 };
 
-
 SpecAbstract::STRING_RECORD _APK_file_records[]=
 {
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SECSHELL,                     "",                 ""},                    "lib/armeabi/libSecShell-x86.so"},
