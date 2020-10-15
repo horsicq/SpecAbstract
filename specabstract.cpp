@@ -255,6 +255,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ANSKYAPOLYMORPHICPACKER:               sResult=QString("Anskya Polymorphic Packer");                   break;
         case RECORD_NAME_ANSLYMPACKER:                          sResult=QString("AnslymPacker");                                break;
         case RECORD_NAME_ANTIDOTE:                              sResult=QString("AntiDote");                                    break;
+        case RECORD_NAME_APACHEANT:                             sResult=QString("Apache Ant");                                  break;
         case RECORD_NAME_APPLELLVM:                             sResult=QString("Apple LLVM");                                  break;
         case RECORD_NAME_APPORTABLECLANG:                       sResult=QString("Apportable clang");                            break;
         case RECORD_NAME_ARCRYPT:                               sResult=QString("AR Crypt");                                    break;
@@ -462,6 +463,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_JAR:                                   sResult=QString("JAR");                                         break;
         case RECORD_NAME_JAVA:                                  sResult=QString("Java");                                        break;
         case RECORD_NAME_JAVACOMPILEDCLASS:                     sResult=QString("Java compiled class");                         break;
+        case RECORD_NAME_JAVASDK:                               sResult=QString("Java SDK");                                    break;
         case RECORD_NAME_JDPACK:                                sResult=QString("JDPack");                                      break;
         case RECORD_NAME_JIAGU:                                 sResult=QString("jiagu");                                       break;
         case RECORD_NAME_JPEG:                                  sResult=QString("JPEG");                                        break;
@@ -10339,6 +10341,7 @@ void SpecAbstract::Zip_handle_Manifest(QIODevice *pDevice, bool bIsImage, SpecAb
             {
                 QString sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sDataManifest,1).remove("\r");
                 QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
+                QString sAntVersion=XBinary::regExp("Ant-Version: (.*?)\n",sDataManifest,1).remove("\r");
 
                 if(sCreatedBy.contains("Android Gradle"))
                 {
