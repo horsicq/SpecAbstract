@@ -10346,9 +10346,6 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
         if(xzip.isValid())
         {
             QString sDataManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/MANIFEST.MF").data();
-            QString sJetpack=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/androidx.core_core.version").data();
-            // TODO 1.7.0_79 (Oracle Corporation)
-            // TODO JetBrains
 
             if(sDataManifest!="")
             {
@@ -10361,13 +10358,13 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDGRADLE,"","",0);
                     ss.sVersion=XBinary::regExp("Android Gradle (.*?)$",sCreatedBy,1);
-                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
                 if(sCreatedBy.contains("AntiLVL"))
                 {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ANTILVL,"","",0);
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_APKTOOL,RECORD_NAME_ANTILVL,"","",0);
                     ss.sVersion=sCreatedBy.section(" ",0,0);
-                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
                 else if(sCreatedBy.contains("(Sun Microsystems Inc.)")||
                         sCreatedBy.contains("(BEA Systems, Inc.)")||
@@ -10392,52 +10389,43 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                         ss.name=RECORD_NAME_IBMJDK;
                     }
 
-                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
 
                 if(sCreatedBy.contains("(JetBrains s.r.o)"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_JETBRAINS,"","",0);
-                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
                 else if(sCreatedBy.contains("(d2j-null)"))
                 {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_DEX2JAR,"","",0);
-                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_APKTOOL,RECORD_NAME_DEX2JAR,"","",0);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
                 else if(sCreatedBy.contains("(Jeroen Frijters)"))
                 {
                     // Check OpenJDK
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_IKVMDOTNET,"","",0);
-                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
                 else if(sCreatedBy.contains("(BEA Systems, Inc.)"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_BEAWEBLOGIC,"","",0);
-                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
 
                 if(sAntVersion.contains("Apache Ant"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_APACHEANT,"","",0);
                     ss.sVersion=XBinary::regExp("Apache Ant (.*?)$",sAntVersion,1);
-                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
 
                 if(sBuiltBy.contains("Generated-by-ADT"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ECLIPSE,"","ADT",0);
-                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
-            }
-
-            if(sJetpack!="")
-            {
-                QString sJetpackVersion=XBinary::regExp("(.*?)\n",sJetpack,1).remove("\r");
-
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LIBRARY,RECORD_NAME_ANDROIDJETPACK,"","",0);
-                ss.sVersion=sJetpackVersion;
-                pZipInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
         }
     }
@@ -10465,6 +10453,16 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
 
         if(xzip.isValid())
         {
+            QString sJetpack=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/androidx.core_core.version").data();
+            if(sJetpack!="")
+            {
+                QString sJetpackVersion=XBinary::regExp("(.*?)\n",sJetpack,1).remove("\r");
+
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LIBRARY,RECORD_NAME_ANDROIDJETPACK,"","",0);
+                ss.sVersion=sJetpackVersion;
+                pZipInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SECSHELL))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_SECSHELL,"","",0);

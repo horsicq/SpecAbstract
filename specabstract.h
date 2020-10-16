@@ -806,6 +806,7 @@ public:
         bool bIsKotlin=false;
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapArchiveDetects;
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapMetainfosDetects;
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLanguages;
