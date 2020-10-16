@@ -183,6 +183,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
     {
         case RECORD_TYPE_UNKNOWN:                               sResult=tr("Unknown");                                          break;
         case RECORD_TYPE_APKOBFUSCATOR:                         sResult=QString("APK %1").arg(tr("obfuscator"));                break;
+        case RECORD_TYPE_APKTOOL:                               sResult=QString("APK %1").arg(tr("Tool"));                      break;
         case RECORD_TYPE_ARCHIVE:                               sResult=tr("Archive");                                          break;
         case RECORD_TYPE_CERTIFICATE:                           sResult=tr("Certificate");                                      break;
         case RECORD_TYPE_COMPILER:                              sResult=tr("Compiler");                                         break;
