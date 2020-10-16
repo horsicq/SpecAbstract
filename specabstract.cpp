@@ -255,6 +255,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ANSKYAPOLYMORPHICPACKER:               sResult=QString("Anskya Polymorphic Packer");                   break;
         case RECORD_NAME_ANSLYMPACKER:                          sResult=QString("AnslymPacker");                                break;
         case RECORD_NAME_ANTIDOTE:                              sResult=QString("AntiDote");                                    break;
+        case RECORD_NAME_ANTILVL:                               sResult=QString("AntiLVL");                                     break;
         case RECORD_NAME_APACHEANT:                             sResult=QString("Apache Ant");                                  break;
         case RECORD_NAME_APPLEJDK:                              sResult=QString("Apple JDK");                                   break;
         case RECORD_NAME_APPLELLVM:                             sResult=QString("Apple LLVM");                                  break;
@@ -10358,6 +10359,12 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                     ss.sVersion=XBinary::regExp("Android Gradle (.*?)$",sCreatedBy,1);
                     pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
                 }
+                if(sCreatedBy.contains("AntiLVL"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ANTILVL,"","",0);
+                    ss.sVersion=sCreatedBy.section(" ",0,0);
+                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                }
                 else if(sCreatedBy.contains("(Sun Microsystems Inc.)")||
                         sCreatedBy.contains("(BEA Systems, Inc.)")||
                         sCreatedBy.contains("(The FreeBSD Foundation)")||
@@ -10386,7 +10393,7 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
 
                 if(sCreatedBy.contains("(JetBrains s.r.o)"))
                 {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_JETBRAINS,"","",0);
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_JETBRAINS,"","",0);
                     pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
                 }
                 else if(sCreatedBy.contains("(d2j-null)"))
@@ -10397,12 +10404,12 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                 else if(sCreatedBy.contains("(Jeroen Frijters)"))
                 {
                     // Check OpenJDK
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_IKVMDOTNET,"","",0);
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_IKVMDOTNET,"","",0);
                     pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
                 }
                 else if(sCreatedBy.contains("(BEA Systems, Inc.)"))
                 {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_BEAWEBLOGIC,"","",0);
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_BEAWEBLOGIC,"","",0);
                     pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
                 }
 
