@@ -10426,6 +10426,22 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ECLIPSE,"","ADT",0);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
+
+                if(sProtectedBy.contains("DexProtector"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_DEXPROTECTOR,"","",0);
+
+                    if(sProtectedBy.section(" ",0,0)=="DexProtector")
+                    {
+                        ss.sVersion=sProtectedBy.section(" ",1,1).remove(")").remove("(");
+                    }
+                    else if(sProtectedBy.section(" ",1,1)=="DexProtector")
+                    {
+                        ss.sVersion=sProtectedBy.section(" ",0,0);
+                    }
+
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
             }
         }
     }
@@ -10482,18 +10498,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_DEXPROTECTOR,"","",0);
 
-                QString sDataManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/MANIFEST.MF").data();
-
-                QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
-
-                if(sProtectedBy.section(" ",0,0)=="DexProtector")
-                {
-                    ss.sVersion=sProtectedBy.section(" ",1,1).remove(")").remove("(");
-                }
-                else if(sProtectedBy.section(" ",1,1)=="DexProtector")
-                {
-                    ss.sVersion=sProtectedBy.section(" ",0,0);
-                }
+                // TODO Version from metainfo
 
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
@@ -10616,43 +10621,46 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Spec
 
         if(pZipInfo->basic_info.bIsTest)
         {
-            QString sDataManifest=xzip.decompress("META-INF/MANIFEST.MF").data();
-
-            QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
-            QString sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sDataManifest,1).remove("\r");
-            QString sBuiltBy=XBinary::regExp("Built-By: (.*?)\n",sDataManifest,1).remove("\r");
-
-//            if(sProtectedBy!="")
-//            {
-//                SpecAbstract::_SCANS_STRUCT recordSS={};
-
-//                recordSS.type=RECORD_TYPE_PROTECTOR;
-//                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN);
-//                recordSS.sVersion="Protected: "+sProtectedBy;
-
-//                pZipInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pZipInfo->basic_info),&recordSS));
-//            }
-
-            if(sCreatedBy!="")
+            if(pZipInfo->mapMetainfosDetects.count()==0)
             {
-                SpecAbstract::_SCANS_STRUCT recordSS={};
+                QString sDataManifest=xzip.decompress("META-INF/MANIFEST.MF").data();
 
-                recordSS.type=RECORD_TYPE_PROTECTOR;
-                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN);
-                recordSS.sVersion="Created: "+sCreatedBy;
+                QString sProtectedBy=XBinary::regExp("Protected-By: (.*?)\n",sDataManifest,1).remove("\r");
+                QString sCreatedBy=XBinary::regExp("Created-By: (.*?)\n",sDataManifest,1).remove("\r");
+                QString sBuiltBy=XBinary::regExp("Built-By: (.*?)\n",sDataManifest,1).remove("\r");
 
-                pZipInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pZipInfo->basic_info),&recordSS));
-            }
+                if(sProtectedBy!="")
+                {
+                    SpecAbstract::_SCANS_STRUCT recordSS={};
 
-            if(sBuiltBy!="")
-            {
-                SpecAbstract::_SCANS_STRUCT recordSS={};
+                    recordSS.type=RECORD_TYPE_PROTECTOR;
+                    recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN);
+                    recordSS.sVersion="Protected: "+sProtectedBy;
 
-                recordSS.type=RECORD_TYPE_PROTECTOR;
-                recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN);
-                recordSS.sVersion="Built: "+sBuiltBy;
+                    pZipInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pZipInfo->basic_info),&recordSS));
+                }
 
-                pZipInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pZipInfo->basic_info),&recordSS));
+                if(sCreatedBy!="")
+                {
+                    SpecAbstract::_SCANS_STRUCT recordSS={};
+
+                    recordSS.type=RECORD_TYPE_PROTECTOR;
+                    recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN);
+                    recordSS.sVersion="Created: "+sCreatedBy;
+
+                    pZipInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pZipInfo->basic_info),&recordSS));
+                }
+
+                if(sBuiltBy!="")
+                {
+                    SpecAbstract::_SCANS_STRUCT recordSS={};
+
+                    recordSS.type=RECORD_TYPE_PROTECTOR;
+                    recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN);
+                    recordSS.sVersion="Built: "+sBuiltBy;
+
+                    pZipInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pZipInfo->basic_info),&recordSS));
+                }
             }
         }
     }
