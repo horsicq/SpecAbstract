@@ -182,6 +182,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
     switch(id)
     {
         case RECORD_TYPE_UNKNOWN:                               sResult=tr("Unknown");                                          break;
+        case RECORD_TYPE_APKOBFUSCATOR:                         sResult=QString("APK %1").arg(tr("obfuscator"));                break;
         case RECORD_TYPE_ARCHIVE:                               sResult=tr("Archive");                                          break;
         case RECORD_TYPE_CERTIFICATE:                           sResult=tr("Certificate");                                      break;
         case RECORD_TYPE_COMPILER:                              sResult=tr("Compiler");                                         break;
@@ -195,6 +196,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_IMAGE:                                 sResult=tr("Image");                                            break;
         case RECORD_TYPE_INSTALLER:                             sResult=tr("Installer");                                        break;
         case RECORD_TYPE_INSTALLERDATA:                         sResult=tr("Installer data");                                   break;
+        case RECORD_TYPE_JAROBFUSCATOR:                         sResult=QString("JAR %1").arg(tr("obfuscator"));                break;
         case RECORD_TYPE_JOINER:                                sResult=tr("Joiner");                                           break;
         case RECORD_TYPE_LANGUAGE:                              sResult=tr("Language");                                         break;
         case RECORD_TYPE_LIBRARY:                               sResult=tr("Library");                                          break;
