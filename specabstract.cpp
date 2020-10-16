@@ -449,6 +449,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_HOUNDHACKCRYPTER:                      sResult=QString("Hound Hack Crypter");                          break;
         case RECORD_NAME_HTML:                                  sResult=QString("HTML");                                        break;
         case RECORD_NAME_HXS:                                   sResult=QString("HXS");                                         break;
+        case RECORD_NAME_IBMJDK:                                sResult=QString("IBM JDK");                                     break;
         case RECORD_NAME_IBMPCPASCAL:                           sResult=QString("IBM PC Pascal");                               break;
         case RECORD_NAME_ICE:                                   sResult=QString("ICE");                                         break;
         case RECORD_NAME_ICRYPT:                                sResult=QString("ICrypt");                                      break;
@@ -10365,6 +10366,7 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                         sCreatedBy.contains("(Apple Inc.)")||
                         sCreatedBy.contains("(Google Inc.)")||
                         sCreatedBy.contains("(Jeroen Frijters)")||
+                        sCreatedBy.contains("(IBM Corporation)")||
                         sCreatedBy.contains("(JetBrains s.r.o)"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_JDK,"","",0);
@@ -10373,6 +10375,10 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                     if(sCreatedBy.contains("(Apple Inc.)"))
                     {
                         ss.name=RECORD_NAME_APPLEJDK;
+                    }
+                    else if(sCreatedBy.contains("(IBM Corporation)"))
+                    {
+                        ss.name=RECORD_NAME_IBMJDK;
                     }
 
                     pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
