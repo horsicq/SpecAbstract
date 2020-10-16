@@ -10442,6 +10442,8 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
 
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
+
+                // TODO heur if String contains add to heur
             }
         }
     }
@@ -10450,12 +10452,53 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
 void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, bool bIsImage, ZIPINFO_STRUCT *pZipInfo, SpecAbstract::SCAN_OPTIONS *pOptions, bool *pbIsStop)
 {
     Q_UNUSED(bIsImage)
+    Q_UNUSED(pOptions)
 
     XZip xzip(pDevice);
 
     if(xzip.isValid()&&(!(*pbIsStop)))
     {
-        // TODO
+        if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_JDK))
+        {
+            _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_JDK);
+            pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+        }
+
+        if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APPLEJDK))
+        {
+            _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APPLEJDK);
+            pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+        }
+
+        if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_IBMJDK))
+        {
+            _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_IBMJDK);
+            pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+        }
+
+        if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_JETBRAINS))
+        {
+            _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_JETBRAINS);
+            pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+        }
+
+        if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_IKVMDOTNET))
+        {
+            _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_IKVMDOTNET);
+            pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+        }
+
+        if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_BEAWEBLOGIC))
+        {
+            _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_BEAWEBLOGIC);
+            pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+        }
+
+        if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APACHEANT))
+        {
+            _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APACHEANT);
+            pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+        }
     }
 }
 
@@ -10479,26 +10522,60 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDGRADLE))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDGRADLE);
+                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANTILVL))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANTILVL);
+                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEX2JAR))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DEX2JAR);
+                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ECLIPSE))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ECLIPSE);
+                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SECSHELL))
             {
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_SECSHELL,"","",0);
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_SECSHELL);
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
-            else if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_JIAGU))
-            {
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_JIAGU,"","",0);
-                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
-            }
-            else if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_IJIAMI))
-            {
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_IJIAMI,"","",0);
-                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
-            }
-            else if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_DEXPROTECTOR))
-            {
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_DEXPROTECTOR,"","",0);
 
-                // TODO Version from metainfo
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_JIAGU))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_JIAGU);
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_IJIAMI))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_IJIAMI);
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_DEXPROTECTOR)||pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXPROTECTOR))
+            {
+                _SCANS_STRUCT ss={};
+
+                if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXPROTECTOR))
+                {
+                    ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DEXPROTECTOR);
+                }
+                else
+                {
+                    ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_DEXPROTECTOR);
+                }
 
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
