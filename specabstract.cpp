@@ -187,6 +187,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_CERTIFICATE:                           sResult=tr("Certificate");                                      break;
         case RECORD_TYPE_COMPILER:                              sResult=tr("Compiler");                                         break;
         case RECORD_TYPE_CONVERTER:                             sResult=tr("Converter");                                        break;
+        case RECORD_TYPE_CRYPTOR:                               sResult=tr("Cryptor");                                          break;
         case RECORD_TYPE_DATABASE:                              sResult=tr("Database");                                         break;
         case RECORD_TYPE_DEBUGDATA:                             sResult=tr("Debug data");                                       break;
         case RECORD_TYPE_DONGLEPROTECTION:                      sResult=QString("Dongle %1").arg(tr("protection"));             break;
