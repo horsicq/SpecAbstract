@@ -10353,26 +10353,25 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                     ss.sVersion=XBinary::regExp("Android Gradle (.*?)$",sCreatedBy,1);
                     pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
                 }
-                else if(sCreatedBy.contains("(Sun Microsystems Inc.)"))
+                else if(sCreatedBy.contains("(Sun Microsystems Inc.)")||
+                        sCreatedBy.contains("(BEA Systems, Inc.)")||
+                        sCreatedBy.contains("(The FreeBSD Foundation)")||
+                        sCreatedBy.contains("(d2j-null)")||
+                        sCreatedBy.contains("(Oracle Corporation)")||
+                        sCreatedBy.contains("(Apple Inc.)")||
+                        sCreatedBy.contains("(Google Inc.)")||
+                        sCreatedBy.contains("(Jeroen Frijters)")||
+                        sCreatedBy.contains("(JetBrains s.r.o)"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_JDK,"","",0);
-                    ss.sVersion=XBinary::regExp("(.*?) \\(Sun Microsystems Inc.\\)",sCreatedBy,1);
+                    ss.sVersion=sCreatedBy.section(" ",0,0);
                     pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
                 }
-                else if(sCreatedBy.contains("(Oracle Corporation)"))
-                {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_JDK,"","",0);
-                    ss.sVersion=XBinary::regExp("(.*?) \\(Oracle Corporation\\)",sCreatedBy,1);
-                    pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
-                }
-                else if(sCreatedBy.contains("(JetBrains s.r.o)"))
+
+                if(sCreatedBy.contains("(JetBrains s.r.o)"))
                 {
                     _SCANS_STRUCT ssJetBrains=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_JETBRAINS,"","",0);
                     pZipInfo->mapResultTools.insert(ssJetBrains.name,scansToScan(&(pZipInfo->basic_info),&ssJetBrains));
-
-                    _SCANS_STRUCT ssJDK=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_JDK,"","",0);
-                    ssJDK.sVersion=XBinary::regExp("(.*?) \\(JetBrains s.r.o\\)",sCreatedBy,1);
-                    pZipInfo->mapResultTools.insert(ssJDK.name,scansToScan(&(pZipInfo->basic_info),&ssJDK));
                 }
 
                 if(sAntVersion.contains("Apache Ant"))
