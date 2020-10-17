@@ -461,7 +461,7 @@ public:
         RECORD_NAME_PEQUAKE,
         RECORD_NAME_PERL,
         RECORD_NAME_PESHIELD,
-        RECORD_NAME_PESPIN,        
+        RECORD_NAME_PESPIN,
         RECORD_NAME_PETITE,
         RECORD_NAME_PETITE_KERNEL32,
         RECORD_NAME_PETITE_USER32,
@@ -1167,7 +1167,7 @@ public:
     static void PE_handle_Tools(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_PETools(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_wxWidgets(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
-    static void PE_handle_GCC(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_GCC(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Signtools(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Installers(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_SFX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
