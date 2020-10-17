@@ -1203,37 +1203,37 @@ public:
 
     static void Binary_handle_FixDetects(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
 
-    static void MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, MSDOSINFO_STRUCT *pMSDOSInfo);
-    static void MSDOS_handle_Borland(QIODevice *pDevice, bool bIsImage, MSDOSINFO_STRUCT *pMSDOSInfo);
+    static void MSDOS_handle_Tools(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
+    static void MSDOS_handle_Borland(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_Protection(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_SFX(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_DosExtenders(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_Recursive(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
 
-    static void ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, ELFINFO_STRUCT *pELFInfo);
-    static void ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, ELFINFO_STRUCT *pELFInfo);
-    static void ELF_handle_GCC(QIODevice *pDevice,bool bIsImage, ELFINFO_STRUCT *pELFInfo);
-    static void ELF_handle_Protection(QIODevice *pDevice,bool bIsImage, ELFINFO_STRUCT *pELFInfo);
+    static void ELF_handle_CommentSection(QIODevice *pDevice,bool bIsImage,ELFINFO_STRUCT *pELFInfo);
+    static void ELF_handle_Tools(QIODevice *pDevice,bool bIsImage,ELFINFO_STRUCT *pELFInfo);
+    static void ELF_handle_GCC(QIODevice *pDevice,bool bIsImage,ELFINFO_STRUCT *pELFInfo);
+    static void ELF_handle_Protection(QIODevice *pDevice,bool bIsImage,ELFINFO_STRUCT *pELFInfo);
     static void ELF_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,ELFINFO_STRUCT *pELFInfo);
 
     static void ELF_handle_FixDetects(QIODevice *pDevice,bool bIsImage,ELFINFO_STRUCT *pELFInfo);
 
-    static void MACH_handle_Tools(QIODevice *pDevice,bool bIsImage, MACHINFO_STRUCT *pMACHInfo);
-    static void MACH_handle_Protection(QIODevice *pDevice,bool bIsImage, MACHINFO_STRUCT *pMACHInfo);
+    static void MACH_handle_Tools(QIODevice *pDevice,bool bIsImage,MACHINFO_STRUCT *pMACHInfo);
+    static void MACH_handle_Protection(QIODevice *pDevice,bool bIsImage,MACHINFO_STRUCT *pMACHInfo);
 
     static void LE_handle_Microsoft(QIODevice *pDevice,bool bIsImage,LEINFO_STRUCT *pLEInfo);
     static void LE_handle_Borland(QIODevice *pDevice,bool bIsImage,LEINFO_STRUCT *pLEInfo);
 
-    static void NE_handle_Borland(QIODevice *pDevice, bool bIsImage, NEINFO_STRUCT *pNEInfo);
+    static void NE_handle_Borland(QIODevice *pDevice,bool bIsImage,NEINFO_STRUCT *pNEInfo);
 
-    static void DEX_handle_Tools(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo);
+    static void DEX_handle_Tools(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo);
 
     static void Zip_handle_Microsoftoffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_Metainfos(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
-    static void Zip_handle_JAR(QIODevice *pDevice, bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
+    static void Zip_handle_JAR(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
     static void Zip_handle_APK(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
-    static void Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
+    static void Zip_handle_Recursive(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
     static void Zip_handle_FixDetects(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
 
     static void updateVersion(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sVersion);
@@ -1298,7 +1298,7 @@ public:
     static QByteArray _BasicPEInfoToArray(BASIC_PE_INFO *pInfo);
     static BASIC_PE_INFO _ArrayToBasicPEInfo(const QByteArray *pbaArray);
 
-    static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SIGNATURE_RECORD *pRecords, int nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SIGNATURE_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
     static void signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SIGNATURE_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
     static void PE_resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,PE_RESOURCES_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
     static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
@@ -1309,7 +1309,7 @@ public:
 
     static void signatureExpScan(XBinary *pXBinary,XBinary::_MEMORY_MAP *pMemoryMap,QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,qint64 nOffset,SIGNATURE_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
-    static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, int nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
     static QByteArray serializeScanStruct(SCAN_STRUCT scanStruct,bool bIsHeader=false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData,bool *pbIsHeader=nullptr);
