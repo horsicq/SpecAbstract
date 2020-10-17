@@ -1217,7 +1217,13 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_ByteGuard_string(QString sString)
     {
         result.bIsValid=true;
 
-        result.sVersion=sString.section("ByteGuard ",1,1).section("-",0,0);
+        result.sVersion=sString.section("ByteGuard ",1,1).section("-",0,0).section(")",0,0);
+    }
+    else if(sString.contains("Byteguard"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section("Byteguard ",1,1).section("-",0,0).section(")",0,0);
     }
 
     return result;
@@ -1385,7 +1391,14 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMThumbMacroAssembler_string(QString
     {
         result.bIsValid=true;
 
-        result.sVersion=sString.section("vsn ",1,-1);
+        if(sString.contains("vsn "))
+        {
+            result.sVersion=sString.section("vsn ",1,-1);
+        }
+        else
+        {
+            result.sVersion=sString.section(", ",1,-1);
+        }
     }
 
     return result;
@@ -10656,11 +10669,11 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
                             // bIsJava
                         }
 
-                        if( stFileTypes.contains(XBinary::FT_ELF32)||
-                            stFileTypes.contains(XBinary::FT_ELF64))
-                        {
-                            filterResult(&scanResult.listRecords,QSet<RECORD_TYPE>()<<RECORD_TYPE_PACKER<<RECORD_TYPE_PROTECTOR);
-                        }
+//                        if( stFileTypes.contains(XBinary::FT_ELF32)||
+//                            stFileTypes.contains(XBinary::FT_ELF64))
+//                        {
+//                            filterResult(&scanResult.listRecords,QSet<RECORD_TYPE>()<<RECORD_TYPE_PACKER<<RECORD_TYPE_PROTECTOR);
+//                        }
 
                         pZipInfo->listRecursiveDetects.append(scanResult.listRecords);
                     }
