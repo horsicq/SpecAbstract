@@ -1117,7 +1117,7 @@ public:
 
     explicit SpecAbstract(QObject *pParent=nullptr);
 
-    static void scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions,bool bInit=false,bool *pbIsStop=nullptr);
+    static void scan(QIODevice *pDevice,SpecAbstract::SCAN_RESULT *pScanResult,qint64 nOffset,qint64 nSize,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,bool bInit=false,bool *pbIsStop=nullptr);
 
     static QString append(QString sResult,QString sString);
     static QString recordFilePartIdToString(RECORD_FILEPART id);
@@ -1125,7 +1125,7 @@ public:
     static QString recordNameIdToString(RECORD_NAME id);
     static QString heurTypeIdToString(HEURTYPE id);
 
-    static SpecAbstract::UNPACK_OPTIONS getPossibleUnpackOptions(QIODevice *pDevice, bool bIsImage); // TODO Check
+    static SpecAbstract::UNPACK_OPTIONS getPossibleUnpackOptions(QIODevice *pDevice,bool bIsImage); // TODO Check
 
     static QString _SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct);
 
