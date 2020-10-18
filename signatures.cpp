@@ -1460,6 +1460,7 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXPROTECTOR,                 "",                 ""},                    "assets/dp.mp3"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXPROTECTOR,                 "",                 ""},                    "assets/dp.x86.so.dat"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXPROTECTOR,                 "",                 ""},                    "assets/dp.x86_64.so.dat"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXPROTECTOR,                 "",                 "Kotlin"},              "assets/dp-lib/dp.kotlin-v1.lua.mph"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_JIAGU,                        "",                 ""},                    "assets/libjiagu.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_JIAGU,                        "",                 ""},                    "assets/libjiagu_a64.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_JIAGU,                        "",                 ""},                    "assets/libjiagu_ls.so"},
@@ -1470,4 +1471,5 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "",                 ""},                    "assets/ijm_lib/armeabi/libexecmain.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "",                 ""},                    "assets/ijm_lib/x86/libexec.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "",                 ""},                    "assets/ijm_lib/x86/libexecmain.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TENCENTOBFUSCATION,           "",                 ""},                    "tencent_stub"},
 };

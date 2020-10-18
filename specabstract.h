@@ -166,6 +166,7 @@ public:
         RECORD_NAME_BORLANDDELPHIDOTNET,
         RECORD_NAME_BORLANDOBJECTPASCAL,
         RECORD_NAME_BREAKINTOPATTERN,
+        RECORD_NAME_BYTEDANCESECCOMPILER,
         RECORD_NAME_BYTEGUARD,
         RECORD_NAME_BZIP2,
         RECORD_NAME_C,
@@ -224,6 +225,7 @@ public:
         RECORD_NAME_DEXPROTECTOR,
         RECORD_NAME_DJVU,
         RECORD_NAME_DIET,
+        RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR,
         RECORD_NAME_DIRTYCRYPTOR,
         RECORD_NAME_DMD32D,
         RECORD_NAME_DNGUARD,
@@ -309,6 +311,7 @@ public:
         RECORD_NAME_HALVCRYPTER,
         RECORD_NAME_HIDEANDPROTECT,
         RECORD_NAME_HIDEPE,
+        RECORD_NAME_HIKARIOBFUSCATOR,
         RECORD_NAME_HMIMYSPACKER,
         RECORD_NAME_HMIMYSPROTECTOR,
         RECORD_NAME_HOODLUM,
@@ -545,6 +548,7 @@ public:
         RECORD_NAME_SWF,
         RECORD_NAME_TARMAINSTALLER,
         RECORD_NAME_TELOCK,
+        RECORD_NAME_TENCENTOBFUSCATION,
         RECORD_NAME_TGRCRYPTER,
         RECORD_NAME_THEBESTCRYPTORBYFSK,
         RECORD_NAME_THEMIDAWINLICENSE,
@@ -1260,6 +1264,10 @@ public:
     static VI_STRUCT _get_AlipayObfuscator_string(QString sString);
     static VI_STRUCT _get_wangzehuaLLVM_string(QString sString);
     static VI_STRUCT _get_ByteGuard_string(QString sString);
+    static VI_STRUCT _get_TencentObfuscation_string(QString sString);
+    static VI_STRUCT _get_HikariObfuscator_string(QString sString);
+    static VI_STRUCT _get_ByteDanceSecCompiler_string(QString sString);
+    static VI_STRUCT _get_DingbaozengNativeObfuscator_string(QString sString);
     static VI_STRUCT _get_SafeengineLLVM_string(QString sString);
     static VI_STRUCT _get_NagainLLVM_string(QString sString);
     static VI_STRUCT _get_iJiami_string(QString sString);

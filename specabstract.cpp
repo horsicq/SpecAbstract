@@ -305,6 +305,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BORLANDDELPHIDOTNET:                   sResult=QString("Borland Delphi .NET");                         break;
         case RECORD_NAME_BORLANDOBJECTPASCAL:                   sResult=QString("Borland Object Pascal");                       break;
         case RECORD_NAME_BREAKINTOPATTERN:                      sResult=QString("Break Into Pattern");                          break;
+        case RECORD_NAME_BYTEDANCESECCOMPILER:                  sResult=QString("ByteDance-SecCompiler");                       break;
         case RECORD_NAME_BYTEGUARD:                             sResult=QString("ByteGuard");                                   break;
         case RECORD_NAME_BZIP2:                                 sResult=QString("bzip2");                                       break;
         case RECORD_NAME_C:                                     sResult=QString("C");                                           break;
@@ -363,6 +364,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DEXPROTECTOR:                          sResult=QString("DexProtector");                                break;
         case RECORD_NAME_DJVU:                                  sResult=QString("DjVu");                                        break;
         case RECORD_NAME_DIET:                              	sResult=QString("DIET");                                        break;
+        case RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR:           sResult=QString("Dingbaozeng native obfuscator");               break;
         case RECORD_NAME_DIRTYCRYPTOR:                          sResult=QString("DirTy Cryptor");                               break;
         case RECORD_NAME_DMD32D:                                sResult=QString("DMD32 D");                                     break;
         case RECORD_NAME_DNGUARD:                               sResult=QString("DNGuard");                                     break;
@@ -448,6 +450,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_HALVCRYPTER:                           sResult=QString("HaLV Crypter");                                break;
         case RECORD_NAME_HIDEANDPROTECT:                        sResult=QString("Hide&Protect");                                break;
         case RECORD_NAME_HIDEPE:                                sResult=QString("HidePE");                                      break;
+        case RECORD_NAME_HIKARIOBFUSCATOR:                      sResult=QString("HikariObfuscator");                            break;
         case RECORD_NAME_HMIMYSPACKER:                          sResult=QString("Hmimys Packer");                               break;
         case RECORD_NAME_HMIMYSPROTECTOR:                       sResult=QString("Hmimys's Protector");                          break;
         case RECORD_NAME_HOODLUM:                               sResult=QString("HOODLUM");                                     break;
@@ -684,6 +687,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SWF:                                   sResult=QString("SWF");                                         break;
         case RECORD_NAME_TARMAINSTALLER:                        sResult=QString("Tarma Installer");                             break;
         case RECORD_NAME_TELOCK:                                sResult=QString("tElock");                                      break;
+        case RECORD_NAME_TENCENTOBFUSCATION:                    sResult=QString("Tencent-Obfuscation");                         break;
         case RECORD_NAME_TGRCRYPTER:                            sResult=QString("TGR Crypter");                                 break;
         case RECORD_NAME_THEBESTCRYPTORBYFSK:                   sResult=QString("The Best Cryptor [by FsK]");                   break;
         case RECORD_NAME_THEMIDAWINLICENSE:                     sResult=QString("Themida/Winlicense");                          break;
@@ -1229,6 +1233,58 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_ByteGuard_string(QString sString)
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::_get_TencentObfuscation_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("Tencent-Obfuscation Compiler"))
+    {
+        // TODO Version
+        result.bIsValid=true;
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_HikariObfuscator_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("HikariObfuscator")||sString.contains("_Hikari"))
+    {
+        // TODO Version
+        result.bIsValid=true;
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ByteDanceSecCompiler_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("ByteDance-SecCompiler"))
+    {
+        // TODO Version
+        result.bIsValid=true;
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_DingbaozengNativeObfuscator_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("dingbaozeng/native_obfuscator.git"))
+    {
+        // TODO Version
+        result.bIsValid=true;
+    }
+
+    return result;
+}
+
 SpecAbstract::VI_STRUCT SpecAbstract::_get_SafeengineLLVM_string(QString sString)
 {
     VI_STRUCT result={};
@@ -1279,7 +1335,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AppleLLVM_string(QString sString)
     {
         result.bIsValid=true;
 
-        result.sVersion=sString.section(" ",3,3);
+        result.sVersion=sString.section("Based on Apple LLVM version ",1,1).section(" ",0,0);
     }
 
     return result;
@@ -10577,6 +10633,12 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTOBFUSCATION))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_TENCENTOBFUSCATION);
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_DEXPROTECTOR)||pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXPROTECTOR))
             {
                 _SCANS_STRUCT ss={};
@@ -11598,6 +11660,51 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
                 pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
             }
         }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_TencentObfuscation_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_TENCENTOBFUSCATION,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        {
+            vi=_get_HikariObfuscator_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_HIKARIOBFUSCATOR,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        {
+            vi=_get_ByteDanceSecCompiler_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_BYTEDANCESECCOMPILER,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        {
+            vi=_get_DingbaozengNativeObfuscator_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
     }
 }
 
@@ -11889,6 +11996,38 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SAFEENGINELLVM))
         {
             SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SAFEENGINELLVM);
+
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Tencent-Obfuscation
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_TENCENTOBFUSCATION))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_TENCENTOBFUSCATION);
+
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // HikariObfuscator
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_HIKARIOBFUSCATOR))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_HIKARIOBFUSCATOR);
+
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // ByteDance-SecCompiler
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_BYTEDANCESECCOMPILER))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_BYTEDANCESECCOMPILER);
+
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Dingbaozeng native obfuscator
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR);
 
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
