@@ -352,6 +352,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CVTRES:                                sResult=QString("CVTRES");                                      break;
         case RECORD_NAME_CWSDPMI:                               sResult=QString("CWSDPMI");                                     break;
         case RECORD_NAME_CYGWIN:                                sResult=QString("Cygwin");                                      break;
+        case RECORD_NAME_D2JAPKSIGN:                            sResult=QString("d2j-apk-sign");                                break;
         case RECORD_NAME_DALKRYPT:                              sResult=QString("DalKrypt");                                    break;
         case RECORD_NAME_DBPE:                                  sResult=QString("DBPE");                                        break;
         case RECORD_NAME_DCRYPTPRIVATE:                         sResult=QString("DCrypt Private");                              break;
@@ -625,6 +626,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PRIVATEEXEPROTECTOR:                   sResult=QString("Private EXE Protector");                       break;
         case RECORD_NAME_PROPACK:                               sResult=QString("PRO-PACK");                                    break;
         case RECORD_NAME_PROTECTEXE:                            sResult=QString("PROTECT! EXE");                                break;
+        case RECORD_NAME_PSEUDOAPKSIGNER:                       sResult=QString("PseudoApkSigner");                             break;
         case RECORD_NAME_PUBCRYPTER:                            sResult=QString("Pub Crypter");                                 break;
         case RECORD_NAME_PUNISHER:                              sResult=QString("PUNiSHER");                                    break;
         case RECORD_NAME_PUREBASIC:                             sResult=QString("PureBasic");                                   break;
@@ -10435,6 +10437,18 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                     ss.sVersion=sCreatedBy.section(" ",0,0);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
+                else if(sCreatedBy.contains("d2j-apk-sign"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_SIGNTOOL,RECORD_NAME_D2JAPKSIGN,"","",0);
+                    ss.sVersion=XBinary::regExp("d2j-apk-sign (.*?)$",sCreatedBy,1);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
+                else if(sCreatedBy.contains("PseudoApkSigner"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_SIGNTOOL,RECORD_NAME_PSEUDOAPKSIGNER,"","",0);
+                    ss.sVersion=XBinary::regExp("PseudoApkSigner (.*?)$",sCreatedBy,1);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
                 else if(sCreatedBy.contains("(Sun Microsystems Inc.)")||
                         sCreatedBy.contains("(BEA Systems, Inc.)")||
                         sCreatedBy.contains("(The FreeBSD Foundation)")||
@@ -10481,7 +10495,7 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_BEAWEBLOGIC,"","",0);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
-                }
+                } 
 
                 if(sAntVersion.contains("Apache Ant"))
                 {
@@ -10606,6 +10620,18 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEX2JAR))
             {
                 _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DEX2JAR);
+                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_D2JAPKSIGN))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_D2JAPKSIGN);
+                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_PSEUDOAPKSIGNER))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_PSEUDOAPKSIGNER);
                 pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
