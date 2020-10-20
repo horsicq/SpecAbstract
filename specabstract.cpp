@@ -365,6 +365,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DEX:                                   sResult=QString("DEX");                                         break;
         case RECORD_NAME_DEX2JAR:                               sResult=QString("dex2jar");                                     break;
         case RECORD_NAME_DEXGUARD:                              sResult=QString("DexGuard");                                    break;
+        case RECORD_NAME_DEXLIB:                                sResult=QString("dexlib");                                      break;
+        case RECORD_NAME_DEXLIB2:                               sResult=QString("dexlib2");                                     break;
+        case RECORD_NAME_DEXMERGE:                              sResult=QString("DexMerge");                                    break;
         case RECORD_NAME_DEXPROTECTOR:                          sResult=QString("DexProtector");                                break;
         case RECORD_NAME_DJVU:                                  sResult=QString("DjVu");                                        break;
         case RECORD_NAME_DIET:                              	sResult=QString("DIET");                                        break;
@@ -12473,30 +12476,127 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
 
         pDEXInfo->mapResultTools.insert(recordAndroidSDK.name,scansToScan(&(pDEXInfo->basic_info),&recordAndroidSDK));
 
-//        QList<XDEX_DEF::MAP_ITEM> listMaps=dex.getMapItems();
+        QList<XDEX_DEF::MAP_ITEM> listMaps=dex.getMapItems();
 
-//        int nNumberOfMapItems=listMaps.count();
+        // dx
+        // https://github.com/aosp-mirror/platform_dalvik/blob/master/dx/src/com/android/dx/dex/file/DexFile.java#L122
+        QList<quint16> listDx;
+        listDx.append(XDEX_DEF::TYPE_HEADER_ITEM);
+        listDx.append(XDEX_DEF::TYPE_STRING_ID_ITEM);
+        listDx.append(XDEX_DEF::TYPE_TYPE_ID_ITEM);
+        listDx.append(XDEX_DEF::TYPE_PROTO_ID_ITEM);
+        listDx.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
+        listDx.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
+        listDx.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
+        listDx.append(XDEX_DEF::TYPE_CALL_SITE_ID_ITEM);  // Optional API 26+
+        listDx.append(XDEX_DEF::TYPE_METHOD_HANDLE_ITEM); // Optional API 26+
+        listDx.append(XDEX_DEF::TYPE_CODE_ITEM);
+        listDx.append(XDEX_DEF::TYPE_TYPE_LIST);
+        listDx.append(XDEX_DEF::TYPE_STRING_DATA_ITEM);
+        listDx.append(XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM);
+        listDx.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
+        listDx.append(XDEX_DEF::TYPE_MAP_LIST);
 
-//        // dx
-//        // https://github.com/aosp-mirror/platform_dalvik/blob/master/dx/src/com/android/dx/dex/file/DexFile.java#L122
-//        if(nNumberOfMapItems>8) // TODO Check
-//        {
-//            if( (listMaps.at(0).nType==XDEX_DEF::TYPE_HEADER_ITEM)&&
-//                (listMaps.at(1).nType==XDEX_DEF::TYPE_STRING_ID_ITEM)&&
-//                (listMaps.at(2).nType==XDEX_DEF::TYPE_TYPE_ID_ITEM)&&
-//                (listMaps.at(3).nType==XDEX_DEF::TYPE_PROTO_ID_ITEM)&&
-//                (listMaps.at(4).nType==XDEX_DEF::TYPE_FIELD_ID_ITEM)&&
-//                (listMaps.at(5).nType==XDEX_DEF::TYPE_METHOD_ID_ITEM)&&
-//                (listMaps.at(6).nType==XDEX_DEF::TYPE_CLASS_DEF_ITEM)&&
-//                (listMaps.at(nNumberOfMapItems-1).nType==XDEX_DEF::TYPE_MAP_LIST))
-//            {
-//                SpecAbstract::_SCANS_STRUCT recordDX=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DX,"","",0);
-//                pDEXInfo->mapResultTools.insert(recordDX.name,scansToScan(&(pDEXInfo->basic_info),&recordDX));
-//            }
-//        }
+        // dexlib2
+        // https://github.com/JesusFreke/smali/blob/master/dexlib2/src/main/java/org/jf/dexlib2/writer/DexWriter.java#L1465
+        QList<quint16> listDexLib2;
+        listDexLib2.append(XDEX_DEF::TYPE_HEADER_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_STRING_ID_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_TYPE_ID_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_PROTO_ID_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_CALL_SITE_ID_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_METHOD_HANDLE_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_STRING_DATA_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_TYPE_LIST);
+        listDexLib2.append(XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_ANNOTATION_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_ANNOTATION_SET_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST);
+        listDexLib2.append(XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_DEBUG_INFO_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_CODE_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
+        listDexLib2.append(XDEX_DEF::TYPE_HIDDENAPI_CLASS_DATA_ITEM);   // Optional
+        listDexLib2.append(XDEX_DEF::TYPE_MAP_LIST);
 
         // r8
         // https://r8.googlesource.com/r8/+/refs/heads/master/src/main/java/com/android/tools/r8/dex/FileWriter.java#752
+        QList<quint16> listR8;
+        listR8.append(XDEX_DEF::TYPE_HEADER_ITEM);
+        listR8.append(XDEX_DEF::TYPE_STRING_ID_ITEM);
+        listR8.append(XDEX_DEF::TYPE_TYPE_ID_ITEM);
+        listR8.append(XDEX_DEF::TYPE_PROTO_ID_ITEM);
+        listR8.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
+        listR8.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
+        listR8.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
+        listR8.append(XDEX_DEF::TYPE_CALL_SITE_ID_ITEM);
+        listR8.append(XDEX_DEF::TYPE_METHOD_HANDLE_ITEM);
+        listR8.append(XDEX_DEF::TYPE_CODE_ITEM);
+        listR8.append(XDEX_DEF::TYPE_DEBUG_INFO_ITEM);
+        listR8.append(XDEX_DEF::TYPE_TYPE_LIST);
+        listR8.append(XDEX_DEF::TYPE_STRING_DATA_ITEM);
+        listR8.append(XDEX_DEF::TYPE_ANNOTATION_ITEM);
+        listR8.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
+        listR8.append(XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM);
+        listR8.append(XDEX_DEF::TYPE_ANNOTATION_SET_ITEM);
+        listR8.append(XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST);
+        listR8.append(XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM);
+        listR8.append(XDEX_DEF::TYPE_MAP_LIST);
+
+        // DexMerge
+        // https://github.com/aosp-mirror/platform_dalvik/blob/master/dx/src/com/android/dx/merge/DexMerger.java#L95
+        QList<quint16> listDexMerge;
+        listDexMerge.append(XDEX_DEF::TYPE_HEADER_ITEM);
+        listDexMerge.append(XDEX_DEF::TYPE_STRING_ID_ITEM);
+        listDexMerge.append(XDEX_DEF::TYPE_TYPE_ID_ITEM);
+        listDexMerge.append(XDEX_DEF::TYPE_PROTO_ID_ITEM);
+        listDexMerge.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
+        listDexMerge.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
+        listDexMerge.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
+        listDexMerge.append(XDEX_DEF::TYPE_MAP_LIST);
+        listDexMerge.append(XDEX_DEF::TYPE_TYPE_LIST);
+        listDexMerge.append(XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST);
+        listDexMerge.append(XDEX_DEF::TYPE_ANNOTATION_SET_ITEM);
+        listDexMerge.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
+        listDexMerge.append(XDEX_DEF::TYPE_CODE_ITEM);
+        listDexMerge.append(XDEX_DEF::TYPE_STRING_DATA_ITEM);
+        listDexMerge.append(XDEX_DEF::TYPE_DEBUG_INFO_ITEM);
+        listDexMerge.append(XDEX_DEF::TYPE_ANNOTATION_ITEM);
+        listDexMerge.append(XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM);
+        listDexMerge.append(XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM);
+
+        if(XDEX::compareMapItems(&listMaps,&listDx))
+        {
+            SpecAbstract::_SCANS_STRUCT recordDX=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DX,"","",0);
+            pDEXInfo->mapResultCompilers.insert(recordDX.name,scansToScan(&(pDEXInfo->basic_info),&recordDX));
+        }
+
+        if(XDEX::compareMapItems(&listMaps,&listDexLib2))
+        {
+            SpecAbstract::_SCANS_STRUCT recordDX=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DEXLIB2,"","",0);
+            pDEXInfo->mapResultCompilers.insert(recordDX.name,scansToScan(&(pDEXInfo->basic_info),&recordDX));
+        }
+
+        if(XDEX::compareMapItems(&listMaps,&listR8))
+        {
+            SpecAbstract::_SCANS_STRUCT recordDX=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_R8,"","",0);
+            pDEXInfo->mapResultCompilers.insert(recordDX.name,scansToScan(&(pDEXInfo->basic_info),&recordDX));
+        }
+
+        if(XDEX::compareMapItems(&listMaps,&listDexMerge))
+        {
+            SpecAbstract::_SCANS_STRUCT recordDX=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DEXMERGE,"","",0);
+            pDEXInfo->mapResultCompilers.insert(recordDX.name,scansToScan(&(pDEXInfo->basic_info),&recordDX));
+        }
+
+        if(pDEXInfo->mapResultCompilers.size()==0)
+        {
+            SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_UNKNOWN,QString("%1").arg(dex.getMapItemsHash()),"",0);
+            pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
+        }
     }
 }
 
