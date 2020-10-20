@@ -261,6 +261,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ANTIDOTE:                              sResult=QString("AntiDote");                                    break;
         case RECORD_NAME_ANTILVL:                               sResult=QString("AntiLVL");                                     break;
         case RECORD_NAME_APACHEANT:                             sResult=QString("Apache Ant");                                  break;
+        case RECORD_NAME_APKPROTECT:                            sResult=QString("APKProtect");                                  break;
+        case RECORD_NAME_APPGUARD:                              sResult=QString("AppGuard");                                    break;
         case RECORD_NAME_APPLEJDK:                              sResult=QString("Apple JDK");                                   break;
         case RECORD_NAME_APPLELLVM:                             sResult=QString("Apple LLVM");                                  break;
         case RECORD_NAME_APPORTABLECLANG:                       sResult=QString("Apportable clang");                            break;
@@ -362,6 +364,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DEPLOYMASTER:                          sResult=QString("DeployMaster");                                break;
         case RECORD_NAME_DEX:                                   sResult=QString("DEX");                                         break;
         case RECORD_NAME_DEX2JAR:                               sResult=QString("dex2jar");                                     break;
+        case RECORD_NAME_DEXGUARD:                              sResult=QString("DexGuard");                                    break;
         case RECORD_NAME_DEXPROTECTOR:                          sResult=QString("DexProtector");                                break;
         case RECORD_NAME_DJVU:                                  sResult=QString("DjVu");                                        break;
         case RECORD_NAME_DIET:                              	sResult=QString("DIET");                                        break;
@@ -381,6 +384,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DRAGONARMOR:                           sResult=QString("DragonArmor");                                 break;
         case RECORD_NAME_DROPBOX:                               sResult=QString("Dropbox");                                     break;
         case RECORD_NAME_DVCLAL:                                sResult=QString("DVCLAL");                                      break;
+        case RECORD_NAME_DX:                                    sResult=QString("dx");                                          break;
+        case RECORD_NAME_DXSHIELD:                              sResult=QString("DxShield");                                    break;
         case RECORD_NAME_DYAMAR:                                sResult=QString("DYAMAR");                                      break;
         case RECORD_NAME_DYNASM:                                sResult=QString("DynASM");                                      break;
         case RECORD_NAME_EAZFUSCATOR:                           sResult=QString("Eazfuscator");                                 break;
@@ -489,6 +494,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_KCRYPTOR:                              sResult=QString("K!Cryptor");                                   break;
         case RECORD_NAME_KGBCRYPTER:                            sResult=QString("KGB Crypter");                                 break;
         case RECORD_NAME_KIAMSCRYPTOR:                          sResult=QString("KiAms Cryptor");                               break;
+        case RECORD_NAME_KIRO:                                  sResult=QString("Kiro");                                        break;
         case RECORD_NAME_KKRUNCHY:                              sResult=QString("kkrunchy");                                    break;
         case RECORD_NAME_KOTLIN:                                sResult=QString("Kotlin");                                      break;
         case RECORD_NAME_KRATOSCRYPTER:                         sResult=QString("Kratos Crypter");                              break;
@@ -559,6 +565,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_NASM:                                  sResult=QString("NASM");                                        break;
         case RECORD_NAME_NCODE:                                 sResult=QString("N-Code");                                      break;
         case RECORD_NAME_NEOLITE:                               sResult=QString("NeoLite");                                     break;
+        case RECORD_NAME_NETEASEAPKSIGNER:                      sResult=QString("NetEase ApkSigner");                           break;
         case RECORD_NAME_NIDHOGG:                               sResult=QString("Nidhogg");                                     break;
         case RECORD_NAME_NJOINER:                               sResult=QString("N-Joiner");                                    break;
         case RECORD_NAME_NJOY:                                  sResult=QString("N-Joy");                                       break;
@@ -577,6 +584,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_OBJECTPASCAL:                          sResult=QString("Object Pascal");                               break;
         case RECORD_NAME_OBSIDIUM:                              sResult=QString("Obsidium");                                    break;
         case RECORD_NAME_OPENDOCUMENT:                          sResult=QString("Open Document");                               break;
+        case RECORD_NAME_OPENJDK:                               sResult=QString("OpenJDK");                                     break;
         case RECORD_NAME_OPENSOURCECODECRYPTER:                 sResult=QString("Open Source Code Crypter");                    break;
         case RECORD_NAME_OPERA:                                 sResult=QString("Opera");                                       break;
         case RECORD_NAME_ORIEN:                                 sResult=QString("ORiEN");                                       break;
@@ -636,6 +644,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_QT:                                    sResult=QString("Qt");                                          break;
         case RECORD_NAME_QTINSTALLER:                           sResult=QString("Qt Installer");                                break;
         case RECORD_NAME_QUICKPACKNT:                           sResult=QString("QuickPack NT");                                break;
+        case RECORD_NAME_R8:                                    sResult=QString("r8");                                          break;
         case RECORD_NAME_RAR:                                   sResult=QString("RAR");                                         break;
         case RECORD_NAME_RCRYPTOR:                              sResult=QString("RCryptor(Russian Cryptor)");                   break;
         case RECORD_NAME_RDGTEJONCRYPTER:                       sResult=QString("RDG Tejon Crypter");                           break;
@@ -690,6 +699,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_TARMAINSTALLER:                        sResult=QString("Tarma Installer");                             break;
         case RECORD_NAME_TELOCK:                                sResult=QString("tElock");                                      break;
         case RECORD_NAME_TENCENTOBFUSCATION:                    sResult=QString("Tencent-Obfuscation");                         break;
+        case RECORD_NAME_TENCENTLEGU:                           sResult=QString("Tencent Legu");                                break;
         case RECORD_NAME_TGRCRYPTER:                            sResult=QString("TGR Crypter");                                 break;
         case RECORD_NAME_THEBESTCRYPTORBYFSK:                   sResult=QString("The Best Cryptor [by FsK]");                   break;
         case RECORD_NAME_THEMIDAWINLICENSE:                     sResult=QString("Themida/Winlicense");                          break;
@@ -10449,16 +10459,31 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                     ss.sVersion=XBinary::regExp("PseudoApkSigner (.*?)$",sCreatedBy,1);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
+                else if(sCreatedBy.contains("(NetEase ApkSigner)"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_SIGNTOOL,RECORD_NAME_NETEASEAPKSIGNER,"","",0);
+                    ss.sVersion=sCreatedBy.section("(NetEase ApkSigner)",0,0);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
+                else if(sCreatedBy.contains("DexGuard, version"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_PROTECTOR,RECORD_NAME_DEXGUARD,"","",0);
+                    ss.sVersion=XBinary::regExp("DexGuard, version (.*?)$",sCreatedBy,1);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
                 else if(sCreatedBy.contains("(Sun Microsystems Inc.)")||
                         sCreatedBy.contains("(BEA Systems, Inc.)")||
                         sCreatedBy.contains("(The FreeBSD Foundation)")||
                         sCreatedBy.contains("(d2j-null)")||
+                        sCreatedBy.contains("(d2j-2.1-SNAPSHOT)")||
                         sCreatedBy.contains("(Oracle Corporation)")||
                         sCreatedBy.contains("(Apple Inc.)")||
                         sCreatedBy.contains("(Google Inc.)")||
                         sCreatedBy.contains("(Jeroen Frijters)")||
                         sCreatedBy.contains("(IBM Corporation)")||
-                        sCreatedBy.contains("(JetBrains s.r.o)"))
+                        sCreatedBy.contains("(JetBrains s.r.o)")||
+                        sCreatedBy.contains("(Alibaba)")||
+                        sCreatedBy.contains("(AdoptOpenJdk)"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_JDK,"","",0);
                     ss.sVersion=sCreatedBy.section(" ",0,0);
@@ -10470,6 +10495,10 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                     else if(sCreatedBy.contains("(IBM Corporation)"))
                     {
                         ss.name=RECORD_NAME_IBMJDK;
+                    }
+                    else if(sCreatedBy.contains("(AdoptOpenJdk)"))
+                    {
+                        ss.name=RECORD_NAME_OPENJDK;
                     }
 
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
@@ -10483,6 +10512,11 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                 else if(sCreatedBy.contains("(d2j-null)"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_APKTOOL,RECORD_NAME_DEX2JAR,"","",0);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
+                else if(sCreatedBy.contains("(d2j-2.1-SNAPSHOT)"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_APKTOOL,RECORD_NAME_DEX2JAR,"2.1","",0);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
                 else if(sCreatedBy.contains("(Jeroen Frijters)"))
@@ -10556,6 +10590,12 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
         if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_IBMJDK))
         {
             _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_IBMJDK);
+            pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+        }
+
+        if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_OPENJDK))
+        {
+            _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_OPENJDK);
             pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
         }
 
@@ -10635,6 +10675,12 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_NETEASEAPKSIGNER))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_NETEASEAPKSIGNER);
+                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
             if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ECLIPSE))
             {
                 _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ECLIPSE);
@@ -10662,6 +10708,61 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTOBFUSCATION))
             {
                 _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_TENCENTOBFUSCATION);
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTLEGU))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_TENCENTLEGU);
+
+                int nNumberOfRecords=pZipInfo->listArchiveRecords.count();
+
+                for(int i=0;i<nNumberOfRecords;i++)
+                {
+                    if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/arm64-v8a/libshella-"))
+                    {
+                        ss.sVersion=XBinary::regExp("lib/arm64-v8a/libshella-(.*?).so",pZipInfo->listArchiveRecords.at(i).sFileName,1);
+                    }
+                }
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            // AppGuard
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APPGUARD))
+            {
+                SpecAbstract::_SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_APPGUARD);
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            // Kiro
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_KIRO))
+            {
+                SpecAbstract::_SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_KIRO);
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            // DxShield
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_DXSHIELD))
+            {
+                SpecAbstract::_SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_DXSHIELD);
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            // APKProtect
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECT))
+            {
+                SpecAbstract::_SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_APKPROTECT);
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXGUARD))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DEXGUARD);
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
@@ -12339,7 +12440,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
 
     if(dex.isValid())
     {
-        SpecAbstract::_SCANS_STRUCT recordAndroidSDK=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDSDK,"","",0);;
+        SpecAbstract::_SCANS_STRUCT recordAndroidSDK=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDSDK,"","",0);
 
         QString sDDEXVersion=dex.getVersion();
 
@@ -12371,6 +12472,31 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         }
 
         pDEXInfo->mapResultTools.insert(recordAndroidSDK.name,scansToScan(&(pDEXInfo->basic_info),&recordAndroidSDK));
+
+//        QList<XDEX_DEF::MAP_ITEM> listMaps=dex.getMapItems();
+
+//        int nNumberOfMapItems=listMaps.count();
+
+//        // dx
+//        // https://github.com/aosp-mirror/platform_dalvik/blob/master/dx/src/com/android/dx/dex/file/DexFile.java#L122
+//        if(nNumberOfMapItems>8) // TODO Check
+//        {
+//            if( (listMaps.at(0).nType==XDEX_DEF::TYPE_HEADER_ITEM)&&
+//                (listMaps.at(1).nType==XDEX_DEF::TYPE_STRING_ID_ITEM)&&
+//                (listMaps.at(2).nType==XDEX_DEF::TYPE_TYPE_ID_ITEM)&&
+//                (listMaps.at(3).nType==XDEX_DEF::TYPE_PROTO_ID_ITEM)&&
+//                (listMaps.at(4).nType==XDEX_DEF::TYPE_FIELD_ID_ITEM)&&
+//                (listMaps.at(5).nType==XDEX_DEF::TYPE_METHOD_ID_ITEM)&&
+//                (listMaps.at(6).nType==XDEX_DEF::TYPE_CLASS_DEF_ITEM)&&
+//                (listMaps.at(nNumberOfMapItems-1).nType==XDEX_DEF::TYPE_MAP_LIST))
+//            {
+//                SpecAbstract::_SCANS_STRUCT recordDX=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DX,"","",0);
+//                pDEXInfo->mapResultTools.insert(recordDX.name,scansToScan(&(pDEXInfo->basic_info),&recordDX));
+//            }
+//        }
+
+        // r8
+        // https://r8.googlesource.com/r8/+/refs/heads/master/src/main/java/com/android/tools/r8/dex/FileWriter.java#752
     }
 }
 

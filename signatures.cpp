@@ -1471,5 +1471,16 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "",                 ""},                    "assets/ijm_lib/armeabi/libexecmain.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "",                 ""},                    "assets/ijm_lib/x86/libexec.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "",                 ""},                    "assets/ijm_lib/x86/libexecmain.so"},
-    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TENCENTOBFUSCATION,           "",                 ""},                    "tencent_stub"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TENCENTOBFUSCATION,           "",                 ""},                    "tencent_stub"}, // Check another protectors from TENCENT(Mobile Tencent Protect)
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TENCENTOBFUSCATION,           "",                 ""},                    "assets/tosversion"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TENCENTLEGU,                  "",                 ""},                    "assets/o0oooOO0ooOo.dat"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TENCENTLEGU,                  "",                 ""},                    "assets/0OO00l111l1l"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TENCENTLEGU,                  "",                 ""},                    "assets/0OO00oo01l1l"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TENCENTLEGU,                  "",                 ""},                    "assets/libshellx-super.2019.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TENCENTLEGU,                  "",                 ""},                    "lib/armeabi/libshell-super.2019.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TENCENTLEGU,                  "",                 ""},                    "lib/arm64-v8a/libshell-super.2019.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APPGUARD,                     "",                 ""},                    "libAppGuard.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KIRO,                         "",                 ""},                    "libkiroro.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DXSHIELD,                     "",                 ""},                    "libdxbase.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKPROTECT,                   "",                 ""},                    "libAPKProtect.so"},
 };
