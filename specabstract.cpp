@@ -12592,32 +12592,32 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
 
         if(XDEX::compareMapItems(&listMaps,&listDx))
         {
-            SpecAbstract::_SCANS_STRUCT recordDX=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DX,"","",0);
-            pDEXInfo->mapResultCompilers.insert(recordDX.name,scansToScan(&(pDEXInfo->basic_info),&recordDX));
+            SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DX,"","",0);
+            pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 
         if(XDEX::compareMapItems(&listMaps,&listDexLib))
         {
-            SpecAbstract::_SCANS_STRUCT recordDX=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DEXLIB,"","",0);
-            pDEXInfo->mapResultCompilers.insert(recordDX.name,scansToScan(&(pDEXInfo->basic_info),&recordDX));
+            SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DEXLIB,"","",0);
+            pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 
         if(XDEX::compareMapItems(&listMaps,&listDexLib2))
         {
-            SpecAbstract::_SCANS_STRUCT recordDX=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DEXLIB2,"","",0);
-            pDEXInfo->mapResultCompilers.insert(recordDX.name,scansToScan(&(pDEXInfo->basic_info),&recordDX));
+            SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DEXLIB2,"","",0);
+            pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 
         if(XDEX::compareMapItems(&listMaps,&listR8))
         {
-            SpecAbstract::_SCANS_STRUCT recordDX=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_R8,"","",0);
-            pDEXInfo->mapResultCompilers.insert(recordDX.name,scansToScan(&(pDEXInfo->basic_info),&recordDX));
+            SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_R8,"","",0);
+            pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 
         if(XDEX::compareMapItems(&listMaps,&listDexMerge))
         {
-            SpecAbstract::_SCANS_STRUCT recordDX=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DEXMERGE,"","",0);
-            pDEXInfo->mapResultCompilers.insert(recordDX.name,scansToScan(&(pDEXInfo->basic_info),&recordDX));
+            SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DEXMERGE,"","",0);
+            pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 
         if(pDEXInfo->mapResultCompilers.size()==0)
