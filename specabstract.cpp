@@ -262,6 +262,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ANTILVL:                               sResult=QString("AntiLVL");                                     break;
         case RECORD_NAME_APACHEANT:                             sResult=QString("Apache Ant");                                  break;
         case RECORD_NAME_APKPROTECT:                            sResult=QString("APKProtect");                                  break;
+        case RECORD_NAME_APKSIGNER:                             sResult=QString("ApkSigner");                                   break;
         case RECORD_NAME_APPGUARD:                              sResult=QString("AppGuard");                                    break;
         case RECORD_NAME_APPLEJDK:                              sResult=QString("Apple JDK");                                   break;
         case RECORD_NAME_APPLELLVM:                             sResult=QString("Apple LLVM");                                  break;
@@ -2521,6 +2522,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
         result.basic_info.listDetects.append(result.mapResultArchives.values());
         result.basic_info.listDetects.append(result.mapResultFormats.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
+        result.basic_info.listDetects.append(result.mapResultSigntools.values());
         result.basic_info.listDetects.append(result.mapResultLanguages.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
         result.basic_info.listDetects.append(result.mapResultAPKProtectors.values());
@@ -10462,6 +10464,11 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                     ss.sVersion=XBinary::regExp("PseudoApkSigner (.*?)$",sCreatedBy,1);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
+                else if(sCreatedBy.contains("ApkSigner"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_SIGNTOOL,RECORD_NAME_APKSIGNER,"","",0);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
                 else if(sCreatedBy.contains("(NetEase ApkSigner)"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_SIGNTOOL,RECORD_NAME_NETEASEAPKSIGNER,"","",0);
@@ -10669,19 +10676,25 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_D2JAPKSIGN))
             {
                 _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_D2JAPKSIGN);
-                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                pZipInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
             if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_PSEUDOAPKSIGNER))
             {
                 _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_PSEUDOAPKSIGNER);
-                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                pZipInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKSIGNER))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKSIGNER);
+                pZipInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
             if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_NETEASEAPKSIGNER))
             {
                 _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_NETEASEAPKSIGNER);
-                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                pZipInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
             if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ECLIPSE))

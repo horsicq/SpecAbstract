@@ -123,6 +123,7 @@ public:
         RECORD_NAME_ANTILVL,
         RECORD_NAME_APACHEANT,
         RECORD_NAME_APKPROTECT,
+        RECORD_NAME_APKSIGNER,
         RECORD_NAME_APPGUARD,
         RECORD_NAME_APPLEJDK,
         RECORD_NAME_APPLELLVM,
@@ -828,6 +829,7 @@ public:
         QMap<RECORD_NAME,_SCANS_STRUCT> mapMetainfosDetects;
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultSigntools;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLanguages;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultArchives;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultFormats;
