@@ -12497,6 +12497,28 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         listDx.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
         listDx.append(XDEX_DEF::TYPE_MAP_LIST);
 
+        // DexLib
+        // https://android.googlesource.com/platform/external/smali/+/9a12fbef9912a824a4824e392f0d2fdd5319f580/dexlib/src/main/java/org/jf/dexlib/DexFile.java?autodive=0%2F#210
+        QList<quint16> listDexLib;
+        listDexLib.append(XDEX_DEF::TYPE_HEADER_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_STRING_ID_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_TYPE_ID_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_PROTO_ID_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST);
+        listDexLib.append(XDEX_DEF::TYPE_ANNOTATION_SET_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_CODE_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_TYPE_LIST);
+        listDexLib.append(XDEX_DEF::TYPE_STRING_DATA_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_ANNOTATION_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_DEBUG_INFO_ITEM);
+        listDexLib.append(XDEX_DEF::TYPE_MAP_LIST);
+
         // dexlib2
         // https://github.com/JesusFreke/smali/blob/master/dexlib2/src/main/java/org/jf/dexlib2/writer/DexWriter.java#L1465
         QList<quint16> listDexLib2;
@@ -12571,6 +12593,12 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         if(XDEX::compareMapItems(&listMaps,&listDx))
         {
             SpecAbstract::_SCANS_STRUCT recordDX=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DX,"","",0);
+            pDEXInfo->mapResultCompilers.insert(recordDX.name,scansToScan(&(pDEXInfo->basic_info),&recordDX));
+        }
+
+        if(XDEX::compareMapItems(&listMaps,&listDexLib))
+        {
+            SpecAbstract::_SCANS_STRUCT recordDX=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DEXLIB,"","",0);
             pDEXInfo->mapResultCompilers.insert(recordDX.name,scansToScan(&(pDEXInfo->basic_info),&recordDX));
         }
 
