@@ -32,6 +32,7 @@
 #include "xrar.h"
 #include "xsevenzip.h"
 #include "xdex.h"
+#include "xandroidbinary.h"
 
 class SpecAbstract : public QObject
 {
@@ -116,6 +117,7 @@ public:
         RECORD_NAME_ANDROIDJETPACK,
         RECORD_NAME_ANDROIDGRADLE,
         RECORD_NAME_ANDROIDSDK,
+        RECORD_NAME_ANDROIDSIGNAPK,
         RECORD_NAME_ANDROIDXML,
         RECORD_NAME_ANSKYAPOLYMORPHICPACKER,
         RECORD_NAME_ANSLYMPACKER,
@@ -284,6 +286,7 @@ public:
         RECORD_NAME_FAKUSCRYPTOR,
         RECORD_NAME_FASM,
         RECORD_NAME_FASTFILECRYPT,
+        RECORD_NAME_FASTPROXY,
         RECORD_NAME_FEARZCRYPTER,
         RECORD_NAME_FEARZPACKER,
         RECORD_NAME_FILESHIELD,
@@ -309,6 +312,7 @@ public:
         RECORD_NAME_GO,
         RECORD_NAME_GOASM,
         RECORD_NAME_GOATSPEMUTILATOR,
+        RECORD_NAME_GOLD,
         RECORD_NAME_GOLIATHNET,
         RECORD_NAME_GOLINK,
         RECORD_NAME_GOOGLE,
@@ -1269,6 +1273,7 @@ public:
     static VI_STRUCT get_GCC_vi2(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT _get_GCC_string(QString sString);
     static VI_STRUCT get_WindowsInstaller_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
+    static VI_STRUCT get_gold_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_TurboLinker_vi(QIODevice *pDevice,bool bIsImage);
     static VI_STRUCT get_Enigma_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_DeepSea_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
