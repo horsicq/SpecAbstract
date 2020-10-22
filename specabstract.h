@@ -124,6 +124,7 @@ public:
         RECORD_NAME_ANTIDOTE,
         RECORD_NAME_ANTILVL,
         RECORD_NAME_APACHEANT,
+        RECORD_NAME_APKEDITOR,
         RECORD_NAME_APKPROTECT,
         RECORD_NAME_APKSIGNER,
         RECORD_NAME_APPGUARD,
@@ -196,6 +197,7 @@ public:
         RECORD_NAME_CODEVEIL,
         RECORD_NAME_CODEWALL,
         RECORD_NAME_COFF,
+        RECORD_NAME_COMEXSIGNAPK,
         RECORD_NAME_CONFUSER,
         RECORD_NAME_CONFUSEREX,
         RECORD_NAME_COPYMINDER,
@@ -544,6 +546,7 @@ public:
         RECORD_NAME_SIMCRYPTER,
         RECORD_NAME_SIMPLECRYPTER,
         RECORD_NAME_SIMPLEPACK,
+        RECORD_NAME_SINGLEJAR,
         RECORD_NAME_SIXXPACK,
         RECORD_NAME_SKATER,
         RECORD_NAME_SMARTASSEMBLY,
@@ -1261,9 +1264,9 @@ public:
     static void Zip_handle_Recursive(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
     static void Zip_handle_FixDetects(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
 
-    static void updateVersion(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sVersion);
-    static void updateInfo(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sInfo);
-    static void updateVersionAndInfo(QMap<RECORD_NAME,SCAN_STRUCT> *map,RECORD_NAME name,QString sVersion,QString sInfo);
+    static void updateVersion(QMap<RECORD_NAME,SCAN_STRUCT> *pMap,RECORD_NAME name,QString sVersion);
+    static void updateInfo(QMap<RECORD_NAME,SCAN_STRUCT> *pMap,RECORD_NAME name,QString sInfo);
+    static void updateVersionAndInfo(QMap<RECORD_NAME,SCAN_STRUCT> *pMap,RECORD_NAME name,QString sVersion,QString sInfo);
 
     static bool isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListScanStructs,XBinary::FT fileType,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo);
 
@@ -1278,6 +1281,7 @@ public:
     static VI_STRUCT get_Enigma_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_DeepSea_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_SmartAssembly_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
+    static VI_STRUCT get_R8_marker_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_Go_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_ObfuscatorLLVM_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT _get_ObfuscatorLLVM_string(QString sString);

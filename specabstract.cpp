@@ -262,6 +262,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ANTIDOTE:                              sResult=QString("AntiDote");                                    break;
         case RECORD_NAME_ANTILVL:                               sResult=QString("AntiLVL");                                     break;
         case RECORD_NAME_APACHEANT:                             sResult=QString("Apache Ant");                                  break;
+        case RECORD_NAME_APKEDITOR:                             sResult=QString("ApkEditor");                                   break;
         case RECORD_NAME_APKPROTECT:                            sResult=QString("APKProtect");                                  break;
         case RECORD_NAME_APKSIGNER:                             sResult=QString("ApkSigner");                                   break;
         case RECORD_NAME_APPGUARD:                              sResult=QString("AppGuard");                                    break;
@@ -334,6 +335,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CODEVEIL:                              sResult=QString("CodeVeil");                                    break;
         case RECORD_NAME_CODEWALL:                              sResult=QString("CodeWall");                                    break;
         case RECORD_NAME_COFF:                                  sResult=QString("COFF");                                        break;
+        case RECORD_NAME_COMEXSIGNAPK:                          sResult=QString("COMEX SignApk");                               break;
         case RECORD_NAME_CONFUSER:                              sResult=QString("Confuser");                                    break;
         case RECORD_NAME_CONFUSEREX:                            sResult=QString("ConfuserEx");                                  break;
         case RECORD_NAME_COPYMINDER:                            sResult=QString("CopyMinder");                                  break;
@@ -651,7 +653,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_QT:                                    sResult=QString("Qt");                                          break;
         case RECORD_NAME_QTINSTALLER:                           sResult=QString("Qt Installer");                                break;
         case RECORD_NAME_QUICKPACKNT:                           sResult=QString("QuickPack NT");                                break;
-        case RECORD_NAME_R8:                                    sResult=QString("r8");                                          break;
+        case RECORD_NAME_R8:                                    sResult=QString("R8");                                          break;
         case RECORD_NAME_RAR:                                   sResult=QString("RAR");                                         break;
         case RECORD_NAME_RCRYPTOR:                              sResult=QString("RCryptor(Russian Cryptor)");                   break;
         case RECORD_NAME_RDGTEJONCRYPTER:                       sResult=QString("RDG Tejon Crypter");                           break;
@@ -682,6 +684,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SIMCRYPTER:                            sResult=QString("Sim Crypter");                                 break;
         case RECORD_NAME_SIMPLECRYPTER:                         sResult=QString("Simple Crypter");                              break;
         case RECORD_NAME_SIMPLEPACK:                            sResult=QString("Simple Pack");                                 break;
+        case RECORD_NAME_SINGLEJAR:                             sResult=QString("SingleJar");                                   break;
         case RECORD_NAME_SIXXPACK:                              sResult=QString("Sixxpack");                                    break;
         case RECORD_NAME_SKATER:                                sResult=QString("Skater");                                      break;
         case RECORD_NAME_SMARTASSEMBLY:                         sResult=QString("Smart Assembly");                              break;
@@ -1079,6 +1082,41 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_SmartAssembly_vi(QIODevice *pDevice, b
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::get_R8_marker_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+{
+    VI_STRUCT result={};
+
+    XBinary binary(pDevice,bIsImage);
+
+    // https://r8.googlesource.com/r8/+/refs/heads/master/src/main/java/com/android/tools/r8/dex/Marker.java
+    // X~~D8{"compilation-mode":"release","has-checksums":false,"min-api":14,"version":"2.0.88"}
+    qint64 _nOffset=binary.find_ansiString(nOffset,nSize,"\"compilation-mode\":\"");
+
+    if(_nOffset>20) // TODO rewrite
+    {
+        _nOffset=binary.find_ansiString(_nOffset-5,20,"~~");
+
+        if(_nOffset!=-1)
+        {
+            result.bIsValid=true;
+            QString sString=binary.read_ansiString(_nOffset);
+
+            result.sVersion=XBinary::regExp("\"version\":\"(.*?)\"",sString,1);
+
+            if(sString.contains("~~D8")||sString.contains("~~R8"))
+            {
+                result.sInfo=XBinary::regExp("\"compilation-mode\":\"(.*?)\"",sString,1);
+            }
+            else
+            {
+                result.sInfo="CHECK D8: "+sString;
+            }
+        }
+    }
+
+    return result;
+}
+
 SpecAbstract::VI_STRUCT SpecAbstract::get_Go_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
 {
     VI_STRUCT result={};
@@ -1194,6 +1232,12 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AndroidClang_string(QString sString)
         result.bIsValid=true;
 
         result.sVersion=sString.section(" ",3,3);
+    }
+    else if(sString.contains("Android (")&&sString.contains(" clang version "))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" clang version ",1,1).section(" ",0,0);
     }
 
     return result;
@@ -1354,7 +1398,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AppleLLVM_string(QString sString)
     {
         result.bIsValid=true;
 
-        result.sVersion=sString.section("Based on Apple LLVM version ",1,1).section(" ",0,0);
+        result.sVersion=sString.section("Apple LLVM version ",1,1).section(" ",0,0);
     }
 
     return result;
@@ -10455,38 +10499,54 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                     ss.sVersion=sCreatedBy.section(" ",0,0);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
+                else if(sCreatedBy.contains("ApkEditor"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_APKTOOL,RECORD_NAME_APKEDITOR,"","",0);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
                 else if(sCreatedBy.contains("d2j-apk-sign"))
                 {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_SIGNTOOL,RECORD_NAME_D2JAPKSIGN,"","",0);
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_D2JAPKSIGN,"","",0);
                     ss.sVersion=XBinary::regExp("d2j-apk-sign (.*?)$",sCreatedBy,1);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
+                else if(sCreatedBy.contains("singlejar"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_SINGLEJAR,"","",0);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
                 else if(sCreatedBy.contains("PseudoApkSigner"))
                 {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_SIGNTOOL,RECORD_NAME_PSEUDOAPKSIGNER,"","",0);
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_PSEUDOAPKSIGNER,"","",0);
                     ss.sVersion=XBinary::regExp("PseudoApkSigner (.*?)$",sCreatedBy,1);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
                 else if(sCreatedBy.contains("ApkSigner"))
                 {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_SIGNTOOL,RECORD_NAME_APKSIGNER,"","",0);
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_APKSIGNER,"","",0);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
+                else if(sCreatedBy.contains("(COMEX SignApk)"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_COMEXSIGNAPK,"","",0);
+                    ss.sVersion=sCreatedBy.section("(COMEX SignApk)",0,0);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
                 else if(sCreatedBy.contains("(NetEase ApkSigner)"))
                 {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_SIGNTOOL,RECORD_NAME_NETEASEAPKSIGNER,"","",0);
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_NETEASEAPKSIGNER,"","",0);
                     ss.sVersion=sCreatedBy.section("(NetEase ApkSigner)",0,0);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
                 else if(sCreatedBy.contains("(Android SignApk)"))
                 {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_SIGNTOOL,RECORD_NAME_ANDROIDSIGNAPK,"","",0);
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_ANDROIDSIGNAPK,"","",0);
                     ss.sVersion=sCreatedBy.section("(Android SignApk)",0,0);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
                 else if(sCreatedBy.contains("DexGuard, version"))
                 {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_PROTECTOR,RECORD_NAME_DEXGUARD,"","",0);
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_DEXGUARD,"","",0);
                     ss.sVersion=XBinary::regExp("DexGuard, version (.*?)$",sCreatedBy,1);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
@@ -10641,6 +10701,12 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APACHEANT);
             pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
         }
+
+        if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_SINGLEJAR))
+        {
+            _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_SINGLEJAR);
+            pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+        }
     }
 }
 
@@ -10658,54 +10724,86 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
 
             QString sAndroidManifest=XAndroidBinary::getDecoded(&baAndroidManifest);
 
+            QString sCompileSdkVersion=XBinary::regExp("android:compileSdkVersion=\"(.*?)\"",sAndroidManifest,1);
+            QString sCompileSdkVersionCodename=XBinary::regExp("android:compileSdkVersionCodename=\"(.*?)\"",sAndroidManifest,1);
             QString sPlatformBuildVersionCode=XBinary::regExp("platformBuildVersionCode=\"(.*?)\"",sAndroidManifest,1);
             QString sPlatformBuildVersionName=XBinary::regExp("platformBuildVersionName=\"(.*?)\"",sAndroidManifest,1);
             QString sTargetSdkVersion=XBinary::regExp("android:targetSdkVersion=\"(.*?)\"",sAndroidManifest,1);
 
-            if((sPlatformBuildVersionCode!="")||(sPlatformBuildVersionName!="")||(sTargetSdkVersion!=""))
+            if( (sCompileSdkVersion!="")||
+                (sCompileSdkVersionCodename!="")||
+                (sPlatformBuildVersionCode!="")||
+                (sPlatformBuildVersionName!="")||
+                (sTargetSdkVersion!=""))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDSDK,"","",0);
 
-                if(sPlatformBuildVersionCode=="")
+                QString _sVersion;
+                QString _sAnroidVersion;
+
+                _sVersion=sCompileSdkVersion;
+                _sAnroidVersion=sCompileSdkVersionCodename;
+
+                if(_sVersion=="")
                 {
-                    sPlatformBuildVersionCode=sTargetSdkVersion;
+                    _sVersion=sCompileSdkVersion;
                 }
 
-                if(sPlatformBuildVersionName=="")
+                if(_sVersion=="")
                 {
-                    sPlatformBuildVersionName="Unknown";
-
-                    if(sTargetSdkVersion=="3")    sPlatformBuildVersionName="1.5";
-                    if(sTargetSdkVersion=="4")    sPlatformBuildVersionName="1.6";
-                    if(sTargetSdkVersion=="5")    sPlatformBuildVersionName="2.0";
-                    if(sTargetSdkVersion=="6")    sPlatformBuildVersionName="2.0.1";
-                    if(sTargetSdkVersion=="7")    sPlatformBuildVersionName="2.1";
-                    if(sTargetSdkVersion=="8")    sPlatformBuildVersionName="2.2.X";
-                    if(sTargetSdkVersion=="9")    sPlatformBuildVersionName="2.3-2.3.2";
-                    if(sTargetSdkVersion=="10")   sPlatformBuildVersionName="2.3.3-2.3.7";
-                    if(sTargetSdkVersion=="11")   sPlatformBuildVersionName="3.0";
-                    if(sTargetSdkVersion=="12")   sPlatformBuildVersionName="3.1";
-                    if(sTargetSdkVersion=="13")   sPlatformBuildVersionName="3.2.X";
-                    if(sTargetSdkVersion=="14")   sPlatformBuildVersionName="4.0.1-4.0.2";
-                    if(sTargetSdkVersion=="15")   sPlatformBuildVersionName="4.0.3-4.0.4";
-                    if(sTargetSdkVersion=="16")   sPlatformBuildVersionName="4.1.X";
-                    if(sTargetSdkVersion=="17")   sPlatformBuildVersionName="4.2.X";
-                    if(sTargetSdkVersion=="18")   sPlatformBuildVersionName="4.3.X";
-                    if(sTargetSdkVersion=="19")   sPlatformBuildVersionName="4.4-4.4.4";
-                    if(sTargetSdkVersion=="20")   sPlatformBuildVersionName="4.4W";
-                    if(sTargetSdkVersion=="21")   sPlatformBuildVersionName="5.0";
-                    if(sTargetSdkVersion=="22")   sPlatformBuildVersionName="5.1";
-                    if(sTargetSdkVersion=="23")   sPlatformBuildVersionName="6.0";
-                    if(sTargetSdkVersion=="24")   sPlatformBuildVersionName="7.0";
-                    if(sTargetSdkVersion=="25")   sPlatformBuildVersionName="7.1";
-                    if(sTargetSdkVersion=="26")   sPlatformBuildVersionName="8.0.0";
-                    if(sTargetSdkVersion=="27")   sPlatformBuildVersionName="8.1.0";
-                    if(sTargetSdkVersion=="28")   sPlatformBuildVersionName="9";
-                    if(sTargetSdkVersion=="29")   sPlatformBuildVersionName="10";
-                    if(sTargetSdkVersion=="30")   sPlatformBuildVersionName="11";
+                    _sVersion=sPlatformBuildVersionCode;
                 }
 
-                ss.sVersion=QString("API %1(Android %2)").arg(sPlatformBuildVersionCode).arg(sPlatformBuildVersionName);
+                if(_sVersion=="")
+                {
+                    _sVersion=sTargetSdkVersion;
+                }
+
+                if(_sAnroidVersion=="")
+                {
+                    _sAnroidVersion=sCompileSdkVersionCodename;
+                }
+
+                if(_sAnroidVersion=="")
+                {
+                    _sAnroidVersion=sPlatformBuildVersionName;
+                }
+
+                if(_sAnroidVersion=="")
+                {
+                    _sAnroidVersion="Unknown";
+
+                    if(_sVersion=="3")    _sAnroidVersion="1.5";
+                    if(_sVersion=="4")    _sAnroidVersion="1.6";
+                    if(_sVersion=="5")    _sAnroidVersion="2.0";
+                    if(_sVersion=="6")    _sAnroidVersion="2.0.1";
+                    if(_sVersion=="7")    _sAnroidVersion="2.1";
+                    if(_sVersion=="8")    _sAnroidVersion="2.2.X";
+                    if(_sVersion=="9")    _sAnroidVersion="2.3-2.3.2";
+                    if(_sVersion=="10")   _sAnroidVersion="2.3.3-2.3.7";
+                    if(_sVersion=="11")   _sAnroidVersion="3.0";
+                    if(_sVersion=="12")   _sAnroidVersion="3.1";
+                    if(_sVersion=="13")   _sAnroidVersion="3.2.X";
+                    if(_sVersion=="14")   _sAnroidVersion="4.0.1-4.0.2";
+                    if(_sVersion=="15")   _sAnroidVersion="4.0.3-4.0.4";
+                    if(_sVersion=="16")   _sAnroidVersion="4.1.X";
+                    if(_sVersion=="17")   _sAnroidVersion="4.2.X";
+                    if(_sVersion=="18")   _sAnroidVersion="4.3.X";
+                    if(_sVersion=="19")   _sAnroidVersion="4.4-4.4.4";
+                    if(_sVersion=="20")   _sAnroidVersion="4.4W";
+                    if(_sVersion=="21")   _sAnroidVersion="5.0";
+                    if(_sVersion=="22")   _sAnroidVersion="5.1";
+                    if(_sVersion=="23")   _sAnroidVersion="6.0";
+                    if(_sVersion=="24")   _sAnroidVersion="7.0";
+                    if(_sVersion=="25")   _sAnroidVersion="7.1";
+                    if(_sVersion=="26")   _sAnroidVersion="8.0.0";
+                    if(_sVersion=="27")   _sAnroidVersion="8.1.0";
+                    if(_sVersion=="28")   _sAnroidVersion="9";
+                    if(_sVersion=="29")   _sAnroidVersion="10";
+                    if(_sVersion=="30")   _sAnroidVersion="11";
+                }
+
+                ss.sVersion=QString("API %1(Android %2)").arg(_sVersion).arg(_sAnroidVersion);
 
                 pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
@@ -10729,6 +10827,12 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANTILVL))
             {
                 _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANTILVL);
+                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKEDITOR))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKEDITOR);
                 pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
@@ -10765,6 +10869,12 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDSIGNAPK))
             {
                 _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDSIGNAPK);
+                pZipInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_COMEXSIGNAPK))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_COMEXSIGNAPK);
                 pZipInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
@@ -10809,6 +10919,20 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                     if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/arm64-v8a/libshella-"))
                     {
                         ss.sVersion=XBinary::regExp("lib/arm64-v8a/libshella-(.*?).so",pZipInfo->listArchiveRecords.at(i).sFileName,1);
+
+                        break;
+                    }
+                    else if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/armeabi-v7a/libshella-"))
+                    {
+                        ss.sVersion=XBinary::regExp("lib/armeabi-v7a/libshella-(.*?).so",pZipInfo->listArchiveRecords.at(i).sFileName,1);
+
+                        break;
+                    }
+                    else if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/x86/libshella-"))
+                    {
+                        ss.sVersion=XBinary::regExp("lib/x86/libshella-(.*?).so",pZipInfo->listArchiveRecords.at(i).sFileName,1);
+
+                        break;
                     }
                 }
 
@@ -12677,8 +12801,8 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         listR8.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
         listR8.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
         listR8.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
-        listR8.append(XDEX_DEF::TYPE_CALL_SITE_ID_ITEM);
-        listR8.append(XDEX_DEF::TYPE_METHOD_HANDLE_ITEM);
+        listR8.append(XDEX_DEF::TYPE_CALL_SITE_ID_ITEM);  // Optional
+        listR8.append(XDEX_DEF::TYPE_METHOD_HANDLE_ITEM);  // Optional
         listR8.append(XDEX_DEF::TYPE_CODE_ITEM);
         listR8.append(XDEX_DEF::TYPE_DEBUG_INFO_ITEM);
         listR8.append(XDEX_DEF::TYPE_TYPE_LIST);
@@ -12687,7 +12811,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         listR8.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
         listR8.append(XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM);
         listR8.append(XDEX_DEF::TYPE_ANNOTATION_SET_ITEM);
-        listR8.append(XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST);
+        listR8.append(XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST);  // Check
         listR8.append(XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM);
         listR8.append(XDEX_DEF::TYPE_MAP_LIST);
 
@@ -12730,6 +12854,14 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         listFastProxy.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
         listFastProxy.append(XDEX_DEF::TYPE_MAP_LIST);
 
+        // TODO Check https://github.com/facebookexperimental/r8
+
+        // https://r8.googlesource.com/r8/+/refs/heads/master/src/main/java/com/android/tools/r8/dex/Marker.java
+        // Example: X~~D8{"compilation-mode":"release","has-checksums":false,"min-api":14,"version":"2.0.88"}
+
+        VI_STRUCT viR8=get_R8_marker_vi(pDevice,false,0,pDEXInfo->basic_info.nSize);
+        bool bR8=XDEX::compareMapItems(&listMaps,&listR8);
+
         if(XDEX::compareMapItems(&listMaps,&listDx))
         {
             SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DX,"","",0);
@@ -12748,9 +12880,18 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 
-        if(XDEX::compareMapItems(&listMaps,&listR8))
+        if(viR8.bIsValid&&bR8)
         {
             SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_R8,"","",0);
+            recordCompiler.sVersion=viR8.sVersion;
+            recordCompiler.sInfo=viR8.sInfo;
+            pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
+        }
+        else if(viR8.bIsValid||bR8)
+        {
+            SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_R8,"","",0);
+            recordCompiler.sVersion=viR8.sVersion;
+            recordCompiler.sInfo="CHECK Maps";
             pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 
@@ -12792,34 +12933,34 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
 //    }
 //}
 
-void SpecAbstract::updateVersion(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::SCAN_STRUCT> *map, SpecAbstract::RECORD_NAME name, QString sVersion)
+void SpecAbstract::updateVersion(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::SCAN_STRUCT> *pMap, SpecAbstract::RECORD_NAME name, QString sVersion)
 {
-    if(map->contains(name))
+    if(pMap->contains(name))
     {
-        SpecAbstract::SCAN_STRUCT record=map->value(name);
+        SpecAbstract::SCAN_STRUCT record=pMap->value(name);
         record.sVersion=sVersion;
-        map->insert(name,record);
+        pMap->insert(name,record);
     }
 }
 
-void SpecAbstract::updateInfo(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::SCAN_STRUCT> *map, SpecAbstract::RECORD_NAME name, QString sInfo)
+void SpecAbstract::updateInfo(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::SCAN_STRUCT> *pMap, SpecAbstract::RECORD_NAME name, QString sInfo)
 {
-    if(map->contains(name))
+    if(pMap->contains(name))
     {
-        SpecAbstract::SCAN_STRUCT record=map->value(name);
+        SpecAbstract::SCAN_STRUCT record=pMap->value(name);
         record.sInfo=sInfo;
-        map->insert(name,record);
+        pMap->insert(name,record);
     }
 }
 
-void SpecAbstract::updateVersionAndInfo(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::SCAN_STRUCT> *map, SpecAbstract::RECORD_NAME name, QString sVersion, QString sInfo)
+void SpecAbstract::updateVersionAndInfo(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::SCAN_STRUCT> *pMap, SpecAbstract::RECORD_NAME name, QString sVersion, QString sInfo)
 {
-    if(map->contains(name))
+    if(pMap->contains(name))
     {
-        SpecAbstract::SCAN_STRUCT record=map->value(name);
+        SpecAbstract::SCAN_STRUCT record=pMap->value(name);
         record.sVersion=sVersion;
         record.sInfo=sInfo;
-        map->insert(name,record);
+        pMap->insert(name,record);
     }
 }
 
