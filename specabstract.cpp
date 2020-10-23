@@ -254,6 +254,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ANDROIDCLANG:                          sResult=QString("Android clang");                               break;
         case RECORD_NAME_ANDROIDJETPACK:                        sResult=QString("Android Jetpack");                             break;
         case RECORD_NAME_ANDROIDGRADLE:                         sResult=QString("Android Gradle");                              break;
+        case RECORD_NAME_ANDROIDMAVENPLUGIN:                    sResult=QString("Android Maven Plugin");                        break;
         case RECORD_NAME_ANDROIDSDK:                            sResult=QString("Android SDK");                                 break;
         case RECORD_NAME_ANDROIDSIGNAPK:                        sResult=QString("Android SignApk");                             break;
         case RECORD_NAME_ANDROIDXML:                            sResult=QString("Android XML");                                 break;
@@ -264,6 +265,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_APACHEANT:                             sResult=QString("Apache Ant");                                  break;
         case RECORD_NAME_APKEDITOR:                             sResult=QString("ApkEditor");                                   break;
         case RECORD_NAME_APKPROTECT:                            sResult=QString("APKProtect");                                  break;
+        case RECORD_NAME_APKPROTECTOR:                          sResult=QString("ApkProtector");                                break;
         case RECORD_NAME_APKSIGNER:                             sResult=QString("ApkSigner");                                   break;
         case RECORD_NAME_APPGUARD:                              sResult=QString("AppGuard");                                    break;
         case RECORD_NAME_APPLEJDK:                              sResult=QString("Apple JDK");                                   break;
@@ -635,6 +637,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PKLITE32:                              sResult=QString("PKLITE32");                                    break;
         case RECORD_NAME_PKZIPMINISFX:                          sResult=QString("PKZIP mini-sfx");                              break;
         case RECORD_NAME_PLAIN:                                 sResult=QString("Plain");                                       break;
+        case RECORD_NAME_PLEXCLANG:                             sResult=QString("Plex clang");                                  break;
         case RECORD_NAME_PMODEW:                                sResult=QString("PMODE/W");                                     break;
         case RECORD_NAME_PNG:                                   sResult=QString("PNG");                                         break;
         case RECORD_NAME_POKECRYPTER:                           sResult=QString("Poke Crypter");                                break;
@@ -729,6 +732,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_TURBOLINKER:                           sResult=QString("Turbo linker");                                break;
         case RECORD_NAME_TURKISHCYBERSIGNATURE:                 sResult=QString("Turkish Cyber Signature");                     break;
         case RECORD_NAME_TURKOJANCRYPTER:                       sResult=QString("Turkojan Crypter");                            break;
+        case RECORD_NAME_UBUNTUCLANG:                           sResult=QString("Ubuntu clang");                                break;
         case RECORD_NAME_UCEXE:                                 sResult=QString("UCEXE");                                       break;
         case RECORD_NAME_UNDERGROUNDCRYPTER:                    sResult=QString("UnderGround Crypter");                         break;
         case RECORD_NAME_UNDOCRYPTER:                           sResult=QString("UnDo Crypter");                                break;
@@ -1238,6 +1242,34 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AndroidClang_string(QString sString)
         result.bIsValid=true;
 
         result.sVersion=sString.section(" clang version ",1,1).section(" ",0,0);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_PlexClang_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("Plex clang"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",3,3);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_UbuntuClang_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("Ubuntu clang"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",3,3);
     }
 
     return result;
@@ -10493,7 +10525,12 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                     ss.sVersion=XBinary::regExp("Android Gradle (.*?)$",sCreatedBy,1);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
-                if(sCreatedBy.contains("AntiLVL"))
+                else if(sCreatedBy.contains("Android Maven"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDMAVENPLUGIN,"","",0);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
+                else if(sCreatedBy.contains("AntiLVL"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_APKTOOL,RECORD_NAME_ANTILVL,"","",0);
                     ss.sVersion=sCreatedBy.section(" ",0,0);
@@ -10548,6 +10585,17 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_DEXGUARD,"","",0);
                     ss.sVersion=XBinary::regExp("DexGuard, version (.*?)$",sCreatedBy,1);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
+                else if(sCreatedBy.contains("ApkProtector"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_APKPROTECTOR,"","",0);
+
+                    if(sCreatedBy.section(" ",0,0)=="ApkProtector")
+                    {
+                        ss.sVersion=sCreatedBy.section(" ",1,1).remove(")").remove("(");
+                    }
+
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
                 else if(sCreatedBy.contains("(Sun Microsystems Inc.)")||
@@ -10730,6 +10778,14 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             QString sPlatformBuildVersionName=XBinary::regExp("platformBuildVersionName=\"(.*?)\"",sAndroidManifest,1);
             QString sTargetSdkVersion=XBinary::regExp("android:targetSdkVersion=\"(.*?)\"",sAndroidManifest,1);
 
+            // Check
+            if(!XBinary::checkStringNumber(sCompileSdkVersion,1,40))        sCompileSdkVersion="";
+            if(!XBinary::checkStringNumber(sPlatformBuildVersionCode,1,40)) sPlatformBuildVersionCode="";
+            if(!XBinary::checkStringNumber(sTargetSdkVersion,1,40))         sTargetSdkVersion="";
+
+            if(!XBinary::checkStringNumber(sCompileSdkVersionCodename.section(".",0,0),1,15))   sCompileSdkVersionCodename="";
+            if(!XBinary::checkStringNumber(sPlatformBuildVersionName.section(".",0,0),1,15))    sPlatformBuildVersionName="";
+
             if( (sCompileSdkVersion!="")||
                 (sCompileSdkVersionCodename!="")||
                 (sPlatformBuildVersionCode!="")||
@@ -10744,30 +10800,12 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 _sVersion=sCompileSdkVersion;
                 _sAnroidVersion=sCompileSdkVersionCodename;
 
-                if(_sVersion=="")
-                {
-                    _sVersion=sCompileSdkVersion;
-                }
+                if(_sVersion=="")       _sVersion=sCompileSdkVersion;
+                if(_sVersion=="")       _sVersion=sPlatformBuildVersionCode;
+                if(_sVersion=="")       _sVersion=sTargetSdkVersion;
 
-                if(_sVersion=="")
-                {
-                    _sVersion=sPlatformBuildVersionCode;
-                }
-
-                if(_sVersion=="")
-                {
-                    _sVersion=sTargetSdkVersion;
-                }
-
-                if(_sAnroidVersion=="")
-                {
-                    _sAnroidVersion=sCompileSdkVersionCodename;
-                }
-
-                if(_sAnroidVersion=="")
-                {
-                    _sAnroidVersion=sPlatformBuildVersionName;
-                }
+                if(_sAnroidVersion=="") _sAnroidVersion=sCompileSdkVersionCodename;
+                if(_sAnroidVersion=="") _sAnroidVersion=sPlatformBuildVersionName;
 
                 if(_sAnroidVersion=="")
                 {
@@ -10821,6 +10859,12 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDGRADLE))
             {
                 _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDGRADLE);
+                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDMAVENPLUGIN))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDMAVENPLUGIN);
                 pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
@@ -10992,6 +11036,22 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
 
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
+
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECTOR)||pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKPROTECTOR))
+            {
+                _SCANS_STRUCT ss={};
+
+                if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKPROTECTOR))
+                {
+                    ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKPROTECTOR);
+                }
+                else
+                {
+                    ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_APKPROTECTOR);
+                }
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
         }
     }
 }
@@ -11012,6 +11072,35 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
 
                 for(int i=0;(i<nNumberOfRecords)&&(!(*pbIsStop));i++)
                 {
+                    if(pZipInfo->basic_info.bIsTest)
+                    {
+                        _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_UNKNOWN,"","",0);
+
+                        if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("libAppGuard.so"))
+                        {
+                            ss.sVersion="libAppGuard.so";
+                            pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                        }
+
+                        if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("libkiroro.so"))
+                        {
+                            ss.sVersion="libkiroro.so";
+                            pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                        }
+
+                        if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("libdxbase.so"))
+                        {
+                            ss.sVersion="libdxbase.so";
+                            pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                        }
+
+                        if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("libAPKProtect.so"))
+                        {
+                            ss.sVersion="libAPKProtect.so";
+                            pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                        }
+                    }
+
                     QByteArray baRecordData=xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)),true);
 
                     QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(&baRecordData,true);
@@ -11749,6 +11838,30 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
         if(!vi.bIsValid)
         {
+            vi=_get_PlexClang_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_PLEXCLANG,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_UbuntuClang_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_UBUNTUCLANG,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
             vi=_get_ApportableClang_string(sComment);
 
             if(vi.bIsValid)
@@ -12146,6 +12259,22 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ANDROIDCLANG))
         {
             SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ANDROIDCLANG);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Plex clang
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_PLEXCLANG))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_PLEXCLANG);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Ubuntu clang
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_UBUNTUCLANG))
+        {
+            SpecAbstract::_SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_UBUNTUCLANG);
 
             pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
@@ -12891,7 +13020,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         {
             SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_R8,"","",0);
             recordCompiler.sVersion=viR8.sVersion;
-            recordCompiler.sInfo="CHECK Maps";
+            recordCompiler.sInfo=QString("CHECK Maps %1").arg(dex.getMapItemsHash());
             pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 

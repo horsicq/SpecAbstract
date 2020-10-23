@@ -1483,4 +1483,12 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KIRO,                         "",                 ""},                    "libkiroro.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DXSHIELD,                     "",                 ""},                    "libdxbase.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKPROTECT,                   "",                 ""},                    "libAPKProtect.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKPROTECTOR,                 "",                 ""},                    "assets/ap.others/apkprotect.bin"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKPROTECTOR,                 "",                 ""},                    "assets/ap.src/apkprotect-v1.bin"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKPROTECTOR,                 "",                 ""},                    "assets/ap.src/apkprotect-v2.bin"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKPROTECTOR,                 "",                 ""},                    "assets/ap.src/apkprotect-v3.bin"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKPROTECTOR,                 "",                 ""},                    "lib/arm64-v8a/libapkprotect.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKPROTECTOR,                 "",                 ""},                    "lib/armeabi-v7a/libapkprotect.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKPROTECTOR,                 "",                 ""},                    "lib/x86/libapkprotect.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKPROTECTOR,                 "",                 ""},                    "lib/x86_64/libapkprotect.so"},
 };

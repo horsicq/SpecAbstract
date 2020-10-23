@@ -116,6 +116,7 @@ public:
         RECORD_NAME_ANDROIDCLANG,
         RECORD_NAME_ANDROIDJETPACK,
         RECORD_NAME_ANDROIDGRADLE,
+        RECORD_NAME_ANDROIDMAVENPLUGIN,
         RECORD_NAME_ANDROIDSDK,
         RECORD_NAME_ANDROIDSIGNAPK,
         RECORD_NAME_ANDROIDXML,
@@ -126,6 +127,7 @@ public:
         RECORD_NAME_APACHEANT,
         RECORD_NAME_APKEDITOR,
         RECORD_NAME_APKPROTECT,
+        RECORD_NAME_APKPROTECTOR,
         RECORD_NAME_APKSIGNER,
         RECORD_NAME_APPGUARD,
         RECORD_NAME_APPLEJDK,
@@ -497,6 +499,7 @@ public:
         RECORD_NAME_PKLITE32,
         RECORD_NAME_PKZIPMINISFX,
         RECORD_NAME_PLAIN,
+        RECORD_NAME_PLEXCLANG,
         RECORD_NAME_PMODEW,
         RECORD_NAME_PNG,
         RECORD_NAME_POKECRYPTER,
@@ -591,6 +594,7 @@ public:
         RECORD_NAME_TURBOLINKER,
         RECORD_NAME_TURKISHCYBERSIGNATURE,
         RECORD_NAME_TURKOJANCRYPTER,
+        RECORD_NAME_UBUNTUCLANG,
         RECORD_NAME_UCEXE,
         RECORD_NAME_UNDERGROUNDCRYPTER,
         RECORD_NAME_UNDOCRYPTER,
@@ -1287,6 +1291,8 @@ public:
     static VI_STRUCT _get_ObfuscatorLLVM_string(QString sString);
     static VI_STRUCT get_AndroidClang_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT _get_AndroidClang_string(QString sString);
+    static VI_STRUCT _get_PlexClang_string(QString sString);
+    static VI_STRUCT _get_UbuntuClang_string(QString sString);
     static VI_STRUCT _get_AlipayObfuscator_string(QString sString);
     static VI_STRUCT _get_wangzehuaLLVM_string(QString sString);
     static VI_STRUCT _get_ByteGuard_string(QString sString);
