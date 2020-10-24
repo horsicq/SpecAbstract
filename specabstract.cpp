@@ -184,7 +184,6 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_UNKNOWN:                               sResult=tr("Unknown");                                          break;
         case RECORD_TYPE_APKOBFUSCATOR:                         sResult=QString("APK %1").arg(tr("obfuscator"));                break;
         case RECORD_TYPE_APKTOOL:                               sResult=QString("APK %1").arg(tr("Tool"));                      break;
-        case RECORD_TYPE_ARCHIVE:                               sResult=tr("Archive");                                          break;
         case RECORD_TYPE_CERTIFICATE:                           sResult=tr("Certificate");                                      break;
         case RECORD_TYPE_COMPILER:                              sResult=tr("Compiler");                                         break;
         case RECORD_TYPE_CONVERTER:                             sResult=tr("Converter");                                        break;
@@ -1725,6 +1724,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
 
         // Scan Header
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_binary_records,sizeof(_binary_records),result.basic_info.id.fileType,XBinary::FT_BINARY,&(result.basic_info),HEURTYPE_HEADER);
+        signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_archive_records,sizeof(_archive_records),result.basic_info.id.fileType,XBinary::FT_ARCHIVE,&(result.basic_info),HEURTYPE_HEADER);
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_COM_records,sizeof(_COM_records),result.basic_info.id.fileType,XBinary::FT_COM,&(result.basic_info),HEURTYPE_HEADER);
         signatureExpScan(&binary,&(result.basic_info.memoryMap),&result.basic_info.mapHeaderDetects,0,_COM_Exp_records,sizeof(_COM_Exp_records),result.basic_info.id.fileType,XBinary::FT_COM,&(result.basic_info),HEURTYPE_HEADER);
 
@@ -2334,6 +2334,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_PE_header_records,sizeof(_PE_header_records),result.basic_info.id.fileType,XBinary::FT_PE,&(result.basic_info),HEURTYPE_HEADER);
         signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_PE_entrypoint_records,sizeof(_PE_entrypoint_records),result.basic_info.id.fileType,XBinary::FT_PE,&(result.basic_info),HEURTYPE_ENTRYPOINT);
         signatureScan(&result.mapOverlayDetects,result.sOverlaySignature,_binary_records,sizeof(_binary_records),result.basic_info.id.fileType,XBinary::FT_BINARY,&(result.basic_info),HEURTYPE_OVERLAY);
+        signatureScan(&result.mapOverlayDetects,result.sOverlaySignature,_archive_records,sizeof(_archive_records),result.basic_info.id.fileType,XBinary::FT_ARCHIVE,&(result.basic_info),HEURTYPE_OVERLAY);
         signatureScan(&result.mapOverlayDetects,result.sOverlaySignature,_PE_overlay_records,sizeof(_PE_overlay_records),result.basic_info.id.fileType,XBinary::FT_BINARY,&(result.basic_info),HEURTYPE_OVERLAY);
 
         stringScan(&result.mapSectionNamesDetects,&result.listSectionNames,_PE_sectionNames_records,sizeof(_PE_sectionNames_records),result.basic_info.id.fileType,XBinary::FT_PE,&(result.basic_info),HEURTYPE_SECTIONNAME);
@@ -9680,6 +9681,8 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
 
         if(xsevenzip.isValid())
         {
+            pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
+
             _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_7Z);
 
             ss.sVersion=xsevenzip.getVersion();
@@ -9697,6 +9700,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
 
         if(xzip.isValid())
         {
+            pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
             // TODO deep scan
             _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ZIP);
 
@@ -9715,6 +9719,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
     // GZIP
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GZIP))&&(pBinaryInfo->basic_info.nSize>=9))
     {
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_GZIP);
 
         // TODO options
@@ -9724,6 +9729,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
     // xar
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_XAR))&&(pBinaryInfo->basic_info.nSize>=9))
     {
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_XAR);
 
         // TODO options
@@ -9737,6 +9743,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
 
         if(xcab.isValid())
         {
+            pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
             _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CAB);
 
             ss.sVersion=xcab.getVersion();
@@ -9754,6 +9761,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
 
         if(xrar.isValid())
         {
+            pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
             _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RAR);
 
             ss.sVersion=xrar.getVersion();
@@ -9766,6 +9774,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
     // zlib
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ZLIB))&&(pBinaryInfo->basic_info.nSize>=32))
     {
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ZLIB);
 
         // TODO options
@@ -9775,6 +9784,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
     // XZ
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_XZ))&&(pBinaryInfo->basic_info.nSize>=32))
     {
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_XZ);
 
         // TODO options
@@ -9784,6 +9794,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
     // ARJ
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ARJ))&&(pBinaryInfo->basic_info.nSize>=4))
     {
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ARJ);
 
         // TODO options
@@ -9812,6 +9823,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
 
         if(bDetected)
         {
+            pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
             // TODO options
             // TODO files
             pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
@@ -9820,6 +9832,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
     // BZIP2
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_BZIP2))&&(pBinaryInfo->basic_info.nSize>=9))
     {
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_BZIP2);
 
         // TODO options
@@ -11076,27 +11089,37 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
                     {
                         _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_UNKNOWN,"","",0);
 
-                        if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("libAppGuard.so"))
+                        if(     pZipInfo->listArchiveRecords.at(i).sFileName.contains("libloader.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libDexHelper.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libdexjni.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libsecexe.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libsecmain.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libprotectClass.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libapktoolplus_jiagu.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("qdbh")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libdecrypt.jar")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libunicomsdk.jar")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("LIAPPClient.sc")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libNSaferOnly.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libnqshield.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libmobisecy.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libddog.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libmobisec.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("high_resolution.png")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libbaiduprotect.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libnsecure.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libkonyjsvm.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libapproov.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libnesec.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("apkPackerConfiguration")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libhdus.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libwjus.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libAppSuit.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libcovault.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libcovault-appsec.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libsecenh.so"))
                         {
-                            ss.sVersion="libAppGuard.so";
-                            pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
-                        }
-
-                        if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("libkiroro.so"))
-                        {
-                            ss.sVersion="libkiroro.so";
-                            pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
-                        }
-
-                        if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("libdxbase.so"))
-                        {
-                            ss.sVersion="libdxbase.so";
-                            pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
-                        }
-
-                        if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("libAPKProtect.so"))
-                        {
-                            ss.sVersion="libAPKProtect.so";
+                            ss.sVersion=pZipInfo->listArchiveRecords.at(i).sFileName;
                             pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
                         }
                     }
@@ -12159,7 +12182,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
         if(ss.name==RECORD_NAME_UNKNOWN)
         {
-            if(!vi.bIsValid)
+            if((!vi.bIsValid)&&(!sComment.contains(QRegExp(".o$"))))
             {
                 SpecAbstract::_SCANS_STRUCT recordSS={};
 
@@ -12991,21 +13014,31 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         VI_STRUCT viR8=get_R8_marker_vi(pDevice,false,0,pDEXInfo->basic_info.nSize);
         bool bR8=XDEX::compareMapItems(&listMaps,&listR8);
 
+        QString sOverlay=QString("Maps %1").arg(dex.getMapItemsHash());
+
+        if(dex.isOverlayPresent(&(pDEXInfo->basic_info.memoryMap)))
+        {
+            sOverlay=append(sOverlay,"Overlay");
+        }
+
         if(XDEX::compareMapItems(&listMaps,&listDx))
         {
             SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DX,"","",0);
+            recordCompiler.sInfo=append(recordCompiler.sInfo,sOverlay);
             pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 
         if(XDEX::compareMapItems(&listMaps,&listDexLib))
         {
             SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DEXLIB,"","",0);
+            recordCompiler.sInfo=append(recordCompiler.sInfo,sOverlay);
             pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 
         if(XDEX::compareMapItems(&listMaps,&listDexLib2))
         {
             SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DEXLIB2,"","",0);
+            recordCompiler.sInfo=append(recordCompiler.sInfo,sOverlay);
             pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 
@@ -13014,25 +13047,28 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_R8,"","",0);
             recordCompiler.sVersion=viR8.sVersion;
             recordCompiler.sInfo=viR8.sInfo;
+            recordCompiler.sInfo=append(recordCompiler.sInfo,sOverlay);
             pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
         else if(viR8.bIsValid||bR8)
         {
             SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_R8,"","",0);
             recordCompiler.sVersion=viR8.sVersion;
-            recordCompiler.sInfo=QString("CHECK Maps %1").arg(dex.getMapItemsHash());
+            recordCompiler.sInfo=append(recordCompiler.sInfo,sOverlay);
             pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 
         if(XDEX::compareMapItems(&listMaps,&listDexMerge))
         {
             SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DEXMERGE,"","",0);
+            recordCompiler.sInfo=append(recordCompiler.sInfo,sOverlay);
             pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 
         if(XDEX::compareMapItems(&listMaps,&listFastProxy))
         {
             SpecAbstract::_SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_FASTPROXY,"","",0);
+            recordCompiler.sInfo=append(recordCompiler.sInfo,sOverlay);
             pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 
