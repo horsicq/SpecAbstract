@@ -173,6 +173,7 @@ public:
         RECORD_NAME_BORLANDDELPHIDOTNET,
         RECORD_NAME_BORLANDOBJECTPASCAL,
         RECORD_NAME_BREAKINTOPATTERN,
+        RECORD_NAME_BTWORKSCODEGUARD,
         RECORD_NAME_BYTEDANCESECCOMPILER,
         RECORD_NAME_BYTEGUARD,
         RECORD_NAME_BZIP2,
@@ -824,6 +825,18 @@ public:
         QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
+    struct DEXINFO_STRUCT
+    {
+        BASIC_INFO basic_info;
+
+        QList<QString> listStrings;
+        QList<QString> listTypeItemStrings;
+
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
+    };
+
     struct ZIPINFO_STRUCT
     {
         BASIC_INFO basic_info;
@@ -834,6 +847,8 @@ public:
         bool bIsAPK=false;
         bool bIsJava=false;
         bool bIsKotlin=false;
+
+        DEXINFO_STRUCT dexInfoClasses;
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapArchiveDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapMetainfosDetects;
@@ -847,17 +862,6 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
 
         QList<SCAN_STRUCT> listRecursiveDetects;
-    };
-
-    struct DEXINFO_STRUCT
-    {
-        BASIC_INFO basic_info;
-
-        QList<QString> listStrings;
-        QList<QString> listTypeItemStrings;
-
-        QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
-        QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
     };
 
     struct MSDOSINFO_STRUCT
@@ -1266,6 +1270,8 @@ public:
     static void Zip_handle_APK(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_Recursive(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
     static void Zip_handle_FixDetects(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
+
+    static DEXINFO_STRUCT Zip_scan_DEX(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop,QString sFileName);
 
     static void updateVersion(QMap<RECORD_NAME,SCAN_STRUCT> *pMap,RECORD_NAME name,QString sVersion);
     static void updateInfo(QMap<RECORD_NAME,SCAN_STRUCT> *pMap,RECORD_NAME name,QString sInfo);
