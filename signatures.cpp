@@ -1498,4 +1498,10 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKPROTECTOR,                 "",                 ""},                    "lib/armeabi-v7a/libapkprotect.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKPROTECTOR,                 "",                 ""},                    "lib/x86/libapkprotect.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKPROTECTOR,                 "",                 ""},                    "lib/x86_64/libapkprotect.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_QDBH,                         "",                 ""},                    "assets/qdbh"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BANGCLEPROTECTION,            "",                 ""},                    "lib/armeabi/libsecexe.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BANGCLEPROTECTION,            "",                 ""},                    "lib/x86/libsecexe.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_QIHOO360PROTECTION,           "",                 ""},                    "lib/armeabi/libprotectClass.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_QIHOO360PROTECTION,           "",                 ""},                    "lib/armeabi-v7a/libprotectClass.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_QIHOO360PROTECTION,           "",                 ""},                    "lib/x86/libprotectClass.so"},
 };
