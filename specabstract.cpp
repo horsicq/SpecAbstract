@@ -593,6 +593,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_NOSTUBLINKER:                          sResult=QString("NOSTUBLINKER");                                break;
         case RECORD_NAME_NOXCRYPT:                              sResult=QString("noX Crypt");                                   break;
         case RECORD_NAME_NPACK:                                 sResult=QString("nPack");                                       break;
+        case RECORD_NAME_NQSHIELD:                              sResult=QString("NQ Shield");                                   break;
         case RECORD_NAME_NSIS:                                  sResult=QString("Nullsoft Scriptable Install System");          break;
         case RECORD_NAME_NSPACK:                                sResult=QString("NsPack");                                      break;
         case RECORD_NAME_OBFUSCAR:                              sResult=QString("Obfuscar");                                    break;
@@ -11142,6 +11143,14 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
+            // NQ Shield
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_NQSHIELD))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_NQSHIELD);
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
             // APKProtect
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECT))
             {
@@ -13347,6 +13356,15 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/baidu/protect/StubApplication;")) // Check overlay
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_BAIDUPROTECTION,"","",0);
+            ss.sInfo=append(ss.sInfo,sOverlay);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"libnqshieldx86.so")&&
+            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"LIB_NQ_SHIELD")&&
+            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"Lcom/nqshield/Common;"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_NQSHIELD,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }

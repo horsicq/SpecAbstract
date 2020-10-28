@@ -1513,4 +1513,7 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BAIDUPROTECTION,              "",                 ""},                    "lib/armeabi/libbaiduprotect.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BAIDUPROTECTION,              "",                 ""},                    "lib/mips/libbaiduprotect.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BAIDUPROTECTION,              "",                 ""},                    "lib/x86/libbaiduprotect.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NQSHIELD,                     "",                 ""},                    "assets/libnqshieldx86.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NQSHIELD,                     "",                 ""},                    "assets/nqdata"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NQSHIELD,                     "",                 ""},                    "lib/armeabi/libnqshield.so"},
 };
