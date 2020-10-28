@@ -11239,7 +11239,6 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libunicomsdk.jar")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("LIAPPClient.sc")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libNSaferOnly.so")||
-                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libnqshield.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libmobisecy.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libddog.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("high_resolution.png")||
