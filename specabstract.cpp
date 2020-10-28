@@ -13392,7 +13392,8 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_UNKNOWN,"","",0);
 
-            if(     pDEXInfo->listStrings.at(i).contains("StubApplication;"))
+            if(     pDEXInfo->listStrings.at(i).contains("StubApplication;")||
+                    XBinary::isRegExpPresent("^LIB",pDEXInfo->listStrings.at(i)))
             {
                 ss.sVersion=pDEXInfo->listStrings.at(i);
                 pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
@@ -13410,6 +13411,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         }
 
         // Check Ljava/lang/ClassLoader;
+        // TODO LIBRARY_* LIB*
     }
 }
 
