@@ -578,6 +578,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MSYS2:                                 sResult=QString("MSYS2");                                       break;
         case RECORD_NAME_MZ0OPE:                                sResult=QString("MZ0oPE");                                      break;
         case RECORD_NAME_NAGAINLLVM:                            sResult=QString("Nagain LLVM");                                 break;
+        case RECORD_NAME_NAGAPTPROTECTION:                      sResult=QString("Nagapt Protection");                           break;
         case RECORD_NAME_NAKEDPACKER:                           sResult=QString("NakedPacker");                                 break;
         case RECORD_NAME_NASM:                                  sResult=QString("NASM");                                        break;
         case RECORD_NAME_NCODE:                                 sResult=QString("N-Code");                                      break;
@@ -11151,6 +11152,14 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
+            // Nagapt Protection
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_NAGAPTPROTECTION))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_NAGAPTPROTECTION);
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
             // APKProtect
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECT))
             {
@@ -11240,7 +11249,6 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("LIAPPClient.sc")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libNSaferOnly.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libmobisecy.so")||
-                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libddog.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("high_resolution.png")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libnsecure.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libkonyjsvm.so")||
@@ -13234,9 +13242,11 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         bool bFastProxy_map=XDEX::compareMapItems(&listMaps,&listFastProxy);
         bool bIsStringPoolSorted=dex.isStringPoolSorted();
 
+        bool bIsOverlayPresent=dex.isOverlayPresent(&(pDEXInfo->basic_info.memoryMap));
+
         QString sOverlay=QString("Maps %1").arg(dex.getMapItemsHash());
 
-        if(dex.isOverlayPresent(&(pDEXInfo->basic_info.memoryMap)))
+        if(bIsOverlayPresent)
         {
             sOverlay=append(sOverlay,"Overlay");
         }
@@ -13368,6 +13378,14 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"LIBRARY_DDOG")||
+            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"LIBRARY_FDOG"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_NAGAPTPROTECTION,"","",0);
+            ss.sInfo=append(ss.sInfo,sOverlay);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+
         int nNumberOfRecords=pDEXInfo->listStrings.count();
 
         for(int i=0;i<nNumberOfRecords;i++)
@@ -13377,6 +13395,16 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             if(     pDEXInfo->listStrings.at(i).contains("StubApplication;"))
             {
                 ss.sVersion=pDEXInfo->listStrings.at(i);
+                pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+            }
+        }
+
+        if(pDEXInfo->mapResultProtectors.size()==0)
+        {
+            if(bIsOverlayPresent)
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_UNKNOWN,"","",0);
+                ss.sVersion="OVERLAY";
                 pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
             }
         }
