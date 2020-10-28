@@ -108,6 +108,7 @@ public:
         RECORD_NAME_ALCHEMYMINDWORKS,
         RECORD_NAME_ALEXPROTECTOR,
         RECORD_NAME_ALIASOBJ,
+        RECORD_NAME_ALIBABAPROTECTION,
         RECORD_NAME_ALIPAYOBFUSCATOR,
         RECORD_NAME_ALLOY,
         RECORD_NAME_ANDPAKK2,
@@ -314,6 +315,7 @@ public:
         RECORD_NAME_GIXPROTECTOR,
         RECORD_NAME_GKRIPTO,
         RECORD_NAME_GKSETUPSFX,
+        RECORD_NAME_GNUASSEMBLER,
         RECORD_NAME_GNULINKER,
         RECORD_NAME_GO,
         RECORD_NAME_GOASM,
@@ -463,6 +465,7 @@ public:
         RECORD_NAME_OPENJDK,
         RECORD_NAME_OPENSOURCECODECRYPTER,
         RECORD_NAME_OPERA,
+        RECORD_NAME_ORACLESOLARISLINKEDITORS,
         RECORD_NAME_ORIEN,
         RECORD_NAME_OSCCRYPTER,
         RECORD_NAME_P0KESCRAMBLER,
@@ -574,6 +577,7 @@ public:
         RECORD_NAME_STARFORCE,
         RECORD_NAME_STASFODIDOCRYPTOR,
         RECORD_NAME_STONESPEENCRYPTOR, // TODO Check name from .Stone Section // TODO EP
+        RECORD_NAME_SUNWORKSHOP,
         RECORD_NAME_SVKPROTECTOR,
         RECORD_NAME_SWF,
         RECORD_NAME_TARMAINSTALLER,
@@ -1327,6 +1331,8 @@ public:
     static VI_STRUCT _get_DynASM_string(QString sString);
     static VI_STRUCT _get_Delphi_string(QString sString);
     static VI_STRUCT _get_LLD_string(QString sString);
+    static VI_STRUCT _get_OracleSolarisLinkEditors_string(QString sString);
+    static VI_STRUCT _get_SunWorkShop_string(QString sString);
     static VI_STRUCT _get_SnapdragonLLVMARM_string(QString sString);
     static VI_STRUCT _get_NASM_string(QString sString);
 

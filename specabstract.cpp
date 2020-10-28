@@ -246,6 +246,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALCHEMYMINDWORKS:                      sResult=QString("Alchemy Mindworks");                           break;
         case RECORD_NAME_ALEXPROTECTOR:                         sResult=QString("Alex Protector");                              break;
         case RECORD_NAME_ALIASOBJ:                              sResult=QString("ALIASOBJ");                                    break;
+        case RECORD_NAME_ALIBABAPROTECTION:                     sResult=QString("Alibaba Protection");                          break;
         case RECORD_NAME_ALIPAYOBFUSCATOR:                      sResult=QString("Alipay Obfuscator");                           break;
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
         case RECORD_NAME_ANDPAKK2:                              sResult=QString("ANDpakk2");                                    break;
@@ -452,6 +453,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_GIXPROTECTOR:                          sResult=QString("G!X Protector");                               break;
         case RECORD_NAME_GKRIPTO:                               sResult=QString("GKripto");                                     break;
         case RECORD_NAME_GKSETUPSFX:                            sResult=QString("GkSetup SFX");                                 break;
+        case RECORD_NAME_GNUASSEMBLER:                          sResult=QString("GNU Assembler");                               break;
         case RECORD_NAME_GNULINKER:                             sResult=QString("GNU ld");                                      break;
         case RECORD_NAME_GO:                                    sResult=QString("Go");                                          break;
         case RECORD_NAME_GOASM:                                 sResult=QString("GoAsm");                                       break;
@@ -601,6 +603,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_OPENJDK:                               sResult=QString("OpenJDK");                                     break;
         case RECORD_NAME_OPENSOURCECODECRYPTER:                 sResult=QString("Open Source Code Crypter");                    break;
         case RECORD_NAME_OPERA:                                 sResult=QString("Opera");                                       break;
+        case RECORD_NAME_ORACLESOLARISLINKEDITORS:              sResult=QString("Oracle Solaris Link Editors");                 break;
         case RECORD_NAME_ORIEN:                                 sResult=QString("ORiEN");                                       break;
         case RECORD_NAME_OSCCRYPTER:                            sResult=QString("OSC-Crypter");                                 break;
         case RECORD_NAME_P0KESCRAMBLER:                         sResult=QString("p0ke Scrambler");                              break;
@@ -712,6 +715,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_STARFORCE:                             sResult=QString("StarForce");                                   break;
         case RECORD_NAME_STASFODIDOCRYPTOR:                     sResult=QString("StasFodidoCryptor");                           break;
         case RECORD_NAME_STONESPEENCRYPTOR:                     sResult=QString("Stone's PE Encryptor");                        break;
+        case RECORD_NAME_SUNWORKSHOP:                           sResult=QString("Sun WorkShop");                                break;
         case RECORD_NAME_SVKPROTECTOR:                          sResult=QString("SVK Protector");                               break;
         case RECORD_NAME_SWF:                                   sResult=QString("SWF");                                         break;
         case RECORD_NAME_TARMAINSTALLER:                        sResult=QString("Tarma Installer");                             break;
@@ -1626,6 +1630,34 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_LLD_string(QString sString)
         result.bIsValid=true;
 
         result.sVersion=sString.section("Linker: LLD ",1,1).section("(",0,0);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_OracleSolarisLinkEditors_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains(QRegExp("^ld: Software Generation Utilities - Solaris Link Editors:")))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section("Solaris Link Editors: ",1,1);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_SunWorkShop_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains(QRegExp("Sun WorkShop")))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section("Sun WorkShop ",1,1).section(" ",0,0);
     }
 
     return result;
@@ -11093,6 +11125,14 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
+            // Alibaba Protection
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_ALIBABAPROTECTION))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_ALIBABAPROTECTION);
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
             // APKProtect
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECT))
             {
@@ -11184,7 +11224,6 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libnqshield.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libmobisecy.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libddog.so")||
-                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libmobisec.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("high_resolution.png")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libbaiduprotect.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libnsecure.so")||
@@ -12152,6 +12191,30 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
         if(!vi.bIsValid)
         {
+            vi=_get_OracleSolarisLinkEditors_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_LINKER,RECORD_NAME_ORACLESOLARISLINKEDITORS,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_SunWorkShop_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_LINKER,RECORD_NAME_SUNWORKSHOP,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
             vi=_get_SnapdragonLLVMARM_string(sComment);
 
             if(vi.bIsValid)
@@ -12524,6 +12587,22 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_LLD);
 
             pELFInfo->mapResultLinkers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Oracle Solaris Link Editors
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ORACLESOLARISLINKEDITORS))
+        {
+            _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ORACLESOLARISLINKEDITORS);
+
+            pELFInfo->mapResultLinkers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Sun WorkShop
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SUNWORKSHOP))
+        {
+            _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SUNWORKSHOP);
+
+            pELFInfo->mapResultTools.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
         // Snapdragon LLVM ARM
@@ -13249,6 +13328,28 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
+
+        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/ali/mobisecenhance/StubApplication;")) // Check overlay
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_ALIBABAPROTECTION,"","",0);
+            ss.sInfo=append(ss.sInfo,sOverlay);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+
+        int nNumberOfRecords=pDEXInfo->listStrings.count();
+
+        for(int i=0;i<nNumberOfRecords;i++)
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_UNKNOWN,"","",0);
+
+            if(     pDEXInfo->listStrings.at(i).contains("StubApplication;"))
+            {
+                ss.sVersion=pDEXInfo->listStrings.at(i);
+                pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+            }
+        }
+
+        // Check Ljava/lang/ClassLoader;
     }
 }
 

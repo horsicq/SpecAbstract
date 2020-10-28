@@ -1504,4 +1504,7 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_QIHOO360PROTECTION,           "",                 ""},                    "lib/armeabi/libprotectClass.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_QIHOO360PROTECTION,           "",                 ""},                    "lib/armeabi-v7a/libprotectClass.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_QIHOO360PROTECTION,           "",                 ""},                    "lib/x86/libprotectClass.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ALIBABAPROTECTION,            "",                 ""},                    "lib/armeabi/libmobisec.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ALIBABAPROTECTION,            "",                 ""},                    "lib/armeabi-v7a/libmobisec.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ALIBABAPROTECTION,            "",                 ""},                    "lib/x86/libmobisec.so"},
 };
