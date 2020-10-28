@@ -1507,4 +1507,10 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ALIBABAPROTECTION,            "",                 ""},                    "lib/armeabi/libmobisec.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ALIBABAPROTECTION,            "",                 ""},                    "lib/armeabi-v7a/libmobisec.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ALIBABAPROTECTION,            "",                 ""},                    "lib/x86/libmobisec.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BAIDUPROTECTION,              "",                 ""},                    "assets/libbaiduprotect_x86.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BAIDUPROTECTION,              "",                 ""},                    "assets/baiduprotect.jar"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BAIDUPROTECTION,              "",                 ""},                    "lib/armeabi-v7a/libbaiduprotect.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BAIDUPROTECTION,              "",                 ""},                    "lib/armeabi/libbaiduprotect.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BAIDUPROTECTION,              "",                 ""},                    "lib/mips/libbaiduprotect.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BAIDUPROTECTION,              "",                 ""},                    "lib/x86/libbaiduprotect.so"},
 };

@@ -298,6 +298,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_AZPROTECT:                             sResult=QString("AZProtect");                                   break;
         case RECORD_NAME_BABELNET:                              sResult=QString("Babel .NET");                                  break;
         case RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR:           sResult=QString("Backdoor PE Compress Protector");              break;
+        case RECORD_NAME_BAIDUPROTECTION:                       sResult=QString("Baidu Protection");                            break;
         case RECORD_NAME_BAMBAM:                                sResult=QString("bambam");                                      break;
         case RECORD_NAME_BANGCLEPROTECTION:                     sResult=QString("Bangcle Protection");                          break;
         case RECORD_NAME_BAT2EXEC:                              sResult=QString("BAT2EXEC");                                    break;
@@ -13332,6 +13333,13 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/ali/mobisecenhance/StubApplication;")) // Check overlay
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_ALIBABAPROTECTION,"","",0);
+            ss.sInfo=append(ss.sInfo,sOverlay);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+
+        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/baidu/protect/StubApplication;")) // Check overlay
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_BAIDUPROTECTION,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
