@@ -11134,6 +11134,14 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
+            // Baidu Protection
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_BAIDUPROTECTION))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_BAIDUPROTECTION);
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
             // APKProtect
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECT))
             {
