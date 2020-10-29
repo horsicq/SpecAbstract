@@ -250,6 +250,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALIPAYOBFUSCATOR:                      sResult=QString("Alipay Obfuscator");                           break;
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
         case RECORD_NAME_ANDPAKK2:                              sResult=QString("ANDpakk2");                                    break;
+        case RECORD_NAME_ANDROIDAPKSIGNER:                      sResult=QString("Android apksigner");                           break;
         case RECORD_NAME_ANDROIDARSC:                           sResult=QString("Android ARSC");                                break;
         case RECORD_NAME_ANDROIDCLANG:                          sResult=QString("Android clang");                               break;
         case RECORD_NAME_ANDROIDJETPACK:                        sResult=QString("Android Jetpack");                             break;
@@ -264,6 +265,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ANTILVL:                               sResult=QString("AntiLVL");                                     break;
         case RECORD_NAME_APACHEANT:                             sResult=QString("Apache Ant");                                  break;
         case RECORD_NAME_APK_SIGNER:                            sResult=QString("apk-signer");                                  break;
+        case RECORD_NAME_APKMODIFIERSIGNAPK:                    sResult=QString("ApkModifier SignApk");                         break;
         case RECORD_NAME_APKEDITOR:                             sResult=QString("ApkEditor");                                   break;
         case RECORD_NAME_APKPROTECT:                            sResult=QString("APKProtect");                                  break;
         case RECORD_NAME_APKPROTECTOR:                          sResult=QString("ApkProtector");                                break;
@@ -298,6 +300,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_AZPROTECT:                             sResult=QString("AZProtect");                                   break;
         case RECORD_NAME_BABELNET:                              sResult=QString("Babel .NET");                                  break;
         case RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR:           sResult=QString("Backdoor PE Compress Protector");              break;
+        case RECORD_NAME_BAIDUSIGNATUREPLATFORM:                sResult=QString("Baidu Signature platform");                    break;
         case RECORD_NAME_BAIDUPROTECTION:                       sResult=QString("Baidu Protection");                            break;
         case RECORD_NAME_BAMBAM:                                sResult=QString("bambam");                                      break;
         case RECORD_NAME_BANGCLEPROTECTION:                     sResult=QString("Bangcle Protection");                          break;
@@ -723,8 +726,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SWF:                                   sResult=QString("SWF");                                         break;
         case RECORD_NAME_TARMAINSTALLER:                        sResult=QString("Tarma Installer");                             break;
         case RECORD_NAME_TELOCK:                                sResult=QString("tElock");                                      break;
-        case RECORD_NAME_TENCENTOBFUSCATION:                    sResult=QString("Tencent-Obfuscation");                         break;
         case RECORD_NAME_TENCENTLEGU:                           sResult=QString("Tencent Legu");                                break;
+        case RECORD_NAME_TENCENTPROTECTION:                     sResult=QString("Tencent Protection");                          break;
         case RECORD_NAME_TGRCRYPTER:                            sResult=QString("TGR Crypter");                                 break;
         case RECORD_NAME_THEBESTCRYPTORBYFSK:                   sResult=QString("The Best Cryptor [by FsK]");                   break;
         case RECORD_NAME_THEMIDAWINLICENSE:                     sResult=QString("Themida/Winlicense");                          break;
@@ -733,6 +736,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_THUMBC:                                sResult=QString("Thumb C");                                     break;
         case RECORD_NAME_TIFF:                                  sResult=QString("TIFF");                                        break;
         case RECORD_NAME_TINYPROG:                              sResult=QString("TinyProg");                                    break;
+        case RECORD_NAME_TINYSIGN:                              sResult=QString("tiny-sign");                                   break;
         case RECORD_NAME_TOTALCOMMANDERINSTALLER:               sResult=QString("Total Commander Installer");                   break;
         case RECORD_NAME_TPPPACK:                               sResult=QString("TTP Pack");                                    break;
         case RECORD_NAME_TSTCRYPTER:                            sResult=QString("TsT Crypter");                                 break;
@@ -10581,8 +10585,9 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                     ss.sVersion=XBinary::regExp("Android Gradle (.*?)$",sCreatedBy,1);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
-                else if(sCreatedBy.contains("MOTODEV Studio for Android"))
+                else if(sCreatedBy.contains("MOTODEV Studio for Android")||sCreatedBy.contains("MOTODEV Studio for ANDROID"))
                 {
+                    // TODO Check "MOTODEV Studio for ANDROID" version
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_MOTODEVSTUDIOFORANDROID,"","",0);
                     ss.sVersion=XBinary::regExp("MOTODEV Studio for Android v(.*?).release",sCreatedBy,1);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
@@ -10643,10 +10648,10 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                 else if(sCreatedBy.contains("(COMEX SignApk)"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_COMEXSIGNAPK,"","",0);
-                    ss.sVersion=sCreatedBy.section("(COMEX SignApk)",0,0);
+                    ss.sVersion=sCreatedBy.section(" (COMEX SignApk)",0,0);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
-                else if(sCreatedBy.contains("(NetEase ApkSigner)"))
+                else if(sCreatedBy.contains("(NetEase ApkSigner)")) // TODO Check " " !!!
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_NETEASEAPKSIGNER,"","",0);
                     ss.sVersion=sCreatedBy.section("(NetEase ApkSigner)",0,0);
@@ -10655,7 +10660,31 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                 else if(sCreatedBy.contains("(Android SignApk)"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_ANDROIDSIGNAPK,"","",0);
-                    ss.sVersion=sCreatedBy.section("(Android SignApk)",0,0);
+                    ss.sVersion=sCreatedBy.section(" (Android SignApk)",0,0);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
+                else if(sCreatedBy.contains("(Android apksigner)"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_ANDROIDAPKSIGNER,"","",0);
+                    ss.sVersion=sCreatedBy.section(" (Android apksigner)",0,0);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
+                else if(sCreatedBy.contains("(ApkModifier SignApk)"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_APKMODIFIERSIGNAPK,"","",0);
+                    ss.sVersion=sCreatedBy.section(" (ApkModifier SignApk)",0,0);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
+                else if(sCreatedBy.contains("(Baidu Signature platform)"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_BAIDUSIGNATUREPLATFORM,"","",0);
+                    ss.sVersion=sCreatedBy.section(" (Baidu Signature platform)",0,0);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
+                else if(sCreatedBy.contains("tiny-sign"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_TINYSIGN,"","",0);
+                    ss.sVersion=sCreatedBy.section("tiny-sign-",1,1);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
                 else if(sCreatedBy.contains("DexGuard, version"))
@@ -11013,6 +11042,30 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDAPKSIGNER))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDAPKSIGNER);
+                pZipInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKMODIFIERSIGNAPK))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKMODIFIERSIGNAPK);
+                pZipInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_BAIDUSIGNATUREPLATFORM))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_BAIDUSIGNATUREPLATFORM);
+                pZipInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_TINYSIGN))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_TINYSIGN);
+                pZipInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
             if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_COMEXSIGNAPK))
             {
                 _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_COMEXSIGNAPK);
@@ -11043,9 +11096,9 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
-            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTOBFUSCATION))
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTPROTECTION))
             {
-                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_TENCENTOBFUSCATION);
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_TENCENTPROTECTION);
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
@@ -11372,7 +11425,7 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Spec
 
         if(pZipInfo->basic_info.bIsTest)
         {
-            if(pZipInfo->mapMetainfosDetects.count()==0)
+            //if(pZipInfo->mapMetainfosDetects.count()==0)
             {
                 QString sDataManifest=xzip.decompress("META-INF/MANIFEST.MF").data();
 
@@ -12339,7 +12392,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
             if(vi.bIsValid)
             {
-                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_TENCENTOBFUSCATION,vi.sVersion,vi.sInfo,0);
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_TENCENTPROTECTION,vi.sVersion,vi.sInfo,0);
 
                 pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
             }
@@ -12744,9 +12797,9 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         }
 
         // Tencent-Obfuscation
-        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_TENCENTOBFUSCATION))
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_TENCENTPROTECTION))
         {
-            _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_TENCENTOBFUSCATION);
+            _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_TENCENTPROTECTION);
 
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
@@ -13339,6 +13392,14 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"/.jiagu")&&
+            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"jiagu"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_JIAGU,"","",0);
+            ss.sInfo=append(ss.sInfo,sOverlay);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+
         if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"SecApk")&&
             XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"apkFilePath")&&
             XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"apkPath"))
@@ -13369,6 +13430,13 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
+        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/tencent/StubShell/TxAppEntry;")) // Check overlay
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_TENCENTPROTECTION,"","",0);
+            ss.sInfo=append(ss.sInfo,sOverlay);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+
         if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"libnqshieldx86.so")&&
             XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"LIB_NQ_SHIELD")&&
             XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"Lcom/nqshield/Common;"))
@@ -13386,19 +13454,19 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        int nNumberOfRecords=pDEXInfo->listStrings.count();
+//        int nNumberOfRecords=pDEXInfo->listStrings.count();
 
-        for(int i=0;i<nNumberOfRecords;i++)
-        {
-            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_UNKNOWN,"","",0);
+//        for(int i=0;i<nNumberOfRecords;i++)
+//        {
+//            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_UNKNOWN,"","",0);
 
-            if(     pDEXInfo->listStrings.at(i).contains("StubApplication;")||
-                    XBinary::isRegExpPresent("^LIB",pDEXInfo->listStrings.at(i)))
-            {
-                ss.sVersion=pDEXInfo->listStrings.at(i);
-                pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
-            }
-        }
+//            if(     pDEXInfo->listStrings.at(i).contains("StubApplication;")||
+//                    XBinary::isRegExpPresent("^LIB",pDEXInfo->listStrings.at(i)))
+//            {
+//                ss.sVersion=pDEXInfo->listStrings.at(i);
+//                pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+//            }
+//        }
 
         if(pDEXInfo->mapResultProtectors.size()==0)
         {
@@ -13411,7 +13479,6 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         }
 
         // Check Ljava/lang/ClassLoader;
-        // TODO LIBRARY_* LIB*
     }
 }
 
