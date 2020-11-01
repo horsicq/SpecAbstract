@@ -363,6 +363,7 @@ public:
         RECORD_NAME_INSTALLSHIELD,
         RECORD_NAME_IPBPROTECT,
         RECORD_NAME_ISO9660,
+        RECORD_NAME_JACK,
         RECORD_NAME_JAM,
         RECORD_NAME_JAR,
         RECORD_NAME_JAVA,
@@ -623,6 +624,7 @@ public:
         RECORD_NAME_UNDERGROUNDCRYPTER,
         RECORD_NAME_UNDOCRYPTER,
         RECORD_NAME_UNICODE,
+        RECORD_NAME_UNICOMSDK,
         RECORD_NAME_UNILINK,
         RECORD_NAME_UNIVERSALTUPLECOMPILER,
         RECORD_NAME_UNKOWNCRYPTER,
@@ -690,6 +692,7 @@ public:
         RECORD_NAME_XZ,
         RECORD_NAME_YANDEX,
         RECORD_NAME_YANO,
+        RECORD_NAME_YIDUN,
         RECORD_NAME_YODASCRYPTER,
         RECORD_NAME_YODASPROTECTOR,
         RECORD_NAME_YZPACK,
@@ -861,8 +864,9 @@ public:
         QList<XDEX_DEF::METHOD_ITEM_ID> listMethodIDs;
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
-        QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
     };
 
     struct ZIPINFO_STRUCT

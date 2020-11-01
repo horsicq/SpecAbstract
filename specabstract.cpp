@@ -501,6 +501,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_INSTALLSHIELD:                         sResult=QString("InstallShield");                               break;
         case RECORD_NAME_IPBPROTECT:                            sResult=QString("iPB Protect");                                 break;
         case RECORD_NAME_ISO9660:                               sResult=QString("ISO 9660");                                    break;
+        case RECORD_NAME_JACK:                                  sResult=QString("Jack");                                        break;
         case RECORD_NAME_JAM:                                   sResult=QString("JAM");                                         break;
         case RECORD_NAME_JAR:                                   sResult=QString("JAR");                                         break;
         case RECORD_NAME_JAVA:                                  sResult=QString("Java");                                        break;
@@ -761,6 +762,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_UNDERGROUNDCRYPTER:                    sResult=QString("UnderGround Crypter");                         break;
         case RECORD_NAME_UNDOCRYPTER:                           sResult=QString("UnDo Crypter");                                break;
         case RECORD_NAME_UNICODE:                               sResult=QString("Unicode");                                     break;
+        case RECORD_NAME_UNICOMSDK:                             sResult=QString("Unicon SDK");                                  break;
         case RECORD_NAME_UNILINK:                               sResult=QString("UniLink");                                     break;
         case RECORD_NAME_UNIVERSALTUPLECOMPILER:                sResult=QString("Universal Tuple Compiler");                    break;
         case RECORD_NAME_UNKOWNCRYPTER:                         sResult=QString("unkOwn Crypter");                              break;
@@ -828,6 +830,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_XZ:                                    sResult=QString("XZ");                                          break;
         case RECORD_NAME_YANDEX:                                sResult=QString("Yandex");                                      break;
         case RECORD_NAME_YANO:                                  sResult=QString("Yano");                                        break;
+        case RECORD_NAME_YIDUN:                                 sResult=QString("yidun");                                       break;
         case RECORD_NAME_YODASCRYPTER:                          sResult=QString("Yoda's Crypter");                              break;
         case RECORD_NAME_YODASPROTECTOR:                        sResult=QString("Yoda's Protector");                            break;
         case RECORD_NAME_YZPACK:                                sResult=QString("YZPack");                                      break;
@@ -2630,6 +2633,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
 
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
+        result.basic_info.listDetects.append(result.mapResultLibraries.values());
         result.basic_info.listDetects.append(result.mapResultProtectors.values());
     }
 
@@ -11357,6 +11361,14 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
+            // yidun
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_YIDUN))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_YIDUN);
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
             // APKProtect
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECT))
             {
@@ -11421,6 +11433,14 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
 
                 pZipInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
+
+            // Unicom SDK
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_UNICOMSDK))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_UNICOMSDK);
+
+                pZipInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
         }
     }
 }
@@ -11446,10 +11466,8 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
                         _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_UNKNOWN,"","",0);
 
                         if(     pZipInfo->listArchiveRecords.at(i).sFileName.contains("libloader.so")||
-                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libdexjni.so")||
-                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libapktoolplus_jiagu.so")||
-                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libdecrypt.jar")||
-                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libunicomsdk.jar")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libdex")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libapktoolplus")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libNSaferOnly.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libmobisecy.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("high_resolution.png")||
@@ -13443,6 +13461,8 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         bool bDexLib2_map=XDEX::compareMapItems(&listMaps,&listDexLib2);
         bool bDexMerge_map=XDEX::compareMapItems(&listMaps,&listDexMerge);
         bool bFastProxy_map=XDEX::compareMapItems(&listMaps,&listFastProxy);
+//        bool bIsJack=(dex.find_ansiString(0,-1,"jack-")!=-1);
+//        bool bIsEmitter=(dex.find_ansiString(0,-1,"emitter:")!=-1);
 
         bool bIsStringPoolSorted=dex.isStringPoolSorted();
 
@@ -13471,7 +13491,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
 
             if(bLink)
             {
-                sOverlay=append(sOverlay,"Invalid Link");
+                sOverlay=append(sOverlay,QString("Invalid Link(%1,%2)").arg(pDEXInfo->header.link_size).arg(pDEXInfo->header.link_off));
             }
 
             if(bIsFieldNamesUnicode)
@@ -13536,6 +13556,16 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         if(bFastProxy_map)
         {
             _SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_FASTPROXY,"","",0);
+            recordCompiler.sInfo=append(recordCompiler.sInfo,sOverlay);
+            pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
+        }
+
+        qint32 nJackIndex=dex.getStringNumberFromListExp(&(pDEXInfo->listStrings),"^emitter: jack");
+
+        if(nJackIndex!=-1)
+        {
+            _SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_JACK,"","",0);
+            recordCompiler.sVersion=pDEXInfo->listStrings.at(nJackIndex).section("-",1,-1);
             recordCompiler.sInfo=append(recordCompiler.sInfo,sOverlay);
             pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
@@ -13628,6 +13658,14 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"La/_;")||
+            XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/_;"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_YIDUN,"","",0);
+            ss.sInfo=append(ss.sInfo,sOverlay);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+
         if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/lockincomp/liapp/LiappClassLoader;"))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_LIAPP,"","",0);
@@ -13635,6 +13673,12 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
+        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/unicom/dcLoader/Utils;"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_LIBRARY,RECORD_NAME_UNICOMSDK,"","",0);
+            ss.sInfo=append(ss.sInfo,sOverlay);
+            pDEXInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
 
         if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"libnqshieldx86.so")&&
             XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"LIB_NQ_SHIELD")&&
