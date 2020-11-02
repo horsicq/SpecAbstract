@@ -620,6 +620,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PACKMAN:                               sResult=QString("Packman");                                     break;
         case RECORD_NAME_PACKWIN:                               sResult=QString("PACKWIN");                                     break;
         case RECORD_NAME_PANDORA:                               sResult=QString("Pandora");                                     break;
+        case RECORD_NAME_PANGXIE:                               sResult=QString("PangXie");                                     break;
         case RECORD_NAME_PCGUARD:                               sResult=QString("PC Guard");                                    break;
         case RECORD_NAME_PCOM:                                  sResult=QString("PCOM");                                        break;
         case RECORD_NAME_PCSHRINK:                              sResult=QString("PCShrink");                                    break;
@@ -11234,9 +11235,18 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
-            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTLEGU))
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTLEGU)||pZipInfo->mapArchiveDetects.contains(RECORD_NAME_MOBILETENCENTPROTECT))
             {
-                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_TENCENTLEGU);
+                _SCANS_STRUCT ss={};
+
+                if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTLEGU))
+                {
+                    ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_TENCENTLEGU);
+                }
+                else if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_MOBILETENCENTPROTECT))
+                {
+                    ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_MOBILETENCENTPROTECT);
+                }
 
                 int nNumberOfRecords=pZipInfo->listArchiveRecords.count();
 
@@ -11251,6 +11261,12 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                     else if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/armeabi-v7a/libshella-"))
                     {
                         ss.sVersion=XBinary::regExp("lib/armeabi-v7a/libshella-(.*?).so",pZipInfo->listArchiveRecords.at(i).sFileName,1);
+
+                        break;
+                    }
+                    else if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/armeabi/libshella-"))
+                    {
+                        ss.sVersion=XBinary::regExp("lib/armeabi/libshella-(.*?).so",pZipInfo->listArchiveRecords.at(i).sFileName,1);
 
                         break;
                     }
@@ -11369,6 +11385,14 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
+            // PangXie
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_PANGXIE))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_PANGXIE);
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
             // APKProtect
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECT))
             {
@@ -11465,16 +11489,12 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
                     {
                         _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_UNKNOWN,"","",0);
 
-                        if(     pZipInfo->listArchiveRecords.at(i).sFileName.contains("libloader.so")||
-                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libdex")||
+                        if(     pZipInfo->listArchiveRecords.at(i).sFileName.contains("libdiresu.so")||
+                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("agconfig")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libapktoolplus")||
-                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libNSaferOnly.so")||
-                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libmobisecy.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("high_resolution.png")||
-                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libnsecure.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libkonyjsvm.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libapproov.so")||
-                                pZipInfo->listArchiveRecords.at(i).sFileName.contains("libnesec.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("apkPackerConfiguration")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libhdus.so")||
                                 pZipInfo->listArchiveRecords.at(i).sFileName.contains("libwjus.so")||
@@ -11610,7 +11630,7 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Spec
                     pZipInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pZipInfo->basic_info),&recordSS));
                 }
 
-                if(sCreatedBy!="")
+                if((sCreatedBy!="")&&(sCreatedBy!="Android"))
                 {
                     _SCANS_STRUCT recordSS={};
 
@@ -13503,6 +13523,29 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             {
                 sOverlay=append(sOverlay,"bIsMethodNamesUnicode");
             }
+
+            if(viR8.bIsValid)
+            {
+                if(bDX_map)
+                {
+                    sOverlay=append(sOverlay,"DX");
+                }
+
+                if(bDexLib2_map)
+                {
+                    sOverlay=append(sOverlay,"DexLib2");
+                }
+
+                if(bIsStringPoolSorted)
+                {
+                    sOverlay=append(sOverlay,"DexLib");
+                }
+
+                if(bDexMerge_map)
+                {
+                    sOverlay=append(sOverlay,"DexMerge");
+                }
+            }
         }
 
         if(!bIsStringPoolSorted)
@@ -13697,6 +13740,15 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
+        // TODO Lcom/merry/wapper/WapperApplication;
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"PangXie")||
+            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"nsecure"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_PANGXIE,"","",0);
+            ss.sInfo=append(ss.sInfo,sOverlay);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+
         if(bIsOverlayPresent)
         {
             if(dex.getOverlaySize()==0x60)
@@ -13732,8 +13784,49 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             }
         }
 
+        if(pDEXInfo->basic_info.bIsDeepScan)
+        {
+            int nNumberOfRecords=pDEXInfo->listStrings.count();
+
+            for(int i=0;(i<nNumberOfRecords);i++)
+            {
+                if(pDEXInfo->basic_info.bIsTest)
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_UNKNOWN,"","",0);
+
+                    if(     pDEXInfo->listStrings.at(i).contains("dexguard")||
+                            pDEXInfo->listStrings.at(i).contains("agconfig")||
+                            pDEXInfo->listStrings.at(i).contains("AntiSkid")||
+                            pDEXInfo->listStrings.at(i).contains("Bitwise")||
+                            pDEXInfo->listStrings.at(i).contains("ALLATORIxDEMO")||
+                            pDEXInfo->listStrings.at(i).contains("AppSuit")||
+                            pDEXInfo->listStrings.at(i).contains("appsuit")||
+                            pDEXInfo->listStrings.at(i).contains("gemalto")||
+                            pDEXInfo->listStrings.at(i).contains("Kiwi")||
+                            pDEXInfo->listStrings.at(i).contains("WapperApplication")||
+                            pDEXInfo->listStrings.at(i).contains("medusah")||
+                            pDEXInfo->listStrings.at(i).contains("apache/sax")||
+                            pDEXInfo->listStrings.at(i).contains("AppSealing")||
+                            pDEXInfo->listStrings.at(i).contains("vdog")||
+                            pDEXInfo->listStrings.at(i).contains("whitecryption")||
+                            pDEXInfo->listStrings.at(i).contains("InjectedActivity"))
+                    {
+                        ss.sVersion=pDEXInfo->listStrings.at(i);
+                        pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+
+                        break;
+                    }
+                }
+            }
+        }
+
         // Check Ljava/lang/ClassLoader;
     }
+}
+
+void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice, SpecAbstract::DEXINFO_STRUCT *pDEXInfo)
+{
+    // TODO
 }
 
 //void SpecAbstract::fixDetects(SpecAbstract::PEINFO_STRUCT *pPEInfo)

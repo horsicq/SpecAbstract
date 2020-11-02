@@ -482,6 +482,7 @@ public:
         RECORD_NAME_PACKMAN,
         RECORD_NAME_PACKWIN,
         RECORD_NAME_PANDORA,
+        RECORD_NAME_PANGXIE,
         RECORD_NAME_PCGUARD,
         RECORD_NAME_PCOM,
         RECORD_NAME_PCSHRINK,
@@ -1294,6 +1295,7 @@ public:
     static void NE_handle_Borland(QIODevice *pDevice,bool bIsImage,NEINFO_STRUCT *pNEInfo);
 
     static void DEX_handle_Tools(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo);
+    static void DEX_handle_Protection(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo);
 
     static void Zip_handle_Microsoftoffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);

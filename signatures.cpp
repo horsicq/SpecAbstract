@@ -1547,4 +1547,7 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_UNICOMSDK,                    "",                 ""},                    "assets/x86/libunicomSimplesdk.dat"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_UNICOMSDK,                    "",                 ""},                    "assets/x86/libunicomsdk.jar"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_UNICOMSDK,                    "",                 ""},                    "assets/x86/libdecrypt.jar"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MOBILETENCENTPROTECT,         "",                 ""},                    "lib/armeabi/mix.dex"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PANGXIE,                      "",                 ""},                    "lib/armeabi-v7a/libnsecure.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PANGXIE,                      "",                 ""},                    "lib/armeabi/libnsecure.so"},
 };
