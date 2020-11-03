@@ -13677,6 +13677,14 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"APKProtect",pbIsStop)&&
+            XBinary::isStringInListPresentExp(&(pDEXInfo->listStrings),"http://www.apkprotect.net/",pbIsStop))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_APKPROTECT,"","",0);
+            ss.sInfo=append(ss.sInfo,sOverlay);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+
         // DexProtect
         // 070002000000020083dc63003e000000120113000e0048000500e0000010011239022a001232d563ff0048030503d533ff00e1040608d544ff0048040504d544ff00e0040408b643e1040610d544ff0048040504d544ff00e0040410b643e1040618d544ff0048000504e0000018b6300f000d023901feff1221dd02067f48000502e100000828f50d0328cb0d000000
 
