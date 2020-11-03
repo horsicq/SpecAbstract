@@ -1554,4 +1554,7 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VDOG,                         "",                 ""},                    "assets/main000/libhdog-x86.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VDOG,                         "",                 ""},                    "assets/main000/libvdog.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VDOG,                         "",                 ""},                    "assets/main000/libvdog-x86.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_TOOL,             SpecAbstract::RECORD_NAME_APKTOOLPLUS,                  "",                 ""},                    "lib/armeabi-v7a/libapktoolplus_jiagu.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HDUS_WJUS,                    "",                 ""},                    "lib/armeabi/libhdus.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HDUS_WJUS,                    "",                 ""},                    "lib/armeabi/libwjus.so"},
 };
