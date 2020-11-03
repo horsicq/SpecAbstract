@@ -409,8 +409,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DXSHIELD:                              sResult=QString("DxShield");                                    break;
         case RECORD_NAME_DYAMAR:                                sResult=QString("DYAMAR");                                      break;
         case RECORD_NAME_DYNASM:                                sResult=QString("DynASM");                                      break;
+        case RECORD_NAME_EASYPROTECTOR:                         sResult=QString("EasyProtector");                               break;
         case RECORD_NAME_EAZFUSCATOR:                           sResult=QString("Eazfuscator");                                 break;
-        case RECORD_NAME_EAZYPROTECTOR:                         sResult=QString("Eazfuscator");                                 break;
         case RECORD_NAME_ECLIPSE:                               sResult=QString("Eclipse");                                     break;
         case RECORD_NAME_EMBARCADEROCPP:                        sResult=QString("Embarcadero C++");                             break;
         case RECORD_NAME_EMBARCADEROCPPBUILDER:                 sResult=QString("Embarcadero C++ Builder");                     break;
@@ -13682,6 +13682,14 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             XBinary::isStringInListPresentExp(&(pDEXInfo->listStrings),"http://www.apkprotect.net/",pbIsStop))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_APKPROTECT,"","",0);
+            ss.sInfo=append(ss.sInfo,sOverlay);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"EasyProtector",pbIsStop)&&
+            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"com.easyprotector.android",pbIsStop))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_EASYPROTECTOR,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
