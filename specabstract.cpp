@@ -410,6 +410,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DYAMAR:                                sResult=QString("DYAMAR");                                      break;
         case RECORD_NAME_DYNASM:                                sResult=QString("DynASM");                                      break;
         case RECORD_NAME_EAZFUSCATOR:                           sResult=QString("Eazfuscator");                                 break;
+        case RECORD_NAME_EAZYPROTECTOR:                         sResult=QString("Eazfuscator");                                 break;
         case RECORD_NAME_ECLIPSE:                               sResult=QString("Eclipse");                                     break;
         case RECORD_NAME_EMBARCADEROCPP:                        sResult=QString("Embarcadero C++");                             break;
         case RECORD_NAME_EMBARCADEROCPPBUILDER:                 sResult=QString("Embarcadero C++ Builder");                     break;
