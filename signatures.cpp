@@ -1550,4 +1550,8 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MOBILETENCENTPROTECT,         "",                 ""},                    "lib/armeabi/mix.dex"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PANGXIE,                      "",                 ""},                    "lib/armeabi-v7a/libnsecure.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PANGXIE,                      "",                 ""},                    "lib/armeabi/libnsecure.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VDOG,                         "",                 ""},                    "assets/main000/libhdog.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VDOG,                         "",                 ""},                    "assets/main000/libhdog-x86.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VDOG,                         "",                 ""},                    "assets/main000/libvdog.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VDOG,                         "",                 ""},                    "assets/main000/libvdog-x86.so"},
 };

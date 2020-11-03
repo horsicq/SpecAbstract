@@ -110,6 +110,7 @@ public:
         RECORD_NAME_ALIASOBJ,
         RECORD_NAME_ALIBABAPROTECTION,
         RECORD_NAME_ALIPAYOBFUSCATOR,
+        RECORD_NAME_ALLATORIOBFUSCATOR,
         RECORD_NAME_ALLOY,
         RECORD_NAME_ANDPAKK2,
         RECORD_NAME_ANDROIDAPKSIGNER,
@@ -638,6 +639,7 @@ public:
         RECORD_NAME_VCASMPROTECTOR,
         RECORD_NAME_VCL,
         RECORD_NAME_VCLPACKAGEINFO,
+        RECORD_NAME_VDOG,
         RECORD_NAME_VERACRYPT,
         RECORD_NAME_VIRTUALIZEPROTECT,
         RECORD_NAME_VIRTUALPASCAL,
@@ -1294,7 +1296,7 @@ public:
 
     static void NE_handle_Borland(QIODevice *pDevice,bool bIsImage,NEINFO_STRUCT *pNEInfo);
 
-    static void DEX_handle_Tools(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo);
+    static void DEX_handle_Tools(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo, bool *pbIsStop);
     static void DEX_handle_Protection(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo);
 
     static void Zip_handle_Microsoftoffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);

@@ -248,6 +248,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALIASOBJ:                              sResult=QString("ALIASOBJ");                                    break;
         case RECORD_NAME_ALIBABAPROTECTION:                     sResult=QString("Alibaba Protection");                          break;
         case RECORD_NAME_ALIPAYOBFUSCATOR:                      sResult=QString("Alipay Obfuscator");                           break;
+        case RECORD_NAME_ALLATORIOBFUSCATOR:                    sResult=QString("Allatori Obfuscator");                         break;
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
         case RECORD_NAME_ANDPAKK2:                              sResult=QString("ANDpakk2");                                    break;
         case RECORD_NAME_ANDROIDAPKSIGNER:                      sResult=QString("Android apksigner");                           break;
@@ -776,6 +777,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_VCASMPROTECTOR:                        sResult=QString("VCasm-Protector");                             break;
         case RECORD_NAME_VCL:                                   sResult=QString("Visual Component Library");                    break;
         case RECORD_NAME_VCLPACKAGEINFO:                        sResult=QString("VCL PackageInfo");                             break;
+        case RECORD_NAME_VDOG:                                  sResult=QString("VDog");                                        break;
         case RECORD_NAME_VERACRYPT:                             sResult=QString("VeraCrypt");                                   break;
         case RECORD_NAME_VIRTUALIZEPROTECT:                     sResult=QString("VirtualizeProtect");                           break;
         case RECORD_NAME_VIRTUALPASCAL:                         sResult=QString("Virtual Pascal");                              break;
@@ -2586,13 +2588,13 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
         if(pOptions->bDeepScan)
         {
             result.listStrings=dex.getStrings(&(result.mapItems),pbIsStop);
-            result.listTypeItemStrings=dex.getTypeItemStrings(&(result.mapItems),&result.listStrings);
+            result.listTypeItemStrings=dex.getTypeItemStrings(&(result.mapItems),&result.listStrings,pbIsStop);
 
 //            QList<XDEX_DEF::STRING_ITEM_ID> getList_STRING_ITEM_ID(&mapItems);
 //            QList<XDEX_DEF::TYPE_ITEM_ID> getList_TYPE_ITEM_ID(&mapItems);
 //            QList<XDEX_DEF::PROTO_ITEM_ID> getList_PROTO_ITEM_ID(&mapItems);
-            result.listFieldIDs=dex.getList_FIELD_ITEM_ID(&(result.mapItems));
-            result.listMethodIDs=dex.getList_METHOD_ITEM_ID(&(result.mapItems));
+            result.listFieldIDs=dex.getList_FIELD_ITEM_ID(&(result.mapItems),pbIsStop);
+            result.listMethodIDs=dex.getList_METHOD_ITEM_ID(&(result.mapItems),pbIsStop);
 //            QList<XDEX_DEF::CLASS_ITEM_DEF> getList_CLASS_ITEM_DEF(&mapItems);
 
 #ifdef QT_DEBUG
@@ -2630,7 +2632,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
 
         // TODO Check Strings
 
-        DEX_handle_Tools(pDevice,&result);
+        DEX_handle_Tools(pDevice,&result,pbIsStop);
 
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
@@ -11393,6 +11395,22 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
+            // VDog
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_VDOG))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_VDOG);
+
+                QString sVersion=xzip.decompress(&(pZipInfo->listArchiveRecords),"assets/version").data();
+
+                if(sVersion!="")
+                {
+                    // V4.1.0_VDOG-1.8.5.3_AOP-7.23
+                    ss.sVersion=sVersion.section("VDOG-",1,1).section("_",0,0);
+                }
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
             // APKProtect
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECT))
             {
@@ -13271,7 +13289,7 @@ void SpecAbstract::NE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbst
     }
 }
 
-void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_STRUCT *pDEXInfo)
+void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_STRUCT *pDEXInfo, bool *pbIsStop)
 {
     XDEX dex(pDevice);
 
@@ -13536,7 +13554,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
                     sOverlay=append(sOverlay,"DexLib2");
                 }
 
-                if(bIsStringPoolSorted)
+                if(!bIsStringPoolSorted)
                 {
                     sOverlay=append(sOverlay,"DexLib");
                 }
@@ -13619,12 +13637,21 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
 
-        if( XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lo/CON;")||
-            XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lo/AUX;")||
-            XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcon;")||
-            XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Laux;")||
-            XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lo/con;")||
-            XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lo/aux;"))
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lo/CON;",pbIsStop)||
+            XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lo/AUX;",pbIsStop)||
+            XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcon;",pbIsStop)||
+            XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Laux;",pbIsStop)||
+            XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lo/con;",pbIsStop)||
+            XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lo/aux;",pbIsStop))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_DEXGUARD,"","",0);
+            ss.sInfo=append(ss.sInfo,sOverlay);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+        else if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/guardsquare/dexguard/runtime/detection/DebugDetector;",pbIsStop)||
+                XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/guardsquare/dexguard/runtime/detection/EmulatorDetector;",pbIsStop)||
+                XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/guardsquare/dexguard/runtime/detection/RootDetector;",pbIsStop)||
+                XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/guardsquare/dexguard/runtime/detection/TamperDetector;",pbIsStop))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_DEXGUARD,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
@@ -13634,115 +13661,129 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         // DexProtect
         // 070002000000020083dc63003e000000120113000e0048000500e0000010011239022a001232d563ff0048030503d533ff00e1040608d544ff0048040504d544ff00e0040408b643e1040610d544ff0048040504d544ff00e0040410b643e1040618d544ff0048000504e0000018b6300f000d023901feff1221dd02067f48000502e100000828f50d0328cb0d000000
 
-        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lbtworks/codeguard/agent/A;"))
+        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lbtworks/codeguard/agent/A;",pbIsStop))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_BTWORKSCODEGUARD,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"/qdbh")&&
-            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"qdbh"))
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"/qdbh",pbIsStop)&&
+            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"qdbh",pbIsStop))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_QDBH,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"/.jiagu")&&
-            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"jiagu"))
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"/.jiagu",pbIsStop)&&
+            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"jiagu",pbIsStop))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_JIAGU,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"SecApk")&&
-            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"apkFilePath")&&
-            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"apkPath"))
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"SecApk",pbIsStop)&&
+            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"apkFilePath",pbIsStop)&&
+            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"apkPath",pbIsStop))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_BANGCLEPROTECTION,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/qihoo/util/StubApplication;")) // Check overlay
+        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/qihoo/util/StubApplication;",pbIsStop)) // Check overlay
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_QIHOO360PROTECTION,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/ali/mobisecenhance/StubApplication;")) // Check overlay
+        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/ali/mobisecenhance/StubApplication;",pbIsStop)) // Check overlay
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_ALIBABAPROTECTION,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/baidu/protect/StubApplication;")) // Check overlay
+        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/baidu/protect/StubApplication;",pbIsStop)) // Check overlay
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_BAIDUPROTECTION,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/tencent/StubShell/TxAppEntry;")) // Check overlay
+        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/tencent/StubShell/TxAppEntry;",pbIsStop)) // Check overlay
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_TENCENTPROTECTION,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/secneo/apkwrapper/ApplicationWrapper;"))
+        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/secneo/apkwrapper/ApplicationWrapper;",pbIsStop))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_SECNEO,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        if( XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"La/_;")||
-            XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/_;"))
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"La/_;",pbIsStop)||
+            XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/_;",pbIsStop))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_YIDUN,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/lockincomp/liapp/LiappClassLoader;"))
+        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/lockincomp/liapp/LiappClassLoader;",pbIsStop))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_LIAPP,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/unicom/dcLoader/Utils;"))
+        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/vdog/Common;",pbIsStop))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_VDOG,"","",0);
+            ss.sInfo=append(ss.sInfo,sOverlay);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+
+        if(XBinary::isStringInListPresent(&(pDEXInfo->listTypeItemStrings),"Lcom/unicom/dcLoader/Utils;",pbIsStop))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_LIBRARY,RECORD_NAME_UNICOMSDK,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"libnqshieldx86.so")&&
-            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"LIB_NQ_SHIELD")&&
-            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"Lcom/nqshield/Common;"))
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"libnqshieldx86.so",pbIsStop)&&
+            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"LIB_NQ_SHIELD",pbIsStop)&&
+            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"Lcom/nqshield/Common;",pbIsStop))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_NQSHIELD,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"LIBRARY_DDOG")||
-            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"LIBRARY_FDOG"))
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"LIBRARY_DDOG",pbIsStop)||
+            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"LIBRARY_FDOG",pbIsStop))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_NAGAPTPROTECTION,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"ALLATORIxDEMO",pbIsStop))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_ALLATORIOBFUSCATOR,"","Demo",0);
+            ss.sInfo=append(ss.sInfo,sOverlay);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+
         // TODO Lcom/merry/wapper/WapperApplication;
-        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"PangXie")||
-            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"nsecure"))
+        if( XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"PangXie",pbIsStop)||
+            XBinary::isStringInListPresent(&(pDEXInfo->listStrings),"nsecure",pbIsStop))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_PANGXIE,"","",0);
             ss.sInfo=append(ss.sInfo,sOverlay);
@@ -13797,17 +13838,16 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
                     if(     pDEXInfo->listStrings.at(i).contains("dexguard")||
                             pDEXInfo->listStrings.at(i).contains("agconfig")||
                             pDEXInfo->listStrings.at(i).contains("AntiSkid")||
-                            pDEXInfo->listStrings.at(i).contains("Bitwise")||
-                            pDEXInfo->listStrings.at(i).contains("ALLATORIxDEMO")||
+                            pDEXInfo->listStrings.at(i).contains("ALLATORI")||
                             pDEXInfo->listStrings.at(i).contains("AppSuit")||
                             pDEXInfo->listStrings.at(i).contains("appsuit")||
                             pDEXInfo->listStrings.at(i).contains("gemalto")||
-                            pDEXInfo->listStrings.at(i).contains("Kiwi")||
+                            pDEXInfo->listStrings.at(i).contains("KiwiVersionEncrypter")||
+                            pDEXInfo->listStrings.at(i).contains("Obfuscator")||
                             pDEXInfo->listStrings.at(i).contains("WapperApplication")||
                             pDEXInfo->listStrings.at(i).contains("medusah")||
                             pDEXInfo->listStrings.at(i).contains("apache/sax")||
                             pDEXInfo->listStrings.at(i).contains("AppSealing")||
-                            pDEXInfo->listStrings.at(i).contains("vdog")||
                             pDEXInfo->listStrings.at(i).contains("whitecryption")||
                             pDEXInfo->listStrings.at(i).contains("InjectedActivity"))
                     {
