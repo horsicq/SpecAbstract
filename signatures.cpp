@@ -1558,3 +1558,31 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HDUS_WJUS,                    "",                 ""},                    "lib/armeabi/libhdus.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HDUS_WJUS,                    "",                 ""},                    "lib/armeabi/libwjus.so"},
 };
+
+SpecAbstract::STRING_RECORD _DEX_string_records[]=
+{
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lo/CON;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lo/AUX;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcon;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Laux;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lo/con;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lo/aux;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/DebugDetector;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/EmulatorDetector;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/RootDetector;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/TamperDetector;"},
+};
+
+SpecAbstract::STRING_RECORD _DEX_type_records[]=
+{
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lo/CON;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lo/AUX;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcon;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Laux;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lo/con;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lo/aux;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/DebugDetector;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/EmulatorDetector;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/RootDetector;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/TamperDetector;"},
+};

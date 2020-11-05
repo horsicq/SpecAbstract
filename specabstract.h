@@ -758,7 +758,9 @@ public:
         HEURTYPE_NETUNICODESTRING,
         HEURTYPE_RICH,
         HEURTYPE_ARCHIVE,
-        HEURTYPE_RESOURCES
+        HEURTYPE_RESOURCES,
+        HEURTYPE_DEXSTRING,
+        HEURTYPE_DEXTYPE
     };
 
     struct HEUR_RECORD
@@ -869,6 +871,11 @@ public:
         QList<QString> listTypeItemStrings;
         QList<XDEX_DEF::FIELD_ITEM_ID> listFieldIDs;
         QList<XDEX_DEF::METHOD_ITEM_ID> listMethodIDs;
+        bool bIsStringPoolSorted;
+        bool bIsOverlayPresent;
+
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapStringDetects;
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapTypeDetects;
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
@@ -1388,7 +1395,7 @@ public:
     static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SIGNATURE_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
     static void signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SIGNATURE_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
     static void PE_resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,PE_RESOURCES_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
-    static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType); // TODO pbStop !!!
     static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
     static void MSDOS_richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
 
