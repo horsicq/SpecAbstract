@@ -413,6 +413,7 @@ public:
         RECORD_NAME_MASM,
         RECORD_NAME_MASM32,
         RECORD_NAME_MAXTOCODE,
+        RECORD_NAME_MEDUSAH,
         RECORD_NAME_MEW10,
         RECORD_NAME_MEW11SE,
         RECORD_NAME_MFC,
@@ -434,6 +435,7 @@ public:
         RECORD_NAME_MINKE,
         RECORD_NAME_MKFPACK,
         RECORD_NAME_MOBILETENCENTPROTECT,
+        RECORD_NAME_MODGUARD,
         RECORD_NAME_MOLEBOX,
         RECORD_NAME_MOLEBOXULTRA,
         RECORD_NAME_MONEYCRYPTER,
@@ -476,6 +478,7 @@ public:
         RECORD_NAME_OBFUSCATORNET2009,
         RECORD_NAME_OBJECTPASCAL,
         RECORD_NAME_OBSIDIUM,
+        RECORD_NAME_ONESPANPROTECTION, // till 2018 Vasco !
         RECORD_NAME_OPENDOCUMENT,
         RECORD_NAME_OPENJDK,
         RECORD_NAME_OPENSOURCECODECRYPTER,
@@ -585,6 +588,7 @@ public:
         RECORD_NAME_SMARTINSTALLMAKER,
         RECORD_NAME_SMOKESCREENCRYPTER,
         RECORD_NAME_SNAPDRAGONLLVMARM,
+        RECORD_NAME_SNAPPROTECT,
         RECORD_NAME_SNOOPCRYPT,
         RECORD_NAME_SOFTDEFENDER,
         RECORD_NAME_SOFTSENTRY,
@@ -744,30 +748,30 @@ public:
         bool bIsHeuristic;
     };
 
-    enum HEURTYPE
+    enum DETECTTYPE
     {
-        HEURTYPE_UNKNOWN=0,
-        HEURTYPE_HEADER,
-        HEURTYPE_ENTRYPOINT,
-        HEURTYPE_OVERLAY,
-        HEURTYPE_SECTIONNAME,
-        HEURTYPE_IMPORTHASH,
-        HEURTYPE_CODESECTION,
-        HEURTYPE_ENTRYPOINTSECTION,
-        HEURTYPE_NETANSISTRING,
-        HEURTYPE_NETUNICODESTRING,
-        HEURTYPE_RICH,
-        HEURTYPE_ARCHIVE,
-        HEURTYPE_RESOURCES,
-        HEURTYPE_DEXSTRING,
-        HEURTYPE_DEXTYPE
+        DETECTTYPE_UNKNOWN=0,
+        DETECTTYPE_HEADER,
+        DETECTTYPE_ENTRYPOINT,
+        DETECTTYPE_OVERLAY,
+        DETECTTYPE_SECTIONNAME,
+        DETECTTYPE_IMPORTHASH,
+        DETECTTYPE_CODESECTION,
+        DETECTTYPE_ENTRYPOINTSECTION,
+        DETECTTYPE_NETANSISTRING,
+        DETECTTYPE_NETUNICODESTRING,
+        DETECTTYPE_RICH,
+        DETECTTYPE_ARCHIVE,
+        DETECTTYPE_RESOURCES,
+        DETECTTYPE_DEXSTRING,
+        DETECTTYPE_DEXTYPE
     };
 
-    struct HEUR_RECORD
+    struct DETECT_RECORD
     {
         qint64 nOffset; // memory scan
         RECORD_FILEPART filepart;
-        HEURTYPE heurType;
+        DETECTTYPE detectType;
         QString sValue; // mb TODO variant
         quint32 nVariant;
         XBinary::FT fileType;
@@ -782,7 +786,7 @@ public:
         qint64 nScanTime;
         QString sFileName;
         QList<SCAN_STRUCT> listRecords;
-        QList<HEUR_RECORD> listHeurs;
+        QList<DETECT_RECORD> listHeurs;
     };
 
     struct _SCANS_STRUCT
@@ -824,10 +828,10 @@ public:
         QList<SCAN_STRUCT> listDetects;
         bool bIsDeepScan;
         bool bIsHeuristicScan;
-        bool bShowHeuristic;
+        bool bShowDetects;
         bool bIsUnknown;
         bool bIsTest;
-        QList<HEUR_RECORD> listHeurs;
+        QList<DETECT_RECORD> listHeurs;
     };
 
     struct BINARYINFO_STRUCT
@@ -1105,7 +1109,7 @@ public:
         bool bRecursiveScan;
         bool bDeepScan;
         bool bHeuristicScan;
-        bool bShowHeuristic;
+        bool bShowDetects;
         bool bResultAsXML;
         bool bResultAsJSON;
         bool bSubdirectories;
@@ -1204,7 +1208,7 @@ public:
     static QString recordFilePartIdToString(RECORD_FILEPART id);
     static QString recordTypeIdToString(RECORD_TYPE id);
     static QString recordNameIdToString(RECORD_NAME id);
-    static QString heurTypeIdToString(HEURTYPE id);
+    static QString heurTypeIdToString(DETECTTYPE id);
 
     static SpecAbstract::UNPACK_OPTIONS getPossibleUnpackOptions(QIODevice *pDevice,bool bIsImage); // TODO Check
 
@@ -1230,7 +1234,7 @@ public:
     static _SCANS_STRUCT getScansStruct(quint32 nVariant,XBinary::FT fileType,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo,qint64 nOffset);
 
     static void PE_handle_import(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
-    static void PE_handle_Protection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_Protection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo,bool *pbIsStop);
     static void PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_VProtect(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo); // TODO move to protection
     static void PE_handle_TTProtect(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo); // TODO move to protection
@@ -1242,7 +1246,7 @@ public:
     static void PE_handle_StarForce(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Petite(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
-    static void PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo,bool *pbIsStop);
     static void PE_handle_Borland(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Watcom(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Tools(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
@@ -1302,13 +1306,14 @@ public:
     static void MACH_handle_Tools(QIODevice *pDevice,bool bIsImage,MACHINFO_STRUCT *pMACHInfo);
     static void MACH_handle_Protection(QIODevice *pDevice,bool bIsImage,MACHINFO_STRUCT *pMACHInfo);
 
-    static void LE_handle_Microsoft(QIODevice *pDevice,bool bIsImage,LEINFO_STRUCT *pLEInfo);
+    static void LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO_STRUCT *pLEInfo, bool *pbIsStop);
     static void LE_handle_Borland(QIODevice *pDevice,bool bIsImage,LEINFO_STRUCT *pLEInfo);
 
     static void NE_handle_Borland(QIODevice *pDevice,bool bIsImage,NEINFO_STRUCT *pNEInfo);
 
-    static void DEX_handle_Tools(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo, bool *pbIsStop);
-    static void DEX_handle_Protection(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo);
+    static void DEX_handle_Tools(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo,bool *pbIsStop);
+    static void DEX_handle_Dexguard(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo,bool *pbIsStop);
+    static void DEX_handle_Protection(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo,bool *pbIsStop);
 
     static void Zip_handle_Microsoftoffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
@@ -1327,7 +1332,8 @@ public:
     static bool isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListScanStructs,XBinary::FT fileType,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo);
 
     static bool checkVersionString(QString sVersion);
-    static VI_STRUCT get_UPX_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
+    static VI_STRUCT get_UPX_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,XBinary::FT fileType);
+    static VI_STRUCT _get_UPX_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,XBinary::FT fileType);
     static VI_STRUCT get_GCC_vi1(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize); // TODO Check
     static VI_STRUCT get_GCC_vi2(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT _get_GCC_string(QString sString);
@@ -1350,6 +1356,7 @@ public:
     static VI_STRUCT _get_ByteGuard_string(QString sString);
     static VI_STRUCT _get_TencentObfuscation_string(QString sString);
     static VI_STRUCT _get_HikariObfuscator_string(QString sString);
+    static VI_STRUCT _get_SnapProtect_string(QString sString);
     static VI_STRUCT _get_ByteDanceSecCompiler_string(QString sString);
     static VI_STRUCT _get_DingbaozengNativeObfuscator_string(QString sString);
     static VI_STRUCT _get_SafeengineLLVM_string(QString sString);
@@ -1392,18 +1399,18 @@ public:
     static QByteArray _BasicPEInfoToArray(BASIC_PE_INFO *pInfo);
     static BASIC_PE_INFO _ArrayToBasicPEInfo(const QByteArray *pbaArray);
 
-    static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SIGNATURE_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
-    static void signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SIGNATURE_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
-    static void PE_resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,PE_RESOURCES_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
-    static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType); // TODO pbStop !!!
-    static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
-    static void MSDOS_richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SIGNATURE_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
+    static void signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SIGNATURE_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
+    static void PE_resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,PE_RESOURCES_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
+    static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
+    static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
+    static void MSDOS_richScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
 
-    static void archiveScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XArchive::RECORD> *pListArchiveRecords,STRING_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void archiveScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XArchive::RECORD> *pListArchiveRecords,STRING_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
 
-    static void signatureExpScan(XBinary *pXBinary,XBinary::_MEMORY_MAP *pMemoryMap,QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,qint64 nOffset,SIGNATURE_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static void signatureExpScan(XBinary *pXBinary,XBinary::_MEMORY_MAP *pMemoryMap,QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,qint64 nOffset,SIGNATURE_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
 
-    static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,HEURTYPE heurType);
+    static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID,quint32 nBuild,MSRICH_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
 
     static QByteArray serializeScanStruct(SCAN_STRUCT scanStruct,bool bIsHeader=false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData,bool *pbIsHeader=nullptr);
