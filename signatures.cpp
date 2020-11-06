@@ -1454,7 +1454,7 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SECSHELL,                     "",                 ""},                    "lib/armeabi/libSecShell-x86.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SECSHELL,                     "",                 ""},                    "lib/armeabi/libSecShell.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SECSHELL,                     "",                 ""},                    "assets/secData0.jar"},
-    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXPROTECTOR,                 "",                 ""},                    "assets/dexprotect/classes.dex.dat"}, // Old version
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXPROTECTOR,                 "Old",              ""},                    "assets/dexprotect/classes.dex.dat"}, // Old version
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXPROTECTOR,                 "",                 ""},                    "assets/classes.dex.dat"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXPROTECTOR,                 "",                 ""},                    "assets/dp.arm-v7.so.dat"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXPROTECTOR,                 "",                 ""},                    "assets/dp.arm-v8.so.dat"},
@@ -1463,6 +1463,8 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXPROTECTOR,                 "",                 ""},                    "assets/dp.x86.so.dat"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXPROTECTOR,                 "",                 ""},                    "assets/dp.x86_64.so.dat"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXPROTECTOR,                 "",                 "Kotlin"},              "assets/dp-lib/dp.kotlin-v1.lua.mph"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXPROTECTOR,                 "4.9.0-4.9.5",      ""},                    "lib/armeabi/libdexprotector.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXPROTECTOR,                 "4.9.0-4.9.5",      ""},                    "lib/armeabi-v7a/libdexprotector.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_JIAGU,                        "",                 ""},                    "assets/libjiagu.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_JIAGU,                        "",                 ""},                    "assets/libjiagu_a64.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_JIAGU,                        "",                 ""},                    "assets/libjiagu_ls.so"},
@@ -1473,6 +1475,13 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "",                 ""},                    "assets/ijm_lib/armeabi/libexecmain.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "",                 ""},                    "assets/ijm_lib/x86/libexec.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "",                 ""},                    "assets/ijm_lib/x86/libexecmain.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "Old",              ""},                    "assets/ijiami.dat"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "Old",              ""},                    "lib/armeabi/libexec.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "Old",              ""},                    "lib/armeabi/libexecmain.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "Old",              ""},                    "lib/armeabi-v7a/libexec.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "Old",              ""},                    "lib/armeabi-v7a/libexecmain.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "Old",              ""},                    "lib/x86/libexec.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_IJIAMI,                       "Old",              ""},                    "lib/x86/libexecmain.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TENCENTPROTECTION,            "",                 ""},                    "tencent_stub"}, // Check another protectors from TENCENT(Mobile Tencent Protect)
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TENCENTPROTECTION,            "",                 ""},                    "assets/tosversion"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TENCENTLEGU,                  "",                 ""},                    "assets/o0oooOO0ooOo.dat"},

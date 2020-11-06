@@ -531,6 +531,7 @@ public:
         RECORD_NAME_POLYCRYPTPE,
         RECORD_NAME_POWERBASIC,
         RECORD_NAME_PRIVATEEXEPROTECTOR,
+        RECORD_NAME_PROGUARD,
         RECORD_NAME_PROPACK,
         RECORD_NAME_PROTECTEXE,
         RECORD_NAME_PSEUDOAPKSIGNER,
@@ -1198,6 +1199,7 @@ public:
         bool bIsValid;
         QString sVersion;
         QString sInfo;
+        quint64 nValue;
     };
 
     explicit SpecAbstract(QObject *pParent=nullptr);

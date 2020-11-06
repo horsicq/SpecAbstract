@@ -669,6 +669,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_POLYCRYPTPE:                           sResult=QString("PolyCrypt PE");                                break;
         case RECORD_NAME_POWERBASIC:                            sResult=QString("PowerBASIC");                                  break;
         case RECORD_NAME_PRIVATEEXEPROTECTOR:                   sResult=QString("Private EXE Protector");                       break;
+        case RECORD_NAME_PROGUARD:                              sResult=QString("Proguard");                                    break;
         case RECORD_NAME_PROPACK:                               sResult=QString("PRO-PACK");                                    break;
         case RECORD_NAME_PROTECTEXE:                            sResult=QString("PROTECT! EXE");                                break;
         case RECORD_NAME_PSEUDOAPKSIGNER:                       sResult=QString("PseudoApkSigner");                             break;
@@ -13033,6 +13034,25 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
             pELFInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
         }
 
+        if(viUPXEnd.nValue==0x21434553) // SEC!
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_SECNEO,"Old","UPX",0);
+
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+        else if(viUPXEnd.nValue==0x00010203)
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_SECNEO,"","UPX",0);
+
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+        else if(viUPXEnd.nValue==0x214d4a41) // "AJM!"
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_IJIAMI,"","UPX",0);
+
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
         // Obfuscator-LLVM
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_OBFUSCATORLLVM))
         {
@@ -13500,6 +13520,16 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         listDexLib2.append(XDEX_DEF::TYPE_HIDDENAPI_CLASS_DATA_ITEM);   // Optional
         listDexLib2.append(XDEX_DEF::TYPE_MAP_LIST);
 
+        QList<quint16> listDexLib2heur;
+        listDexLib2heur.append(XDEX_DEF::TYPE_HEADER_ITEM);
+        listDexLib2heur.append(XDEX_DEF::TYPE_STRING_ID_ITEM);
+        listDexLib2heur.append(XDEX_DEF::TYPE_TYPE_ID_ITEM);
+        listDexLib2heur.append(XDEX_DEF::TYPE_PROTO_ID_ITEM);
+        listDexLib2heur.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
+        listDexLib2heur.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
+        listDexLib2heur.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
+        listDexLib2heur.append(XDEX_DEF::TYPE_STRING_DATA_ITEM);
+
         // r8
         // https://r8.googlesource.com/r8/+/refs/heads/master/src/main/java/com/android/tools/r8/dex/FileWriter.java#752
         QList<quint16> listR8;
@@ -13578,6 +13608,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         bool bDX_map=XDEX::compareMapItems(&listMaps,&listDx);
         bool bDexLib_map=XDEX::compareMapItems(&listMaps,&listDexLib);
         bool bDexLib2_map=XDEX::compareMapItems(&listMaps,&listDexLib2);
+        bool bDexLib2heur_map=XDEX::compareMapItems(&listMaps,&listDexLib2heur);
         bool bDexMerge_map=XDEX::compareMapItems(&listMaps,&listDexMerge);
         bool bFastProxy_map=XDEX::compareMapItems(&listMaps,&listFastProxy);
 
@@ -13606,6 +13637,11 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         else if(bR8_map)
         {
             _SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_R8,"","",0);
+            pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
+        }
+        else if(bDexLib2heur_map)
+        {
+            _SCANS_STRUCT recordCompiler=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_COMPILER,RECORD_NAME_DEXLIB2,"","",0);
             pDEXInfo->mapResultCompilers.insert(recordCompiler.name,scansToScan(&(pDEXInfo->basic_info),&recordCompiler));
         }
         else if(bFastProxy_map)
@@ -13745,8 +13781,8 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
 //                            pDEXInfo->listStrings.at(i).contains("Protect")||
 //                            pDEXInfo->listStrings.at(i).contains("protect")||
                             pDEXInfo->listStrings.at(i).contains("WapperApplication")||
-                            pDEXInfo->listStrings.at(i).contains("StubApplication")||
-                            pDEXInfo->listStrings.at(i).contains("medusah")||
+//                            pDEXInfo->listStrings.at(i).contains("StubApplication")||
+//                            pDEXInfo->listStrings.at(i).contains("medusah")||
                             pDEXInfo->listStrings.at(i).contains("apache/sax")||
                             pDEXInfo->listStrings.at(i).contains("AppSealing")||
                             pDEXInfo->listStrings.at(i).contains("whitecryption")||
@@ -13983,6 +14019,15 @@ void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice, SpecAbstract::DEXIN
         {
             _SCANS_STRUCT ss=pDEXInfo->mapTypeDetects.value(RECORD_NAME_YIDUN);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+
+        if(pDEXInfo->basic_info.bIsDeepScan)
+        {
+            if(XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings),"\\/proguard\\/",pbIsStop))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_PROGUARD,"","",0);
+                pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+            }
         }
     }
 }
@@ -14421,11 +14466,11 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_UPX_vi(QIODevice *pDevice, bool bIsIm
                     }
                 }
 
-                quint32 nSignature=binary.read_uint32(nOffset);
+                result.nValue=binary.read_uint32(nOffset);
 
-                if(nSignature!=0x21585055) // UPX!
+                if(result.nValue!=0x21585055) // UPX!
                 {
-                    result.sInfo=append(result.sInfo,QString("Modified(%1)").arg(XBinary::valueToHex(nSignature)));
+                    result.sInfo=append(result.sInfo,QString("Modified(%1)").arg(XBinary::valueToHex((quint32)result.nValue)));
                 }
             }
         }
