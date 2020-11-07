@@ -139,6 +139,7 @@ public:
         RECORD_NAME_APPLEJDK,
         RECORD_NAME_APPLELLVM,
         RECORD_NAME_APPORTABLECLANG,
+        RECORD_NAME_APPSOLID,
         RECORD_NAME_ARCRYPT,
         RECORD_NAME_ARJ,
         RECORD_NAME_ARMADILLO,
@@ -384,6 +385,7 @@ public:
         RECORD_NAME_KGBCRYPTER,
         RECORD_NAME_KIAMSCRYPTOR,
         RECORD_NAME_KIRO,
+        RECORD_NAME_KIWIVERSIONOBFUSCATOR,
         RECORD_NAME_KKRUNCHY,
         RECORD_NAME_KOTLIN,
         RECORD_NAME_KRATOSCRYPTER,
@@ -1382,6 +1384,7 @@ public:
     static VI_STRUCT _get_SunWorkShop_string(QString sString);
     static VI_STRUCT _get_SnapdragonLLVMARM_string(QString sString);
     static VI_STRUCT _get_NASM_string(QString sString);
+    static VI_STRUCT _get_TencentLegu_string(QString sString);
 
     static VI_STRUCT _get_DelphiVersionFromCompiler(QString sString);
 

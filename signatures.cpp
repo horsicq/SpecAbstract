@@ -1557,6 +1557,7 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_UNICOMSDK,                    "",                 ""},                    "assets/x86/libunicomsdk.jar"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_UNICOMSDK,                    "",                 ""},                    "assets/x86/libdecrypt.jar"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MOBILETENCENTPROTECT,         "",                 ""},                    "lib/armeabi/mix.dex"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MOBILETENCENTPROTECT,         "",                 ""},                    "lib/armeabi-v7a/mix.dex"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PANGXIE,                      "",                 ""},                    "lib/armeabi-v7a/libnsecure.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PANGXIE,                      "",                 ""},                    "lib/armeabi/libnsecure.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VDOG,                         "",                 ""},                    "assets/main000/libhdog.so"},
@@ -1567,6 +1568,8 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HDUS_WJUS,                    "",                 ""},                    "lib/armeabi/libhdus.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HDUS_WJUS,                    "",                 ""},                    "lib/armeabi/libwjus.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MEDUSAH,                      "",                 ""},                    "lib/armeabi-v7a/libmd.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APPSOLID,                     "",                 ""},                    "assets/high_resolution.png"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PROGUARD,                     "",                 ""},                    "META-INF/proguard/androidx-annotations.pro"},
 };
 
 SpecAbstract::STRING_RECORD _DEX_string_records[]=
@@ -1584,6 +1587,7 @@ SpecAbstract::STRING_RECORD _DEX_string_records[]=
     {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AESOBFUSCATOR,                "",                 ""},                    "AESObfuscator.java"},
     {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MODGUARD,                     "1.2",              ""},                    "ModGuard - Protect Your Piracy v1.2 by ill420smoker"},
     {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MODGUARD,                     "1.3",              ""},                    "ModGuard - Protect Your Piracy v1.3 by ill420smoker"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KIWIVERSIONOBFUSCATOR,        "",                 ""},                    "Kiwi__Version__Obfuscator"},
 };
 
 SpecAbstract::STRING_RECORD _DEX_type_records[]=
@@ -1596,11 +1600,11 @@ SpecAbstract::STRING_RECORD _DEX_type_records[]=
 //    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Laux;"},
 //    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lo/con;"},
 //    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lo/aux;"},
-    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/DebugDetector;"},
-    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/EmulatorDetector;"},
-    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/RootDetector;"},
-    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/TamperDetector;"},
-    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BTWORKSCODEGUARD,             "",                 ""},                    "Lbtworks/codeguard/agent/A;"},
+//    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/DebugDetector;"},
+//    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/EmulatorDetector;"},
+//    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/RootDetector;"},
+//    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DEXGUARD,                     "",                 ""},                    "Lcom/guardsquare/dexguard/runtime/detection/TamperDetector;"},
+//    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BTWORKSCODEGUARD,             "",                 ""},                    "Lbtworks/codeguard/agent/A;"},
 //    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_QIHOO360PROTECTION,           "",                 ""},                    "Lcom/qihoo/util/StubApplication;"},
     {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ALIBABAPROTECTION,            "",                 ""},                    "Lcom/ali/mobisecenhance/StubApplication;"},
     {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_BAIDUPROTECTION,              "",                 ""},                    "Lcom/baidu/protect/StubApplication;"},
@@ -1612,5 +1616,6 @@ SpecAbstract::STRING_RECORD _DEX_type_records[]=
     {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NQSHIELD,                     "",                 ""},                    "Lcom/nqshield/Common;"},
     {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_YIDUN,                        "",                 ""},                    "La/_;"},
     {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_YIDUN,                        "",                 ""},                    "Lcom/_;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APPSOLID,                     "",                 ""},                    "Lweb/apache/sax/app;"},
 };
 // CHECK nqshield
