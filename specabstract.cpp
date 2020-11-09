@@ -547,6 +547,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LUACOMPILED:                           sResult=QString("Lua compiled");                                break;
         case RECORD_NAME_LUCYPHER:                              sResult=QString("LuCypher");                                    break;
         case RECORD_NAME_LZEXE:                                 sResult=QString("LZEXE");                                       break;
+        case RECORD_NAME_LZFSE:                                 sResult=QString("LZFSE");                                       break;
         case RECORD_NAME_MACROBJECT:                            sResult=QString("Macrobject");                                  break;
         case RECORD_NAME_MALPACKER:                             sResult=QString("Mal Packer");                                  break;
         case RECORD_NAME_MASKPE:                                sResult=QString("MaskPE");                                      break;
@@ -9880,6 +9881,16 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
     {
         pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_XAR);
+
+        // TODO options
+        // TODO files
+        pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    // LZFSE
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LZFSE))&&(pBinaryInfo->basic_info.nSize>=9))
+    {
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LZFSE);
 
         // TODO options
         // TODO files

@@ -79,6 +79,7 @@ SpecAbstract::SIGNATURE_RECORD _archive_records[]=
     {{0, XBinary::FT_ARCHIVE,    SpecAbstract::RECORD_TYPE_FORMAT,          SpecAbstract::RECORD_NAME_GZIP,                         "",                 ""},                    "1F8B08"},
     {{0, XBinary::FT_ARCHIVE,    SpecAbstract::RECORD_TYPE_FORMAT,          SpecAbstract::RECORD_NAME_LHA,                          "",                 ""},                    "....'-lh'..2D"},
     {{0, XBinary::FT_ARCHIVE,    SpecAbstract::RECORD_TYPE_FORMAT,          SpecAbstract::RECORD_NAME_LHA,                          "",                 ""},                    "....'-lz'..2D"},
+    {{0, XBinary::FT_ARCHIVE,    SpecAbstract::RECORD_TYPE_FORMAT,          SpecAbstract::RECORD_NAME_LZFSE,                        "",                 ""},                    "'BXVN'"},
     {{0, XBinary::FT_ARCHIVE,    SpecAbstract::RECORD_TYPE_FORMAT,          SpecAbstract::RECORD_NAME_RAR,                          "1.4",              ""},                    "'RE~^'"},
     {{1, XBinary::FT_ARCHIVE,    SpecAbstract::RECORD_TYPE_FORMAT,          SpecAbstract::RECORD_NAME_RAR,                          "4.X",              ""},                    "'Rar!'1A0700"},
     {{1, XBinary::FT_ARCHIVE,    SpecAbstract::RECORD_TYPE_FORMAT,          SpecAbstract::RECORD_NAME_RAR,                          "5.X",              ""},                    "'Rar!'1A070100"},
