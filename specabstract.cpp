@@ -14164,11 +14164,11 @@ bool SpecAbstract::isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListSc
 
     for(int i=0; i<nNumberOfRecords; i++)
     {
-        if( (pListScanStructs->at(i).id.fileType==fileType)
-            &&(pListScanStructs->at(i).type==type)
-            &&(pListScanStructs->at(i).name==name)
-            &&(pListScanStructs->at(i).sVersion==sVersion)
-            &&(pListScanStructs->at(i).sInfo==sInfo))
+        if(     ((pListScanStructs->at(i).id.fileType==fileType)||(fileType==XBinary::FT_UNKNOWN))
+            &&  ((pListScanStructs->at(i).type==type)||(type==SpecAbstract::RECORD_TYPE_UNKNOWN))
+            &&  ((pListScanStructs->at(i).name==name)||(name==SpecAbstract::RECORD_NAME_UNKNOWN))
+            &&  ((pListScanStructs->at(i).sVersion==sVersion)||(sVersion==""))
+            &&  ((pListScanStructs->at(i).sInfo==sInfo)||(sInfo=="")))
         {
             bResult=true;
             break;

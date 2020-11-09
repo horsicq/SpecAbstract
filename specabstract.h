@@ -1334,7 +1334,7 @@ public:
     static void updateInfo(QMap<RECORD_NAME,SCAN_STRUCT> *pMap,RECORD_NAME name,QString sInfo);
     static void updateVersionAndInfo(QMap<RECORD_NAME,SCAN_STRUCT> *pMap,RECORD_NAME name,QString sVersion,QString sInfo);
 
-    static bool isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListScanStructs,XBinary::FT fileType,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo);
+    static bool isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListScanStructs,XBinary::FT fileType,RECORD_TYPE type=RECORD_TYPE_UNKNOWN,RECORD_NAME name=RECORD_NAME_UNKNOWN,QString sVersion="",QString sInfo="");
 
     static bool checkVersionString(QString sVersion);
     static VI_STRUCT get_UPX_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,XBinary::FT fileType);
