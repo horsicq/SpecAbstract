@@ -32,7 +32,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_AUTOIT,                       "3.X",              "Compiled script"},     "A3484BBE986C4AA9"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_COFF,                         "",                 ""},                    "'!<arch>'0A2F"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_DEX,                          "",                 ""},                    "'dex\n'......00"},
-    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_JAVACOMPILEDCLASS,            "",                 ""},                    "CAFEBABE"}, // TODO MACH universal !!!
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_JAVACOMPILEDCLASS,            "",                 ""},                    "CAFEBABE"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_LUACOMPILED,                  "",                 ""},                    "1B'Lua'..000104040408"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP,    "",                 ""},                    "'ITSF'03000000"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_MICROSOFTOFFICE,              "97-2003",          ""},                    "D0CF11E0A1B11AE1"},
@@ -89,6 +89,8 @@ SpecAbstract::SIGNATURE_RECORD _archive_records[]=
     {{0, XBinary::FT_ARCHIVE,    SpecAbstract::RECORD_TYPE_FORMAT,          SpecAbstract::RECORD_NAME_ZLIB,                         "",                 "level 6(default)"},    "789C"},
     {{0, XBinary::FT_ARCHIVE,    SpecAbstract::RECORD_TYPE_FORMAT,          SpecAbstract::RECORD_NAME_ZLIB,                         "",                 "level 7-9(best)"},     "78DA"},
     {{0, XBinary::FT_ARCHIVE,    SpecAbstract::RECORD_TYPE_FORMAT,          SpecAbstract::RECORD_NAME_XZ,                           "",                 ""},                    "FD'7zXZ'0000"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_MACHOFAT,                     "",                 ""},                    "CAFEBABE"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_MACHOFAT,                     "",                 ""},                    "BEBAFECA"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _PE_overlay_records[]=

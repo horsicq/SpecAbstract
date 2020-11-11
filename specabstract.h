@@ -31,6 +31,7 @@
 #include "xcab.h"
 #include "xrar.h"
 #include "xsevenzip.h"
+#include "xmachofat.h"
 #include "xdex.h"
 #include "xandroidbinary.h"
 

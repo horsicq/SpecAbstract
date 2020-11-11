@@ -9915,6 +9915,24 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage, Spec
             pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
         }
     }
+    // MAch-O FAT
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MACHOFAT))&&(pBinaryInfo->basic_info.nSize>=30))
+    {
+        XMACHOFat xmachofat(pDevice);
+
+        if(xmachofat.isValid())
+        {
+            pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
+            _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MACHOFAT);
+
+            ss.sVersion=xmachofat.getVersion();
+            ss.sInfo=QString("%1 records").arg(xmachofat.getNumberOfRecords());
+
+            // TODO options
+            // TODO files
+            pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        }
+    }
     // RAR
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RAR))&&(pBinaryInfo->basic_info.nSize>=64))
     {
