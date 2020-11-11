@@ -548,6 +548,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LUCYPHER:                              sResult=QString("LuCypher");                                    break;
         case RECORD_NAME_LZEXE:                                 sResult=QString("LZEXE");                                       break;
         case RECORD_NAME_LZFSE:                                 sResult=QString("LZFSE");                                       break;
+        case RECORD_NAME_MACHOFAT:                              sResult=QString("Mach-O FAT");                                  break;
         case RECORD_NAME_MACROBJECT:                            sResult=QString("Macrobject");                                  break;
         case RECORD_NAME_MALPACKER:                             sResult=QString("Mal Packer");                                  break;
         case RECORD_NAME_MASKPE:                                sResult=QString("MaskPE");                                      break;
