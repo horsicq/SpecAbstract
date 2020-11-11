@@ -73,7 +73,7 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
             pScanResult->listRecords.append(elf_info.basic_info.listDetects);
             pScanResult->listHeurs.append(elf_info.basic_info.listHeurs);
         }
-        else if(stFileTypes.contains(XBinary::FT_MACH32)||stFileTypes.contains(XBinary::FT_MACH64))
+        else if(stFileTypes.contains(XBinary::FT_MACHO32)||stFileTypes.contains(XBinary::FT_MACHO64))
         {
             SpecAbstract::MACHINFO_STRUCT mach_info=SpecAbstract::getMACHInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
@@ -2084,7 +2084,7 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
         result.bIsBigEndian=mach.isBigEndian();
 
         result.basic_info.parentId=parentId;
-        result.basic_info.id.fileType=result.bIs64?XBinary::FT_MACH64:XBinary::FT_MACH32;
+        result.basic_info.id.fileType=result.bIs64?XBinary::FT_MACHO64:XBinary::FT_MACHO32;
         result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
         result.basic_info.id.uuid=QUuid::createUuid();
         result.basic_info.nOffset=nOffset;
@@ -14422,7 +14422,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_UPX_vi(QIODevice *pDevice, bool bIsIm
                         result.bIsValid=false;
                     }
                 }
-                else if(fileType==XBinary::FT_MACH)
+                else if(fileType==XBinary::FT_MACHO)
                 {
                     if( (nFormat!=29)&&         // UPX_F_MACH_i386
                         (nFormat!=32)&&         // UPX_F_MACH_ARMEL
