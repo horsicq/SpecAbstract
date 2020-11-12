@@ -27,13 +27,6 @@
 #include <QElapsedTimer>
 #include <QUuid>
 #include "xformats.h"
-#include "xzip.h" // Mb TODO xarchives
-#include "xcab.h"
-#include "xrar.h"
-#include "xsevenzip.h"
-#include "xmachofat.h"
-#include "xdex.h"
-#include "xandroidbinary.h"
 
 class SpecAbstract : public QObject
 {

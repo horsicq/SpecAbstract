@@ -1,6 +1,14 @@
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
+!contains(XCONFIG, use_dex) {
+    XCONFIG += use_dex
+}
+
+!contains(XCONFIG, use_archive) {
+    XCONFIG += use_archive
+}
+
 HEADERS += \
     $$PWD/specabstract.h
 
@@ -11,14 +19,4 @@ SOURCES += \
 !contains(XCONFIG, xformats) {
     XCONFIG += xformats
     include($$PWD/../Formats/xformats.pri)
-}
-
-!contains(XCONFIG, xdex) {
-    XCONFIG += xdex
-    include($$PWD/../XDEX/xdex.pri)
-}
-
-!contains(XCONFIG, xarchive) {
-    XCONFIG += xarchive
-    include($$PWD/../XArchive/xarchive.pri)
 }
