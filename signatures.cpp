@@ -54,7 +54,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_WINDOWSBITMAP,                "",                 ""},                    "'BM'"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_WINDOWSICON,                  "",                 ""},                    "00000100"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_AU,                           "",                 ""},                    "'.snd'"},
-    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_DEB,                          "",                 ""},                    "'!<arch>'0a'debian-binary'"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_DEB,                          "",                 ""},                    "'!<arch>'0a'debian-binary'"}, // TODO Check
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_AVI,                          "",                 ""},                    "'RIFF'........'AVI '"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_TTF,                          "",                 ""},                    "........................................................'OS/2'"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_TTF,                          "",                 ""},                    "........................................................'BASE'"},
