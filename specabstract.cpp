@@ -1842,17 +1842,17 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         if(result.unicodeType!=XBinary::UNICODE_TYPE_NONE)
         {
             result.sHeaderText=binary.read_unicodeString(2,qMin(result.basic_info.nSize,(qint64)0x1000),(result.unicodeType==XBinary::UNICODE_TYPE_BE));
-            result.basic_info.id.fileType=XBinary::FT_TEXT;
+            result.basic_info.id.fileType=XBinary::FT_UNICODE;
         }
         else if(result.bIsUTF8)
         {
             result.sHeaderText=binary.read_utf8String(3,qMin(result.basic_info.nSize,(qint64)0x1000));
-            result.basic_info.id.fileType=XBinary::FT_TEXT;
+            result.basic_info.id.fileType=XBinary::FT_UTF8;
         }
         else if(result.bIsPlainText)
         {
             result.sHeaderText=binary.read_ansiString(0,qMin(result.basic_info.nSize,(qint64)0x1000));
-            result.basic_info.id.fileType=XBinary::FT_TEXT;
+            result.basic_info.id.fileType=XBinary::FT_PLAINTEXT;
         }
 
         Binary_handle_Texts(pDevice,pOptions->bIsImage,&result);
@@ -9734,34 +9734,34 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
         }
 
-        if(pBinaryInfo->mapResultTexts.count()==0)
-        {
-            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_TEXT,RECORD_TYPE_FORMAT,RECORD_NAME_PLAIN,"","",0);
+//        if(pBinaryInfo->mapResultTexts.count()==0)
+//        {
+//            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_TEXT,RECORD_TYPE_FORMAT,RECORD_NAME_PLAIN,"","",0);
 
-            if(pBinaryInfo->unicodeType!=XBinary::UNICODE_TYPE_NONE)
-            {
-                ss.name=RECORD_NAME_UNICODE;
+//            if(pBinaryInfo->unicodeType!=XBinary::UNICODE_TYPE_NONE)
+//            {
+//                ss.name=RECORD_NAME_UNICODE;
 
-                if(pBinaryInfo->unicodeType==XBinary::UNICODE_TYPE_BE)
-                {
-                    ss.sVersion="Big Endian";
-                }
-                else if(pBinaryInfo->unicodeType==XBinary::UNICODE_TYPE_LE)
-                {
-                    ss.sVersion="Little Endian";
-                }
-            }
-            else if(pBinaryInfo->bIsUTF8)
-            {
-                ss.name=RECORD_NAME_UTF8;
-            }
-            else if(pBinaryInfo->bIsPlainText)
-            {
-                ss.name=RECORD_NAME_PLAIN;
-            }
+//                if(pBinaryInfo->unicodeType==XBinary::UNICODE_TYPE_BE)
+//                {
+//                    ss.sVersion="Big Endian";
+//                }
+//                else if(pBinaryInfo->unicodeType==XBinary::UNICODE_TYPE_LE)
+//                {
+//                    ss.sVersion="Little Endian";
+//                }
+//            }
+//            else if(pBinaryInfo->bIsUTF8)
+//            {
+//                ss.name=RECORD_NAME_UTF8;
+//            }
+//            else if(pBinaryInfo->bIsPlainText)
+//            {
+//                ss.name=RECORD_NAME_PLAIN;
+//            }
 
-            pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
-        }
+//            pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+//        }
     }
 }
 
