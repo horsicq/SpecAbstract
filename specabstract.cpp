@@ -609,6 +609,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_NOOBYPROTECT:                          sResult=QString("NoobyProtect");                                break;
         case RECORD_NAME_NOODLECRYPT:                           sResult=QString("NoodleCrypt");                                 break;
         case RECORD_NAME_NORTHSTARPESHRINKER:                   sResult=QString("North Star PE Shrinker");                      break;
+        case RECORD_NAME_NOSINSTALLER:                          sResult=QString("NOS Installer");                               break;
         case RECORD_NAME_NOSTUBLINKER:                          sResult=QString("NOSTUBLINKER");                                break;
         case RECORD_NAME_NOXCRYPT:                              sResult=QString("noX Crypt");                                   break;
         case RECORD_NAME_NPACK:                                 sResult=QString("nPack");                                       break;
@@ -8069,6 +8070,15 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                 }
             }
 
+            if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_NOSINSTALLER))
+            {
+                if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_NOSINSTALLER))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_NOSINSTALLER,"","",0);
+                    pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
+
             // CAB SFX
             if(pPEInfo->sResourceManifest.contains("sfxcab.exe"))
             {
@@ -10488,6 +10498,11 @@ void SpecAbstract::Binary_handle_InstallerData(QIODevice *pDevice,bool bIsImage,
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_VMWARE))&&(pBinaryInfo->basic_info.nSize>=8))
     {
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_VMWARE);
+        pBinaryInfo->mapResultInstallerData.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_NOSINSTALLER))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_NOSINSTALLER);
         pBinaryInfo->mapResultInstallerData.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 }

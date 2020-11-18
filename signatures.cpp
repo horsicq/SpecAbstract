@@ -150,6 +150,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_overlay_records[]=
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_SHELL,                        "",                 ""},                    "'#!'"}, // "'#!c:\python\python.exe'"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_SIXXPACK,                     "",                 ""},                    "5D0000800000"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_THINSTALL,                    "",                 ""},                    "09050000"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_NOSINSTALLER,                 "",                 ""},                    "'NOS_PO'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _COM_records[]=
@@ -1225,6 +1226,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NEOLITE,                      "1.0",              ""},                    ".neolit"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NOODLECRYPT,                  "",                 ""},                    ".Ncryo  "},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NOODLECRYPT,                  "",                 ""},                    ".De-vir "},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NOSINSTALLER,                 "",                 ""},                    ".nos"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NPACK,                        "",                 ""},                    ".nPack"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NSPACK,                       "",                 ""},                    ".nsp0"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NSPACK,                       "",                 ""},                    ".nsp1"},
