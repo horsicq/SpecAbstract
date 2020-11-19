@@ -421,6 +421,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_EMPTYFILE:                             sResult=QString("Empty File");                                  break;
         case RECORD_NAME_ENCRYPTPE:                             sResult=QString("EncryptPE");                                   break;
         case RECORD_NAME_ENIGMA:                                sResult=QString("ENIGMA");                                      break;
+        case RECORD_NAME_ENIGMAVIRTUALBOX:                      sResult=QString("Enigma Virtual Box");                          break;
         case RECORD_NAME_EPEXEPACK:                             sResult=QString("!EP(EXE Pack)");                               break;
         case RECORD_NAME_EPROT:                                 sResult=QString("!EProt");                                      break;
         case RECORD_NAME_EXCELSIORJET:                          sResult=QString("Excelsior JET");                               break;
@@ -3959,6 +3960,12 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                         pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     }
+                }
+
+                if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_ENIGMAVIRTUALBOX))
+                {
+                    _SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_ENIGMAVIRTUALBOX);
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
                 // Yoda's Protector
