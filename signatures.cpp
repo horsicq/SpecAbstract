@@ -181,6 +181,7 @@ SpecAbstract::SIGNATURE_RECORD _COM_Exp_records[]=
     {{0, XBinary::FT_COM,       SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_DIET,                         "1.02b, 1.10a",     ""},                    "......BF....B9....3BFC72$$FDF3A5FC8BF7BF....ADAD8BE8B2..E9"},
     {{0, XBinary::FT_COM,       SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_DIET,                         "1.20",             ""},                    "......BF....B9....3BFC72$$31DBEB$$FDF3A5FC8BF7BF....ADAD8BE8B2..E9"},
     {{0, XBinary::FT_COM,       SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_DIET,                         "1.44-1.45",        ""},                    "F99CEB$$55061E575652515350E8$$$$59B1..D3E98CC803C18ED88EC0"},
+    {{0, XBinary::FT_COM,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTCOM,                     "2.0",              ""},                    "E9$$$$BE....56B9....C704....C644....8134....4646E2..31F631C9C3"},
 };
 
 // MSDOS,NE,LE,PE
