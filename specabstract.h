@@ -1384,7 +1384,6 @@ public:
     static VI_STRUCT _get_SnapdragonLLVMARM_string(QString sString);
     static VI_STRUCT _get_NASM_string(QString sString);
     static VI_STRUCT _get_TencentLegu_string(QString sString);
-
     static VI_STRUCT _get_DelphiVersionFromCompiler(QString sString);
 
     static bool PE_isValid_UPX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
