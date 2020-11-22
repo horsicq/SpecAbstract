@@ -9814,6 +9814,13 @@ void SpecAbstract::Binary_handle_COM(QIODevice *pDevice, bool bIsImage, SpecAbst
         pBinaryInfo->mapResultCOMProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 
+    if(pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_CRYPTDISMEMBER))
+    {
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_COM;
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CRYPTDISMEMBER);
+        pBinaryInfo->mapResultCOMProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+
     if(pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SPIRIT))
     {
         pBinaryInfo->basic_info.id.fileType=XBinary::FT_COM;

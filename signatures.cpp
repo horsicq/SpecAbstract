@@ -167,6 +167,7 @@ SpecAbstract::SIGNATURE_RECORD _COM_records[]=
     {{0, XBinary::FT_COM,       SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.30-0.40",        ""},                    "B9....BE....BF....BD....FDF3A4FCF7E19387F783C6..57E9"},
     {{0, XBinary::FT_COM,       SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.50",             ""},                    "B9....BE....BF....FDF3A4FCF7E19387F783EE..19ED57"},
     {{0, XBinary::FT_COM,       SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.81-1.20",        ""},                    "81FC....77..CD20B9....BE....BF....BB....FDF3A4FC87F783EE"},
+    {{0, XBinary::FT_COM,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTDISMEMBER,               "1.7",              ""},                    "0E179C58F6C4..74..EB..90B4..BE....BF....B9....68....68....68....57F3A4C3"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _COM_Exp_records[]=
