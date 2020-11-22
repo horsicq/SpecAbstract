@@ -360,6 +360,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CRYEXE:                                sResult=QString("CryEXE");                                      break;
         case RECORD_NAME_CRYPTABLESEDUCATION:                   sResult=QString("Cryptable Seduction");                         break;
         case RECORD_NAME_CRYPTCOM:                              sResult=QString("CryptCom");                                    break;
+        case RECORD_NAME_CRYPTDISMEMBER:                        sResult=QString("Crypt(Dismember)");                            break;
         case RECORD_NAME_CRYPTER:                               sResult=QString("Crypter");                                     break;
         case RECORD_NAME_CRYPTIC:                               sResult=QString("Cryptic");                                     break;
         case RECORD_NAME_CRYPTOCRACKPEPROTECTOR:                sResult=QString("CrypToCrack Pe Protector");                    break;
