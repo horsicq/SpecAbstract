@@ -3067,6 +3067,12 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
+        if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_ENIGMAVIRTUALBOX))
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_ENIGMAVIRTUALBOX);
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
         if(!pPEInfo->cliInfo.bValid)
         {
             // TODO MPRESS import
@@ -3963,12 +3969,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                         pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     }
-                }
-
-                if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_ENIGMAVIRTUALBOX))
-                {
-                    _SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_ENIGMAVIRTUALBOX);
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
 
                 // Yoda's Protector
