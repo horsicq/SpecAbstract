@@ -439,6 +439,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_EXESTEALTH:                            sResult=QString("ExeStealth");                                  break;
         case RECORD_NAME_EXPORT:                                sResult=QString("Export");                                      break;
         case RECORD_NAME_EXPRESSOR:                             sResult=QString("eXPressor");                                   break;
+        case RECORD_NAME_EXPRESSOR_KERNEL32:                    sResult=QString("eXPressor[Kernel32]");                         break;
+        case RECORD_NAME_EXPRESSOR_USER32:                      sResult=QString("eXPressor[User32]");                           break;
         case RECORD_NAME_EZIP:                                  sResult=QString("EZIP");                                        break;
         case RECORD_NAME_FAKESIGNATURE:                         sResult=QString("Fake signature");                              break;
         case RECORD_NAME_FAKUSCRYPTOR:                          sResult=QString("Fakus Cryptor");                               break;
@@ -3100,7 +3102,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
             }
 
             // EXPRESSOR
-            if(pPEInfo->mapImportDetects.contains(RECORD_NAME_EXPRESSOR))
+            if(pPEInfo->mapImportDetects.contains(RECORD_NAME_EXPRESSOR)||(pPEInfo->mapImportDetects.contains(RECORD_NAME_EXPRESSOR_KERNEL32)&&pPEInfo->mapImportDetects.contains(RECORD_NAME_EXPRESSOR_USER32)))
             {
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EXPRESSOR))
                 {

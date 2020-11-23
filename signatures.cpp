@@ -859,6 +859,8 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "",                 ""},                    0xFFFFFFFF,     0x5707cc91}, // kernel32.dll
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "",                 ""},                    0xFFFFFFFF,     0x2063eed2}, // KERNEL32.dll
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "",                 ""},                    0xFFFFFFFF,     0x8c357aef}, // KERNEL32.DLL
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXPRESSOR_KERNEL32,           "1.4.5.X",          ""},                    0,              0x5c1c45e2},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXPRESSOR_USER32,             "1.4.5.X",          ""},                    1,              0x8348d305},
 };
 
 SpecAbstract::PE_RESOURCES_RECORD _PE_resorces_records[]=

@@ -16546,3 +16546,16 @@ KERNEL32.dll GetVersionExA
 KERNEL32.dll LoadLibraryA
 KERNEL32.dll GetProcAddress
 KERNEL32.dll ExitProcess
+
+Import hash: 5c1c45e2
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll GetProcAddress
+KERNEL32.dll LoadLibraryExA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll VirtualProtect
+KERNEL32.dll ExitProcess
+KERNEL32.dll GetModuleFileNameA
+
+Import hash: 8348d305
+USER32.dll MessageBoxA
