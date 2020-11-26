@@ -13895,6 +13895,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
             {
                 if(pDEXInfo->basic_info.bIsTest)
                 {
+                    // TODO find!
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_UNKNOWN,"","",0);
 
                     if(     pDEXInfo->listStrings.at(i).contains("agconfig")||
@@ -13903,15 +13904,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
                             pDEXInfo->listStrings.at(i).contains("AppSuit")||
                             pDEXInfo->listStrings.at(i).contains("appsuit")||
                             pDEXInfo->listStrings.at(i).contains("gemalto")||
-//                            pDEXInfo->listStrings.at(i).contains("Obfuscator")||
-//                            pDEXInfo->listStrings.at(i).contains("Obfuscat")||
-//                            pDEXInfo->listStrings.at(i).contains("bfuscat")||
-//                            pDEXInfo->listStrings.at(i).contains("Guard")||
-//                            pDEXInfo->listStrings.at(i).contains("quard")||
-//                            pDEXInfo->listStrings.at(i).contains("Protect")||
-//                            pDEXInfo->listStrings.at(i).contains("protect")||
                             pDEXInfo->listStrings.at(i).contains("WapperApplication")||
-//                            pDEXInfo->listStrings.at(i).contains("StubApplication")||
                             pDEXInfo->listStrings.at(i).contains("AppSealing")||
                             pDEXInfo->listStrings.at(i).contains("whitecryption")||
                             pDEXInfo->listStrings.at(i).contains("ModGuard")||
