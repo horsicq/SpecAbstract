@@ -1395,7 +1395,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_HikariObfuscator_string(QString sStri
 {
     VI_STRUCT result={};
 
-    if(sString.contains("HikariObfuscator")||sString.contains("_Hikari"))
+    if(sString.contains("HikariObfuscator")||sString.contains("_Hikari")||sString.contains("Hikari.git"))
     {
         // TODO Version
         result.bIsValid=true;
