@@ -719,6 +719,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SECSHELL:                              sResult=QString("SecShell");                                    break;
         case RECORD_NAME_SECNEO:                                sResult=QString("SecNeo");                                      break;
         case RECORD_NAME_SECURESHADE:                           sResult=QString("Secure Shade");                                break;
+        case RECORD_NAME_SECUROM:                               sResult=QString("SecuROM");                                     break;
         case RECORD_NAME_SETUPFACTORY:                          sResult=QString("Setup Factory");                               break;
         case RECORD_NAME_SEXECRYPTER:                           sResult=QString("Sexe Crypter");                                break;
         case RECORD_NAME_SHELL:                                 sResult=QString("Shell");                                       break;
@@ -3064,6 +3065,14 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
         {
             _SCANS_STRUCT ssOverlay=pPEInfo->mapOverlayDetects.value(RECORD_NAME_ACTIVEMARK);
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_ACTIVEMARK,ssOverlay.sVersion,ssOverlay.sInfo,0);
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_SECUROM))
+        {
+            // TODO Version
+            _SCANS_STRUCT ssOverlay=pPEInfo->mapOverlayDetects.value(RECORD_NAME_SECUROM);
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_SECUROM,ssOverlay.sVersion,ssOverlay.sInfo,0);
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
@@ -10533,6 +10542,12 @@ void SpecAbstract::Binary_handle_InstallerData(QIODevice *pDevice,bool bIsImage,
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_NOSINSTALLER))&&(pBinaryInfo->basic_info.nSize>=8))
     {
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_NOSINSTALLER);
+        pBinaryInfo->mapResultInstallerData.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SECUROM))&&(pBinaryInfo->basic_info.nSize>=30))
+    {
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SECUROM);
+        ss.sVersion=binary.read_ansiString(8);
         pBinaryInfo->mapResultInstallerData.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
 }

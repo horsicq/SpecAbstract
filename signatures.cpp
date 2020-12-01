@@ -150,7 +150,8 @@ SpecAbstract::SIGNATURE_RECORD _PE_overlay_records[]=
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_SHELL,                        "",                 ""},                    "'#!'"}, // "'#!c:\python\python.exe'"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_SIXXPACK,                     "",                 ""},                    "5D0000800000"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_THINSTALL,                    "",                 ""},                    "09050000"},
-    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_NOSINSTALLER,                 "",                 ""},                    "'NOS_PO'"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_NOSINSTALLER,                 "",                 ""},                    "'NOS_PO'"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_SECUROM,                      "",                 ""},                    "'AddD'03"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _COM_records[]=
