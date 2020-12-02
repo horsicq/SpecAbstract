@@ -1250,6 +1250,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEBUNDLE,                     "",                 ""},                    "pebundle"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PECRYPT32,                    "1.02",             ""},                    ".ficken"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEDIMINISHER,                 "0.1",              ""},                    ".teraphy"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PELOCKNT,                     "",                 ""},                    "PELOCKnt"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PENGUINCRYPT,                 "1.0",              ""},                    "Pingvin"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PEPACKSPROTECT,               "2.3",              ""},                    "okpack"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PESHIELD,                     "0.25-0.26",        ""},                    "PESHiELD"},
