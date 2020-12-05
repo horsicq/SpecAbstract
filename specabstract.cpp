@@ -5397,8 +5397,8 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
                     {
                         if(pPEInfo->listImports.at(i).listPositions.count()==2)
                         {
-                            if((pPEInfo->listImports.at(i).listPositions.at(0).sName=="MessageBoxA")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(1).sName=="wsprintfA"))
+                            if( (pPEInfo->listImports.at(i).listPositions.at(0).sName=="MessageBoxA")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(1).sName=="wsprintfA"))
                             {
                                 bUser32=true;
                             }
@@ -5415,13 +5415,13 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
                     {
                         if(pPEInfo->listImports.at(i).listPositions.count()==7)
                         {
-                            if((pPEInfo->listImports.at(i).listPositions.at(0).sName=="ExitProcess")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(1).sName=="GetModuleHandleA")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(2).sName=="GetProcAddress")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(3).sName=="VirtualProtect")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(4).sName=="VirtualAlloc")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(5).sName=="VirtualFree")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(6).sName=="LoadLibraryA"))
+                            if( (pPEInfo->listImports.at(i).listPositions.at(0).sName=="ExitProcess")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(1).sName=="GetModuleHandleA")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(2).sName=="GetProcAddress")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(3).sName=="VirtualProtect")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(4).sName=="VirtualAlloc")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(5).sName=="VirtualFree")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(6).sName=="LoadLibraryA"))
                             {
                                 sVersion="2.4";
                                 bKernel32=true;
@@ -5441,12 +5441,12 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
 
                         if(pPEInfo->listImports.at(i).listPositions.count()==6)
                         {
-                            if((pPEInfo->listImports.at(i).listPositions.at(0).sName=="ExitProcess")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(1).sName=="GetModuleHandleA")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(2).sName=="GetProcAddress")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(3).sName=="VirtualProtect")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(4).sName=="GlobalAlloc")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(5).sName=="GlobalFree"))
+                            if( (pPEInfo->listImports.at(i).listPositions.at(0).sName=="ExitProcess")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(1).sName=="GetModuleHandleA")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(2).sName=="GetProcAddress")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(3).sName=="VirtualProtect")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(4).sName=="GlobalAlloc")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(5).sName=="GlobalFree"))
                             {
                                 sVersion="2.3";// DLL only?? // TODO Check
                                 bKernel32=true;
@@ -5454,11 +5454,11 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
                         }
                         else if(pPEInfo->listImports.at(i).listPositions.count()==5)
                         {
-                            if((pPEInfo->listImports.at(i).listPositions.at(0).sName=="ExitProcess")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(1).sName=="LoadLibraryA")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(2).sName=="GetProcAddress")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(3).sName=="VirtualProtect")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(4).sName=="GlobalAlloc"))
+                            if( (pPEInfo->listImports.at(i).listPositions.at(0).sName=="ExitProcess")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(1).sName=="LoadLibraryA")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(2).sName=="GetProcAddress")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(3).sName=="VirtualProtect")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(4).sName=="GlobalAlloc"))
                             {
                                 sVersion="2.2";
                                 bKernel32=true;
@@ -5466,10 +5466,10 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
                         }
                         else if(pPEInfo->listImports.at(i).listPositions.count()==4)
                         {
-                            if((pPEInfo->listImports.at(i).listPositions.at(0).sName=="ExitProcess")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(1).sName=="GetProcAddress")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(2).sName=="LoadLibraryA")&&
-                                    (pPEInfo->listImports.at(i).listPositions.at(3).sName=="GlobalAlloc"))
+                            if( (pPEInfo->listImports.at(i).listPositions.at(0).sName=="ExitProcess")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(1).sName=="GetProcAddress")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(2).sName=="LoadLibraryA")&&
+                                (pPEInfo->listImports.at(i).listPositions.at(3).sName=="GlobalAlloc"))
                             {
                                 sVersion="1.4";
                                 bKernel32=true;
