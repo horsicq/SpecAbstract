@@ -5479,7 +5479,6 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
                 }
 
                 // TODO Import hash
-
                 if(bUser32&&bKernel32)
                 {
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PETITE))
@@ -5489,7 +5488,7 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
                         pPEInfo->mapResultPackers.insert(recordPETITE.name,scansToScan(&(pPEInfo->basic_info),&recordPETITE));
                     }
                 }
-                else if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_PETITE)) // TODO
+                else if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_PETITE))
                 {
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PETITE))
                     {
