@@ -5478,6 +5478,8 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
                     }
                 }
 
+                // TODO Import hash
+
                 if(bUser32&&bKernel32)
                 {
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PETITE))
