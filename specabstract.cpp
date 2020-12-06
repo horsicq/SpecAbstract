@@ -3068,7 +3068,6 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
             ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
-
         // TODO more versions of Xenocode
 
         // MoleBox Ultra
