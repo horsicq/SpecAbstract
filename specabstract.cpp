@@ -302,7 +302,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_AVI:                                   sResult=QString("AVI");                                         break;
         case RECORD_NAME_AVPACK:                                sResult=QString("AVPACK");                                      break;
         case RECORD_NAME_AZPROTECT:                             sResult=QString("AZProtect");                                   break;
-        case RECORD_NAME_B4A:                                   sResult=QString("B4A");                                         break;
+        case RECORD_NAME_BASIC4ANDROID:                         sResult=QString("Basic4Android");                               break;
         case RECORD_NAME_BABELNET:                              sResult=QString("Babel .NET");                                  break;
         case RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR:           sResult=QString("Backdoor PE Compress Protector");              break;
         case RECORD_NAME_BAIDUSIGNATUREPLATFORM:                sResult=QString("Baidu Signature platform");                    break;
@@ -2750,12 +2750,14 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
         if(result.bIsAPK)
         {
             archiveScan(&(result.mapArchiveDetects),&(result.listArchiveRecords),_APK_file_records,sizeof(_APK_file_records),result.basic_info.id.fileType,XBinary::FT_APK,&(result.basic_info),DETECTTYPE_ARCHIVE,pbIsStop);
+            archiveExpScan(&(result.mapArchiveDetects),&(result.listArchiveRecords),_APK_fileExp_records,sizeof(_APK_fileExp_records),result.basic_info.id.fileType,XBinary::FT_APK,&(result.basic_info),DETECTTYPE_ARCHIVE,pbIsStop);
             result.dexInfoClasses=Zip_scan_DEX(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop,"classes.dex");
         }
 
         Zip_handle_Metainfos(pDevice,pOptions->bIsImage,&result);
         Zip_handle_Microsoftoffice(pDevice,pOptions->bIsImage,&result);
         Zip_handle_OpenOffice(pDevice,pOptions->bIsImage,&result);
+
         Zip_handle_JAR(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
         Zip_handle_APK(pDevice,pOptions->bIsImage,&result);
 
@@ -11706,6 +11708,14 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
+            // Basic4Android
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_BASIC4ANDROID))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_BASIC4ANDROID);
+
+                pZipInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
             // ApkToolPlus
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKTOOLPLUS))
             {
@@ -15508,6 +15518,64 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
                     quint32 nCRC2=listSignatureCRC[j];
 
                     if(nCRC1==nCRC2)
+                    {
+                        if(!pMapRecords->contains(pRecords[j].basicInfo.name))
+                        {
+                            _SCANS_STRUCT record={};
+                            record.nVariant=pRecords[j].basicInfo.nVariant;
+                            record.fileType=pRecords[j].basicInfo.fileType;
+                            record.type=pRecords[j].basicInfo.type;
+                            record.name=pRecords[j].basicInfo.name;
+                            record.sVersion=pRecords[j].basicInfo.pszVersion;
+                            record.sInfo=pRecords[j].basicInfo.pszInfo;
+
+                            record.nOffset=0;
+
+                            pMapRecords->insert(record.name,record);
+
+#ifdef QT_DEBUG
+                            qDebug("ARCHIVE SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
+#endif
+                        }
+
+                        if(pBasicInfo->bShowDetects)
+                        {
+                            DETECT_RECORD heurRecord={};
+
+                            heurRecord.nVariant=pRecords[j].basicInfo.nVariant;
+                            heurRecord.fileType=pRecords[j].basicInfo.fileType;
+                            heurRecord.type=pRecords[j].basicInfo.type;
+                            heurRecord.name=pRecords[j].basicInfo.name;
+                            heurRecord.sVersion=pRecords[j].basicInfo.pszVersion;
+                            heurRecord.sInfo=pRecords[j].basicInfo.pszInfo;
+                            heurRecord.nOffset=0;
+                            heurRecord.filepart=pBasicInfo->id.filePart;
+                            heurRecord.detectType=detectType;
+                            heurRecord.sValue=pRecords[j].pszString;
+
+                            pBasicInfo->listHeurs.append(heurRecord);
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+void SpecAbstract::archiveExpScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, SpecAbstract::STRING_RECORD *pRecords, int nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, SpecAbstract::BASIC_INFO *pBasicInfo, SpecAbstract::DETECTTYPE detectType, bool *pbIsStop)
+{
+    int nNumberOfArchives=pListArchiveRecords->count();
+    int nNumberOfSignatures=nRecordsSize/sizeof(STRING_RECORD);
+
+    for(int i=0; i<nNumberOfArchives; i++)
+    {
+        for(int j=0; j<nNumberOfSignatures; j++)
+        {
+            if((pRecords[j].basicInfo.fileType==fileType1)||(pRecords[j].basicInfo.fileType==fileType2))
+            {
+                if((!pMapRecords->contains(pRecords[j].basicInfo.name))||(pBasicInfo->bShowDetects))
+                {
+                    if(XBinary::isRegExpPresent(pRecords[j].pszString,pListArchiveRecords->at(i).sFileName))
                     {
                         if(!pMapRecords->contains(pRecords[j].basicInfo.name))
                         {
