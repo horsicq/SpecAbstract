@@ -302,6 +302,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_AVI:                                   sResult=QString("AVI");                                         break;
         case RECORD_NAME_AVPACK:                                sResult=QString("AVPACK");                                      break;
         case RECORD_NAME_AZPROTECT:                             sResult=QString("AZProtect");                                   break;
+        case RECORD_NAME_B4A:                                   sResult=QString("B4A");                                         break;
         case RECORD_NAME_BABELNET:                              sResult=QString("Babel .NET");                                  break;
         case RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR:           sResult=QString("Backdoor PE Compress Protector");              break;
         case RECORD_NAME_BAIDUSIGNATUREPLATFORM:                sResult=QString("Baidu Signature platform");                    break;
