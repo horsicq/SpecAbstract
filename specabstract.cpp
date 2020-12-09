@@ -15120,7 +15120,7 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
 
         int nSignaturesCount=nRecordsSize/sizeof(SIGNATURE_RECORD);
 
-        for(int i=0; i<nSignaturesCount; i++)
+        for(int i=0; (i<nSignaturesCount)&&(!(*pbIsStop)); i++)
         {
             if((pRecords[i].basicInfo.fileType==fileType1)||(pRecords[i].basicInfo.fileType==fileType2))
             {
@@ -15172,7 +15172,7 @@ void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, 
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(SIGNATURE_RECORD);
 
-    for(int i=0; i<nSignaturesCount; i++)
+    for(int i=0; (i<nSignaturesCount)&&(!(*pbIsStop)); i++)
     {
         if((pRecords[i].basicInfo.fileType==fileType1)||(pRecords[i].basicInfo.fileType==fileType2))
         {
@@ -15226,7 +15226,7 @@ void SpecAbstract::PE_resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract
 {
     int nSignaturesCount=nRecordsSize/sizeof(PE_RESOURCES_RECORD);
 
-    for(int i=0; i<nSignaturesCount; i++)
+    for(int i=0; (i<nSignaturesCount)&&(!(*pbIsStop)); i++)
     {
         if((pRecords[i].basicInfo.fileType==fileType1)||(pRecords[i].basicInfo.fileType==fileType2))
         {
@@ -15330,7 +15330,7 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
         listSignatureCRC.append(nCRC);
     }
 
-    for(int i=0; i<nNumberOfStrings; i++)
+    for(int i=0; (i<nNumberOfStrings)&&(!(*pbIsStop)); i++)
     {
         for(int j=0; j<nNumberOfSignatures; j++)
         {
@@ -15390,7 +15390,7 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(CONST_RECORD);
 
-    for(int i=0; i<nSignaturesCount; i++)
+    for(int i=0; (i<nSignaturesCount)&&(!(*pbIsStop)); i++)
     {
         if((pRecords[i].basicInfo.fileType==fileType1)||(pRecords[i].basicInfo.fileType==fileType2))
         {
@@ -15506,9 +15506,9 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
         listSignatureCRC.append(nCRC);
     }
 
-    for(int i=0; i<nNumberOfArchives; i++)
+    for(int i=0; (i<nNumberOfArchives)&&(!(*pbIsStop)); i++)
     {
-        for(int j=0; j<nNumberOfSignatures; j++)
+        for(int j=0; (j<nNumberOfSignatures)&&(!(*pbIsStop)); j++)
         {
             if((pRecords[j].basicInfo.fileType==fileType1)||(pRecords[j].basicInfo.fileType==fileType2))
             {
@@ -15567,9 +15567,9 @@ void SpecAbstract::archiveExpScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
     int nNumberOfArchives=pListArchiveRecords->count();
     int nNumberOfSignatures=nRecordsSize/sizeof(STRING_RECORD);
 
-    for(int i=0; i<nNumberOfArchives; i++)
+    for(int i=0; (i<nNumberOfArchives)&&(!(*pbIsStop)); i++)
     {
-        for(int j=0; j<nNumberOfSignatures; j++)
+        for(int j=0; (j<nNumberOfSignatures)&&(!(*pbIsStop)); j++)
         {
             if((pRecords[j].basicInfo.fileType==fileType1)||(pRecords[j].basicInfo.fileType==fileType2))
             {
@@ -15624,7 +15624,7 @@ void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMe
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(SIGNATURE_RECORD);
 
-    for(int i=0; i<nSignaturesCount; i++)
+    for(int i=0; (i<nSignaturesCount)&&(!(*pbIsStop)); i++)
     {
         if((pRecords[i].basicInfo.fileType==fileType1)||(pRecords[i].basicInfo.fileType==fileType2))
         {
@@ -15680,7 +15680,7 @@ QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, qui
 
     int nSignaturesCount=nRecordsSize/(int)sizeof(MSRICH_RECORD);
 
-    for(int i=0; i<nSignaturesCount; i++)
+    for(int i=0; (i<nSignaturesCount)&&(!(*pbIsStop)); i++)
     {
         _SCANS_STRUCT record={};
 
