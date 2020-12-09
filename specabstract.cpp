@@ -501,6 +501,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_IJIAMI:                                sResult=QString("iJiami");                                      break;
         case RECORD_NAME_IJIAMILLVM:                            sResult=QString("iJiami LLVM");                                 break;
         case RECORD_NAME_IKVMDOTNET:                            sResult=QString("IKVM.NET");                                    break;
+        case RECORD_NAME_IL2CPP:                                sResult=QString("IL2CPP");                                      break;
         case RECORD_NAME_ILASM:                                 sResult=QString("ILAsm");                                       break;
         case RECORD_NAME_IMPORT:                                sResult=QString("Import");                                      break;
         case RECORD_NAME_INFCRYPTOR:                            sResult=QString("INF Cryptor");                                 break;
@@ -786,6 +787,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_UNICODE:                               sResult=QString("Unicode");                                     break;
         case RECORD_NAME_UNICOMSDK:                             sResult=QString("Unicom SDK");                                  break;
         case RECORD_NAME_UNILINK:                               sResult=QString("UniLink");                                     break;
+        case RECORD_NAME_UNITY:                                 sResult=QString("Unity");                                       break;
         case RECORD_NAME_UNIVERSALTUPLECOMPILER:                sResult=QString("Universal Tuple Compiler");                    break;
         case RECORD_NAME_UNKOWNCRYPTER:                         sResult=QString("unkOwn Crypter");                              break;
         case RECORD_NAME_UNK_UPXLIKE:                           sResult=QString("(Unknown)UPX-like");                           break;
@@ -11683,6 +11685,22 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_UNICOMSDK))
             {
                 _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_UNICOMSDK);
+
+                pZipInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            // Unity
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_UNITY))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_UNITY);
+
+                pZipInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            // IL2CPP
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_IL2CPP))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_IL2CPP);
 
                 pZipInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }

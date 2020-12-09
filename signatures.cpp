@@ -1586,6 +1586,8 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MEDUSAH,                      "",                 ""},                    "lib/armeabi-v7a/libmd.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APPSOLID,                     "",                 ""},                    "assets/high_resolution.png"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PROGUARD,                     "",                 ""},                    "META-INF/proguard/androidx-annotations.pro"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_UNITY,                        "",                 ""},                    "lib/armeabi-v7a/libunity.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IL2CPP,                       "",                 ""},                    "lib/armeabi-v7a/libil2cpp.so"},
 };
 
 SpecAbstract::STRING_RECORD _DEX_string_records[]=
