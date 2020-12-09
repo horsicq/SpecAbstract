@@ -1317,7 +1317,7 @@ public:
     static void MACH_handle_Tools(QIODevice *pDevice,bool bIsImage,MACHINFO_STRUCT *pMACHInfo);
     static void MACH_handle_Protection(QIODevice *pDevice,bool bIsImage,MACHINFO_STRUCT *pMACHInfo);
 
-    static void LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO_STRUCT *pLEInfo, bool *pbIsStop);
+    static void LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage,LEINFO_STRUCT *pLEInfo,bool *pbIsStop);
     static void LE_handle_Borland(QIODevice *pDevice,bool bIsImage,LEINFO_STRUCT *pLEInfo);
 
     static void NE_handle_Borland(QIODevice *pDevice,bool bIsImage,NEINFO_STRUCT *pNEInfo);
