@@ -5119,7 +5119,13 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
     {
         if(!pPEInfo->cliInfo.bValid)
         {
+            bool bHeaderDetect=false;
             bool bImportDetect=false;
+
+            if((pPEInfo->nMajorLinkerVersion==0x53)&&(pPEInfo->nMinorLinkerVersion==0x52))
+            {
+                bHeaderDetect=true;
+            }
 
             int nNumberOfImports=pPEInfo->listImports.count();
 
@@ -5133,7 +5139,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
                                     (pPEInfo->listImports.at(2).sName.toUpper()=="USER32.DLL")   );
             }
 
-            if(bImportDetect)
+            if(bImportDetect||bHeaderDetect)
             {
                 bool bDetect=false;
 
@@ -5146,7 +5152,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
                     bDetect=true;
                 }
 
-                if((pPEInfo->nMajorLinkerVersion==0x53)&&(pPEInfo->nMinorLinkerVersion==0x52))
+                if(bHeaderDetect)
                 {
                     bDetect=true;
                 }
@@ -9617,6 +9623,21 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,
                 recordSS.name=RECORD_NAME_PECOMPACT;
                 recordSS.sVersion=viPECompact.sVersion;
                 recordSS.sInfo=viPECompact.sInfo;
+                recordSS.bIsHeuristic=true;
+
+                pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+            }
+        }
+
+        if(!pPEInfo->mapResultPackers.contains(RECORD_NAME_KKRUNCHY))
+        {
+            if( pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_KKRUNCHY)&&
+                (pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_KKRUNCHY).nVariant==0))
+            {
+                _SCANS_STRUCT recordSS={};
+
+                recordSS.type=RECORD_TYPE_PACKER;
+                recordSS.name=RECORD_NAME_KKRUNCHY;
                 recordSS.bIsHeuristic=true;
 
                 pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
