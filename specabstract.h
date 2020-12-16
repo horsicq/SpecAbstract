@@ -21,7 +21,6 @@
 #ifndef SPECABSTRACT_H
 #define SPECABSTRACT_H
 
-#include <QObject>
 #include <QSet>
 #include <QDataStream>
 #include <QElapsedTimer>
