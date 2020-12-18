@@ -1339,6 +1339,7 @@ SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_PHOENIXPROTECTOR,             "",                 ""},                    "?1?.?9?.resources"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETCOMPRESSOR,    SpecAbstract::RECORD_NAME_SIXXPACK,                     "",                 ""},                    "Sixxpack"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_SMARTASSEMBLY,                "",                 ""},                    "SmartAssembly.Attributes"},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_SMARTASSEMBLY,                "",                 ""},                    "SmartAssembly.Attributes.PoweredByAttribute"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_CONFUSER,                     "1.X",              ""},                    "ConfusedByAttribute"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_SPICESNET,                    "",                 ""},                    "NineRays.Obfuscator"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_OBFUSCATORNET2009,            "",                 ""},                    "Macrobject.Obfuscator"},
