@@ -1213,7 +1213,7 @@ public:
 
     explicit SpecAbstract(QObject *pParent=nullptr);
 
-    static void scan(QIODevice *pDevice,SpecAbstract::SCAN_RESULT *pScanResult,qint64 nOffset,qint64 nSize,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,bool bInit=false,bool *pbIsStop=nullptr);
+    static void scan(QIODevice *pDevice,SpecAbstract::SCAN_RESULT *pScanResult,qint64 nOffset,qint64 nSize,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,bool bInit,bool *pbIsStop);
 
     static QString append(QString sResult,QString sString);
     static QString recordFilePartIdToString(RECORD_FILEPART id);

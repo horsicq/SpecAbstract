@@ -54,7 +54,7 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
     {
         QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(&sd,true);
 
-        if(pOptions->fileType!=XBinary::FT_UNKNOWN)
+        if((pOptions->fileType!=XBinary::FT_UNKNOWN)&&(bInit))
         {
             XBinary::filterFileTypes(&stFileTypes,pOptions->fileType);
         }
@@ -9705,7 +9705,7 @@ void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAb
 
                 SpecAbstract::ID _parentId=pPEInfo->basic_info.id;
                 _parentId.filePart=SpecAbstract::RECORD_FILEPART_OVERLAY;
-                scan(pDevice,&scanResult,pPEInfo->nOverlayOffset,pPEInfo->nOverlaySize,_parentId,pOptions,pbIsStop);
+                scan(pDevice,&scanResult,pPEInfo->nOverlayOffset,pPEInfo->nOverlaySize,_parentId,pOptions,false,pbIsStop);
 
                 pPEInfo->listRecursiveDetects.append(scanResult.listRecords);
             }
@@ -11820,7 +11820,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
 
                                     if(file.open(QIODevice::ReadOnly))
                                     {
-                                        scan(&file,&scanResult,0,file.size(),_parentId,pOptions,pbIsStop);
+                                        scan(&file,&scanResult,0,file.size(),_parentId,pOptions,false,pbIsStop);
 
                                         file.close();
                                     }
@@ -11833,7 +11833,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
 
                             if(buffer.open(QIODevice::ReadOnly))
                             {
-                                scan(&buffer,&scanResult,0,buffer.size(),_parentId,pOptions,pbIsStop);
+                                scan(&buffer,&scanResult,0,buffer.size(),_parentId,pOptions,false,pbIsStop);
 
                                 buffer.close();
                             }
@@ -12478,7 +12478,7 @@ void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, bool bIsImage, Spe
 
                 SpecAbstract::ID _parentId=pMSDOSInfo->basic_info.id;
                 _parentId.filePart=SpecAbstract::RECORD_FILEPART_OVERLAY;
-                scan(pDevice,&scanResult,pMSDOSInfo->nOverlayOffset,pMSDOSInfo->nOverlaySize,_parentId,pOptions,pbIsStop);
+                scan(pDevice,&scanResult,pMSDOSInfo->nOverlayOffset,pMSDOSInfo->nOverlaySize,_parentId,pOptions,false,pbIsStop);
 
                 pMSDOSInfo->listRecursiveDetects.append(scanResult.listRecords);
             }
