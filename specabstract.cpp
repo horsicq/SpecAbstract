@@ -1644,7 +1644,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_clang_string(QString sString)
 {
     VI_STRUCT result={};
 
-    if(sString.contains(QRegExp("^clang version")))
+    if(XBinary::isRegExpPresent("^clang version",sString))
     {
         result.bIsValid=true;
 
@@ -1673,7 +1673,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_Delphi_string(QString sString)
     VI_STRUCT result={};
 
     // Embarcadero Delphi for Android compiler version
-    if(sString.contains(QRegExp("^Embarcadero Delphi for")))
+    if(XBinary::isRegExpPresent("^Embarcadero Delphi for",sString))
     {
         result.bIsValid=true;
 
@@ -1687,7 +1687,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_LLD_string(QString sString)
 {
     VI_STRUCT result={};
 
-    if(sString.contains(QRegExp("^Linker: LLD")))
+    if(XBinary::isRegExpPresent("^Linker: LLD",sString))
     {
         result.bIsValid=true;
 
@@ -1701,7 +1701,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_OracleSolarisLinkEditors_string(QStri
 {
     VI_STRUCT result={};
 
-    if(sString.contains(QRegExp("^ld: Software Generation Utilities - Solaris Link Editors:")))
+    if(XBinary::isRegExpPresent("^ld: Software Generation Utilities - Solaris Link Editors:",sString))
     {
         result.bIsValid=true;
 
@@ -1715,7 +1715,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SunWorkShop_string(QString sString)
 {
     VI_STRUCT result={};
 
-    if(sString.contains(QRegExp("Sun WorkShop")))
+    if(XBinary::isRegExpPresent("Sun WorkShop",sString))
     {
         result.bIsValid=true;
 
@@ -1729,7 +1729,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SnapdragonLLVMARM_string(QString sStr
 {
     VI_STRUCT result={};
 
-    if(sString.contains(QRegExp("^Snapdragon LLVM ARM Compiler")))
+    if(XBinary::isRegExpPresent("^Snapdragon LLVM ARM Compiler",sString))
     {
         result.bIsValid=true;
 
@@ -1743,7 +1743,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_NASM_string(QString sString)
 {
     VI_STRUCT result={};
 
-    if(sString.contains(QRegExp("^The Netwide Assembler")))
+    if(XBinary::isRegExpPresent("^The Netwide Assembler",sString))
     {
         result.bIsValid=true;
 
@@ -1757,7 +1757,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_TencentLegu_string(QString sString)
 {
     VI_STRUCT result={};
 
-    if(sString.contains(QRegExp("^legu")))
+    if(XBinary::isRegExpPresent("^legu",sString))
     {
         result.bIsValid=true;
         // TODO Version

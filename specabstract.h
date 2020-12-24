@@ -21,9 +21,7 @@
 #ifndef SPECABSTRACT_H
 #define SPECABSTRACT_H
 
-#include <QSet>
 #include <QDataStream>
-#include <QElapsedTimer>
 #include <QUuid>
 #include "xformats.h"
 
@@ -735,12 +733,12 @@ public:
 
     struct ID
     {
+        bool bVirtual;
         QUuid uuid;
         XBinary::FT fileType;
         RECORD_FILEPART filePart;
         QString sVersion;
         QString sInfo;
-        bool bVirtual;
     };
 
     // TODO flags(static scan/emul/heur)
