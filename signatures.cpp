@@ -1258,7 +1258,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PETITE,                       "",                 ""},                    ".petite"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PETITE,                       "",                 ""},                    "petite"}, // TODO Check version
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PUNISHER,                     "1.5 demo",         ""},                    "PUNiSHER"},
-    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_QT,                           "",                 ""},                    ".qtmetad"},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_QT,                           "",                 ""},                    ".qtmetad"}, // TODO Version 5.x Only?
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_RCRYPTOR,                     "",                 ""},                    "RCryptor"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_RLP,                          "",                 ""},                    ".rlp"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_RLPACK,                       "",                 ""},                    ".packed"},

@@ -5999,7 +5999,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, SpecAb
         {
             // https://en.wikipedia.org/wiki/Microsoft_Foundation_Class_Library
             // TODO eMbedded Visual C++ 4.0 		mfcce400.dll 	MFC 6.0
-            if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^MFC")))
+            if(XBinary::isRegExpPresent("^MFC",pPEInfo->listImports.at(i).sName.toUpper()))
             {
                 //                    QRegularExpression rxVersion("(\\d+)");
                 //                    QRegularExpressionMatch matchVersion=rxVersion.match(pPEInfo->listImports.at(i).sName.toUpper());
@@ -7321,6 +7321,16 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_QT,"5.X","Debug",0);
                 pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
+            else if(XPE::isImportLibraryPresentI("Qt6Core.dll",&(pPEInfo->listImports)))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_QT,"6.X","",0);
+                pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
+            else if(XPE::isImportLibraryPresentI("Qt6Cored.dll",&(pPEInfo->listImports)))
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_QT,"6.X","Debug",0);
+                pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
             else if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_QT))
             {
                 // TODO Version!
@@ -7405,7 +7415,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
             for(int i=0; i<nNumberOfImports; i++)
             {
-                if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^PYTHON")))
+                if(XBinary::isRegExpPresent("^PYTHON",pPEInfo->listImports.at(i).sName.toUpper()))
                 {
                     QString sVersion=XBinary::regExp("(\\d+)",pPEInfo->listImports.at(i).sName.toUpper(),0);
 
@@ -7429,7 +7439,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             // Perl
             for(int i=0; i<nNumberOfImports; i++)
             {
-                if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^PERL")))
+                if(XBinary::isRegExpPresent("^PERL",pPEInfo->listImports.at(i).sName.toUpper()))
                 {
                     QString sVersion=XBinary::regExp("(\\d+)",pPEInfo->listImports.at(i).sName.toUpper(),0);
 
@@ -7563,7 +7573,7 @@ void SpecAbstract::PE_handle_wxWidgets(QIODevice *pDevice, bool bIsImage, SpecAb
 
             for(int i=0; i<nNumberOfImports; i++)
             {
-                if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^WX")))
+                if(XBinary::isRegExpPresent("^WX",pPEInfo->listImports.at(i).sName.toUpper()))
                 {
                     QString sDllVersion=XBinary::regExp("(\\d+)",pPEInfo->listImports.at(i).sName.toUpper(),0);
 
@@ -7820,7 +7830,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
 
             for(int i=0; i<nNumberOfImports; i++)
             {
-                if(pPEInfo->listImports.at(i).sName.toUpper().contains(QRegExp("^CYGWIN")))
+                if(XBinary::isRegExpPresent("^CYGWIN",pPEInfo->listImports.at(i).sName.toUpper()))
                 {
                     QString sVersion=XBinary::regExp("(\\d+)",pPEInfo->listImports.at(i).sName.toUpper(),0);
 
@@ -8701,7 +8711,7 @@ void SpecAbstract::PE_handle_DongleProtection(QIODevice *pDevice,bool bIsImage, 
 
     if(pPEInfo->listImports.count()==1)
     {
-        if(pPEInfo->listImports.at(0).sName.toUpper().contains(QRegExp("^NOVEX")))
+        if(XBinary::isRegExpPresent("^NOVEX",pPEInfo->listImports.at(0).sName.toUpper()))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_DONGLEPROTECTION,RECORD_NAME_GUARDIANSTEALTH,"","",0);
             pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
@@ -12921,12 +12931,12 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
         {
             if(ss.name==RECORD_NAME_UNKNOWN)
             {
-                if((!vi.bIsValid)&&
-                        (!sComment.contains(QRegExp(".o$")))&&
-                        (!sComment.contains(QRegExp(".c$")))&&
-                        (!sComment.contains(QRegExp(".S22$")))&&
-                        (!sComment.contains(QRegExp(".s$")))&&
-                        (!sComment.contains(QRegExp(".S$"))))
+                if( (!vi.bIsValid)&&
+                    (!XBinary::isRegExpPresent(".o$",sComment))&&
+                    (!XBinary::isRegExpPresent(".c$",sComment))&&
+                    (!XBinary::isRegExpPresent(".S22$",sComment))&&
+                    (!XBinary::isRegExpPresent(".s$",sComment))&&
+                    (!XBinary::isRegExpPresent(".S$",sComment)))
                 {
                     _SCANS_STRUCT recordSS={};
 
