@@ -750,6 +750,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SPIRIT:                                sResult=QString("$pirit");                                      break;
         case RECORD_NAME_SPOONINSTALLER:                        sResult=QString("Spoon Installer");                             break;
         case RECORD_NAME_SPOONSTUDIO:                           sResult=QString("Spoon Studio");                                break;
+        case RECORD_NAME_SPOONSTUDIO2011:                       sResult=QString("Spoon Studio 2011");                           break;
         case RECORD_NAME_SQUEEZSFX:                             sResult=QString("Squeez Self Extractor");                       break;
         case RECORD_NAME_STARFORCE:                             sResult=QString("StarForce");                                   break;
         case RECORD_NAME_STASFODIDOCRYPTOR:                     sResult=QString("StasFodidoCryptor");                           break;
@@ -3039,7 +3040,22 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
         }
 
 
-        if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2009"))
+        // Spoon Studio
+        if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Spoon Studio 2011"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_SPOONSTUDIO2011,"","",0);
+            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            ss.sVersion.replace(", ",".");
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+        else if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Spoon Studio"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_SPOONSTUDIO,"","",0);
+            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            ss.sVersion.replace(", ",".");
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+        else if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2009"))
         {
             // Xenocode Virtual Application Studio 2009
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2009,"","",0);
@@ -3073,7 +3089,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
             ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
-        // TODO more versions of Xenocode
+        // TODO more versions of Xenocode, SpoonStudio
 
         // MoleBox Ultra
         if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_MOLEBOXULTRA))
@@ -8326,15 +8342,6 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_SPOONINSTALLER,"","",0);
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-            }
-
-            // Spoon Studio
-            if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Spoon Studio"))
-            {
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_SPOONSTUDIO,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
-                ss.sVersion.replace(", ",".");
-                pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
             if(pPEInfo->sResourceManifest.contains("DeployMaster Installer"))
