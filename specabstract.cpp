@@ -3089,7 +3089,16 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
             ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
-        // TODO more versions of Xenocode, SpoonStudio
+        else if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_SPOONSTUDIO))
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapOverlayDetects.value(RECORD_NAME_SPOONSTUDIO);
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+        else if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_XENOCODE))
+        {
+            _SCANS_STRUCT ss=pPEInfo->mapOverlayDetects.value(RECORD_NAME_XENOCODE);
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
 
         // MoleBox Ultra
         if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_MOLEBOXULTRA))
