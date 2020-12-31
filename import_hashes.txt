@@ -16559,3 +16559,13 @@ KERNEL32.dll GetModuleFileNameA
 
 Import hash: 8348d305
 USER32.dll MessageBoxA
+
+Import hash: 38eada856 37df662a
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL GetModuleHandleA
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL ExitProcess
+KERNEL32.DLL VirtualAlloc
+KERNEL32.DLL VirtualFree
+KERNEL32.DLL CreateMutexA
+USER32.DLL MessageBoxA

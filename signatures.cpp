@@ -716,6 +716,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WOUTHRSEXECRYPTER,            "1.0",              ""},                    0x1d8a9e5e20,   0xc9e08d88},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ROGUEPACK,                    "1.1",              "TEST"},                0xbb132a76d,    0xe23394a8},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ROGUEPACK,                    "3.3.1",            "TEST"},                0x855d9788c,    0x96ed2351},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TELOCK,                       "0.5X",             ""},                    0x38eada856,    0x37df662a}, // TODO All versions
     // Delphi cryptors
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ASSCRYPTER,                   "1.0",              "TEST"},                0x12d94ca858,   0x36fb88c9},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AASE,                         "1.0",              ""},                    0xc06abc0fa,    0x77035a90},
