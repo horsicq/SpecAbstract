@@ -798,6 +798,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_UTF8:                                  sResult=QString("UTF-8");                                       break;
         case RECORD_NAME_VALVE:                                 sResult=QString("Valve");                                       break;
         case RECORD_NAME_VBNET:                                 sResult=QString("VB .NET");                                     break;
+        case RECORD_NAME_VBSTOEXE:                              sResult=QString("Vbs To Exe");                                  break;
         case RECORD_NAME_VCASMPROTECTOR:                        sResult=QString("VCasm-Protector");                             break;
         case RECORD_NAME_VCL:                                   sResult=QString("Visual Component Library");                    break;
         case RECORD_NAME_VCLPACKAGEINFO:                        sResult=QString("VCL PackageInfo");                             break;
