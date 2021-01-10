@@ -9813,6 +9813,7 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
             if(sInterpreter=="") sInterpreter=XBinary::regExp("#!\\/usr\\/local\\/bin\\/(\\w+)",        pBinaryInfo->sHeaderText,1); // #!/usr/local/bin/ruby
             if(sInterpreter=="") sInterpreter=XBinary::regExp("#!\\/usr\\/bin\\/env (\\w+)",            pBinaryInfo->sHeaderText,1); // #!/usr/bin/env perl
             if(sInterpreter=="") sInterpreter=XBinary::regExp("#!\\/usr\\/bin\\/(\\w+)",                pBinaryInfo->sHeaderText,1); // #!/usr/bin/perl
+            if(sInterpreter=="") sInterpreter=XBinary::regExp("#!\\/bin\\/(\\w+)",                      pBinaryInfo->sHeaderText,1); // #!/bin/sh
             if(sInterpreter=="") sInterpreter=XBinary::regExp("#!(\\w+)",                               pBinaryInfo->sHeaderText,1); // #!perl
 
             if(sInterpreter=="perl")
@@ -9837,7 +9838,7 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
             }
             else
             {
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_TEXT,RECORD_TYPE_SOURCECODE,RECORD_NAME_PYTHON,sInterpreter,"",0);
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_TEXT,RECORD_TYPE_SOURCECODE,RECORD_NAME_SHELL,sInterpreter,"",0);
                 pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
             }
         }
