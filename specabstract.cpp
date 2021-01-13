@@ -780,6 +780,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_TURBOC:                                sResult=QString("Turbo C");                                     break;
         case RECORD_NAME_TURBOCPP:                              sResult=QString("Turbo C++");                                   break;
         case RECORD_NAME_TURBOLINKER:                           sResult=QString("Turbo linker");                                break;
+        case RECORD_NAME_TURBOSTUDIO:                           sResult=QString("Turbo Studio");                                break;
         case RECORD_NAME_TURKISHCYBERSIGNATURE:                 sResult=QString("Turkish Cyber Signature");                     break;
         case RECORD_NAME_TURKOJANCRYPTER:                       sResult=QString("Turkojan Crypter");                            break;
         case RECORD_NAME_UBUNTUCLANG:                           sResult=QString("Ubuntu clang");                                break;
@@ -3090,14 +3091,20 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
             ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
+        else if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Turbo Studio"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_TURBOSTUDIO,"","",0);
+            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
         else if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_SPOONSTUDIO))
         {
-            _SCANS_STRUCT ss=pPEInfo->mapOverlayDetects.value(RECORD_NAME_SPOONSTUDIO);
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_SPOONSTUDIO,"","",0);
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
         else if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_XENOCODE))
         {
-            _SCANS_STRUCT ss=pPEInfo->mapOverlayDetects.value(RECORD_NAME_XENOCODE);
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_XENOCODE,"","",0);
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
