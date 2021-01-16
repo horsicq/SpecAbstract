@@ -152,6 +152,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_overlay_records[]=
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_THINSTALL,                    "",                 ""},                    "09050000"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_NOSINSTALLER,                 "",                 ""},                    "'NOS_PO'"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_SECUROM,                      "",                 ""},                    "'AddD'03"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_SERGREENAPPACKER,             "",                 ""},                    "'<SerGreen>'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _COM_records[]=
