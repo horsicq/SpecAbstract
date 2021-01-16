@@ -3109,6 +3109,13 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
+        if(XPE::getResourceVersionValue("CompanyName",&(pPEInfo->resVersion)).contains("SerGreen"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PACKER,RECORD_NAME_SERGREENAPPACKER,"","",0);
+            ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+            pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
         // MoleBox Ultra
         if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_MOLEBOXULTRA))
         {
