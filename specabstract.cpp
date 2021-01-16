@@ -723,6 +723,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SECNEO:                                sResult=QString("SecNeo");                                      break;
         case RECORD_NAME_SECURESHADE:                           sResult=QString("Secure Shade");                                break;
         case RECORD_NAME_SECUROM:                               sResult=QString("SecuROM");                                     break;
+        case RECORD_NAME_SERGREENAPPACKER:                      sResult=QString("SerGreen Appacker");                           break;
         case RECORD_NAME_SETUPFACTORY:                          sResult=QString("Setup Factory");                               break;
         case RECORD_NAME_SEXECRYPTER:                           sResult=QString("Sexe Crypter");                                break;
         case RECORD_NAME_SHELL:                                 sResult=QString("Shell");                                       break;
