@@ -8175,6 +8175,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             {
                 if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_NOSINSTALLER))
                 {
+                    // TODO Version from resources!
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_NOSINSTALLER,"","",0);
                     pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
