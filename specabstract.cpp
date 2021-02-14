@@ -5867,6 +5867,11 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
                 _SCANS_STRUCT ss=pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_EAZFUSCATOR);
                 pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
+            else if(pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_EAZFUSCATOR))
+            {
+                _SCANS_STRUCT ss=pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_EAZFUSCATOR);
+                pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
             // Obfuscar
             if(pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_OBFUSCAR))
             {

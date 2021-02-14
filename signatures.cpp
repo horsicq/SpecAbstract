@@ -1349,6 +1349,7 @@ SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_XENOCODEPOSTBUILD,            "2.X-3.X",          ""},                    "Xenocode.Client.Attributes.AssemblyAttributes"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_CODEVEIL,                     "4.X",              ""},                    "____KILL"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_DOTNETSPIDER,                 "0.5-1.3",          ""},                    "NETSpider.Attribute"},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_EAZFUSCATOR,                  "",                 ""},                    "value__"},
 };
 
 SpecAbstract::STRING_RECORD _PE_dot_unicodestrings_records[]={
