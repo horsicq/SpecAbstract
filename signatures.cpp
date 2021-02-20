@@ -70,6 +70,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_ANDROIDARSC,                  "",                 ""},                    "02000C00"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_WINDOWSMEDIA,                 "",                 ""},                    "3026B2758E66CF11A6D900AA0062CE6C"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_FLASHVIDEO,                   "",                 ""},                    "'FLV'01"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_SHELL,                        "",                 ""},                    "'#!'"}, // "'#!c:\python\python.exe'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _archive_records[]=
@@ -149,7 +150,6 @@ SpecAbstract::SIGNATURE_RECORD _PE_overlay_records[]=
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_PDBFILELINK,                  "2.0",              ""},                    "'NB10'"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_PDBFILELINK,                  "7.0",              ""},                    "'RSDS'"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_DOTNETSHRINK,                 "2.01",             ""},                    "5D00000002"},
-    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_SHELL,                        "",                 ""},                    "'#!'"}, // "'#!c:\python\python.exe'"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_SIXXPACK,                     "",                 ""},                    "5D0000800000"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_THINSTALL,                    "",                 ""},                    "09050000"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_NOSINSTALLER,                 "",                 ""},                    "'NOS_PO'"},
