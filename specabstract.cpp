@@ -10358,7 +10358,8 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice,bool bIsImage, SpecA
     }
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINDOWSMEDIA))&&(pBinaryInfo->basic_info.nSize>=8))
     {
-        // Windows Media WMV/WMA
+        // Windows Media
+        // TODO WMV/WMA
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINDOWSMEDIA);
         // TODO Version
         pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
