@@ -830,6 +830,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WINDOWSBITMAP:                         sResult=QString("Windows Bitmap");                              break;
         case RECORD_NAME_WINDOWSICON:                           sResult=QString("Windows Icon");                                break;
         case RECORD_NAME_WINDOWSINSTALLER:                      sResult=QString("Windows Installer");                           break;
+        case RECORD_NAME_WINDOWSMEDIA:                          sResult=QString("Windows Media");                               break;
         case RECORD_NAME_WINGSCRYPT:                            sResult=QString("WingsCrypt");                                  break;
         case RECORD_NAME_WINKRIPT:                              sResult=QString("WinKript");                                    break;
         case RECORD_NAME_WINRAR:                                sResult=QString("WinRAR");                                      break;
@@ -10351,6 +10352,13 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice,bool bIsImage, SpecA
     {
         // MP4
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MP4);
+        // TODO Version
+        pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINDOWSMEDIA))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        // Windows Media WMV/WMA
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINDOWSMEDIA);
         // TODO Version
         pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
