@@ -454,6 +454,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_FISHNET:                               sResult=QString("FISH .NET");                                   break;
         case RECORD_NAME_FISHPEPACKER:                          sResult=QString("Fish PE Packer");                              break; // TODO Check name
         case RECORD_NAME_FISHPESHIELD:                          sResult=QString("FishPE Shield");                               break;
+        case RECORD_NAME_FLASHVIDEO:                            sResult=QString("Flash Video");                                 break;
         case RECORD_NAME_FLEXLM:                                sResult=QString("Flex License Manager");                        break;
         case RECORD_NAME_FLEXNET:                               sResult=QString("FlexNet Licensing");                           break;
         case RECORD_NAME_FPC:                                   sResult=QString("Free Pascal");                                 break;
@@ -10359,6 +10360,13 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice,bool bIsImage, SpecA
     {
         // Windows Media WMV/WMA
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINDOWSMEDIA);
+        // TODO Version
+        pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_FLASHVIDEO))&&(pBinaryInfo->basic_info.nSize>=8))
+    {
+        // Flash Video
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_FLASHVIDEO);
         // TODO Version
         pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }

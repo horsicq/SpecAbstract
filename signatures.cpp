@@ -69,6 +69,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_ANDROIDXML,                   "",                 ""},                    "03000800"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_ANDROIDARSC,                  "",                 ""},                    "02000C00"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_WINDOWSMEDIA,                 "",                 ""},                    "3026B2758E66CF11A6D900AA0062CE6C"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_FLASHVIDEO,                   "",                 ""},                    "'FLV'01"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _archive_records[]=
