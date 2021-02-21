@@ -266,6 +266,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ANTIDOTE:                              sResult=QString("AntiDote");                                    break;
         case RECORD_NAME_ANTILVL:                               sResult=QString("AntiLVL");                                     break;
         case RECORD_NAME_APACHEANT:                             sResult=QString("Apache Ant");                                  break;
+        case RECORD_NAME_APACK:                                 sResult=QString("aPACK");                                       break;
         case RECORD_NAME_APK_SIGNER:                            sResult=QString("apk-signer");                                  break;
         case RECORD_NAME_APKMODIFIERSIGNAPK:                    sResult=QString("ApkModifier SignApk");                         break;
         case RECORD_NAME_APKEDITOR:                             sResult=QString("ApkEditor");                                   break;
@@ -12384,6 +12385,12 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
         if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_UCEXE))
         {
             _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_UCEXE);
+            pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
+        }
+
+        if(pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_APACK))
+        {
+            _SCANS_STRUCT ss=pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_APACK);
             pMSDOSInfo->mapResultPackers.insert(ss.name,scansToScan(&(pMSDOSInfo->basic_info),&ss));
         }
 
