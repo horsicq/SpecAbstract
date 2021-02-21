@@ -1455,10 +1455,11 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.20-0.60",        ""},                    "8CCBB9....BE....89F71EA9....8D......8ED805....8EC0FDF3A5FC"},
     {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.82-3.XX",        ""},                    "B9....BE....89F71EA9....8CC805....8ED805....8EC0FDF3A5FC2E........73..92AFAD0E0E"},
     {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_LOCKTITE,                     "",                 ""},                    "8CC88ED88CC381C3....8BC30306....8EC08B0E....8BF14E8BFEFDF3A450B8....50CB"},
-    {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PCOM,                         "2.8b2-2.8b3 -e -i",""},                    "BE....B9....2E8A0434..2E880446E2"},
+    {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PCOM,                         "2.8b2-2.8b3",      "-e -i"},               "BE....B9....2E8A0434..2E880446E2"},
 
     {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_APACK,                        "0.90-0.99,XE_1.3-1.4", ""},                "1E068CCBBA....03DAFC33F633FF4B8EDB8D......8EC0B9....F3A54A75..8EC38ED833FFBE....05....0E50"},
     {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_APACK,                        "0.82",             ""},                    "1E068CCBBA....03DA8D87....FC33F633FF484B8EC08EDBB9....F3A54A75..8EC38ED833FFBE....05....0E50"},
+    {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_APACK,                        "0.94",             "-m -d"},               "8CC88ED805....8EC050BE....33FFFCB2..BD....33C950A4FFD5"},
     // TODO More
 };
 
