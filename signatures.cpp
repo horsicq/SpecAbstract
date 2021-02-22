@@ -1460,6 +1460,7 @@ SpecAbstract::SIGNATURE_RECORD _MSDOS_entrypoint_records[]=
     {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_APACK,                        "0.90-0.99,XE_1.3-1.4", ""},                "1E068CCBBA....03DAFC33F633FF4B8EDB8D......8EC0B9....F3A54A75..8EC38ED833FFBE....05....0E50"},
     {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_APACK,                        "0.82",             ""},                    "1E068CCBBA....03DA8D87....FC33F633FF484B8EC08EDBB9....F3A54A75..8EC38ED833FFBE....05....0E50"},
     {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_APACK,                        "0.94",             "-m -d"},               "8CC88ED805....8EC050BE....33FFFCB2..BD....33C950A4FFD5"},
+    {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_APACK,                        "0.98, 0.99",       "-t"},                  "1E060E1F0E07BE....BF....8BCFFC57F3A4C3"},
     // TODO More
 };
 
