@@ -6273,6 +6273,8 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, SpecAb
             }
         }
 
+        // TODO if Export ^? RECORD_NAME_VISUALCCPP/C++
+
         if((ssMFC.name==RECORD_NAME_MFC)&&(ssMFC.sVersion==""))
         {
             if((ssCompiler.name==RECORD_NAME_VISUALCCPP)&&(ssLinker.sVersion!=""))
