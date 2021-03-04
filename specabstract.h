@@ -1066,6 +1066,7 @@ public:
         QMap<RECORD_NAME,_SCANS_STRUCT> mapOverlayDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapImportDetects;
+        QMap<RECORD_NAME,_SCANS_STRUCT> mapExportDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapDotAnsiStringsDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapDotUnicodeStringsDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapCodeSectionDetects;
@@ -1249,7 +1250,7 @@ public:
 
     static _SCANS_STRUCT getScansStruct(quint32 nVariant,XBinary::FT fileType,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo,qint64 nOffset);
 
-    static void PE_handle_import(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_import(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo); // TODO remove !!!
     static void PE_handle_Protection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo,bool *pbIsStop);
     static void PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_VProtect(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo); // TODO move to protection

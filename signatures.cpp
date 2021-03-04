@@ -868,7 +868,7 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXPRESSOR_USER32,             "1.4.5.X",          ""},                    1,              0x8348d305},
 };
 
-SpecAbstract::PE_RESOURCES_RECORD _PE_resorces_records[]=
+SpecAbstract::PE_RESOURCES_RECORD _PE_resources_records[]=
 {
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_VCL,                          "",                 ""},                    false,      "",         XPE_DEF::S_RT_RCDATA,       true,   "PACKAGEINFO",      0},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_VCL,                          "",                 ""},                    false,      "",         XPE_DEF::S_RT_RCDATA,       true,   "DVCLAL",           0},
@@ -886,6 +886,12 @@ SpecAbstract::PE_RESOURCES_RECORD _PE_resorces_records[]=
 };
 
 // TODO Resource version
+
+// TODO
+SpecAbstract::STRING_RECORD _PE_exportExp_records[]=
+{
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_CCPP,                         "",                 ""},                    "#include [\"<].*?[>\"]"},
+};
 
 SpecAbstract::MSRICH_RECORD _MS_rich_records[]=
 {
@@ -1391,7 +1397,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_dot_codesection_records[]=
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_FISHNET,                      "",                 ""},                    "0800'FISH_NET'"},
 };
 
-SpecAbstract::STRING_RECORD _TEXT_records[]=
+SpecAbstract::STRING_RECORD _TEXT_Exp_records[]=
 {
     {{0, XBinary::FT_TEXT,      SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_CCPP,                         "",                 ""},                    "#include [\"<].*?[>\"]"},
     {{0, XBinary::FT_TEXT,      SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_CCPP,                         "",                 "header"},              "#ifndef (\\w+).*\\s+#define \\1"},

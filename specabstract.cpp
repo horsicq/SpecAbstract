@@ -2453,6 +2453,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.fileType,XBinary::FT_MSDOS,&(result.basic_info),DETECTTYPE_HEADER,pbIsStop);
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_PE_header_records,sizeof(_PE_header_records),result.basic_info.id.fileType,XBinary::FT_PE,&(result.basic_info),DETECTTYPE_HEADER,pbIsStop);
         signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_PE_entrypoint_records,sizeof(_PE_entrypoint_records),result.basic_info.id.fileType,XBinary::FT_PE,&(result.basic_info),DETECTTYPE_ENTRYPOINT,pbIsStop);
+        signatureExpScan(&pe,&(result.basic_info.memoryMap),&result.mapEntryPointDetects,result.nEntryPointOffset,_PE_entrypointExp_records,sizeof(_PE_entrypointExp_records),result.basic_info.id.fileType,XBinary::FT_PE,&(result.basic_info),DETECTTYPE_ENTRYPOINT,pbIsStop);
         signatureScan(&result.mapOverlayDetects,result.sOverlaySignature,_binary_records,sizeof(_binary_records),result.basic_info.id.fileType,XBinary::FT_BINARY,&(result.basic_info),DETECTTYPE_OVERLAY,pbIsStop);
         signatureScan(&result.mapOverlayDetects,result.sOverlaySignature,_archive_records,sizeof(_archive_records),result.basic_info.id.fileType,XBinary::FT_ARCHIVE,&(result.basic_info),DETECTTYPE_OVERLAY,pbIsStop);
         signatureScan(&result.mapOverlayDetects,result.sOverlaySignature,_PE_overlay_records,sizeof(_PE_overlay_records),result.basic_info.id.fileType,XBinary::FT_BINARY,&(result.basic_info),DETECTTYPE_OVERLAY,pbIsStop);
@@ -2462,6 +2463,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         // Import
         constScan(&(result.mapImportDetects),result.nImportHash64,result.nImportHash32,_PE_importhash_records,sizeof(_PE_importhash_records),result.basic_info.id.fileType,XBinary::FT_PE,&(result.basic_info),DETECTTYPE_IMPORTHASH,pbIsStop);
 
+        // Export
+
         int nNumberOfImports=result.listImportPositionHashes.count();
 
         for(int i=0;i<nNumberOfImports;i++)
@@ -2469,10 +2472,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
             constScan(&(result.mapImportDetects),i,result.listImportPositionHashes.at(i),_PE_importpositionhash_records,sizeof(_PE_importpositionhash_records),result.basic_info.id.fileType,XBinary::FT_PE,&(result.basic_info),DETECTTYPE_IMPORTHASH,pbIsStop);
         }
 
-        signatureExpScan(&pe,&(result.basic_info.memoryMap),&result.mapEntryPointDetects,result.nEntryPointOffset,_PE_entrypointExp_records,sizeof(_PE_entrypointExp_records),result.basic_info.id.fileType,XBinary::FT_PE,&(result.basic_info),DETECTTYPE_ENTRYPOINT,pbIsStop);
-
         // TODO Resources scan
-        PE_resourcesScan(&(result.mapResourcesDetects),&(result.listResources),_PE_resorces_records,sizeof(_PE_resorces_records),result.basic_info.id.fileType,XBinary::FT_PE,&(result.basic_info),DETECTTYPE_RESOURCES,pbIsStop);
+        PE_resourcesScan(&(result.mapResourcesDetects),&(result.listResources),_PE_resources_records,sizeof(_PE_resources_records),result.basic_info.id.fileType,XBinary::FT_PE,&(result.basic_info),DETECTTYPE_RESOURCES,pbIsStop);
 
         PE_x86Emul(pDevice,pOptions->bIsImage,&result);
 
@@ -9772,19 +9773,19 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
 
     if((pBinaryInfo->bIsPlainText)||(pBinaryInfo->unicodeType!=XBinary::UNICODE_TYPE_NONE)||(pBinaryInfo->bIsUTF8))
     {
-        int nSignaturesCount=sizeof(_TEXT_records)/sizeof(STRING_RECORD);
+        int nSignaturesCount=sizeof(_TEXT_Exp_records)/sizeof(STRING_RECORD);
 
-        for(int i=0; i<nSignaturesCount; i++) // TODO move to an own function
+        for(int i=0; i<nSignaturesCount; i++) // TODO move to an own function !!!
         {
-            if(XBinary::isRegExpPresent(_TEXT_records[i].pszString,pBinaryInfo->sHeaderText))
+            if(XBinary::isRegExpPresent(_TEXT_Exp_records[i].pszString,pBinaryInfo->sHeaderText))
             {
                 _SCANS_STRUCT record={};
-                record.nVariant=_TEXT_records[i].basicInfo.nVariant;
-                record.fileType=_TEXT_records[i].basicInfo.fileType;
-                record.type=_TEXT_records[i].basicInfo.type;
-                record.name=_TEXT_records[i].basicInfo.name;
-                record.sVersion=_TEXT_records[i].basicInfo.pszVersion;
-                record.sInfo=_TEXT_records[i].basicInfo.pszInfo;
+                record.nVariant=_TEXT_Exp_records[i].basicInfo.nVariant;
+                record.fileType=_TEXT_Exp_records[i].basicInfo.fileType;
+                record.type=_TEXT_Exp_records[i].basicInfo.type;
+                record.name=_TEXT_Exp_records[i].basicInfo.name;
+                record.sVersion=_TEXT_Exp_records[i].basicInfo.pszVersion;
+                record.sInfo=_TEXT_Exp_records[i].basicInfo.pszInfo;
                 record.nOffset=0;
 
                 pBinaryInfo->mapTextHeaderDetects.insert(record.name,record);
