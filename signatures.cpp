@@ -890,7 +890,7 @@ SpecAbstract::PE_RESOURCES_RECORD _PE_resources_records[]=
 // TODO
 SpecAbstract::STRING_RECORD _PE_exportExp_records[]=
 {
-    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_CCPP,                         "",                 ""},                    "#include [\"<].*?[>\"]"},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "",                 ""},                    "^$"},
 };
 
 SpecAbstract::MSRICH_RECORD _MS_rich_records[]=
