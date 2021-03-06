@@ -893,6 +893,8 @@ SpecAbstract::STRING_RECORD _PE_exportExp_records[]=
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VISUALCCPP,                   "",                 ""},                    "^$"},
 };
 
+// TODO import
+
 SpecAbstract::MSRICH_RECORD _MS_rich_records[]=
 {
     {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IMPORT,                       "",                 ""},                    0x0001,         0},             // Linker generated import object version 0
