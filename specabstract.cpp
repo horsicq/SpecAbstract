@@ -6717,7 +6717,8 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
 
             qint64 nOffset_BorlandCPP=-1;
             qint64 nOffset_CodegearCPP=-1;
-            qint64 nOffset_EmbarcaderoCPP=-1;
+            qint64 nOffset_EmbarcaderoCPP_old=-1;
+            qint64 nOffset_EmbarcaderoCPP_new=-1;
 
             QList<VCL_STRUCT> listVCL;
 
@@ -6763,7 +6764,12 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
 
                     if(nOffset_CodegearCPP==-1)
                     {
-                        nOffset_EmbarcaderoCPP=pe.find_ansiString(_nOffset,_nSize,"Embarcadero RAD Studio - Copyright "); // Embarcadero RAD Studio - Copyright 2009 Embarcadero Technologies, Inc.
+                        nOffset_EmbarcaderoCPP_old=pe.find_ansiString(_nOffset,_nSize,"Embarcadero RAD Studio - Copyright "); // Embarcadero RAD Studio - Copyright 2009 Embarcadero Technologies, Inc.
+
+                        if(nOffset_EmbarcaderoCPP_old==-1)
+                        {
+                            nOffset_EmbarcaderoCPP_new=pe.find_ansiString(_nOffset,_nSize,"Embarcadero RAD Studio 27.0 - Copyright 2020 Embarcadero Technologies, Inc.");
+                        }
                     }
                 }
             }
@@ -6777,7 +6783,8 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                     (nOffset_TObject!=-1)||
                     (nOffset_BorlandCPP!=-1)||
                     (nOffset_CodegearCPP!=-1)||
-                    (nOffset_EmbarcaderoCPP!=-1)||
+                    (nOffset_EmbarcaderoCPP_old!=-1)||
+                    (nOffset_EmbarcaderoCPP_new!=-1)||
                     bCppExport)
             {
                 bool bCpp=false;
@@ -6801,7 +6808,8 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_BORLANDCPP)||
                         (nOffset_BorlandCPP!=-1)||
                         (nOffset_CodegearCPP!=-1)||
-                        (nOffset_EmbarcaderoCPP!=-1)||
+                        (nOffset_EmbarcaderoCPP_old!=-1)||
+                        (nOffset_EmbarcaderoCPP_new!=-1)||
                         bCppExport)
                 {
                     bCpp=true;
@@ -6814,7 +6822,11 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                     {
                         company=COMPANY_CODEGEAR;
                     }
-                    else if(nOffset_EmbarcaderoCPP!=-1)
+                    else if(nOffset_EmbarcaderoCPP_old!=-1)
+                    {
+                        company=COMPANY_EMBARCADERO;
+                    }
+                    else if(nOffset_EmbarcaderoCPP_new!=-1)
                     {
                         company=COMPANY_EMBARCADERO;
                     }
@@ -6881,9 +6893,14 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                     sCppCompilerVersion=pe.read_ansiString(nOffset_CodegearCPP+25,4);
                 }
 
-                if(nOffset_EmbarcaderoCPP!=-1)
+                if(nOffset_EmbarcaderoCPP_old!=-1)
                 {
-                    sCppCompilerVersion=pe.read_ansiString(nOffset_EmbarcaderoCPP+35,4);
+                    sCppCompilerVersion=pe.read_ansiString(nOffset_EmbarcaderoCPP_old+35,4);
+                }
+
+                if(nOffset_EmbarcaderoCPP_new!=-1)
+                {
+                    sCppCompilerVersion=pe.read_ansiString(nOffset_EmbarcaderoCPP_new+40,4);
                 }
 
                 if(sCppCompilerVersion=="2009")
@@ -6893,6 +6910,10 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                 else if(sCppCompilerVersion=="2015")
                 {
                     sBuilderVersion="2015";
+                }
+                else if(sCppCompilerVersion=="2020")
+                {
+                    sBuilderVersion="10.4";
                 }
 
                 if(listVCL.count())
