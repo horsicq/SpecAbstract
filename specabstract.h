@@ -1042,7 +1042,7 @@ public:
         qint64 nOverlayOffset;
         qint64 nOverlaySize;
         XMSDOS_DEF::IMAGE_DOS_HEADEREX dosHeader;
-        XPE_DEF::S_IMAGE_FILE_HEADER fileHeader;
+        XPE_DEF::IMAGE_FILE_HEADER fileHeader;
         union OPTIONAL_HEADER
         {
             XPE_DEF::IMAGE_OPTIONAL_HEADER32 optionalHeader32;
