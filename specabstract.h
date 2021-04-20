@@ -366,6 +366,7 @@ public:
         RECORD_NAME_INSTALL4J,
         RECORD_NAME_INSTALLANYWHERE,
         RECORD_NAME_INSTALLSHIELD,
+        RECORD_NAME_IPA,
         RECORD_NAME_IPBPROTECT,
         RECORD_NAME_ISO9660,
         RECORD_NAME_JACK,
@@ -910,6 +911,7 @@ public:
 
         bool bIsJAR=false;
         bool bIsAPK=false;
+        bool bIsIPA=false;
         bool bIsJava=false;
         bool bIsKotlin=false;
 
@@ -925,6 +927,15 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultFormats;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultAPKProtectors;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
+
+        QList<SCAN_STRUCT> listRecursiveDetects;
+    };
+
+    struct MACHOFATINFO_STRUCT
+    {
+        BASIC_INFO basic_info;
+
+        QList<XArchive::RECORD> listArchiveRecords;
 
         QList<SCAN_STRUCT> listRecursiveDetects;
     };
@@ -1017,7 +1028,7 @@ public:
         QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
-    struct MACHINFO_STRUCT
+    struct MACHOINFO_STRUCT
     {
         BASIC_INFO basic_info;
         QString sEntryPointSignature;
@@ -1241,12 +1252,13 @@ public:
     static BINARYINFO_STRUCT getBinaryInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
     static MSDOSINFO_STRUCT getMSDOSInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
     static ELFINFO_STRUCT getELFInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
-    static MACHINFO_STRUCT getMACHInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
+    static MACHOINFO_STRUCT getMACHOInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
     static LEINFO_STRUCT getLEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
     static NEINFO_STRUCT getNEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
     static PEINFO_STRUCT getPEInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
     static DEXINFO_STRUCT getDEXInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
     static ZIPINFO_STRUCT getZIPInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
+    static MACHOFATINFO_STRUCT getMACHOFATInfo(QIODevice *pDevice,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
 
     static _SCANS_STRUCT getScansStruct(quint32 nVariant,XBinary::FT fileType,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo,qint64 nOffset);
 
@@ -1320,8 +1332,9 @@ public:
 
     static void ELF_handle_FixDetects(QIODevice *pDevice,bool bIsImage,ELFINFO_STRUCT *pELFInfo);
 
-    static void MACH_handle_Tools(QIODevice *pDevice,bool bIsImage,MACHINFO_STRUCT *pMACHInfo);
-    static void MACH_handle_Protection(QIODevice *pDevice,bool bIsImage,MACHINFO_STRUCT *pMACHInfo);
+    static void MACHO_handle_Tools(QIODevice *pDevice,bool bIsImage,MACHOINFO_STRUCT *pMACHInfo);
+    static void MACHO_handle_Protection(QIODevice *pDevice,bool bIsImage,MACHOINFO_STRUCT *pMACHInfo);
+    static void MACHO_handle_FixDetects(QIODevice *pDevice,bool bIsImage,MACHOINFO_STRUCT *pMACHInfo);
 
     static void LE_handle_Microsoft(QIODevice *pDevice,bool bIsImage,LEINFO_STRUCT *pLEInfo,bool *pbIsStop);
     static void LE_handle_Borland(QIODevice *pDevice,bool bIsImage,LEINFO_STRUCT *pLEInfo);
@@ -1337,6 +1350,7 @@ public:
     static void Zip_handle_Metainfos(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_JAR(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
     static void Zip_handle_APK(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
+    static void Zip_handle_IPA(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_Recursive(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
     static void Zip_handle_FixDetects(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
 

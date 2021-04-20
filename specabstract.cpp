@@ -75,7 +75,7 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
         }
         else if(stFileTypes.contains(XBinary::FT_MACHO32)||stFileTypes.contains(XBinary::FT_MACHO64))
         {
-            SpecAbstract::MACHINFO_STRUCT mach_info=SpecAbstract::getMACHInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
+            SpecAbstract::MACHOINFO_STRUCT mach_info=SpecAbstract::getMACHOInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
             pScanResult->listRecords.append(mach_info.basic_info.listDetects);
             pScanResult->listHeurs.append(mach_info.basic_info.listHeurs);
@@ -104,6 +104,13 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
         else if(stFileTypes.contains(XBinary::FT_ZIP))
         {
             SpecAbstract::ZIPINFO_STRUCT zip_info=SpecAbstract::getZIPInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
+
+            pScanResult->listRecords.append(zip_info.basic_info.listDetects);
+            pScanResult->listHeurs.append(zip_info.basic_info.listHeurs);
+        }
+        else if(stFileTypes.contains(XBinary::FT_MACHOFAT))
+        {
+            SpecAbstract::MACHOFATINFO_STRUCT zip_info=SpecAbstract::getMACHOFATInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
             pScanResult->listRecords.append(zip_info.basic_info.listDetects);
             pScanResult->listHeurs.append(zip_info.basic_info.listHeurs);
@@ -513,6 +520,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_INSTALL4J:                             sResult=QString("install4j");                                   break;
         case RECORD_NAME_INSTALLANYWHERE:                       sResult=QString("InstallAnywhere");                             break;
         case RECORD_NAME_INSTALLSHIELD:                         sResult=QString("InstallShield");                               break;
+        case RECORD_NAME_IPA:                                   sResult=QString("iOS App Store Package");                       break;
         case RECORD_NAME_IPBPROTECT:                            sResult=QString("iPB Protect");                                 break;
         case RECORD_NAME_ISO9660:                               sResult=QString("ISO 9660");                                    break;
         case RECORD_NAME_JACK:                                  sResult=QString("Jack");                                        break;
@@ -2090,12 +2098,12 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
     return result;
 }
 
-SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
 
-    MACHINFO_STRUCT result={};
+    MACHOINFO_STRUCT result={};
 
     XMACH mach(pDevice,pOptions->bIsImage);
 
@@ -2127,8 +2135,10 @@ SpecAbstract::MACHINFO_STRUCT SpecAbstract::getMACHInfo(QIODevice *pDevice, Spec
         // TODO Segments
         // TODO Sections
 
-        MACH_handle_Tools(pDevice,pOptions->bIsImage,&result);
-        MACH_handle_Protection(pDevice,pOptions->bIsImage,&result);
+        MACHO_handle_Tools(pDevice,pOptions->bIsImage,&result);
+        MACHO_handle_Protection(pDevice,pOptions->bIsImage,&result);
+
+        MACHO_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
@@ -2743,10 +2753,15 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
 
         result.bIsJAR=XArchive::isArchiveRecordPresent("META-INF/MANIFEST.MF",&(result.listArchiveRecords));
         result.bIsAPK=XArchive::isArchiveRecordPresent("classes.dex",&(result.listArchiveRecords));
+        result.bIsIPA=XArchive::isArchiveRecordPresent("Payload/",&(result.listArchiveRecords));
         result.bIsKotlin=   XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version",&(result.listArchiveRecords))||
                             XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins",&(result.listArchiveRecords));
 
-        if((result.bIsJAR)&&(!(result.bIsAPK)))
+        if(result.bIsIPA)
+        {
+            result.basic_info.id.fileType=XBinary::FT_IPA;
+        }
+        else if((result.bIsJAR)&&(!(result.bIsAPK)))
         {
             result.basic_info.id.fileType=XBinary::FT_JAR;
         }
@@ -2768,6 +2783,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
 
         Zip_handle_JAR(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
         Zip_handle_APK(pDevice,pOptions->bIsImage,&result);
+        Zip_handle_IPA(pDevice,pOptions->bIsImage,&result);
 
         Zip_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
 
@@ -2792,6 +2808,83 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
 
             result.basic_info.bIsUnknown=true;
         }
+
+        result.basic_info.listDetects.append(result.listRecursiveDetects);
+    }
+
+    result.basic_info.nElapsedTime=timer.elapsed();
+
+    return result;
+}
+
+SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    MACHOFATINFO_STRUCT result={};
+
+    XMACHOFat xmachofat(pDevice);
+
+    if(xmachofat.isValid()&&(!(*pbIsStop)))
+    {
+        result.basic_info.parentId=parentId;
+        result.basic_info.id.fileType=XBinary::FT_ARCHIVE;
+        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.nOffset=nOffset;
+        result.basic_info.nSize=pDevice->size();
+        result.basic_info.sHeaderSignature=xmachofat.getSignature(0,150);
+        result.basic_info.bIsDeepScan=pOptions->bDeepScan;
+        result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bShowDetects=pOptions->bShowDetects;
+        result.basic_info.bIsTest=pOptions->bIsTest;
+        result.basic_info.memoryMap=xmachofat.getMemoryMap();
+
+        result.listArchiveRecords=xmachofat.getRecords();
+
+        int nNumberOfRecords=result.listArchiveRecords.count();
+
+        for(int i=0;(i<nNumberOfRecords)&&(!(*pbIsStop));i++)
+        {
+            SpecAbstract::SCAN_RESULT scanResult={0};
+
+            SpecAbstract::ID _parentId=result.basic_info.id;
+            _parentId.filePart=SpecAbstract::RECORD_FILEPART_ARCHIVERECORD;
+            _parentId.sInfo=result.listArchiveRecords.at(i).sFileName;
+            _parentId.bVirtual=true; // TODO Check
+
+            QTemporaryFile fileTemp;
+
+            if(fileTemp.open())
+            {
+                QString sTempFileName=fileTemp.fileName();
+
+                if(xmachofat.decompressToFile(&(result.listArchiveRecords.at(i)),sTempFileName))
+                {
+                    QFile file;
+
+                    file.setFileName(sTempFileName);
+
+                    if(file.open(QIODevice::ReadOnly))
+                    {
+                        scan(&file,&scanResult,0,file.size(),_parentId,pOptions,false,pbIsStop);
+
+                        file.close();
+                    }
+                }
+            }
+
+            result.listRecursiveDetects.append(scanResult.listRecords);
+        }
+
+
+        _SCANS_STRUCT ssFormat=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_MACHOFAT,"","",0);;
+
+        ssFormat.sVersion=xmachofat.getVersion();
+        ssFormat.sInfo=QString("%1 records").arg(xmachofat.getNumberOfRecords());
+
+        result.basic_info.listDetects.append(scansToScan(&(result.basic_info),&ssFormat));
 
         result.basic_info.listDetects.append(result.listRecursiveDetects);
     }
@@ -11845,6 +11938,26 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
     }
 }
 
+void SpecAbstract::Zip_handle_IPA(QIODevice *pDevice, bool bIsImage, SpecAbstract::ZIPINFO_STRUCT *pZipInfo)
+{
+    Q_UNUSED(bIsImage)
+
+    XZip xzip(pDevice);
+
+    if(xzip.isValid())
+    {
+        if(pZipInfo->bIsIPA)
+        {
+            _SCANS_STRUCT ssFormat=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_IPA,"","",0);;
+
+            ssFormat.sVersion=xzip.getVersion();
+            ssFormat.sInfo=QString("%1 records").arg(xzip.getNumberOfRecords());
+
+            pZipInfo->basic_info.listDetects.append(scansToScan(&(pZipInfo->basic_info),&ssFormat));
+        }
+    }
+}
+
 void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAbstract::ZIPINFO_STRUCT *pZipInfo, SpecAbstract::SCAN_OPTIONS *pOptions, bool *pbIsStop)
 {
     Q_UNUSED(bIsImage)
@@ -11853,7 +11966,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
 
     if(xzip.isValid())
     {
-        if((pZipInfo->bIsAPK)&&(pOptions->bRecursiveScan))
+        if(((pZipInfo->bIsAPK)||(pZipInfo->bIsIPA))&&(pOptions->bRecursiveScan))
         {
             if(pOptions->bDeepScan)
             {
@@ -11892,7 +12005,10 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
 
                     if( stFileTypes.contains(XBinary::FT_DEX)||
                         stFileTypes.contains(XBinary::FT_ELF32)||
-                        stFileTypes.contains(XBinary::FT_ELF64))
+                        stFileTypes.contains(XBinary::FT_ELF64)||
+                        stFileTypes.contains(XBinary::FT_MACHOFAT)||
+                        stFileTypes.contains(XBinary::FT_MACHO32)||
+                        stFileTypes.contains(XBinary::FT_MACHO64))
                     {
                         SpecAbstract::SCAN_RESULT scanResult={0};
 
@@ -13501,7 +13617,7 @@ void SpecAbstract::ELF_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Spec
     }
 }
 
-void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstract::MACHINFO_STRUCT *pMACHInfo)
+void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstract::MACHOINFO_STRUCT *pMACHInfo)
 {
     XMACH mach(pDevice,bIsImage);
 
@@ -13557,7 +13673,7 @@ void SpecAbstract::MACH_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbst
     }
 }
 
-void SpecAbstract::MACH_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecAbstract::MACHINFO_STRUCT *pMACHInfo)
+void SpecAbstract::MACHO_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecAbstract::MACHOINFO_STRUCT *pMACHInfo)
 {
     XMACH mach(pDevice,bIsImage);
 
@@ -13574,6 +13690,39 @@ void SpecAbstract::MACH_handle_Protection(QIODevice *pDevice, bool bIsImage, Spe
             recordSS.name=SpecAbstract::RECORD_NAME_VMPROTECT;
 
             pMACHInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
+        }
+    }
+}
+
+void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, bool bIsImage, SpecAbstract::MACHOINFO_STRUCT *pMACHInfo)
+{
+    XMACH mach(pDevice,bIsImage);
+
+    if(mach.isValid())
+    {
+        if(pMACHInfo->basic_info.bIsTest)
+        {
+            static QMap<quint64,QString> mapCommands=XMACH::getLoadCommandTypesS();
+
+            QList<XMACH::COMMAND_RECORD> list=mach.getCommandRecords();
+
+            QSet<quint32> stRecords;
+
+            for(int i=0;i<list.count();i++)
+            {
+                if(!stRecords.contains(list.at(i).nType))
+                {
+                    _SCANS_STRUCT recordSS={};
+
+                    recordSS.type=RECORD_TYPE_LIBRARY;
+                    recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+i+1);
+                    recordSS.sVersion=mapCommands.value(list.at(i).nType);
+
+                    pMACHInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
+
+                    stRecords.insert(list.at(i).nType);
+                }
+            }
         }
     }
 }
