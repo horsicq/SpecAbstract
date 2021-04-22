@@ -211,6 +211,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_LINKER:                                sResult=tr("Linker");                                           break;
         case RECORD_TYPE_NETCOMPRESSOR:                         sResult=QString(".NET %1").arg(tr("compressor"));               break;
         case RECORD_TYPE_NETOBFUSCATOR:                         sResult=QString(".NET %1").arg(tr("obfuscator"));               break;
+        case RECORD_TYPE_OPERATIONSYSTEM:                       sResult=tr("Operation system");                                 break;
         case RECORD_TYPE_PACKER:                                sResult=tr("Packer");                                           break;
         case RECORD_TYPE_PETOOL:                                sResult=QString("PE %1").arg(tr("Tool"));                       break;
         case RECORD_TYPE_PROTECTOR:                             sResult=tr("Protector");                                        break;
@@ -259,6 +260,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALLATORIOBFUSCATOR:                    sResult=QString("Allatori Obfuscator");                         break;
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
         case RECORD_NAME_ANDPAKK2:                              sResult=QString("ANDpakk2");                                    break;
+        case RECORD_NAME_ANDROID:                               sResult=QString("Android");                                     break;
         case RECORD_NAME_ANDROIDAPKSIGNER:                      sResult=QString("Android apksigner");                           break;
         case RECORD_NAME_ANDROIDARSC:                           sResult=QString("Android ARSC");                                break;
         case RECORD_NAME_ANDROIDCLANG:                          sResult=QString("Android clang");                               break;
@@ -520,6 +522,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_INSTALL4J:                             sResult=QString("install4j");                                   break;
         case RECORD_NAME_INSTALLANYWHERE:                       sResult=QString("InstallAnywhere");                             break;
         case RECORD_NAME_INSTALLSHIELD:                         sResult=QString("InstallShield");                               break;
+        case RECORD_NAME_IOS:                                   sResult=QString("iOS");                                         break;
         case RECORD_NAME_IPA:                                   sResult=QString("iOS App Store Package");                       break;
         case RECORD_NAME_IPBPROTECT:                            sResult=QString("iPB Protect");                                 break;
         case RECORD_NAME_ISO9660:                               sResult=QString("ISO 9660");                                    break;
@@ -565,6 +568,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LZEXE:                                 sResult=QString("LZEXE");                                       break;
         case RECORD_NAME_LZFSE:                                 sResult=QString("LZFSE");                                       break;
         case RECORD_NAME_MACHOFAT:                              sResult=QString("Mach-O FAT");                                  break;
+        case RECORD_NAME_MACOS:                                 sResult=QString("macOS");                                       break;
         case RECORD_NAME_MACROBJECT:                            sResult=QString("Macrobject");                                  break;
         case RECORD_NAME_MALPACKER:                             sResult=QString("Mal Packer");                                  break;
         case RECORD_NAME_MASKPE:                                sResult=QString("MaskPE");                                      break;
@@ -645,6 +649,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ORACLESOLARISLINKEDITORS:              sResult=QString("Oracle Solaris Link Editors");                 break;
         case RECORD_NAME_ORIEN:                                 sResult=QString("ORiEN");                                       break;
         case RECORD_NAME_OSCCRYPTER:                            sResult=QString("OSC-Crypter");                                 break;
+        case RECORD_NAME_OSX:                                   sResult=QString("OSX");                                         break;
         case RECORD_NAME_P0KESCRAMBLER:                         sResult=QString("p0ke Scrambler");                              break;
         case RECORD_NAME_PACKMAN:                               sResult=QString("Packman");                                     break;
         case RECORD_NAME_PACKWIN:                               sResult=QString("PACKWIN");                                     break;
@@ -794,6 +799,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_TURBOSTUDIO:                           sResult=QString("Turbo Studio");                                break;
         case RECORD_NAME_TURKISHCYBERSIGNATURE:                 sResult=QString("Turkish Cyber Signature");                     break;
         case RECORD_NAME_TURKOJANCRYPTER:                       sResult=QString("Turkojan Crypter");                            break;
+        case RECORD_NAME_TVOS:                                  sResult=QString("tvOS");                                        break;
         case RECORD_NAME_UBUNTUCLANG:                           sResult=QString("Ubuntu clang");                                break;
         case RECORD_NAME_UCEXE:                                 sResult=QString("UCEXE");                                       break;
         case RECORD_NAME_UNDERGROUNDCRYPTER:                    sResult=QString("UnderGround Crypter");                         break;
@@ -828,6 +834,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_VMWARE:                                sResult=QString("VMware");                                      break;
         case RECORD_NAME_VPACKER:                               sResult=QString("VPacker");                                     break;
         case RECORD_NAME_WANGZEHUALLVM:                         sResult=QString("wangzehua LLVM");                              break;
+        case RECORD_NAME_WATCHOS:                               sResult=QString("watchOS");                                     break;
         case RECORD_NAME_WATCOMC:                               sResult=QString("Watcom C");                                    break;
         case RECORD_NAME_WATCOMCCPP:                            sResult=QString("Watcom C/C++");                                break;
         case RECORD_NAME_WATCOMLINKER:                          sResult=QString("Watcom linker");                               break;
@@ -855,6 +862,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WWPACK32:                              sResult=QString("WWPack32");                                    break;
         case RECORD_NAME_WXWIDGETS:                             sResult=QString("wxWidgets");                                   break;
         case RECORD_NAME_XAR:                                   sResult=QString("xar");                                         break;
+        case RECORD_NAME_XCODE:                                 sResult=QString("Xcode");                                       break;
         case RECORD_NAME_XENOCODE:                              sResult=QString("Xenocode");                                    break;
         case RECORD_NAME_XENOCODEPOSTBUILD:                     sResult=QString("Xenocode Postbuild");                          break;
         case RECORD_NAME_XENOCODEPOSTBUILD2009FORDOTNET:        sResult=QString("Xenocode Postbuild 2009 for .NET");            break;
@@ -2140,8 +2148,10 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, Sp
 
         MACHO_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
+        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
+        result.basic_info.listDetects.append(result.mapResultTools.values());
         result.basic_info.listDetects.append(result.mapResultProtectors.values());
 
         if(!result.basic_info.listDetects.count())
@@ -2714,6 +2724,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
         DEX_handle_Protection(pDevice,&result,pbIsStop);
         DEX_handle_Dexguard(pDevice,&result,pbIsStop);
 
+        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
@@ -2789,6 +2800,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
 
         Zip_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
+        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultArchives.values());
         result.basic_info.listDetects.append(result.mapResultFormats.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
@@ -11398,7 +11410,8 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 (sPlatformBuildVersionName!="")||
                 (sTargetSdkVersion!=""))
             {
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDSDK,"","",0);
+                _SCANS_STRUCT ssAndroidSDK=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDSDK,"","",0);
+                _SCANS_STRUCT ssAndroid=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_ANDROID,"","",0);
 
                 QString _sVersion;
                 QString _sAnroidVersion;
@@ -11447,9 +11460,13 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                     if(_sVersion=="30")   _sAnroidVersion="11";
                 }
 
-                ss.sVersion=QString("API %1(Android %2)").arg(_sVersion).arg(_sAnroidVersion);
+                ssAndroidSDK.sVersion=QString("API %1").arg(_sVersion);
 
-                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                pZipInfo->mapResultTools.insert(ssAndroidSDK.name,scansToScan(&(pZipInfo->basic_info),&ssAndroidSDK));
+
+                ssAndroid.sVersion=QString("%1").arg(_sAnroidVersion);
+
+                pZipInfo->mapResultOperationSystems.insert(ssAndroid.name,scansToScan(&(pZipInfo->basic_info),&ssAndroid));
             }
 
             QString sJetpack=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/androidx.core_core.version").data();
@@ -13623,6 +13640,53 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
     if(mach.isValid())
     {
+        // XCODE
+        qint64 nVersionMinOffset=-1;
+
+        RECORD_NAME osName=RECORD_NAME_UNKNOWN;
+
+        if(mach.isCommandPresent(XMACH_DEF::LC_VERSION_MIN_IPHONEOS,&(pMACHInfo->listCommandRecords)))
+        {
+            nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::LC_VERSION_MIN_IPHONEOS,0,&(pMACHInfo->listCommandRecords));
+            osName=RECORD_NAME_IOS;
+        }
+        else if(mach.isCommandPresent(XMACH_DEF::LC_VERSION_MIN_MACOSX,&(pMACHInfo->listCommandRecords)))
+        {
+            nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::LC_VERSION_MIN_MACOSX,0,&(pMACHInfo->listCommandRecords));
+            osName=RECORD_NAME_MACOS;
+        }
+        else if(mach.isCommandPresent(XMACH_DEF::LC_VERSION_MIN_TVOS,&(pMACHInfo->listCommandRecords)))
+        {
+            nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::LC_VERSION_MIN_TVOS,0,&(pMACHInfo->listCommandRecords));
+            osName=RECORD_NAME_TVOS;
+        }
+        else if(mach.isCommandPresent(XMACH_DEF::LC_VERSION_MIN_WATCHOS,&(pMACHInfo->listCommandRecords)))
+        {
+            nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::LC_VERSION_MIN_WATCHOS,0,&(pMACHInfo->listCommandRecords));
+            osName=RECORD_NAME_WATCHOS;
+        }
+
+        if(nVersionMinOffset!=-1)
+        {
+            XMACH_DEF::version_min_command version_min=mach._read_version_min_command(nVersionMinOffset);
+
+            _SCANS_STRUCT recordXcode={};
+
+            recordXcode.type=SpecAbstract::RECORD_TYPE_TOOL;
+            recordXcode.name=SpecAbstract::RECORD_NAME_XCODE;
+            recordXcode.sVersion=XBinary::get_uint32_version(version_min.sdk)+"+";
+
+            pMACHInfo->mapResultTools.insert(recordXcode.name,scansToScan(&(pMACHInfo->basic_info),&recordXcode));
+
+            _SCANS_STRUCT recordOS={};
+
+            recordOS.type=SpecAbstract::RECORD_TYPE_OPERATIONSYSTEM;
+            recordOS.name=osName;
+            recordOS.sVersion=XBinary::get_uint32_version(version_min.version)+"+";
+
+            pMACHInfo->mapResultOperationSystems.insert(recordOS.name,scansToScan(&(pMACHInfo->basic_info),&recordOS));
+        }
+
         // GCC
         if(XMACH::isSectionNamePresent("__gcc_except_tab",&(pMACHInfo->listSectionRecords)))  // TODO
         {
@@ -13866,13 +13930,15 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
     if(dex.isValid())
     {
         _SCANS_STRUCT recordAndroidSDK=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDSDK,"","",0);
+        _SCANS_STRUCT recordAndroid=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_ANDROID,"","",0);
 
         QString sDDEXVersion=dex.getVersion();
 
         // https://source.android.com/devices/tech/dalvik/dex-format
         if(sDDEXVersion=="035")
         {
-            recordAndroidSDK.sVersion="API 14+(Android 4.0+)";
+            recordAndroidSDK.sVersion="API 14+";
+            recordAndroid.sVersion="4.0+";
         }
 //        else if (sDDEXVersion=="036")
 //        {
@@ -13881,15 +13947,18 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
 //        }
         else if(sDDEXVersion=="037")
         {
-            recordAndroidSDK.sVersion="API 24+(Android 7.0+)";
+            recordAndroidSDK.sVersion="API 24+";
+            recordAndroid.sVersion="7.0+";
         }
         else if(sDDEXVersion=="038")
         {
-            recordAndroidSDK.sVersion="API 26+(Android 8.0+)";
+            recordAndroidSDK.sVersion="API 26+";
+            recordAndroid.sVersion="8.0+";
         }
         else if(sDDEXVersion=="039")
         {
-            recordAndroidSDK.sVersion="API 28+(Android 9.0+)";
+            recordAndroidSDK.sVersion="API 28+";
+            recordAndroid.sVersion="9.0+";
         }
         else
         {
@@ -13897,6 +13966,11 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         }
 
         pDEXInfo->mapResultTools.insert(recordAndroidSDK.name,scansToScan(&(pDEXInfo->basic_info),&recordAndroidSDK));
+
+        if(recordAndroid.sVersion!="")
+        {
+            pDEXInfo->mapResultOperationSystems.insert(recordAndroid.name,scansToScan(&(pDEXInfo->basic_info),&recordAndroid));
+        }
 
         QList<XDEX_DEF::MAP_ITEM> listMaps=dex.getMapItems();
 
