@@ -3139,26 +3139,26 @@ void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage,
 
     if(pe.isValid())
     {
-        _SCANS_STRUCT ssOS=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_WINDOWS,"","",0);
+        _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_WINDOWS,"","",0);
 
         quint16 nMajorOS=pe.getOptionalHeader_MajorOperatingSystemVersion();
         quint16 nMinorOS=pe.getOptionalHeader_MinorOperatingSystemVersion();
 
-        if      ((nMajorOS==4)&&(nMinorOS==0))      ssOS.sVersion="95+";
-        else if ((nMajorOS==4)&&(nMinorOS==1))      ssOS.sVersion="98+";
-        else if ((nMajorOS==4)&&(nMinorOS==9))      ssOS.sVersion="Millenium+";
-        else if ((nMajorOS==5)&&(nMinorOS==0))      ssOS.sVersion="2000+";
-        else if ((nMajorOS==5)&&(nMinorOS==1))      ssOS.sVersion="XP+";
-        else if ((nMajorOS==5)&&(nMinorOS==1))      ssOS.sVersion="XP Professional X64+";
-        else if ((nMajorOS==6)&&(nMinorOS==0))      ssOS.sVersion="Vista+";
-        else if ((nMajorOS==6)&&(nMinorOS==1))      ssOS.sVersion="7+";
-        else if ((nMajorOS==6)&&(nMinorOS==2))      ssOS.sVersion="8+";
-        else if ((nMajorOS==6)&&(nMinorOS==3))      ssOS.sVersion="8.1+";
-        else if ((nMajorOS==10)&&(nMinorOS==0))     ssOS.sVersion="10+";
+        if      ((nMajorOS==4)&&(nMinorOS==0))      ssOperationSystem.sVersion="95+";
+        else if ((nMajorOS==4)&&(nMinorOS==1))      ssOperationSystem.sVersion="98+";
+        else if ((nMajorOS==4)&&(nMinorOS==9))      ssOperationSystem.sVersion="Millenium+";
+        else if ((nMajorOS==5)&&(nMinorOS==0))      ssOperationSystem.sVersion="2000+";
+        else if ((nMajorOS==5)&&(nMinorOS==1))      ssOperationSystem.sVersion="XP+";
+        else if ((nMajorOS==5)&&(nMinorOS==1))      ssOperationSystem.sVersion="XP Professional X64+";
+        else if ((nMajorOS==6)&&(nMinorOS==0))      ssOperationSystem.sVersion="Vista+";
+        else if ((nMajorOS==6)&&(nMinorOS==1))      ssOperationSystem.sVersion="7+";
+        else if ((nMajorOS==6)&&(nMinorOS==2))      ssOperationSystem.sVersion="8+";
+        else if ((nMajorOS==6)&&(nMinorOS==3))      ssOperationSystem.sVersion="8.1+";
+        else if ((nMajorOS==10)&&(nMinorOS==0))     ssOperationSystem.sVersion="10+";
 
-        ssOS.sInfo=QString("%1, %2").arg((pPEInfo->bIs64)?("64"):("32")).arg(pe.getTypeAsString());
+        ssOperationSystem.sInfo=QString("%1, %2, %3").arg(pe.getArch()).arg((pPEInfo->bIs64)?("64-bit"):("32-bit")).arg(pe.getTypeAsString());
 
-        pPEInfo->mapResultOperationSystems.insert(ssOS.name,scansToScan(&(pPEInfo->basic_info),&ssOS));
+        pPEInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pPEInfo->basic_info),&ssOperationSystem));
     }
 }
 
@@ -13716,6 +13716,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
             recordOS.type=SpecAbstract::RECORD_TYPE_OPERATIONSYSTEM;
             recordOS.name=osName;
             recordOS.sVersion=XBinary::get_uint32_version(version_min.version)+"+";
+            recordOS.sInfo=QString("%1, %2, %3").arg(mach.getArch(),(pMACHInfo->bIs64)?("64-bit"):("32-bit"),mach.getTypeAsString());
 
             pMACHInfo->mapResultOperationSystems.insert(recordOS.name,scansToScan(&(pMACHInfo->basic_info),&recordOS));
         }
