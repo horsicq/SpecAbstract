@@ -560,6 +560,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LIAPP:                                 sResult=QString("LIAPP");                                       break;
         case RECORD_NAME_LIGHTNINGCRYPTERPRIVATE:               sResult=QString("Lightning Crypter Private");                   break;
         case RECORD_NAME_LIGHTNINGCRYPTERSCANTIME:              sResult=QString("Lightning Crypter ScanTime");                  break;
+        case RECORD_NAME_LINUX:                                 sResult=QString("Linux");                                       break;
         case RECORD_NAME_LLD:                                   sResult=QString("LDD");                                         break;
         case RECORD_NAME_LOCKTITE:                              sResult=QString("LockTite+");                                   break;
         case RECORD_NAME_LSCRYPRT:                              sResult=QString("LSCRYPT");                                     break;
