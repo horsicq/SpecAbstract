@@ -963,7 +963,7 @@ QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct)
         sResult+="(Heuristic)";
     }
 
-    sResult+=QString("%1: %2(%3)[%4]").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type)).arg(SpecAbstract::recordNameIdToString(pScanStruct->name)).arg(pScanStruct->sVersion).arg(pScanStruct->sInfo);
+    sResult+=QString("%1: %2(%3)[%4]").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type),SpecAbstract::recordNameIdToString(pScanStruct->name)).arg(pScanStruct->sVersion).arg(pScanStruct->sInfo);
 
     return sResult;
 }
@@ -977,7 +977,7 @@ QString SpecAbstract::createResultString(const SpecAbstract::SCAN_STRUCT *pScanS
         sResult+="(Heuristic)";
     }
 
-    sResult+=QString("%1: %2(%3)[%4]").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type)).arg(SpecAbstract::recordNameIdToString(pScanStruct->name)).arg(pScanStruct->sVersion).arg(pScanStruct->sInfo);
+    sResult+=QString("%1: %2(%3)[%4]").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type),SpecAbstract::recordNameIdToString(pScanStruct->name)).arg(pScanStruct->sVersion).arg(pScanStruct->sInfo);
 
     return sResult;
 }
@@ -991,7 +991,7 @@ QString SpecAbstract::createResultString2(const SpecAbstract::SCAN_STRUCT *pScan
         sResult+="(Heuristic)";
     }
 
-    sResult+=QString("%1: %2").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type)).arg(SpecAbstract::recordNameIdToString(pScanStruct->name));
+    sResult+=QString("%1: %2").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type),SpecAbstract::recordNameIdToString(pScanStruct->name));
 
     if(pScanStruct->sVersion!="")
     {
@@ -1015,7 +1015,7 @@ QString SpecAbstract::createFullResultString(const SpecAbstract::SCAN_STRUCT *pS
         sResult+="(Heuristic)";
     }
 
-    sResult+=QString("%1: %2").arg(createTypeString(pScanStruct)).arg(createResultString(pScanStruct));
+    sResult+=QString("%1: %2").arg(createTypeString(pScanStruct),createResultString(pScanStruct));
 
     return sResult;
 }
@@ -1029,7 +1029,7 @@ QString SpecAbstract::createFullResultString2(const SpecAbstract::SCAN_STRUCT *p
         sResult+="(Heuristic)";
     }
 
-    sResult+=QString("%1: %2").arg(createTypeString(pScanStruct)).arg(createResultString2(pScanStruct));
+    sResult+=QString("%1: %2").arg(createTypeString(pScanStruct),createResultString2(pScanStruct));
 
     return sResult;
 }
@@ -13959,6 +13959,8 @@ void SpecAbstract::NE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbst
 
 void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_STRUCT *pDEXInfo, bool *pbIsStop)
 {
+    Q_UNUSED(pbIsStop)
+
     XDEX dex(pDevice);
 
     if(dex.isValid())
