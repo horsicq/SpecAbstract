@@ -844,6 +844,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WINACE:                                sResult=QString("WinACE");                                      break;
         case RECORD_NAME_WINAUTH:                               sResult=QString("Windows Authenticode");                        break;
         case RECORD_NAME_WINDOFCRYPT:                           sResult=QString("WindOfCrypt");                                 break;
+        case RECORD_NAME_WINDOWS:                               sResult=QString("Windows");                                     break;
         case RECORD_NAME_WINDOWSBITMAP:                         sResult=QString("Windows Bitmap");                              break;
         case RECORD_NAME_WINDOWSICON:                           sResult=QString("Windows Icon");                                break;
         case RECORD_NAME_WINDOWSINSTALLER:                      sResult=QString("Windows Installer");                           break;
@@ -2562,6 +2563,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         PE_handle_import(pDevice,pOptions->bIsImage,&result);
 
+        PE_handle_OperationSystems(pDevice,pOptions->bIsImage,&result);
         PE_handle_Protection(pDevice,pOptions->bIsImage,&result,pbIsStop);
         PE_handle_SafeengineShielden(pDevice,pOptions->bIsImage,&result);
         PE_handle_VProtect(pDevice,pOptions->bIsImage,&result);
@@ -2604,6 +2606,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         PE_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
 
+        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
@@ -3127,6 +3130,35 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
     // TODO
     // Import
+}
+
+void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+{
+    XPE pe(pDevice,bIsImage);
+
+    if(pe.isValid())
+    {
+        _SCANS_STRUCT ssOS=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_WINDOWS,"","",0);
+
+        quint16 nMajorOS=pe.getOptionalHeader_MajorOperatingSystemVersion();
+        quint16 nMinorOS=pe.getOptionalHeader_MinorOperatingSystemVersion();
+
+        if      ((nMajorOS==4)&&(nMinorOS==0))      ssOS.sVersion="95+";
+        else if ((nMajorOS==4)&&(nMinorOS==1))      ssOS.sVersion="98+";
+        else if ((nMajorOS==4)&&(nMinorOS==9))      ssOS.sVersion="Millenium+";
+        else if ((nMajorOS==5)&&(nMinorOS==0))      ssOS.sVersion="2000+";
+        else if ((nMajorOS==5)&&(nMinorOS==1))      ssOS.sVersion="XP+";
+        else if ((nMajorOS==5)&&(nMinorOS==1))      ssOS.sVersion="XP Professional X64+";
+        else if ((nMajorOS==6)&&(nMinorOS==0))      ssOS.sVersion="Vista+";
+        else if ((nMajorOS==6)&&(nMinorOS==1))      ssOS.sVersion="7+";
+        else if ((nMajorOS==6)&&(nMinorOS==2))      ssOS.sVersion="8+";
+        else if ((nMajorOS==6)&&(nMinorOS==3))      ssOS.sVersion="8.1+";
+        else if ((nMajorOS==10)&&(nMinorOS==0))     ssOS.sVersion="10+";
+
+        ssOS.sInfo=QString("%1, %2").arg((pPEInfo->bIs64)?("64"):("32")).arg(pe.getTypeAsString());
+
+        pPEInfo->mapResultOperationSystems.insert(ssOS.name,scansToScan(&(pPEInfo->basic_info),&ssOS));
+    }
 }
 
 void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo, bool *pbIsStop)

@@ -690,6 +690,7 @@ public:
         RECORD_NAME_WINACE,
         RECORD_NAME_WINAUTH,
         RECORD_NAME_WINDOFCRYPT,
+        RECORD_NAME_WINDOWS,
         RECORD_NAME_WINDOWSBITMAP,
         RECORD_NAME_WINDOWSICON,
         RECORD_NAME_WINDOWSINSTALLER,
@@ -1125,6 +1126,7 @@ public:
         XBinary::OFFSETSIZE osImportSection;
         XBinary::OFFSETSIZE osResourceSection;
 
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultOperationSystems;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
@@ -1276,6 +1278,7 @@ public:
     static _SCANS_STRUCT getScansStruct(quint32 nVariant,XBinary::FT fileType,RECORD_TYPE type,RECORD_NAME name,QString sVersion,QString sInfo,qint64 nOffset);
 
     static void PE_handle_import(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo); // TODO remove !!!
+    static void PE_handle_OperationSystems(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Protection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo,bool *pbIsStop);
     static void PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_VProtect(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo); // TODO move to protection
