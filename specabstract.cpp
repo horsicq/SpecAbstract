@@ -963,7 +963,7 @@ QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct)
         sResult+="(Heuristic)";
     }
 
-    sResult+=QString("%1: %2(%3)[%4]").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type),SpecAbstract::recordNameIdToString(pScanStruct->name)).arg(pScanStruct->sVersion).arg(pScanStruct->sInfo);
+    sResult+=QString("%1: %2(%3)[%4]").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type),SpecAbstract::recordNameIdToString(pScanStruct->name),pScanStruct->sVersion,pScanStruct->sInfo);
 
     return sResult;
 }
@@ -977,7 +977,7 @@ QString SpecAbstract::createResultString(const SpecAbstract::SCAN_STRUCT *pScanS
         sResult+="(Heuristic)";
     }
 
-    sResult+=QString("%1: %2(%3)[%4]").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type),SpecAbstract::recordNameIdToString(pScanStruct->name)).arg(pScanStruct->sVersion).arg(pScanStruct->sInfo);
+    sResult+=QString("%1: %2(%3)[%4]").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type),SpecAbstract::recordNameIdToString(pScanStruct->name),pScanStruct->sVersion,pScanStruct->sInfo);
 
     return sResult;
 }
@@ -3156,7 +3156,7 @@ void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage,
         else if ((nMajorOS==6)&&(nMinorOS==3))      ssOperationSystem.sVersion="8.1+";
         else if ((nMajorOS==10)&&(nMinorOS==0))     ssOperationSystem.sVersion="10+";
 
-        ssOperationSystem.sInfo=QString("%1, %2, %3").arg(pe.getArch()).arg((pPEInfo->bIs64)?("64-bit"):("32-bit")).arg(pe.getTypeAsString());
+        ssOperationSystem.sInfo=QString("%1, %2, %3").arg(pe.getArch(),(pPEInfo->bIs64)?("64-bit"):("32-bit"),pe.getTypeAsString());
 
         pPEInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pPEInfo->basic_info),&ssOperationSystem));
     }
@@ -4528,7 +4528,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     // TODO compare entryPoint and import sections
                     QString _sSignature=pPEInfo->sEntryPointSignature;
                     qint64 _nOffset=0;
-                    QString _sVersion;
+//                    QString _sVersion;
 
                     // TODO a function
                     while(true)
@@ -14185,7 +14185,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         VI_STRUCT viR8=get_R8_marker_vi(pDevice,false,0,pDEXInfo->basic_info.nSize);
         bool bR8_map=XDEX::compareMapItems(&listMaps,&listR8);
         bool bDX_map=XDEX::compareMapItems(&listMaps,&listDx);
-        bool bDexLib_map=XDEX::compareMapItems(&listMaps,&listDexLib);
+//        bool bDexLib_map=XDEX::compareMapItems(&listMaps,&listDexLib);
         bool bDexLib2_map=XDEX::compareMapItems(&listMaps,&listDexLib2);
         bool bDexLib2heur_map=XDEX::compareMapItems(&listMaps,&listDexLib2heur);
         bool bDexMerge_map=XDEX::compareMapItems(&listMaps,&listDexMerge);
@@ -15832,7 +15832,7 @@ void SpecAbstract::MSDOS_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(MSRICH_RECORD);
 
-    for(int i=0; i<nSignaturesCount; i++)
+    for(int i=0; (i<nSignaturesCount)&&(!(*pbIsStop)); i++)
     {
         if((!pMapRecords->contains(pRecords[i].basicInfo.name))||(pBasicInfo->bShowDetects))
         {
