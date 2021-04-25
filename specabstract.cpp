@@ -468,6 +468,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_FLEXLM:                                sResult=QString("Flex License Manager");                        break;
         case RECORD_NAME_FLEXNET:                               sResult=QString("FlexNet Licensing");                           break;
         case RECORD_NAME_FPC:                                   sResult=QString("Free Pascal");                                 break;
+        case RECORD_NAME_FREEBSD:                               sResult=QString("FreeBSD");                                     break;
         case RECORD_NAME_FREECRYPTOR:                           sResult=QString("FreeCryptor");                                 break;
         case RECORD_NAME_FSG:                                   sResult=QString("FSG");                                         break;
         case RECORD_NAME_GCC:                                   sResult=QString("GCC");                                         break;
@@ -643,6 +644,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_OBJECTPASCAL:                          sResult=QString("Object Pascal");                               break;
         case RECORD_NAME_OBSIDIUM:                              sResult=QString("Obsidium");                                    break;
         case RECORD_NAME_ONESPANPROTECTION:                     sResult=QString("OneSpan Protection");                          break;
+        case RECORD_NAME_OPENBSD:                               sResult=QString("OpenBSD");                                     break;
         case RECORD_NAME_OPENDOCUMENT:                          sResult=QString("Open Document");                               break;
         case RECORD_NAME_OPENJDK:                               sResult=QString("OpenJDK");                                     break;
         case RECORD_NAME_OPENSOURCECODECRYPTER:                 sResult=QString("Open Source Code Crypter");                    break;
