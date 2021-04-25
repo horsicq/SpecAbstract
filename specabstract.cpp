@@ -891,6 +891,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ZIP:                                   sResult=QString("ZIP");                                         break;
         case RECORD_NAME_ZLIB:                                  sResult=QString("zlib");                                        break;
         case RECORD_NAME_ZPROTECT:                              sResult=QString("ZProtect");                                    break;
+        case RECORD_NAME_UNIX:                                  sResult=QString("Unix");                                        break;
         case RECORD_NAME_UNKNOWN0:                              sResult=QString("_Unknown");                                    break;
         case RECORD_NAME_UNKNOWN1:                              sResult=QString("_Unknown");                                    break;
         case RECORD_NAME_UNKNOWN2:                              sResult=QString("_Unknown");                                    break;
@@ -2071,10 +2072,9 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
             result.listComments=elf.getStringsFromSection(result.nCommentSection).values();
         }
 
-        // TODO function for .comment detects;
-
         ELF_handle_CommentSection(pDevice,pOptions->bIsImage,&result);
 
+        ELF_handle_OperationSystems(pDevice,pOptions->bIsImage,&result);
         ELF_handle_GCC(pDevice,pOptions->bIsImage,&result);
         ELF_handle_Tools(pDevice,pOptions->bIsImage,&result);
         ELF_handle_Protection(pDevice,pOptions->bIsImage,&result);
@@ -2083,6 +2083,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
 
         ELF_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
+        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
@@ -12752,6 +12753,36 @@ void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, bool bIsImage, Spe
                 pMSDOSInfo->listRecursiveDetects.append(scanResult.listRecords);
             }
         }
+    }
+}
+
+void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage, SpecAbstract::ELFINFO_STRUCT *pELFInfo)
+{
+    XELF elf(pDevice,bIsImage);
+
+    if(elf.isValid())
+    {
+        _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_UNIX,"","",0);
+
+        ssOperationSystem.sInfo=QString("%1, %2, %3").arg(elf.getArch(),(pELFInfo->bIs64)?("64-bit"):("32-bit"),elf.getTypeAsString());
+
+        pELFInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pELFInfo->basic_info),&ssOperationSystem));
+
+        //ELFOSABI_NONE       : 'No extensions or unspecified',
+        //ELFOSABI_HPUX       : 'Hewlett-Packard HP-UX',
+        //ELFOSABI_NETBSD     : 'NetBSD',
+        //ELFOSABI_GNU        : 'GNU',
+        //ELFOSABI_SOLARIS    : 'Sun Solaris',
+        //ELFOSABI_AIX        : 'AIX',
+        //ELFOSABI_IRIX       : 'IRIX',
+        //ELFOSABI_FREEBSD    : 'FreeBSD',
+        //ELFOSABI_TRU64      : 'Compaq TRU64 UNIX',
+        //ELFOSABI_MODESTO    : 'Novell Modesto',
+        //ELFOSABI_OPENBSD    : 'Open BSD',
+        //ELFOSABI_OPENVMS    : 'Open VMS',
+        //ELFOSABI_NSK        : 'Hewlett-Packard Non-Stop Kernel',
+        //ELFOSABI_AROS       : 'Amiga Research OS',
+        //ELFOSABI_FENIXOS    : 'The FenixOS highly scalable multi-core OS',
     }
 }
 

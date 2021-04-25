@@ -737,6 +737,7 @@ public:
         RECORD_NAME_ZIP,
         RECORD_NAME_ZLIB,
         RECORD_NAME_ZPROTECT,
+        RECORD_NAME_UNIX,
         RECORD_NAME_UNKNOWN0,
         RECORD_NAME_UNKNOWN1,
         RECORD_NAME_UNKNOWN2,
@@ -998,6 +999,7 @@ public:
         QMap<RECORD_NAME,_SCANS_STRUCT> mapCommentSectionDetects;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
 
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultOperationSystems;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
@@ -1341,6 +1343,7 @@ public:
     static void MSDOS_handle_DosExtenders(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_Recursive(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop);
 
+    static void ELF_handle_OperationSystems(QIODevice *pDevice,bool bIsImage,ELFINFO_STRUCT *pELFInfo);
     static void ELF_handle_CommentSection(QIODevice *pDevice,bool bIsImage,ELFINFO_STRUCT *pELFInfo);
     static void ELF_handle_Tools(QIODevice *pDevice,bool bIsImage,ELFINFO_STRUCT *pELFInfo);
     static void ELF_handle_GCC(QIODevice *pDevice,bool bIsImage,ELFINFO_STRUCT *pELFInfo);
