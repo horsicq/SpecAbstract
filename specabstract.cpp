@@ -602,6 +602,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MINKE:                                 sResult=QString("Minke");                                       break;
         case RECORD_NAME_MKFPACK:                               sResult=QString("MKFPack");                                     break;
         case RECORD_NAME_MOBILETENCENTPROTECT:                  sResult=QString("Mobile Tencent Protect");                      break;
+        case RECORD_NAME_MODESTO:                               sResult=QString("Novell Modesto");                              break;
         case RECORD_NAME_MODGUARD:                              sResult=QString("ModGuard");                                    break;
         case RECORD_NAME_MOLEBOX:                               sResult=QString("MoleBox");                                     break;
         case RECORD_NAME_MOLEBOXULTRA:                          sResult=QString("MoleBox Ultra");                               break;
@@ -797,6 +798,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_TINYSIGN:                              sResult=QString("tiny-sign");                                   break;
         case RECORD_NAME_TOTALCOMMANDERINSTALLER:               sResult=QString("Total Commander Installer");                   break;
         case RECORD_NAME_TPPPACK:                               sResult=QString("TTP Pack");                                    break;
+        case RECORD_NAME_TRU64:                                 sResult=QString("Compaq TRU64 UNIX");                           break;
         case RECORD_NAME_TSTCRYPTER:                            sResult=QString("TsT Crypter");                                 break;
         case RECORD_NAME_TTF:                                   sResult=QString("True Type Font");                              break;
         case RECORD_NAME_TTPROTECT:                             sResult=QString("TTprotect");                                   break;
@@ -12782,8 +12784,8 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
         else if (osabi==XELF_DEF::ELFOSABI_AIX)         ssOperationSystem.name=RECORD_NAME_AIX;
         else if (osabi==XELF_DEF::ELFOSABI_IRIX)        ssOperationSystem.name=RECORD_NAME_IRIX;
         else if (osabi==XELF_DEF::ELFOSABI_FREEBSD)     ssOperationSystem.name=RECORD_NAME_FREEBSD;
-//        else if (osabi==XELF_DEF::ELFOSABI_TRU64)       ssOperationSystem.name=RECORD_NAME_TRU64;
-//        else if (osabi==XELF_DEF::ELFOSABI_MODESTO)     ssOperationSystem.name=RECORD_NAME_MODESTO;
+        else if (osabi==XELF_DEF::ELFOSABI_TRU64)       ssOperationSystem.name=RECORD_NAME_TRU64;
+        else if (osabi==XELF_DEF::ELFOSABI_MODESTO)     ssOperationSystem.name=RECORD_NAME_MODESTO;
         else if (osabi==XELF_DEF::ELFOSABI_OPENBSD)     ssOperationSystem.name=RECORD_NAME_OPENBSD;
 //        else if (osabi==XELF_DEF::ELFOSABI_OPENVMS)     ssOperationSystem.name=RECORD_NAME_OPENVMS;
 //        else if (osabi==XELF_DEF::ELFOSABI_NSK)         ssOperationSystem.name=RECORD_NAME_NSK;
@@ -12794,16 +12796,6 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
 
         pELFInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pELFInfo->basic_info),&ssOperationSystem));
 
-        //ELFOSABI_NONE       : 'No extensions or unspecified',
-        //ELFOSABI_HPUX       : 'Hewlett-Packard HP-UX',
-        //ELFOSABI_NETBSD     : 'NetBSD',
-        //ELFOSABI_SOLARIS    : 'Sun Solaris',
-        //ELFOSABI_AIX        : 'AIX',
-        //ELFOSABI_IRIX       : 'IRIX',
-        //ELFOSABI_FREEBSD    : 'FreeBSD',
-        //ELFOSABI_TRU64      : 'Compaq TRU64 UNIX',
-        //ELFOSABI_MODESTO    : 'Novell Modesto',
-        //ELFOSABI_OPENBSD    : 'Open BSD',
         //ELFOSABI_OPENVMS    : 'Open VMS',
         //ELFOSABI_NSK        : 'Hewlett-Packard Non-Stop Kernel',
         //ELFOSABI_AROS       : 'Amiga Research OS',
