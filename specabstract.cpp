@@ -12764,6 +12764,13 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
     {
         _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_UNIX,"","",0);
 
+        quint8 osabi=elf.getIdent_osabi();
+
+        if(osabi==XELF_DEF::ELFOSABI_LINUX)
+        {
+            ssOperationSystem.name=RECORD_NAME_LINUX;
+        }
+
         ssOperationSystem.sInfo=QString("%1, %2, %3").arg(elf.getArch(),(pELFInfo->bIs64)?("64-bit"):("32-bit"),elf.getTypeAsString());
 
         pELFInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pELFInfo->basic_info),&ssOperationSystem));
@@ -12771,7 +12778,6 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
         //ELFOSABI_NONE       : 'No extensions or unspecified',
         //ELFOSABI_HPUX       : 'Hewlett-Packard HP-UX',
         //ELFOSABI_NETBSD     : 'NetBSD',
-        //ELFOSABI_GNU        : 'GNU',
         //ELFOSABI_SOLARIS    : 'Sun Solaris',
         //ELFOSABI_AIX        : 'AIX',
         //ELFOSABI_IRIX       : 'IRIX',
