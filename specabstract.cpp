@@ -252,6 +252,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_AHPACKER:                              sResult=QString("AHPacker");                                    break;
         case RECORD_NAME_AHTEAMEPPROTECTOR:                     sResult=QString("AHTeam EP Protector");                         break;
         case RECORD_NAME_AINEXE:                                sResult=QString("AINEXE");                                      break;
+        case RECORD_NAME_AIX:                                   sResult=QString("AIX");                                         break;
         case RECORD_NAME_ALCHEMYMINDWORKS:                      sResult=QString("Alchemy Mindworks");                           break;
         case RECORD_NAME_ALEXPROTECTOR:                         sResult=QString("Alex Protector");                              break;
         case RECORD_NAME_ALIASOBJ:                              sResult=QString("ALIASOBJ");                                    break;
@@ -527,6 +528,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_IOS:                                   sResult=QString("iOS");                                         break;
         case RECORD_NAME_IPA:                                   sResult=QString("iOS App Store Package");                       break;
         case RECORD_NAME_IPBPROTECT:                            sResult=QString("iPB Protect");                                 break;
+        case RECORD_NAME_IRIX:                                  sResult=QString("IRIX");                                        break;
         case RECORD_NAME_ISO9660:                               sResult=QString("ISO 9660");                                    break;
         case RECORD_NAME_JACK:                                  sResult=QString("Jack");                                        break;
         case RECORD_NAME_JAM:                                   sResult=QString("JAM");                                         break;
@@ -767,6 +769,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SOFTSENTRY:                            sResult=QString("SoftSentry");                                  break;
         case RECORD_NAME_SOFTWARECOMPRESS:                      sResult=QString("Software Compress");                           break;
         case RECORD_NAME_SOFTWAREZATOR:                         sResult=QString("SoftwareZator");                               break;
+        case RECORD_NAME_SOLARIS:                               sResult=QString("Sun Solaris");                                 break;
         case RECORD_NAME_SPICESNET:                             sResult=QString("Spices.Net");                                  break;
         case RECORD_NAME_SPIRIT:                                sResult=QString("$pirit");                                      break;
         case RECORD_NAME_SPOONINSTALLER:                        sResult=QString("Spoon Installer");                             break;
@@ -12775,9 +12778,9 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
         if      (osabi==XELF_DEF::ELFOSABI_HPUX)        ssOperationSystem.name=RECORD_NAME_HPUX;
         else if (osabi==XELF_DEF::ELFOSABI_NETBSD)      ssOperationSystem.name=RECORD_NAME_NETBSD;
         else if (osabi==XELF_DEF::ELFOSABI_LINUX)       ssOperationSystem.name=RECORD_NAME_LINUX;
-//        else if (osabi==XELF_DEF::ELFOSABI_SOLARIS)     ssOperationSystem.name=RECORD_NAME_SOLARIS;
-//        else if (osabi==XELF_DEF::ELFOSABI_AIX)         ssOperationSystem.name=RECORD_NAME_AIX;
-//        else if (osabi==XELF_DEF::ELFOSABI_IRIX)        ssOperationSystem.name=RECORD_NAME_IRIX;
+        else if (osabi==XELF_DEF::ELFOSABI_SOLARIS)     ssOperationSystem.name=RECORD_NAME_SOLARIS;
+        else if (osabi==XELF_DEF::ELFOSABI_AIX)         ssOperationSystem.name=RECORD_NAME_AIX;
+        else if (osabi==XELF_DEF::ELFOSABI_IRIX)        ssOperationSystem.name=RECORD_NAME_IRIX;
         else if (osabi==XELF_DEF::ELFOSABI_FREEBSD)     ssOperationSystem.name=RECORD_NAME_FREEBSD;
 //        else if (osabi==XELF_DEF::ELFOSABI_TRU64)       ssOperationSystem.name=RECORD_NAME_TRU64;
 //        else if (osabi==XELF_DEF::ELFOSABI_MODESTO)     ssOperationSystem.name=RECORD_NAME_MODESTO;
