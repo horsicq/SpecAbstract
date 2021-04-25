@@ -642,6 +642,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_NPACK:                                 sResult=QString("nPack");                                       break;
         case RECORD_NAME_NQSHIELD:                              sResult=QString("NQ Shield");                                   break;
         case RECORD_NAME_NSIS:                                  sResult=QString("Nullsoft Scriptable Install System");          break;
+        case RECORD_NAME_NSK:                                   sResult=QString("Hewlett-Packard Non-Stop Kernel");             break;
         case RECORD_NAME_NSPACK:                                sResult=QString("NsPack");                                      break;
         case RECORD_NAME_OBFUSCAR:                              sResult=QString("Obfuscar");                                    break;
         case RECORD_NAME_OBFUSCATORLLVM:                        sResult=QString("Obfuscator-LLVM");                             break;
@@ -653,6 +654,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_OPENDOCUMENT:                          sResult=QString("Open Document");                               break;
         case RECORD_NAME_OPENJDK:                               sResult=QString("OpenJDK");                                     break;
         case RECORD_NAME_OPENSOURCECODECRYPTER:                 sResult=QString("Open Source Code Crypter");                    break;
+        case RECORD_NAME_OPENVMS:                               sResult=QString("Open VMS");                                    break;
         case RECORD_NAME_OPERA:                                 sResult=QString("Opera");                                       break;
         case RECORD_NAME_ORACLESOLARISLINKEDITORS:              sResult=QString("Oracle Solaris Link Editors");                 break;
         case RECORD_NAME_ORIEN:                                 sResult=QString("ORiEN");                                       break;
@@ -12787,8 +12789,8 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
         else if (osabi==XELF_DEF::ELFOSABI_TRU64)       ssOperationSystem.name=RECORD_NAME_TRU64;
         else if (osabi==XELF_DEF::ELFOSABI_MODESTO)     ssOperationSystem.name=RECORD_NAME_MODESTO;
         else if (osabi==XELF_DEF::ELFOSABI_OPENBSD)     ssOperationSystem.name=RECORD_NAME_OPENBSD;
-//        else if (osabi==XELF_DEF::ELFOSABI_OPENVMS)     ssOperationSystem.name=RECORD_NAME_OPENVMS;
-//        else if (osabi==XELF_DEF::ELFOSABI_NSK)         ssOperationSystem.name=RECORD_NAME_NSK;
+        else if (osabi==XELF_DEF::ELFOSABI_OPENVMS)     ssOperationSystem.name=RECORD_NAME_OPENVMS;
+        else if (osabi==XELF_DEF::ELFOSABI_NSK)         ssOperationSystem.name=RECORD_NAME_NSK;
 //        else if (osabi==XELF_DEF::ELFOSABI_AROS)        ssOperationSystem.name=RECORD_NAME_AROS;
 //        else if (osabi==XELF_DEF::ELFOSABI_FENIXOS)     ssOperationSystem.name=RECORD_NAME_FENIXOS;
 
@@ -12796,7 +12798,6 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
 
         pELFInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pELFInfo->basic_info),&ssOperationSystem));
 
-        //ELFOSABI_OPENVMS    : 'Open VMS',
         //ELFOSABI_NSK        : 'Hewlett-Packard Non-Stop Kernel',
         //ELFOSABI_AROS       : 'Amiga Research OS',
         //ELFOSABI_FENIXOS    : 'The FenixOS highly scalable multi-core OS',
