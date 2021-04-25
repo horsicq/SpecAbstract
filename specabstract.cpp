@@ -300,6 +300,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ARMPROTECTOR:                          sResult=QString("ARM Protector");                               break;
         case RECORD_NAME_ARMTHUMBCCPP:                          sResult=QString("ARM/Thumb C/C++");                             break;
         case RECORD_NAME_ARMTHUMBMACROASSEMBLER:                sResult=QString("ARM/Thumb Macro Assembler");                   break;
+        case RECORD_NAME_AROS:                                  sResult=QString("Amiga Research OS");                           break;
         case RECORD_NAME_ASDPACK:                               sResult=QString("ASDPack");                                     break;
         case RECORD_NAME_ASM:                                   sResult=QString("Asm");                                         break;
         case RECORD_NAME_ASPACK:                                sResult=QString("ASPack");                                      break;
@@ -461,6 +462,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_FASTPROXY:                             sResult=QString("fast-proxy");                                  break;
         case RECORD_NAME_FEARZCRYPTER:                          sResult=QString("fEaRz Crypter");                               break;
         case RECORD_NAME_FEARZPACKER:                           sResult=QString("fEaRz Packer");                                break;
+        case RECORD_NAME_FENIXOS:                               sResult=QString("FenixOS");                                     break;
         case RECORD_NAME_FILESHIELD:                            sResult=QString("FileShield");                                  break;
         case RECORD_NAME_FISHNET:                               sResult=QString("FISH .NET");                                   break;
         case RECORD_NAME_FISHPEPACKER:                          sResult=QString("Fish PE Packer");                              break; // TODO Check name
@@ -12791,16 +12793,12 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
         else if (osabi==XELF_DEF::ELFOSABI_OPENBSD)     ssOperationSystem.name=RECORD_NAME_OPENBSD;
         else if (osabi==XELF_DEF::ELFOSABI_OPENVMS)     ssOperationSystem.name=RECORD_NAME_OPENVMS;
         else if (osabi==XELF_DEF::ELFOSABI_NSK)         ssOperationSystem.name=RECORD_NAME_NSK;
-//        else if (osabi==XELF_DEF::ELFOSABI_AROS)        ssOperationSystem.name=RECORD_NAME_AROS;
-//        else if (osabi==XELF_DEF::ELFOSABI_FENIXOS)     ssOperationSystem.name=RECORD_NAME_FENIXOS;
+        else if (osabi==XELF_DEF::ELFOSABI_AROS)        ssOperationSystem.name=RECORD_NAME_AROS;
+        else if (osabi==XELF_DEF::ELFOSABI_FENIXOS)     ssOperationSystem.name=RECORD_NAME_FENIXOS;
 
         ssOperationSystem.sInfo=QString("%1, %2, %3").arg(elf.getArch(),(pELFInfo->bIs64)?("64-bit"):("32-bit"),elf.getTypeAsString());
 
         pELFInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pELFInfo->basic_info),&ssOperationSystem));
-
-        //ELFOSABI_NSK        : 'Hewlett-Packard Non-Stop Kernel',
-        //ELFOSABI_AROS       : 'Amiga Research OS',
-        //ELFOSABI_FENIXOS    : 'The FenixOS highly scalable multi-core OS',
     }
 }
 
