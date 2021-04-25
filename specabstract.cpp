@@ -505,6 +505,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_HMIMYSPROTECTOR:                       sResult=QString("Hmimys's Protector");                          break;
         case RECORD_NAME_HOODLUM:                               sResult=QString("HOODLUM");                                     break;
         case RECORD_NAME_HOUNDHACKCRYPTER:                      sResult=QString("Hound Hack Crypter");                          break;
+        case RECORD_NAME_HPUX:                                  sResult=QString("Hewlett-Packard HP-UX");                       break;
         case RECORD_NAME_HTML:                                  sResult=QString("HTML");                                        break;
         case RECORD_NAME_HXS:                                   sResult=QString("HXS");                                         break;
         case RECORD_NAME_IBMJDK:                                sResult=QString("IBM JDK");                                     break;
@@ -624,6 +625,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_NCODE:                                 sResult=QString("N-Code");                                      break;
         case RECORD_NAME_NEOLITE:                               sResult=QString("NeoLite");                                     break;
         case RECORD_NAME_NETEASEAPKSIGNER:                      sResult=QString("NetEase ApkSigner");                           break;
+        case RECORD_NAME_NETBSD:                                sResult=QString("NetBSD");                                      break;
         case RECORD_NAME_NIDHOGG:                               sResult=QString("Nidhogg");                                     break;
         case RECORD_NAME_NJOINER:                               sResult=QString("N-Joiner");                                    break;
         case RECORD_NAME_NJOY:                                  sResult=QString("N-Joy");                                       break;
@@ -12768,10 +12770,22 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
 
         quint8 osabi=elf.getIdent_osabi();
 
-        if(osabi==XELF_DEF::ELFOSABI_LINUX)
-        {
-            ssOperationSystem.name=RECORD_NAME_LINUX;
-        }
+        ssOperationSystem.sVersion=QString("%1").arg(osabi);
+
+        if      (osabi==XELF_DEF::ELFOSABI_HPUX)        ssOperationSystem.name=RECORD_NAME_HPUX;
+        else if (osabi==XELF_DEF::ELFOSABI_NETBSD)      ssOperationSystem.name=RECORD_NAME_NETBSD;
+        else if (osabi==XELF_DEF::ELFOSABI_LINUX)       ssOperationSystem.name=RECORD_NAME_LINUX;
+//        else if (osabi==XELF_DEF::ELFOSABI_SOLARIS)     ssOperationSystem.name=RECORD_NAME_SOLARIS;
+//        else if (osabi==XELF_DEF::ELFOSABI_AIX)         ssOperationSystem.name=RECORD_NAME_AIX;
+//        else if (osabi==XELF_DEF::ELFOSABI_IRIX)        ssOperationSystem.name=RECORD_NAME_IRIX;
+        else if (osabi==XELF_DEF::ELFOSABI_FREEBSD)     ssOperationSystem.name=RECORD_NAME_FREEBSD;
+//        else if (osabi==XELF_DEF::ELFOSABI_TRU64)       ssOperationSystem.name=RECORD_NAME_TRU64;
+//        else if (osabi==XELF_DEF::ELFOSABI_MODESTO)     ssOperationSystem.name=RECORD_NAME_MODESTO;
+        else if (osabi==XELF_DEF::ELFOSABI_OPENBSD)     ssOperationSystem.name=RECORD_NAME_OPENBSD;
+//        else if (osabi==XELF_DEF::ELFOSABI_OPENVMS)     ssOperationSystem.name=RECORD_NAME_OPENVMS;
+//        else if (osabi==XELF_DEF::ELFOSABI_NSK)         ssOperationSystem.name=RECORD_NAME_NSK;
+//        else if (osabi==XELF_DEF::ELFOSABI_AROS)        ssOperationSystem.name=RECORD_NAME_AROS;
+//        else if (osabi==XELF_DEF::ELFOSABI_FENIXOS)     ssOperationSystem.name=RECORD_NAME_FENIXOS;
 
         ssOperationSystem.sInfo=QString("%1, %2, %3").arg(elf.getArch(),(pELFInfo->bIs64)?("64-bit"):("32-bit"),elf.getTypeAsString());
 
