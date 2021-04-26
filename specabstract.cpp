@@ -13768,7 +13768,11 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
             recordXcode.type=SpecAbstract::RECORD_TYPE_TOOL;
             recordXcode.name=SpecAbstract::RECORD_NAME_XCODE;
-            recordXcode.sVersion=XBinary::get_uint32_version(version_min.sdk)+"+";
+
+            if(version_min.sdk)
+            {
+                recordXcode.sVersion=XBinary::get_uint32_version(version_min.sdk)+"+";
+            }
 
             pMACHInfo->mapResultTools.insert(recordXcode.name,scansToScan(&(pMACHInfo->basic_info),&recordXcode));
 
