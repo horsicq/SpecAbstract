@@ -495,6 +495,7 @@ public:
         RECORD_NAME_OBFUSCAR,
         RECORD_NAME_OBFUSCATORLLVM,
         RECORD_NAME_OBFUSCATORNET2009,
+        RECORD_NAME_OBJECTIVEC,
         RECORD_NAME_OBJECTPASCAL,
         RECORD_NAME_OBSIDIUM,
         RECORD_NAME_ONESPANPROTECTION, // till 2018 Vasco !
@@ -633,6 +634,7 @@ public:
         RECORD_NAME_SUNWORKSHOP,
         RECORD_NAME_SVKPROTECTOR,
         RECORD_NAME_SWF,
+        RECORD_NAME_SWIFT,
         RECORD_NAME_TARMAINSTALLER,
         RECORD_NAME_TELOCK,
         RECORD_NAME_TENCENTLEGU,
@@ -1069,6 +1071,7 @@ public:
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultOperationSystems;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultLanguages;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;

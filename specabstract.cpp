@@ -649,6 +649,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_OBFUSCAR:                              sResult=QString("Obfuscar");                                    break;
         case RECORD_NAME_OBFUSCATORLLVM:                        sResult=QString("Obfuscator-LLVM");                             break;
         case RECORD_NAME_OBFUSCATORNET2009:                     sResult=QString("Obfuscator.NET 2009");                         break;
+        case RECORD_NAME_OBJECTIVEC:                            sResult=QString("Objective-C");                                 break;
         case RECORD_NAME_OBJECTPASCAL:                          sResult=QString("Object Pascal");                               break;
         case RECORD_NAME_OBSIDIUM:                              sResult=QString("Obsidium");                                    break;
         case RECORD_NAME_ONESPANPROTECTION:                     sResult=QString("OneSpan Protection");                          break;
@@ -787,6 +788,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SUNWORKSHOP:                           sResult=QString("Sun WorkShop");                                break;
         case RECORD_NAME_SVKPROTECTOR:                          sResult=QString("SVK Protector");                               break;
         case RECORD_NAME_SWF:                                   sResult=QString("SWF");                                         break;
+        case RECORD_NAME_SWIFT:                                 sResult=QString("Swift");                                       break;
         case RECORD_NAME_TARMAINSTALLER:                        sResult=QString("Tarma Installer");                             break;
         case RECORD_NAME_TELOCK:                                sResult=QString("tElock");                                      break;
         case RECORD_NAME_TENCENTLEGU:                           sResult=QString("Tencent Legu");                                break;
@@ -2166,6 +2168,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, Sp
 
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
+        result.basic_info.listDetects.append(result.mapResultLanguages.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
         result.basic_info.listDetects.append(result.mapResultProtectors.values());
@@ -13787,7 +13790,8 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
         }
 
         // GCC
-        if(XMACH::isSectionNamePresent("__gcc_except_tab",&(pMACHInfo->listSectionRecords)))  // TODO
+        if( XMACH::isSectionNamePresent("__gcc_except_tab",&(pMACHInfo->listSectionRecords))||
+            XMACH::isLibraryRecordNamePresent("libgcc_s.1.dylib",&(pMACHInfo->listLibraryRecords)))
         {
             _SCANS_STRUCT recordSS={};
 
@@ -13796,6 +13800,29 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
             pMACHInfo->mapResultCompilers.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
         }
+
+        // Swift
+        if( XMACH::isSectionNamePresent("__swift2_proto",&(pMACHInfo->listSectionRecords))||
+            XMACH::isLibraryRecordNamePresent("libswiftCore.dylib",&(pMACHInfo->listLibraryRecords)))  // TODO
+        {
+            _SCANS_STRUCT recordSS={};
+
+            recordSS.type=SpecAbstract::RECORD_TYPE_LANGUAGE;
+            recordSS.name=SpecAbstract::RECORD_NAME_SWIFT;
+
+            pMACHInfo->mapResultLanguages.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
+        }
+        else if(XMACH::isSectionNamePresent("__objc_selrefs",&(pMACHInfo->listSectionRecords))||
+                XMACH::isLibraryRecordNamePresent("libobjc.A.dylib",&(pMACHInfo->listLibraryRecords)))
+        {
+            _SCANS_STRUCT recordSS={};
+
+            recordSS.type=SpecAbstract::RECORD_TYPE_LANGUAGE;
+            recordSS.name=SpecAbstract::RECORD_NAME_OBJECTIVEC;
+
+            pMACHInfo->mapResultLanguages.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
+        }
+
         // Qt
         if(XMACH::isLibraryRecordNamePresent("QtCore",&(pMACHInfo->listLibraryRecords)))
         {
