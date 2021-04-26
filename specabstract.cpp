@@ -11442,11 +11442,15 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             QString sPlatformBuildVersionCode=XBinary::regExp("platformBuildVersionCode=\"(.*?)\"",sAndroidManifest,1);
             QString sPlatformBuildVersionName=XBinary::regExp("platformBuildVersionName=\"(.*?)\"",sAndroidManifest,1);
             QString sTargetSdkVersion=XBinary::regExp("android:targetSdkVersion=\"(.*?)\"",sAndroidManifest,1);
+            QString sMinSdkVersion=XBinary::regExp("android:minSdkVersion=\"(.*?)\"",sAndroidManifest,1);
+            QString sAndroid=XBinary::regExp("android:=\"(.*?)\"",sAndroidManifest,1);
 
             // Check
             if(!XBinary::checkStringNumber(sCompileSdkVersion,1,40))        sCompileSdkVersion="";
             if(!XBinary::checkStringNumber(sPlatformBuildVersionCode,1,40)) sPlatformBuildVersionCode="";
             if(!XBinary::checkStringNumber(sTargetSdkVersion,1,40))         sTargetSdkVersion="";
+            if(!XBinary::checkStringNumber(sMinSdkVersion,1,40))            sMinSdkVersion="";
+            if(!XBinary::checkStringNumber(sAndroid,1,40))                  sAndroid="";
 
             if(!XBinary::checkStringNumber(sCompileSdkVersionCodename.section(".",0,0),1,15))   sCompileSdkVersionCodename="";
             if(!XBinary::checkStringNumber(sPlatformBuildVersionName.section(".",0,0),1,15))    sPlatformBuildVersionName="";
@@ -11455,63 +11459,70 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 (sCompileSdkVersionCodename!="")||
                 (sPlatformBuildVersionCode!="")||
                 (sPlatformBuildVersionName!="")||
-                (sTargetSdkVersion!=""))
+                (sTargetSdkVersion!="")||
+                (sMinSdkVersion!="")||
+                (sAndroid!=""))
             {
                 _SCANS_STRUCT ssAndroidSDK=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDSDK,"","",0);
                 _SCANS_STRUCT ssAndroid=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_ANDROID,"","",0);
 
                 QString _sVersion;
-                QString _sAnroidVersion;
+                QString _sAndroidVersion;
 
                 _sVersion=sCompileSdkVersion;
-                _sAnroidVersion=sCompileSdkVersionCodename;
+                _sAndroidVersion=sCompileSdkVersionCodename;
 
                 if(_sVersion=="")       _sVersion=sCompileSdkVersion;
                 if(_sVersion=="")       _sVersion=sPlatformBuildVersionCode;
                 if(_sVersion=="")       _sVersion=sTargetSdkVersion;
+                if(_sVersion=="")       _sVersion=sMinSdkVersion;
+                if(_sVersion=="")       _sVersion=sAndroid;
 
-                if(_sAnroidVersion=="") _sAnroidVersion=sCompileSdkVersionCodename;
-                if(_sAnroidVersion=="") _sAnroidVersion=sPlatformBuildVersionName;
+                if(_sAndroidVersion=="") _sAndroidVersion=sCompileSdkVersionCodename;
+                if(_sAndroidVersion=="") _sAndroidVersion=sPlatformBuildVersionName;
 
-                if(_sAnroidVersion=="")
+                if(_sAndroidVersion=="")
                 {
-                    _sAnroidVersion="Unknown";
+                    _sAndroidVersion="Unknown";
 
-                    if(_sVersion=="3")    _sAnroidVersion="1.5";
-                    if(_sVersion=="4")    _sAnroidVersion="1.6";
-                    if(_sVersion=="5")    _sAnroidVersion="2.0";
-                    if(_sVersion=="6")    _sAnroidVersion="2.0.1";
-                    if(_sVersion=="7")    _sAnroidVersion="2.1";
-                    if(_sVersion=="8")    _sAnroidVersion="2.2.X";
-                    if(_sVersion=="9")    _sAnroidVersion="2.3-2.3.2";
-                    if(_sVersion=="10")   _sAnroidVersion="2.3.3-2.3.7";
-                    if(_sVersion=="11")   _sAnroidVersion="3.0";
-                    if(_sVersion=="12")   _sAnroidVersion="3.1";
-                    if(_sVersion=="13")   _sAnroidVersion="3.2.X";
-                    if(_sVersion=="14")   _sAnroidVersion="4.0.1-4.0.2";
-                    if(_sVersion=="15")   _sAnroidVersion="4.0.3-4.0.4";
-                    if(_sVersion=="16")   _sAnroidVersion="4.1.X";
-                    if(_sVersion=="17")   _sAnroidVersion="4.2.X";
-                    if(_sVersion=="18")   _sAnroidVersion="4.3.X";
-                    if(_sVersion=="19")   _sAnroidVersion="4.4-4.4.4";
-                    if(_sVersion=="20")   _sAnroidVersion="4.4W";
-                    if(_sVersion=="21")   _sAnroidVersion="5.0";
-                    if(_sVersion=="22")   _sAnroidVersion="5.1";
-                    if(_sVersion=="23")   _sAnroidVersion="6.0";
-                    if(_sVersion=="24")   _sAnroidVersion="7.0";
-                    if(_sVersion=="25")   _sAnroidVersion="7.1";
-                    if(_sVersion=="26")   _sAnroidVersion="8.0.0";
-                    if(_sVersion=="27")   _sAnroidVersion="8.1.0";
-                    if(_sVersion=="28")   _sAnroidVersion="9";
-                    if(_sVersion=="29")   _sAnroidVersion="10";
-                    if(_sVersion=="30")   _sAnroidVersion="11";
+                    if(_sVersion=="3")    _sAndroidVersion="1.5";
+                    if(_sVersion=="4")    _sAndroidVersion="1.6";
+                    if(_sVersion=="5")    _sAndroidVersion="2.0";
+                    if(_sVersion=="6")    _sAndroidVersion="2.0.1";
+                    if(_sVersion=="7")    _sAndroidVersion="2.1";
+                    if(_sVersion=="8")    _sAndroidVersion="2.2.X";
+                    if(_sVersion=="9")    _sAndroidVersion="2.3-2.3.2";
+                    if(_sVersion=="10")   _sAndroidVersion="2.3.3-2.3.7";
+                    if(_sVersion=="11")   _sAndroidVersion="3.0";
+                    if(_sVersion=="12")   _sAndroidVersion="3.1";
+                    if(_sVersion=="13")   _sAndroidVersion="3.2.X";
+                    if(_sVersion=="14")   _sAndroidVersion="4.0.1-4.0.2";
+                    if(_sVersion=="15")   _sAndroidVersion="4.0.3-4.0.4";
+                    if(_sVersion=="16")   _sAndroidVersion="4.1.X";
+                    if(_sVersion=="17")   _sAndroidVersion="4.2.X";
+                    if(_sVersion=="18")   _sAndroidVersion="4.3.X";
+                    if(_sVersion=="19")   _sAndroidVersion="4.4-4.4.4";
+                    if(_sVersion=="20")   _sAndroidVersion="4.4W";
+                    if(_sVersion=="21")   _sAndroidVersion="5.0";
+                    if(_sVersion=="22")   _sAndroidVersion="5.1";
+                    if(_sVersion=="23")   _sAndroidVersion="6.0";
+                    if(_sVersion=="24")   _sAndroidVersion="7.0";
+                    if(_sVersion=="25")   _sAndroidVersion="7.1";
+                    if(_sVersion=="26")   _sAndroidVersion="8.0.0";
+                    if(_sVersion=="27")   _sAndroidVersion="8.1.0";
+                    if(_sVersion=="28")   _sAndroidVersion="9";
+                    if(_sVersion=="29")   _sAndroidVersion="10";
+                    if(_sVersion=="30")   _sAndroidVersion="11";
                 }
 
-                ssAndroidSDK.sVersion=QString("API %1").arg(_sVersion);
+                if(_sVersion!="")
+                {
+                    ssAndroidSDK.sVersion=QString("API %1").arg(_sVersion);
 
-                pZipInfo->mapResultTools.insert(ssAndroidSDK.name,scansToScan(&(pZipInfo->basic_info),&ssAndroidSDK));
+                    pZipInfo->mapResultTools.insert(ssAndroidSDK.name,scansToScan(&(pZipInfo->basic_info),&ssAndroidSDK));
+                }
 
-                ssAndroid.sVersion=QString("%1").arg(_sAnroidVersion);
+                ssAndroid.sVersion=QString("%1").arg(_sAndroidVersion);
 
                 pZipInfo->mapResultOperationSystems.insert(ssAndroid.name,scansToScan(&(pZipInfo->basic_info),&ssAndroid));
             }
@@ -12779,8 +12790,6 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
 
         quint8 osabi=elf.getIdent_osabi();
 
-        ssOperationSystem.sVersion=QString("%1").arg(osabi);
-
         if      (osabi==XELF_DEF::ELFOSABI_HPUX)        ssOperationSystem.name=RECORD_NAME_HPUX;
         else if (osabi==XELF_DEF::ELFOSABI_NETBSD)      ssOperationSystem.name=RECORD_NAME_NETBSD;
         else if (osabi==XELF_DEF::ELFOSABI_LINUX)       ssOperationSystem.name=RECORD_NAME_LINUX;
@@ -12795,6 +12804,11 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
         else if (osabi==XELF_DEF::ELFOSABI_NSK)         ssOperationSystem.name=RECORD_NAME_NSK;
         else if (osabi==XELF_DEF::ELFOSABI_AROS)        ssOperationSystem.name=RECORD_NAME_AROS;
         else if (osabi==XELF_DEF::ELFOSABI_FENIXOS)     ssOperationSystem.name=RECORD_NAME_FENIXOS;
+
+        if(ssOperationSystem.name==RECORD_NAME_UNIX)
+        {
+            ssOperationSystem.sVersion=QString("%1").arg(osabi);
+        }
 
         ssOperationSystem.sInfo=QString("%1, %2, %3").arg(elf.getArch(),(pELFInfo->bIs64)?("64-bit"):("32-bit"),elf.getTypeAsString());
 
