@@ -13737,6 +13737,11 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
     if(mach.isValid())
     {
+        _SCANS_STRUCT recordOS={};
+        recordOS.type=SpecAbstract::RECORD_TYPE_OPERATIONSYSTEM;
+        recordOS.name=RECORD_NAME_MACOS;
+        recordOS.sInfo=QString("%1, %2, %3").arg(mach.getArch(),(pMACHInfo->bIs64)?("64-bit"):("32-bit"),mach.getTypeAsString());
+
         // XCODE
         qint64 nVersionMinOffset=-1;
 
@@ -13779,15 +13784,11 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
             pMACHInfo->mapResultTools.insert(recordXcode.name,scansToScan(&(pMACHInfo->basic_info),&recordXcode));
 
-            _SCANS_STRUCT recordOS={};
-
-            recordOS.type=SpecAbstract::RECORD_TYPE_OPERATIONSYSTEM;
             recordOS.name=osName;
             recordOS.sVersion=XBinary::get_uint32_version(version_min.version)+"+";
-            recordOS.sInfo=QString("%1, %2, %3").arg(mach.getArch(),(pMACHInfo->bIs64)?("64-bit"):("32-bit"),mach.getTypeAsString());
-
-            pMACHInfo->mapResultOperationSystems.insert(recordOS.name,scansToScan(&(pMACHInfo->basic_info),&recordOS));
         }
+
+        pMACHInfo->mapResultOperationSystems.insert(recordOS.name,scansToScan(&(pMACHInfo->basic_info),&recordOS));
 
         // GCC
         if( XMACH::isSectionNamePresent("__gcc_except_tab",&(pMACHInfo->listSectionRecords))||
