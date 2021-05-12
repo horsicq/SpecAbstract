@@ -13747,24 +13747,24 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
         RECORD_NAME osName=RECORD_NAME_UNKNOWN;
 
-        if(mach.isCommandPresent(XMACH_DEF::LC_VERSION_MIN_IPHONEOS,&(pMACHInfo->listCommandRecords)))
+        if(mach.isCommandPresent(XMACH_DEF::S_LC_VERSION_MIN_IPHONEOS,&(pMACHInfo->listCommandRecords)))
         {
-            nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::LC_VERSION_MIN_IPHONEOS,0,&(pMACHInfo->listCommandRecords));
+            nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::S_LC_VERSION_MIN_IPHONEOS,0,&(pMACHInfo->listCommandRecords));
             osName=RECORD_NAME_IOS;
         }
-        else if(mach.isCommandPresent(XMACH_DEF::LC_VERSION_MIN_MACOSX,&(pMACHInfo->listCommandRecords)))
+        else if(mach.isCommandPresent(XMACH_DEF::S_LC_VERSION_MIN_MACOSX,&(pMACHInfo->listCommandRecords)))
         {
-            nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::LC_VERSION_MIN_MACOSX,0,&(pMACHInfo->listCommandRecords));
+            nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::S_LC_VERSION_MIN_MACOSX,0,&(pMACHInfo->listCommandRecords));
             osName=RECORD_NAME_MACOS;
         }
-        else if(mach.isCommandPresent(XMACH_DEF::LC_VERSION_MIN_TVOS,&(pMACHInfo->listCommandRecords)))
+        else if(mach.isCommandPresent(XMACH_DEF::S_LC_VERSION_MIN_TVOS,&(pMACHInfo->listCommandRecords)))
         {
-            nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::LC_VERSION_MIN_TVOS,0,&(pMACHInfo->listCommandRecords));
+            nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::S_LC_VERSION_MIN_TVOS,0,&(pMACHInfo->listCommandRecords));
             osName=RECORD_NAME_TVOS;
         }
-        else if(mach.isCommandPresent(XMACH_DEF::LC_VERSION_MIN_WATCHOS,&(pMACHInfo->listCommandRecords)))
+        else if(mach.isCommandPresent(XMACH_DEF::S_LC_VERSION_MIN_WATCHOS,&(pMACHInfo->listCommandRecords)))
         {
-            nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::LC_VERSION_MIN_WATCHOS,0,&(pMACHInfo->listCommandRecords));
+            nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::S_LC_VERSION_MIN_WATCHOS,0,&(pMACHInfo->listCommandRecords));
             osName=RECORD_NAME_WATCHOS;
         }
 
