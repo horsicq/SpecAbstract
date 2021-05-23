@@ -2156,6 +2156,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, Sp
         result.listCommandRecords=mach.getCommandRecords();
 
         result.listLibraryRecords=mach.getLibraryRecords(&result.listCommandRecords);
+        result.listSegmentRecords=mach.getSegmentRecords(&result.listCommandRecords);
         result.listSectionRecords=mach.getSectionRecords(&result.listCommandRecords);
 
         // TODO Segments
@@ -13814,6 +13815,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
             pMACHInfo->mapResultLanguages.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
         }
         else if(XMACH::isSectionNamePresent("__objc_selrefs",&(pMACHInfo->listSectionRecords))||
+                XMACH::isSegmentNamePresent("__OBJC",&(pMACHInfo->listSegmentRecords))||
                 XMACH::isLibraryRecordNamePresent("libobjc.A.dylib",&(pMACHInfo->listLibraryRecords)))
         {
             _SCANS_STRUCT recordSS={};

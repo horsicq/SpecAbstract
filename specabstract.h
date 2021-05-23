@@ -1065,6 +1065,7 @@ public:
         bool bIsBigEndian;
         QList<XMACH::COMMAND_RECORD> listCommandRecords;
         QList<XMACH::LIBRARY_RECORD> listLibraryRecords;
+        QList<XMACH::SEGMENT_RECORD> listSegmentRecords;
         QList<XMACH::SECTION_RECORD> listSectionRecords;
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
