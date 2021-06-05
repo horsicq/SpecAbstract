@@ -2369,7 +2369,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         //        }
         result.nImportHash64=pe.getImportHash64(&(result.basic_info.memoryMap));
         result.nImportHash32=pe.getImportHash32(&(result.basic_info.memoryMap));
-        result.listImportPositionHashes=pe.getImportPositionHashes(&(result.basic_info.memoryMap));
+        result.listImportPositionHashes=pe.getImportPositionHashes(&(result.listImports));
 
 #ifdef QT_DEBUG
         QString sDebugString=QString::number(result.nImportHash64,16)+" "+QString::number(result.nImportHash32,16);
