@@ -14977,6 +14977,14 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_UPX_vi(QIODevice *pDevice, bool bIsIm
                 }
             }
 
+            Q_UNUSED(nUAdler)
+            Q_UNUSED(nCAdler)
+            Q_UNUSED(nFileSize)
+            Q_UNUSED(nFilter)
+            Q_UNUSED(nFilterCTO)
+            Q_UNUSED(nMRU)
+            Q_UNUSED(nHeaderChecksum)
+
             if(result.bIsValid)
             {
                 // Check Executable formats
