@@ -1080,7 +1080,7 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::createHeaderScanStruct(const SpecAbstrac
 {
     SCAN_STRUCT result=*pScanStruct;
 
-    result.id.uuid=QUuid::createUuid();
+    result.id.sUuid=XBinary::generateUUID();
     result.type=RECORD_TYPE_GENERIC;
     result.name=RECORD_NAME_GENERIC;
     result.sVersion="";
@@ -1866,7 +1866,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=XBinary::FT_BINARY;
         result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
-        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=binary.getSignature(0,150);
@@ -1975,7 +1975,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=XBinary::FT_MSDOS;
         result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
-        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=msdos.getSignature(0,150);
@@ -2054,7 +2054,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=result.bIs64?XBinary::FT_ELF64:XBinary::FT_ELF32;
         result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
-        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=elf.getSignature(0,150);
@@ -2141,7 +2141,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, Sp
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=result.bIs64?XBinary::FT_MACHO64:XBinary::FT_MACHO32;
         result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
-        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=mach.getSignature(0,150);
@@ -2215,7 +2215,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
         }
 
         result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
-        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=le.getSignature(0,150);
@@ -2269,7 +2269,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=XBinary::FT_NE;
         result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
-        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=ne.getSignature(0,150);
@@ -2322,7 +2322,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=result.bIs64?XBinary::FT_PE64:XBinary::FT_PE32;
         result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
-        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=pe.getSignature(0,150);
@@ -2676,7 +2676,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=XBinary::FT_DEX;
         result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
-        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=dex.getSignature(0,150);
@@ -2772,7 +2772,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=XBinary::FT_ZIP;
         result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
-        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=xzip.getSignature(0,150);
@@ -2865,7 +2865,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=XBinary::FT_ARCHIVE;
         result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
-        result.basic_info.id.uuid=QUuid::createUuid();
+        result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
         result.basic_info.sHeaderSignature=xmachofat.getSignature(0,150);
@@ -16205,10 +16205,10 @@ QByteArray SpecAbstract::serializeScanStruct(SCAN_STRUCT scanStruct, bool bIsHea
 
     ds << scanStruct.nSize;
     ds << scanStruct.nOffset;
-    ds << scanStruct.id.uuid;
+    ds << scanStruct.id.sUuid;
     ds << (quint32)scanStruct.id.fileType;
     ds << (quint32)scanStruct.id.filePart;
-    ds << scanStruct.parentId.uuid;
+    ds << scanStruct.parentId.sUuid;
     ds << (quint32)scanStruct.parentId.fileType;
     ds << (quint32)scanStruct.parentId.filePart;
     ds << (quint32)scanStruct.type;
@@ -16230,12 +16230,12 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(QByteArray baData,
 
     ds >> ssResult.nSize;
     ds >> ssResult.nOffset;
-    ds >> ssResult.id.uuid;
+    ds >> ssResult.id.sUuid;
     ds >> nTemp;
     ssResult.id.fileType=(XBinary::FT)nTemp;
     ds >> nTemp;
     ssResult.id.filePart=(RECORD_FILEPART)nTemp;
-    ds >> ssResult.parentId.uuid;
+    ds >> ssResult.parentId.sUuid;
     ds >> nTemp;
     ssResult.parentId.fileType=(XBinary::FT)nTemp;
     ds >> nTemp;

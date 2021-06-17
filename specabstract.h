@@ -768,7 +768,7 @@ public:
     struct ID
     {
         bool bVirtual;
-        QUuid uuid;
+        QString sUuid;
         XBinary::FT fileType;
         RECORD_FILEPART filePart;
         QString sVersion;
