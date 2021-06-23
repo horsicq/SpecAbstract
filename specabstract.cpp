@@ -268,6 +268,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ANDROIDJETPACK:                        sResult=QString("Android Jetpack");                             break;
         case RECORD_NAME_ANDROIDGRADLE:                         sResult=QString("Android Gradle");                              break;
         case RECORD_NAME_ANDROIDMAVENPLUGIN:                    sResult=QString("Android Maven Plugin");                        break;
+        case RECORD_NAME_ANDROIDNDK:                            sResult=QString("Android NDK");                                 break;
         case RECORD_NAME_ANDROIDSDK:                            sResult=QString("Android SDK");                                 break;
         case RECORD_NAME_ANDROIDSIGNAPK:                        sResult=QString("Android SignApk");                             break;
         case RECORD_NAME_ANDROIDXML:                            sResult=QString("Android XML");                                 break;
@@ -652,6 +653,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_OBJECTIVEC:                            sResult=QString("Objective-C");                                 break;
         case RECORD_NAME_OBJECTPASCAL:                          sResult=QString("Object Pascal");                               break;
         case RECORD_NAME_OBSIDIUM:                              sResult=QString("Obsidium");                                    break;
+        case RECORD_NAME_OLLVMTLL:                              sResult=QString("ollvm-tll(LLVM 6.0+Ollvm+Armariris)");         break;
         case RECORD_NAME_ONESPANPROTECTION:                     sResult=QString("OneSpan Protection");                          break;
         case RECORD_NAME_OPENBSD:                               sResult=QString("OpenBSD");                                     break;
         case RECORD_NAME_OPENDOCUMENT:                          sResult=QString("Open Document");                               break;
@@ -1807,6 +1809,19 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_TencentLegu_string(QString sString)
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::_get_OllvmTll_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("ollvm-tll.git"))
+    {
+        result.bIsValid=true;
+        // TODO Version
+    }
+
+    return result;
+}
+
 SpecAbstract::VI_STRUCT SpecAbstract::_get_DelphiVersionFromCompiler(QString sString)
 {
     VI_STRUCT result={};
@@ -2076,6 +2091,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         result.listProgramHeaders=elf.getElf_PhdrList();
 
         result.listSectionRecords=XELF::getSectionRecords(&result.listSectionHeaders,pOptions->bIsImage,&result.baStringTable);
+        result.listNotes=elf.getNotes(&result.listProgramHeaders);
 
         result.nCommentSection=XELF::getSectionNumber(".comment",&result.listSectionRecords);
 
@@ -11487,36 +11503,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
 
                 if(_sAndroidVersion=="")
                 {
-                    _sAndroidVersion="Unknown";
-
-                    if(_sVersion=="3")    _sAndroidVersion="1.5";
-                    if(_sVersion=="4")    _sAndroidVersion="1.6";
-                    if(_sVersion=="5")    _sAndroidVersion="2.0";
-                    if(_sVersion=="6")    _sAndroidVersion="2.0.1";
-                    if(_sVersion=="7")    _sAndroidVersion="2.1";
-                    if(_sVersion=="8")    _sAndroidVersion="2.2.X";
-                    if(_sVersion=="9")    _sAndroidVersion="2.3-2.3.2";
-                    if(_sVersion=="10")   _sAndroidVersion="2.3.3-2.3.7";
-                    if(_sVersion=="11")   _sAndroidVersion="3.0";
-                    if(_sVersion=="12")   _sAndroidVersion="3.1";
-                    if(_sVersion=="13")   _sAndroidVersion="3.2.X";
-                    if(_sVersion=="14")   _sAndroidVersion="4.0.1-4.0.2";
-                    if(_sVersion=="15")   _sAndroidVersion="4.0.3-4.0.4";
-                    if(_sVersion=="16")   _sAndroidVersion="4.1.X";
-                    if(_sVersion=="17")   _sAndroidVersion="4.2.X";
-                    if(_sVersion=="18")   _sAndroidVersion="4.3.X";
-                    if(_sVersion=="19")   _sAndroidVersion="4.4-4.4.4";
-                    if(_sVersion=="20")   _sAndroidVersion="4.4W";
-                    if(_sVersion=="21")   _sAndroidVersion="5.0";
-                    if(_sVersion=="22")   _sAndroidVersion="5.1";
-                    if(_sVersion=="23")   _sAndroidVersion="6.0";
-                    if(_sVersion=="24")   _sAndroidVersion="7.0";
-                    if(_sVersion=="25")   _sAndroidVersion="7.1";
-                    if(_sVersion=="26")   _sAndroidVersion="8.0.0";
-                    if(_sVersion=="27")   _sAndroidVersion="8.1.0";
-                    if(_sVersion=="28")   _sAndroidVersion="9";
-                    if(_sVersion=="29")   _sAndroidVersion="10";
-                    if(_sVersion=="30")   _sAndroidVersion="11";
+                    _sAndroidVersion=getAndroidVersionFromApi(_sVersion.toUInt());
                 }
 
                 if(_sVersion!="")
@@ -11913,6 +11900,14 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECT))
             {
                 _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_APKPROTECT);
+
+                pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            // ollvm-tll
+            if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_OLLVMTLL))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_OLLVMTLL);
 
                 pZipInfo->mapResultAPKProtectors.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
@@ -12790,7 +12785,7 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
 
     if(elf.isValid())
     {
-        _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_UNIX,"","",0);
+        _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_UNIX,"","",0);
 
         quint8 osabi=elf.getIdent_osabi();
 
@@ -12808,6 +12803,46 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
         else if (osabi==XELF_DEF::ELFOSABI_NSK)         ssOperationSystem.name=RECORD_NAME_NSK;
         else if (osabi==XELF_DEF::ELFOSABI_AROS)        ssOperationSystem.name=RECORD_NAME_AROS;
         else if (osabi==XELF_DEF::ELFOSABI_FENIXOS)     ssOperationSystem.name=RECORD_NAME_FENIXOS;
+
+        if(ssOperationSystem.name==RECORD_NAME_UNIX)
+        {
+            if(XELF::isNotePresent(&(pELFInfo->listNotes),"Android"))
+            {
+                ssOperationSystem.name=RECORD_NAME_ANDROID;
+
+                XELF::NOTE note=XELF::getNote(&(pELFInfo->listNotes),"Android");
+
+                _SCANS_STRUCT ssAndroidSDK=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDSDK,"","",0);
+                _SCANS_STRUCT ssAndroidNDK=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDNDK,"","",0);
+
+                if(note.nSize>=4)
+                {
+                    quint32 nSDKVersion=elf.read_uint32(note.nDataOffset);
+                    ssAndroidSDK.sVersion=QString("API %1").arg(nSDKVersion);
+
+                    ssOperationSystem.sVersion=getAndroidVersionFromApi(nSDKVersion);
+                }
+
+                if(note.nSize>=4+64*2)
+                {
+                    QString sNdkVersion=elf.read_ansiString(note.nDataOffset+4);
+                    QString sNdkBuild=elf.read_ansiString(note.nDataOffset+4+64);
+
+                    ssAndroidNDK.sVersion=QString("%1(%2)").arg(sNdkVersion).arg(sNdkBuild);
+                }
+
+                pELFInfo->mapResultTools.insert(ssAndroidSDK.name,scansToScan(&(pELFInfo->basic_info),&ssAndroidSDK));
+                pELFInfo->mapResultTools.insert(ssAndroidNDK.name,scansToScan(&(pELFInfo->basic_info),&ssAndroidNDK));
+            }
+        }
+
+        if(ssOperationSystem.name==RECORD_NAME_UNIX)
+        {
+            if(XELF::isSectionNamePresent(".note.android.ident",&(pELFInfo->listSectionRecords)))
+            {
+                ssOperationSystem.name=RECORD_NAME_ANDROID;
+            }
+        }
 
         if(ssOperationSystem.name==RECORD_NAME_UNIX)
         {
@@ -13251,6 +13286,17 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
             }
         }
 
+        {
+            vi=_get_OllvmTll_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_OLLVMTLL,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
         if(pELFInfo->basic_info.bIsTest)
         {
             if(ss.name==RECORD_NAME_UNKNOWN)
@@ -13282,7 +13328,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
     if(elf.isValid())
     {
         // Qt
-        if(XELF::isSectionNamePresent(".qtversion",&(pELFInfo->listSectionRecords))) // TODO
+        if(XELF::isSectionNamePresent(".qtversion",&(pELFInfo->listSectionRecords)))
         {
             _SCANS_STRUCT recordSS={};
 
@@ -13699,6 +13745,14 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
 
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
+
+        // LLVM 6.0 + Ollvm + Armariris
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_OLLVMTLL))
+        {
+            _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_OLLVMTLL);
+
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
     }
 }
 
@@ -14068,8 +14122,8 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
         // https://source.android.com/devices/tech/dalvik/dex-format
         if(sDDEXVersion=="035")
         {
-            recordAndroidSDK.sVersion="API 14+";
-            recordAndroid.sVersion="4.0+";
+            recordAndroidSDK.sVersion="API 14";
+            recordAndroid.sVersion=getAndroidVersionFromApi(14);
         }
 //        else if (sDDEXVersion=="036")
 //        {
@@ -14078,18 +14132,18 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
 //        }
         else if(sDDEXVersion=="037")
         {
-            recordAndroidSDK.sVersion="API 24+";
-            recordAndroid.sVersion="7.0+";
+            recordAndroidSDK.sVersion="API 24";
+            recordAndroid.sVersion=getAndroidVersionFromApi(24);
         }
         else if(sDDEXVersion=="038")
         {
-            recordAndroidSDK.sVersion="API 26+";
-            recordAndroid.sVersion="8.0+";
+            recordAndroidSDK.sVersion="API 26";
+            recordAndroid.sVersion=getAndroidVersionFromApi(26);
         }
         else if(sDDEXVersion=="039")
         {
-            recordAndroidSDK.sVersion="API 28+";
-            recordAndroid.sVersion="9.0+";
+            recordAndroidSDK.sVersion="API 28";
+            recordAndroid.sVersion=getAndroidVersionFromApi(28);
         }
         else
         {
@@ -16249,6 +16303,42 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(QByteArray baData,
     ds >> *pbIsHeader;
 
     return ssResult;
+}
+
+QString SpecAbstract::getAndroidVersionFromApi(quint32 nAPI)
+{
+    QString sResult="Unknown";
+
+    if(nAPI==3)     sResult="1.5";
+    if(nAPI==4)     sResult="1.6";
+    if(nAPI==5)     sResult="2.0";
+    if(nAPI==6)     sResult="2.0.1";
+    if(nAPI==7)     sResult="2.1";
+    if(nAPI==8)     sResult="2.2.X";
+    if(nAPI==9)     sResult="2.3-2.3.2";
+    if(nAPI==10)    sResult="2.3.3-2.3.7";
+    if(nAPI==11)    sResult="3.0";
+    if(nAPI==12)    sResult="3.1";
+    if(nAPI==13)    sResult="3.2.X";
+    if(nAPI==14)    sResult="4.0.1-4.0.2";
+    if(nAPI==15)    sResult="4.0.3-4.0.4";
+    if(nAPI==16)    sResult="4.1.X";
+    if(nAPI==17)    sResult="4.2.X";
+    if(nAPI==18)    sResult="4.3.X";
+    if(nAPI==19)    sResult="4.4-4.4.4";
+    if(nAPI==20)    sResult="4.4W";
+    if(nAPI==21)    sResult="5.0";
+    if(nAPI==22)    sResult="5.1";
+    if(nAPI==23)    sResult="6.0";
+    if(nAPI==24)    sResult="7.0";
+    if(nAPI==25)    sResult="7.1";
+    if(nAPI==26)    sResult="8.0";
+    if(nAPI==27)    sResult="8.1";
+    if(nAPI==28)    sResult="9.0";
+    if(nAPI==29)    sResult="10.0";
+    if(nAPI==30)    sResult="11.0";
+
+    return sResult;
 }
 
 bool SpecAbstract::PE_compareRichRecord(_SCANS_STRUCT *pResult,SpecAbstract::MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, XBinary::FT fileType1, XBinary::FT fileType2)

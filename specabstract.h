@@ -114,6 +114,7 @@ public:
         RECORD_NAME_ANDROIDJETPACK,
         RECORD_NAME_ANDROIDGRADLE,
         RECORD_NAME_ANDROIDMAVENPLUGIN,
+        RECORD_NAME_ANDROIDNDK,
         RECORD_NAME_ANDROIDSDK,
         RECORD_NAME_ANDROIDSIGNAPK,
         RECORD_NAME_ANDROIDXML,
@@ -498,6 +499,7 @@ public:
         RECORD_NAME_OBJECTIVEC,
         RECORD_NAME_OBJECTPASCAL,
         RECORD_NAME_OBSIDIUM,
+        RECORD_NAME_OLLVMTLL,
         RECORD_NAME_ONESPANPROTECTION, // till 2018 Vasco !
         RECORD_NAME_OPENBSD,
         RECORD_NAME_OPENDOCUMENT,
@@ -1004,6 +1006,7 @@ public:
         QList<XELF_DEF::Elf_Shdr> listSectionHeaders;
         QList<XELF_DEF::Elf_Phdr> listProgramHeaders;
         QList<XELF::SECTION_RECORD> listSectionRecords;
+        QList<XELF::NOTE> listNotes;
 
         qint32 nCommentSection;
         qint32 nStringTableSection;
@@ -1449,6 +1452,7 @@ public:
     static VI_STRUCT _get_SnapdragonLLVMARM_string(QString sString);
     static VI_STRUCT _get_NASM_string(QString sString);
     static VI_STRUCT _get_TencentLegu_string(QString sString);
+    static VI_STRUCT _get_OllvmTll_string(QString sString);
     static VI_STRUCT _get_DelphiVersionFromCompiler(QString sString);
 
     static bool PE_isValid_UPX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
@@ -1483,6 +1487,8 @@ public:
 
     static QByteArray serializeScanStruct(SCAN_STRUCT scanStruct,bool bIsHeader=false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData,bool *pbIsHeader=nullptr);
+
+    static QString getAndroidVersionFromApi(quint32 nAPI);
 
 private:
     static bool PE_compareRichRecord(_SCANS_STRUCT *pResult,MSRICH_RECORD *pRecord,quint16 nID,quint32 nBuild,XBinary::FT fileType1,XBinary::FT fileType2);
