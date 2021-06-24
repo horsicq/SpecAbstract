@@ -11453,6 +11453,11 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
 
         if(xzip.isValid())
         {
+            bool bIsSigned=xzip.isAPKSignBlockPresent();
+
+            QList<XZip::APK_SIG_BLOCK_RECORD> listRecords=xzip.getAPKSignaturesBlockList();
+            // TODO
+
             QByteArray baAndroidManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"AndroidManifest.xml");
 
             QString sAndroidManifest=XAndroidBinary::getDecoded(&baAndroidManifest);
