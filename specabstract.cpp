@@ -283,6 +283,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_APKEDITOR:                             sResult=QString("ApkEditor");                                   break;
         case RECORD_NAME_APKPROTECT:                            sResult=QString("APKProtect");                                  break;
         case RECORD_NAME_APKPROTECTOR:                          sResult=QString("ApkProtector");                                break;
+        case RECORD_NAME_APKSIGNATURESCHEME:                    sResult=QString("APK Signature Scheme");                        break;
         case RECORD_NAME_APKSIGNER:                             sResult=QString("ApkSigner");                                   break;
         case RECORD_NAME_APKTOOLPLUS:                           sResult=QString("ApkToolPlus");                                 break;
         case RECORD_NAME_APPGUARD:                              sResult=QString("AppGuard");                                    break;
@@ -494,6 +495,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_GOLIATHNET:                            sResult=QString("Goliath .NET");                                break;
         case RECORD_NAME_GOLINK:                                sResult=QString("GoLink");                                      break;
         case RECORD_NAME_GOOGLE:                                sResult=QString("Google");                                      break;
+        case RECORD_NAME_GOOGLEPLAY:                            sResult=QString("Google Play");                                 break;
         case RECORD_NAME_GPINSTALL:                             sResult=QString("GP-Install");                                  break;
         case RECORD_NAME_GUARDIANSTEALTH:                       sResult=QString("Guardian Stealth");                            break;
         case RECORD_NAME_GZIP:                                  sResult=QString("GZIP");                                        break;
@@ -851,6 +853,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_VMUNPACKER:                            sResult=QString("VMUnpacker");                                  break;
         case RECORD_NAME_VMWARE:                                sResult=QString("VMware");                                      break;
         case RECORD_NAME_VPACKER:                               sResult=QString("VPacker");                                     break;
+        case RECORD_NAME_WALLE:                                 sResult=QString("Walle");                                       break;
         case RECORD_NAME_WANGZEHUALLVM:                         sResult=QString("wangzehua LLVM");                              break;
         case RECORD_NAME_WATCHOS:                               sResult=QString("watchOS");                                     break;
         case RECORD_NAME_WATCOMC:                               sResult=QString("Watcom C");                                    break;
@@ -11453,10 +11456,69 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
 
         if(xzip.isValid())
         {
-            bool bIsSigned=xzip.isAPKSignBlockPresent();
+            // 0x7109871a APK_SIGNATURE_SCHEME_V2_BLOCK_ID
+            // TODO Check 0x7109871f https://github.com/18598925736/ApkChannelPackageJavaCore/blob/9342d57a1fc5f9271d569612df6028758f6ee42d/src/channel/data/Constants.java#L38
+            // 0xf05368c0 APK_SIGNATURE_SCHEME_V3_BLOCK_ID
+            // 0x42726577 padding
+            // 0x504b4453 DEPENDENCY_INFO_BLOCK_ID; https://github.com/jomof/CppBuildCacheWorkInProgress/blob/148b94d712d14b6f2a13ab37a526c7795e2215b3/agp-7.1.0-alpha01/tools/base/signflinger/src/com/android/signflinger/SignedApk.java#L56
+            // 0x71777777 Walle  https://github.com/Meituan-Dianping/walle/blob/f78edcf1117a0aa858a3d04bb24d86bf9ad51bb2/payload_reader/src/main/java/com/meituan/android/walle/ApkUtil.java#L40
+            // 0x6dff800d SOURCE_STAMP_BLOCK_ID
+            // 0x2146444e Google Play
 
-            QList<XZip::APK_SIG_BLOCK_RECORD> listRecords=xzip.getAPKSignaturesBlockList();
-            // TODO
+            QList<XZip::APK_SIG_BLOCK_RECORD> listApkSignaturesBlockRecords=xzip.getAPKSignaturesBlockRecordsList();
+
+            _SCANS_STRUCT ssSignTool=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_APKSIGNATURESCHEME,"","",0);
+
+            if(XZip::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords,0x7109871a))
+            {
+                ssSignTool.sVersion="v2";
+            }
+            else if(XZip::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords,0xf05368c0))
+            {
+                ssSignTool.sVersion="v3";
+            }
+
+            // TODO V4
+
+            if(ssSignTool.sVersion!="")
+            {
+                pZipInfo->mapResultSigntools.insert(ssSignTool.name,scansToScan(&(pZipInfo->basic_info),&ssSignTool));
+            }
+
+            if(XZip::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords,0x71777777))
+            {
+                _SCANS_STRUCT ssWalle=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_WALLE,"","",0);
+                pZipInfo->mapResultTools.insert(ssWalle.name,scansToScan(&(pZipInfo->basic_info),&ssWalle));
+            }
+
+            if(XZip::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords,0x2146444e))
+            {
+                _SCANS_STRUCT ssWalle=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_GOOGLEPLAY,"","",0);
+                pZipInfo->mapResultTools.insert(ssWalle.name,scansToScan(&(pZipInfo->basic_info),&ssWalle));
+            }
+
+            if(pZipInfo->basic_info.bIsTest)
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_UNKNOWN,"","",0);
+
+                int nNumberOfRecords=listApkSignaturesBlockRecords.count();
+
+                for(int i=0;i<nNumberOfRecords;i++)
+                {
+                    if(listApkSignaturesBlockRecords.at(i).nID>0xFFFF)
+                    {
+                        if( (listApkSignaturesBlockRecords.at(i).nID!=0x7109871a)&&
+                            (listApkSignaturesBlockRecords.at(i).nID!=0xf05368c0)&&
+                            (listApkSignaturesBlockRecords.at(i).nID!=0x42726577))
+                        {
+                            ss.name=(RECORD_NAME)((int)RECORD_NAME_UNKNOWN0+i);
+                            ss.sVersion=XBinary::valueToHex(listApkSignaturesBlockRecords.at(i).nID);
+                            //ss.sInfo=XBinary::valueToHex(listApkSignaturesBlockRecords.at(i).nDataSize);
+                            pZipInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+                        }
+                    }
+                }
+            }
 
             QByteArray baAndroidManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"AndroidManifest.xml");
 

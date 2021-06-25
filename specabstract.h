@@ -24,6 +24,7 @@
 #include <QDataStream>
 #include <QUuid>
 #include "xformats.h"
+#include "xarchives.h"
 
 class SpecAbstract : public QObject
 {
@@ -129,6 +130,7 @@ public:
         RECORD_NAME_APKMODIFIERSIGNAPK,
         RECORD_NAME_APKPROTECT,
         RECORD_NAME_APKPROTECTOR,
+        RECORD_NAME_APKSIGNATURESCHEME,
         RECORD_NAME_APKSIGNER,
         RECORD_NAME_APKTOOLPLUS,
         RECORD_NAME_APPGUARD,
@@ -340,6 +342,7 @@ public:
         RECORD_NAME_GOLIATHNET,
         RECORD_NAME_GOLINK,
         RECORD_NAME_GOOGLE,
+        RECORD_NAME_GOOGLEPLAY,
         RECORD_NAME_GPINSTALL,
         RECORD_NAME_GUARDIANSTEALTH,
         RECORD_NAME_GZIP,
@@ -697,6 +700,7 @@ public:
         RECORD_NAME_VMUNPACKER,
         RECORD_NAME_VMWARE,
         RECORD_NAME_VPACKER,
+        RECORD_NAME_WALLE,
         RECORD_NAME_WANGZEHUALLVM,
         RECORD_NAME_WATCHOS,
         RECORD_NAME_WATCOMC,
