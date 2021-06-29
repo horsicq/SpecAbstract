@@ -279,8 +279,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_APACHEANT:                             sResult=QString("Apache Ant");                                  break;
         case RECORD_NAME_APACK:                                 sResult=QString("aPACK");                                       break;
         case RECORD_NAME_APK_SIGNER:                            sResult=QString("apk-signer");                                  break;
-        case RECORD_NAME_APKMODIFIERSIGNAPK:                    sResult=QString("ApkModifier SignApk");                         break;
         case RECORD_NAME_APKEDITOR:                             sResult=QString("ApkEditor");                                   break;
+        case RECORD_NAME_APKENCRYPTOR:                          sResult=QString("ApkEncryptor");                                break;
+        case RECORD_NAME_APKMODIFIERSIGNAPK:                    sResult=QString("ApkModifier SignApk");                         break;
         case RECORD_NAME_APKPROTECT:                            sResult=QString("APKProtect");                                  break;
         case RECORD_NAME_APKPROTECTOR:                          sResult=QString("ApkProtector");                                break;
         case RECORD_NAME_APKSIGNATURESCHEME:                    sResult=QString("APK Signature Scheme");                        break;
@@ -14813,6 +14814,12 @@ void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice, SpecAbstract::DEXIN
         if(pDEXInfo->mapTypeDetects.contains(RECORD_NAME_YIDUN))
         {
             _SCANS_STRUCT ss=pDEXInfo->mapTypeDetects.value(RECORD_NAME_YIDUN);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+
+        if(pDEXInfo->mapTypeDetects.contains(RECORD_NAME_APKENCRYPTOR))
+        {
+            _SCANS_STRUCT ss=pDEXInfo->mapTypeDetects.value(RECORD_NAME_APKENCRYPTOR);
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 

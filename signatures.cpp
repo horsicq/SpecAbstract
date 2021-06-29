@@ -1663,5 +1663,6 @@ SpecAbstract::STRING_RECORD _DEX_type_records[]=
     {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_YIDUN,                        "",                 ""},                    "La/_;"},
     {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_YIDUN,                        "",                 ""},                    "Lcom/_;"},
     {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APPSOLID,                     "",                 ""},                    "Lweb/apache/sax/app;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKENCRYPTOR,                 "",                 ""},                    "Lcn/beingyi/sub/utils/Native;"},
 };
 // CHECK nqshield
