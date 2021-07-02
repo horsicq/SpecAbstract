@@ -8216,6 +8216,7 @@ void SpecAbstract::PE_handle_Signtools(QIODevice *pDevice, bool bIsImage, SpecAb
             // TODO image
             XPE_DEF::IMAGE_DATA_DIRECTORY dd=pe.getOptionalHeader_DataDirectory(XPE_DEF::S_IMAGE_DIRECTORY_ENTRY_SECURITY);
 
+            // TODO File format
             if(pe.compareSignature(&(pPEInfo->basic_info.memoryMap),"........00020200",dd.VirtualAddress))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_SIGNTOOL,RECORD_NAME_GENERIC,"2.0","PKCS #7",0);
