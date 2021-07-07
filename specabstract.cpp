@@ -11539,6 +11539,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             QString sTargetSdkVersion=XBinary::regExp("android:targetSdkVersion=\"(.*?)\"",sAndroidManifest,1);
             QString sMinSdkVersion=XBinary::regExp("android:minSdkVersion=\"(.*?)\"",sAndroidManifest,1);
             QString sAndroid=XBinary::regExp("android:=\"(.*?)\"",sAndroidManifest,1);
+            QString sAndroidVersionName=XBinary::regExp("android:versionName=\"(.*?)\"",sAndroidManifest,1);
 
             // Check
             if(!XBinary::checkStringNumber(sCompileSdkVersion,1,40))        sCompileSdkVersion="";
@@ -11575,6 +11576,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
 
                 if(_sAndroidVersion=="") _sAndroidVersion=sCompileSdkVersionCodename;
                 if(_sAndroidVersion=="") _sAndroidVersion=sPlatformBuildVersionName;
+                if(_sAndroidVersion=="") _sAndroidVersion=sAndroidVersionName;
 
                 if(_sAndroidVersion=="")
                 {
