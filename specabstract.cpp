@@ -505,6 +505,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_HACKSTOP:                              sResult=QString("HackStop");                                    break;
         case RECORD_NAME_HALVCRYPTER:                           sResult=QString("HaLV Crypter");                                break;
         case RECORD_NAME_HDUS_WJUS:                             sResult=QString("Hdus-Wjus");                                   break;
+        case RECORD_NAME_HIAPKCOM:                              sResult=QString("HiAPK.com");                                   break;
         case RECORD_NAME_HIDEANDPROTECT:                        sResult=QString("Hide&Protect");                                break;
         case RECORD_NAME_HIDEPE:                                sResult=QString("HidePE");                                      break;
         case RECORD_NAME_HIKARIOBFUSCATOR:                      sResult=QString("HikariObfuscator");                            break;
@@ -11149,6 +11150,11 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecA
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_APKSIGNER,"","",0);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
                 }
+                else if(sCreatedBy.contains("www.HiAPK.com"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_HIAPKCOM,"","",0);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
                 else if(sBuiltBy.contains("com.haibison.apksigner")||sCreatedBy.contains("com.haibison.apksigner"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_APK_SIGNER,"","",0);
@@ -11732,6 +11738,12 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ECLIPSE))
             {
                 _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ECLIPSE);
+                pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_HIAPKCOM))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_HIAPKCOM);
                 pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
