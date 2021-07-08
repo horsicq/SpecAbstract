@@ -505,7 +505,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_HACKSTOP:                              sResult=QString("HackStop");                                    break;
         case RECORD_NAME_HALVCRYPTER:                           sResult=QString("HaLV Crypter");                                break;
         case RECORD_NAME_HDUS_WJUS:                             sResult=QString("Hdus-Wjus");                                   break;
-        case RECORD_NAME_HIAPKCOM:                              sResult=QString("HiAPK.com");                                   break;
+        case RECORD_NAME_HIAPKCOM:                              sResult=QString("www.HiAPK.com");                               break;
         case RECORD_NAME_HIDEANDPROTECT:                        sResult=QString("Hide&Protect");                                break;
         case RECORD_NAME_HIDEPE:                                sResult=QString("HidePE");                                      break;
         case RECORD_NAME_HIKARIOBFUSCATOR:                      sResult=QString("HikariObfuscator");                            break;
