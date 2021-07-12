@@ -135,6 +135,7 @@ public:
         RECORD_NAME_APKSIGNER,
         RECORD_NAME_APKTOOLPLUS,
         RECORD_NAME_APPGUARD,
+        RECORD_NAME_APPIMAGE,
         RECORD_NAME_APPLEJDK,
         RECORD_NAME_APPLELLVM,
         RECORD_NAME_APPORTABLECLANG,
@@ -1432,6 +1433,7 @@ public:
     static VI_STRUCT _get_wangzehuaLLVM_string(QString sString);
     static VI_STRUCT _get_ByteGuard_string(QString sString);
     static VI_STRUCT _get_TencentObfuscation_string(QString sString);
+    static VI_STRUCT _get_AppImage_string(QString sString);
     static VI_STRUCT _get_HikariObfuscator_string(QString sString);
     static VI_STRUCT _get_SnapProtect_string(QString sString);
     static VI_STRUCT _get_ByteDanceSecCompiler_string(QString sString);

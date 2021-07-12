@@ -288,6 +288,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_APKSIGNER:                             sResult=QString("ApkSigner");                                   break;
         case RECORD_NAME_APKTOOLPLUS:                           sResult=QString("ApkToolPlus");                                 break;
         case RECORD_NAME_APPGUARD:                              sResult=QString("AppGuard");                                    break;
+        case RECORD_NAME_APPIMAGE:                              sResult=QString("AppImage");                                    break;
         case RECORD_NAME_APPLEJDK:                              sResult=QString("Apple JDK");                                   break;
         case RECORD_NAME_APPLELLVM:                             sResult=QString("Apple LLVM");                                  break;
         case RECORD_NAME_APPORTABLECLANG:                       sResult=QString("Apportable clang");                            break;
@@ -1439,6 +1440,19 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_TencentObfuscation_string(QString sSt
     VI_STRUCT result={};
 
     if(sString.contains("Tencent-Obfuscation Compiler"))
+    {
+        // TODO Version
+        result.bIsValid=true;
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_AppImage_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("AppImage by Simon Peter, http://appimage.org/"))
     {
         // TODO Version
         result.bIsValid=true;
@@ -13325,6 +13339,18 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
             }
         }
 
+        if(!vi.bIsValid)
+        {
+            vi=_get_AppImage_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_TOOL,RECORD_NAME_APPIMAGE,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
         {
             vi=_get_HikariObfuscator_string(sComment);
 
@@ -13709,19 +13735,16 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         if(viUPXEnd.nValue==0x21434553) // SEC!
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_SECNEO,"Old","UPX",0);
-
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
         else if(viUPXEnd.nValue==0x00010203)
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_SECNEO,"","UPX",0);
-
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
         else if(viUPXEnd.nValue==0x214d4a41) // "AJM!"
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_IJIAMI,"","UPX",0);
-
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
@@ -13729,7 +13752,6 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_OBFUSCATORLLVM))
         {
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_OBFUSCATORLLVM);
-
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
@@ -13737,7 +13759,6 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_WANGZEHUALLVM))
         {
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_WANGZEHUALLVM);
-
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
@@ -13745,7 +13766,6 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_BYTEGUARD))
         {
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_BYTEGUARD);
-
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
@@ -13753,7 +13773,6 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ALIPAYOBFUSCATOR))
         {
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ALIPAYOBFUSCATOR);
-
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
@@ -13761,7 +13780,6 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_TENCENTLEGU))
         {
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_TENCENTLEGU);
-
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
@@ -13769,7 +13787,6 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SAFEENGINELLVM))
         {
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SAFEENGINELLVM);
-
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
@@ -13777,15 +13794,20 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_TENCENTPROTECTION))
         {
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_TENCENTPROTECTION);
-
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // AppImage
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_APPIMAGE)) // Check overlay
+        {
+            _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_APPIMAGE);
+            pELFInfo->mapResultTools.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
         // HikariObfuscator
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_HIKARIOBFUSCATOR))
         {
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_HIKARIOBFUSCATOR);
-
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
@@ -13793,7 +13815,6 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SNAPPROTECT))
         {
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SNAPPROTECT);
-
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
@@ -13801,7 +13822,6 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_BYTEDANCESECCOMPILER))
         {
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_BYTEDANCESECCOMPILER);
-
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
