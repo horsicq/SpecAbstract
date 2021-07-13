@@ -484,9 +484,10 @@ public:
         RECORD_NAME_NEOLITE,
         RECORD_NAME_NETEASEAPKSIGNER,
         RECORD_NAME_NETBSD,
+        RECORD_NAME_NIDHOGG,
+        RECORD_NAME_NIM,
         RECORD_NAME_NJOINER,
         RECORD_NAME_NJOY,
-        RECORD_NAME_NIDHOGG,
         RECORD_NAME_NME,
         RECORD_NAME_NOOBYPROTECT,
         RECORD_NAME_NOODLECRYPT,
@@ -594,6 +595,7 @@ public:
         RECORD_NAME_ROSASM,
         RECORD_NAME_RTF,
         RECORD_NAME_RUBY,
+        RECORD_NAME_RUST,
         RECORD_NAME_SAFEENGINESHIELDEN,
         RECORD_NAME_SAFEENGINELLVM,
         RECORD_NAME_SANDHOOK,
@@ -758,6 +760,7 @@ public:
         RECORD_NAME_YODASPROTECTOR,
         RECORD_NAME_YZPACK,
         RECORD_NAME_ZELDACRYPT,
+        RECORD_NAME_ZIG,
         RECORD_NAME_ZIP,
         RECORD_NAME_ZLIB,
         RECORD_NAME_ZPROTECT,
@@ -1184,6 +1187,8 @@ public:
         bool bShowDetects;
         bool bResultAsXML;
         bool bResultAsJSON;
+        bool bResultAsCSV;
+        bool bResultAsTSV;
         bool bSubdirectories;
         bool bIsImage;
         bool bIsTest;
@@ -1414,6 +1419,7 @@ public:
     static VI_STRUCT _get_UPX_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,XBinary::FT fileType);
     static VI_STRUCT get_GCC_vi1(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize); // TODO Check
     static VI_STRUCT get_GCC_vi2(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
+    static VI_STRUCT get_Nim_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT _get_GCC_string(QString sString);
     static VI_STRUCT get_WindowsInstaller_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_gold_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);

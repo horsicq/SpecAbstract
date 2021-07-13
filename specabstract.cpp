@@ -638,6 +638,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_NETEASEAPKSIGNER:                      sResult=QString("NetEase ApkSigner");                           break;
         case RECORD_NAME_NETBSD:                                sResult=QString("NetBSD");                                      break;
         case RECORD_NAME_NIDHOGG:                               sResult=QString("Nidhogg");                                     break;
+        case RECORD_NAME_NIM:                                   sResult=QString("Nim");                                         break;
         case RECORD_NAME_NJOINER:                               sResult=QString("N-Joiner");                                    break;
         case RECORD_NAME_NJOY:                                  sResult=QString("N-Joy");                                       break;
         case RECORD_NAME_NME:                                   sResult=QString("NME");                                         break;
@@ -747,6 +748,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ROSASM:                                sResult=QString("RosAsm");                                      break;
         case RECORD_NAME_RTF:                                   sResult=QString("Rich Text Format");                            break;
         case RECORD_NAME_RUBY:                                  sResult=QString("Ruby");                                        break;
+        case RECORD_NAME_RUST:                                  sResult=QString("Rust");                                        break;
         case RECORD_NAME_SAFEENGINESHIELDEN:                    sResult=QString("Safengine Shielden");                          break;
         case RECORD_NAME_SAFEENGINELLVM:                        sResult=QString("Safengine LLVM");                              break;
         case RECORD_NAME_SANDHOOK:                              sResult=QString("SandHook");                                    break;
@@ -911,6 +913,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_YODASPROTECTOR:                        sResult=QString("Yoda's Protector");                            break;
         case RECORD_NAME_YZPACK:                                sResult=QString("YZPack");                                      break;
         case RECORD_NAME_ZELDACRYPT:                            sResult=QString("ZeldaCrypt");                                  break;
+        case RECORD_NAME_ZIG:                                   sResult=QString("Zig");                                         break;
         case RECORD_NAME_ZIP:                                   sResult=QString("ZIP");                                         break;
         case RECORD_NAME_ZLIB:                                  sResult=QString("zlib");                                        break;
         case RECORD_NAME_ZPROTECT:                              sResult=QString("ZProtect");                                    break;
@@ -7414,6 +7417,13 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
     if(pe.isValid())
     {
+        if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_RUST))
+        {
+            // TODO Version
+            _SCANS_STRUCT ssCompiler=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_RUST);
+            pPEInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pPEInfo->basic_info),&ssCompiler));
+        }
+
         if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EXCELSIORJET))
         {
             // TODO Version
@@ -7458,6 +7468,24 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_COMPILER,RECORD_NAME_FASM,"","",0);
             ss.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
             pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        // Zig
+        if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ZIG))
+        {
+            _SCANS_STRUCT ss=pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ZIG);;
+            pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pe.checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bIsDeepScan))
+        {
+            VI_STRUCT viNim=get_Nim_vi(pDevice,bIsImage,pPEInfo->osConstDataSection.nOffset,pPEInfo->osConstDataSection.nSize);
+
+            if(viNim.bIsValid)
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_COMPILER,RECORD_NAME_NIM,"","",0);
+                pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            }
         }
 
         // Valve
@@ -15357,6 +15385,23 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi2(QIODevice *pDevice,bool bIsIma
         result.bIsValid=true;
         QString sVersionString=binary.read_ansiString(nOffset_Version);
         result.sVersion=sVersionString.section("-",1,1).section("/",0,0);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::get_Nim_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+{
+    VI_STRUCT result={};
+
+    XBinary binary(pDevice,bIsImage);
+
+    qint64 nOffset_Version=binary.find_ansiString(nOffset,nSize,"\\lib\\system\\io.nim");
+
+    if(nOffset_Version!=-1)
+    {
+        result.bIsValid=true;
+        // TODO Version
     }
 
     return result;
