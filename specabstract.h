@@ -472,6 +472,7 @@ public:
         RECORD_NAME_MPACK,
         RECORD_NAME_MPRESS,
         RECORD_NAME_MRUNDECTETABLE,
+        RECORD_NAME_MSDOS,
         RECORD_NAME_MSLRH,
         RECORD_NAME_MSYS,
         RECORD_NAME_MSYS2,
@@ -991,6 +992,7 @@ public:
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
 
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultOperationSystems;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultDosExtenders;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
@@ -1368,6 +1370,7 @@ public:
 
     static void Binary_handle_FixDetects(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo);
 
+    static void MSDOS_handle_OperationSystems(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_Tools(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_Borland(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_Protection(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo);

@@ -625,6 +625,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MPACK:                                 sResult=QString("mPack");                                       break;
         case RECORD_NAME_MPRESS:                                sResult=QString("MPRESS");                                      break;
         case RECORD_NAME_MRUNDECTETABLE:                        sResult=QString("Mr Undectetable");                             break;
+        case RECORD_NAME_MSDOS:                                 sResult=QString("MS-DOS");                                      break;
         case RECORD_NAME_MSLRH:                                 sResult=QString("MSLRH");                                       break;
         case RECORD_NAME_MSYS:                                  sResult=QString("Msys");                                        break;
         case RECORD_NAME_MSYS2:                                 sResult=QString("MSYS2");                                       break;
@@ -2039,6 +2040,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
 
         signatureExpScan(&msdos,&(result.basic_info.memoryMap),&result.mapEntryPointDetects,result.nEntryPointOffset,_MSDOS_entrypointExp_records,sizeof(_MSDOS_entrypointExp_records),result.basic_info.id.fileType,XBinary::FT_MSDOS,&(result.basic_info),DETECTTYPE_ENTRYPOINT,pbIsStop);
 
+        MSDOS_handle_OperationSystems(pDevice,pOptions->bIsImage,&result);
         MSDOS_handle_Borland(pDevice,pOptions->bIsImage,&result);
         MSDOS_handle_Tools(pDevice,pOptions->bIsImage,&result);
         MSDOS_handle_Protection(pDevice,pOptions->bIsImage,&result);
@@ -2047,6 +2049,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
 
         MSDOS_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
 
+        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultDosExtenders.values());
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
@@ -12382,6 +12385,16 @@ void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, bool bIsImage, S
         pBinaryInfo->mapResultFormats[RECORD_NAME_PDF].id.fileType=XBinary::FT_BINARY;
         pBinaryInfo->basic_info.id.fileType=XBinary::FT_BINARY;
     }
+}
+
+void SpecAbstract::MSDOS_handle_OperationSystems(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(bIsImage)
+
+    _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_MSDOS,"","",0);
+
+    pMSDOSInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pMSDOSInfo->basic_info),&ssOperationSystem));
 }
 
 void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
