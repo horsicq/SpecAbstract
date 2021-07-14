@@ -13919,6 +13919,26 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
         if(pELFInfo->basic_info.bIsTest)
         {
             // TODO names of note sections
+
+            QList<QString> list=pELFInfo->listComments;
+
+            QSet<QString> stRecords;
+
+            for(int i=0;i<list.count();i++)
+            {
+                if(!stRecords.contains(list.at(i)))
+                {
+                    _SCANS_STRUCT recordSS={};
+
+                    recordSS.type=RECORD_TYPE_LIBRARY;
+                    recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+i+1);
+                    recordSS.sVersion=list.at(i);
+
+                    pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+
+                    stRecords.insert(list.at(i));
+                }
+            }
         }
     }
 }
@@ -14101,7 +14121,7 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Sp
     {
         if(pMACHInfo->basic_info.bIsTest)
         {
-            static QMap<quint64,QString> mapCommands=XMACH::getLoadCommandTypesS();
+            QMap<quint64,QString> mapCommands=XMACH::getLoadCommandTypesS();
 
             QList<XMACH::COMMAND_RECORD> list=mach.getCommandRecords();
 
