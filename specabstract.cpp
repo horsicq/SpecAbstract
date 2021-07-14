@@ -1962,6 +1962,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
 
         Binary_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
+        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultTexts.values());
         result.basic_info.listDetects.append(result.mapResultArchives.values());
         result.basic_info.listDetects.append(result.mapResultCertificates.values());
@@ -10203,6 +10204,13 @@ void SpecAbstract::Binary_handle_COM(QIODevice *pDevice, bool bIsImage, SpecAbst
         pBinaryInfo->basic_info.id.fileType=XBinary::FT_COM;
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CRYPTCOM);
         pBinaryInfo->mapResultCOMProtectors.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+
+    if(pBinaryInfo->mapResultCOMProtectors.size()||pBinaryInfo->mapResultCOMPackers.size())
+    {
+        _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_MSDOS,"","",0);
+
+        pBinaryInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pBinaryInfo->basic_info),&ssOperationSystem));
     }
 }
 

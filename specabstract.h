@@ -900,6 +900,7 @@ public:
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapTextHeaderDetects;
 
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultOperationSystems;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTexts;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLanguages;
