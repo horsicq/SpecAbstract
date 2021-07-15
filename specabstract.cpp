@@ -826,6 +826,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_TURKISHCYBERSIGNATURE:                 sResult=QString("Turkish Cyber Signature");                     break;
         case RECORD_NAME_TURKOJANCRYPTER:                       sResult=QString("Turkojan Crypter");                            break;
         case RECORD_NAME_TVOS:                                  sResult=QString("tvOS");                                        break;
+        case RECORD_NAME_UBUNTU:                                sResult=QString("Ubuntu");                                      break;
         case RECORD_NAME_UBUNTUCLANG:                           sResult=QString("Ubuntu clang");                                break;
         case RECORD_NAME_UCEXE:                                 sResult=QString("UCEXE");                                       break;
         case RECORD_NAME_UNDERGROUNDCRYPTER:                    sResult=QString("UnderGround Crypter");                         break;
@@ -7707,6 +7708,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             }
 
             // Python
+            // TODO Create function
             int nNumberOfImports=pPEInfo->listImports.count();
 
             for(int i=0; i<nNumberOfImports; i++)
@@ -7733,6 +7735,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             }
 
             // Perl
+            // TODO Create function
             for(int i=0; i<nNumberOfImports; i++)
             {
                 if(XBinary::isRegExpPresent("^PERL",pPEInfo->listImports.at(i).sName.toUpper()))
@@ -12987,6 +12990,35 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
             if(XELF::isSectionNamePresent(".note.android.ident",&(pELFInfo->listSectionRecords)))
             {
                 ssOperationSystem.name=RECORD_NAME_ANDROID;
+            }
+        }
+
+        if((ssOperationSystem.name==RECORD_NAME_UNIX)||(ssOperationSystem.name==RECORD_NAME_LINUX))
+        {
+            qint32 nNumberOfComments=pELFInfo->listComments.count();
+
+            for(int i=0; i<nNumberOfComments; i++)
+            {
+                bool bFound=false;
+
+                QString sComment=pELFInfo->listComments.at(i);
+
+                if(sComment.contains("Ubuntu")||sComment.contains("ubuntu"))
+                {
+                    ssOperationSystem.name=RECORD_NAME_UBUNTU;
+
+                    if(sComment.contains("ubuntu1~"))
+                    {
+                        ssOperationSystem.sVersion=sComment.section("ubuntu1~",1,-1).section(")",0,0);
+                    }
+
+                    bFound=true;
+                }
+
+                if(bFound)
+                {
+                    break;
+                }
             }
         }
 
