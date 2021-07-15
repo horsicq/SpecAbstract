@@ -308,6 +308,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ASDPACK:                               sResult=QString("ASDPack");                                     break;
         case RECORD_NAME_ASM:                                   sResult=QString("Asm");                                         break;
         case RECORD_NAME_ASPACK:                                sResult=QString("ASPack");                                      break;
+        case RECORD_NAME_ASPLINUX:                              sResult=QString("ASPLinux");                                    break;
         case RECORD_NAME_ASPROTECT:                             sResult=QString("ASProtect");                                   break;
         case RECORD_NAME_ASSCRYPTER:                            sResult=QString("Ass Crypter");                                 break;
         case RECORD_NAME_ASSEMBLYINVOKE:                        sResult=QString("AssemblyInvoke");                              break;
@@ -799,7 +800,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_STONESPEENCRYPTOR:                     sResult=QString("Stone's PE Encryptor");                        break;
         case RECORD_NAME_SUNOS:                                 sResult=QString("SunOS");                                       break;
         case RECORD_NAME_SUNWORKSHOP:                           sResult=QString("Sun WorkShop");                                break;
-        case RECORD_NAME_SUSELINUX:                             sResult=QString("SuSe Linux");                                  break;
+        case RECORD_NAME_SUSELINUX:                             sResult=QString("SuSE Linux");                                  break;
         case RECORD_NAME_SVKPROTECTOR:                          sResult=QString("SVK Protector");                               break;
         case RECORD_NAME_SWF:                                   sResult=QString("SWF");                                         break;
         case RECORD_NAME_SWIFT:                                 sResult=QString("Swift");                                       break;
@@ -13030,9 +13031,20 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
 
                     bFound=true;
                 }
-                else if(sComment.contains("SuSe"))
+                else if(sComment.contains("SuSE"))
                 {
                     ssOperationSystem.name=RECORD_NAME_SUSELINUX;
+
+                    bFound=true;
+                }
+                else if(sComment.contains("ASPLinux"))
+                {
+                    ssOperationSystem.name=RECORD_NAME_ASPLINUX;
+
+                    if(sComment.contains("ASPLinux "))
+                    {
+                        ssOperationSystem.sVersion=sComment.section("ASPLinux ",1,-1).section(")",0,0);
+                    }
 
                     bFound=true;
                 }
