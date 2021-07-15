@@ -395,6 +395,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DBPE:                                  sResult=QString("DBPE");                                        break;
         case RECORD_NAME_DCRYPTPRIVATE:                         sResult=QString("DCrypt Private");                              break;
         case RECORD_NAME_DEB:                                   sResult=QString("DEB");                                         break;
+        case RECORD_NAME_DEBIAN:                                sResult=QString("Debian");                                      break;
         case RECORD_NAME_DEEPSEA:                               sResult=QString("DeepSea");                                     break;
         case RECORD_NAME_DEPACK:                                sResult=QString("dePack");                                      break;
         case RECORD_NAME_DEPLOYMASTER:                          sResult=QString("DeployMaster");                                break;
@@ -13013,6 +13014,10 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
                     }
 
                     bFound=true;
+                }
+                else if(sComment.contains("Debian")||sComment.contains("debian"))
+                {
+                    ssOperationSystem.name=RECORD_NAME_DEBIAN;
                 }
 
                 if(bFound)
