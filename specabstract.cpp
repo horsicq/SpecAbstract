@@ -13029,9 +13029,9 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
                     {
                         ssOperationSystem.name=RECORD_NAME_SUNOS;
 
-                        if(sComment.contains("SunOS "))
+                        if(sComment.contains("@(#)SunOS "))
                         {
-                            ssOperationSystem.sVersion=sComment.section("ubuntu1~",1,-1).section(" ",0,0);
+                            ssOperationSystem.sVersion=sComment.section("@(#)SunOS ",1,-1);
                         }
 
                         bFound=true;
