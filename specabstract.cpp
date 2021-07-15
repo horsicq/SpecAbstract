@@ -395,7 +395,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DBPE:                                  sResult=QString("DBPE");                                        break;
         case RECORD_NAME_DCRYPTPRIVATE:                         sResult=QString("DCrypt Private");                              break;
         case RECORD_NAME_DEB:                                   sResult=QString("DEB");                                         break;
-        case RECORD_NAME_DEBIAN:                                sResult=QString("Debian");                                      break;
+        case RECORD_NAME_DEBIANLINUX:                           sResult=QString("Debian Linux");                                break;
         case RECORD_NAME_DEEPSEA:                               sResult=QString("DeepSea");                                     break;
         case RECORD_NAME_DEPACK:                                sResult=QString("dePack");                                      break;
         case RECORD_NAME_DEPLOYMASTER:                          sResult=QString("DeployMaster");                                break;
@@ -794,10 +794,12 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SPOONSTUDIO2011:                       sResult=QString("Spoon Studio 2011");                           break;
         case RECORD_NAME_SQUEEZSFX:                             sResult=QString("Squeez Self Extractor");                       break;
         case RECORD_NAME_STARFORCE:                             sResult=QString("StarForce");                                   break;
+        case RECORD_NAME_STARTOSLINUX:                          sResult=QString("StartOS Linux");                               break;
         case RECORD_NAME_STASFODIDOCRYPTOR:                     sResult=QString("StasFodidoCryptor");                           break;
         case RECORD_NAME_STONESPEENCRYPTOR:                     sResult=QString("Stone's PE Encryptor");                        break;
         case RECORD_NAME_SUNOS:                                 sResult=QString("SunOS");                                       break;
         case RECORD_NAME_SUNWORKSHOP:                           sResult=QString("Sun WorkShop");                                break;
+        case RECORD_NAME_SUSELINUX:                             sResult=QString("SuSe Linux");                                  break;
         case RECORD_NAME_SVKPROTECTOR:                          sResult=QString("SVK Protector");                               break;
         case RECORD_NAME_SWF:                                   sResult=QString("SWF");                                         break;
         case RECORD_NAME_SWIFT:                                 sResult=QString("Swift");                                       break;
@@ -828,8 +830,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_TURKISHCYBERSIGNATURE:                 sResult=QString("Turkish Cyber Signature");                     break;
         case RECORD_NAME_TURKOJANCRYPTER:                       sResult=QString("Turkojan Crypter");                            break;
         case RECORD_NAME_TVOS:                                  sResult=QString("tvOS");                                        break;
-        case RECORD_NAME_UBUNTU:                                sResult=QString("Ubuntu");                                      break;
         case RECORD_NAME_UBUNTUCLANG:                           sResult=QString("Ubuntu clang");                                break;
+        case RECORD_NAME_UBUNTULINUX:                           sResult=QString("Ubuntu Linux");                                break;
         case RECORD_NAME_UCEXE:                                 sResult=QString("UCEXE");                                       break;
         case RECORD_NAME_UNDERGROUNDCRYPTER:                    sResult=QString("UnderGround Crypter");                         break;
         case RECORD_NAME_UNDOCRYPTER:                           sResult=QString("UnDo Crypter");                                break;
@@ -13007,7 +13009,7 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
 
                 if(sComment.contains("Ubuntu")||sComment.contains("ubuntu"))
                 {
-                    ssOperationSystem.name=RECORD_NAME_UBUNTU;
+                    ssOperationSystem.name=RECORD_NAME_UBUNTULINUX;
 
                     if(sComment.contains("ubuntu1~"))
                     {
@@ -13018,7 +13020,19 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
                 }
                 else if(sComment.contains("Debian")||sComment.contains("debian"))
                 {
-                    ssOperationSystem.name=RECORD_NAME_DEBIAN;
+                    ssOperationSystem.name=RECORD_NAME_DEBIANLINUX;
+
+                    bFound=true;
+                }
+                else if(sComment.contains("StartOS"))
+                {
+                    ssOperationSystem.name=RECORD_NAME_STARTOSLINUX;
+
+                    bFound=true;
+                }
+                else if(sComment.contains("SuSe"))
+                {
+                    ssOperationSystem.name=RECORD_NAME_SUSELINUX;
 
                     bFound=true;
                 }
