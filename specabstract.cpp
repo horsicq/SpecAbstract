@@ -796,6 +796,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_STARFORCE:                             sResult=QString("StarForce");                                   break;
         case RECORD_NAME_STASFODIDOCRYPTOR:                     sResult=QString("StasFodidoCryptor");                           break;
         case RECORD_NAME_STONESPEENCRYPTOR:                     sResult=QString("Stone's PE Encryptor");                        break;
+        case RECORD_NAME_SUNOS:                                 sResult=QString("SunOS");                                       break;
         case RECORD_NAME_SUNWORKSHOP:                           sResult=QString("Sun WorkShop");                                break;
         case RECORD_NAME_SVKPROTECTOR:                          sResult=QString("SVK Protector");                               break;
         case RECORD_NAME_SWF:                                   sResult=QString("SWF");                                         break;
@@ -13018,6 +13019,23 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
                 else if(sComment.contains("Debian")||sComment.contains("debian"))
                 {
                     ssOperationSystem.name=RECORD_NAME_DEBIAN;
+
+                    bFound=true;
+                }
+
+                if(ssOperationSystem.name!=RECORD_NAME_LINUX)
+                {
+                    if(sComment.contains("SunOS"))
+                    {
+                        ssOperationSystem.name=RECORD_NAME_SUNOS;
+
+                        if(sComment.contains("SunOS "))
+                        {
+                            ssOperationSystem.sVersion=sComment.section("ubuntu1~",1,-1).section(" ",0,0);
+                        }
+
+                        bFound=true;
+                    }
                 }
 
                 if(bFound)
