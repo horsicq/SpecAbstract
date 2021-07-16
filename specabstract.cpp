@@ -260,6 +260,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALIPAYOBFUSCATOR:                      sResult=QString("Alipay Obfuscator");                           break;
         case RECORD_NAME_ALLATORIOBFUSCATOR:                    sResult=QString("Allatori Obfuscator");                         break;
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
+        case RECORD_NAME_ALPINELINUX:                           sResult=QString("Alpine Linux");                                break;
         case RECORD_NAME_ANDPAKK2:                              sResult=QString("ANDpakk2");                                    break;
         case RECORD_NAME_ANDROID:                               sResult=QString("Android");                                     break;
         case RECORD_NAME_ANDROIDAPKSIGNER:                      sResult=QString("Android apksigner");                           break;
@@ -484,6 +485,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_GENERIC:                               sResult=QString("Generic");                                     break;
         case RECORD_NAME_GENERICLINKER:                         sResult=QString("Generic Linker");                              break;
         case RECORD_NAME_GENTEEINSTALLER:                       sResult=QString("Gentee Installer");                            break;
+        case RECORD_NAME_GENTOOLINUX:                           sResult=QString("Gentoo Linux");                                break;
         case RECORD_NAME_GHAZZACRYPTER:                         sResult=QString("GhaZza CryPter");                              break; // st
         case RECORD_NAME_GHOSTINSTALLER:                        sResult=QString("Ghost Installer");                             break;
         case RECORD_NAME_GIF:                                   sResult=QString("GIF");                                         break;
@@ -507,6 +509,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_HACCREWCRYPTER:                        sResult=QString("HAC Crew Crypter");                            break;
         case RECORD_NAME_HACKSTOP:                              sResult=QString("HackStop");                                    break;
         case RECORD_NAME_HALVCRYPTER:                           sResult=QString("HaLV Crypter");                                break;
+        case RECORD_NAME_HANCOMLINUX:                           sResult=QString("Hancom Linux");                                break;
         case RECORD_NAME_HDUS_WJUS:                             sResult=QString("Hdus-Wjus");                                   break;
         case RECORD_NAME_HIAPKCOM:                              sResult=QString("www.HiAPK.com");                               break;
         case RECORD_NAME_HIDEANDPROTECT:                        sResult=QString("Hide&Protect");                                break;
@@ -586,6 +589,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MACOS:                                 sResult=QString("macOS");                                       break;
         case RECORD_NAME_MACROBJECT:                            sResult=QString("Macrobject");                                  break;
         case RECORD_NAME_MALPACKER:                             sResult=QString("Mal Packer");                                  break;
+        case RECORD_NAME_MANDRAKELINUX:                         sResult=QString("Mandrake Linux");                              break;
         case RECORD_NAME_MASKPE:                                sResult=QString("MaskPE");                                      break;
         case RECORD_NAME_MASM:                                  sResult=QString("MASM");                                        break;
         case RECORD_NAME_MASM32:                                sResult=QString("MASM32");                                      break;
@@ -740,6 +744,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_RAR:                                   sResult=QString("RAR");                                         break;
         case RECORD_NAME_RCRYPTOR:                              sResult=QString("RCryptor(Russian Cryptor)");                   break;
         case RECORD_NAME_RDGTEJONCRYPTER:                       sResult=QString("RDG Tejon Crypter");                           break;
+        case RECORD_NAME_REDHATLINUX:                           sResult=QString("Red Hat Linux");                               break;
         case RECORD_NAME_RELPACK:                               sResult=QString("Relpack");                                     break;
         case RECORD_NAME_RENETPACK:                             sResult=QString("ReNET-pack");                                  break;
         case RECORD_NAME_RESOURCE:                              sResult=QString("Resource");                                    break;
@@ -800,7 +805,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_STONESPEENCRYPTOR:                     sResult=QString("Stone's PE Encryptor");                        break;
         case RECORD_NAME_SUNOS:                                 sResult=QString("SunOS");                                       break;
         case RECORD_NAME_SUNWORKSHOP:                           sResult=QString("Sun WorkShop");                                break;
-        case RECORD_NAME_SUSELINUX:                             sResult=QString("SuSE Linux");                                  break;
+        case RECORD_NAME_SUSELINUX:                             sResult=QString("SUSE Linux");                                  break;
         case RECORD_NAME_SVKPROTECTOR:                          sResult=QString("SVK Protector");                               break;
         case RECORD_NAME_SWF:                                   sResult=QString("SWF");                                         break;
         case RECORD_NAME_SWIFT:                                 sResult=QString("Swift");                                       break;
@@ -882,6 +887,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WINDOWSICON:                           sResult=QString("Windows Icon");                                break;
         case RECORD_NAME_WINDOWSINSTALLER:                      sResult=QString("Windows Installer");                           break;
         case RECORD_NAME_WINDOWSMEDIA:                          sResult=QString("Windows Media");                               break;
+        case RECORD_NAME_WINDRIVERLINUX:                        sResult=QString("Wind River Linux");                            break;
         case RECORD_NAME_WINGSCRYPT:                            sResult=QString("WingsCrypt");                                  break;
         case RECORD_NAME_WINKRIPT:                              sResult=QString("WinKript");                                    break;
         case RECORD_NAME_WINRAR:                                sResult=QString("WinRAR");                                      break;
@@ -13031,9 +13037,33 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
 
                     bFound=true;
                 }
-                else if(sComment.contains("SuSE"))
+                else if(sComment.contains("Gentoo"))
+                {
+                    ssOperationSystem.name=RECORD_NAME_GENTOOLINUX;
+
+                    bFound=true;
+                }
+                else if(sComment.contains("Alpine"))
+                {
+                    ssOperationSystem.name=RECORD_NAME_ALPINELINUX;
+
+                    bFound=true;
+                }
+                else if(sComment.contains("Wind River Linux"))
+                {
+                    ssOperationSystem.name=RECORD_NAME_WINDRIVERLINUX;
+
+                    bFound=true;
+                }
+                else if(sComment.contains("SuSE")||sComment.contains("SUSE Linux"))
                 {
                     ssOperationSystem.name=RECORD_NAME_SUSELINUX;
+
+                    bFound=true;
+                }
+                else if(sComment.contains("Mandrakelinux")||sComment.contains("Linux-Mandrake")||sComment.contains("Mandrake Linux"))
+                {
+                    ssOperationSystem.name=RECORD_NAME_MANDRAKELINUX;
 
                     bFound=true;
                 }
@@ -13041,10 +13071,17 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
                 {
                     ssOperationSystem.name=RECORD_NAME_ASPLINUX;
 
-                    if(sComment.contains("ASPLinux "))
-                    {
-                        ssOperationSystem.sVersion=sComment.section("ASPLinux ",1,-1).section(")",0,0);
-                    }
+                    bFound=true;
+                }
+                else if(sComment.contains("Red Hat"))
+                {
+                    ssOperationSystem.name=RECORD_NAME_REDHATLINUX;
+
+                    bFound=true;
+                }
+                else if(sComment.contains("Hancom Linux"))
+                {
+                    ssOperationSystem.name=RECORD_NAME_HANCOMLINUX;
 
                     bFound=true;
                 }
