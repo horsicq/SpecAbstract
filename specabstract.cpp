@@ -832,6 +832,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_TURBOC:                                sResult=QString("Turbo C");                                     break;
         case RECORD_NAME_TURBOCPP:                              sResult=QString("Turbo C++");                                   break;
         case RECORD_NAME_TURBOLINKER:                           sResult=QString("Turbo linker");                                break;
+        case RECORD_NAME_TURBOLINUX:                            sResult=QString("Turbolinux");                                  break;
         case RECORD_NAME_TURBOSTUDIO:                           sResult=QString("Turbo Studio");                                break;
         case RECORD_NAME_TURKISHCYBERSIGNATURE:                 sResult=QString("Turkish Cyber Signature");                     break;
         case RECORD_NAME_TURKOJANCRYPTER:                       sResult=QString("Turkojan Crypter");                            break;
@@ -859,6 +860,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_VCLPACKAGEINFO:                        sResult=QString("VCL PackageInfo");                             break;
         case RECORD_NAME_VDOG:                                  sResult=QString("VDog");                                        break;
         case RECORD_NAME_VERACRYPT:                             sResult=QString("VeraCrypt");                                   break;
+        case RECORD_NAME_VINELINUX:                             sResult=QString("Vine Linux");                                  break;
         case RECORD_NAME_VIRTUALIZEPROTECT:                     sResult=QString("VirtualizeProtect");                           break;
         case RECORD_NAME_VIRTUALPASCAL:                         sResult=QString("Virtual Pascal");                              break;
         case RECORD_NAME_VISE:                                  sResult=QString("Vise");                                        break;
@@ -13082,6 +13084,18 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
                 else if(sComment.contains("Hancom Linux"))
                 {
                     ssOperationSystem.name=RECORD_NAME_HANCOMLINUX;
+
+                    bFound=true;
+                }
+                else if(sComment.contains("TurboLinux"))
+                {
+                    ssOperationSystem.name=RECORD_NAME_TURBOLINUX;
+
+                    bFound=true;
+                }
+                else if(sComment.contains("Vine Linux"))
+                {
+                    ssOperationSystem.name=RECORD_NAME_VINELINUX;
 
                     bFound=true;
                 }
