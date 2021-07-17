@@ -1799,7 +1799,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SunWorkShop_string(QString sString)
     {
         result.bIsValid=true;
 
-        result.sVersion=sString.section("Sun WorkShop ",1,1).section(" ",0,0);
+        result.sVersion=sString.section("Sun WorkShop ",1,1).section(" ",0,1).section("\r",0,0).section("\n",0,0);
     }
 
     return result;
