@@ -3218,17 +3218,18 @@ void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage,
         quint16 nMajorOS=pe.getOptionalHeader_MajorOperatingSystemVersion();
         quint16 nMinorOS=pe.getOptionalHeader_MinorOperatingSystemVersion();
 
-        if      ((nMajorOS==4)&&(nMinorOS==0))      ssOperationSystem.sVersion="95+";
-        else if ((nMajorOS==4)&&(nMinorOS==1))      ssOperationSystem.sVersion="98+";
-        else if ((nMajorOS==4)&&(nMinorOS==9))      ssOperationSystem.sVersion="Millenium+";
-        else if ((nMajorOS==5)&&(nMinorOS==0))      ssOperationSystem.sVersion="2000+";
-        else if ((nMajorOS==5)&&(nMinorOS==1))      ssOperationSystem.sVersion="XP+";
-        else if ((nMajorOS==5)&&(nMinorOS==1))      ssOperationSystem.sVersion="XP Professional X64+";
-        else if ((nMajorOS==6)&&(nMinorOS==0))      ssOperationSystem.sVersion="Vista+";
-        else if ((nMajorOS==6)&&(nMinorOS==1))      ssOperationSystem.sVersion="7+";
-        else if ((nMajorOS==6)&&(nMinorOS==2))      ssOperationSystem.sVersion="8+";
-        else if ((nMajorOS==6)&&(nMinorOS==3))      ssOperationSystem.sVersion="8.1+";
-        else if ((nMajorOS==10)&&(nMinorOS==0))     ssOperationSystem.sVersion="10+";
+        if      ((nMajorOS==3)&&(nMinorOS==10))     ssOperationSystem.sVersion="NT 3.1";
+        else if ((nMajorOS==4)&&(nMinorOS==0))      ssOperationSystem.sVersion="95";
+        else if ((nMajorOS==4)&&(nMinorOS==1))      ssOperationSystem.sVersion="98";
+        else if ((nMajorOS==4)&&(nMinorOS==9))      ssOperationSystem.sVersion="Millenium";
+        else if ((nMajorOS==5)&&(nMinorOS==0))      ssOperationSystem.sVersion="2000";
+        else if ((nMajorOS==5)&&(nMinorOS==1))      ssOperationSystem.sVersion="XP";
+        else if ((nMajorOS==5)&&(nMinorOS==2))      ssOperationSystem.sVersion="Server 2003";
+        else if ((nMajorOS==6)&&(nMinorOS==0))      ssOperationSystem.sVersion="Vista";
+        else if ((nMajorOS==6)&&(nMinorOS==1))      ssOperationSystem.sVersion="7";
+        else if ((nMajorOS==6)&&(nMinorOS==2))      ssOperationSystem.sVersion="8";
+        else if ((nMajorOS==6)&&(nMinorOS==3))      ssOperationSystem.sVersion="8.1";
+        else if ((nMajorOS==10)&&(nMinorOS==0))     ssOperationSystem.sVersion="10";
 
         ssOperationSystem.sInfo=QString("%1, %2, %3").arg(pe.getArch(),(pPEInfo->bIs64)?("64-bit"):("32-bit"),pe.getTypeAsString());
 
