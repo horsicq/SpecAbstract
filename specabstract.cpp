@@ -15620,6 +15620,10 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_GCC_string(QString sString)
         {
             result.sVersion=sString.section(") ",1,1).section(" ",0,0);
         }
+        else if(sString.contains("GCC: (c) "))
+        {
+            result.sVersion=sString.section("GCC: (c) ",1,1);
+        }
         else
         {
             result.sVersion=sString.section(" ",-1,-1);
