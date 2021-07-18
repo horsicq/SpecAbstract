@@ -793,6 +793,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SOFTWARECOMPRESS:                      sResult=QString("Software Compress");                           break;
         case RECORD_NAME_SOFTWAREZATOR:                         sResult=QString("SoftwareZator");                               break;
         case RECORD_NAME_SOLARIS:                               sResult=QString("Sun Solaris");                                 break;
+        case RECORD_NAME_SOURCERYCODEBENCH:                     sResult=QString("Sourcery CodeBench");                          break;
         case RECORD_NAME_SOURCERYCODEBENCHLITE:                 sResult=QString("Sourcery CodeBench Lite");                     break;
         case RECORD_NAME_SPICESNET:                             sResult=QString("Spices.Net");                                  break;
         case RECORD_NAME_SPIRIT:                                sResult=QString("$pirit");                                      break;
@@ -1914,6 +1915,13 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SourceryCodeBench_string(QString sStr
         result.bIsValid=true;
 
         result.sVersion=sString.section("Sourcery CodeBench Lite ",1,1).section(")",0,0);
+        result.sInfo="lite";
+    }
+    else if(XBinary::isRegExpPresent("Sourcery CodeBench ",sString))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section("Sourcery CodeBench ",1,1).section(")",0,0);
     }
 
     return result;
@@ -13608,7 +13616,14 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
             if(vi.bIsValid)
             {
-                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_TOOL,RECORD_NAME_SOURCERYCODEBENCHLITE,vi.sVersion,vi.sInfo,0);
+                if(vi.sInfo=="lite")
+                {
+                    ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_TOOL,RECORD_NAME_SOURCERYCODEBENCHLITE,vi.sVersion,"",0);
+                }
+                else
+                {
+                    ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_TOOL,RECORD_NAME_SOURCERYCODEBENCH,vi.sVersion,"",0);
+                }
 
                 pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
             }
@@ -13713,7 +13728,13 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
             pELFInfo->mapResultLinkers.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
         }
 
-        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SOURCERYCODEBENCHLITE))
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SOURCERYCODEBENCH))
+        {
+            _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SOURCERYCODEBENCH);
+
+            pELFInfo->mapResultTools.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+        else if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SOURCERYCODEBENCHLITE))
         {
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SOURCERYCODEBENCHLITE);
 
