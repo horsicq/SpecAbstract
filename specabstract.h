@@ -640,6 +640,7 @@ public:
         RECORD_NAME_SOFTWARECOMPRESS,
         RECORD_NAME_SOFTWAREZATOR,
         RECORD_NAME_SOLARIS,
+        RECORD_NAME_SOURCERYCODEBENCHLITE,
         RECORD_NAME_SPICESNET,
         RECORD_NAME_SPIRIT,
         RECORD_NAME_SPOONINSTALLER,
@@ -1486,6 +1487,7 @@ public:
     static VI_STRUCT _get_TencentLegu_string(QString sString);
     static VI_STRUCT _get_OllvmTll_string(QString sString);
     static VI_STRUCT _get_DelphiVersionFromCompiler(QString sString);
+    static VI_STRUCT _get_SourceryCodeBench_string(QString sString);
 
     static bool PE_isValid_UPX(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_x86Emul(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
