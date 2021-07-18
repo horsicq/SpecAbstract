@@ -15608,6 +15608,10 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_GCC_string(QString sString)
         {
             result.sVersion=sString.section(" ",-3,-1); // TODO Check
         }
+        else if(sString.contains("(GNU) c "))
+        {
+            result.sVersion=sString.section("(GNU) c ",1,-1);
+        }
         else if(sString.contains("GNU"))
         {
             result.sVersion=sString.section(" ",2,-1);
@@ -15619,6 +15623,10 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_GCC_string(QString sString)
         else if(sString.contains("(Ubuntu "))
         {
             result.sVersion=sString.section(") ",1,1).section(" ",0,0);
+        }
+        else if(sString.contains("StartOS)"))
+        {
+            result.sVersion=sString.section(")",1,1).section(" ",0,0);
         }
         else if(sString.contains("GCC: (c) "))
         {
