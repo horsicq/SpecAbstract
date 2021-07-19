@@ -15198,29 +15198,36 @@ bool SpecAbstract::isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListSc
 
 bool SpecAbstract::checkVersionString(QString sVersion)
 {
-    bool bResult=true;
+    bool bResult=false;
 
-    int nStringSize=sVersion.size();
-
-    // TODO
-    for(int i=0; i<nStringSize; i++)
+    if(sVersion.trimmed()!="")
     {
-        QChar _char=sVersion.at(i);
+        bResult=true;
 
-        if((_char>=QChar('0'))&&(_char<=QChar('9')))
-        {
+        int nStringSize=sVersion.size();
 
-        }
-        else if(_char==QChar('.'))
+        // TODO
+        for(int i=0; i<nStringSize; i++)
         {
+            QChar _char=sVersion.at(i);
 
-        }
-        else
-        {
-            bResult=false;
-            break;
+            if((_char>=QChar('0'))&&(_char<=QChar('9')))
+            {
+
+            }
+            else if(_char==QChar('.'))
+            {
+
+            }
+            else
+            {
+                bResult=false;
+                break;
+            }
         }
     }
+
+
 
     return bResult;
 }
