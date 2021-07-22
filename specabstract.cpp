@@ -307,7 +307,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ARMTHUMBMACROASSEMBLER:                sResult=QString("ARM/Thumb Macro Assembler");                   break;
         case RECORD_NAME_AROS:                                  sResult=QString("Amiga Research OS");                           break;
         case RECORD_NAME_ASDPACK:                               sResult=QString("ASDPack");                                     break;
-        case RECORD_NAME_ASM:                                   sResult=QString("Asm");                                         break;
+        case RECORD_NAME_ASSEMBLER:                             sResult=QString("Assembler");                                   break;
         case RECORD_NAME_ASPACK:                                sResult=QString("ASPack");                                      break;
         case RECORD_NAME_ASPLINUX:                              sResult=QString("ASPLinux");                                    break;
         case RECORD_NAME_ASPROTECT:                             sResult=QString("ASProtect");                                   break;
@@ -320,13 +320,14 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_AVI:                                   sResult=QString("AVI");                                         break;
         case RECORD_NAME_AVPACK:                                sResult=QString("AVPACK");                                      break;
         case RECORD_NAME_AZPROTECT:                             sResult=QString("AZProtect");                                   break;
-        case RECORD_NAME_BASIC4ANDROID:                         sResult=QString("Basic4Android");                               break;
         case RECORD_NAME_BABELNET:                              sResult=QString("Babel .NET");                                  break;
         case RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR:           sResult=QString("Backdoor PE Compress Protector");              break;
         case RECORD_NAME_BAIDUSIGNATUREPLATFORM:                sResult=QString("Baidu Signature platform");                    break;
         case RECORD_NAME_BAIDUPROTECTION:                       sResult=QString("Baidu Protection");                            break;
         case RECORD_NAME_BAMBAM:                                sResult=QString("bambam");                                      break;
         case RECORD_NAME_BANGCLEPROTECTION:                     sResult=QString("Bangcle Protection");                          break;
+        case RECORD_NAME_BASIC:                                 sResult=QString("BASIC");                                       break;
+        case RECORD_NAME_BASIC4ANDROID:                         sResult=QString("Basic4Android");                               break;
         case RECORD_NAME_BAT2EXEC:                              sResult=QString("BAT2EXEC");                                    break;
         case RECORD_NAME_BEAWEBLOGIC:                           sResult=QString("BEA WebLogic");                                break;
         case RECORD_NAME_BEROEXEPACKER:                         sResult=QString("BeRoEXEPacker");                               break;
@@ -387,13 +388,16 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CRYPTORBYDISMEMBER:                    sResult=QString("Cryptor by Dismember");                        break;
         case RECORD_NAME_CRYPTOZ:                               sResult=QString("CRyptOZ");                                     break;
         case RECORD_NAME_CRYPTRROADS:                           sResult=QString("Crypt R.roads");                               break;
+        case RECORD_NAME_CSHARP:                                sResult=QString("C#");                                          break;
         case RECORD_NAME_CVTOMF:                                sResult=QString("CVTOMF");                                      break;
         case RECORD_NAME_CVTPGD:                                sResult=QString("Cvtpgd");                                      break;
         case RECORD_NAME_CVTRES:                                sResult=QString("CVTRES");                                      break;
         case RECORD_NAME_CWSDPMI:                               sResult=QString("CWSDPMI");                                     break;
         case RECORD_NAME_CYGWIN:                                sResult=QString("Cygwin");                                      break;
+        case RECORD_NAME_D:                                     sResult=QString("D");                                           break;
         case RECORD_NAME_D2JAPKSIGN:                            sResult=QString("d2j-apk-sign");                                break;
         case RECORD_NAME_DALKRYPT:                              sResult=QString("DalKrypt");                                    break;
+        case RECORD_NAME_DALVIK:                                sResult=QString("Dalvik");                                      break;
         case RECORD_NAME_DBPE:                                  sResult=QString("DBPE");                                        break;
         case RECORD_NAME_DCRYPTPRIVATE:                         sResult=QString("DCrypt Private");                              break;
         case RECORD_NAME_DEB:                                   sResult=QString("DEB");                                         break;
@@ -477,6 +481,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_FLASHVIDEO:                            sResult=QString("Flash Video");                                 break;
         case RECORD_NAME_FLEXLM:                                sResult=QString("Flex License Manager");                        break;
         case RECORD_NAME_FLEXNET:                               sResult=QString("FlexNet Licensing");                           break;
+        case RECORD_NAME_FORTRAN:                               sResult=QString("Fortran");                                     break;
         case RECORD_NAME_FPC:                                   sResult=QString("Free Pascal");                                 break;
         case RECORD_NAME_FREEBSD:                               sResult=QString("FreeBSD");                                     break;
         case RECORD_NAME_FREECRYPTOR:                           sResult=QString("FreeCryptor");                                 break;
@@ -1999,6 +2004,8 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
 
         Binary_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
+        Binary_handleLanguages(pDevice,pOptions->bIsImage,&result);
+
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultTexts.values());
         result.basic_info.listDetects.append(result.mapResultArchives.values());
@@ -2085,12 +2092,17 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
         MSDOS_handle_SFX(pDevice,pOptions->bIsImage,&result);
         MSDOS_handle_DosExtenders(pDevice,pOptions->bIsImage,&result);
 
+        MSDOS_handleLanguages(pDevice,pOptions->bIsImage,&result);
+
         MSDOS_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
 
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultDosExtenders.values());
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
+        result.basic_info.listDetects.append(result.mapResultLanguages.values());
+        result.basic_info.listDetects.append(result.mapResultLibraries.values());
+        result.basic_info.listDetects.append(result.mapResultTools.values());
         result.basic_info.listDetects.append(result.mapResultPackers.values());
         result.basic_info.listDetects.append(result.mapResultSFX.values());
         result.basic_info.listDetects.append(result.mapResultProtectors.values());
@@ -2177,9 +2189,12 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
 
         ELF_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
+        ELF_handleLanguages(pDevice,pOptions->bIsImage,&result);
+
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
+        result.basic_info.listDetects.append(result.mapResultLanguages.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
         result.basic_info.listDetects.append(result.mapResultPackers.values());
@@ -2246,7 +2261,10 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, Sp
 
         MACHO_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
+        MACHO_handleLanguages(pDevice,pOptions->bIsImage,&result);
+
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
+        result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLanguages.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
@@ -2313,8 +2331,13 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
         LE_handle_Microsoft(pDevice,pOptions->bIsImage,&result,pbIsStop);
         LE_handle_Borland(pDevice,pOptions->bIsImage,&result);
 
+        LE_handleLanguages(pDevice,pOptions->bIsImage,&result);
+
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
+        result.basic_info.listDetects.append(result.mapResultLanguages.values());
+        result.basic_info.listDetects.append(result.mapResultLibraries.values());
+        result.basic_info.listDetects.append(result.mapResultTools.values());
 
         if(!result.basic_info.listDetects.count())
         {
@@ -2364,8 +2387,13 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbst
 
         NE_handle_Borland(pDevice,pOptions->bIsImage,&result);
 
+        NE_handleLanguages(pDevice,pOptions->bIsImage,&result);
+
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
+        result.basic_info.listDetects.append(result.mapResultLanguages.values());
+        result.basic_info.listDetects.append(result.mapResultLibraries.values());
+        result.basic_info.listDetects.append(result.mapResultTools.values());
 
         if(!result.basic_info.listDetects.count())
         {
@@ -2702,11 +2730,14 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         PE_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
+        PE_handleLanguages(pDevice,pOptions->bIsImage,&result);
+
         PE_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
 
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
+        result.basic_info.listDetects.append(result.mapResultLanguages.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
         result.basic_info.listDetects.append(result.mapResultPETools.values());
@@ -2825,10 +2856,14 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
         DEX_handle_Protection(pDevice,&result,pbIsStop);
         DEX_handle_Dexguard(pDevice,&result,pbIsStop);
 
+        DEX_handleLanguages(pDevice,&result);
+
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
+        result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
-        result.basic_info.listDetects.append(result.mapResultTools.values());
+        result.basic_info.listDetects.append(result.mapResultLanguages.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
+        result.basic_info.listDetects.append(result.mapResultTools.values());
         result.basic_info.listDetects.append(result.mapResultProtectors.values());
     }
 
@@ -2900,6 +2935,8 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
         Zip_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
 
         Zip_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
+
+        Zip_handleLanguages(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultArchives.values());
@@ -10030,6 +10067,19 @@ void SpecAbstract::PE_handle_FixDetects(QIODevice *pDevice,bool bIsImage, SpecAb
     }
 }
 
+void SpecAbstract::PE_handleLanguages(QIODevice *pDevice, bool bIsImage, PEINFO_STRUCT *pPEInfo)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(bIsImage)
+
+    getLanguage(&(pPEInfo->mapResultLinkers),&(pPEInfo->mapResultLanguages));
+    getLanguage(&(pPEInfo->mapResultCompilers),&(pPEInfo->mapResultLanguages));
+    getLanguage(&(pPEInfo->mapResultLibraries),&(pPEInfo->mapResultLanguages));
+    getLanguage(&(pPEInfo->mapResultTools),&(pPEInfo->mapResultLanguages));
+
+    fixLanguage(&(pPEInfo->mapResultLanguages));
+}
+
 void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo, SpecAbstract::SCAN_OPTIONS *pOptions, bool *pbIsStop)
 {
     if(pOptions->bRecursiveScan)
@@ -12396,6 +12446,17 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Spec
     }
 }
 
+void SpecAbstract::Zip_handleLanguages(QIODevice *pDevice, bool bIsImage, ZIPINFO_STRUCT *pZipInfo)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(bIsImage)
+
+    getLanguage(&(pZipInfo->mapResultLibraries),&(pZipInfo->mapResultLanguages));
+    getLanguage(&(pZipInfo->mapResultTools),&(pZipInfo->mapResultLanguages));
+
+    fixLanguage(&(pZipInfo->mapResultLanguages));
+}
+
 SpecAbstract::DEXINFO_STRUCT SpecAbstract::Zip_scan_DEX(QIODevice *pDevice, bool bIsImage, SpecAbstract::ZIPINFO_STRUCT *pZipInfo, SCAN_OPTIONS *pOptions, bool *pbIsStop, QString sFileName)
 {
     Q_UNUSED(bIsImage)
@@ -12433,6 +12494,16 @@ void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, bool bIsImage, S
         pBinaryInfo->mapResultFormats[RECORD_NAME_PDF].id.fileType=XBinary::FT_BINARY;
         pBinaryInfo->basic_info.id.fileType=XBinary::FT_BINARY;
     }
+}
+
+void SpecAbstract::Binary_handleLanguages(QIODevice *pDevice, bool bIsImage, BINARYINFO_STRUCT *pBinaryInfo)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(bIsImage)
+
+//    getLanguage(&(pBinaryInfo->mapResultCOMPackers),&(pBinaryInfo->mapResultLanguages));
+//    getLanguage(&(pBinaryInfo->mapResultCOMProtectors),&(pBinaryInfo->mapResultLanguages));
+    // TODO fixes
 }
 
 void SpecAbstract::MSDOS_handle_OperationSystems(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
@@ -12941,6 +13012,19 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, bool bIsImage, 
             }
         }
     }
+}
+
+void SpecAbstract::MSDOS_handleLanguages(QIODevice *pDevice, bool bIsImage, MSDOSINFO_STRUCT *pMSDOSInfo)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(bIsImage)
+
+    getLanguage(&(pMSDOSInfo->mapResultLinkers),&(pMSDOSInfo->mapResultLanguages));
+    getLanguage(&(pMSDOSInfo->mapResultCompilers),&(pMSDOSInfo->mapResultLanguages));
+    getLanguage(&(pMSDOSInfo->mapResultLibraries),&(pMSDOSInfo->mapResultLanguages));
+    getLanguage(&(pMSDOSInfo->mapResultTools),&(pMSDOSInfo->mapResultLanguages));
+
+    fixLanguage(&(pMSDOSInfo->mapResultLanguages));
 }
 
 void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop)
@@ -14145,6 +14229,19 @@ void SpecAbstract::ELF_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Spec
     }
 }
 
+void SpecAbstract::ELF_handleLanguages(QIODevice *pDevice, bool bIsImage, ELFINFO_STRUCT *pELFInfo)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(bIsImage)
+
+    getLanguage(&(pELFInfo->mapResultLinkers),&(pELFInfo->mapResultLanguages));
+    getLanguage(&(pELFInfo->mapResultCompilers),&(pELFInfo->mapResultLanguages));
+    getLanguage(&(pELFInfo->mapResultLibraries),&(pELFInfo->mapResultLanguages));
+    getLanguage(&(pELFInfo->mapResultTools),&(pELFInfo->mapResultLanguages));
+
+    fixLanguage(&(pELFInfo->mapResultLanguages));
+}
+
 void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstract::MACHOINFO_STRUCT *pMACHInfo)
 {
     XMACH mach(pDevice,bIsImage);
@@ -14333,6 +14430,19 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Sp
     }
 }
 
+void SpecAbstract::MACHO_handleLanguages(QIODevice *pDevice, bool bIsImage, MACHOINFO_STRUCT *pMACHInfo)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(bIsImage)
+
+    getLanguage(&(pMACHInfo->mapResultLinkers),&(pMACHInfo->mapResultLanguages));
+    getLanguage(&(pMACHInfo->mapResultCompilers),&(pMACHInfo->mapResultLanguages));
+    getLanguage(&(pMACHInfo->mapResultLibraries),&(pMACHInfo->mapResultLanguages));
+    getLanguage(&(pMACHInfo->mapResultTools),&(pMACHInfo->mapResultLanguages));
+
+    fixLanguage(&(pMACHInfo->mapResultLanguages));
+}
+
 void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO_STRUCT *pLEInfo, bool *pbIsStop)
 {
     XLE le(pDevice,bIsImage);
@@ -14436,6 +14546,19 @@ void SpecAbstract::LE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbst
     }
 }
 
+void SpecAbstract::LE_handleLanguages(QIODevice *pDevice, bool bIsImage, LEINFO_STRUCT *pLEInfo)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(bIsImage)
+
+    getLanguage(&(pLEInfo->mapResultLinkers),&(pLEInfo->mapResultLanguages));
+    getLanguage(&(pLEInfo->mapResultCompilers),&(pLEInfo->mapResultLanguages));
+    getLanguage(&(pLEInfo->mapResultLibraries),&(pLEInfo->mapResultLanguages));
+    getLanguage(&(pLEInfo->mapResultTools),&(pLEInfo->mapResultLanguages));
+
+    fixLanguage(&(pLEInfo->mapResultLanguages));
+}
+
 void SpecAbstract::NE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbstract::NEINFO_STRUCT *pNEInfo)
 {
     XNE ne(pDevice,bIsImage);
@@ -14463,6 +14586,19 @@ void SpecAbstract::NE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbst
             pNEInfo->mapResultLinkers.insert(recordLinker.name,scansToScan(&(pNEInfo->basic_info),&recordLinker));
         }
     }
+}
+
+void SpecAbstract::NE_handleLanguages(QIODevice *pDevice, bool bIsImage, NEINFO_STRUCT *pNEInfo)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(bIsImage)
+
+    getLanguage(&(pNEInfo->mapResultLinkers),&(pNEInfo->mapResultLanguages));
+    getLanguage(&(pNEInfo->mapResultCompilers),&(pNEInfo->mapResultLanguages));
+    getLanguage(&(pNEInfo->mapResultLibraries),&(pNEInfo->mapResultLanguages));
+    getLanguage(&(pNEInfo->mapResultTools),&(pNEInfo->mapResultLanguages));
+
+    fixLanguage(&(pNEInfo->mapResultLanguages));
 }
 
 void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_STRUCT *pDEXInfo, bool *pbIsStop)
@@ -15123,6 +15259,21 @@ void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice, SpecAbstract::DEXIN
             }
         }
     }
+}
+
+void SpecAbstract::DEX_handleLanguages(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo)
+{
+    Q_UNUSED(pDevice)
+
+    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_LANGUAGE,RECORD_NAME_DALVIK,"","",0);
+    pDEXInfo->mapResultLanguages.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+
+    getLanguage(&(pDEXInfo->mapResultLinkers),&(pDEXInfo->mapResultLanguages));
+    getLanguage(&(pDEXInfo->mapResultCompilers),&(pDEXInfo->mapResultLanguages));
+    getLanguage(&(pDEXInfo->mapResultLibraries),&(pDEXInfo->mapResultLanguages));
+    getLanguage(&(pDEXInfo->mapResultTools),&(pDEXInfo->mapResultLanguages));
+
+    fixLanguage(&(pDEXInfo->mapResultLanguages));
 }
 
 //void SpecAbstract::fixDetects(SpecAbstract::PEINFO_STRUCT *pPEInfo)
@@ -16740,6 +16891,173 @@ QString SpecAbstract::getAndroidVersionFromApi(quint32 nAPI)
     if(nAPI==30)    sResult="11.0";
 
     return sResult;
+}
+
+void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages)
+{
+    QMapIterator<RECORD_NAME,SCAN_STRUCT> i(*pMapDetects);
+    while (i.hasNext())
+    {
+        i.next();
+
+        SCAN_STRUCT ssDetect=i.value();
+        _SCANS_STRUCT ssLanguage=getScansStruct(0,ssDetect.id.fileType,RECORD_TYPE_LANGUAGE,RECORD_NAME_UNKNOWN,"","",0);
+
+        switch(ssDetect.name)
+        {
+            case RECORD_NAME_C:
+            case RECORD_NAME_ARMC:
+            case RECORD_NAME_LCCLNK:
+            case RECORD_NAME_LCCWIN:
+            case RECORD_NAME_MICROSOFTC:
+            case RECORD_NAME_THUMBC:
+            case RECORD_NAME_TURBOC:
+            case RECORD_NAME_WATCOMC:
+                ssLanguage.name=RECORD_NAME_C;
+                break;
+            case RECORD_NAME_CCPP:
+            case RECORD_NAME_ARMCCPP:
+            case RECORD_NAME_ARMNEONCCPP:
+            case RECORD_NAME_ARMTHUMBCCPP:
+            case RECORD_NAME_BORLANDCCPP:
+            case RECORD_NAME_CLANG:
+            case RECORD_NAME_GCC:
+            case RECORD_NAME_MINGW:
+            case RECORD_NAME_MSYS:
+            case RECORD_NAME_MSYS2:
+            case RECORD_NAME_VISUALCCPP:
+            case RECORD_NAME_WATCOMCCPP:
+                ssLanguage.name=RECORD_NAME_CCPP;
+                break;
+            case RECORD_NAME_CPP:
+            case RECORD_NAME_BORLANDCPP:
+            case RECORD_NAME_BORLANDCPPBUILDER:
+            case RECORD_NAME_CODEGEARCPP:
+            case RECORD_NAME_CODEGEARCPPBUILDER:
+            case RECORD_NAME_EMBARCADEROCPP:
+            case RECORD_NAME_EMBARCADEROCPPBUILDER:
+            case RECORD_NAME_MICROSOFTCPP:
+            case RECORD_NAME_TURBOCPP:
+                ssLanguage.name=RECORD_NAME_CPP;
+                break;
+            case RECORD_NAME_ASSEMBLER:
+            case RECORD_NAME_ARMTHUMBMACROASSEMBLER:
+            case RECORD_NAME_FASM:
+            case RECORD_NAME_GNUASSEMBLER:
+            case RECORD_NAME_GOASM:
+            case RECORD_NAME_MASM:
+            case RECORD_NAME_MASM32:
+            case RECORD_NAME_NASM:
+                ssLanguage.name=RECORD_NAME_ASSEMBLER;
+                break;
+            case RECORD_NAME_AUTOIT:
+                ssLanguage.name=RECORD_NAME_AUTOIT;
+                break;
+            case RECORD_NAME_OBJECTPASCAL:
+            case RECORD_NAME_BORLANDDELPHI:
+            case RECORD_NAME_BORLANDDELPHIDOTNET:
+            case RECORD_NAME_BORLANDOBJECTPASCAL:
+            case RECORD_NAME_CODEGEARDELPHI:
+            case RECORD_NAME_CODEGEAROBJECTPASCAL:
+            case RECORD_NAME_EMBARCADERODELPHI:
+            case RECORD_NAME_EMBARCADERODELPHIDOTNET:
+            case RECORD_NAME_EMBARCADEROOBJECTPASCAL:
+            case RECORD_NAME_LAZARUS:
+            case RECORD_NAME_FPC:
+            case RECORD_NAME_VIRTUALPASCAL:
+            case RECORD_NAME_IBMPCPASCAL:
+                ssLanguage.name=RECORD_NAME_OBJECTPASCAL;
+                break;
+            case RECORD_NAME_D:
+            case RECORD_NAME_DMD32D:
+                ssLanguage.name=RECORD_NAME_D;
+                break;
+            case RECORD_NAME_CSHARP:
+            case RECORD_NAME_DOTNET:
+                ssLanguage.name=RECORD_NAME_CSHARP;
+                break;
+            case RECORD_NAME_GO:
+                ssLanguage.name=RECORD_NAME_GO;
+                break;
+            case RECORD_NAME_JAVA:
+            case RECORD_NAME_JDK:
+            case RECORD_NAME_OPENJDK:
+            case RECORD_NAME_IBMJDK:
+            case RECORD_NAME_APPLEJDK:
+                ssLanguage.name=RECORD_NAME_JAVA;
+                break;
+            case RECORD_NAME_KOTLIN:
+                ssLanguage.name=RECORD_NAME_KOTLIN;
+                break;
+            case RECORD_NAME_FORTRAN:
+            case RECORD_NAME_LAYHEYFORTRAN90:
+                ssLanguage.name=RECORD_NAME_FORTRAN;
+                break;
+            case RECORD_NAME_NIM:
+                ssLanguage.name=RECORD_NAME_NIM;
+                break;
+            case RECORD_NAME_OBJECTIVEC:
+                ssLanguage.name=RECORD_NAME_OBJECTIVEC;
+                break;
+            case RECORD_NAME_BASIC:
+            case RECORD_NAME_BASIC4ANDROID:
+            case RECORD_NAME_POWERBASIC:
+            case RECORD_NAME_PUREBASIC:
+            case RECORD_NAME_TURBOBASIC:
+            case RECORD_NAME_VBNET:
+            case RECORD_NAME_VISUALBASIC:
+                ssLanguage.name=RECORD_NAME_BASIC;
+                break;
+            case RECORD_NAME_RUST:
+                ssLanguage.name=RECORD_NAME_RUST;
+                break;
+            case RECORD_NAME_RUBY:
+                ssLanguage.name=RECORD_NAME_RUBY;
+                break;
+            case RECORD_NAME_PYTHON:
+                ssLanguage.name=RECORD_NAME_PYTHON;
+                break;
+            case RECORD_NAME_SWIFT:
+                ssLanguage.name=RECORD_NAME_SWIFT;
+                break;
+        }
+
+        if(ssLanguage.name!=RECORD_NAME_UNKNOWN)
+        {
+            SCAN_STRUCT ss=ssDetect;
+            ss.type=ssLanguage.type;
+            ss.name=ssLanguage.name;
+            ss.sInfo="";
+            ss.sVersion="";
+
+            pMapLanguages->insert(ss.name,ss);
+        }
+    }
+}
+
+void SpecAbstract::fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages)
+{
+    if(pMapLanguages->contains(RECORD_NAME_C)&&pMapLanguages->contains(RECORD_NAME_CPP))
+    {
+        SCAN_STRUCT ss=pMapLanguages->value(RECORD_NAME_C);
+        ss.name=RECORD_NAME_CCPP;
+        pMapLanguages->insert(ss.name,ss);
+    }
+
+    if(pMapLanguages->contains(RECORD_NAME_C)&&pMapLanguages->contains(RECORD_NAME_CCPP))
+    {
+        pMapLanguages->remove(RECORD_NAME_C);
+    }
+
+    if(pMapLanguages->contains(RECORD_NAME_CPP)&&pMapLanguages->contains(RECORD_NAME_CCPP))
+    {
+        pMapLanguages->remove(RECORD_NAME_CPP);
+    }
+
+//    if(pMapLanguages->contains(RECORD_NAME_OBJECTIVEC)&&pMapLanguages->contains(RECORD_NAME_CCPP))
+//    {
+//        pMapLanguages->remove(RECORD_NAME_CCPP);
+//    }
 }
 
 bool SpecAbstract::PE_compareRichRecord(_SCANS_STRUCT *pResult,SpecAbstract::MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, XBinary::FT fileType1, XBinary::FT fileType2)
