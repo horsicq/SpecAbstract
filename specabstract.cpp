@@ -14290,13 +14290,13 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
             if(version_min.sdk)
             {
-                recordXcode.sVersion=XBinary::get_uint32_version(version_min.sdk)+"+";
+                recordXcode.sVersion=XBinary::get_uint32_version(version_min.sdk);
             }
 
             pMACHInfo->mapResultTools.insert(recordXcode.name,scansToScan(&(pMACHInfo->basic_info),&recordXcode));
 
             recordOS.name=osName;
-            recordOS.sVersion=XBinary::get_uint32_version(version_min.version)+"+";
+            recordOS.sVersion=XBinary::get_uint32_version(version_min.version);
         }
 
         pMACHInfo->mapResultOperationSystems.insert(recordOS.name,scansToScan(&(pMACHInfo->basic_info),&recordOS));
