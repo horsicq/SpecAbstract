@@ -737,6 +737,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PUNISHER:                              sResult=QString("PUNiSHER");                                    break;
         case RECORD_NAME_PUREBASIC:                             sResult=QString("PureBasic");                                   break;
         case RECORD_NAME_PUSSYCRYPTER:                          sResult=QString("PussyCrypter");                                break;
+        case RECORD_NAME_PYINSTALLER:                           sResult=QString("PyInstaller");                                 break;
         case RECORD_NAME_PYTHON:                                sResult=QString("Python");                                      break;
         case RECORD_NAME_QDBH:                                  sResult=QString("qdbh");                                        break;
         case RECORD_NAME_QIHOO360PROTECTION:                    sResult=QString("Qihoo 360 Protection");                        break;
@@ -3422,6 +3423,24 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
         {
             _SCANS_STRUCT ss=pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_ENIGMAVIRTUALBOX);
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
+
+        if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_ZLIB))
+        {
+            if(pe.checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            {
+                VI_STRUCT viStruct=get_PyInstaller_vi(pDevice,bIsImage,pPEInfo->osConstDataSection.nOffset,pPEInfo->osConstDataSection.nSize);
+
+                if(viStruct.bIsValid)
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PACKER,RECORD_NAME_PYINSTALLER,"","",0);
+
+                    ss.sVersion=viStruct.sVersion;
+                    ss.sInfo=viStruct.sInfo;
+
+                    pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
         }
 
         if(!pPEInfo->cliInfo.bValid)
@@ -15783,6 +15802,23 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Nim_vi(QIODevice *pDevice, bool bIsIma
     XBinary binary(pDevice,bIsImage);
 
     qint64 nOffset_Version=binary.find_ansiString(nOffset,nSize,"\\lib\\system\\io.nim");
+
+    if(nOffset_Version!=-1)
+    {
+        result.bIsValid=true;
+        // TODO Version
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::get_PyInstaller_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+{
+    VI_STRUCT result={};
+
+    XBinary binary(pDevice,bIsImage);
+
+    qint64 nOffset_Version=binary.find_ansiString(nOffset,nSize,"PyInstaller: FormatMessageW failed.");
 
     if(nOffset_Version!=-1)
     {
