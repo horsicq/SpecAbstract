@@ -3030,7 +3030,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
         }
 
 
-        _SCANS_STRUCT ssFormat=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_MACHOFAT,"","",0);;
+        _SCANS_STRUCT ssFormat=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_MACHOFAT,"","",0);
 
         ssFormat.sVersion=xmachofat.getVersion();
         ssFormat.sInfo=QString("%1 records").arg(xmachofat.getNumberOfRecords());
@@ -7570,9 +7570,21 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
         // Zig
         if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ZIG))
-        {
-            _SCANS_STRUCT ss=pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ZIG);;
-            pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        { 
+            if(pe.checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            {
+                VI_STRUCT viStruct=get_Zig_vi(pDevice,bIsImage,pPEInfo->osConstDataSection.nOffset,pPEInfo->osConstDataSection.nSize);
+
+                if(viStruct.bIsValid)
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_COMPILER,RECORD_NAME_ZIG,"","",0);
+
+                    ss.sVersion=viStruct.sVersion;
+                    ss.sInfo=viStruct.sInfo;
+
+                    pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
         }
 
         if(pe.checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bIsDeepScan))
@@ -8359,11 +8371,15 @@ void SpecAbstract::PE_handle_Signtools(QIODevice *pDevice, bool bIsImage, SpecAb
             // TODO image
             XPE_DEF::IMAGE_DATA_DIRECTORY dd=pe.getOptionalHeader_DataDirectory(XPE_DEF::S_IMAGE_DIRECTORY_ENTRY_SECURITY);
 
-            // TODO File format
-            if(pe.compareSignature(&(pPEInfo->basic_info.memoryMap),"........00020200",dd.VirtualAddress))
+            QList<XPE::CERT> listCerts=pe.getCertList(dd.VirtualAddress,dd.Size);
+
+            if(listCerts.count())
             {
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_SIGNTOOL,RECORD_NAME_GENERIC,"2.0","PKCS #7",0);
-                pPEInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                if((listCerts.at(0).record.wRevision==0x200)&&(listCerts.at(0).record.wCertificateType==2))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_SIGNTOOL,RECORD_NAME_GENERIC,"2.0","PKCS #7",0);
+                    pPEInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
             }
         }
     }
@@ -10095,6 +10111,7 @@ void SpecAbstract::PE_handleLanguages(QIODevice *pDevice, bool bIsImage, PEINFO_
     getLanguage(&(pPEInfo->mapResultCompilers),&(pPEInfo->mapResultLanguages));
     getLanguage(&(pPEInfo->mapResultLibraries),&(pPEInfo->mapResultLanguages));
     getLanguage(&(pPEInfo->mapResultTools),&(pPEInfo->mapResultLanguages));
+    getLanguage(&(pPEInfo->mapResultPackers),&(pPEInfo->mapResultLanguages));
 
     fixLanguage(&(pPEInfo->mapResultLanguages));
 }
@@ -12267,7 +12284,7 @@ void SpecAbstract::Zip_handle_IPA(QIODevice *pDevice, bool bIsImage, SpecAbstrac
     {
         if(pZipInfo->bIsIPA)
         {
-            _SCANS_STRUCT ssFormat=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_IPA,"","",0);;
+            _SCANS_STRUCT ssFormat=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_IPA,"","",0);
 
             ssFormat.sVersion=xzip.getVersion();
             ssFormat.sInfo=QString("%1 records").arg(xzip.getNumberOfRecords());
@@ -15812,6 +15829,23 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Nim_vi(QIODevice *pDevice, bool bIsIma
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::get_Zig_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+{
+    VI_STRUCT result={};
+
+    XBinary binary(pDevice,bIsImage);
+
+    qint64 nOffset_Version=binary.find_unicodeString(nOffset,nSize,"ZIG_DEBUG_COLOR");
+
+    if(nOffset_Version!=-1)
+    {
+        result.bIsValid=true;
+        // TODO Version
+    }
+
+    return result;
+}
+
 SpecAbstract::VI_STRUCT SpecAbstract::get_PyInstaller_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
 {
     VI_STRUCT result={};
@@ -17051,6 +17085,7 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
                 ssLanguage.name=RECORD_NAME_RUBY;
                 break;
             case RECORD_NAME_PYTHON:
+            case RECORD_NAME_PYINSTALLER:
                 ssLanguage.name=RECORD_NAME_PYTHON;
                 break;
             case RECORD_NAME_SWIFT:
