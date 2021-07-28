@@ -8101,6 +8101,11 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
                             case 29:
                             case 30:
                             case 31:
+                            case 32:
+                            case 33:
+                            case 34:
+                            case 35:
+                            case 36:
                             case 56:
                                 bHeurGCC=true;
                                 break;
