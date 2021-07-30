@@ -1189,6 +1189,7 @@ public:
         quint16 nMajorImageVersion;
         bool bIs64;
         bool bIsNetPresent;
+        bool bIsTLSPresent;
 
         XBinary::OFFSETSIZE osHeader;
         XBinary::OFFSETSIZE osEntryPointSection;
@@ -1488,6 +1489,7 @@ public:
     static VI_STRUCT get_SmartAssembly_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_R8_marker_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_Go_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
+    static VI_STRUCT get_Rust_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_ObfuscatorLLVM_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT _get_ObfuscatorLLVM_string(QString sString);
     static VI_STRUCT get_AndroidClang_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);

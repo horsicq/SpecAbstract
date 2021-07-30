@@ -1302,6 +1302,28 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Go_vi(QIODevice *pDevice, bool bIsImag
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::get_Rust_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+{
+    VI_STRUCT result={};
+
+    XBinary binary(pDevice,bIsImage);
+
+    // TODO version
+    qint64 nOffset_Version=-1;
+
+    if(nOffset_Version==-1)
+    {
+        nOffset_Version=binary.find_ansiString(nOffset,nSize,"Local\\RustBacktraceMutex");
+
+        if(nOffset_Version!=-1)
+        {
+            result.bIsValid=true;
+        }
+    }
+
+    return result;
+}
+
 SpecAbstract::VI_STRUCT SpecAbstract::get_ObfuscatorLLVM_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
 {
     VI_STRUCT result={};
@@ -2534,6 +2556,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.nTLSSection=pe.getTLSSection(&(result.basic_info.memoryMap));
 
         result.bIsNetPresent=((result.cliInfo.bValid)||(pe.isNETPresent()&&(result.basic_info.bIsDeepScan)));
+        result.bIsTLSPresent=(result.nTLSSection!=-1);
 
         if(result.nEntryPointSection!=-1)
         {
@@ -4112,7 +4135,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                     if(pPEInfo->listSectionRecords.count()==2)
                     {
-                        if(pPEInfo->nTLSSection!=-1)
+                        if(pPEInfo->bIsTLSPresent)
                         {
                             bDetected=true; // 1.00
                         }
@@ -7516,11 +7539,22 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
     if(pe.isValid())
     {
-        if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_RUST))
+        if((pPEInfo->bIsTLSPresent)&&(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_RUST)))
         {
-            // TODO Version
-            _SCANS_STRUCT ssCompiler=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_RUST);
-            pPEInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pPEInfo->basic_info),&ssCompiler));
+            if(pe.checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bIsDeepScan))
+            {
+                VI_STRUCT viStruct=get_Rust_vi(pDevice,bIsImage,pPEInfo->osConstDataSection.nOffset,pPEInfo->osConstDataSection.nSize);
+
+                if(viStruct.bIsValid)
+                {
+                    _SCANS_STRUCT ssCompiler=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_RUST);
+
+                    ssCompiler.sVersion=viStruct.sVersion;
+                    ssCompiler.sInfo=viStruct.sInfo;
+
+                    pPEInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pPEInfo->basic_info),&ssCompiler));
+                }
+            }
         }
 
         if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EXCELSIORJET))
