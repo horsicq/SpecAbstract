@@ -1452,7 +1452,7 @@ public:
     static void DEX_handle_Dexguard(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo,bool *pbIsStop);
     static void DEX_handle_Protection(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo,bool *pbIsStop);
 
-    static void DEX_handleLanguages(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo);
+    static void DEX_handleLanguages(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo);
 
     static void Zip_handle_Microsoftoffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
     static void Zip_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo);
