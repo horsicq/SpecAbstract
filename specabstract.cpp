@@ -7604,7 +7604,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
         }
 
         // Zig
-        if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ZIG))
+        if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER)&&(pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_GENERICLINKER).nVariant==1))
         { 
             if(pe.checkOffsetSize(pPEInfo->osConstDataSection)&&(pPEInfo->basic_info.bIsDeepScan))
             {
