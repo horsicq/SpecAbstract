@@ -7590,7 +7590,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
         if(pe.compareSignature(&(pPEInfo->basic_info.memoryMap),"'This Visual Objects application cannot be run in DOS mode'",0x312))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_COMPILER,RECORD_NAME_VISUALOBJECTS,"2.XX","",0);
-            ss.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
+            ss.sVersion=QString("%1.%2").arg(QString::number(pPEInfo->nMajorLinkerVersion),QString::number(pPEInfo->nMinorLinkerVersion));
             pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
@@ -7599,7 +7599,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
         {
             // TODO correct Version
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_COMPILER,RECORD_NAME_FASM,"","",0);
-            ss.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
+            ss.sVersion=QString("%1.%2").arg(QString::number(pPEInfo->nMajorLinkerVersion),QString::number(pPEInfo->nMinorLinkerVersion));
             pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
@@ -7659,7 +7659,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
         if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GOLINK))
         {
             _SCANS_STRUCT ssLinker=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_LINKER,RECORD_NAME_GOLINK,"","",0);
-            ssLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
+            ssLinker.sVersion=QString("%1.%2").arg(QString::number(pPEInfo->nMajorLinkerVersion),QString::number(pPEInfo->nMinorLinkerVersion));
             pPEInfo->mapResultLinkers.insert(ssLinker.name,scansToScan(&(pPEInfo->basic_info),&ssLinker));
 
             _SCANS_STRUCT ssCompiler=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_COMPILER,RECORD_NAME_GOASM,"","",0);
@@ -7913,7 +7913,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_COMPILER,RECORD_NAME_VIRTUALPASCAL,"","",0);
 
                     // TODO Version???
-                    ss.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
+                    ss.sVersion=QString("%1.%2").arg(QString::number(pPEInfo->nMajorLinkerVersion),QString::number(pPEInfo->nMinorLinkerVersion));
                     pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
             }
