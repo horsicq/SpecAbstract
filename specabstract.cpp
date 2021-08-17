@@ -828,6 +828,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_THEZONECRYPTER:                        sResult=QString("The Zone Crypter");                            break;
         case RECORD_NAME_THINSTALL:                             sResult=QString("Thinstall(VMware ThinApp)");                   break;
         case RECORD_NAME_THUMBC:                                sResult=QString("Thumb C");                                     break;
+        case RECORD_NAME_TINYC:                                 sResult=QString("Tiny C");                                      break;
         case RECORD_NAME_TIFF:                                  sResult=QString("TIFF");                                        break;
         case RECORD_NAME_TINYPROG:                              sResult=QString("TinyProg");                                    break;
         case RECORD_NAME_TINYSIGN:                              sResult=QString("tiny-sign");                                   break;
@@ -7554,6 +7555,38 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
                     pPEInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pPEInfo->basic_info),&ssCompiler));
                 }
+            }
+        }
+
+        if(XPE::isImportLibraryPresentI("msvcrt.dll",&(pPEInfo->listImports))&&(pPEInfo->nMajorLinkerVersion==6)&&(pPEInfo->nMinorLinkerVersion==0))
+        {
+            bool bDetected=false;
+
+            if(pPEInfo->bIs64)
+            {
+                if(pPEInfo->listSectionNames.count()==3)
+                {
+                    if((pPEInfo->listSectionNames.at(0)==".text")&&(pPEInfo->listSectionNames.at(1)==".data")&&(pPEInfo->listSectionNames.at(2)==".pdata"))
+                    {
+                        bDetected=true;
+                    }
+                }
+            }
+            else
+            {
+                if(pPEInfo->listSectionNames.count()==2)
+                {
+                    if((pPEInfo->listSectionNames.at(0)==".text")&&(pPEInfo->listSectionNames.at(1)==".data"))
+                    {
+                        bDetected=true;
+                    }
+                }
+            }
+
+            if(bDetected)
+            {
+                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_COMPILER,RECORD_NAME_TINYC,"","",0);
+                pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
         }
 
@@ -17035,6 +17068,7 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
             case RECORD_NAME_LCCWIN:
             case RECORD_NAME_MICROSOFTC:
             case RECORD_NAME_THUMBC:
+            case RECORD_NAME_TINYC:
             case RECORD_NAME_TURBOC:
             case RECORD_NAME_WATCOMC:
                 ssLanguage.name=RECORD_NAME_C;
