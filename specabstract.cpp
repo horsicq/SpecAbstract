@@ -8446,6 +8446,12 @@ void SpecAbstract::PE_handle_Signtools(QIODevice *pDevice, bool bIsImage, SpecAb
 
             QList<XPE::CERT> listCerts=pe.getCertList(dd.VirtualAddress,dd.Size);
 
+        #ifdef QT_DEBUG
+            QString sCert=XPE::certListToString(&listCerts);
+
+            qDebug(sCert.toLatin1().data());
+        #endif
+
             if(listCerts.count())
             {
                 if((listCerts.at(0).record.wRevision==0x200)&&(listCerts.at(0).record.wCertificateType==2))
