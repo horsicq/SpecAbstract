@@ -158,13 +158,7 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
 QString SpecAbstract::append(QString sResult, QString sString)
 {
-    if(sString!="")
-    {
-        if(sResult!="") sResult+=",";
-        sResult+=sString;
-    }
-
-    return sResult;
+    return XBinary::appendText(sResult,sString,",");
 }
 
 QString SpecAbstract::recordFilePartIdToString(SpecAbstract::RECORD_FILEPART id)
