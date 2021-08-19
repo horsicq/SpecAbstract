@@ -8450,7 +8450,7 @@ void SpecAbstract::PE_handle_Signtools(QIODevice *pDevice, bool bIsImage, SpecAb
             {
                 if((listCerts.at(0).record.wRevision==0x200)&&(listCerts.at(0).record.wCertificateType==2))
                 {
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_SIGNTOOL,RECORD_NAME_GENERIC,"2.0","PKCS #7",0);
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_SIGNTOOL,RECORD_NAME_WINAUTH,"2.0","PKCS #7",0);
                     pPEInfo->mapResultSigntools.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
             }
