@@ -7985,7 +7985,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
                     _SCANS_STRUCT ssLinker={};
                     ssLinker.name=RECORD_NAME_LCCLNK;
                     ssLinker.type=RECORD_TYPE_LINKER;
-                    ssLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
+                    ssLinker.sVersion=QString("%1.%2").arg(QString::number(pPEInfo->nMajorLinkerVersion),QString::number(pPEInfo->nMinorLinkerVersion));
                     pPEInfo->mapResultLinkers.insert(ssLinker.name,scansToScan(&(pPEInfo->basic_info),&ssLinker));
                 }
             }
