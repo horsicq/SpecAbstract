@@ -11747,8 +11747,15 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
 
             if(XZip::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords,0x2146444e))
             {
-                _SCANS_STRUCT ssWalle=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_GOOGLEPLAY,"","",0);
-                pZipInfo->mapResultTools.insert(ssWalle.name,scansToScan(&(pZipInfo->basic_info),&ssWalle));
+                _SCANS_STRUCT ssGooglePlay=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_TOOL,RECORD_NAME_GOOGLEPLAY,"","",0);
+                pZipInfo->mapResultTools.insert(ssGooglePlay.name,scansToScan(&(pZipInfo->basic_info),&ssGooglePlay));
+            }
+
+            // TODO Java
+            if(pZipInfo->bIsKotlin)
+            {
+                _SCANS_STRUCT ssKotlin=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LANGUAGE,RECORD_NAME_KOTLIN,"","",0);
+                pZipInfo->mapResultLanguages.insert(ssKotlin.name,scansToScan(&(pZipInfo->basic_info),&ssKotlin));
             }
 
             if(pZipInfo->basic_info.bIsTest)
