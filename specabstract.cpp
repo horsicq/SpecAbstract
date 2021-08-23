@@ -216,6 +216,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_SOURCECODE:                            sResult=tr("Source code");                                      break;
         case RECORD_TYPE_STUB:                                  sResult=tr("Stub");                                             break;
         case RECORD_TYPE_TOOL:                                  sResult=tr("Tool");                                             break;
+        case RECORD_TYPE_VIRTUALMACHINE:                        sResult=tr("Virtual machine");                                  break;
     }
 
     return sResult;
@@ -553,6 +554,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_JETBRAINS:                             sResult=QString("JetBrains");                                   break;
         case RECORD_NAME_JIAGU:                                 sResult=QString("jiagu");                                       break;
         case RECORD_NAME_JPEG:                                  sResult=QString("JPEG");                                        break;
+        case RECORD_NAME_JVM:                                   sResult=QString("JVM");                                         break;
         case RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER:         sResult=QString("KaOs PE-DLL eXecutable Undetecter");           break;
         case RECORD_NAME_KBYS:                                  sResult=QString("KByS");                                        break;
         case RECORD_NAME_KCRYPTOR:                              sResult=QString("K!Cryptor");                                   break;
@@ -11644,6 +11646,9 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
 
     if(xzip.isValid()&&(!(*pbIsStop)))
     {
+        _SCANS_STRUCT ssVM=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_VIRTUALMACHINE,RECORD_NAME_JVM,"","",0);
+        pZipInfo->mapResultOperationSystems.insert(ssVM.name,scansToScan(&(pZipInfo->basic_info),&ssVM));
+
         if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_JDK))
         {
             _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_JDK);
@@ -11751,11 +11756,15 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                 pZipInfo->mapResultTools.insert(ssGooglePlay.name,scansToScan(&(pZipInfo->basic_info),&ssGooglePlay));
             }
 
-            // TODO Java
             if(pZipInfo->bIsKotlin)
             {
                 _SCANS_STRUCT ssKotlin=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LANGUAGE,RECORD_NAME_KOTLIN,"","",0);
                 pZipInfo->mapResultLanguages.insert(ssKotlin.name,scansToScan(&(pZipInfo->basic_info),&ssKotlin));
+            }
+            else
+            {
+                _SCANS_STRUCT ssJava=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_LANGUAGE,RECORD_NAME_JAVA,"","",0);
+                pZipInfo->mapResultLanguages.insert(ssJava.name,scansToScan(&(pZipInfo->basic_info),&ssJava));
             }
 
             if(pZipInfo->basic_info.bIsTest)
@@ -17139,6 +17148,7 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
                 ssLanguage.name=RECORD_NAME_GO;
                 break;
             case RECORD_NAME_JAVA:
+            case RECORD_NAME_JVM:
             case RECORD_NAME_JDK:
             case RECORD_NAME_OPENJDK:
             case RECORD_NAME_IBMJDK:
