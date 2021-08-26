@@ -371,6 +371,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CPP:                                   sResult=QString("C++");                                         break;
         case RECORD_NAME_CREATEINSTALL:                         sResult=QString("CreateInstall");                               break;
         case RECORD_NAME_CRINKLER:                              sResult=QString("Crinkler");                                    break;
+        case RECORD_NAME_CHROMIUMCRASHPAD:                      sResult=QString("Chromium Crashpad");                           break;
         case RECORD_NAME_CRUNCH:                                sResult=QString("Crunch");                                      break;
         case RECORD_NAME_CRYEXE:                                sResult=QString("CryEXE");                                      break;
         case RECORD_NAME_CRYPTABLESEDUCATION:                   sResult=QString("Cryptable Seduction");                         break;
@@ -7586,6 +7587,25 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             }
         }
 
+        if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_CHROMIUMCRASHPAD))
+        {
+            XPE::SECTION_RECORD sr=XPE::getSectionRecordByName("CPADinfo",&(pPEInfo->listSectionRecords));
+
+            if(sr.nSize)
+            {
+                quint32 nSignature=pe.read_uint32(sr.nOffset);
+
+                if(nSignature==0x43506164)
+                {
+                    quint32 nVersion=pe.read_uint32(sr.nOffset+8);
+
+                    _SCANS_STRUCT ssLibrary=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_CHROMIUMCRASHPAD,"","",0);
+                    ssLibrary.sVersion=QString("%1.0").arg(nVersion);
+                    pPEInfo->mapResultLibraries.insert(ssLibrary.name,scansToScan(&(pPEInfo->basic_info),&ssLibrary));
+                }
+            }
+        }
+
         if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EXCELSIORJET))
         {
             // TODO Version
@@ -8328,12 +8348,12 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
             {
                 if(XPE::isSectionNamePresent(".stabstr",&(pPEInfo->listSectionHeaders))) // TODO
                 {
-                    XPE_DEF::IMAGE_SECTION_HEADER sh=XPE::getSectionByName(".stabstr",&(pPEInfo->listSectionHeaders));
+                    XPE::SECTION_RECORD sr=XPE::getSectionRecordByName(".stabstr",&(pPEInfo->listSectionRecords));
 
-                    if(sh.SizeOfRawData)
+                    if(sr.nSize)
                     {
-                        qint64 _nOffset=sh.PointerToRawData;
-                        qint64 _nSize=sh.SizeOfRawData;
+                        qint64 _nOffset=sr.nOffset;
+                        qint64 _nSize=sr.nSize;
 
                         bool bSuccess=false;
 
