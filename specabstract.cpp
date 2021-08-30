@@ -167,6 +167,7 @@ QString SpecAbstract::recordFilePartIdToString(SpecAbstract::RECORD_FILEPART id)
 
     switch(id)
     {
+        // TODO more
         case RECORD_FILEPART_UNKNOWN:                           sResult=tr("Unknown");                                          break;
         case RECORD_FILEPART_HEADER:                            sResult=tr("Header");                                           break;
         case RECORD_FILEPART_OVERLAY:                           sResult=tr("Overlay");                                          break;
