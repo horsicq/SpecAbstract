@@ -365,6 +365,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CODEWALL:                              sResult=QString("CodeWall");                                    break;
         case RECORD_NAME_COFF:                                  sResult=QString("COFF");                                        break;
         case RECORD_NAME_COMEXSIGNAPK:                          sResult=QString("COMEX SignApk");                               break;
+        case RECORD_NAME_COMPOUNDFILEBINARYFORMAT:              sResult=QString("Compound File Binary Format");                 break;
         case RECORD_NAME_CONFUSER:                              sResult=QString("Confuser");                                    break;
         case RECORD_NAME_CONFUSEREX:                            sResult=QString("ConfuserEx");                                  break;
         case RECORD_NAME_COPYMINDER:                            sResult=QString("CopyMinder");                                  break;
@@ -604,6 +605,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MICROSOFTACCESS:                       sResult=QString("Microsoft Access");                            break;
         case RECORD_NAME_MICROSOFTC:                            sResult=QString("Microsoft C");                                 break;
         case RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP:             sResult=QString("Microsoft Compiled HTML Help");                break;
+        case RECORD_NAME_MICROSOFTCOMPOUND:                     sResult=QString("Microsoft Compound");                          break;
         case RECORD_NAME_MICROSOFTCPP:                          sResult=QString("Microsoft C++");                               break;
         case RECORD_NAME_MICROSOFTDOTNETFRAMEWORK:              sResult=QString("Microsoft .NET Framework");                    break;
         case RECORD_NAME_MICROSOFTEXCEL:                        sResult=QString("Microsoft Excel");                             break;
@@ -8980,7 +8982,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             }
 
             // Windows Installer
-            if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_MICROSOFTOFFICE))
+            if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_MICROSOFTCOMPOUND))
             {
                 VI_STRUCT vi=get_WindowsInstaller_vi(pDevice,bIsImage,pPEInfo->nOverlayOffset,pPEInfo->nOverlaySize);
 
@@ -10689,10 +10691,10 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice,bool bIsImage, SpecA
         ss.sVersion=XBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(5*2,6));
         pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
-    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTOFFICE))&&(pBinaryInfo->basic_info.nSize>=8))
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTCOMPOUND))&&(pBinaryInfo->basic_info.nSize>=8))
     {
-        // Microsoft Office
-        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MICROSOFTOFFICE);
+        // Microsoft Compound
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MICROSOFTCOMPOUND);
         pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP))&&(pBinaryInfo->basic_info.nSize>=8))
