@@ -43,10 +43,7 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
         scanTimer.start();
     }
 
-    if(QString(pDevice->metaObject()->className())=="QFile")
-    {
-        pScanResult->sFileName=((QFile *)pDevice)->fileName(); // TODO
-    }
+    pScanResult->sFileName=XBinary::getDeviceFileName(pDevice);
 
     SubDevice sd(pDevice,nOffset,nSize);
 
