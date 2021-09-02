@@ -17109,6 +17109,10 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
             case RECORD_NAME_ARMTHUMBCCPP:
             case RECORD_NAME_BORLANDCCPP:
             case RECORD_NAME_CLANG:
+            case RECORD_NAME_ANDROIDCLANG:
+            case RECORD_NAME_APPORTABLECLANG:
+            case RECORD_NAME_PLEXCLANG:
+            case RECORD_NAME_UBUNTUCLANG:
             case RECORD_NAME_GCC:
             case RECORD_NAME_MINGW:
             case RECORD_NAME_MSYS:
