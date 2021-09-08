@@ -5282,7 +5282,6 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
 
                     for(int i=0; i<nNumberOfSections; i++)
                     {
-                        // TODO init section
                         if( (i==pPEInfo->nEntryPointSection)||
                             (i==pPEInfo->nResourceSection)||
                             (i==pPEInfo->nTLSSection)||
