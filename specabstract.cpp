@@ -17045,36 +17045,36 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(QByteArray baData,
 
 QString SpecAbstract::getAndroidVersionFromApi(quint32 nAPI)
 {
-    QString sResult="Unknown";
+    QString sResult=QString("Unknown");
 
-    if(nAPI==3)     sResult="1.5";
-    if(nAPI==4)     sResult="1.6";
-    if(nAPI==5)     sResult="2.0";
-    if(nAPI==6)     sResult="2.0.1";
-    if(nAPI==7)     sResult="2.1";
-    if(nAPI==8)     sResult="2.2.X";
-    if(nAPI==9)     sResult="2.3-2.3.2";
-    if(nAPI==10)    sResult="2.3.3-2.3.7";
-    if(nAPI==11)    sResult="3.0";
-    if(nAPI==12)    sResult="3.1";
-    if(nAPI==13)    sResult="3.2.X";
-    if(nAPI==14)    sResult="4.0.1-4.0.2";
-    if(nAPI==15)    sResult="4.0.3-4.0.4";
-    if(nAPI==16)    sResult="4.1.X";
-    if(nAPI==17)    sResult="4.2.X";
-    if(nAPI==18)    sResult="4.3.X";
-    if(nAPI==19)    sResult="4.4-4.4.4";
-    if(nAPI==20)    sResult="4.4W";
-    if(nAPI==21)    sResult="5.0";
-    if(nAPI==22)    sResult="5.1";
-    if(nAPI==23)    sResult="6.0";
-    if(nAPI==24)    sResult="7.0";
-    if(nAPI==25)    sResult="7.1";
-    if(nAPI==26)    sResult="8.0";
-    if(nAPI==27)    sResult="8.1";
-    if(nAPI==28)    sResult="9.0";
-    if(nAPI==29)    sResult="10.0";
-    if(nAPI==30)    sResult="11.0";
+    if(nAPI==3)     sResult=QString("1.5");
+    if(nAPI==4)     sResult=QString("1.6");
+    if(nAPI==5)     sResult=QString("2.0");
+    if(nAPI==6)     sResult=QString("2.0.1");
+    if(nAPI==7)     sResult=QString("2.1");
+    if(nAPI==8)     sResult=QString("2.2.X");
+    if(nAPI==9)     sResult=QString("2.3-2.3.2");
+    if(nAPI==10)    sResult=QString("2.3.3-2.3.7");
+    if(nAPI==11)    sResult=QString("3.0");
+    if(nAPI==12)    sResult=QString("3.1");
+    if(nAPI==13)    sResult=QString("3.2.X");
+    if(nAPI==14)    sResult=QString("4.0.1-4.0.2");
+    if(nAPI==15)    sResult=QString("4.0.3-4.0.4");
+    if(nAPI==16)    sResult=QString("4.1.X");
+    if(nAPI==17)    sResult=QString("4.2.X");
+    if(nAPI==18)    sResult=QString("4.3.X");
+    if(nAPI==19)    sResult=QString("4.4-4.4.4");
+    if(nAPI==20)    sResult=QString("4.4W");
+    if(nAPI==21)    sResult=QString("5.0");
+    if(nAPI==22)    sResult=QString("5.1");
+    if(nAPI==23)    sResult=QString("6.0");
+    if(nAPI==24)    sResult=QString("7.0");
+    if(nAPI==25)    sResult=QString("7.1");
+    if(nAPI==26)    sResult=QString("8.0");
+    if(nAPI==27)    sResult=QString("8.1");
+    if(nAPI==28)    sResult=QString("9.0");
+    if(nAPI==29)    sResult=QString("10.0");
+    if(nAPI==30)    sResult=QString("11.0");
 
     return sResult;
 }
