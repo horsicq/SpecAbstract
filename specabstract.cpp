@@ -226,7 +226,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
 
     switch(id)
     {
-        case RECORD_NAME_UNKNOWN:                               sResult=QString("Unknown");                                     break;
+        case RECORD_NAME_UNKNOWN:                               sResult=tr("Unknown");                                          break;
         case RECORD_NAME_12311134:                              sResult=QString("12311134");                                    break;
         case RECORD_NAME_1337EXECRYPTER:                        sResult=QString("1337 Exe Crypter");                            break;
         case RECORD_NAME_32LITE:                                sResult=QString("32Lite");                                      break;
