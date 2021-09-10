@@ -17045,7 +17045,7 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(QByteArray baData,
 
 QString SpecAbstract::getAndroidVersionFromApi(quint32 nAPI)
 {
-    QString sResult=QString("Unknown");
+    QString sResult=tr("Unknown");
 
     if(nAPI==3)     sResult=QString("1.5");
     if(nAPI==4)     sResult=QString("1.6");
