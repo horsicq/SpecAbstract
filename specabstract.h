@@ -21,6 +21,13 @@
 #ifndef SPECABSTRACT_H
 #define SPECABSTRACT_H
 
+#ifndef USE_DEX
+#define USE_DEX
+#endif
+#ifndef USE_ARCHIVE
+#define USE_ARCHIVE
+#endif
+
 #include <QDataStream>
 #include <QUuid>
 #include "xformats.h"
