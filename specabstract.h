@@ -29,9 +29,7 @@
 #endif
 
 #include <QDataStream>
-#include <QUuid>
 #include "xformats.h"
-#include "xarchives.h"
 
 class SpecAbstract : public QObject
 {
