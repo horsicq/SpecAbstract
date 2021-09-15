@@ -20,7 +20,7 @@
 //
 
 #include "specabstract.h"
-#include "signatures.cpp"
+#include "signatures.cpp" // Do not include in cmake files!
 
 SpecAbstract::SpecAbstract(QObject *pParent)
 {
