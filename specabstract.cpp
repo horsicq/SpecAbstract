@@ -1994,7 +1994,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         result.bIsUTF8=binary.isUTF8TextType();
         result.unicodeType=binary.getUnicodeType();
 
-        // TODO Try QTextStream functions!
+        // TODO Try QTextStream functions! Check
         if(result.unicodeType!=XBinary::UNICODE_TYPE_NONE)
         {
             result.sHeaderText=binary.read_unicodeString(2,qMin(result.basic_info.nSize,(qint64)0x1000),(result.unicodeType==XBinary::UNICODE_TYPE_BE));
