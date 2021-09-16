@@ -1183,7 +1183,7 @@ public:
         QMap<RECORD_NAME,_SCANS_STRUCT> mapResourcesDetects;
 
         qint32 nEntryPointSection;
-        qint32 nResourceSection;
+        qint32 nResourcesSection;
         qint32 nImportSection;
         qint32 nCodeSection;
         qint32 nDataSection;
@@ -1207,7 +1207,7 @@ public:
         XBinary::OFFSETSIZE osDataSection;
         XBinary::OFFSETSIZE osConstDataSection;
         XBinary::OFFSETSIZE osImportSection;
-        XBinary::OFFSETSIZE osResourceSection;
+        XBinary::OFFSETSIZE osResourcesSection;
 
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultOperationSystems;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;

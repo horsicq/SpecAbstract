@@ -2545,7 +2545,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.nMajorImageVersion=result.bIs64?result.optional_header.optionalHeader64.MajorImageVersion:result.optional_header.optionalHeader32.MajorImageVersion;
 
         result.nEntryPointSection=pe.getEntryPointSection(&(result.basic_info.memoryMap));
-        result.nResourceSection=pe.getResourcesSection(&(result.basic_info.memoryMap));
+        result.nResourcesSection=pe.getResourcesSection(&(result.basic_info.memoryMap));
         result.nImportSection=pe.getImportSection(&(result.basic_info.memoryMap));
         result.nCodeSection=pe.getNormalCodeSection(&(result.basic_info.memoryMap));
         result.nDataSection=pe.getNormalDataSection(&(result.basic_info.memoryMap));
@@ -2600,10 +2600,10 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
             result.osImportSection.nSize=result.listSectionRecords.at(result.nImportSection).nSize;
         }
 
-        if(result.nResourceSection!=-1)
+        if(result.nResourcesSection!=-1)
         {
-            result.osResourceSection.nOffset=result.listSectionRecords.at(result.nResourceSection).nOffset;
-            result.osResourceSection.nSize=result.listSectionRecords.at(result.nResourceSection).nSize;
+            result.osResourcesSection.nOffset=result.listSectionRecords.at(result.nResourcesSection).nOffset;
+            result.osResourcesSection.nSize=result.listSectionRecords.at(result.nResourcesSection).nSize;
         }
 
         //        if(result.nCodeSectionSize)
@@ -5283,7 +5283,7 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
                     for(int i=0; i<nNumberOfSections; i++)
                     {
                         if( (i==pPEInfo->nEntryPointSection)||
-                            (i==pPEInfo->nResourceSection)||
+                            (i==pPEInfo->nResourcesSection)||
                             (i==pPEInfo->nTLSSection)||
                             (i==pPEInfo->nRelocsSection)||
                             (QString((char *)pPEInfo->listSectionHeaders.at(i).Name)==".INIT")||
@@ -8642,10 +8642,10 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_SFX,RECORD_NAME_CAB,"","",0);
 
-                if(pe.checkOffsetSize(pPEInfo->osResourceSection)&&(pPEInfo->basic_info.bIsDeepScan))
+                if(pe.checkOffsetSize(pPEInfo->osResourcesSection)&&(pPEInfo->basic_info.bIsDeepScan))
                 {
-                    qint64 nSectionOffset=  pPEInfo->listSectionHeaders.at(pPEInfo->nResourceSection).PointerToRawData+
-                                            pPEInfo->listSectionHeaders.at(pPEInfo->nResourceSection).Misc.VirtualSize;
+                    qint64 nSectionOffset=  pPEInfo->listSectionHeaders.at(pPEInfo->nResourcesSection).PointerToRawData+
+                                            pPEInfo->listSectionHeaders.at(pPEInfo->nResourcesSection).Misc.VirtualSize;
 
                     qint64 nVersionOffset=pe.find_signature(&(pPEInfo->basic_info.memoryMap),nSectionOffset-0x600,0x600,"BD04EFFE00000100");
                     if(nVersionOffset!=-1)
@@ -16117,7 +16117,7 @@ bool SpecAbstract::PE_isValid_UPX(QIODevice *pDevice,bool bIsImage, SpecAbstract
     if(pPEInfo->listSectionHeaders.count()>=3)
     {
         // pPEInfo->listSections.at(0).SizeOfRawData!=0 dump file
-        if((pPEInfo->listSectionHeaders.at(0).SizeOfRawData==0)&&((pPEInfo->nResourceSection==-1)||(pPEInfo->nResourceSection==2)))
+        if((pPEInfo->listSectionHeaders.at(0).SizeOfRawData==0)&&((pPEInfo->nResourcesSection==-1)||(pPEInfo->nResourcesSection==2)))
         {
             bResult=true;
         }
