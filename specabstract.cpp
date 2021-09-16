@@ -12638,6 +12638,9 @@ void SpecAbstract::Binary_handleLanguages(QIODevice *pDevice, bool bIsImage, BIN
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
+    Q_UNUSED(pBinaryInfo)
+
+    // TODO
 
 //    getLanguage(&(pBinaryInfo->mapResultCOMPackers),&(pBinaryInfo->mapResultLanguages));
 //    getLanguage(&(pBinaryInfo->mapResultCOMProtectors),&(pBinaryInfo->mapResultLanguages));
