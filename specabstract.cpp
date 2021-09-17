@@ -5434,7 +5434,7 @@ void SpecAbstract::PE_handle_tElock(QIODevice *pDevice, bool bIsImage, SpecAbstr
                 bool bKernel32=false;
                 bool bUser32=false;
 
-                // TODO !!!
+                // TODO
                 if(pPEInfo->listImports.at(0).sName=="kernel32.dll")
                 {
                     if(pPEInfo->listImports.at(0).listPositions.count()==1)
