@@ -333,7 +333,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BORLANDCPPBUILDER:                     sResult=QString("Borland C++ Builder");                         break;
         case RECORD_NAME_BORLANDDELPHI:                         sResult=QString("Borland Delphi");                              break;
         case RECORD_NAME_BORLANDDELPHIDOTNET:                   sResult=QString("Borland Delphi .NET");                         break;
-        case RECORD_NAME_BORLANDOBJECTPASCAL:                   sResult=QString("Borland Object Pascal");                       break;
+        case RECORD_NAME_BORLANDOBJECTPASCALDELPHI:             sResult=QString("Borland Object Pascal(Delphi)");               break;
         case RECORD_NAME_BREAKINTOPATTERN:                      sResult=QString("Break Into Pattern");                          break;
         case RECORD_NAME_BTWORKSCODEGUARD:                      sResult=QString("Btworks CodeGuard");                           break;
         case RECORD_NAME_BUNDLETOOL:                            sResult=QString("BundleTool");                                  break;
@@ -358,7 +358,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CODEGEARCPP:                           sResult=QString("CodeGear C++");                                break;
         case RECORD_NAME_CODEGEARCPPBUILDER:                    sResult=QString("CodeGear C++ Builder");                        break;
         case RECORD_NAME_CODEGEARDELPHI:                        sResult=QString("CodeGear Delphi");                             break;
-        case RECORD_NAME_CODEGEAROBJECTPASCAL:                  sResult=QString("Codegear Object Pascal");                      break;
+        case RECORD_NAME_CODEGEAROBJECTPASCALDELPHI:            sResult=QString("Codegear Object Pascal(Delphi)");              break;
         case RECORD_NAME_CODEVEIL:                              sResult=QString("CodeVeil");                                    break;
         case RECORD_NAME_CODEWALL:                              sResult=QString("CodeWall");                                    break;
         case RECORD_NAME_COFF:                                  sResult=QString("COFF");                                        break;
@@ -438,7 +438,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_EMBARCADEROCPPBUILDER:                 sResult=QString("Embarcadero C++ Builder");                     break;
         case RECORD_NAME_EMBARCADERODELPHI:                     sResult=QString("Embarcadero Delphi");                          break;
         case RECORD_NAME_EMBARCADERODELPHIDOTNET:               sResult=QString("Embarcadero Delphi .NET");                     break;
-        case RECORD_NAME_EMBARCADEROOBJECTPASCAL:               sResult=QString("Embarcadero Object Pascal");                   break;
+        case RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI:         sResult=QString("Embarcadero Object Pascal(Delphi)");           break;
         case RECORD_NAME_EMPTYFILE:                             sResult=QString("Empty File");                                  break;
         case RECORD_NAME_ENCRYPTPE:                             sResult=QString("EncryptPE");                                   break;
         case RECORD_NAME_ENIGMA:                                sResult=QString("ENIGMA");                                      break;
@@ -668,6 +668,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_OBFUSCATORNET2009:                     sResult=QString("Obfuscator.NET 2009");                         break;
         case RECORD_NAME_OBJECTIVEC:                            sResult=QString("Objective-C");                                 break;
         case RECORD_NAME_OBJECTPASCAL:                          sResult=QString("Object Pascal");                               break;
+        case RECORD_NAME_OBJECTPASCALDELPHI:                    sResult=QString("Object Pascal(Delphi)");                       break;
         case RECORD_NAME_OBSIDIUM:                              sResult=QString("Obsidium");                                    break;
         case RECORD_NAME_OLLVMTLL:                              sResult=QString("ollvm-tll(LLVM 6.0+Ollvm+Armariris)");         break;
         case RECORD_NAME_ONESPANPROTECTION:                     sResult=QString("OneSpan Protection");                          break;
@@ -7399,17 +7400,17 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                 {
                     if(company==COMPANY_BORLAND)
                     {
-                        recordCompiler.name=RECORD_NAME_BORLANDOBJECTPASCAL;
+                        recordCompiler.name=RECORD_NAME_BORLANDOBJECTPASCALDELPHI;
                         recordTool.name=RECORD_NAME_BORLANDDELPHI;
                     }
                     else if(company==COMPANY_CODEGEAR)
                     {
-                        recordCompiler.name=RECORD_NAME_CODEGEAROBJECTPASCAL;
+                        recordCompiler.name=RECORD_NAME_CODEGEAROBJECTPASCALDELPHI;
                         recordTool.name=RECORD_NAME_CODEGEARDELPHI;
                     }
                     else if(company==COMPANY_EMBARCADERO)
                     {
-                        recordCompiler.name=RECORD_NAME_EMBARCADEROOBJECTPASCAL;
+                        recordCompiler.name=RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI;
                         recordTool.name=RECORD_NAME_EMBARCADERODELPHI;
                     }
 
@@ -10166,9 +10167,9 @@ void SpecAbstract::PE_handle_FixDetects(QIODevice *pDevice,bool bIsImage, SpecAb
 
     // Check SafeEngine
     if( pPEInfo->mapResultCompilers.contains(RECORD_NAME_VISUALCCPP)&&
-        pPEInfo->mapResultCompilers.contains(RECORD_NAME_BORLANDOBJECTPASCAL))
+        pPEInfo->mapResultCompilers.contains(RECORD_NAME_BORLANDOBJECTPASCALDELPHI))
     {
-        pPEInfo->mapResultCompilers.remove(RECORD_NAME_BORLANDOBJECTPASCAL);
+        pPEInfo->mapResultCompilers.remove(RECORD_NAME_BORLANDOBJECTPASCALDELPHI);
     }
 
     if( pPEInfo->mapResultLinkers.contains(RECORD_NAME_MICROSOFTLINKER)&&
@@ -13621,7 +13622,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
             if(vi.bIsValid)
             {
-                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_EMBARCADEROOBJECTPASCAL,vi.sVersion,vi.sInfo,0);
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI,vi.sVersion,vi.sInfo,0);
 
                 pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
             }
@@ -14100,9 +14101,9 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
         }
 
         // Delphi
-        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_EMBARCADEROOBJECTPASCAL))
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI))
         {
-            _SCANS_STRUCT ssCompiler=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_EMBARCADEROOBJECTPASCAL);
+            _SCANS_STRUCT ssCompiler=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI);
 
             pELFInfo->mapResultCompilers.insert(ssCompiler.name,scansToScan(&(pELFInfo->basic_info),&ssCompiler));
 
@@ -17148,19 +17149,21 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
                 ssLanguage.name=RECORD_NAME_AUTOIT;
                 break;
             case RECORD_NAME_OBJECTPASCAL:
-            case RECORD_NAME_BORLANDDELPHI:
-            case RECORD_NAME_BORLANDDELPHIDOTNET:
-            case RECORD_NAME_BORLANDOBJECTPASCAL:
-            case RECORD_NAME_CODEGEARDELPHI:
-            case RECORD_NAME_CODEGEAROBJECTPASCAL:
-            case RECORD_NAME_EMBARCADERODELPHI:
-            case RECORD_NAME_EMBARCADERODELPHIDOTNET:
-            case RECORD_NAME_EMBARCADEROOBJECTPASCAL:
             case RECORD_NAME_LAZARUS:
             case RECORD_NAME_FPC:
             case RECORD_NAME_VIRTUALPASCAL:
             case RECORD_NAME_IBMPCPASCAL:
                 ssLanguage.name=RECORD_NAME_OBJECTPASCAL;
+                break;
+            case RECORD_NAME_BORLANDDELPHI:
+            case RECORD_NAME_BORLANDDELPHIDOTNET:
+            case RECORD_NAME_BORLANDOBJECTPASCALDELPHI:
+            case RECORD_NAME_CODEGEARDELPHI:
+            case RECORD_NAME_CODEGEAROBJECTPASCALDELPHI:
+            case RECORD_NAME_EMBARCADERODELPHI:
+            case RECORD_NAME_EMBARCADERODELPHIDOTNET:
+            case RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI:
+                ssLanguage.name=RECORD_NAME_OBJECTPASCALDELPHI;
                 break;
             case RECORD_NAME_D:
             case RECORD_NAME_DMD32D:
