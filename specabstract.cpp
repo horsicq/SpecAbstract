@@ -3299,6 +3299,7 @@ void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage,
     {
         _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_WINDOWS,"","",0);
 
+        // TODO pe.getOperatingSystemVersion();
         quint16 nMajorOS=pe.getOptionalHeader_MajorOperatingSystemVersion();
         quint16 nMinorOS=pe.getOptionalHeader_MinorOperatingSystemVersion();
 
