@@ -3302,6 +3302,16 @@ void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage,
         quint16 nMajorOS=pe.getOptionalHeader_MajorOperatingSystemVersion();
         quint16 nMinorOS=pe.getOptionalHeader_MinorOperatingSystemVersion();
 
+        if(pPEInfo->bIs64) // Correct version
+        {
+            if((nMajorOS*10+nMinorOS)<62)
+            {
+                // Server 2003
+                nMajorOS=6;
+                nMinorOS=2;
+            }
+        }
+
         if      ((nMajorOS==3)&&(nMinorOS==10))     ssOperationSystem.sVersion="NT 3.1";
         else if ((nMajorOS==4)&&(nMinorOS==0))      ssOperationSystem.sVersion="95";
         else if ((nMajorOS==4)&&(nMinorOS==1))      ssOperationSystem.sVersion="98";
