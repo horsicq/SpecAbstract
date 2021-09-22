@@ -3293,6 +3293,7 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
 void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
+    // TODO more checks
     XPE pe(pDevice,bIsImage);
 
     if(pe.isValid())
