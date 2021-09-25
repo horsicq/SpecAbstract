@@ -13940,7 +13940,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
             if(nVersion)
             {
-                recordSS.sVersion=XBinary::get_uint32_version(nVersion);
+                recordSS.sVersion=XBinary::get_uint32_full_version(nVersion);
             }
 
             pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
@@ -14458,13 +14458,13 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
             if(version_min.sdk)
             {
-                recordXcode.sVersion=XBinary::get_uint32_version(version_min.sdk);
+                recordXcode.sVersion=XBinary::get_uint32_full_version(version_min.sdk);
             }
 
             pMACHInfo->mapResultTools.insert(recordXcode.name,scansToScan(&(pMACHInfo->basic_info),&recordXcode));
 
             recordOS.name=osName;
-            recordOS.sVersion=XBinary::get_uint32_version(version_min.version);
+            recordOS.sVersion=XBinary::get_uint32_full_version(version_min.version);
         }
 
         pMACHInfo->mapResultOperationSystems.insert(recordOS.name,scansToScan(&(pMACHInfo->basic_info),&recordOS));
@@ -14513,7 +14513,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
             recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
             recordSS.name=SpecAbstract::RECORD_NAME_QT;
-            recordSS.sVersion=XBinary::get_uint32_version(lr.current_version);
+            recordSS.sVersion=XBinary::get_uint32_full_version(lr.current_version);
 
             pMACHInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
         }
