@@ -3312,7 +3312,7 @@ void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage,
             }
         }
 
-        QMap<quint64,QString> mapOSVersion=XPE::getWindowsOperatingSystemVersionsS();
+        QMap<quint64,QString> mapOSVersion=XPE::getOperatingSystemVersionsS(); // TODO
 
         if(!mapOSVersion.contains(nOSVersion)||(nOSVersion==0))
         {
