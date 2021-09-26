@@ -726,6 +726,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PNG:                                   sResult=QString("PNG");                                         break;
         case RECORD_NAME_POKECRYPTER:                           sResult=QString("Poke Crypter");                                break;
         case RECORD_NAME_POLYCRYPTPE:                           sResult=QString("PolyCrypt PE");                                break;
+        case RECORD_NAME_POSIX:                                 sResult=QString("Posix");                                       break;
         case RECORD_NAME_POWERBASIC:                            sResult=QString("PowerBASIC");                                  break;
         case RECORD_NAME_PRIVATEEXEPROTECTOR:                   sResult=QString("Private EXE Protector");                       break;
         case RECORD_NAME_PROGUARD:                              sResult=QString("Proguard");                                    break;
@@ -17277,7 +17278,10 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
 {
     _SCANS_STRUCT result={};
 
-    // TODO
+    if      (osinfo.osType==XBinary::OSTYPE_MSDOS)      result.name=RECORD_NAME_MSDOS;
+    else if (osinfo.osType==XBinary::OSTYPE_POSIX)      result.name=RECORD_NAME_POSIX;
+    else if (osinfo.osType==XBinary::OSTYPE_UNIX)       result.name=RECORD_NAME_UNIX;
+    else if (osinfo.osType==XBinary::OSTYPE_WINDOWS)    result.name=RECORD_NAME_WINDOWS;
 
     result.sVersion=osinfo.sOsVersion;
     result.sInfo=QString("%1, %2, %3").arg(osinfo.sArch,XBinary::modeIdToString(osinfo.mode),osinfo.sType);
