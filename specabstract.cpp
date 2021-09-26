@@ -3299,6 +3299,7 @@ void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage,
     if(pe.isValid())
     {
         // TODO OS2,POSIX
+        // TODO XBinary::OSINFO -> _SCANS_STRUCT
         _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_WINDOWS,"","",0);
 
         quint32 nOSVersion=pe.getOperatingSystemVersion();
