@@ -17279,6 +17279,9 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
 
     // TODO
 
+    result.sVersion=osinfo.sOsVersion;
+    result.sInfo=QString("%1, %2, %3").arg(osinfo.sArch,XBinary::modeIdToString(osinfo.mode),osinfo.sType);
+
     return result;
 }
 
