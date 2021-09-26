@@ -3298,6 +3298,7 @@ void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage,
 
     if(pe.isValid())
     {
+        // TODO OS2,POSIX
         _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_WINDOWS,"","",0);
 
         quint32 nOSVersion=pe.getOperatingSystemVersion();
@@ -3311,7 +3312,7 @@ void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage,
             }
         }
 
-        QMap<quint64,QString> mapOSVersion=XPE::getOperatingSystemVersionsS();
+        QMap<quint64,QString> mapOSVersion=XPE::getWindowsOperatingSystemVersionsS();
 
         if(!mapOSVersion.contains(nOSVersion)||(nOSVersion==0))
         {
