@@ -17270,7 +17270,16 @@ void SpecAbstract::fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages)
 //    if(pMapLanguages->contains(RECORD_NAME_OBJECTIVEC)&&pMapLanguages->contains(RECORD_NAME_CCPP))
 //    {
 //        pMapLanguages->remove(RECORD_NAME_CCPP);
-//    }
+    //    }
+}
+
+SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSINFO osinfo)
+{
+    _SCANS_STRUCT result={};
+
+    // TODO
+
+    return result;
 }
 
 bool SpecAbstract::PE_compareRichRecord(_SCANS_STRUCT *pResult,SpecAbstract::MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, XBinary::FT fileType1, XBinary::FT fileType2)

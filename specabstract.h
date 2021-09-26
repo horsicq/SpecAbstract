@@ -1578,6 +1578,8 @@ public:
     static void getLanguage(QMap<RECORD_NAME,SCAN_STRUCT> *pMapDetects,QMap<RECORD_NAME,SCAN_STRUCT> *pMapLanguages);
     static void fixLanguage(QMap<RECORD_NAME,SCAN_STRUCT> *pMapLanguages);
 
+    static _SCANS_STRUCT getScansStructFromOsInfo(XBinary::OSINFO osinfo);
+
 private:
     static bool PE_compareRichRecord(_SCANS_STRUCT *pResult,MSRICH_RECORD *pRecord,quint16 nID,quint32 nBuild,XBinary::FT fileType1,XBinary::FT fileType2);
     static void filterResult(QList<SCAN_STRUCT> *pListRecords,QSet<RECORD_TYPE> stRecordTypes);
