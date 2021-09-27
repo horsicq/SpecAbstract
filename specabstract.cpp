@@ -17283,6 +17283,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     if      (osinfo.osType==XBinary::OSTYPE_MSDOS)      result.name=RECORD_NAME_MSDOS;
     else if (osinfo.osType==XBinary::OSTYPE_POSIX)      result.name=RECORD_NAME_POSIX;
     else if (osinfo.osType==XBinary::OSTYPE_UNIX)       result.name=RECORD_NAME_UNIX;
+    else if (osinfo.osType==XBinary::OSTYPE_LINUX)      result.name=RECORD_NAME_LINUX;
     else if (osinfo.osType==XBinary::OSTYPE_WINDOWS)    result.name=RECORD_NAME_WINDOWS;
     else if (osinfo.osType==XBinary::OSTYPE_XBOX)       result.name=RECORD_NAME_XBOX;
     else if (osinfo.osType==XBinary::OSTYPE_OS2)        result.name=RECORD_NAME_OS2;
