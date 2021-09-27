@@ -681,6 +681,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ORACLESOLARISLINKEDITORS:              sResult=QString("Oracle Solaris Link Editors");                 break;
         case RECORD_NAME_ORIEN:                                 sResult=QString("ORiEN");                                       break;
         case RECORD_NAME_OSCCRYPTER:                            sResult=QString("OSC-Crypter");                                 break;
+        case RECORD_NAME_OS2:                                   sResult=QString("OS2");                                         break;
         case RECORD_NAME_OSX:                                   sResult=QString("OSX");                                         break;
         case RECORD_NAME_P0KESCRAMBLER:                         sResult=QString("p0ke Scrambler");                              break;
         case RECORD_NAME_PACKMAN:                               sResult=QString("Packman");                                     break;
@@ -913,6 +914,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WWPACK32:                              sResult=QString("WWPack32");                                    break;
         case RECORD_NAME_WXWIDGETS:                             sResult=QString("wxWidgets");                                   break;
         case RECORD_NAME_XAR:                                   sResult=QString("xar");                                         break;
+        case RECORD_NAME_XBOX:                                  sResult=QString("XBOX");                                        break;
         case RECORD_NAME_XCODE:                                 sResult=QString("Xcode");                                       break;
         case RECORD_NAME_XENOCODE:                              sResult=QString("Xenocode");                                    break;
         case RECORD_NAME_XENOCODEPOSTBUILD:                     sResult=QString("Xenocode Postbuild");                          break;
@@ -2537,7 +2539,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.listRichSignatures=pe.getRichSignatureRecords();
         result.cliInfo=pe.getCliInfo(true,&(result.basic_info.memoryMap));
         result.sResourceManifest=pe.getResourceManifest(&result.listResources);
-        result.resVersion=pe.getResourceVersion(&result.listResources);
+        result.resVersion=pe.getResourcesVersion(&result.listResources);
 
         result.nEntryPointAddress=result.bIs64?result.optional_header.optionalHeader64.AddressOfEntryPoint:result.optional_header.optionalHeader32.AddressOfEntryPoint;
         result.nImageBaseAddress=result.bIs64?result.optional_header.optionalHeader64.ImageBase:result.optional_header.optionalHeader32.ImageBase;
@@ -3360,58 +3362,58 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
 
         // Spoon Studio
-        if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Spoon Studio 2011"))
+        if(XPE::getResourcesVersionValue("Packager",&(pPEInfo->resVersion)).contains("Spoon Studio 2011"))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_SPOONSTUDIO2011,"","",0);
-            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            ss.sVersion=XPE::getResourcesVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             ss.sVersion.replace(", ",".");
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
-        else if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Spoon Studio"))
+        else if(XPE::getResourcesVersionValue("Packager",&(pPEInfo->resVersion)).contains("Spoon Studio"))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_SPOONSTUDIO,"","",0);
-            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            ss.sVersion=XPE::getResourcesVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             ss.sVersion.replace(", ",".");
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
-        else if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2009"))
+        else if(XPE::getResourcesVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2009"))
         {
             // Xenocode Virtual Application Studio 2009
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2009,"","",0);
-            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            ss.sVersion=XPE::getResourcesVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
-        else if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2010 ISV Edition"))
+        else if(XPE::getResourcesVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2010 ISV Edition"))
         {
             // Xenocode Virtual Application Studio 2010 (ISV Edition)
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010ISVEDITION,"","",0);
-            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            ss.sVersion=XPE::getResourcesVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
-        else if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2010"))
+        else if(XPE::getResourcesVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2010"))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010,"","",0);
-            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            ss.sVersion=XPE::getResourcesVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
-        else if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2012 ISV Edition"))
+        else if(XPE::getResourcesVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2012 ISV Edition"))
         {
             // Xenocode Virtual Application Studio 2012 (ISV Edition)
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2012ISVEDITION,"","",0);
-            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            ss.sVersion=XPE::getResourcesVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
-        else if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2013 ISV Edition"))
+        else if(XPE::getResourcesVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2013 ISV Edition"))
         {
             // Xenocode Virtual Application Studio 2013 (ISV Edition)
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2013ISVEDITION,"","",0);
-            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            ss.sVersion=XPE::getResourcesVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
-        else if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Turbo Studio"))
+        else if(XPE::getResourcesVersionValue("Packager",&(pPEInfo->resVersion)).contains("Turbo Studio"))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_TURBOSTUDIO,"","",0);
-            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            ss.sVersion=XPE::getResourcesVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
         else if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_SPOONSTUDIO))
@@ -3425,10 +3427,10 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
-        if(XPE::getResourceVersionValue("CompanyName",&(pPEInfo->resVersion)).contains("SerGreen"))
+        if(XPE::getResourcesVersionValue("CompanyName",&(pPEInfo->resVersion)).contains("SerGreen"))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PACKER,RECORD_NAME_SERGREENAPPACKER,"","",0);
-            ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+            ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
@@ -4881,7 +4883,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 {
                     _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_MOLEBOX);
 
-                    QString sComment=XPE::getResourceVersionValue("Comments",&(pPEInfo->resVersion));
+                    QString sComment=XPE::getResourcesVersionValue("Comments",&(pPEInfo->resVersion));
 
                     if(sComment.contains("MoleBox "))
                     {
@@ -5119,17 +5121,17 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
-                else if(XPE::getResourceVersionValue("ThinAppVersion",&(pPEInfo->resVersion))!="")
+                else if(XPE::getResourcesVersionValue("ThinAppVersion",&(pPEInfo->resVersion))!="")
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_THINSTALL,"","",0);
-                    ss.sVersion=XPE::getResourceVersionValue("ThinAppVersion",&(pPEInfo->resVersion)).trimmed();
+                    ss.sVersion=XPE::getResourcesVersionValue("ThinAppVersion",&(pPEInfo->resVersion)).trimmed();
 
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
-                else if(XPE::getResourceVersionValue("ThinstallVersion",&(pPEInfo->resVersion))!="")
+                else if(XPE::getResourcesVersionValue("ThinstallVersion",&(pPEInfo->resVersion))!="")
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_THINSTALL,"","",0);
-                    ss.sVersion=XPE::getResourceVersionValue("ThinstallVersion",&(pPEInfo->resVersion)).trimmed();
+                    ss.sVersion=XPE::getResourcesVersionValue("ThinstallVersion",&(pPEInfo->resVersion)).trimmed();
 
                     pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
@@ -6254,18 +6256,18 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage, Spe
         }
 
         // Xenocode Virtual Application Studio 2009
-        if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Postbuild 2009 for .NET"))
+        if(XPE::getResourcesVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Postbuild 2009 for .NET"))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_NETOBFUSCATOR,RECORD_NAME_XENOCODEPOSTBUILD2009FORDOTNET,"","",0);
-            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            ss.sVersion=XPE::getResourcesVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultNETObfuscators.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
         // Xenocode Postbuild 2010 for .NET
-        if(XPE::getResourceVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Postbuild 2010 for .NET"))
+        if(XPE::getResourcesVersionValue("Packager",&(pPEInfo->resVersion)).contains("Xenocode Postbuild 2010 for .NET"))
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_XENOCODEPOSTBUILD2010FORDOTNET,"","",0);
-            ss.sVersion=XPE::getResourceVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
+            ss.sVersion=XPE::getResourcesVersionValue("PackagerVersion",&(pPEInfo->resVersion)).trimmed();
             pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         }
 
@@ -8680,10 +8682,10 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             // Install Anywhere
             if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_INSTALLANYWHERE))
             {
-                if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion))=="InstallAnywhere")
+                if(XPE::getResourcesVersionValue("ProductName",&(pPEInfo->resVersion))=="InstallAnywhere")
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_INSTALLANYWHERE,"","",0);
-                    ss.sVersion=XPE::getResourceVersionValue("ProductVersion",&(pPEInfo->resVersion));
+                    ss.sVersion=XPE::getResourcesVersionValue("ProductVersion",&(pPEInfo->resVersion));
                     pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
             }
@@ -8761,10 +8763,10 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             }
 
             // InstallShield
-            if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("InstallShield"))
+            if(XPE::getResourcesVersionValue("ProductName",&(pPEInfo->resVersion)).contains("InstallShield"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_INSTALLSHIELD,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
                 ss.sVersion.replace(", ",".");
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
@@ -8789,7 +8791,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                 if(ss.sVersion=="")
                 {
                     // TODO unicode
-                    ss.sVersion=XPE::getResourceVersionValue("ISInternalVersion",&(pPEInfo->resVersion));
+                    ss.sVersion=XPE::getResourcesVersionValue("ISInternalVersion",&(pPEInfo->resVersion));
                 }
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
@@ -8800,13 +8802,13 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                 // TODO version
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
-            else if(XPE::getResourceVersionValue("CompanyName",&(pPEInfo->resVersion)).contains("InstallShield"))
+            else if(XPE::getResourcesVersionValue("CompanyName",&(pPEInfo->resVersion)).contains("InstallShield"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_INSTALLSHIELD,"","",0);
 
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion));
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion));
 
-                if(XPE::getResourceVersionValue("CompanyName",&(pPEInfo->resVersion)).contains("PackageForTheWeb"))
+                if(XPE::getResourcesVersionValue("CompanyName",&(pPEInfo->resVersion)).contains("PackageForTheWeb"))
                 {
                     ss.sInfo="PackageForTheWeb";
                 }
@@ -8876,98 +8878,98 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if( XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("GP-Install")&&
-                XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("TASPro6-Install"))
+            if( XPE::getResourcesVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("GP-Install")&&
+                XPE::getResourcesVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("TASPro6-Install"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_GPINSTALL,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
                 ss.sVersion.replace(", ",".");
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Total Commander Installer"))
+            if(XPE::getResourcesVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Total Commander Installer"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_TOTALCOMMANDERINSTALLER,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(XPE::getResourceVersionValue("Comments",&(pPEInfo->resVersion)).contains("Actual Installer"))
+            if(XPE::getResourcesVersionValue("Comments",&(pPEInfo->resVersion)).contains("Actual Installer"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_ACTUALINSTALLER,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(XPE::getResourceVersionValue("Comments",&(pPEInfo->resVersion)).contains("Avast Antivirus"))
+            if(XPE::getResourcesVersionValue("Comments",&(pPEInfo->resVersion)).contains("Avast Antivirus"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_AVASTANTIVIRUS,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("Opera Installer"))
+            if(XPE::getResourcesVersionValue("ProductName",&(pPEInfo->resVersion)).contains("Opera Installer"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_OPERA,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("Yandex Installer"))
+            if(XPE::getResourcesVersionValue("ProductName",&(pPEInfo->resVersion)).contains("Yandex Installer"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_YANDEX,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("Google Update"))
+            if(XPE::getResourcesVersionValue("ProductName",&(pPEInfo->resVersion)).contains("Google Update"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_GOOGLE,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Visual Studio Installer"))
+            if(XPE::getResourcesVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Visual Studio Installer"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_MICROSOFTVISUALSTUDIO,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("Dropbox Update Setup"))
+            if(XPE::getResourcesVersionValue("InternalName",&(pPEInfo->resVersion)).contains("Dropbox Update Setup"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_DROPBOX,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("VeraCrypt"))
+            if(XPE::getResourcesVersionValue("ProductName",&(pPEInfo->resVersion)).contains("VeraCrypt"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_VERACRYPT,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Microsoft .NET Framework"))
+            if(XPE::getResourcesVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Microsoft .NET Framework"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_MICROSOFTDOTNETFRAMEWORK,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(XPE::getResourceVersionValue("LegalTrademarks",&(pPEInfo->resVersion)).contains("Setup Factory"))
+            if(XPE::getResourcesVersionValue("LegalTrademarks",&(pPEInfo->resVersion)).contains("Setup Factory"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_SETUPFACTORY,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("ProductVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("ProductVersion",&(pPEInfo->resVersion)).trimmed();
 
                 if(ss.sVersion.contains(","))
                 {
@@ -8978,19 +8980,19 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if( XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Java")&&
-                XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("Setup Launcher"))
+            if( XPE::getResourcesVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Java")&&
+                XPE::getResourcesVersionValue("InternalName",&(pPEInfo->resVersion)).contains("Setup Launcher"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_JAVA,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
-            if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_VMWARE)||XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("VMware installation"))
+            if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_VMWARE)||XPE::getResourcesVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("VMware installation"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_VMWARE,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
@@ -9135,10 +9137,10 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice,bool bIsImage, SpecAbstract:
             }
 
             // 7z SFX
-            if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("7-Zip"))
+            if(XPE::getResourcesVersionValue("ProductName",&(pPEInfo->resVersion)).contains("7-Zip"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_SFX,RECORD_NAME_7Z,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("ProductVersion",&(pPEInfo->resVersion));
+                ss.sVersion=XPE::getResourcesVersionValue("ProductVersion",&(pPEInfo->resVersion));
                 pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
@@ -9152,21 +9154,21 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice,bool bIsImage, SpecAbstract:
             // SQUEEZ SFX
             if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_SQUEEZSFX))
             {
-                if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("Squeez"))
+                if(XPE::getResourcesVersionValue("ProductName",&(pPEInfo->resVersion)).contains("Squeez"))
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_SQUEEZSFX,"","",0);
-                    ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
+                    ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion)).trimmed();
                     pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                 }
             }
 
             // WinACE
-            if(     XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("WinACE")||
-                    XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("WinAce")||
-                    XPE::getResourceVersionValue("InternalName",&(pPEInfo->resVersion)).contains("UNACE"))
+            if(     XPE::getResourcesVersionValue("InternalName",&(pPEInfo->resVersion)).contains("WinACE")||
+                    XPE::getResourcesVersionValue("InternalName",&(pPEInfo->resVersion)).contains("WinAce")||
+                    XPE::getResourcesVersionValue("InternalName",&(pPEInfo->resVersion)).contains("UNACE"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_SFX,RECORD_NAME_WINACE,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("ProductVersion",&(pPEInfo->resVersion));
+                ss.sVersion=XPE::getResourcesVersionValue("ProductVersion",&(pPEInfo->resVersion));
                 pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
@@ -9182,18 +9184,18 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice,bool bIsImage, SpecAbstract:
             }
 
             // Cab
-            if(XPE::getResourceVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Self-Extracting Cabinet"))
+            if(XPE::getResourcesVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Self-Extracting Cabinet"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_SFX,RECORD_NAME_CAB,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("FileVersion",&(pPEInfo->resVersion));
+                ss.sVersion=XPE::getResourcesVersionValue("FileVersion",&(pPEInfo->resVersion));
                 pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
             // GkSetup SFX
-            if(XPE::getResourceVersionValue("ProductName",&(pPEInfo->resVersion)).contains("GkSetup Self extractor"))
+            if(XPE::getResourcesVersionValue("ProductName",&(pPEInfo->resVersion)).contains("GkSetup Self extractor"))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_SFX,RECORD_NAME_GKSETUPSFX,"","",0);
-                ss.sVersion=XPE::getResourceVersionValue("ProductVersion",&(pPEInfo->resVersion));
+                ss.sVersion=XPE::getResourcesVersionValue("ProductVersion",&(pPEInfo->resVersion));
                 pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
         }
@@ -17282,6 +17284,8 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     else if (osinfo.osType==XBinary::OSTYPE_POSIX)      result.name=RECORD_NAME_POSIX;
     else if (osinfo.osType==XBinary::OSTYPE_UNIX)       result.name=RECORD_NAME_UNIX;
     else if (osinfo.osType==XBinary::OSTYPE_WINDOWS)    result.name=RECORD_NAME_WINDOWS;
+    else if (osinfo.osType==XBinary::OSTYPE_XBOX)       result.name=RECORD_NAME_XBOX;
+    else if (osinfo.osType==XBinary::OSTYPE_OS2)        result.name=RECORD_NAME_OS2;
 
     result.sVersion=osinfo.sOsVersion;
     result.sInfo=QString("%1, %2, %3").arg(osinfo.sArch,XBinary::modeIdToString(osinfo.mode),osinfo.sType);

@@ -540,6 +540,7 @@ public:
         RECORD_NAME_ORACLESOLARISLINKEDITORS,
         RECORD_NAME_ORIEN,
         RECORD_NAME_OSCCRYPTER,
+        RECORD_NAME_OS2,
         RECORD_NAME_OSX,
         RECORD_NAME_P0KESCRAMBLER,
         RECORD_NAME_PACKMAN,
@@ -772,6 +773,7 @@ public:
         RECORD_NAME_WWPACK32,
         RECORD_NAME_WXWIDGETS,
         RECORD_NAME_XAR,
+        RECORD_NAME_XBOX,
         RECORD_NAME_XCODE,
         RECORD_NAME_XENOCODE,
         RECORD_NAME_XENOCODEPOSTBUILD,
@@ -1169,7 +1171,7 @@ public:
         QList<XPE::RESOURCE_RECORD> listResources;
         QList<XMSDOS::MS_RICH_RECORD> listRichSignatures;
         QString sResourceManifest;
-        XPE::RESOURCE_VERSION resVersion;
+        XPE::RESOURCES_VERSION resVersion;
         XPE::CLI_INFO cliInfo;
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapOverlayDetects;
