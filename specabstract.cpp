@@ -896,6 +896,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WINDOFCRYPT:                           sResult=QString("WindOfCrypt");                                 break;
         case RECORD_NAME_WINDOWS:                               sResult=QString("Windows");                                     break;
         case RECORD_NAME_WINDOWSBITMAP:                         sResult=QString("Windows Bitmap");                              break;
+        case RECORD_NAME_WINDOWSCE:                             sResult=QString("Windows CE");                                  break;
         case RECORD_NAME_WINDOWSICON:                           sResult=QString("Windows Icon");                                break;
         case RECORD_NAME_WINDOWSINSTALLER:                      sResult=QString("Windows Installer");                           break;
         case RECORD_NAME_WINDOWSMEDIA:                          sResult=QString("Windows Media");                               break;
@@ -17285,6 +17286,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     else if (osinfo.osType==XBinary::OSTYPE_UNIX)       result.name=RECORD_NAME_UNIX;
     else if (osinfo.osType==XBinary::OSTYPE_LINUX)      result.name=RECORD_NAME_LINUX;
     else if (osinfo.osType==XBinary::OSTYPE_WINDOWS)    result.name=RECORD_NAME_WINDOWS;
+    else if (osinfo.osType==XBinary::OSTYPE_WINDOWSCE)  result.name=RECORD_NAME_WINDOWSCE;
     else if (osinfo.osType==XBinary::OSTYPE_XBOX)       result.name=RECORD_NAME_XBOX;
     else if (osinfo.osType==XBinary::OSTYPE_OS2)        result.name=RECORD_NAME_OS2;
 
