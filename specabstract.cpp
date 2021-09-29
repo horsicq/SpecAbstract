@@ -3297,43 +3297,11 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
 void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
-    // TODO more checks
     XPE pe(pDevice,bIsImage);
 
     if(pe.isValid())
     {
-        // TODO OS2,POSIX
-        // TODO XBinary::OSINFO -> _SCANS_STRUCT
-        _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_WINDOWS,"","",0);
-
-        quint32 nOSVersion=pe.getOperatingSystemVersion();
-
-        if(pPEInfo->bIs64) // Correct version
-        {
-            if(nOSVersion<0x00050002)
-            {
-                // Server 2003
-                nOSVersion=0x00050002;
-            }
-        }
-
-        QMap<quint64,QString> mapOSVersion=XPE::getOperatingSystemVersionsS(); // TODO
-
-        if(!mapOSVersion.contains(nOSVersion)||(nOSVersion==0))
-        {
-            if(pPEInfo->bIs64)
-            {
-                nOSVersion=0x00050002; // Server 2003
-            }
-            else
-            {
-                nOSVersion=0x00050001; // XP
-            }
-        }
-
-        ssOperationSystem.sVersion=mapOSVersion.value(nOSVersion);
-
-        ssOperationSystem.sInfo=QString("%1, %2, %3").arg(pe.getArch(),(pPEInfo->bIs64)?("64-bit"):("32-bit"),pe.getTypeAsString());
+        _SCANS_STRUCT ssOperationSystem=getScansStructFromOsInfo(pe.getOsInfo());
 
         pPEInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pPEInfo->basic_info),&ssOperationSystem));
     }
@@ -17280,6 +17248,8 @@ void SpecAbstract::fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages)
 SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSINFO osinfo)
 {
     _SCANS_STRUCT result={};
+
+    result.type=RECORD_TYPE_OPERATIONSYSTEM;
 
     if      (osinfo.osName==XBinary::OSNAME_MSDOS)      result.name=RECORD_NAME_MSDOS;
     else if (osinfo.osName==XBinary::OSNAME_POSIX)      result.name=RECORD_NAME_POSIX;
