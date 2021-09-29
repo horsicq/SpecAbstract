@@ -17290,6 +17290,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     else if (osinfo.osType==XBinary::OSTYPE_XBOX)       result.name=RECORD_NAME_XBOX;
     else if (osinfo.osType==XBinary::OSTYPE_OS2)        result.name=RECORD_NAME_OS2;
     else if (osinfo.osType==XBinary::OSTYPE_OSX)        result.name=RECORD_NAME_OSX;
+    else if (osinfo.osType==XBinary::OSTYPE_ANDROID)    result.name=RECORD_NAME_ANDROID;
 
     result.sVersion=osinfo.sOsVersion;
     result.sInfo=QString("%1, %2, %3").arg(osinfo.sArch,XBinary::modeIdToString(osinfo.mode),osinfo.sType);
