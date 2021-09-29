@@ -17281,17 +17281,18 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
 {
     _SCANS_STRUCT result={};
 
-    if      (osinfo.osType==XBinary::OSTYPE_MSDOS)      result.name=RECORD_NAME_MSDOS;
-    else if (osinfo.osType==XBinary::OSTYPE_POSIX)      result.name=RECORD_NAME_POSIX;
-    else if (osinfo.osType==XBinary::OSTYPE_UNIX)       result.name=RECORD_NAME_UNIX;
-    else if (osinfo.osType==XBinary::OSTYPE_LINUX)      result.name=RECORD_NAME_LINUX;
-    else if (osinfo.osType==XBinary::OSTYPE_WINDOWS)    result.name=RECORD_NAME_WINDOWS;
-    else if (osinfo.osType==XBinary::OSTYPE_WINDOWSCE)  result.name=RECORD_NAME_WINDOWSCE;
-    else if (osinfo.osType==XBinary::OSTYPE_XBOX)       result.name=RECORD_NAME_XBOX;
-    else if (osinfo.osType==XBinary::OSTYPE_OS2)        result.name=RECORD_NAME_OS2;
-    else if (osinfo.osType==XBinary::OSTYPE_OSX)        result.name=RECORD_NAME_OSX;
-    else if (osinfo.osType==XBinary::OSTYPE_ANDROID)    result.name=RECORD_NAME_ANDROID;
-    else if (osinfo.osType==XBinary::OSTYPE_FREEBSD)    result.name=RECORD_NAME_FREEBSD;
+    if      (osinfo.osName==XBinary::OSNAME_MSDOS)      result.name=RECORD_NAME_MSDOS;
+    else if (osinfo.osName==XBinary::OSNAME_POSIX)      result.name=RECORD_NAME_POSIX;
+    else if (osinfo.osName==XBinary::OSNAME_UNIX)       result.name=RECORD_NAME_UNIX;
+    else if (osinfo.osName==XBinary::OSNAME_LINUX)      result.name=RECORD_NAME_LINUX;
+    else if (osinfo.osName==XBinary::OSNAME_WINDOWS)    result.name=RECORD_NAME_WINDOWS;
+    else if (osinfo.osName==XBinary::OSNAME_WINDOWSCE)  result.name=RECORD_NAME_WINDOWSCE;
+    else if (osinfo.osName==XBinary::OSNAME_XBOX)       result.name=RECORD_NAME_XBOX;
+    else if (osinfo.osName==XBinary::OSNAME_OS2)        result.name=RECORD_NAME_OS2;
+    else if (osinfo.osName==XBinary::OSNAME_OSX)        result.name=RECORD_NAME_OSX;
+    else if (osinfo.osName==XBinary::OSNAME_ANDROID)    result.name=RECORD_NAME_ANDROID;
+    else if (osinfo.osName==XBinary::OSNAME_FREEBSD)    result.name=RECORD_NAME_FREEBSD;
+    else if (osinfo.osName==XBinary::OSNAME_OPENBSD)    result.name=RECORD_NAME_OPENBSD;
 
     result.sVersion=osinfo.sOsVersion;
     result.sInfo=QString("%1, %2, %3").arg(osinfo.sArch,XBinary::modeIdToString(osinfo.mode),osinfo.sType);
