@@ -965,21 +965,21 @@ QString SpecAbstract::heurTypeIdToString(SpecAbstract::DETECTTYPE id)
 
     switch(id)
     {
-        case DETECTTYPE_UNKNOWN:                          sResult=tr("Unknown");                                      break;
-        case DETECTTYPE_HEADER:                           sResult=tr("Header");                                       break;
-        case DETECTTYPE_OVERLAY:                          sResult=tr("Overlay");                                      break;
-        case DETECTTYPE_ENTRYPOINT:                       sResult=tr("Entry point");                                  break;
-        case DETECTTYPE_SECTIONNAME:                      sResult=tr("Section name");                                 break;
-        case DETECTTYPE_IMPORTHASH:                       sResult=QString("Import hash");                             break;
-        case DETECTTYPE_CODESECTION:                      sResult=tr("Code section");                                 break;
-        case DETECTTYPE_ENTRYPOINTSECTION:                sResult=tr("Entry point section");                          break;
-        case DETECTTYPE_NETANSISTRING:                    sResult=QString(".NET ANSI %1").arg(tr("String"));          break;
-        case DETECTTYPE_NETUNICODESTRING:                 sResult=QString(".NET Unicode %1").arg(tr("String"));       break;
-        case DETECTTYPE_RICH:                             sResult=QString("RICH");                                    break;
-        case DETECTTYPE_ARCHIVE:                          sResult=tr("Archive");                                      break;
-        case DETECTTYPE_RESOURCES:                        sResult=tr("Resources");                                    break;
-        case DETECTTYPE_DEXSTRING:                        sResult=QString("DEX %1").arg(tr("String"));                break;
-        case DETECTTYPE_DEXTYPE:                          sResult=QString("DEX %1").arg(tr("Type"));                  break;
+        case DETECTTYPE_UNKNOWN:                          sResult=tr("Unknown");                                        break;
+        case DETECTTYPE_HEADER:                           sResult=tr("Header");                                         break;
+        case DETECTTYPE_OVERLAY:                          sResult=tr("Overlay");                                        break;
+        case DETECTTYPE_ENTRYPOINT:                       sResult=tr("Entry point");                                    break;
+        case DETECTTYPE_SECTIONNAME:                      sResult=tr("Section name");                                   break;
+        case DETECTTYPE_IMPORTHASH:                       sResult=tr("Import hash");                                    break;
+        case DETECTTYPE_CODESECTION:                      sResult=tr("Code section");                                   break;
+        case DETECTTYPE_ENTRYPOINTSECTION:                sResult=tr("Entry point section");                            break;
+        case DETECTTYPE_NETANSISTRING:                    sResult=QString(".NET ANSI %1").arg(tr("String"));            break;
+        case DETECTTYPE_NETUNICODESTRING:                 sResult=QString(".NET Unicode %1").arg(tr("String"));         break;
+        case DETECTTYPE_RICH:                             sResult=QString("RICH");                                      break;
+        case DETECTTYPE_ARCHIVE:                          sResult=tr("Archive");                                        break;
+        case DETECTTYPE_RESOURCES:                        sResult=tr("Resources");                                      break;
+        case DETECTTYPE_DEXSTRING:                        sResult=QString("DEX %1").arg(tr("String"));                  break;
+        case DETECTTYPE_DEXTYPE:                          sResult=QString("DEX %1").arg(tr("Type"));                    break;
     }
 
     return sResult;
