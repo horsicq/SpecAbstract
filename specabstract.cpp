@@ -7907,6 +7907,25 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
                     break;
                 }
+                else if(XBinary::isRegExpPresent("^LIBPYTHON",pPEInfo->listImports.at(i).sName.toUpper()))
+                {
+                    QString sVersion=XBinary::regExp("(\\d.\\d)",pPEInfo->listImports.at(i).sName.toUpper(),0);
+
+                    if(sVersion!="")
+                    {
+                        double dVersion=sVersion.toDouble();
+
+                        if(dVersion)
+                        {
+                            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_PYTHON,"","",0);
+
+                            ss.sVersion=QString::number(dVersion);
+                            pPEInfo->mapResultLibraries.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                        }
+                    }
+
+                    break;
+                }
             }
 
             // Perl
@@ -12636,12 +12655,14 @@ void SpecAbstract::Binary_handleLanguages(QIODevice *pDevice, bool bIsImage, BIN
 
 void SpecAbstract::MSDOS_handle_OperationSystems(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
 {
-    Q_UNUSED(pDevice)
-    Q_UNUSED(bIsImage)
+    XMSDOS msdos(pDevice,bIsImage);
 
-    _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_MSDOS,"","",0);
+    if(msdos.isValid())
+    {
+        _SCANS_STRUCT ssOperationSystem=getScansStructFromOsInfo(msdos.getOsInfo());
 
-    pMSDOSInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pMSDOSInfo->basic_info),&ssOperationSystem));
+        pMSDOSInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pMSDOSInfo->basic_info),&ssOperationSystem));
+    }
 }
 
 void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
