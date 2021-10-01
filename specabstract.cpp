@@ -17286,6 +17286,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     else if (osinfo.osName==XBinary::OSNAME_OPENBSD)    result.name=RECORD_NAME_OPENBSD;
     else if (osinfo.osName==XBinary::OSNAME_NETBSD)     result.name=RECORD_NAME_NETBSD;
     else if (osinfo.osName==XBinary::OSNAME_HPUX)       result.name=RECORD_NAME_HPUX;
+    else if (osinfo.osName==XBinary::OSNAME_SOLARIS)    result.name=RECORD_NAME_SOLARIS;
 
     result.sVersion=osinfo.sOsVersion;
     result.sInfo=QString("%1, %2, %3").arg(osinfo.sArch,XBinary::modeIdToString(osinfo.mode),osinfo.sType);
