@@ -17284,6 +17284,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     else if (osinfo.osName==XBinary::OSNAME_ANDROID)    result.name=RECORD_NAME_ANDROID;
     else if (osinfo.osName==XBinary::OSNAME_FREEBSD)    result.name=RECORD_NAME_FREEBSD;
     else if (osinfo.osName==XBinary::OSNAME_OPENBSD)    result.name=RECORD_NAME_OPENBSD;
+    else if (osinfo.osName==XBinary::OSNAME_NETBSD)     result.name=RECORD_NAME_NETBSD;
 
     result.sVersion=osinfo.sOsVersion;
     result.sInfo=QString("%1, %2, %3").arg(osinfo.sArch,XBinary::modeIdToString(osinfo.mode),osinfo.sType);
