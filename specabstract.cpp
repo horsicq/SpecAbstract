@@ -17288,6 +17288,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     else if (osinfo.osName==XBinary::OSNAME_HPUX)       result.name=RECORD_NAME_HPUX;
     else if (osinfo.osName==XBinary::OSNAME_SOLARIS)    result.name=RECORD_NAME_SOLARIS;
     else if (osinfo.osName==XBinary::OSNAME_AIX)        result.name=RECORD_NAME_AIX;
+    else if (osinfo.osName==XBinary::OSNAME_IRIX)       result.name=RECORD_NAME_IRIX;
 
     result.sVersion=osinfo.sOsVersion;
     result.sInfo=QString("%1, %2, %3").arg(osinfo.sArch,XBinary::modeIdToString(osinfo.mode),osinfo.sType);
