@@ -17291,6 +17291,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     else if (osinfo.osName==XBinary::OSNAME_IRIX)       result.name=RECORD_NAME_IRIX;
     else if (osinfo.osName==XBinary::OSNAME_TRU64)      result.name=RECORD_NAME_TRU64;
     else if (osinfo.osName==XBinary::OSNAME_MODESTO)    result.name=RECORD_NAME_MODESTO;
+    else if (osinfo.osName==XBinary::OSNAME_OPENVMS)    result.name=RECORD_NAME_OPENVMS;
 
     result.sVersion=osinfo.sOsVersion;
     result.sInfo=QString("%1, %2, %3").arg(osinfo.sArch,XBinary::modeIdToString(osinfo.mode),osinfo.sType);
