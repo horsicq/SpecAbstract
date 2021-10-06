@@ -28,7 +28,6 @@
 #define USE_ARCHIVE
 #endif
 
-#include <QDataStream>
 #include "xformats.h"
 
 class SpecAbstract : public QObject
