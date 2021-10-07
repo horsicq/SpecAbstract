@@ -607,6 +607,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MICROSOFTCPP:                          sResult=QString("Microsoft C++");                               break;
         case RECORD_NAME_MICROSOFTDOTNETFRAMEWORK:              sResult=QString("Microsoft .NET Framework");                    break;
         case RECORD_NAME_MICROSOFTEXCEL:                        sResult=QString("Microsoft Excel");                             break;
+        case RECORD_NAME_MICROSOFTINSTALLER:                    sResult=QString("Microsoft Installer(MSI)");                    break;
         case RECORD_NAME_MICROSOFTLINKER:                       sResult=QString("Microsoft linker");                            break;
         case RECORD_NAME_MICROSOFTLINKERDATABASE:               sResult=QString("Microsoft Linker Database");                   break;
         case RECORD_NAME_MICROSOFTOFFICE:                       sResult=QString("Microsoft Office");                            break;
@@ -10698,6 +10699,26 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice,bool bIsImage, SpecA
     {
         // Microsoft Compound
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MICROSOFTCOMPOUND);
+
+        quint16 nSub1=binary.read_uint16(0x200);
+        quint16 nSub2=binary.read_uint16(0x1000);
+
+        // TODO More
+        if((nSub1==0)&&(nSub2==0xFFFD))
+        {
+            ss.type=RECORD_TYPE_INSTALLER; // TODO mapResultInstallers
+            ss.name=RECORD_NAME_MICROSOFTINSTALLER;
+            ss.sVersion="";
+            ss.sInfo="";
+        }
+        else if(nSub1==0xA5EC)
+        {
+            ss.type=RECORD_TYPE_FORMAT;
+            ss.name=RECORD_NAME_MICROSOFTOFFICEWORD;
+            ss.sVersion="97-2003";
+            ss.sInfo="";
+        }
+
         pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP))&&(pBinaryInfo->basic_info.nSize>=8))
