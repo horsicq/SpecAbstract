@@ -1236,7 +1236,7 @@ public:
 
     struct SCAN_OPTIONS
     {
-        //        bool bEmulate;
+        //        bool bEmulate; // TODO Check
         bool bRecursiveScan;
         bool bDeepScan;
         bool bHeuristicScan;
