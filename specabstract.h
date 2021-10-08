@@ -21,11 +21,11 @@
 #ifndef SPECABSTRACT_H
 #define SPECABSTRACT_H
 
-#ifndef USE_DEX
-#define USE_DEX
-#endif
 #ifndef USE_ARCHIVE
 #define USE_ARCHIVE
+#endif
+#ifndef USE_DEX
+#define USE_DEX
 #endif
 
 #include "xformats.h"
