@@ -17121,6 +17121,7 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
         SCAN_STRUCT ssDetect=i.value();
         _SCANS_STRUCT ssLanguage=getScansStruct(0,ssDetect.id.fileType,RECORD_TYPE_LANGUAGE,RECORD_NAME_UNKNOWN,"","",0);
 
+        // TODO Libraries like MFC
         switch(ssDetect.name)
         {
             case RECORD_NAME_C:
