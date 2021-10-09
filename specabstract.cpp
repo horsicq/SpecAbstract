@@ -14375,23 +14375,23 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
         {
             // TODO names of note sections
 
-            QList<QString> list=pELFInfo->listComments;
-
             QSet<QString> stRecords;
 
-            for(int i=0;i<list.count();i++)
+            int nNumberOfRecords=pELFInfo->listComments.count();
+
+            for(int i=0;i<nNumberOfRecords;i++)
             {
-                if(!stRecords.contains(list.at(i)))
+                if(!stRecords.contains(pELFInfo->listComments.at(i)))
                 {
                     _SCANS_STRUCT recordSS={};
 
                     recordSS.type=RECORD_TYPE_LIBRARY;
                     recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+i+1);
-                    recordSS.sVersion=list.at(i);
+                    recordSS.sVersion=pELFInfo->listComments.at(i);
 
                     pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
 
-                    stRecords.insert(list.at(i));
+                    stRecords.insert(pELFInfo->listComments.at(i));
                 }
             }
         }
