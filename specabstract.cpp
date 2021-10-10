@@ -2514,7 +2514,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         int _nNumberOfImports=listImports.count();
 
-        for(int i=0;i<_nNumberOfImports; i++)
+        for(int i=0;i<_nNumberOfImports;i++)
         {
             QString sRecord=listImports.at(i).sLibrary+" "+listImports.at(i).sFunction;
 
@@ -5268,7 +5268,7 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
 
                     int nNumberOfSections=pPEInfo->listSectionHeaders.count();
 
-                    for(int i=0; i<nNumberOfSections; i++)
+                    for(int i=0;i<nNumberOfSections;i++)
                     {
                         if( (i==pPEInfo->nEntryPointSection)||
                             (i==pPEInfo->nResourcesSection)||
