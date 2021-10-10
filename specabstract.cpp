@@ -6346,7 +6346,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, SpecAb
 
         int nNumberOfImports=pPEInfo->listImports.count();
 
-        for(int i=0; i<nNumberOfImports; i++)
+        for(int i=0;i<nNumberOfImports;i++)
         {
             // https://en.wikipedia.org/wiki/Microsoft_Foundation_Class_Library
             // TODO eMbedded Visual C++ 4.0 		mfcce400.dll 	MFC 6.0
