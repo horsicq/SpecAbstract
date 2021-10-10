@@ -5730,7 +5730,7 @@ void SpecAbstract::PE_handle_StarForce(QIODevice *pDevice, bool bIsImage, SpecAb
 
             int nNumberOfImports=pPEInfo->listImports.count();
 
-            for(int i=0; i<nNumberOfImports; i++)
+            for(int i=0;i<nNumberOfImports;i++)
             {
                 if(pPEInfo->listImports.at(i).listPositions.count()==1)
                 {
