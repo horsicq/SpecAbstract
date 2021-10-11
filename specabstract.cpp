@@ -15966,9 +15966,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Nim_vi(QIODevice *pDevice, bool bIsIma
 
     XBinary binary(pDevice,bIsImage);
 
-    qint64 nOffset_Version=binary.find_ansiString(nOffset,nSize,"\\lib\\system\\io.nim");
-
-    if(nOffset_Version!=-1)
+    if((binary.find_ansiString(nOffset,nSize,"io.nim")!=-1)||(binary.find_ansiString(nOffset,nSize,"fatal.nim")!=-1))
     {
         result.bIsValid=true;
         // TODO Version
