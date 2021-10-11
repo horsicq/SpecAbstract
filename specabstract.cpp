@@ -7931,7 +7931,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
             // Perl
             // TODO Create function
-            for(int i=0; i<nNumberOfImports; i++)
+            for(int i=0;i<nNumberOfImports;i++)
             {
                 if(XBinary::isRegExpPresent("^PERL",pPEInfo->listImports.at(i).sName.toUpper()))
                 {
