@@ -10241,7 +10241,7 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
     {
         int nSignaturesCount=sizeof(_TEXT_Exp_records)/sizeof(STRING_RECORD);
 
-        for(int i=0; i<nSignaturesCount; i++) // TODO move to an own function !!!
+        for(int i=0;i<nSignaturesCount;i++) // TODO move to an own function !!!
         {
             if(XBinary::isRegExpPresent(_TEXT_Exp_records[i].pszString,pBinaryInfo->sHeaderText))
             {
