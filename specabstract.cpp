@@ -13302,7 +13302,7 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
         {
             qint32 nNumberOfComments=pELFInfo->listComments.count();
 
-            for(int i=0; i<nNumberOfComments; i++)
+            for(int i=0;i<nNumberOfComments;i++)
             {
                 bool bFound=false;
 
