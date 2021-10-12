@@ -8327,7 +8327,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract
 
             int nNumberOfImports=pPEInfo->listImports.count();
 
-            for(int i=0; i<nNumberOfImports; i++)
+            for(int i=0;i<nNumberOfImports;i++)
             {
                 if(XBinary::isRegExpPresent("^CYGWIN",pPEInfo->listImports.at(i).sName.toUpper()))
                 {
