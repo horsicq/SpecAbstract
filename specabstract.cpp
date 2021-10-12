@@ -9015,7 +9015,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
             {
                 int nNumberOfResources=pPEInfo->listResources.count();
 
-                for(int i=0; i<nNumberOfResources; i++)
+                for(int i=0;i<nNumberOfResources;i++)
                 {
                     qint64 _nOffset=pPEInfo->listResources.at(i).nOffset;
                     qint64 _nSize=pPEInfo->listResources.at(i).nSize;
