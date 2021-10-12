@@ -15542,7 +15542,7 @@ bool SpecAbstract::checkVersionString(QString sVersion)
         int nStringSize=sVersion.size();
 
         // TODO
-        for(int i=0; i<nStringSize; i++)
+        for(int i=0;i<nStringSize;i++)
         {
             QChar _char=sVersion.at(i);
 
