@@ -15515,7 +15515,7 @@ bool SpecAbstract::isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListSc
 
     int nNumberOfRecords=pListScanStructs->count();
 
-    for(int i=0; i<nNumberOfRecords; i++)
+    for(int i=0;i<nNumberOfRecords;i++)
     {
         if(     ((pListScanStructs->at(i).id.fileType==fileType)||(fileType==XBinary::FT_UNKNOWN))
             &&  ((pListScanStructs->at(i).type==type)||(type==SpecAbstract::RECORD_TYPE_UNKNOWN))
