@@ -16426,7 +16426,7 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
 
         int nSignaturesCount=nRecordsSize/sizeof(SIGNATURE_RECORD);
 
-        for(int i=0; (i<nSignaturesCount)&&(!(*pbIsStop)); i++)
+        for(int i=0;(i<nSignaturesCount)&&(!(*pbIsStop));i++)
         {
             if((pRecords[i].basicInfo.fileType==fileType1)||(pRecords[i].basicInfo.fileType==fileType2))
             {
