@@ -16478,7 +16478,7 @@ void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, 
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(SIGNATURE_RECORD);
 
-    for(int i=0; (i<nSignaturesCount)&&(!(*pbIsStop)); i++)
+    for(int i=0;(i<nSignaturesCount)&&(!(*pbIsStop));i++)
     {
         if((pRecords[i].basicInfo.fileType==fileType1)||(pRecords[i].basicInfo.fileType==fileType2))
         {
