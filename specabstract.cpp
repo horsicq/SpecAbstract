@@ -15562,8 +15562,6 @@ bool SpecAbstract::checkVersionString(QString sVersion)
         }
     }
 
-
-
     return bResult;
 }
 
