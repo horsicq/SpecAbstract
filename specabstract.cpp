@@ -16532,7 +16532,7 @@ void SpecAbstract::PE_resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract
 {
     int nSignaturesCount=nRecordsSize/sizeof(PE_RESOURCES_RECORD);
 
-    for(int i=0; (i<nSignaturesCount)&&(!(*pbIsStop)); i++)
+    for(int i=0;(i<nSignaturesCount)&&(!(*pbIsStop));i++)
     {
         if((pRecords[i].basicInfo.fileType==fileType1)||(pRecords[i].basicInfo.fileType==fileType2))
         {
