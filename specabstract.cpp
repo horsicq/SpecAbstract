@@ -16636,7 +16636,7 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
         listSignatureCRC.append(nCRC);
     }
 
-    for(int i=0; (i<nNumberOfStrings)&&(!(*pbIsStop)); i++)
+    for(int i=0;(i<nNumberOfStrings)&&(!(*pbIsStop));i++)
     {
         for(int j=0; j<nNumberOfSignatures; j++)
         {
