@@ -16624,7 +16624,7 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
     int nNumberOfStrings=pListStrings->count();
     int nNumberOfSignatures=nRecordsSize/sizeof(STRING_RECORD);
 
-    for(int i=0; i<nNumberOfStrings; i++)
+    for(int i=0;i<nNumberOfStrings;i++)
     {
         quint32 nCRC=XBinary::getStringCustomCRC32(pListStrings->at(i));
         listStringCRC.append(nCRC);
