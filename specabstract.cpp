@@ -7542,6 +7542,20 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             }
         }
 
+        if(pe.isResourcePresent(XPE_DEF::S_RT_RCDATA,"SCRIPT",&(pPEInfo->listResources)))
+        {
+            _SCANS_STRUCT ssLibrary=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_AUTOIT,"3.XX","",0);
+            // TODO Version
+            pPEInfo->mapResultLibraries.insert(ssLibrary.name,scansToScan(&(pPEInfo->basic_info),&ssLibrary));
+        }
+        else if(pe.getResourcesVersionValue("FileDescription",&(pPEInfo->resVersion))=="Compiled AutoIt Script")
+        {
+            _SCANS_STRUCT ssLibrary=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_LIBRARY,RECORD_NAME_AUTOIT,"2.XX","",0);
+
+            ssLibrary.sVersion=pe.getFileVersionMS(&(pPEInfo->resVersion));
+            pPEInfo->mapResultLibraries.insert(ssLibrary.name,scansToScan(&(pPEInfo->basic_info),&ssLibrary));
+        }
+
         if(XPE::isImportLibraryPresentI("msvcrt.dll",&(pPEInfo->listImports))&&(pPEInfo->nMajorLinkerVersion==6)&&(pPEInfo->nMinorLinkerVersion==0))
         {
             bool bDetected=false;
