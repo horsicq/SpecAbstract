@@ -16826,7 +16826,7 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
         listSignatureCRC.append(nCRC);
     }
 
-    for(int i=0; (i<nNumberOfArchives)&&(!(*pbIsStop)); i++)
+    for(int i=0;(i<nNumberOfArchives)&&(!(*pbIsStop));i++)
     {
         for(int j=0; (j<nNumberOfSignatures)&&(!(*pbIsStop)); j++)
         {
