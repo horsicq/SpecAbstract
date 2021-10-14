@@ -16710,7 +16710,7 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(CONST_RECORD);
 
-    for(int i=0; (i<nSignaturesCount)&&(!(*pbIsStop)); i++)
+    for(int i=0;(i<nSignaturesCount)&&(!(*pbIsStop));i++)
     {
         if((pRecords[i].basicInfo.fileType==fileType1)||(pRecords[i].basicInfo.fileType==fileType2))
         {
