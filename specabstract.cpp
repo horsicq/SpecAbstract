@@ -16819,7 +16819,7 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
         listStringCRC.append(nCRC);
     }
 
-    for(int i=0; i<nNumberOfSignatures; i++)
+    for(int i=0;i<nNumberOfSignatures;i++)
     {
 //        qDebug("%s", pRecords[i].pszString);
         quint32 nCRC=XBinary::getStringCustomCRC32(pRecords[i].pszString);
