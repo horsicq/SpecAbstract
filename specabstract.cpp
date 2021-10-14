@@ -16887,7 +16887,7 @@ void SpecAbstract::archiveExpScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
     int nNumberOfArchives=pListArchiveRecords->count();
     int nNumberOfSignatures=nRecordsSize/sizeof(STRING_RECORD);
 
-    for(int i=0; (i<nNumberOfArchives)&&(!(*pbIsStop)); i++)
+    for(int i=0;(i<nNumberOfArchives)&&(!(*pbIsStop));i++)
     {
         for(int j=0; (j<nNumberOfSignatures)&&(!(*pbIsStop)); j++)
         {
@@ -16944,7 +16944,7 @@ void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMe
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(SIGNATURE_RECORD);
 
-    for(int i=0; (i<nSignaturesCount)&&(!(*pbIsStop)); i++)
+    for(int i=0;(i<nSignaturesCount)&&(!(*pbIsStop));i++)
     {
         if((pRecords[i].basicInfo.fileType==fileType1)||(pRecords[i].basicInfo.fileType==fileType2))
         {
