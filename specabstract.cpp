@@ -16769,7 +16769,7 @@ void SpecAbstract::MSDOS_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
 {
     int nSignaturesCount=nRecordsSize/(int)sizeof(MSRICH_RECORD);
 
-    for(int i=0; (i<nSignaturesCount)&&(!(*pbIsStop)); i++)
+    for(int i=0;(i<nSignaturesCount)&&(!(*pbIsStop));i++)
     {
         if((!pMapRecords->contains(pRecords[i].basicInfo.name))||(pBasicInfo->bShowDetects))
         {
