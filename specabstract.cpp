@@ -17477,7 +17477,7 @@ SpecAbstract::VCL_PACKAGEINFO SpecAbstract::PE_getVCLPackageInfo(QIODevice *pDev
 
                 int nCount=result.nRequiresCount?result.nRequiresCount:1000;
 
-                for(int i=0; i<nCount; i++)
+                for(int i=0;i<nCount;i++)
                 {
                     if(nOffset-rh.nOffset>rh.nSize)
                     {
