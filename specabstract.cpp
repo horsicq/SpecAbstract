@@ -17000,7 +17000,7 @@ QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, qui
 
     int nSignaturesCount=nRecordsSize/(int)sizeof(MSRICH_RECORD);
 
-    for(int i=0; (i<nSignaturesCount)&&(!(*pbIsStop)); i++)
+    for(int i=0;(i<nSignaturesCount)&&(!(*pbIsStop));i++)
     {
         _SCANS_STRUCT record={};
 
@@ -17021,7 +17021,7 @@ QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, qui
                 heurRecord.nOffset=0;
                 heurRecord.filepart=pBasicInfo->id.filePart;
                 heurRecord.detectType=detectType;
-                heurRecord.sValue=QString("%1 %2").arg(XBinary::valueToHex(pRecords[i].nID)).arg(XBinary::valueToHex(pRecords[i].nBuild));
+                heurRecord.sValue=QString("%1 %2").arg(XBinary::valueToHex(pRecords[i].nID),XBinary::valueToHex(pRecords[i].nBuild));
 
                 pBasicInfo->listHeurs.append(heurRecord);
             }
@@ -17413,7 +17413,7 @@ QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice
 
         if(nClassOffset2!=-1)
         {
-            for(int i=0; i<20; i++)
+            for(int i=0;i<20;i++)
             {
                 quint32 nValue=pe.read_uint32(nClassOffset2-nAddressSize*(i+1));
 
