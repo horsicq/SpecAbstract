@@ -20,3 +20,8 @@ SOURCES += \
     XCONFIG += xformats
     include($$PWD/../Formats/xformats.pri)
 }
+
+DISTFILES += \
+    $$PWD/LICENSE \
+    $$PWD/README.md \
+    $$PWD/import_hashes.txt
