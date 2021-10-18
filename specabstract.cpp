@@ -588,6 +588,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LZEXE:                                 sResult=QString("LZEXE");                                       break;
         case RECORD_NAME_LZFSE:                                 sResult=QString("LZFSE");                                       break;
         case RECORD_NAME_MACHOFAT:                              sResult=QString("Mach-O FAT");                                  break;
+        case RECORD_NAME_MAC_OS_X:                              sResult=QString("Mac OS X");                                    break;
         case RECORD_NAME_MACOS:                                 sResult=QString("macOS");                                       break;
         case RECORD_NAME_MACROBJECT:                            sResult=QString("Macrobject");                                  break;
         case RECORD_NAME_MALPACKER:                             sResult=QString("Mal Packer");                                  break;
@@ -683,7 +684,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ORIEN:                                 sResult=QString("ORiEN");                                       break;
         case RECORD_NAME_OS2:                                   sResult=QString("OS2");                                         break;
         case RECORD_NAME_OSCCRYPTER:                            sResult=QString("OSC-Crypter");                                 break;
-        case RECORD_NAME_OSX:                                   sResult=QString("OSX");                                         break;
+        case RECORD_NAME_OS_X:                                  sResult=QString("OS X");                                        break;
         case RECORD_NAME_P0KESCRAMBLER:                         sResult=QString("p0ke Scrambler");                              break;
         case RECORD_NAME_PACKMAN:                               sResult=QString("Packman");                                     break;
         case RECORD_NAME_PACKWIN:                               sResult=QString("PACKWIN");                                     break;
@@ -14446,6 +14447,11 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
     if(mach.isValid())
     {
+//        _SCANS_STRUCT ssOperationSystem=getScansStructFromOsInfo(mach.getOsInfo());
+
+//        pMACHInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pMACHInfo->basic_info),&ssOperationSystem));
+
+        // TODO from XMach
         _SCANS_STRUCT recordOS={};
         recordOS.type=SpecAbstract::RECORD_TYPE_OPERATIONSYSTEM;
         recordOS.name=RECORD_NAME_MACOS;
@@ -17312,7 +17318,9 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     else if (osinfo.osName==XBinary::OSNAME_WINDOWSCE)  result.name=RECORD_NAME_WINDOWSCE;
     else if (osinfo.osName==XBinary::OSNAME_XBOX)       result.name=RECORD_NAME_XBOX;
     else if (osinfo.osName==XBinary::OSNAME_OS2)        result.name=RECORD_NAME_OS2;
-    else if (osinfo.osName==XBinary::OSNAME_OSX)        result.name=RECORD_NAME_OSX;
+    else if (osinfo.osName==XBinary::OSNAME_MAC_OS_X)   result.name=RECORD_NAME_MAC_OS_X;
+    else if (osinfo.osName==XBinary::OSNAME_OS_X)       result.name=RECORD_NAME_OS_X;
+    else if (osinfo.osName==XBinary::OSNAME_MACOS)      result.name=RECORD_NAME_MACOS;
     else if (osinfo.osName==XBinary::OSNAME_ANDROID)    result.name=RECORD_NAME_ANDROID;
     else if (osinfo.osName==XBinary::OSNAME_FREEBSD)    result.name=RECORD_NAME_FREEBSD;
     else if (osinfo.osName==XBinary::OSNAME_OPENBSD)    result.name=RECORD_NAME_OPENBSD;
