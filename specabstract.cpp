@@ -335,6 +335,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BORLANDDELPHIDOTNET:                   sResult=QString("Borland Delphi .NET");                         break;
         case RECORD_NAME_BORLANDOBJECTPASCALDELPHI:             sResult=QString("Borland Object Pascal(Delphi)");               break;
         case RECORD_NAME_BREAKINTOPATTERN:                      sResult=QString("Break Into Pattern");                          break;
+        case RECORD_NAME_BRIDGEOS:                              sResult=QString("bridgeOS");                                    break;
+        case RECORD_NAME_BRIDGEOSSDK:                           sResult=QString("bridgeOS SDK");                                break;
         case RECORD_NAME_BTWORKSCODEGUARD:                      sResult=QString("Btworks CodeGuard");                           break;
         case RECORD_NAME_BUNDLETOOL:                            sResult=QString("BundleTool");                                  break;
         case RECORD_NAME_BYTEDANCESECCOMPILER:                  sResult=QString("ByteDance-SecCompiler");                       break;
@@ -540,6 +542,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_INSTALLANYWHERE:                       sResult=QString("InstallAnywhere");                             break;
         case RECORD_NAME_INSTALLSHIELD:                         sResult=QString("InstallShield");                               break;
         case RECORD_NAME_IOS:                                   sResult=QString("iOS");                                         break;
+        case RECORD_NAME_IOSSDK:                                sResult=QString("iOS SDK");                                     break;
         case RECORD_NAME_IPA:                                   sResult=QString("iOS App Store Package");                       break;
         case RECORD_NAME_IPBPROTECT:                            sResult=QString("iPB Protect");                                 break;
         case RECORD_NAME_IRIX:                                  sResult=QString("IRIX");                                        break;
@@ -588,8 +591,10 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LZEXE:                                 sResult=QString("LZEXE");                                       break;
         case RECORD_NAME_LZFSE:                                 sResult=QString("LZFSE");                                       break;
         case RECORD_NAME_MACHOFAT:                              sResult=QString("Mach-O FAT");                                  break;
+        case RECORD_NAME_MAC_OS:                                sResult=QString("Mac OS");                                      break;
         case RECORD_NAME_MAC_OS_X:                              sResult=QString("Mac OS X");                                    break;
         case RECORD_NAME_MACOS:                                 sResult=QString("macOS");                                       break;
+        case RECORD_NAME_MACOSSDK:                              sResult=QString("macOS SDK");                                   break;
         case RECORD_NAME_MACROBJECT:                            sResult=QString("Macrobject");                                  break;
         case RECORD_NAME_MALPACKER:                             sResult=QString("Mal Packer");                                  break;
         case RECORD_NAME_MANDRAKELINUX:                         sResult=QString("Mandrake Linux");                              break;
@@ -849,6 +854,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_TURKISHCYBERSIGNATURE:                 sResult=QString("Turkish Cyber Signature");                     break;
         case RECORD_NAME_TURKOJANCRYPTER:                       sResult=QString("Turkojan Crypter");                            break;
         case RECORD_NAME_TVOS:                                  sResult=QString("tvOS");                                        break;
+        case RECORD_NAME_TVOSSDK:                               sResult=QString("tvOS SDK");                                    break;
         case RECORD_NAME_UBUNTUCLANG:                           sResult=QString("Ubuntu clang");                                break;
         case RECORD_NAME_UBUNTULINUX:                           sResult=QString("Ubuntu Linux");                                break;
         case RECORD_NAME_UCEXE:                                 sResult=QString("UCEXE");                                       break;
@@ -888,6 +894,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WALLE:                                 sResult=QString("Walle");                                       break;
         case RECORD_NAME_WANGZEHUALLVM:                         sResult=QString("wangzehua LLVM");                              break;
         case RECORD_NAME_WATCHOS:                               sResult=QString("watchOS");                                     break;
+        case RECORD_NAME_WATCHOSSDK:                            sResult=QString("watchOS SDK");                                 break;
         case RECORD_NAME_WATCOMC:                               sResult=QString("Watcom C");                                    break;
         case RECORD_NAME_WATCOMCCPP:                            sResult=QString("Watcom C/C++");                                break;
         case RECORD_NAME_WATCOMLINKER:                          sResult=QString("Watcom linker");                               break;
@@ -14447,63 +14454,92 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
     if(mach.isValid())
     {
-//        _SCANS_STRUCT ssOperationSystem=getScansStructFromOsInfo(mach.getOsInfo());
+        _SCANS_STRUCT ssOperationSystem=getScansStructFromOsInfo(mach.getOsInfo());
 
-//        pMACHInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pMACHInfo->basic_info),&ssOperationSystem));
-
-        // TODO from XMach
-        _SCANS_STRUCT recordOS={};
-        recordOS.type=SpecAbstract::RECORD_TYPE_OPERATIONSYSTEM;
-        recordOS.name=RECORD_NAME_MACOS;
-        recordOS.sInfo=QString("%1, %2, %3").arg(mach.getArch(),(pMACHInfo->bIs64)?("64-bit"):("32-bit"),mach.getTypeAsString());
+        pMACHInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pMACHInfo->basic_info),&ssOperationSystem));
 
         // XCODE
         qint64 nVersionMinOffset=-1;
+        qint64 nBuildVersionOffset=-1;
+        RECORD_NAME nameSDK=RECORD_NAME_UNKNOWN;
+        QString sSDKVersion;
 
-        RECORD_NAME osName=RECORD_NAME_UNKNOWN;
-
-        if(mach.isCommandPresent(XMACH_DEF::S_LC_VERSION_MIN_IPHONEOS,&(pMACHInfo->listCommandRecords)))
+        if(mach.isCommandPresent(XMACH_DEF::S_LC_BUILD_VERSION,&(pMACHInfo->listCommandRecords)))
+        {
+            nBuildVersionOffset=mach.getCommandRecordOffset(XMACH_DEF::S_LC_BUILD_VERSION,0,&(pMACHInfo->listCommandRecords));
+        }
+        else if(mach.isCommandPresent(XMACH_DEF::S_LC_VERSION_MIN_IPHONEOS,&(pMACHInfo->listCommandRecords)))
         {
             nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::S_LC_VERSION_MIN_IPHONEOS,0,&(pMACHInfo->listCommandRecords));
-            osName=RECORD_NAME_IOS;
+            nameSDK=RECORD_NAME_IOSSDK;
         }
         else if(mach.isCommandPresent(XMACH_DEF::S_LC_VERSION_MIN_MACOSX,&(pMACHInfo->listCommandRecords)))
         {
             nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::S_LC_VERSION_MIN_MACOSX,0,&(pMACHInfo->listCommandRecords));
-            osName=RECORD_NAME_MACOS;
+            nameSDK=RECORD_NAME_MACOSSDK;
         }
         else if(mach.isCommandPresent(XMACH_DEF::S_LC_VERSION_MIN_TVOS,&(pMACHInfo->listCommandRecords)))
         {
             nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::S_LC_VERSION_MIN_TVOS,0,&(pMACHInfo->listCommandRecords));
-            osName=RECORD_NAME_TVOS;
+            nameSDK=RECORD_NAME_TVOSSDK;
         }
         else if(mach.isCommandPresent(XMACH_DEF::S_LC_VERSION_MIN_WATCHOS,&(pMACHInfo->listCommandRecords)))
         {
             nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::S_LC_VERSION_MIN_WATCHOS,0,&(pMACHInfo->listCommandRecords));
-            osName=RECORD_NAME_WATCHOS;
+            nameSDK=RECORD_NAME_WATCHOSSDK;
         }
 
-        if(nVersionMinOffset!=-1)
+        if(nBuildVersionOffset!=-1)
+        {
+            XMACH_DEF::build_version_command build_version=mach._read_build_version_command(nBuildVersionOffset);
+
+            if      (build_version.platform==XMACH_DEF::S_PLATFORM_MACOS)       nameSDK=RECORD_NAME_MACOSSDK;
+            else if (build_version.platform==XMACH_DEF::S_PLATFORM_BRIDGEOS)    nameSDK=RECORD_NAME_BRIDGEOS;
+            else if (build_version.platform==XMACH_DEF::S_PLATFORM_IOS)         nameSDK=RECORD_NAME_IOSSDK;
+            else if (build_version.platform==XMACH_DEF::S_PLATFORM_TVOS)        nameSDK=RECORD_NAME_TVOSSDK;
+            else if (build_version.platform==XMACH_DEF::S_PLATFORM_WATCHOS)     nameSDK=RECORD_NAME_WATCHOSSDK;
+
+            if(build_version.sdk)
+            {
+                sSDKVersion=XBinary::get_uint32_full_version(build_version.sdk);
+            }
+        }
+        else if(nVersionMinOffset!=-1)
         {
             XMACH_DEF::version_min_command version_min=mach._read_version_min_command(nVersionMinOffset);
+
+            if(version_min.sdk)
+            {
+                sSDKVersion=XBinary::get_uint32_full_version(version_min.sdk);
+            }
+        }
+
+        if(nameSDK!=RECORD_NAME_UNKNOWN)
+        {
+            _SCANS_STRUCT recordSDK={};
+
+            recordSDK.type=SpecAbstract::RECORD_TYPE_TOOL;
+            recordSDK.name=nameSDK;
+            recordSDK.sVersion=sSDKVersion;
+
+            pMACHInfo->mapResultTools.insert(recordSDK.name,scansToScan(&(pMACHInfo->basic_info),&recordSDK));
 
             _SCANS_STRUCT recordXcode={};
 
             recordXcode.type=SpecAbstract::RECORD_TYPE_TOOL;
             recordXcode.name=SpecAbstract::RECORD_NAME_XCODE;
 
-            if(version_min.sdk)
+            if(nameSDK==SpecAbstract::RECORD_NAME_MACOSSDK)
             {
-                recordXcode.sVersion=XBinary::get_uint32_full_version(version_min.sdk);
+                if(sSDKVersion=="11.3.0")       recordXcode.sVersion="12.5-13.0";
+            }
+            else if(nameSDK==SpecAbstract::RECORD_NAME_IOSSDK)
+            {
+                if(sSDKVersion=="15.0.0")       recordXcode.sVersion="13.0-13.1";
             }
 
             pMACHInfo->mapResultTools.insert(recordXcode.name,scansToScan(&(pMACHInfo->basic_info),&recordXcode));
-
-            recordOS.name=osName;
-            recordOS.sVersion=XBinary::get_uint32_full_version(version_min.version);
         }
-
-        pMACHInfo->mapResultOperationSystems.insert(recordOS.name,scansToScan(&(pMACHInfo->basic_info),&recordOS));
 
         // GCC
         if( XMACH::isSectionNamePresent("__gcc_except_tab",&(pMACHInfo->listSectionRecords))||
@@ -14523,7 +14559,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
         {
             _SCANS_STRUCT recordSS={};
 
-            recordSS.type=SpecAbstract::RECORD_TYPE_LANGUAGE;
+            recordSS.type=SpecAbstract::RECORD_TYPE_LANGUAGE;   // TODO Check
             recordSS.name=SpecAbstract::RECORD_NAME_SWIFT;
 
             pMACHInfo->mapResultLanguages.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
@@ -14534,7 +14570,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
         {
             _SCANS_STRUCT recordSS={};
 
-            recordSS.type=SpecAbstract::RECORD_TYPE_LANGUAGE;
+            recordSS.type=SpecAbstract::RECORD_TYPE_LANGUAGE;   // TODO Check
             recordSS.name=SpecAbstract::RECORD_NAME_OBJECTIVEC;
 
             pMACHInfo->mapResultLanguages.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
@@ -17318,9 +17354,14 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     else if (osinfo.osName==XBinary::OSNAME_WINDOWSCE)  result.name=RECORD_NAME_WINDOWSCE;
     else if (osinfo.osName==XBinary::OSNAME_XBOX)       result.name=RECORD_NAME_XBOX;
     else if (osinfo.osName==XBinary::OSNAME_OS2)        result.name=RECORD_NAME_OS2;
+    else if (osinfo.osName==XBinary::OSNAME_MAC_OS)     result.name=RECORD_NAME_MAC_OS;
     else if (osinfo.osName==XBinary::OSNAME_MAC_OS_X)   result.name=RECORD_NAME_MAC_OS_X;
     else if (osinfo.osName==XBinary::OSNAME_OS_X)       result.name=RECORD_NAME_OS_X;
     else if (osinfo.osName==XBinary::OSNAME_MACOS)      result.name=RECORD_NAME_MACOS;
+    else if (osinfo.osName==XBinary::OSNAME_IOS)        result.name=RECORD_NAME_IOS;
+    else if (osinfo.osName==XBinary::OSNAME_WATCHOS)    result.name=RECORD_NAME_WATCHOS;
+    else if (osinfo.osName==XBinary::OSNAME_TVOS)       result.name=RECORD_NAME_TVOS;
+    else if (osinfo.osName==XBinary::OSNAME_BRIDGEOS)   result.name=RECORD_NAME_BRIDGEOS;
     else if (osinfo.osName==XBinary::OSNAME_ANDROID)    result.name=RECORD_NAME_ANDROID;
     else if (osinfo.osName==XBinary::OSNAME_FREEBSD)    result.name=RECORD_NAME_FREEBSD;
     else if (osinfo.osName==XBinary::OSNAME_OPENBSD)    result.name=RECORD_NAME_OPENBSD;
