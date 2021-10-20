@@ -2502,7 +2502,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.listSectionNames=XPE::getSectionNames(&(result.listSectionRecords));
 
         result.listImports=pe.getImports(&(result.basic_info.memoryMap));
-        //        for(int i=0;i<result.listImports.count();i++)
+        //        for(qint32 i=0;i<result.listImports.count();i++)
         //        {
         //            qDebug(result.listImports.at(i).sName.toLatin1().data());
         //            for(int j=0;j<result.listImports.at(i).listPositions.count();j++)
