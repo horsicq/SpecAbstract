@@ -14531,11 +14531,29 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
             if(nameSDK==SpecAbstract::RECORD_NAME_MACOSSDK)
             {
-                if(sSDKVersion=="11.3.0")       recordXcode.sVersion="12.5-13.0";
+                if      (sSDKVersion=="10.15.0")    recordXcode.sVersion="11.0-11.1";
+                else if (sSDKVersion=="10.15.1")    recordXcode.sVersion="11.2-11.2.1";
+                // TODO
+                else if (sSDKVersion=="11.3.0")     recordXcode.sVersion="12.5-13.0";
+                else if (sSDKVersion=="12.0.0")     recordXcode.sVersion="13.1";
             }
             else if(nameSDK==SpecAbstract::RECORD_NAME_IOSSDK)
             {
-                if(sSDKVersion=="15.0.0")       recordXcode.sVersion="13.0-13.1";
+                if      (sSDKVersion=="13.0.0")     recordXcode.sVersion="11.0";
+                // TODO
+                else if (sSDKVersion=="15.0.0")     recordXcode.sVersion="13.0-13.1";
+            }
+            else if(nameSDK==SpecAbstract::RECORD_NAME_WATCHOSSDK)
+            {
+                if      (sSDKVersion=="6.0.0")      recordXcode.sVersion="11.0-11.1";
+                // TODO
+                else if (sSDKVersion=="8.0.1")      recordXcode.sVersion="13.1";
+            }
+            else if(nameSDK==SpecAbstract::RECORD_NAME_TVOS)
+            {
+                if      (sSDKVersion=="13.0.0")     recordXcode.sVersion="11.0-11.1";
+                // TODO
+                else if (sSDKVersion=="15.0.0")     recordXcode.sVersion="13.0-13.1";
             }
 
             pMACHInfo->mapResultTools.insert(recordXcode.name,scansToScan(&(pMACHInfo->basic_info),&recordXcode));
