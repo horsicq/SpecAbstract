@@ -136,7 +136,7 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 
 //        int nNumberOfRecords=pScanResult->listRecords.count();
 
-//        for(int i=0;i<nNumberOfRecords;i++)
+//        for(qint32 i=0;i<nNumberOfRecords;i++)
 //        {
 //            if(pScanResult->listRecords.at(i).sInfo=="TEST")
 //            {
@@ -2522,7 +2522,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         int _nNumberOfImports=listImports.count();
 
-        for(int i=0;i<_nNumberOfImports;i++)
+        for(qint32 i=0;i<_nNumberOfImports;i++)
         {
             QString sRecord=listImports.at(i).sLibrary+" "+listImports.at(i).sFunction;
 
