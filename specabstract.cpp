@@ -2667,18 +2667,18 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         // Rich
 //        int nNumberOfRichSignatures=result.listRichSignatures.count();
 
-//        for(int i=0;i<nNumberOfRichSignatures;i++)
+//        for(qint32 i=0;i<nNumberOfRichSignatures;i++)
 //        {
 //            PE_richScan(&(result.mapRichDetects),result.listRichSignatures.at(i).nId,result.listRichSignatures.at(i).nVersion,_PE_rich_records,sizeof(_PE_rich_records),result.basic_info.id.filetype,SpecAbstract::XBinary::FT_PE);
 //        }
 
 
-        //        for(int i=0;i<result.listImports.count();i++)
+        //        for(qint32 i=0;i<result.listImports.count();i++)
         //        {
         //            signatureScan(&result._mapImportDetects,QBinary::stringToHex(result.listImports.at(i).sName.toUpper()),_import_records,sizeof(_import_records),result.basic_info.id.filetype,SpecAbstract::XBinary::FT_PE);
         //        }
 
-        //        for(int i=0;i<result.export_header.listPositions.count();i++)
+        //        for(qint32 i=0;i<result.export_header.listPositions.count();i++)
         //        {
         //            signatureScan(&result.mapExportDetects,QBinary::stringToHex(result.export_header.listPositions.at(i).sFunctionName),_export_records,sizeof(_export_records),result.basic_info.id.filetype,SpecAbstract::XBinary::FT_PE);
         //        }
