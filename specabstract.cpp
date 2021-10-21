@@ -2533,7 +2533,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         QList<XPE::IMPORT_HEADER> listImportHeaders=pe.getImports(&(result.basic_info.memoryMap));
 
-        for(int i=0;i<listImportHeaders.count();i++)
+        for(qint32 i=0;i<listImportHeaders.count();i++)
         {
             qDebug("Import hash: %x",result.listImportPositionHashes.at(i));
             for(int j=0;j<listImportHeaders.at(i).listPositions.count();j++)
