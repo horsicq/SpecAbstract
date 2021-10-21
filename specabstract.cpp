@@ -480,6 +480,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_FLEXLM:                                sResult=QString("Flex License Manager");                        break;
         case RECORD_NAME_FLEXNET:                               sResult=QString("FlexNet Licensing");                           break;
         case RECORD_NAME_FORTRAN:                               sResult=QString("Fortran");                                     break;
+        case RECORD_NAME_FOUNDATION:                            sResult=QString("Foundation");                                  break;
         case RECORD_NAME_FPC:                                   sResult=QString("Free Pascal");                                 break;
         case RECORD_NAME_FREEBSD:                               sResult=QString("FreeBSD");                                     break;
         case RECORD_NAME_FREECRYPTOR:                           sResult=QString("FreeCryptor");                                 break;
@@ -544,6 +545,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_IOS:                                   sResult=QString("iOS");                                         break;
         case RECORD_NAME_IOSSDK:                                sResult=QString("iOS SDK");                                     break;
         case RECORD_NAME_IPA:                                   sResult=QString("iOS App Store Package");                       break;
+        case RECORD_NAME_IPADOS:                                sResult=QString("iPadOS");                                      break;
+        case RECORD_NAME_IPHONEOS:                              sResult=QString("iPhone OS");                                   break;
         case RECORD_NAME_IPBPROTECT:                            sResult=QString("iPB Protect");                                 break;
         case RECORD_NAME_IRIX:                                  sResult=QString("IRIX");                                        break;
         case RECORD_NAME_ISO9660:                               sResult=QString("ISO 9660");                                    break;
@@ -2038,9 +2041,9 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         Binary_handle_ProtectorData(pDevice,pOptions->bIsImage,&result);
         Binary_handle_LibraryData(pDevice,pOptions->bIsImage,&result);
 
-        Binary_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
-
         Binary_handleLanguages(pDevice,pOptions->bIsImage,&result);
+
+        Binary_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultTexts.values());
@@ -2223,9 +2226,9 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
 
         ELF_handle_UnknownProtection(pDevice,pOptions->bIsImage,&result);
 
-        ELF_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
-
         ELF_handleLanguages(pDevice,pOptions->bIsImage,&result);
+
+        ELF_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
@@ -2295,9 +2298,9 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, Sp
         MACHO_handle_Tools(pDevice,pOptions->bIsImage,&result);
         MACHO_handle_Protection(pDevice,pOptions->bIsImage,&result);
 
-        MACHO_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
-
         MACHO_handleLanguages(pDevice,pOptions->bIsImage,&result);
+
+        MACHO_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
@@ -2651,7 +2654,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         int nNumberOfImports=result.listImportPositionHashes.count();
 
-        for(int i=0;i<nNumberOfImports;i++)
+        for(qint32 i=0;i<nNumberOfImports;i++)
         {
             constScan(&(result.mapImportDetects),i,result.listImportPositionHashes.at(i),_PE_importpositionhash_records,sizeof(_PE_importpositionhash_records),result.basic_info.id.fileType,XBinary::FT_PE,&(result.basic_info),DETECTTYPE_IMPORTHASH,pbIsStop);
         }
@@ -2765,9 +2768,9 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
             PE_handle_UnknownProtection(pDevice,pOptions->bIsImage,&result);
         }
 
-        PE_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
-
         PE_handleLanguages(pDevice,pOptions->bIsImage,&result);
+
+        PE_handle_FixDetects(pDevice,pOptions->bIsImage,&result); 
 
         PE_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
 
@@ -2971,9 +2974,9 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
 
         Zip_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
 
-        Zip_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
-
         Zip_handleLanguages(pDevice,pOptions->bIsImage,&result);
+
+        Zip_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultArchives.values());
@@ -14454,15 +14457,60 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
     if(mach.isValid())
     {
+        _SCANS_STRUCT recordSDK={};
+        recordSDK.type=SpecAbstract::RECORD_TYPE_TOOL;
+        recordSDK.name=SpecAbstract::RECORD_NAME_UNKNOWN;
+
+        _SCANS_STRUCT recordXcode={};
+
+        recordXcode.type=SpecAbstract::RECORD_TYPE_TOOL;
+        recordXcode.name=SpecAbstract::RECORD_NAME_UNKNOWN;
+
+        _SCANS_STRUCT recordGCC={};
+        recordGCC.type=SpecAbstract::RECORD_TYPE_COMPILER;
+
+        _SCANS_STRUCT recordCLANG={};
+        recordCLANG.type=SpecAbstract::RECORD_TYPE_COMPILER;
+
+        _SCANS_STRUCT recordSwift={};
+        recordSwift.type=SpecAbstract::RECORD_TYPE_COMPILER;
+        recordSwift.name=SpecAbstract::RECORD_NAME_UNKNOWN;
+
         _SCANS_STRUCT ssOperationSystem=getScansStructFromOsInfo(mach.getOsInfo());
 
         pMACHInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pMACHInfo->basic_info),&ssOperationSystem));
 
+        // GCC
+        if(XMACH::isLibraryRecordNamePresent("libgcc_s.1.dylib",&(pMACHInfo->listLibraryRecords)))
+        {
+            recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
+        }
+
+        // Swift
+        if( XMACH::isSectionNamePresent("__swift5_proto",&(pMACHInfo->listSectionRecords))||
+            XMACH::isSectionNamePresent("__swift5_types",&(pMACHInfo->listSectionRecords)))
+        {  // TODO Check
+            recordSwift.name=SpecAbstract::RECORD_NAME_SWIFT;
+            recordSwift.sVersion="5.XX";
+        }
+        else if( XMACH::isSectionNamePresent("__swift2_proto",&(pMACHInfo->listSectionRecords))||
+            XMACH::isLibraryRecordNamePresent("libswiftCore.dylib",&(pMACHInfo->listLibraryRecords)))  // TODO
+        {
+            recordSwift.name=SpecAbstract::RECORD_NAME_SWIFT;
+        }
+
+        if( XMACH::isSectionNamePresent("__objc_selrefs",&(pMACHInfo->listSectionRecords))||
+            XMACH::isSegmentNamePresent("__OBJC",&(pMACHInfo->listSegmentRecords))||
+            XMACH::isLibraryRecordNamePresent("libobjc.A.dylib",&(pMACHInfo->listLibraryRecords)))
+        {
+            recordGCC.sInfo="Objective-C";
+            recordCLANG.sInfo="Objective-C";
+        }
+
+
         // XCODE
         qint64 nVersionMinOffset=-1;
         qint64 nBuildVersionOffset=-1;
-        RECORD_NAME nameSDK=RECORD_NAME_UNKNOWN;
-        QString sSDKVersion;
 
         if(mach.isCommandPresent(XMACH_DEF::S_LC_BUILD_VERSION,&(pMACHInfo->listCommandRecords)))
         {
@@ -14471,37 +14519,37 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
         else if(mach.isCommandPresent(XMACH_DEF::S_LC_VERSION_MIN_IPHONEOS,&(pMACHInfo->listCommandRecords)))
         {
             nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::S_LC_VERSION_MIN_IPHONEOS,0,&(pMACHInfo->listCommandRecords));
-            nameSDK=RECORD_NAME_IOSSDK;
+            recordSDK.name=RECORD_NAME_IOSSDK;
         }
         else if(mach.isCommandPresent(XMACH_DEF::S_LC_VERSION_MIN_MACOSX,&(pMACHInfo->listCommandRecords)))
         {
             nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::S_LC_VERSION_MIN_MACOSX,0,&(pMACHInfo->listCommandRecords));
-            nameSDK=RECORD_NAME_MACOSSDK;
+            recordSDK.name=RECORD_NAME_MACOSSDK;
         }
         else if(mach.isCommandPresent(XMACH_DEF::S_LC_VERSION_MIN_TVOS,&(pMACHInfo->listCommandRecords)))
         {
             nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::S_LC_VERSION_MIN_TVOS,0,&(pMACHInfo->listCommandRecords));
-            nameSDK=RECORD_NAME_TVOSSDK;
+            recordSDK.name=RECORD_NAME_TVOSSDK;
         }
         else if(mach.isCommandPresent(XMACH_DEF::S_LC_VERSION_MIN_WATCHOS,&(pMACHInfo->listCommandRecords)))
         {
             nVersionMinOffset=mach.getCommandRecordOffset(XMACH_DEF::S_LC_VERSION_MIN_WATCHOS,0,&(pMACHInfo->listCommandRecords));
-            nameSDK=RECORD_NAME_WATCHOSSDK;
+            recordSDK.name=RECORD_NAME_WATCHOSSDK;
         }
 
         if(nBuildVersionOffset!=-1)
         {
             XMACH_DEF::build_version_command build_version=mach._read_build_version_command(nBuildVersionOffset);
 
-            if      (build_version.platform==XMACH_DEF::S_PLATFORM_MACOS)       nameSDK=RECORD_NAME_MACOSSDK;
-            else if (build_version.platform==XMACH_DEF::S_PLATFORM_BRIDGEOS)    nameSDK=RECORD_NAME_BRIDGEOS;
-            else if (build_version.platform==XMACH_DEF::S_PLATFORM_IOS)         nameSDK=RECORD_NAME_IOSSDK;
-            else if (build_version.platform==XMACH_DEF::S_PLATFORM_TVOS)        nameSDK=RECORD_NAME_TVOSSDK;
-            else if (build_version.platform==XMACH_DEF::S_PLATFORM_WATCHOS)     nameSDK=RECORD_NAME_WATCHOSSDK;
+            if      (build_version.platform==XMACH_DEF::S_PLATFORM_MACOS)       recordSDK.name=RECORD_NAME_MACOSSDK;
+            else if (build_version.platform==XMACH_DEF::S_PLATFORM_BRIDGEOS)    recordSDK.name=RECORD_NAME_BRIDGEOS;
+            else if (build_version.platform==XMACH_DEF::S_PLATFORM_IOS)         recordSDK.name=RECORD_NAME_IOSSDK;
+            else if (build_version.platform==XMACH_DEF::S_PLATFORM_TVOS)        recordSDK.name=RECORD_NAME_TVOSSDK;
+            else if (build_version.platform==XMACH_DEF::S_PLATFORM_WATCHOS)     recordSDK.name=RECORD_NAME_WATCHOSSDK;
 
             if(build_version.sdk)
             {
-                sSDKVersion=XBinary::get_uint32_full_version(build_version.sdk);
+                recordSDK.sVersion=XBinary::get_uint32_full_version(build_version.sdk);
             }
         }
         else if(nVersionMinOffset!=-1)
@@ -14510,88 +14558,578 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
             if(version_min.sdk)
             {
-                sSDKVersion=XBinary::get_uint32_full_version(version_min.sdk);
+                recordSDK.sVersion=XBinary::get_uint32_full_version(version_min.sdk);
             }
         }
 
-        if(nameSDK!=RECORD_NAME_UNKNOWN)
+        if(recordSDK.name!=RECORD_NAME_UNKNOWN)
         {
-            _SCANS_STRUCT recordSDK={};
-
-            recordSDK.type=SpecAbstract::RECORD_TYPE_TOOL;
-            recordSDK.name=nameSDK;
-            recordSDK.sVersion=sSDKVersion;
-
-            pMACHInfo->mapResultTools.insert(recordSDK.name,scansToScan(&(pMACHInfo->basic_info),&recordSDK));
-
-            _SCANS_STRUCT recordXcode={};
-
-            recordXcode.type=SpecAbstract::RECORD_TYPE_TOOL;
             recordXcode.name=SpecAbstract::RECORD_NAME_XCODE;
 
-            if(nameSDK==SpecAbstract::RECORD_NAME_MACOSSDK)
+            if(recordSDK.name==SpecAbstract::RECORD_NAME_MACOSSDK)
             {
-                if      (sSDKVersion=="10.15.0")    recordXcode.sVersion="11.0-11.1";
-                else if (sSDKVersion=="10.15.1")    recordXcode.sVersion="11.2-11.2.1";
-                // TODO
-                else if (sSDKVersion=="11.3.0")     recordXcode.sVersion="12.5-13.0";
-                else if (sSDKVersion=="12.0.0")     recordXcode.sVersion="13.1";
+                if(recordSDK.sVersion=="10.3.0")
+                {
+                    recordXcode.sVersion="1.0-3.1.4";
+                    recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if(recordSDK.sVersion=="10.4.0")
+                {
+                    recordXcode.sVersion="2.0-3.2.6";
+                    recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
+                    recordGCC.sVersion="4.0-4.2";
+                    recordCLANG.sVersion="1.0.2-1.7";
+                }
+                else if(recordSDK.sVersion=="10.5.0")
+                {
+                    recordXcode.sVersion="2.5-3.2.6";
+                    recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
+                    recordGCC.sVersion="4.0-4.2";
+                    recordCLANG.sVersion="1.0.2-1.7";
+                }
+                else if(recordSDK.sVersion=="10.6.0")
+                {
+                    recordXcode.sVersion="3.2-4.3.3";
+                    recordGCC.sVersion="4.0-4.2";
+                    recordCLANG.sVersion="1.0.2-3.0";
+                }
+                else if(recordSDK.sVersion=="10.7.0")
+                {
+                    recordXcode.sVersion="4.1-4.6.3";
+                    recordGCC.sVersion="4.0-4.2";
+                    recordCLANG.sVersion="2.1-4.2";
+                }
+                else if(recordSDK.sVersion=="10.8.0")
+                {
+                    recordXcode.sVersion="4.4-5.1.1";
+                    recordGCC.sVersion="4.0-4.2";
+                    recordCLANG.sVersion="4.0-5.1";
+                }
+                else if(recordSDK.sVersion=="10.9.0")
+                {
+                    recordXcode.sVersion="5.0.1-6.4";
+                    recordCLANG.sVersion="5.0-6.1.0";
+                }
+                else if(recordSDK.sVersion=="10.10.0")
+                {
+                    recordXcode.sVersion="6.1-6.4";
+                    recordCLANG.sVersion="6.0-6.1.0";
+                }
+                else if(recordSDK.sVersion=="10.11.0")
+                {
+                    recordXcode.sVersion="7.0-7.1.1";
+                    recordCLANG.sVersion="7.0.0";
+                }
+                else if(recordSDK.sVersion=="10.11.2")
+                {
+                    recordXcode.sVersion="7.2-7.2.1";
+                    recordCLANG.sVersion="7.0.2";
+                }
+                else if(recordSDK.sVersion=="10.11.4")
+                {
+                    recordXcode.sVersion="7.3-7.3.1";
+                    recordCLANG.sVersion="7.3.0";
+                }
+                else if(recordSDK.sVersion=="10.12.0")
+                {
+                    recordXcode.sVersion="8.0";
+                    recordCLANG.sVersion="8.0.0";
+                }
+                else if(recordSDK.sVersion=="10.12.1")
+                {
+                    recordXcode.sVersion="8.1";
+                }
+                else if(recordSDK.sVersion=="10.12.2")
+                {
+                    recordXcode.sVersion="8.2-8.2.1";
+                }
+                else if(recordSDK.sVersion=="10.12.4")
+                {
+                    recordXcode.sVersion="8.3-8.3.3";
+                }
+                else if(recordSDK.sVersion=="10.13.0")
+                {
+                    recordXcode.sVersion="9.0-9.0.1";
+                }
+                else if(recordSDK.sVersion=="10.13.1")
+                {
+                    recordXcode.sVersion="9.1";
+                }
+                else if(recordSDK.sVersion=="10.13.2")
+                {
+                    recordXcode.sVersion="9.2";
+                }
+                else if(recordSDK.sVersion=="10.13.4")
+                {
+                    recordXcode.sVersion="9.3-9.4.1";
+                }
+                else if(recordSDK.sVersion=="10.14.0")
+                {
+                    recordXcode.sVersion="10.0";
+                }
+                else if(recordSDK.sVersion=="10.14.1")
+                {
+                    recordXcode.sVersion="10.1";
+                }
+                else if(recordSDK.sVersion=="10.14.4")
+                {
+                    recordXcode.sVersion="10.2-10.12.1";
+                }
+                else if(recordSDK.sVersion=="10.14.6")
+                {
+                    recordXcode.sVersion="10.3";
+                }
+                else if(recordSDK.sVersion=="10.15.0")
+                {
+                    recordXcode.sVersion="11.0-11.1";
+                }
+                else if (recordSDK.sVersion=="10.15.1")
+                {
+                    recordXcode.sVersion="11.2-11.2.1";
+                }
+                else if (recordSDK.sVersion=="10.15.2")
+                {
+                    recordXcode.sVersion="11.3-11.3.1";
+                }
+                else if (recordSDK.sVersion=="10.15.4")
+                {
+                    recordXcode.sVersion="11.4-11.3.5";
+                }
+                else if (recordSDK.sVersion=="10.15.6")
+                {
+                    recordXcode.sVersion="11.6-12.1.1";
+                }
+                else if (recordSDK.sVersion=="11.0.0")
+                {
+                    recordXcode.sVersion="12.2";
+                }
+                else if (recordSDK.sVersion=="11.1.0")
+                {
+                    recordXcode.sVersion="12.3-12.4";
+                }
+                else if (recordSDK.sVersion=="11.3.0")
+                {
+                    recordXcode.sVersion="12.5-13.0";
+                }
+                else if (recordSDK.sVersion=="12.0.0")
+                {
+                    recordXcode.sVersion="13.1";
+                }
             }
-            else if(nameSDK==SpecAbstract::RECORD_NAME_IOSSDK)
+            else if(recordSDK.name==SpecAbstract::RECORD_NAME_IOSSDK)
             {
-                if      (sSDKVersion=="13.0.0")     recordXcode.sVersion="11.0";
-                // TODO
-                else if (sSDKVersion=="15.0.0")     recordXcode.sVersion="13.0-13.1";
+                if(recordSDK.sVersion=="2.0.0")
+                {
+                    recordXcode.sVersion="3.0.0-3.2.1";
+                    recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if (recordSDK.sVersion=="3.1.3")
+                {
+                    recordXcode.sVersion="3.1.3-3.2.1";
+                    recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if (recordSDK.sVersion=="3.2.0")
+                {
+                    recordXcode.sVersion="3.2.2-3.2.4";
+                    recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if (recordSDK.sVersion=="4.0.0")
+                {
+                    recordXcode.sVersion="3.2.3";
+                    recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if(recordSDK.sVersion=="4.1.0")
+                {
+                    recordXcode.sVersion="3.2.4";
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if (recordSDK.sVersion=="4.2.0")
+                {
+                    recordXcode.sVersion="3.2.5";
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if (recordSDK.sVersion=="4.3.0")
+                {
+                    recordXcode.sVersion="3.2.6-4.0.1";
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if(recordSDK.sVersion=="4.3.2")
+                {
+                    recordXcode.sVersion="4.0.2-4.1.1";
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if (recordSDK.sVersion=="4.5.0")
+                {
+                    recordXcode.sVersion="4.2-4.3";
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if (recordSDK.sVersion=="5.1.0")
+                {
+                    recordXcode.sVersion="4.3.1-4.4.1";
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if(recordSDK.sVersion=="6.0.0")
+                {
+                    recordXcode.sVersion="4.5-4.5.2";
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if (recordSDK.sVersion=="6.1.0")
+                {
+                    recordXcode.sVersion="4.6-4.6.3";
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if (recordSDK.sVersion=="7.0.0")
+                {
+                    recordXcode.sVersion="5.0";
+                }
+                else if (recordSDK.sVersion=="7.0.3")
+                {
+                    recordXcode.sVersion="5.0.1-5.0.2";
+                }
+                else if (recordSDK.sVersion=="7.1.0")
+                {
+                    recordXcode.sVersion="5.1-5.1.1";
+                }
+                else if (recordSDK.sVersion=="8.0.0")
+                {
+                    recordXcode.sVersion="6.0.1";
+                }
+                else if (recordSDK.sVersion=="8.1.0")
+                {
+                    recordXcode.sVersion="6.1-6.1.1";
+                }
+                else if (recordSDK.sVersion=="8.2.0")
+                {
+                    recordXcode.sVersion="6.2";
+                }
+                else if (recordSDK.sVersion=="8.3.0")
+                {
+                    recordXcode.sVersion="6.3-6.3.2";
+                }
+                else if (recordSDK.sVersion=="8.4.0")
+                {
+                    recordXcode.sVersion="6.4";
+                }
+                else if (recordSDK.sVersion=="9.0.0")
+                {
+                    recordXcode.sVersion="7.0-7.0.1";
+                }
+                else if (recordSDK.sVersion=="9.1.0")
+                {
+                    recordXcode.sVersion="7.1-7.1.1";
+                }
+                else if (recordSDK.sVersion=="9.2.0")
+                {
+                    recordXcode.sVersion="7.2-7.2.1";
+                }
+                else if (recordSDK.sVersion=="9.3.0")
+                {
+                    recordXcode.sVersion="7.3-7.3.1";
+                }
+                else if(recordSDK.sVersion=="10.0.0")
+                {
+                    recordXcode.sVersion="8.0";
+                }
+                else if(recordSDK.sVersion=="10.1.0")
+                {
+                    recordXcode.sVersion="8.1";
+                }
+                else if(recordSDK.sVersion=="10.2.0")
+                {
+                    recordXcode.sVersion="8.2-8.2.1";
+                }
+                else if(recordSDK.sVersion=="10.3.0")
+                {
+                    recordXcode.sVersion="8.3-8.3.2";
+                }
+                else if(recordSDK.sVersion=="10.3.1")
+                {
+                    recordXcode.sVersion="8.3.3";
+                }
+                else if(recordSDK.sVersion=="11.0.0")
+                {
+                    recordXcode.sVersion="9.0-9.0.1";
+                }
+                else if(recordSDK.sVersion=="11.1.0")
+                {
+                    recordXcode.sVersion="9.1";
+                }
+                else if(recordSDK.sVersion=="11.2.0")
+                {
+                    recordXcode.sVersion="9.2";
+                }
+                else if(recordSDK.sVersion=="11.3.0")
+                {
+                    recordXcode.sVersion="9.3-9.3.1";
+                }
+                else if(recordSDK.sVersion=="11.4.0")
+                {
+                    recordXcode.sVersion="9.4-9.4.1";
+                }
+                else if(recordSDK.sVersion=="12.0.0")
+                {
+                    recordXcode.sVersion="10.0";
+                }
+                else if(recordSDK.sVersion=="12.1.0")
+                {
+                    recordXcode.sVersion="10.1";
+                }
+                else if(recordSDK.sVersion=="12.2.0")
+                {
+                    recordXcode.sVersion="10.2-10.2.1";
+                }
+                else if(recordSDK.sVersion=="12.4.0")
+                {
+                    recordXcode.sVersion="10.3";
+                }
+                else if(recordSDK.sVersion=="13.0.0")
+                {
+                    recordXcode.sVersion="11.0";
+                }
+                else if (recordSDK.sVersion=="13.1.0")
+                {
+                    recordXcode.sVersion="11.1";
+                }
+                else if (recordSDK.sVersion=="13.2.0")
+                {
+                    recordXcode.sVersion="11.2-11.3.1";
+                }
+                else if (recordSDK.sVersion=="13.4.0")
+                {
+                    recordXcode.sVersion="11.4-11.4.1";
+                }
+                else if (recordSDK.sVersion=="13.5.0")
+                {
+                    recordXcode.sVersion="11.5";
+                }
+                else if (recordSDK.sVersion=="13.6.0")
+                {
+                    recordXcode.sVersion="11.6";
+                }
+                else if (recordSDK.sVersion=="13.7.0")
+                {
+                    recordXcode.sVersion="11.7";
+                }
+                else if (recordSDK.sVersion=="14.0.0")
+                {
+                    recordXcode.sVersion="12.0-12.0.1";
+                }
+                else if (recordSDK.sVersion=="14.1.0")
+                {
+                    recordXcode.sVersion="12.1";
+                }
+                else if (recordSDK.sVersion=="14.2.0")
+                {
+                    recordXcode.sVersion="12.1.1-12.2";
+                }
+                else if (recordSDK.sVersion=="14.3.0")
+                {
+                    recordXcode.sVersion="12.3";
+                }
+                else if (recordSDK.sVersion=="14.4.0")
+                {
+                    recordXcode.sVersion="12.4";
+                }
+                else if (recordSDK.sVersion=="14.5.0")
+                {
+                    recordXcode.sVersion="12.5-12.5.1";
+                }
+                else if (recordSDK.sVersion=="15.0.0")
+                {
+                    recordXcode.sVersion="13.0-13.1";
+                }
             }
-            else if(nameSDK==SpecAbstract::RECORD_NAME_WATCHOSSDK)
+            else if(recordSDK.name==SpecAbstract::RECORD_NAME_WATCHOSSDK)
             {
-                if      (sSDKVersion=="6.0.0")      recordXcode.sVersion="11.0-11.1";
-                // TODO
-                else if (sSDKVersion=="8.0.1")      recordXcode.sVersion="13.1";
+                if(recordSDK.sVersion=="2.0.0")
+                {
+                    recordXcode.sVersion="7.0-7.1.1";
+                }
+                else if(recordSDK.sVersion=="2.1.0")
+                {
+                    recordXcode.sVersion="7.2-7.2.1";
+                }
+                else if(recordSDK.sVersion=="2.2.0")
+                {
+                    recordXcode.sVersion="7.3-7.3.1";
+                }
+                else if(recordSDK.sVersion=="3.0.0")
+                {
+                    recordXcode.sVersion="8.0";
+                }
+                else if(recordSDK.sVersion=="3.1.0")
+                {
+                    recordXcode.sVersion="8.1-8.2.1";
+                }
+                else if(recordSDK.sVersion=="3.2.0")
+                {
+                    recordXcode.sVersion="8.3-8.3.3";
+                }
+                else if(recordSDK.sVersion=="4.0.0")
+                {
+                    recordXcode.sVersion="9.0-9.0.1";
+                }
+                else if(recordSDK.sVersion=="4.1.0")
+                {
+                    recordXcode.sVersion="9.1";
+                }
+                else if(recordSDK.sVersion=="4.2.0")
+                {
+                    recordXcode.sVersion="9.2";
+                }
+                else if(recordSDK.sVersion=="4.3.0")
+                {
+                    recordXcode.sVersion="9.3-9.4.1";
+                }
+                else if(recordSDK.sVersion=="5.0.0")
+                {
+                    recordXcode.sVersion="10.0";
+                }
+                else if(recordSDK.sVersion=="5.1.0")
+                {
+                    recordXcode.sVersion="10.1";
+                }
+                else if(recordSDK.sVersion=="5.2.0")
+                {
+                    recordXcode.sVersion="10.2-10.2.1";
+                }
+                else if(recordSDK.sVersion=="5.3.0")
+                {
+                    recordXcode.sVersion="10.3";
+                }
+                else if(recordSDK.sVersion=="6.0.0")
+                {
+                    recordXcode.sVersion="11.0-11.1";
+                }
+                else if (recordSDK.sVersion=="6.1.0")
+                {
+                    recordXcode.sVersion="11.2-11.3.1";
+                }
+                else if (recordSDK.sVersion=="6.2.0")
+                {
+                    recordXcode.sVersion="11.4-11.7";
+                }
+                else if (recordSDK.sVersion=="7.0.0")
+                {
+                    recordXcode.sVersion="12.0-12.1";
+                }
+                else if (recordSDK.sVersion=="7.1.0")
+                {
+                    recordXcode.sVersion="12.1.1-12.2";
+                }
+                else if (recordSDK.sVersion=="7.2.0")
+                {
+                    recordXcode.sVersion="12.3-12.4";
+                }
+                else if (recordSDK.sVersion=="7.4.0")
+                {
+                    recordXcode.sVersion="12.5-12.5.1";
+                }
+                else if (recordSDK.sVersion=="8.0.0")
+                {
+                    recordXcode.sVersion="13.0";
+                }
+                else if (recordSDK.sVersion=="8.0.1")
+                {
+                    recordXcode.sVersion="13.1";
+                }
             }
-            else if(nameSDK==SpecAbstract::RECORD_NAME_TVOS)
+            else if(recordSDK.name==SpecAbstract::RECORD_NAME_TVOS)
             {
-                if      (sSDKVersion=="13.0.0")     recordXcode.sVersion="11.0-11.1";
-                // TODO
-                else if (sSDKVersion=="15.0.0")     recordXcode.sVersion="13.0-13.1";
+                if(recordSDK.sVersion=="9.0.0")
+                {
+                    recordXcode.sVersion="7.1-7.1.1";
+                }
+                else if(recordSDK.sVersion=="9.1.0")
+                {
+                    recordXcode.sVersion="7.2-7.2.1";
+                }
+                else if(recordSDK.sVersion=="9.2.0")
+                {
+                    recordXcode.sVersion="7.3-7.3.1";
+                }
+                else if(recordSDK.sVersion=="10.0.0")
+                {
+                    recordXcode.sVersion="8.0-8.1";
+                }
+                else if(recordSDK.sVersion=="10.1.0")
+                {
+                    recordXcode.sVersion="8.2-8.2.1";
+                }
+                else if(recordSDK.sVersion=="10.2.0")
+                {
+                    recordXcode.sVersion="8.3-8.3.3";
+                }
+                else if(recordSDK.sVersion=="11.0.0")
+                {
+                    recordXcode.sVersion="9.0-9.0.1";
+                }
+                else if(recordSDK.sVersion=="11.1.0")
+                {
+                    recordXcode.sVersion="9.1";
+                }
+                else if(recordSDK.sVersion=="11.2.0")
+                {
+                    recordXcode.sVersion="9.2";
+                }
+                else if(recordSDK.sVersion=="11.3.0")
+                {
+                    recordXcode.sVersion="9.3-9.3.1";
+                }
+                else if(recordSDK.sVersion=="11.4.0")
+                {
+                    recordXcode.sVersion="9.4-9.4.1";
+                }
+                else if(recordSDK.sVersion=="12.0.0")
+                {
+                    recordXcode.sVersion="10.0";
+                }
+                else if(recordSDK.sVersion=="12.1.0")
+                {
+                    recordXcode.sVersion="10.1";
+                }
+                else if(recordSDK.sVersion=="12.2.0")
+                {
+                    recordXcode.sVersion="10.2-10.2.1";
+                }
+                else if(recordSDK.sVersion=="12.4.0")
+                {
+                    recordXcode.sVersion="10.3";
+                }
+                else if(recordSDK.sVersion=="13.0.0")
+                {
+                    recordXcode.sVersion="11.0-11.1";
+                }
+                else if (recordSDK.sVersion=="13.4.0")
+                {
+                    recordXcode.sVersion="11.4-11.7";
+                }
+                else if (recordSDK.sVersion=="14.0.0")
+                {
+                    recordXcode.sVersion="12.0-12.1";
+                }
+                else if (recordSDK.sVersion=="14.2.0")
+                {
+                    recordXcode.sVersion="12.1.1-12.2";
+                }
+                else if (recordSDK.sVersion=="14.3.0")
+                {
+                    recordXcode.sVersion="12.3-12.4";
+                }
+                else if (recordSDK.sVersion=="14.5.0")
+                {
+                    recordXcode.sVersion="12.5-12.5.1";
+                }
+                else if (recordSDK.sVersion=="15.0.0")
+                {
+                    recordXcode.sVersion="13.0-13.1";
+                }
             }
-
-            pMACHInfo->mapResultTools.insert(recordXcode.name,scansToScan(&(pMACHInfo->basic_info),&recordXcode));
-        }
-
-        // GCC
-        if( XMACH::isSectionNamePresent("__gcc_except_tab",&(pMACHInfo->listSectionRecords))||
-            XMACH::isLibraryRecordNamePresent("libgcc_s.1.dylib",&(pMACHInfo->listLibraryRecords)))
-        {
-            _SCANS_STRUCT recordSS={};
-
-            recordSS.type=SpecAbstract::RECORD_TYPE_COMPILER;
-            recordSS.name=SpecAbstract::RECORD_NAME_GCC;
-
-            pMACHInfo->mapResultCompilers.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
-        }
-
-        // Swift
-        if( XMACH::isSectionNamePresent("__swift2_proto",&(pMACHInfo->listSectionRecords))||
-            XMACH::isLibraryRecordNamePresent("libswiftCore.dylib",&(pMACHInfo->listLibraryRecords)))  // TODO
-        {
-            _SCANS_STRUCT recordSS={};
-
-            recordSS.type=SpecAbstract::RECORD_TYPE_LANGUAGE;   // TODO Check
-            recordSS.name=SpecAbstract::RECORD_NAME_SWIFT;
-
-            pMACHInfo->mapResultLanguages.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
-        }
-        else if(XMACH::isSectionNamePresent("__objc_selrefs",&(pMACHInfo->listSectionRecords))||
-                XMACH::isSegmentNamePresent("__OBJC",&(pMACHInfo->listSegmentRecords))||
-                XMACH::isLibraryRecordNamePresent("libobjc.A.dylib",&(pMACHInfo->listLibraryRecords)))
-        {
-            _SCANS_STRUCT recordSS={};
-
-            recordSS.type=SpecAbstract::RECORD_TYPE_LANGUAGE;   // TODO Check
-            recordSS.name=SpecAbstract::RECORD_NAME_OBJECTIVEC;
-
-            pMACHInfo->mapResultLanguages.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
         }
 
         // Qt
@@ -14631,6 +15169,49 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
             pMACHInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
         }
+
+        // Foundation
+        if(XMACH::isLibraryRecordNamePresent("CoreFoundation",&(pMACHInfo->listLibraryRecords)))
+        {
+            _SCANS_STRUCT recordSS={};
+
+            recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
+            recordSS.name=SpecAbstract::RECORD_NAME_FOUNDATION;
+            recordSS.sVersion=XBinary::get_uint32_full_version(XMACH::getLibraryCurrentVersion("CoreFoundation",&(pMACHInfo->listLibraryRecords)));
+
+            pMACHInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
+        }
+
+        if( (recordGCC.name==SpecAbstract::RECORD_NAME_UNKNOWN)&&
+            (recordCLANG.name==SpecAbstract::RECORD_NAME_UNKNOWN))
+        {
+            recordCLANG.name=SpecAbstract::RECORD_NAME_CLANG; // Default
+        }
+
+        if(recordGCC.name!=SpecAbstract::RECORD_NAME_UNKNOWN)
+        {
+            pMACHInfo->mapResultCompilers.insert(recordGCC.name,scansToScan(&(pMACHInfo->basic_info),&recordGCC));
+        }
+
+        if(recordCLANG.name!=SpecAbstract::RECORD_NAME_UNKNOWN)
+        {
+            pMACHInfo->mapResultCompilers.insert(recordCLANG.name,scansToScan(&(pMACHInfo->basic_info),&recordCLANG));
+        }
+
+        if(recordSwift.name!=SpecAbstract::RECORD_NAME_UNKNOWN)
+        {
+            pMACHInfo->mapResultCompilers.insert(recordSwift.name,scansToScan(&(pMACHInfo->basic_info),&recordSwift));
+        }
+
+        if(recordSDK.name!=SpecAbstract::RECORD_NAME_UNKNOWN)
+        {
+            pMACHInfo->mapResultTools.insert(recordSDK.name,scansToScan(&(pMACHInfo->basic_info),&recordSDK));
+        }
+
+        if(recordXcode.name!=SpecAbstract::RECORD_NAME_UNKNOWN)
+        {
+            pMACHInfo->mapResultTools.insert(recordXcode.name,scansToScan(&(pMACHInfo->basic_info),&recordXcode));
+        }
     }
 }
 
@@ -14661,6 +15242,12 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Sp
 
     if(mach.isValid())
     {
+        if( pMACHInfo->mapResultLanguages.contains(RECORD_NAME_OBJECTIVEC)||
+            pMACHInfo->mapResultLanguages.contains(RECORD_NAME_CCPP))
+        {
+            pMACHInfo->mapResultLanguages.remove(RECORD_NAME_CCPP);
+        }
+
         if(pMACHInfo->basic_info.bIsTest)
         {
             QMap<quint64,QString> mapCommands=XMACH::getLoadCommandTypesS();
@@ -17210,18 +17797,27 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
             case RECORD_NAME_ARMNEONCCPP:
             case RECORD_NAME_ARMTHUMBCCPP:
             case RECORD_NAME_BORLANDCCPP:
-            case RECORD_NAME_CLANG:
-            case RECORD_NAME_ANDROIDCLANG:
-            case RECORD_NAME_APPORTABLECLANG:
-            case RECORD_NAME_PLEXCLANG:
-            case RECORD_NAME_UBUNTUCLANG:
-            case RECORD_NAME_GCC:
             case RECORD_NAME_MINGW:
             case RECORD_NAME_MSYS:
             case RECORD_NAME_MSYS2:
             case RECORD_NAME_VISUALCCPP:
             case RECORD_NAME_WATCOMCCPP:
                 ssLanguage.name=RECORD_NAME_CCPP;
+                break;
+            case RECORD_NAME_CLANG:
+            case RECORD_NAME_GCC:
+            case RECORD_NAME_ANDROIDCLANG:
+            case RECORD_NAME_APPORTABLECLANG:
+            case RECORD_NAME_PLEXCLANG:
+            case RECORD_NAME_UBUNTUCLANG:
+                if(ssDetect.sInfo.contains("Objective-C"))
+                {
+                    ssLanguage.name=RECORD_NAME_OBJECTIVEC;
+                }
+                else
+                {
+                    ssLanguage.name=RECORD_NAME_CCPP;
+                }
                 break;
             case RECORD_NAME_CPP:
             case RECORD_NAME_BORLANDCPP:
@@ -17376,6 +17972,8 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     else if (osinfo.osName==XBinary::OSNAME_MAC_OS_X)   result.name=RECORD_NAME_MAC_OS_X;
     else if (osinfo.osName==XBinary::OSNAME_OS_X)       result.name=RECORD_NAME_OS_X;
     else if (osinfo.osName==XBinary::OSNAME_MACOS)      result.name=RECORD_NAME_MACOS;
+    else if (osinfo.osName==XBinary::OSNAME_IPHONEOS)   result.name=RECORD_NAME_IPHONEOS;
+    else if (osinfo.osName==XBinary::OSNAME_IPADOS)     result.name=RECORD_NAME_IPADOS;
     else if (osinfo.osName==XBinary::OSNAME_IOS)        result.name=RECORD_NAME_IOS;
     else if (osinfo.osName==XBinary::OSNAME_WATCHOS)    result.name=RECORD_NAME_WATCHOS;
     else if (osinfo.osName==XBinary::OSNAME_TVOS)       result.name=RECORD_NAME_TVOS;
