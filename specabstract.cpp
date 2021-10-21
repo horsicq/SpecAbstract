@@ -2863,7 +2863,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
 
 //                int nNumberOfItems=listClasses.count();
 
-//                for(int i=0;i<nNumberOfItems;i++)
+//                for(qint32 i=0;i<nNumberOfItems;i++)
 //                {
 
 //                    QString sString=QString("%1|%2|%3") .arg(XBinary::getStringByIndex(&result.listTypeItemStrings,listClasses.at(i).class_idx))
