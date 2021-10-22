@@ -3107,9 +3107,9 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     // Import Check
 
 //#ifdef QT_DEBUG
-//    for(int j=0;j<pPEInfo->listImports.count();j++)
+//    for(qint32 j=0;j<pPEInfo->listImports.count();j++)
 //    {
-//        for(int i=0;i<pPEInfo->listImports.at(j).listPositions.count();i++)
+//        for(qint32 i=0;i<pPEInfo->listImports.at(j).listPositions.count();i++)
 //        {
 //            qDebug("(pPEInfo->listImports.at(%d).listPositions.at(%d).sName==\"%s\")&&",j,i,pPEInfo->listImports.at(j).listPositions.at(i).sName.toLatin1().data());
 //        }
@@ -5277,9 +5277,9 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
                 {
                     bSuccess=true;
 
-                    int nNumberOfSections=pPEInfo->listSectionHeaders.count();
+                    qint32 nNumberOfSections=pPEInfo->listSectionHeaders.count();
 
-                    for(int i=0;i<nNumberOfSections;i++)
+                    for(qint32 i=0;i<nNumberOfSections;i++)
                     {
                         if( (i==pPEInfo->nEntryPointSection)||
                             (i==pPEInfo->nResourcesSection)||
