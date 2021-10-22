@@ -2878,7 +2878,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
 
 //                int nNumberOfItems=listMethods.count();
 
-//                for(int i=0;i<nNumberOfItems;i++)
+//                for(qint32 i=0;i<nNumberOfItems;i++)
 //                {
 
 //                    QString sString=QString("%1|%2") .arg(XBinary::getStringByIndex(&result.listTypeItemStrings,listMethods.at(i).class_idx))
@@ -3033,9 +3033,9 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
 
         result.listArchiveRecords=xmachofat.getRecords();
 
-        int nNumberOfRecords=result.listArchiveRecords.count();
+        qint32 nNumberOfRecords=result.listArchiveRecords.count();
 
-        for(int i=0;(i<nNumberOfRecords)&&(!(*pbIsStop));i++)
+        for(qint32 i=0;(i<nNumberOfRecords)&&(!(*pbIsStop));i++)
         {
             SpecAbstract::SCAN_RESULT scanResult={0};
 
