@@ -5739,9 +5739,9 @@ void SpecAbstract::PE_handle_StarForce(QIODevice *pDevice, bool bIsImage, SpecAb
                 sVersion="4.X-5.X";
             }
 
-            int nNumberOfImports=pPEInfo->listImports.count();
+            qint32 nNumberOfImports=pPEInfo->listImports.count();
 
-            for(int i=0;i<nNumberOfImports;i++)
+            for(qint32 i=0;i<nNumberOfImports;i++)
             {
                 if(pPEInfo->listImports.at(i).listPositions.count()==1)
                 {
