@@ -5669,11 +5669,11 @@ void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, bool bIsImage, SpecAbst
             if(!pPEInfo->mapResultProtectors.contains(RECORD_NAME_THEMIDAWINLICENSE))
             {
                 // New version
-                int nNumbersOfImport=pPEInfo->listImports.count();
+                qint32 nNumbersOfImport=pPEInfo->listImports.count();
 
                 bool bSuccess=true;
 
-                for(int i=0;i<nNumbersOfImport;i++)
+                for(qint32 i=0;i<nNumbersOfImport;i++)
                 {
                     if(pPEInfo->listImports.at(i).listPositions.count()!=1)
                     {
