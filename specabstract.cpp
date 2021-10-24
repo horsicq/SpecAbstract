@@ -5775,9 +5775,9 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,bool bIsImage, SpecAbstra
                 // TODO !!!
                 // TODO Petite 2.4 Check header
 
-                int nNumberOfImports=pPEInfo->listImports.count();
+                qint32 nNumberOfImports=pPEInfo->listImports.count();
 
-                for(int i=0;i<nNumberOfImports;i++)
+                for(qint32 i=0;i<nNumberOfImports;i++)
                 {
                     if(pPEInfo->listImports.at(i).sName.toUpper()=="USER32.DLL")
                     {
