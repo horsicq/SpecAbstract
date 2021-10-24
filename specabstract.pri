@@ -24,4 +24,5 @@ SOURCES += \
 DISTFILES += \
     $$PWD/LICENSE \
     $$PWD/README.md \
-    $$PWD/import_hashes.txt
+    $$PWD/import_hashes.txt \
+    $$PWD/specabstract.cmake
