@@ -2523,7 +2523,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         QList<XPE::IMPORT_RECORD> listImports=pe.getImportRecords(&(result.basic_info.memoryMap));
 
-        int _nNumberOfImports=listImports.count();
+        qint32 _nNumberOfImports=listImports.count();
 
         for(qint32 i=0;i<_nNumberOfImports;i++)
         {
@@ -5209,7 +5209,7 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
 
             QSet<QString> stDetects;
 
-            int nNumberOfImports=pPEInfo->listImports.count();
+            qint32 nNumberOfImports=pPEInfo->listImports.count();
 
             // TODO Check!
             if(nNumberOfImports>=2)
@@ -14506,7 +14506,6 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
             recordCLANG.sInfo="Objective-C";
         }
 
-
         // XCODE
         qint64 nVersionMinOffset=-1;
         qint64 nBuildVersionOffset=-1;
@@ -14609,131 +14608,157 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
                 {
                     recordXcode.sVersion="5.0.1-6.4";
                     recordCLANG.sVersion="5.0-6.1.0";
+                    recordSwift.sVersion="1.0-1.2";
                 }
                 else if(recordSDK.sVersion=="10.10.0")
                 {
                     recordXcode.sVersion="6.1-6.4";
                     recordCLANG.sVersion="6.0-6.1.0";
+                    recordSwift.sVersion="1.0-1.2";
                 }
                 else if(recordSDK.sVersion=="10.11.0")
                 {
                     recordXcode.sVersion="7.0-7.1.1";
                     recordCLANG.sVersion="7.0.0";
+                    recordSwift.sVersion="2.0-2.1";
                 }
                 else if(recordSDK.sVersion=="10.11.2")
                 {
                     recordXcode.sVersion="7.2-7.2.1";
                     recordCLANG.sVersion="7.0.2";
+                    recordSwift.sVersion="2.1.1";
                 }
                 else if(recordSDK.sVersion=="10.11.4")
                 {
                     recordXcode.sVersion="7.3-7.3.1";
                     recordCLANG.sVersion="7.3.0";
+                    recordSwift.sVersion="2.2";
                 }
                 else if(recordSDK.sVersion=="10.12.0")
                 {
                     recordXcode.sVersion="8.0";
                     recordCLANG.sVersion="8.0.0";
+                    recordSwift.sVersion="3.0";
                 }
                 else if(recordSDK.sVersion=="10.12.1")
                 {
                     recordXcode.sVersion="8.1";
                     recordCLANG.sVersion="8.0.0";
+                    recordSwift.sVersion="3.0.1";
                 }
                 else if(recordSDK.sVersion=="10.12.2")
                 {
                     recordXcode.sVersion="8.2-8.2.1";
                     recordCLANG.sVersion="8.0.0";
+                    recordSwift.sVersion="3.0.2";
                 }
                 else if(recordSDK.sVersion=="10.12.4")
                 {
                     recordXcode.sVersion="8.3-8.3.3";
                     recordCLANG.sVersion="8.1.0";
+                    recordSwift.sVersion="3.1";
                 }
                 else if(recordSDK.sVersion=="10.13.0")
                 {
                     recordXcode.sVersion="9.0-9.0.1";
                     recordCLANG.sVersion="9.0.0";
+                    recordSwift.sVersion="4.0";
                 }
                 else if(recordSDK.sVersion=="10.13.1")
                 {
                     recordXcode.sVersion="9.1";
                     recordCLANG.sVersion="9.0.0";
+                    recordSwift.sVersion="4.0.2";
                 }
                 else if(recordSDK.sVersion=="10.13.2")
                 {
                     recordXcode.sVersion="9.2";
                     recordCLANG.sVersion="9.0.0";
+                    recordSwift.sVersion="4.0.3";
                 }
                 else if(recordSDK.sVersion=="10.13.4")
                 {
                     recordXcode.sVersion="9.3-9.4.1";
                     recordCLANG.sVersion="9.1.0";
+                    recordSwift.sVersion="4.1-4.1.2";
                 }
                 else if(recordSDK.sVersion=="10.14.0")
                 {
                     recordXcode.sVersion="10.0";
                     recordCLANG.sVersion="10.0.0";
+                    recordSwift.sVersion="4.2";
                 }
                 else if(recordSDK.sVersion=="10.14.1")
                 {
                     recordXcode.sVersion="10.1";
                     recordCLANG.sVersion="10.0.0";
+                    recordSwift.sVersion="4.2.1";
                 }
                 else if(recordSDK.sVersion=="10.14.4")
                 {
-                    recordXcode.sVersion="10.2-10.12.1";
+                    recordXcode.sVersion="10.2-10.2.1";
                     recordCLANG.sVersion="10.0.1";
+                    recordSwift.sVersion="5.0-5.0.1";
                 }
                 else if(recordSDK.sVersion=="10.14.6")
                 {
                     recordXcode.sVersion="10.3";
                     recordCLANG.sVersion="10.0.1";
+                    recordSwift.sVersion="5.0.1";
                 }
                 else if(recordSDK.sVersion=="10.15.0")
                 {
                     recordXcode.sVersion="11.0-11.1";
                     recordCLANG.sVersion="11.0.0";
+                    recordSwift.sVersion="5.1";
                 }
                 else if (recordSDK.sVersion=="10.15.1")
                 {
                     recordXcode.sVersion="11.2-11.2.1";
                     recordCLANG.sVersion="11.0.0";
+                    recordSwift.sVersion="5.1.2";
                 }
                 else if (recordSDK.sVersion=="10.15.2")
                 {
                     recordXcode.sVersion="11.3-11.3.1";
                     recordCLANG.sVersion="11.0.0";
+                    recordSwift.sVersion="5.1.3";
                 }
                 else if (recordSDK.sVersion=="10.15.4")
                 {
                     recordXcode.sVersion="11.4-11.5";
                     recordCLANG.sVersion="11.0.3";
+                    recordSwift.sVersion="5.2-5.2.4";
                 }
                 else if (recordSDK.sVersion=="10.15.6")
                 {
                     recordXcode.sVersion="11.6-12.1.1";
                     recordCLANG.sVersion="11.0.3-12.0.0";
+                    recordSwift.sVersion="5.2.4-5.3";
                 }
                 else if (recordSDK.sVersion=="11.0.0")
                 {
                     recordXcode.sVersion="12.2";
                     recordCLANG.sVersion="12.0.0";
+                    recordSwift.sVersion="5.3.1";
                 }
                 else if (recordSDK.sVersion=="11.1.0")
                 {
                     recordXcode.sVersion="12.3-12.4";
                     recordCLANG.sVersion="12.0.0";
+                    recordSwift.sVersion="5.3.2";
                 }
                 else if (recordSDK.sVersion=="11.3.0")
                 {
                     recordXcode.sVersion="12.5-13.0";
                     recordCLANG.sVersion="12.0.5-13.0.0";
+                    recordSwift.sVersion="5.4-5.5";
                 }
                 else if (recordSDK.sVersion=="12.0.0")
                 {
                     recordXcode.sVersion="13.1";
                     recordCLANG.sVersion="13.0.0";
+                    recordSwift.sVersion="5.5.1";
                 }
             }
             else if(recordSDK.name==SpecAbstract::RECORD_NAME_IOSSDK)
@@ -14831,186 +14856,223 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
                 {
                     recordXcode.sVersion="6.0.1";
                     recordCLANG.sVersion="6.0";
+                    recordSwift.sVersion="1.0";
                 }
                 else if (recordSDK.sVersion=="8.1.0")
                 {
                     recordXcode.sVersion="6.1-6.1.1";
                     recordCLANG.sVersion="6.0";
+                    recordSwift.sVersion="1.1";
                 }
                 else if (recordSDK.sVersion=="8.2.0")
                 {
                     recordXcode.sVersion="6.2";
                     recordCLANG.sVersion="6.0";
+                    recordSwift.sVersion="1.1";
                 }
                 else if (recordSDK.sVersion=="8.3.0")
                 {
                     recordXcode.sVersion="6.3-6.3.2";
                     recordCLANG.sVersion="6.1.0";
+                    recordSwift.sVersion="1.2";
                 }
                 else if (recordSDK.sVersion=="8.4.0")
                 {
                     recordXcode.sVersion="6.4";
                     recordCLANG.sVersion="6.1.0";
+                    recordSwift.sVersion="1.2";
                 }
                 else if (recordSDK.sVersion=="9.0.0")
                 {
                     recordXcode.sVersion="7.0-7.0.1";
                     recordCLANG.sVersion="7.0.0";
+                    recordSwift.sVersion="2.0";
                 }
                 else if (recordSDK.sVersion=="9.1.0")
                 {
                     recordXcode.sVersion="7.1-7.1.1";
                     recordCLANG.sVersion="7.0.0";
+                    recordSwift.sVersion="2.1";
                 }
                 else if (recordSDK.sVersion=="9.2.0")
                 {
                     recordXcode.sVersion="7.2-7.2.1";
                     recordCLANG.sVersion="7.0.2";
+                    recordSwift.sVersion="2.1.1";
                 }
                 else if (recordSDK.sVersion=="9.3.0")
                 {
                     recordXcode.sVersion="7.3-7.3.1";
                     recordCLANG.sVersion="7.3.0";
+                    recordSwift.sVersion="2.2";
                 }
                 else if(recordSDK.sVersion=="10.0.0")
                 {
                     recordXcode.sVersion="8.0";
                     recordCLANG.sVersion="8.0.0";
+                    recordSwift.sVersion="3.0";
                 }
                 else if(recordSDK.sVersion=="10.1.0")
                 {
                     recordXcode.sVersion="8.1";
                     recordCLANG.sVersion="8.0.0";
+                    recordSwift.sVersion="3.0.1";
                 }
                 else if(recordSDK.sVersion=="10.2.0")
                 {
                     recordXcode.sVersion="8.2-8.2.1";
                     recordCLANG.sVersion="8.0.0";
+                    recordSwift.sVersion="3.0.2";
                 }
                 else if(recordSDK.sVersion=="10.3.0")
                 {
                     recordXcode.sVersion="8.3-8.3.2";
                     recordCLANG.sVersion="8.1.0";
+                    recordSwift.sVersion="3.1";
                 }
                 else if(recordSDK.sVersion=="10.3.1")
                 {
                     recordXcode.sVersion="8.3.3";
                     recordCLANG.sVersion="8.1.0";
+                    recordSwift.sVersion="3.1";
                 }
                 else if(recordSDK.sVersion=="11.0.0")
                 {
                     recordXcode.sVersion="9.0-9.0.1";
                     recordCLANG.sVersion="9.0.0";
+                    recordSwift.sVersion="4.0";
                 }
                 else if(recordSDK.sVersion=="11.1.0")
                 {
                     recordXcode.sVersion="9.1";
                     recordCLANG.sVersion="9.0.0";
+                    recordSwift.sVersion="4.0.2";
                 }
                 else if(recordSDK.sVersion=="11.2.0")
                 {
                     recordXcode.sVersion="9.2";
                     recordCLANG.sVersion="9.0.0";
+                    recordSwift.sVersion="4.0.3";
                 }
                 else if(recordSDK.sVersion=="11.3.0")
                 {
                     recordXcode.sVersion="9.3-9.3.1";
                     recordCLANG.sVersion="9.1.0";
+                    recordSwift.sVersion="4.1";
                 }
                 else if(recordSDK.sVersion=="11.4.0")
                 {
                     recordXcode.sVersion="9.4-9.4.1";
                     recordCLANG.sVersion="9.1.0";
+                    recordSwift.sVersion="4.1.2";
                 }
                 else if(recordSDK.sVersion=="12.0.0")
                 {
                     recordXcode.sVersion="10.0";
                     recordCLANG.sVersion="10.0.0";
+                    recordSwift.sVersion="4.2";
                 }
                 else if(recordSDK.sVersion=="12.1.0")
                 {
                     recordXcode.sVersion="10.1";
                     recordCLANG.sVersion="10.0.0";
+                    recordSwift.sVersion="4.2.1";
                 }
                 else if(recordSDK.sVersion=="12.2.0")
                 {
                     recordXcode.sVersion="10.2-10.2.1";
                     recordCLANG.sVersion="10.0.1";
+                    recordSwift.sVersion="5.0-5.0.1";
                 }
                 else if(recordSDK.sVersion=="12.4.0")
                 {
                     recordXcode.sVersion="10.3";
                     recordCLANG.sVersion="10.0.1";
+                    recordSwift.sVersion="5.0.1";
                 }
                 else if(recordSDK.sVersion=="13.0.0")
                 {
                     recordXcode.sVersion="11.0";
                     recordCLANG.sVersion="11.0.0";
+                    recordSwift.sVersion="5.1";
                 }
                 else if (recordSDK.sVersion=="13.1.0")
                 {
                     recordXcode.sVersion="11.1";
                     recordCLANG.sVersion="11.0.0";
+                    recordSwift.sVersion="5.1";
                 }
                 else if (recordSDK.sVersion=="13.2.0")
                 {
                     recordXcode.sVersion="11.2-11.3.1";
                     recordCLANG.sVersion="11.0.0";
+                    recordSwift.sVersion="5.1.2-5.1.3";
                 }
                 else if (recordSDK.sVersion=="13.4.0")
                 {
                     recordXcode.sVersion="11.4-11.4.1";
                     recordCLANG.sVersion="11.0.3";
+                    recordSwift.sVersion="5.2-5.2.2";
                 }
                 else if (recordSDK.sVersion=="13.5.0")
                 {
                     recordXcode.sVersion="11.5";
                     recordCLANG.sVersion="11.0.3";
+                    recordSwift.sVersion="5.2.4";
                 }
                 else if (recordSDK.sVersion=="13.6.0")
                 {
                     recordXcode.sVersion="11.6";
                     recordCLANG.sVersion="11.0.3";
+                    recordSwift.sVersion="5.2.4";
                 }
                 else if (recordSDK.sVersion=="13.7.0")
                 {
                     recordXcode.sVersion="11.7";
                     recordCLANG.sVersion="11.0.3";
+                    recordSwift.sVersion="5.2.4";
                 }
                 else if (recordSDK.sVersion=="14.0.0")
                 {
                     recordXcode.sVersion="12.0-12.0.1";
                     recordCLANG.sVersion="12.0.0";
+                    recordSwift.sVersion="5.3";
                 }
                 else if (recordSDK.sVersion=="14.1.0")
                 {
                     recordXcode.sVersion="12.1";
                     recordCLANG.sVersion="12.0.0";
+                    recordSwift.sVersion="5.3";
                 }
                 else if (recordSDK.sVersion=="14.2.0")
                 {
                     recordXcode.sVersion="12.1.1-12.2";
                     recordCLANG.sVersion="12.0.0";
+                    recordSwift.sVersion="5.3-5.3.1";
                 }
                 else if (recordSDK.sVersion=="14.3.0")
                 {
                     recordXcode.sVersion="12.3";
                     recordCLANG.sVersion="12.0.0";
+                    recordSwift.sVersion="5.3.2";
                 }
                 else if (recordSDK.sVersion=="14.4.0")
                 {
                     recordXcode.sVersion="12.4";
                     recordCLANG.sVersion="12.0.0";
+                    recordSwift.sVersion="5.3.2";
                 }
                 else if (recordSDK.sVersion=="14.5.0")
                 {
                     recordXcode.sVersion="12.5-12.5.1";
                     recordCLANG.sVersion="12.0.5";
+                    recordSwift.sVersion="5.4-5.4.2";
                 }
                 else if (recordSDK.sVersion=="15.0.0")
                 {
                     recordXcode.sVersion="13.0-13.1";
                     recordCLANG.sVersion="13.0.0";
+                    recordSwift.sVersion="5.5-5.5.1";
                 }
             }
             else if(recordSDK.name==SpecAbstract::RECORD_NAME_WATCHOSSDK)
@@ -15019,116 +15081,139 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
                 {
                     recordXcode.sVersion="7.0-7.1.1";
                     recordCLANG.sVersion="7.0.0";
+                    recordSwift.sVersion="2.0-2.1";
                 }
                 else if(recordSDK.sVersion=="2.1.0")
                 {
                     recordXcode.sVersion="7.2-7.2.1";
                     recordCLANG.sVersion="7.0.2";
+                    recordSwift.sVersion="2.1.1";
                 }
                 else if(recordSDK.sVersion=="2.2.0")
                 {
                     recordXcode.sVersion="7.3-7.3.1";
                     recordCLANG.sVersion="7.3.0";
+                    recordSwift.sVersion="2.2";
                 }
                 else if(recordSDK.sVersion=="3.0.0")
                 {
                     recordXcode.sVersion="8.0";
                     recordCLANG.sVersion="8.0.0";
+                    recordSwift.sVersion="3.0";
                 }
                 else if(recordSDK.sVersion=="3.1.0")
                 {
                     recordXcode.sVersion="8.1-8.2.1";
                     recordCLANG.sVersion="8.0.0";
+                    recordSwift.sVersion="3.0.1-3.0.2";
                 }
                 else if(recordSDK.sVersion=="3.2.0")
                 {
                     recordXcode.sVersion="8.3-8.3.3";
                     recordCLANG.sVersion="8.1.0";
+                    recordSwift.sVersion="3.1";
                 }
                 else if(recordSDK.sVersion=="4.0.0")
                 {
                     recordXcode.sVersion="9.0-9.0.1";
                     recordCLANG.sVersion="9.0.0";
+                    recordSwift.sVersion="4.0";
                 }
                 else if(recordSDK.sVersion=="4.1.0")
                 {
                     recordXcode.sVersion="9.1";
                     recordCLANG.sVersion="9.0.0";
+                    recordSwift.sVersion="4.0.2";
                 }
                 else if(recordSDK.sVersion=="4.2.0")
                 {
                     recordXcode.sVersion="9.2";
                     recordCLANG.sVersion="9.0.0";
+                    recordSwift.sVersion="4.0.3";
                 }
                 else if(recordSDK.sVersion=="4.3.0")
                 {
                     recordXcode.sVersion="9.3-9.4.1";
                     recordCLANG.sVersion="9.1.0";
+                    recordSwift.sVersion="4.1-4.1.2";
                 }
                 else if(recordSDK.sVersion=="5.0.0")
                 {
                     recordXcode.sVersion="10.0";
                     recordCLANG.sVersion="10.0.0";
+                    recordSwift.sVersion="4.2";
                 }
                 else if(recordSDK.sVersion=="5.1.0")
                 {
                     recordXcode.sVersion="10.1";
                     recordCLANG.sVersion="10.0.0";
+                    recordSwift.sVersion="4.2.1";
                 }
                 else if(recordSDK.sVersion=="5.2.0")
                 {
                     recordXcode.sVersion="10.2-10.2.1";
                     recordCLANG.sVersion="10.0.1";
+                    recordSwift.sVersion="5.0-5.0.1";
                 }
                 else if(recordSDK.sVersion=="5.3.0")
                 {
                     recordXcode.sVersion="10.3";
                     recordCLANG.sVersion="10.0.1";
+                    recordSwift.sVersion="5.0.1";
                 }
                 else if(recordSDK.sVersion=="6.0.0")
                 {
                     recordXcode.sVersion="11.0-11.1";
                     recordCLANG.sVersion="11.0.0";
+                    recordSwift.sVersion="5.1";
                 }
                 else if (recordSDK.sVersion=="6.1.0")
                 {
                     recordXcode.sVersion="11.2-11.3.1";
                     recordCLANG.sVersion="11.0.0";
+                    recordSwift.sVersion="5.1.2-5.1.3";
                 }
                 else if (recordSDK.sVersion=="6.2.0")
                 {
                     recordXcode.sVersion="11.4-11.7";
                     recordCLANG.sVersion="11.0.3";
+                    recordSwift.sVersion="5.2-5.2.4";
                 }
                 else if (recordSDK.sVersion=="7.0.0")
                 {
                     recordXcode.sVersion="12.0-12.1";
                     recordCLANG.sVersion="12.0.0";
+                    recordSwift.sVersion="5.3";
                 }
                 else if (recordSDK.sVersion=="7.1.0")
                 {
                     recordXcode.sVersion="12.1.1-12.2";
                     recordCLANG.sVersion="12.0.0";
+                    recordSwift.sVersion="5.3-5.3.1";
                 }
                 else if (recordSDK.sVersion=="7.2.0")
                 {
                     recordXcode.sVersion="12.3-12.4";
                     recordCLANG.sVersion="12.0.0";
+                    recordSwift.sVersion="5.3.2";
                 }
                 else if (recordSDK.sVersion=="7.4.0")
                 {
                     recordXcode.sVersion="12.5-12.5.1";
                     recordCLANG.sVersion="12.0.5";
+                    recordSwift.sVersion="5.4-5.4.2";
                 }
                 else if (recordSDK.sVersion=="8.0.0")
                 {
                     recordXcode.sVersion="13.0";
                     recordCLANG.sVersion="13.0.0";
+                    recordSwift.sVersion="5.5";
                 }
                 else if (recordSDK.sVersion=="8.0.1")
                 {
                     recordXcode.sVersion="13.1";
                     recordCLANG.sVersion="13.0.0";
+                    recordSwift.sVersion="5.5.1";
                 }
             }
             else if(recordSDK.name==SpecAbstract::RECORD_NAME_TVOS)
@@ -15137,109 +15222,139 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
                 {
                     recordXcode.sVersion="7.1-7.1.1";
                     recordCLANG.sVersion="7.0.0";
+                    recordSwift.sVersion="2.1";
                 }
                 else if(recordSDK.sVersion=="9.1.0")
                 {
                     recordXcode.sVersion="7.2-7.2.1";
                     recordCLANG.sVersion="7.0.2";
+                    recordSwift.sVersion="2.1.1";
                 }
                 else if(recordSDK.sVersion=="9.2.0")
                 {
                     recordXcode.sVersion="7.3-7.3.1";
                     recordCLANG.sVersion="7.3.0";
+                    recordSwift.sVersion="2.2";
                 }
                 else if(recordSDK.sVersion=="10.0.0")
                 {
                     recordXcode.sVersion="8.0-8.1";
+                    recordCLANG.sVersion="8.0.0";
+                    recordSwift.sVersion="3.0-3.0.1";
                 }
                 else if(recordSDK.sVersion=="10.1.0")
                 {
                     recordXcode.sVersion="8.2-8.2.1";
                     recordCLANG.sVersion="8.0.0";
+                    recordSwift.sVersion="3.0.2";
                 }
                 else if(recordSDK.sVersion=="10.2.0")
                 {
                     recordXcode.sVersion="8.3-8.3.3";
                     recordCLANG.sVersion="8.1.0";
+                    recordSwift.sVersion="3.1";
                 }
                 else if(recordSDK.sVersion=="11.0.0")
                 {
                     recordXcode.sVersion="9.0-9.0.1";
                     recordCLANG.sVersion="9.0.0";
+                    recordSwift.sVersion="4.0";
                 }
                 else if(recordSDK.sVersion=="11.1.0")
                 {
                     recordXcode.sVersion="9.1";
                     recordCLANG.sVersion="9.0.0";
+                    recordSwift.sVersion="4.0.2";
                 }
                 else if(recordSDK.sVersion=="11.2.0")
                 {
                     recordXcode.sVersion="9.2";
                     recordCLANG.sVersion="9.0.0";
+                    recordSwift.sVersion="4.0.3";
                 }
                 else if(recordSDK.sVersion=="11.3.0")
                 {
                     recordXcode.sVersion="9.3-9.3.1";
                     recordCLANG.sVersion="9.1.0";
+                    recordSwift.sVersion="4.1";
                 }
                 else if(recordSDK.sVersion=="11.4.0")
                 {
                     recordXcode.sVersion="9.4-9.4.1";
                     recordCLANG.sVersion="9.1.0";
+                    recordSwift.sVersion="4.1.2";
                 }
                 else if(recordSDK.sVersion=="12.0.0")
                 {
                     recordXcode.sVersion="10.0";
                     recordCLANG.sVersion="10.0.0";
+                    recordSwift.sVersion="4.2";
                 }
                 else if(recordSDK.sVersion=="12.1.0")
                 {
                     recordXcode.sVersion="10.1";
                     recordCLANG.sVersion="10.0.0";
+                    recordSwift.sVersion="4.2.1";
                 }
                 else if(recordSDK.sVersion=="12.2.0")
                 {
                     recordXcode.sVersion="10.2-10.2.1";
                     recordCLANG.sVersion="10.0.1";
+                    recordSwift.sVersion="5.0-5.0.1";
                 }
                 else if(recordSDK.sVersion=="12.4.0")
                 {
                     recordXcode.sVersion="10.3";
                     recordCLANG.sVersion="10.0.1";
+                    recordSwift.sVersion="5.0.1";
                 }
                 else if(recordSDK.sVersion=="13.0.0")
                 {
                     recordXcode.sVersion="11.0-11.1";
                     recordCLANG.sVersion="11.0.0";
+                    recordSwift.sVersion="5.1";
+                }
+                else if(recordSDK.sVersion=="13.2.0")
+                {
+                    recordXcode.sVersion="11.2-11.3.1";
+                    recordCLANG.sVersion="11.0.0";
+                    recordSwift.sVersion="5.1.2-5.1.3";
                 }
                 else if (recordSDK.sVersion=="13.4.0")
                 {
                     recordXcode.sVersion="11.4-11.7";
                     recordCLANG.sVersion="11.0.3";
+                    recordSwift.sVersion="5.2-5.2.4";
                 }
                 else if (recordSDK.sVersion=="14.0.0")
                 {
                     recordXcode.sVersion="12.0-12.1";
                     recordCLANG.sVersion="12.0.0";
+                    recordSwift.sVersion="5.3";
                 }
                 else if (recordSDK.sVersion=="14.2.0")
                 {
                     recordXcode.sVersion="12.1.1-12.2";
+                    recordCLANG.sVersion="12.0.0";
+                    recordSwift.sVersion="5.3-5.3.1";
                 }
                 else if (recordSDK.sVersion=="14.3.0")
                 {
                     recordXcode.sVersion="12.3-12.4";
                     recordCLANG.sVersion="12.0.0";
+                    recordSwift.sVersion="5.3.2";
                 }
                 else if (recordSDK.sVersion=="14.5.0")
                 {
                     recordXcode.sVersion="12.5-12.5.1";
                     recordCLANG.sVersion="12.0.5";
+                    recordSwift.sVersion="5.4-5.4.2";
                 }
                 else if (recordSDK.sVersion=="15.0.0")
                 {
                     recordXcode.sVersion="13.0-13.1";
                     recordCLANG.sVersion="13.0.0";
+                    recordSwift.sVersion="5.5-5.5.1";
                 }
             }
         }
