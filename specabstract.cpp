@@ -2651,8 +2651,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         constScan(&(result.mapImportDetects),result.nImportHash64,result.nImportHash32,_PE_importhash_records,sizeof(_PE_importhash_records),result.basic_info.id.fileType,XBinary::FT_PE,&(result.basic_info),DETECTTYPE_IMPORTHASH,pbIsStop);
 
         // Export
-
-        int nNumberOfImports=result.listImportPositionHashes.count();
+        qint32 nNumberOfImports=result.listImportPositionHashes.count();
 
         for(qint32 i=0;i<nNumberOfImports;i++)
         {
