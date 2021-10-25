@@ -5483,7 +5483,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbs
                 bHeaderDetect=true;
             }
 
-            int nNumberOfImports=pPEInfo->listImports.count();
+            qint32 nNumberOfImports=pPEInfo->listImports.count();
 
             if(nNumberOfImports>=3)
             {
@@ -7909,7 +7909,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
 
             // Python
             // TODO Create function
-            int nNumberOfImports=pPEInfo->listImports.count();
+            qint32 nNumberOfImports=pPEInfo->listImports.count();
 
             for(int i=0;i<nNumberOfImports;i++)
             {
