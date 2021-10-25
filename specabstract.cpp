@@ -5535,7 +5535,7 @@ void SpecAbstract::PE_handle_Obsidium(QIODevice *pDevice, bool bIsImage, SpecAbs
         // SHEL32.DLL
         if(!pPEInfo->cliInfo.bValid)
         {
-            int nNumberOfImports=pPEInfo->listImports.count();
+            qint32 nNumberOfImports=pPEInfo->listImports.count();
 
             if((nNumberOfImports==2)||(nNumberOfImports==3))
             {
@@ -6406,11 +6406,11 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, SpecAb
         }
 
         // Rich
-        int nRichSignaturesCount=pPEInfo->listRichSignatures.count();
+        qint32 nRichSignaturesCount=pPEInfo->listRichSignatures.count();
 
         QList<_SCANS_STRUCT> listRichDescriptions;
 
-        for(int i=0;i<nRichSignaturesCount;i++)
+        for(qint32 i=0;i<nRichSignaturesCount;i++)
         {
             listRichDescriptions.append(MSDOS_richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pPEInfo->basic_info.id.fileType,XBinary::FT_MSDOS,&(pPEInfo->basic_info),DETECTTYPE_RICH,pbIsStop));
         }
@@ -14475,9 +14475,106 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
         recordSwift.type=SpecAbstract::RECORD_TYPE_COMPILER;
         recordSwift.name=SpecAbstract::RECORD_NAME_UNKNOWN;
 
-        _SCANS_STRUCT ssOperationSystem=getScansStructFromOsInfo(mach.getOsInfo());
+        XBinary::OSINFO osInfo=mach.getOsInfo();
+
+        _SCANS_STRUCT ssOperationSystem=getScansStructFromOsInfo(osInfo);
 
         pMACHInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pMACHInfo->basic_info),&ssOperationSystem));
+
+        // Foundation
+        if(XMACH::isLibraryRecordNamePresent("CoreFoundation",&(pMACHInfo->listLibraryRecords)))
+        {
+            _SCANS_STRUCT recordFoundation={};
+
+            recordFoundation.type=SpecAbstract::RECORD_TYPE_LIBRARY;
+            recordFoundation.name=SpecAbstract::RECORD_NAME_FOUNDATION;
+
+            quint32 nVersion=XMACH::getLibraryCurrentVersion("CoreFoundation",&(pMACHInfo->listLibraryRecords));
+
+            if((osInfo.osName==XBinary::OSNAME_MAC_OS_X)||(osInfo.osName==XBinary::OSNAME_OS_X)||(osInfo.osName==XBinary::OSNAME_MACOS))
+            {
+                recordSDK.name=RECORD_NAME_MACOSSDK;
+
+                if      ((nVersion>=S_FULL_VERSION(397,40,0))&&(nVersion<S_FULL_VERSION(425,0,0)))      recordSDK.sVersion="10.0.0";
+                else if (nVersion<S_FULL_VERSION(462,0,0))                                              recordSDK.sVersion="10.1.0";
+                else if (nVersion<S_FULL_VERSION(462,70,0))                                             recordSDK.sVersion="10.2.0";
+                else if (nVersion<S_FULL_VERSION(500,0,0))                                              recordSDK.sVersion="10.2.7";
+                else if (nVersion<S_FULL_VERSION(500,30,0))                                             recordSDK.sVersion="10.3.0";
+                else if (nVersion<S_FULL_VERSION(500,54,0))                                             recordSDK.sVersion="10.3.2";
+                else if (nVersion<S_FULL_VERSION(500,56,0))                                             recordSDK.sVersion="10.3.3";
+                else if (nVersion<S_FULL_VERSION(500,58,0))                                             recordSDK.sVersion="10.3.4";
+                else if (nVersion<S_FULL_VERSION(567,0,0))                                              recordSDK.sVersion="10.3.9";
+                else if (nVersion<S_FULL_VERSION(567,12,0))                                             recordSDK.sVersion="10.4.0";
+                else if (nVersion<S_FULL_VERSION(567,21,0))                                             recordSDK.sVersion="10.4.2";
+                else if (nVersion<S_FULL_VERSION(567,25,0))                                             recordSDK.sVersion="10.4.4";
+                else if (nVersion<S_FULL_VERSION(567,26,0))                                             recordSDK.sVersion="10.4.5";
+                else if (nVersion<S_FULL_VERSION(567,27,0))                                             recordSDK.sVersion="10.4.6";
+                else if (nVersion<S_FULL_VERSION(567,28,0))                                             recordSDK.sVersion="10.4.7";
+                else if (nVersion<S_FULL_VERSION(567,29,0))                                             recordSDK.sVersion="10.4.8";
+                else if (nVersion<S_FULL_VERSION(567,36,0))                                             recordSDK.sVersion="10.4.9";
+                else if (nVersion<S_FULL_VERSION(677,0,0))                                              recordSDK.sVersion="10.4.11";
+                else if (nVersion<S_FULL_VERSION(677,10,0))                                             recordSDK.sVersion="10.5.0";
+                else if (nVersion<S_FULL_VERSION(677,15,0))                                             recordSDK.sVersion="10.5.1";
+                else if (nVersion<S_FULL_VERSION(677,19,0))                                             recordSDK.sVersion="10.5.2";
+                else if (nVersion<S_FULL_VERSION(677,21,0))                                             recordSDK.sVersion="10.5.3";
+                else if (nVersion<S_FULL_VERSION(677,22,0))                                             recordSDK.sVersion="10.5.5";
+                else if (nVersion<S_FULL_VERSION(677,24,0))                                             recordSDK.sVersion="10.5.6";
+                else if (nVersion<S_FULL_VERSION(677,26,0))                                             recordSDK.sVersion="10.5.7";
+                else if (nVersion<S_FULL_VERSION(751,0,0))                                              recordSDK.sVersion="10.5.8";
+                else if (nVersion<S_FULL_VERSION(751,14,0))                                             recordSDK.sVersion="10.6.0";
+                else if (nVersion<S_FULL_VERSION(751,21,0))                                             recordSDK.sVersion="10.6.2";
+                else if (nVersion<S_FULL_VERSION(751,29,0))                                             recordSDK.sVersion="10.6.3";
+                else if (nVersion<S_FULL_VERSION(751,42,0))                                             recordSDK.sVersion="10.6.4";
+                else if (nVersion<S_FULL_VERSION(751,53,0))                                             recordSDK.sVersion="10.6.5";
+                else if (nVersion<S_FULL_VERSION(751,62,0))                                             recordSDK.sVersion="10.6.6";
+                else if (nVersion<S_FULL_VERSION(833,10,0))                                             recordSDK.sVersion="10.6.8";
+                else if (nVersion<S_FULL_VERSION(833,10,0))                                             recordSDK.sVersion="10.7.0";
+                else if (nVersion<S_FULL_VERSION(833,20,0))                                             recordSDK.sVersion="10.7.1";
+                else if (nVersion<S_FULL_VERSION(833,24,0))                                             recordSDK.sVersion="10.7.2";
+                else if (nVersion<S_FULL_VERSION(833,25,0))                                             recordSDK.sVersion="10.7.3";
+                else if (nVersion<S_FULL_VERSION(945,0,0))                                              recordSDK.sVersion="10.7.4";
+                else if (nVersion<S_FULL_VERSION(945,11,0))                                             recordSDK.sVersion="10.8.0";
+                else if (nVersion<S_FULL_VERSION(945,16,0))                                             recordSDK.sVersion="10.8.2";
+                else if (nVersion<S_FULL_VERSION(945,18,0))                                             recordSDK.sVersion="10.8.3";
+                else if (nVersion<S_FULL_VERSION(1056,0,0))                                             recordSDK.sVersion="10.8.4";
+                else if (nVersion<S_FULL_VERSION(1056,13,0))                                            recordSDK.sVersion="10.9.0";
+                else if (nVersion<S_FULL_VERSION(1151,16,0))                                            recordSDK.sVersion="10.9.2";
+                else if (nVersion<S_FULL_VERSION(1152,14,0))                                            recordSDK.sVersion="10.10.0";
+                else if (nVersion<S_FULL_VERSION(1153,20,0))                                            recordSDK.sVersion="10.10.2";
+                else if (nVersion<S_FULL_VERSION(1200,0,0))                                             recordSDK.sVersion="10.10.3"; // TODO Check
+            }
+            else if((osInfo.osName==XBinary::OSNAME_IPHONEOS)||(osInfo.osName==XBinary::OSNAME_IOS)||(osInfo.osName==XBinary::OSNAME_IPADOS))
+            {
+                recordSDK.name=RECORD_NAME_IOSSDK;
+
+                if      (nVersion<S_FULL_VERSION(678,24,0))                                             recordSDK.sVersion="1.0.0";
+                else if (nVersion<S_FULL_VERSION(678,26,0))                                             recordSDK.sVersion="2.0.0";
+                else if (nVersion<S_FULL_VERSION(678,29,0))                                             recordSDK.sVersion="2.1.0";
+                else if (nVersion<S_FULL_VERSION(678,47,0))                                             recordSDK.sVersion="2.2.0";
+                else if (nVersion<S_FULL_VERSION(678,51,0))                                             recordSDK.sVersion="3.0.0";
+                else if (nVersion<S_FULL_VERSION(678,60,0))                                             recordSDK.sVersion="3.1.0";
+                else if (nVersion<S_FULL_VERSION(751,32,0))                                             recordSDK.sVersion="3.2.0";
+                else if (nVersion<S_FULL_VERSION(751,37,0))                                             recordSDK.sVersion="4.0.0";
+                else if (nVersion<S_FULL_VERSION(751,49,0))                                             recordSDK.sVersion="4.1.0";
+                else if (nVersion<S_FULL_VERSION(881,0,0))                                              recordSDK.sVersion="4.2.0";
+                else if (nVersion<S_FULL_VERSION(890,10,0))                                             recordSDK.sVersion="5.0.0";
+                else if (nVersion<S_FULL_VERSION(992,0,0))                                              recordSDK.sVersion="5.1.0";
+                else if (nVersion<S_FULL_VERSION(993,0,0))                                              recordSDK.sVersion="6.0.0";
+                else if (nVersion<S_FULL_VERSION(1047,20,0))                                            recordSDK.sVersion="6.1.0";
+                else if (nVersion<S_FULL_VERSION(1047,25,0))                                            recordSDK.sVersion="7.0.0";
+                else if (nVersion<S_FULL_VERSION(1140,11,0))                                            recordSDK.sVersion="7.1.0";
+                else if (nVersion<S_FULL_VERSION(1141,1,0))                                             recordSDK.sVersion="8.0.0";
+                else if (nVersion<S_FULL_VERSION(1142,14,0))                                            recordSDK.sVersion="8.1.0";
+                else if (nVersion<S_FULL_VERSION(1144,17,0))                                            recordSDK.sVersion="8.2.0";
+                else if (nVersion<S_FULL_VERSION(1200,0,0))                                             recordSDK.sVersion="8.3.0"; // TODO Check
+            }
+
+            QString sVersion=XBinary::get_uint32_full_version(nVersion);
+
+            recordFoundation.sVersion=sVersion;
+
+            pMACHInfo->mapResultLibraries.insert(recordFoundation.name,scansToScan(&(pMACHInfo->basic_info),&recordFoundation));
+        }
 
         // GCC
         if(XMACH::isLibraryRecordNamePresent("libgcc_s.1.dylib",&(pMACHInfo->listLibraryRecords)))
@@ -14763,7 +14860,13 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
             }
             else if(recordSDK.name==SpecAbstract::RECORD_NAME_IOSSDK)
             {
-                if(recordSDK.sVersion=="2.0.0")
+                if(recordSDK.sVersion=="1.0.0")
+                {
+                    recordXcode.sVersion="1.0.0-2.0.0";
+                    recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if(recordSDK.sVersion=="2.0.0")
                 {
                     recordXcode.sVersion="3.0.0-3.2.1";
                     recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
@@ -15393,18 +15496,6 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
 
             recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
             recordSS.name=SpecAbstract::RECORD_NAME_COCOA;
-
-            pMACHInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
-        }
-
-        // Foundation
-        if(XMACH::isLibraryRecordNamePresent("CoreFoundation",&(pMACHInfo->listLibraryRecords)))
-        {
-            _SCANS_STRUCT recordSS={};
-
-            recordSS.type=SpecAbstract::RECORD_TYPE_LIBRARY;
-            recordSS.name=SpecAbstract::RECORD_NAME_FOUNDATION;
-            recordSS.sVersion=XBinary::get_uint32_full_version(XMACH::getLibraryCurrentVersion("CoreFoundation",&(pMACHInfo->listLibraryRecords)));
 
             pMACHInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
         }
