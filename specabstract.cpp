@@ -10263,9 +10263,9 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
 
     if((pBinaryInfo->bIsPlainText)||(pBinaryInfo->unicodeType!=XBinary::UNICODE_TYPE_NONE)||(pBinaryInfo->bIsUTF8))
     {
-        int nSignaturesCount=sizeof(_TEXT_Exp_records)/sizeof(STRING_RECORD);
+        qint32 nSignaturesCount=sizeof(_TEXT_Exp_records)/sizeof(STRING_RECORD);
 
-        for(int i=0;i<nSignaturesCount;i++) // TODO move to an own function !!!
+        for(qint32 i=0;i<nSignaturesCount;i++) // TODO move to an own function !!!
         {
             if(XBinary::isRegExpPresent(_TEXT_Exp_records[i].pszString,pBinaryInfo->sHeaderText))
             {
@@ -14866,7 +14866,25 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
                     recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
                     recordGCC.sVersion="4.0-4.2";
                 }
+                else if(recordSDK.sVersion.section(".",0,0)=="1") // TODO
+                {
+                    recordXcode.sVersion="1.0.0-2.0.0";
+                    recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
+                    recordGCC.sVersion="4.0-4.2";
+                }
                 else if(recordSDK.sVersion=="2.0.0")
+                {
+                    recordXcode.sVersion="3.0.0-3.2.1";
+                    recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if(recordSDK.sVersion.section(".",0,0)=="2") // TODO
+                {
+                    recordXcode.sVersion="3.0.0-3.2.1";
+                    recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
+                    recordGCC.sVersion="4.0-4.2";
+                }
+                else if (recordSDK.sVersion=="3.0.0") // TODO !!!
                 {
                     recordXcode.sVersion="3.0.0-3.2.1";
                     recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
