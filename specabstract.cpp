@@ -7911,7 +7911,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice,bool bIsImage, SpecAbstrac
             // TODO Create function
             qint32 nNumberOfImports=pPEInfo->listImports.count();
 
-            for(int i=0;i<nNumberOfImports;i++)
+            for(qint32 i=0;i<nNumberOfImports;i++)
             {
                 if(XBinary::isRegExpPresent("^PYTHON",pPEInfo->listImports.at(i).sName.toUpper()))
                 {
@@ -8089,7 +8089,7 @@ void SpecAbstract::PE_handle_wxWidgets(QIODevice *pDevice, bool bIsImage, SpecAb
 
             int nNumberOfImports=pPEInfo->listImports.count();
 
-            for(int i=0;i<nNumberOfImports;i++)
+            for(qint32 i=0;i<nNumberOfImports;i++)
             {
                 if(XBinary::isRegExpPresent("^WX",pPEInfo->listImports.at(i).sName.toUpper()))
                 {
