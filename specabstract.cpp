@@ -14884,7 +14884,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
                     recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
                     recordGCC.sVersion="4.0-4.2";
                 }
-                else if (recordSDK.sVersion=="3.0.0") // TODO !!!
+                else if(recordSDK.sVersion.section(".",0,0)=="3") // TODO
                 {
                     recordXcode.sVersion="3.0.0-3.2.1";
                     recordGCC.name=SpecAbstract::RECORD_NAME_GCC;
