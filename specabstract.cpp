@@ -12459,9 +12459,9 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
         {
             if(pOptions->bDeepScan)
             {
-                int nNumberOfRecords=pZipInfo->listArchiveRecords.count();
+                qint32 nNumberOfRecords=pZipInfo->listArchiveRecords.count();
 
-                for(int i=0;(i<nNumberOfRecords)&&(!(*pbIsStop));i++)
+                for(qint32 i=0;(i<nNumberOfRecords)&&(!(*pbIsStop));i++)
                 {
                     if(pZipInfo->basic_info.bIsTest)
                     {
