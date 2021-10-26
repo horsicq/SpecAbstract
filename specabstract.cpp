@@ -6415,10 +6415,10 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, SpecAb
             listRichDescriptions.append(MSDOS_richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pPEInfo->basic_info.id.fileType,XBinary::FT_MSDOS,&(pPEInfo->basic_info),DETECTTYPE_RICH,pbIsStop));
         }
 
-        int nRichDescriptionsCount=listRichDescriptions.count();
+        qint32 nRichDescriptionsCount=listRichDescriptions.count();
 
         bool bVB=false;
-        for(int i=nRichDescriptionsCount-1;i>=0;i--)
+        for(qint32 i=nRichDescriptionsCount-1;i>=0;i--)
         {
             if(listRichDescriptions.at(i).type==SpecAbstract::RECORD_TYPE_LINKER)
             {
@@ -14482,14 +14482,14 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
         pMACHInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pMACHInfo->basic_info),&ssOperationSystem));
 
         // Foundation
-        if(XMACH::isLibraryRecordNamePresent("CoreFoundation",&(pMACHInfo->listLibraryRecords)))
+        if(XMACH::isLibraryRecordNamePresent("Foundation",&(pMACHInfo->listLibraryRecords)))
         {
             _SCANS_STRUCT recordFoundation={};
 
             recordFoundation.type=SpecAbstract::RECORD_TYPE_LIBRARY;
             recordFoundation.name=SpecAbstract::RECORD_NAME_FOUNDATION;
 
-            quint32 nVersion=XMACH::getLibraryCurrentVersion("CoreFoundation",&(pMACHInfo->listLibraryRecords));
+            quint32 nVersion=XMACH::getLibraryCurrentVersion("Foundation",&(pMACHInfo->listLibraryRecords));
 
             if((osInfo.osName==XBinary::OSNAME_MAC_OS_X)||(osInfo.osName==XBinary::OSNAME_OS_X)||(osInfo.osName==XBinary::OSNAME_MACOS))
             {
@@ -15568,25 +15568,45 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Sp
 
         if(pMACHInfo->basic_info.bIsTest)
         {
-            QMap<quint64,QString> mapCommands=XMACH::getLoadCommandTypesS();
+//            QMap<quint64,QString> mapCommands=XMACH::getLoadCommandTypesS();
 
-            QList<XMACH::COMMAND_RECORD> list=mach.getCommandRecords();
+//            QList<XMACH::COMMAND_RECORD> list=mach.getCommandRecords();
 
-            QSet<quint32> stRecords;
+//            QSet<quint32> stRecords;
+
+//            for(int i=0;i<list.count();i++)
+//            {
+//                if(!stRecords.contains(list.at(i).nType))
+//                {
+//                    _SCANS_STRUCT recordSS={};
+
+//                    recordSS.type=RECORD_TYPE_LIBRARY;
+//                    recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+i+1);
+//                    recordSS.sVersion=mapCommands.value(list.at(i).nType);
+
+//                    pMACHInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
+
+//                    stRecords.insert(list.at(i).nType);
+//                }
+//            }
+            QList<XMACH::LIBRARY_RECORD> list=mach.getLibraryRecords();
+
+            QSet<QString> stRecords;
 
             for(int i=0;i<list.count();i++)
             {
-                if(!stRecords.contains(list.at(i).nType))
+                if(!stRecords.contains(list.at(i).sName))
                 {
                     _SCANS_STRUCT recordSS={};
 
                     recordSS.type=RECORD_TYPE_LIBRARY;
                     recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+i+1);
-                    recordSS.sVersion=mapCommands.value(list.at(i).nType);
+                    recordSS.sVersion=list.at(i).sName;
+                    recordSS.sInfo=XBinary::get_uint32_full_version(list.at(i).current_version);
 
                     pMACHInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
 
-                    stRecords.insert(list.at(i).nType);
+                    stRecords.insert(list.at(i).sName);
                 }
             }
         }
