@@ -11841,9 +11841,9 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_UNKNOWN,"","",0);
 
-                int nNumberOfRecords=listApkSignaturesBlockRecords.count();
+                qint32 nNumberOfRecords=listApkSignaturesBlockRecords.count();
 
-                for(int i=0;i<nNumberOfRecords;i++)
+                for(qint32 i=0;i<nNumberOfRecords;i++)
                 {
                     if(listApkSignaturesBlockRecords.at(i).nID>0xFFFF)
                     {
