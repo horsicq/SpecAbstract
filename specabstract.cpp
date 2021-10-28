@@ -9326,9 +9326,9 @@ void SpecAbstract::PE_handle_PrivateEXEProtector(QIODevice *pDevice, bool bIsIma
                 }
             }
 
-            int nNumberOfSections=pPEInfo->listSectionHeaders.count();
+            qint32 nNumberOfSections=pPEInfo->listSectionHeaders.count();
 
-            for(int i=0;i<nNumberOfSections;i++)
+            for(qint32 i=0;i<nNumberOfSections;i++)
             {
                 if((pPEInfo->listSectionHeaders.at(i).Characteristics&0xFFFF)==0)
                 {
