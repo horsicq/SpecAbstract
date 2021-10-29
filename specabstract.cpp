@@ -18396,9 +18396,9 @@ bool SpecAbstract::PE_compareRichRecord(_SCANS_STRUCT *pResult,SpecAbstract::MSR
 void SpecAbstract::filterResult(QList<SpecAbstract::SCAN_STRUCT> *pListRecords, QSet<SpecAbstract::RECORD_TYPE> stRecordTypes)
 {
     QList<SpecAbstract::SCAN_STRUCT> listRecords;
-    int nNumberOfRecords=pListRecords->count();
+    qint32 nNumberOfRecords=pListRecords->count();
 
-    for(int i=0;i<nNumberOfRecords;i++)
+    for(qint32 i=0;i<nNumberOfRecords;i++)
     {
         if(stRecordTypes.contains(pListRecords->at(i).type))
         {
