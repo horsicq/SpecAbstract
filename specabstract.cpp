@@ -7230,8 +7230,8 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                 if(listVCL.count())
                 {
                     bVCL=true;
-                    int nVCLOffset=listVCL.at(0).nOffset;
-                    int nVCLValue=listVCL.at(0).nValue;
+                    qint32 nVCLOffset=listVCL.at(0).nOffset;
+                    qint32 nVCLValue=listVCL.at(0).nValue;
 
                     //                    qDebug("nVCLOffset: %d",nVCLOffset);
                     //                    qDebug("nVCLValue: %d",nVCLValue);
@@ -8087,7 +8087,7 @@ void SpecAbstract::PE_handle_wxWidgets(QIODevice *pDevice, bool bIsImage, SpecAb
             QString sVersion;
             QString sInfo;
 
-            int nNumberOfImports=pPEInfo->listImports.count();
+            qint32 nNumberOfImports=pPEInfo->listImports.count();
 
             for(qint32 i=0;i<nNumberOfImports;i++)
             {
