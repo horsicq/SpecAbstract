@@ -15675,9 +15675,9 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO
             listRichDescriptions.append(MSDOS_richScan(pLEInfo->listRichSignatures.at(i).nId,pLEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pLEInfo->basic_info.id.fileType,XBinary::FT_MSDOS,&(pLEInfo->basic_info),DETECTTYPE_RICH,pbIsStop));
         }
 
-        int nRichDescriptionsCount=listRichDescriptions.count();
+        qint32 nRichDescriptionsCount=listRichDescriptions.count();
 
-        for(int i=nRichDescriptionsCount-1;i>=0;i--)
+        for(qint32 i=nRichDescriptionsCount-1;i>=0;i--)
         {
             if(listRichDescriptions.at(i).type==SpecAbstract::RECORD_TYPE_LINKER)
             {
