@@ -15660,7 +15660,7 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO
         }
 
         // Rich
-        int nRichSignaturesCount=pLEInfo->listRichSignatures.count();
+        qint32 nRichSignaturesCount=pLEInfo->listRichSignatures.count();
 
         if(nRichSignaturesCount)
         {
@@ -15670,7 +15670,7 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO
 
         QList<_SCANS_STRUCT> listRichDescriptions;
 
-        for(int i=0;i<nRichSignaturesCount;i++)
+        for(qint32 i=0;i<nRichSignaturesCount;i++)
         {
             listRichDescriptions.append(MSDOS_richScan(pLEInfo->listRichSignatures.at(i).nId,pLEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pLEInfo->basic_info.id.fileType,XBinary::FT_MSDOS,&(pLEInfo->basic_info),DETECTTYPE_RICH,pbIsStop));
         }
