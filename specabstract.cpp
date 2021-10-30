@@ -13454,9 +13454,9 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
 
-    int nNumberOfComments=pELFInfo->listComments.count();
+    qint32 nNumberOfComments=pELFInfo->listComments.count();
 
-    for(int i=0;i<nNumberOfComments;i++)
+    for(qint32 i=0;i<nNumberOfComments;i++)
     {
         QString sComment=pELFInfo->listComments.at(i);
 
