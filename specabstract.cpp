@@ -17711,9 +17711,9 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
 
 void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, SpecAbstract::CONST_RECORD *pRecords, int nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, bool *pbIsStop)
 {
-    int nSignaturesCount=nRecordsSize/(int)sizeof(CONST_RECORD);
+    qint32 nSignaturesCount=nRecordsSize/(int)sizeof(CONST_RECORD);
 
-    for(int i=0;(i<nSignaturesCount)&&(!(*pbIsStop));i++)
+    for(qint32 i=0;(i<nSignaturesCount)&&(!(*pbIsStop));i++)
     {
         if((pRecords[i].basicInfo.fileType==fileType1)||(pRecords[i].basicInfo.fileType==fileType2))
         {
