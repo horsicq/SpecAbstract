@@ -9037,9 +9037,9 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAb
 
             if(!pPEInfo->mapResultInstallers.contains(RECORD_NAME_WINDOWSINSTALLER))
             {
-                int nNumberOfResources=pPEInfo->listResources.count();
+                qint32 nNumberOfResources=pPEInfo->listResources.count();
 
-                for(int i=0;i<nNumberOfResources;i++)
+                for(qint32 i=0;i<nNumberOfResources;i++)
                 {
                     qint64 _nOffset=pPEInfo->listResources.at(i).nOffset;
                     qint64 _nSize=pPEInfo->listResources.at(i).nSize;
