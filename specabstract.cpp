@@ -17179,9 +17179,9 @@ void SpecAbstract::PE_x86Emul(QIODevice *pDevice, bool bIsImage, SpecAbstract::P
     bool bSuccess=true;
     bool bVMProtect=true;
 
-    int nCount=10;
+    qint32 nCount=10;
 
-    for(int i=0;i<nCount;i++)
+    for(qint32 i=0;i<nCount;i++)
     {
         qint64 nOffset=XBinary::addressToOffset(&(pPEInfo->basic_info.memoryMap),nAddress);
 
