@@ -16231,9 +16231,9 @@ void SpecAbstract::DEX_handle_Dexguard(QIODevice *pDevice, SpecAbstract::DEXINFO
 
             if(!pDEXInfo->mapTypeDetects.contains(RECORD_NAME_DEXGUARD))
             {
-                int nNumberOfTypes=pDEXInfo->listTypeItemStrings.count();
+                qint32 nNumberOfTypes=pDEXInfo->listTypeItemStrings.count();
 
-                for(int i=0;(i<nNumberOfTypes)&&(!(*pbIsStop));i++)
+                for(qint32 i=0;(i<nNumberOfTypes)&&(!(*pbIsStop));i++)
                 {
                     QString sType=pDEXInfo->listTypeItemStrings.at(i);
 
