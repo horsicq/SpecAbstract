@@ -16556,10 +16556,10 @@ bool SpecAbstract::checkVersionString(QString sVersion)
     {
         bResult=true;
 
-        int nStringSize=sVersion.size();
+        qint32 nStringSize=sVersion.size();
 
         // TODO
-        for(int i=0;i<nStringSize;i++)
+        for(qint32 i=0;i<nStringSize;i++)
         {
             QChar _char=sVersion.at(i);
 
