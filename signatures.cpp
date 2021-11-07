@@ -47,6 +47,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_WAV,                          "",                 ""},                    "................'WAVEfmt'"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_DJVU,                         "",                 ""},                    "'AT&T'"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_JPEG,                         "",                 ""},                    "FFD8FFE0....'JFIF'00"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_JPEG,                         "",                 "EXIF"},                "FFD8FFE1....'Exif'00"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_TIFF,                         "",                 "BE"},                  "'MM'002A"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_TIFF,                         "",                 "LE"},                  "'II'2A00"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_GIF,                          "",                 ""},                    "'GIF8'"},
