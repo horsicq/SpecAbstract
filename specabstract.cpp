@@ -17829,9 +17829,9 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
         listSignatureCRC.append(nCRC);
     }
 
-    for(int i=0;(i<nNumberOfArchives)&&(!(*pbIsStop));i++)
+    for(qint32 i=0;(i<nNumberOfArchives)&&(!(*pbIsStop));i++)
     {
-        for(int j=0; (j<nNumberOfSignatures)&&(!(*pbIsStop)); j++)
+        for(qint32 j=0; (j<nNumberOfSignatures)&&(!(*pbIsStop)); j++)
         {
             if((pRecords[j].basicInfo.fileType==fileType1)||(pRecords[j].basicInfo.fileType==fileType2))
             {
