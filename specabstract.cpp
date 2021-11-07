@@ -16181,9 +16181,9 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
                 }
             }
 
-            int nNumberOfRecords=pDEXInfo->listStrings.count();
+            qint32 nNumberOfRecords=pDEXInfo->listStrings.count();
 
-            for(int i=0;(i<nNumberOfRecords);i++)
+            for(qint32 i=0;(i<nNumberOfRecords);i++)
             {
                 if(pDEXInfo->basic_info.bIsTest)
                 {
