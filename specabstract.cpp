@@ -14401,9 +14401,9 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
 
             QSet<QString> stRecords;
 
-            int nNumberOfRecords=pELFInfo->listComments.count();
+            qint32 nNumberOfRecords=pELFInfo->listComments.count();
 
-            for(int i=0;i<nNumberOfRecords;i++)
+            for(qint32 i=0;i<nNumberOfRecords;i++)
             {
                 if(!stRecords.contains(pELFInfo->listComments.at(i)))
                 {
