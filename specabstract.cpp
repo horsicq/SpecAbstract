@@ -18001,9 +18001,9 @@ QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, qui
 {
     QList<_SCANS_STRUCT> listResult;
 
-    int nSignaturesCount=nRecordsSize/(int)sizeof(MSRICH_RECORD);
+    qint32 nSignaturesCount=nRecordsSize/(int)sizeof(MSRICH_RECORD);
 
-    for(int i=0;(i<nSignaturesCount)&&(!(*pbIsStop));i++)
+    for(qint32 i=0;(i<nSignaturesCount)&&(!(*pbIsStop));i++)
     {
         _SCANS_STRUCT record={};
 
