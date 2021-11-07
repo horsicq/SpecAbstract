@@ -17887,12 +17887,12 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
 
 void SpecAbstract::archiveExpScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, SpecAbstract::STRING_RECORD *pRecords, int nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, SpecAbstract::BASIC_INFO *pBasicInfo, SpecAbstract::DETECTTYPE detectType, bool *pbIsStop)
 {
-    int nNumberOfArchives=pListArchiveRecords->count();
-    int nNumberOfSignatures=nRecordsSize/sizeof(STRING_RECORD);
+    qint32 nNumberOfArchives=pListArchiveRecords->count();
+    qint32 nNumberOfSignatures=nRecordsSize/sizeof(STRING_RECORD);
 
-    for(int i=0;(i<nNumberOfArchives)&&(!(*pbIsStop));i++)
+    for(qint32 i=0;(i<nNumberOfArchives)&&(!(*pbIsStop));i++)
     {
-        for(int j=0; (j<nNumberOfSignatures)&&(!(*pbIsStop)); j++)
+        for(qint32 j=0; (j<nNumberOfSignatures)&&(!(*pbIsStop)); j++)
         {
             if((pRecords[j].basicInfo.fileType==fileType1)||(pRecords[j].basicInfo.fileType==fileType2))
             {
