@@ -12118,9 +12118,9 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, bool bIsImage, ZIPINFO_STR
                     ss=pZipInfo->mapArchiveDetects.value(RECORD_NAME_MOBILETENCENTPROTECT);
                 }
 
-                int nNumberOfRecords=pZipInfo->listArchiveRecords.count();
+                qint32 nNumberOfRecords=pZipInfo->listArchiveRecords.count();
 
-                for(int i=0;i<nNumberOfRecords;i++)
+                for(qint32 i=0;i<nNumberOfRecords;i++)
                 {
                     if(pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/arm64-v8a/libshella-"))
                     {
