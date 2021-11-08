@@ -17547,9 +17547,9 @@ void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, 
 
 void SpecAbstract::PE_resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources, PE_RESOURCES_RECORD *pRecords, int nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, bool *pbIsStop)
 {
-    int nSignaturesCount=nRecordsSize/sizeof(PE_RESOURCES_RECORD);
+    qint32 nSignaturesCount=nRecordsSize/sizeof(PE_RESOURCES_RECORD);
 
-    for(int i=0;(i<nSignaturesCount)&&(!(*pbIsStop));i++)
+    for(qint32 i=0;(i<nSignaturesCount)&&(!(*pbIsStop));i++)
     {
         if((pRecords[i].basicInfo.fileType==fileType1)||(pRecords[i].basicInfo.fileType==fileType2))
         {
