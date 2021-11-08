@@ -15592,7 +15592,7 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Sp
 
 //            QSet<quint32> stRecords;
 
-//            for(int i=0;i<list.count();i++)
+//            for(qint32 i=0;i<list.count();i++)
 //            {
 //                if(!stRecords.contains(list.at(i).nType))
 //                {
