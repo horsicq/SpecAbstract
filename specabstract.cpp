@@ -17812,10 +17812,10 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
     QList<quint32> listStringCRC;
     QList<quint32> listSignatureCRC;
 
-    int nNumberOfArchives=pListArchiveRecords->count();
-    int nNumberOfSignatures=nRecordsSize/sizeof(STRING_RECORD);
+    qint32 nNumberOfArchives=pListArchiveRecords->count();
+    qint32 nNumberOfSignatures=nRecordsSize/sizeof(STRING_RECORD);
 
-    for(int i=0;i<nNumberOfArchives;i++)
+    for(qint32 i=0;i<nNumberOfArchives;i++)
     {
 //        qDebug("%s", pListArchiveRecords->at(i).sFileName.toLatin1().data());
         quint32 nCRC=XBinary::getStringCustomCRC32(pListArchiveRecords->at(i).sFileName);
