@@ -134,7 +134,7 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
 //    {
 //        QList<SpecAbstract::SCAN_STRUCT> _listDetects;
 
-//        int nNumberOfRecords=pScanResult->listRecords.count();
+//        qint32 nNumberOfRecords=pScanResult->listRecords.count();
 
 //        for(qint32 i=0;i<nNumberOfRecords;i++)
 //        {
