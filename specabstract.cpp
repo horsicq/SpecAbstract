@@ -2539,7 +2539,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         for(qint32 i=0;i<listImportHeaders.count();i++)
         {
             qDebug("Import hash: %x",result.listImportPositionHashes.at(i));
-            for(int j=0;j<listImportHeaders.at(i).listPositions.count();j++)
+            for(qint32 j=0;j<listImportHeaders.at(i).listPositions.count();j++)
             {
                 qDebug("%s %s",listImportHeaders.at(i).sName.toLatin1().data(),
                        listImportHeaders.at(i).listPositions.at(j).sFunction.toLatin1().data());
