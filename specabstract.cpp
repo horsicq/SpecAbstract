@@ -1,4 +1,4 @@
-// copyright (c) 2017-2021 hors<horsicq@gmail.com>
+// Copyright (c) 2017-2021 hors<horsicq@gmail.com>
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -15855,7 +15855,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
 
         QList<XDEX_DEF::MAP_ITEM> listMaps=dex.getMapItems();
 
-//        int nNumberOfMapItems=listMaps.count();
+//        qint32 nNumberOfMapItems=listMaps.count();
 
         // dx
         // https://github.com/aosp-mirror/platform_dalvik/blob/master/dx/src/com/android/dx/dex/file/DexFile.java#L122
