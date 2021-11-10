@@ -10042,7 +10042,7 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,
     if(pe.isValid())
     {
 #ifdef QT_DEBUG
-//        int i=pPEInfo->listImportPositionHashes.count()-1;
+//        qint32 i=pPEInfo->listImportPositionHashes.count()-1;
 
 //        if(i>0)
 //        {
