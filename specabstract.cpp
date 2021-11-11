@@ -526,6 +526,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_HPUX:                                  sResult=QString("Hewlett-Packard HP-UX");                       break;
         case RECORD_NAME_HTML:                                  sResult=QString("HTML");                                        break;
         case RECORD_NAME_HXS:                                   sResult=QString("HXS");                                         break;
+        case RECORD_NAME_HYPERTECHCRACKPROOF:                   sResult=QString("HyperTech Crackproof");                        break;
         case RECORD_NAME_IBMJDK:                                sResult=QString("IBM JDK");                                     break;
         case RECORD_NAME_IBMPCPASCAL:                           sResult=QString("IBM PC Pascal");                               break;
         case RECORD_NAME_ICE:                                   sResult=QString("ICE");                                         break;
@@ -2508,7 +2509,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         //        for(qint32 i=0;i<result.listImports.count();i++)
         //        {
         //            qDebug(result.listImports.at(i).sName.toLatin1().data());
-        //            for(int j=0;j<result.listImports.at(i).listPositions.count();j++)
+        //            for(qint32 j=0;j<result.listImports.at(i).listPositions.count();j++)
         //            {
         //                qDebug("%d %s",j,result.listImports.at(i).listPositions.at(j).sFunction.toLatin1().data());
         //            }
@@ -3340,6 +3341,11 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
             pPEInfo->mapResultPackers.insert(recordMPRESS.name,scansToScan(&(pPEInfo->basic_info),&recordMPRESS));
         }
 
+        if(XPE::isImportLibraryPresent("KeRnEl32.dLl",&(pPEInfo->listImports)))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_HYPERTECHCRACKPROOF,"","",0);
+            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        }
 
         // Spoon Studio
         if(XPE::getResourcesVersionValue("Packager",&(pPEInfo->resVersion)).contains("Spoon Studio 2011"))
