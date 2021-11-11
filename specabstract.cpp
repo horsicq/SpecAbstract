@@ -7193,7 +7193,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstr
                             bCpp=false;
                         }
 
-                        //                    for(int i=0;i<pi.listModules.count();i++)
+                        //                    for(qint32 i=0;i<pi.listModules.count();i++)
                         //                    {
                         //                        qDebug(pi.listModules.at(i).sName.toLatin1().data());
                         //                    }
