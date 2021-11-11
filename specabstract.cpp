@@ -4057,7 +4057,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
                     //                    recordWinupack.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(((pPEInfo->nMinorLinkerVersion)/16)*10+(pPEInfo->nMinorLinkerVersion)%16);
 
-                    int nBuildNumber=0;
+                    qint32 nBuildNumber=0;
 
                     if((ss.nVariant==1)||(ss.nVariant==2))
                     {
