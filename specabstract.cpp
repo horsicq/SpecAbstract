@@ -18440,7 +18440,7 @@ QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice
 
         if(nClassOffset2!=-1)
         {
-            for(int i=0;i<20;i++)
+            for(qint32 i=0;i<20;i++)
             {
                 quint32 nValue=pe.read_uint32(nClassOffset2-nAddressSize*(i+1));
 
