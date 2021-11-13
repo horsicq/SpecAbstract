@@ -2876,7 +2876,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
 //            {
 //                QList<XDEX_DEF::METHOD_ITEM_ID> listMethods=dex.getList_METHOD_ITEM_ID(&mapItems);
 
-//                int nNumberOfItems=listMethods.count();
+//                qint32 nNumberOfItems=listMethods.count();
 
 //                for(qint32 i=0;i<nNumberOfItems;i++)
 //                {
