@@ -2665,7 +2665,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         PE_x86Emul(pDevice,pOptions->bIsImage,&result);
 
         // Rich
-//        int nNumberOfRichSignatures=result.listRichSignatures.count();
+//        qint32 nNumberOfRichSignatures=result.listRichSignatures.count();
 
 //        for(qint32 i=0;i<nNumberOfRichSignatures;i++)
 //        {
