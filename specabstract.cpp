@@ -2861,7 +2861,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
 //            {
 //                QList<XDEX_DEF::CLASS_ITEM_DEF> listClasses=dex.getList_CLASS_ITEM_DEF(&mapItems);
 
-//                int nNumberOfItems=listClasses.count();
+//                qint32 nNumberOfItems=listClasses.count();
 
 //                for(qint32 i=0;i<nNumberOfItems;i++)
 //                {
