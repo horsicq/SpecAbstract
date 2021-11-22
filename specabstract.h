@@ -35,14 +35,6 @@ class SpecAbstract : public QObject
     Q_OBJECT
 
 public:
-    enum RECORD_FILEPART
-    {
-        RECORD_FILEPART_UNKNOWN=0,
-        RECORD_FILEPART_ARCHIVERECORD,
-        RECORD_FILEPART_HEADER,
-        RECORD_FILEPART_OVERLAY
-    };
-
     enum RECORD_TYPE
     {
         RECORD_TYPE_UNKNOWN=0,
@@ -833,7 +825,7 @@ public:
         bool bVirtual;
         QString sUuid;
         XBinary::FT fileType;
-        RECORD_FILEPART filePart;
+        XBinary::FILEPART filePart;
         QString sVersion;
         QString sInfo;
     };
@@ -875,7 +867,7 @@ public:
     struct DETECT_RECORD
     {
         qint64 nOffset; // memory scan
-        RECORD_FILEPART filepart;
+        XBinary::FILEPART filepart;
         DETECTTYPE detectType;
         QString sValue; // mb TODO variant
         quint32 nVariant;
@@ -1351,7 +1343,7 @@ public:
     static void scan(QIODevice *pDevice,SpecAbstract::SCAN_RESULT *pScanResult,qint64 nOffset,qint64 nSize,SpecAbstract::ID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,bool bInit,bool *pbIsStop);
 
     static QString append(QString sResult,QString sString);
-    static QString recordFilePartIdToString(RECORD_FILEPART id);
+
     static QString recordTypeIdToString(RECORD_TYPE id);
     static QString recordNameIdToString(RECORD_NAME id);
     static QString heurTypeIdToString(DETECTTYPE id);

@@ -158,22 +158,6 @@ QString SpecAbstract::append(QString sResult, QString sString)
     return XBinary::appendText(sResult,sString,",");
 }
 
-QString SpecAbstract::recordFilePartIdToString(SpecAbstract::RECORD_FILEPART id)
-{
-    QString sResult=tr("Unknown");
-
-    switch(id)
-    {
-        // TODO more
-        case RECORD_FILEPART_UNKNOWN:                           sResult=tr("Unknown");                                          break;
-        case RECORD_FILEPART_HEADER:                            sResult=tr("Header");                                           break;
-        case RECORD_FILEPART_OVERLAY:                           sResult=tr("Overlay");                                          break;
-        case RECORD_FILEPART_ARCHIVERECORD:                     sResult=tr("Archive record");                                   break;
-    }
-
-    return sResult;
-}
-
 QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
 {
     QString sResult=tr("Unknown");
@@ -1105,9 +1089,9 @@ QString SpecAbstract::createTypeString(const SpecAbstract::SCAN_STRUCT *pScanStr
 {
     QString sResult;
 
-    if(pScanStruct->parentId.filePart!=RECORD_FILEPART_HEADER)
+    if(pScanStruct->parentId.filePart!=XBinary::FILEPART_HEADER)
     {
-        sResult+=SpecAbstract::recordFilePartIdToString(pScanStruct->parentId.filePart);
+        sResult+=XBinary::recordFilePartIdToString(pScanStruct->parentId.filePart);
 
         if(pScanStruct->parentId.sVersion!="")
         {
@@ -1985,7 +1969,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     {
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=XBinary::FT_BINARY;
-        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.filePart=XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
@@ -2097,7 +2081,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     {
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=XBinary::FT_MSDOS;
-        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.filePart=XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
@@ -2183,7 +2167,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
 
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=result.bIs64?XBinary::FT_ELF64:XBinary::FT_ELF32;
-        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.filePart=XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
@@ -2274,7 +2258,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, Sp
 
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=result.bIs64?XBinary::FT_MACHO64:XBinary::FT_MACHO32;
-        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.filePart=XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
@@ -2351,7 +2335,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
             result.basic_info.id.fileType=XBinary::FT_LE;
         }
 
-        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.filePart=XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
@@ -2410,7 +2394,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbst
     {
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=XBinary::FT_NE;
-        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.filePart=XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
@@ -2468,7 +2452,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
 
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=result.bIs64?XBinary::FT_PE64:XBinary::FT_PE32;
-        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.filePart=XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
@@ -2825,7 +2809,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
     {
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=XBinary::FT_DEX;
-        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.filePart=XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
@@ -2925,7 +2909,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
     {
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=XBinary::FT_ZIP;
-        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.filePart=XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
@@ -3020,7 +3004,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
     {
         result.basic_info.parentId=parentId;
         result.basic_info.id.fileType=XBinary::FT_ARCHIVE;
-        result.basic_info.id.filePart=RECORD_FILEPART_HEADER;
+        result.basic_info.id.filePart=XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid=XBinary::generateUUID();
         result.basic_info.nOffset=nOffset;
         result.basic_info.nSize=pDevice->size();
@@ -3040,7 +3024,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
             SpecAbstract::SCAN_RESULT scanResult={0};
 
             SpecAbstract::ID _parentId=result.basic_info.id;
-            _parentId.filePart=SpecAbstract::RECORD_FILEPART_ARCHIVERECORD;
+            _parentId.filePart=XBinary::FILEPART_ARCHIVERECORD;
             _parentId.sInfo=result.listArchiveRecords.at(i).sFileName;
             _parentId.bVirtual=true; // TODO Check
 
@@ -10254,7 +10238,7 @@ void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAb
                 SpecAbstract::SCAN_RESULT scanResult={0};
 
                 SpecAbstract::ID _parentId=pPEInfo->basic_info.id;
-                _parentId.filePart=SpecAbstract::RECORD_FILEPART_OVERLAY;
+                _parentId.filePart=XBinary::FILEPART_OVERLAY;
                 scan(pDevice,&scanResult,pPEInfo->nOverlayOffset,pPEInfo->nOverlaySize,_parentId,pOptions,false,pbIsStop);
 
                 pPEInfo->listRecursiveDetects.append(scanResult.listRecords);
@@ -12508,7 +12492,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
                         SpecAbstract::SCAN_RESULT scanResult={0};
 
                         SpecAbstract::ID _parentId=pZipInfo->basic_info.id;
-                        _parentId.filePart=SpecAbstract::RECORD_FILEPART_ARCHIVERECORD;
+                        _parentId.filePart=XBinary::FILEPART_ARCHIVERECORD;
                         _parentId.sInfo=pZipInfo->listArchiveRecords.at(i).sFileName;
                         _parentId.bVirtual=true; // TODO Check
 
@@ -13254,7 +13238,7 @@ void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, bool bIsImage, Spe
                 SpecAbstract::SCAN_RESULT scanResult={0};
 
                 SpecAbstract::ID _parentId=pMSDOSInfo->basic_info.id;
-                _parentId.filePart=SpecAbstract::RECORD_FILEPART_OVERLAY;
+                _parentId.filePart=XBinary::FILEPART_OVERLAY;
                 scan(pDevice,&scanResult,pMSDOSInfo->nOverlayOffset,pMSDOSInfo->nOverlaySize,_parentId,pOptions,false,pbIsStop);
 
                 pMSDOSInfo->listRecursiveDetects.append(scanResult.listRecords);
@@ -18077,12 +18061,12 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(QByteArray baData,
     ds >> nTemp;
     ssResult.id.fileType=(XBinary::FT)nTemp;
     ds >> nTemp;
-    ssResult.id.filePart=(RECORD_FILEPART)nTemp;
+    ssResult.id.filePart=(XBinary::FILEPART)nTemp;
     ds >> ssResult.parentId.sUuid;
     ds >> nTemp;
     ssResult.parentId.fileType=(XBinary::FT)nTemp;
     ds >> nTemp;
-    ssResult.parentId.filePart=(RECORD_FILEPART)nTemp;
+    ssResult.parentId.filePart=(XBinary::FILEPART)nTemp;
     ds >> nTemp;
     ssResult.type=(RECORD_TYPE)nTemp;
     ds >> nTemp;
