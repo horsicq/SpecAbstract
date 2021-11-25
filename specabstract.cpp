@@ -18408,7 +18408,7 @@ QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice
     qint64 _nOffset=nOffset;
     qint64 _nSize=nSize;
 
-    int nAddressSize=bIs64?8:4;
+    qint32 nAddressSize=bIs64?8:4;
 
     while(_nSize>0)
     {
