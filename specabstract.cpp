@@ -4695,6 +4695,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 //                    QString _sVersion;
 
                     // TODO a function
+                    // TODO emul
                     while(true)
                     {
                         bool bContinue=false;
