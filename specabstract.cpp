@@ -2352,11 +2352,13 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
 
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.fileType,XBinary::FT_MSDOS,&(result.basic_info),DETECTTYPE_HEADER,pbIsStop);
 
+        LE_handle_OperationSystems(pDevice,pOptions->bIsImage,&result);
         LE_handle_Microsoft(pDevice,pOptions->bIsImage,&result,pbIsStop);
         LE_handle_Borland(pDevice,pOptions->bIsImage,&result);
 
         LE_handleLanguages(pDevice,pOptions->bIsImage,&result);
 
+        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLanguages.values());
@@ -15633,6 +15635,18 @@ void SpecAbstract::MACHO_handleLanguages(QIODevice *pDevice, bool bIsImage, MACH
     getLanguage(&(pMACHInfo->mapResultTools),&(pMACHInfo->mapResultLanguages));
 
     fixLanguage(&(pMACHInfo->mapResultLanguages));
+}
+
+void SpecAbstract::LE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage, LEINFO_STRUCT *pLEInfo)
+{
+    XLE le(pDevice,bIsImage);
+
+    if(le.isValid())
+    {
+        _SCANS_STRUCT ssOperationSystem=getScansStructFromOsInfo(le.getOsInfo());
+
+        pLEInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pLEInfo->basic_info),&ssOperationSystem));
+    }
 }
 
 void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO_STRUCT *pLEInfo, bool *pbIsStop)

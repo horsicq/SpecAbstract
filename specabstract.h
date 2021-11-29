@@ -1099,6 +1099,7 @@ public:
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
 
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultOperationSystems;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
@@ -1458,6 +1459,7 @@ public:
 
     static void MACHO_handleLanguages(QIODevice *pDevice,bool bIsImage,MACHOINFO_STRUCT *pMACHInfo);
 
+    static void LE_handle_OperationSystems(QIODevice *pDevice,bool bIsImage,LEINFO_STRUCT *pLEInfo);
     static void LE_handle_Microsoft(QIODevice *pDevice,bool bIsImage,LEINFO_STRUCT *pLEInfo,bool *pbIsStop);
     static void LE_handle_Borland(QIODevice *pDevice,bool bIsImage,LEINFO_STRUCT *pLEInfo);
 
