@@ -184,6 +184,7 @@ public:
         RECORD_NAME_BORLANDDELPHI,
         RECORD_NAME_BORLANDDELPHIDOTNET,
         RECORD_NAME_BORLANDOBJECTPASCALDELPHI,
+        RECORD_NAME_BORLANDOSSERVICES,
         RECORD_NAME_BREAKINTOPATTERN,
         RECORD_NAME_BRIDGEOS,
         RECORD_NAME_BRIDGEOSSDK,
@@ -1119,6 +1120,7 @@ public:
 
         QMap<RECORD_NAME,_SCANS_STRUCT> mapEntryPointDetects;
 
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultOperationSystems;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLinkers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
@@ -1465,6 +1467,7 @@ public:
 
     static void LE_handleLanguages(QIODevice *pDevice,bool bIsImage,LEINFO_STRUCT *pLEInfo);
 
+    static void NE_handle_OperationSystems(QIODevice *pDevice,bool bIsImage,NEINFO_STRUCT *pNEInfo);
     static void NE_handle_Borland(QIODevice *pDevice,bool bIsImage,NEINFO_STRUCT *pNEInfo);
 
     static void NE_handleLanguages(QIODevice *pDevice,bool bIsImage,NEINFO_STRUCT *pNEInfo);

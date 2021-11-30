@@ -318,6 +318,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BORLANDDELPHI:                         sResult=QString("Borland Delphi");                              break;
         case RECORD_NAME_BORLANDDELPHIDOTNET:                   sResult=QString("Borland Delphi .NET");                         break;
         case RECORD_NAME_BORLANDOBJECTPASCALDELPHI:             sResult=QString("Borland Object Pascal(Delphi)");               break;
+        case RECORD_NAME_BORLANDOSSERVICES:                     sResult=QString("Borland OS Services");                         break;
         case RECORD_NAME_BREAKINTOPATTERN:                      sResult=QString("Break Into Pattern");                          break;
         case RECORD_NAME_BRIDGEOS:                              sResult=QString("bridgeOS");                                    break;
         case RECORD_NAME_BRIDGEOSSDK:                           sResult=QString("bridgeOS SDK");                                break;
@@ -675,7 +676,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_OPERA:                                 sResult=QString("Opera");                                       break;
         case RECORD_NAME_ORACLESOLARISLINKEDITORS:              sResult=QString("Oracle Solaris Link Editors");                 break;
         case RECORD_NAME_ORIEN:                                 sResult=QString("ORiEN");                                       break;
-        case RECORD_NAME_OS2:                                   sResult=QString("OS2");                                         break;
+        case RECORD_NAME_OS2:                                   sResult=QString("OS/2");                                        break;
         case RECORD_NAME_OSCCRYPTER:                            sResult=QString("OSC-Crypter");                                 break;
         case RECORD_NAME_OS_X:                                  sResult=QString("OS X");                                        break;
         case RECORD_NAME_P0KESCRAMBLER:                         sResult=QString("p0ke Scrambler");                              break;
@@ -2411,10 +2412,12 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbst
 
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.fileType,XBinary::FT_MSDOS,&(result.basic_info),DETECTTYPE_HEADER,pbIsStop);
 
+        NE_handle_OperationSystems(pDevice,pOptions->bIsImage,&result);
         NE_handle_Borland(pDevice,pOptions->bIsImage,&result);
 
         NE_handleLanguages(pDevice,pOptions->bIsImage,&result);
 
+        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
         result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultLanguages.values());
@@ -15765,6 +15768,18 @@ void SpecAbstract::LE_handleLanguages(QIODevice *pDevice, bool bIsImage, LEINFO_
     fixLanguage(&(pLEInfo->mapResultLanguages));
 }
 
+void SpecAbstract::NE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage, NEINFO_STRUCT *pNEInfo)
+{
+    XNE ne(pDevice,bIsImage);
+
+    if(ne.isValid())
+    {
+        _SCANS_STRUCT ssOperationSystem=getScansStructFromOsInfo(ne.getOsInfo());
+
+        pNEInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pNEInfo->basic_info),&ssOperationSystem));
+    }
+}
+
 void SpecAbstract::NE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbstract::NEINFO_STRUCT *pNEInfo)
 {
     XNE ne(pDevice,bIsImage);
@@ -18321,36 +18336,37 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
 
     result.type=RECORD_TYPE_OPERATIONSYSTEM;
 
-    if      (osinfo.osName==XBinary::OSNAME_MSDOS)      result.name=RECORD_NAME_MSDOS;
-    else if (osinfo.osName==XBinary::OSNAME_POSIX)      result.name=RECORD_NAME_POSIX;
-    else if (osinfo.osName==XBinary::OSNAME_UNIX)       result.name=RECORD_NAME_UNIX;
-    else if (osinfo.osName==XBinary::OSNAME_LINUX)      result.name=RECORD_NAME_LINUX;
-    else if (osinfo.osName==XBinary::OSNAME_WINDOWS)    result.name=RECORD_NAME_WINDOWS;
-    else if (osinfo.osName==XBinary::OSNAME_WINDOWSCE)  result.name=RECORD_NAME_WINDOWSCE;
-    else if (osinfo.osName==XBinary::OSNAME_XBOX)       result.name=RECORD_NAME_XBOX;
-    else if (osinfo.osName==XBinary::OSNAME_OS2)        result.name=RECORD_NAME_OS2;
-    else if (osinfo.osName==XBinary::OSNAME_MAC_OS)     result.name=RECORD_NAME_MAC_OS;
-    else if (osinfo.osName==XBinary::OSNAME_MAC_OS_X)   result.name=RECORD_NAME_MAC_OS_X;
-    else if (osinfo.osName==XBinary::OSNAME_OS_X)       result.name=RECORD_NAME_OS_X;
-    else if (osinfo.osName==XBinary::OSNAME_MACOS)      result.name=RECORD_NAME_MACOS;
-    else if (osinfo.osName==XBinary::OSNAME_IPHONEOS)   result.name=RECORD_NAME_IPHONEOS;
-    else if (osinfo.osName==XBinary::OSNAME_IPADOS)     result.name=RECORD_NAME_IPADOS;
-    else if (osinfo.osName==XBinary::OSNAME_IOS)        result.name=RECORD_NAME_IOS;
-    else if (osinfo.osName==XBinary::OSNAME_WATCHOS)    result.name=RECORD_NAME_WATCHOS;
-    else if (osinfo.osName==XBinary::OSNAME_TVOS)       result.name=RECORD_NAME_TVOS;
-    else if (osinfo.osName==XBinary::OSNAME_BRIDGEOS)   result.name=RECORD_NAME_BRIDGEOS;
-    else if (osinfo.osName==XBinary::OSNAME_ANDROID)    result.name=RECORD_NAME_ANDROID;
-    else if (osinfo.osName==XBinary::OSNAME_FREEBSD)    result.name=RECORD_NAME_FREEBSD;
-    else if (osinfo.osName==XBinary::OSNAME_OPENBSD)    result.name=RECORD_NAME_OPENBSD;
-    else if (osinfo.osName==XBinary::OSNAME_NETBSD)     result.name=RECORD_NAME_NETBSD;
-    else if (osinfo.osName==XBinary::OSNAME_HPUX)       result.name=RECORD_NAME_HPUX;
-    else if (osinfo.osName==XBinary::OSNAME_SOLARIS)    result.name=RECORD_NAME_SOLARIS;
-    else if (osinfo.osName==XBinary::OSNAME_AIX)        result.name=RECORD_NAME_AIX;
-    else if (osinfo.osName==XBinary::OSNAME_IRIX)       result.name=RECORD_NAME_IRIX;
-    else if (osinfo.osName==XBinary::OSNAME_TRU64)      result.name=RECORD_NAME_TRU64;
-    else if (osinfo.osName==XBinary::OSNAME_MODESTO)    result.name=RECORD_NAME_MODESTO;
-    else if (osinfo.osName==XBinary::OSNAME_OPENVMS)    result.name=RECORD_NAME_OPENVMS;
-    else if (osinfo.osName==XBinary::OSNAME_FENIXOS)    result.name=RECORD_NAME_FENIXOS;
+    if      (osinfo.osName==XBinary::OSNAME_MSDOS)              result.name=RECORD_NAME_MSDOS;
+    else if (osinfo.osName==XBinary::OSNAME_POSIX)              result.name=RECORD_NAME_POSIX;
+    else if (osinfo.osName==XBinary::OSNAME_UNIX)               result.name=RECORD_NAME_UNIX;
+    else if (osinfo.osName==XBinary::OSNAME_LINUX)              result.name=RECORD_NAME_LINUX;
+    else if (osinfo.osName==XBinary::OSNAME_WINDOWS)            result.name=RECORD_NAME_WINDOWS;
+    else if (osinfo.osName==XBinary::OSNAME_WINDOWSCE)          result.name=RECORD_NAME_WINDOWSCE;
+    else if (osinfo.osName==XBinary::OSNAME_XBOX)               result.name=RECORD_NAME_XBOX;
+    else if (osinfo.osName==XBinary::OSNAME_OS2)                result.name=RECORD_NAME_OS2;
+    else if (osinfo.osName==XBinary::OSNAME_MAC_OS)             result.name=RECORD_NAME_MAC_OS;
+    else if (osinfo.osName==XBinary::OSNAME_MAC_OS_X)           result.name=RECORD_NAME_MAC_OS_X;
+    else if (osinfo.osName==XBinary::OSNAME_OS_X)               result.name=RECORD_NAME_OS_X;
+    else if (osinfo.osName==XBinary::OSNAME_MACOS)              result.name=RECORD_NAME_MACOS;
+    else if (osinfo.osName==XBinary::OSNAME_IPHONEOS)           result.name=RECORD_NAME_IPHONEOS;
+    else if (osinfo.osName==XBinary::OSNAME_IPADOS)             result.name=RECORD_NAME_IPADOS;
+    else if (osinfo.osName==XBinary::OSNAME_IOS)                result.name=RECORD_NAME_IOS;
+    else if (osinfo.osName==XBinary::OSNAME_WATCHOS)            result.name=RECORD_NAME_WATCHOS;
+    else if (osinfo.osName==XBinary::OSNAME_TVOS)               result.name=RECORD_NAME_TVOS;
+    else if (osinfo.osName==XBinary::OSNAME_BRIDGEOS)           result.name=RECORD_NAME_BRIDGEOS;
+    else if (osinfo.osName==XBinary::OSNAME_ANDROID)            result.name=RECORD_NAME_ANDROID;
+    else if (osinfo.osName==XBinary::OSNAME_FREEBSD)            result.name=RECORD_NAME_FREEBSD;
+    else if (osinfo.osName==XBinary::OSNAME_OPENBSD)            result.name=RECORD_NAME_OPENBSD;
+    else if (osinfo.osName==XBinary::OSNAME_NETBSD)             result.name=RECORD_NAME_NETBSD;
+    else if (osinfo.osName==XBinary::OSNAME_HPUX)               result.name=RECORD_NAME_HPUX;
+    else if (osinfo.osName==XBinary::OSNAME_SOLARIS)            result.name=RECORD_NAME_SOLARIS;
+    else if (osinfo.osName==XBinary::OSNAME_AIX)                result.name=RECORD_NAME_AIX;
+    else if (osinfo.osName==XBinary::OSNAME_IRIX)               result.name=RECORD_NAME_IRIX;
+    else if (osinfo.osName==XBinary::OSNAME_TRU64)              result.name=RECORD_NAME_TRU64;
+    else if (osinfo.osName==XBinary::OSNAME_MODESTO)            result.name=RECORD_NAME_MODESTO;
+    else if (osinfo.osName==XBinary::OSNAME_OPENVMS)            result.name=RECORD_NAME_OPENVMS;
+    else if (osinfo.osName==XBinary::OSNAME_FENIXOS)            result.name=RECORD_NAME_FENIXOS;
+    else if (osinfo.osName==XBinary::OSNAME_BORLANDOSSERVICES)  result.name=RECORD_NAME_BORLANDOSSERVICES;
 
     result.sVersion=osinfo.sOsVersion;
     result.sInfo=QString("%1, %2, %3").arg(osinfo.sArch,XBinary::modeIdToString(osinfo.mode),osinfo.sType);
