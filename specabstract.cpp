@@ -1006,7 +1006,7 @@ SpecAbstract::UNPACK_OPTIONS SpecAbstract::getPossibleUnpackOptions(QIODevice *p
     return result;
 }
 
-QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct)
+QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, bool bShowType)
 {
     QString sResult;
 
@@ -1015,7 +1015,22 @@ QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct)
         sResult+="(Heuristic)";
     }
 
-    sResult+=QString("%1: %2(%3)[%4]").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type),SpecAbstract::recordNameIdToString(pScanStruct->name),pScanStruct->sVersion,pScanStruct->sInfo);
+    if(bShowType)
+    {
+        sResult+=QString("%1: ").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type));
+    }
+
+    sResult+=QString("%1").arg(SpecAbstract::recordNameIdToString(pScanStruct->name));
+
+    if(pScanStruct->sVersion!="")
+    {
+        sResult+=QString("(%1)").arg(pScanStruct->sVersion);
+    }
+
+    if(pScanStruct->sInfo!="")
+    {
+        sResult+=QString("[%1]").arg(pScanStruct->sInfo);
+    }
 
     return sResult;
 }
@@ -17798,7 +17813,7 @@ void SpecAbstract::MSDOS_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
         {
             _SCANS_STRUCT record={};
 
-            if(PE_compareRichRecord(&record,&(pRecords[i]),nID,nBuild,fileType1,fileType2))
+            if(MSDOS_compareRichRecord(&record,&(pRecords[i]),nID,nBuild,fileType1,fileType2))
             {
                 if(!pMapRecords->contains(pRecords[i].basicInfo.name))
                 {
@@ -18027,7 +18042,7 @@ QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, qui
     {
         _SCANS_STRUCT record={};
 
-        if(PE_compareRichRecord(&record,&(pRecords[i]),nID,nBuild,fileType1,fileType2))
+        if(MSDOS_compareRichRecord(&record,&(pRecords[i]),nID,nBuild,fileType1,fileType2))
         {
             listResult.append(record);
 
@@ -18374,7 +18389,29 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     return result;
 }
 
-bool SpecAbstract::PE_compareRichRecord(_SCANS_STRUCT *pResult,SpecAbstract::MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, XBinary::FT fileType1, XBinary::FT fileType2)
+QString SpecAbstract::getMsRichString(quint16 nId, quint16 nBuild)
+{
+    QString sResult;
+
+    MSRICH_RECORD *pRecords=_MS_rich_records;
+    int nRecordsSize=sizeof(_MS_rich_records);
+
+    qint32 nSignaturesCount=nRecordsSize/(int)sizeof(MSRICH_RECORD);
+
+    for(qint32 i=0;i<nSignaturesCount;i++)
+    {
+        _SCANS_STRUCT record={};
+
+        if(MSDOS_compareRichRecord(&record,&(pRecords[i]),nId,nBuild,XBinary::FT_PE,XBinary::FT_MSDOS))
+        {
+            sResult=_SCANS_STRUCT_toString(&record);
+        }
+    }
+
+    return sResult;
+}
+
+bool SpecAbstract::MSDOS_compareRichRecord(_SCANS_STRUCT *pResult,SpecAbstract::MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, XBinary::FT fileType1, XBinary::FT fileType2)
 {
     bool bResult=false;
 
@@ -18517,9 +18554,9 @@ SpecAbstract::VCL_PACKAGEINFO SpecAbstract::PE_getVCLPackageInfo(QIODevice *pDev
                     nOffset+=3;
                 }
 
-                int nCount=result.nRequiresCount?result.nRequiresCount:1000;
+                qint32 nCount=result.nRequiresCount?result.nRequiresCount:1000;
 
-                for(int i=0;i<nCount;i++)
+                for(qint32 i=0;i<nCount;i++)
                 {
                     if(nOffset-rh.nOffset>rh.nSize)
                     {

@@ -1353,7 +1353,7 @@ public:
 
     static SpecAbstract::UNPACK_OPTIONS getPossibleUnpackOptions(QIODevice *pDevice,bool bIsImage); // TODO Check
 
-    static QString _SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct);
+    static QString _SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct,bool bShowType=true);
 
     static QString createResultString(const SCAN_STRUCT *pScanStruct);
     static QString createResultString2(const SCAN_STRUCT *pScanStruct);
@@ -1562,7 +1562,7 @@ public:
 
     static QList<VCL_STRUCT> PE_getVCLstruct(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,bool bIs64);
     static VCL_PACKAGEINFO PE_getVCLPackageInfo(QIODevice *pDevice,bool bIsImage,QList<XPE::RESOURCE_RECORD> *pListResources);
-    static SpecAbstract::_SCANS_STRUCT PE_getRichSignatureDescription(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo,quint32 nRichID);
+    static SpecAbstract::_SCANS_STRUCT PE_getRichSignatureDescription(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo,quint32 nRichID); // TODO remove
 
     static SCAN_STRUCT scansToScan(BASIC_INFO *pBasicInfo,_SCANS_STRUCT *pScansStruct);
 
@@ -1593,8 +1593,10 @@ public:
 
     static _SCANS_STRUCT getScansStructFromOsInfo(XBinary::OSINFO osinfo);
 
+    static QString getMsRichString(quint16 nId,quint16 nBuild);
+
 private:
-    static bool PE_compareRichRecord(_SCANS_STRUCT *pResult,MSRICH_RECORD *pRecord,quint16 nID,quint32 nBuild,XBinary::FT fileType1,XBinary::FT fileType2);
+    static bool MSDOS_compareRichRecord(_SCANS_STRUCT *pResult,MSRICH_RECORD *pRecord,quint16 nID,quint32 nBuild,XBinary::FT fileType1,XBinary::FT fileType2);
     static void filterResult(QList<SCAN_STRUCT> *pListRecords,QSet<RECORD_TYPE> stRecordTypes);
 
 protected:
