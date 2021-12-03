@@ -27,7 +27,7 @@ SpecAbstract::SpecAbstract(QObject *pParent)
     Q_UNUSED(pParent)
 }
 
-void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, bool bInit, bool *pbIsStop)
+void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, bool bInit, bool *pbIsStop)
 {
     bool __bIsStop=false;
 
@@ -1127,18 +1127,18 @@ QString SpecAbstract::createTypeString(const SpecAbstract::SCAN_STRUCT *pScanStr
     return sResult;
 }
 
-SpecAbstract::SCAN_STRUCT SpecAbstract::createHeaderScanStruct(const SpecAbstract::SCAN_STRUCT *pScanStruct)
-{
-    SCAN_STRUCT result=*pScanStruct;
+//SpecAbstract::SCAN_STRUCT SpecAbstract::createHeaderScanStruct(const SpecAbstract::SCAN_STRUCT *pScanStruct)
+//{
+//    SCAN_STRUCT result=*pScanStruct;
 
-    result.id.sUuid=XBinary::generateUUID();
-    result.type=RECORD_TYPE_GENERIC;
-    result.name=RECORD_NAME_GENERIC;
-    result.sVersion="";
-    result.sInfo="";
+//    result.id.sUuid=XBinary::generateUUID();
+//    result.type=RECORD_TYPE_GENERIC;
+//    result.name=RECORD_NAME_GENERIC;
+//    result.sVersion="";
+//    result.sInfo="";
 
-    return result;
-}
+//    return result;
+//}
 
 SpecAbstract::VI_STRUCT SpecAbstract::get_Enigma_vi(QIODevice *pDevice,bool bIsImage, qint64 nOffset, qint64 nSize)
 {
@@ -1972,7 +1972,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SourceryCodeBench_string(QString sStr
     return result;
 }
 
-SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, XBinary::SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -1995,6 +1995,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=binary.getMemoryMap();
+        result.basic_info.id.sArch=result.basic_info.memoryMap.sArch;
 
         // Scan Header
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_binary_records,sizeof(_binary_records),result.basic_info.id.fileType,XBinary::FT_BINARY,&(result.basic_info),DETECTTYPE_HEADER,pbIsStop);
@@ -2084,7 +2085,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     return result;
 }
 
-SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -2107,6 +2108,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=msdos.getMemoryMap();
+        result.basic_info.id.sArch=result.basic_info.memoryMap.sArch;
 
         result.nOverlayOffset=msdos.getOverlayOffset(&(result.basic_info.memoryMap));
         result.nOverlaySize=msdos.getOverlaySize(&(result.basic_info.memoryMap));
@@ -2167,7 +2169,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, Sp
     return result;
 }
 
-SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -2193,6 +2195,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=elf.getMemoryMap();
+        result.basic_info.id.sArch=result.basic_info.memoryMap.sArch;
 
         result.sEntryPointSignature=elf.getSignature(elf.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
@@ -2258,7 +2261,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, SpecAb
     return result;
 }
 
-SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -2284,6 +2287,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, Sp
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=mach.getMemoryMap();
+        result.basic_info.id.sArch=result.basic_info.memoryMap.sArch;
 
         result.sEntryPointSignature=mach.getSignature(mach.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
@@ -2329,7 +2333,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, Sp
     return result;
 }
 
-SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -2361,6 +2365,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=le.getMemoryMap();
+        result.basic_info.id.sArch=result.basic_info.memoryMap.sArch;
 
         result.sEntryPointSignature=le.getSignature(le.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
@@ -2399,7 +2404,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, SpecAbst
     return result;
 }
 
-SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -2422,6 +2427,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=ne.getMemoryMap();
+        result.basic_info.id.sArch=result.basic_info.memoryMap.sArch;
 
         result.sEntryPointSignature=ne.getSignature(ne.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
@@ -2457,7 +2463,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, SpecAbst
     return result;
 }
 
-SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -2482,6 +2488,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=pe.getMemoryMap();
+        result.basic_info.id.sArch=result.basic_info.memoryMap.sArch;
 
         result.nEntryPointOffset=pe.getEntryPointOffset(&(result.basic_info.memoryMap));
         result.sEntryPointSignature=pe.getSignature(result.nEntryPointOffset,150);
@@ -2816,7 +2823,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, SpecAbst
     return result;
 }
 
-SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -2839,6 +2846,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=dex.getMemoryMap();
+        result.basic_info.id.sArch=result.basic_info.memoryMap.sArch;
 
         result.header=dex.getHeader();
         result.mapItems=dex.getMapItems();
@@ -2916,7 +2924,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, SpecAb
     return result;
 }
 
-SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -2939,6 +2947,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=xzip.getMemoryMap();
+        result.basic_info.id.sArch=result.basic_info.memoryMap.sArch;
 
         result.listArchiveRecords=xzip.getRecords();
 
@@ -3011,7 +3020,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, SpecAb
     return result;
 }
 
-SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevice, SpecAbstract::ID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
@@ -3034,6 +3043,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=xmachofat.getMemoryMap();
+        result.basic_info.id.sArch=result.basic_info.memoryMap.sArch;
 
         result.listArchiveRecords=xmachofat.getRecords();
 
@@ -3043,7 +3053,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
         {
             SpecAbstract::SCAN_RESULT scanResult={0};
 
-            SpecAbstract::ID _parentId=result.basic_info.id;
+            XBinary::SCANID _parentId=result.basic_info.id;
             _parentId.filePart=XBinary::FILEPART_ARCHIVERECORD;
             _parentId.sInfo=result.listArchiveRecords.at(i).sFileName;
             _parentId.bVirtual=true; // TODO Check
@@ -10258,7 +10268,7 @@ void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAb
             {
                 SpecAbstract::SCAN_RESULT scanResult={0};
 
-                SpecAbstract::ID _parentId=pPEInfo->basic_info.id;
+                XBinary::SCANID _parentId=pPEInfo->basic_info.id;
                 _parentId.filePart=XBinary::FILEPART_OVERLAY;
                 scan(pDevice,&scanResult,pPEInfo->nOverlayOffset,pPEInfo->nOverlaySize,_parentId,pOptions,false,pbIsStop);
 
@@ -12512,7 +12522,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
                     {
                         SpecAbstract::SCAN_RESULT scanResult={0};
 
-                        SpecAbstract::ID _parentId=pZipInfo->basic_info.id;
+                        XBinary::SCANID _parentId=pZipInfo->basic_info.id;
                         _parentId.filePart=XBinary::FILEPART_ARCHIVERECORD;
                         _parentId.sInfo=pZipInfo->listArchiveRecords.at(i).sFileName;
                         _parentId.bVirtual=true; // TODO Check
@@ -13258,7 +13268,7 @@ void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, bool bIsImage, Spe
             {
                 SpecAbstract::SCAN_RESULT scanResult={0};
 
-                SpecAbstract::ID _parentId=pMSDOSInfo->basic_info.id;
+                XBinary::SCANID _parentId=pMSDOSInfo->basic_info.id;
                 _parentId.filePart=XBinary::FILEPART_OVERLAY;
                 scan(pDevice,&scanResult,pMSDOSInfo->nOverlayOffset,pMSDOSInfo->nOverlaySize,_parentId,pOptions,false,pbIsStop);
 
@@ -17444,7 +17454,7 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::scansToScan(SpecAbstract::BASIC_INFO *pB
     result.sVersion=pScansStruct->sVersion;
     result.sInfo=pScansStruct->sInfo;
     result.bIsHeuristic=pScansStruct->bIsHeuristic;
-    result.sArch=pBasicInfo->memoryMap.sArch;
+//    result.sArch=pBasicInfo->memoryMap.sArch;
 
     return result;
 }
@@ -18394,7 +18404,7 @@ QString SpecAbstract::getMsRichString(quint16 nId, quint16 nBuild)
     QString sResult;
 
     MSRICH_RECORD *pRecords=_MS_rich_records;
-    int nRecordsSize=sizeof(_MS_rich_records);
+    qint32 nRecordsSize=sizeof(_MS_rich_records);
 
     qint32 nSignaturesCount=nRecordsSize/(int)sizeof(MSRICH_RECORD);
 
@@ -18409,6 +18419,35 @@ QString SpecAbstract::getMsRichString(quint16 nId, quint16 nBuild)
     }
 
     return sResult;
+}
+
+QList<XBinary::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListScanStructs)
+{
+    QList<XBinary::SCANSTRUCT> listResult;
+
+    int nNumberOfRecords=pListScanStructs->count();
+
+    for(int i=0;i<nNumberOfRecords;i++)
+    {
+        XBinary::SCANSTRUCT record={};
+
+        record.nSize=pListScanStructs->at(i).nSize;
+        record.nOffset=pListScanStructs->at(i).nOffset;
+        record.id=pListScanStructs->at(i).id;
+        record.parentId=pListScanStructs->at(i).parentId;
+        record.sType=recordTypeIdToString(pListScanStructs->at(i).type);
+        record.sName=recordNameIdToString(pListScanStructs->at(i).name);
+        record.sVersion=pListScanStructs->at(i).sVersion;
+        record.sInfo=pListScanStructs->at(i).sInfo;
+        record.bIsHeuristic=pListScanStructs->at(i).bIsHeuristic;
+    #ifdef QT_GUI_LIB
+        record.colText; // TODO
+    #endif
+
+        listResult.append(record);
+    }
+
+    return listResult;
 }
 
 bool SpecAbstract::MSDOS_compareRichRecord(_SCANS_STRUCT *pResult,SpecAbstract::MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, XBinary::FT fileType1, XBinary::FT fileType2)
