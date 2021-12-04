@@ -18425,7 +18425,7 @@ QList<XBinary::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListScanSt
 {
     QList<XBinary::SCANSTRUCT> listResult;
 
-    int nNumberOfRecords=pListScanStructs->count();
+    qint32 nNumberOfRecords=pListScanStructs->count();
 
     for(qint32 i=0;i<nNumberOfRecords;i++)
     {
