@@ -30,6 +30,10 @@
 
 #include "xformats.h"
 
+#ifdef QT_GUI_LIB
+#include <QApplication>
+#endif
+
 class SpecAbstract : public QObject
 {
     Q_OBJECT
@@ -824,15 +828,13 @@ public:
     // TODO flags(static scan/emul/heur)
     struct SCAN_STRUCT
     {
-        qint64 nSize;
-        qint64 nOffset;
+        bool bIsHeuristic;
         XBinary::SCANID id;
         XBinary::SCANID parentId;
         RECORD_TYPE type;
         RECORD_NAME name;
         QString sVersion;
         QString sInfo;
-        bool bIsHeuristic;
     };
 
     enum DETECTTYPE
@@ -907,8 +909,6 @@ public:
         qint64 nElapsedTime;
         XBinary::SCANID parentId;
         XBinary::SCANID id;
-        qint64 nOffset;
-        qint64 nSize;
         QString sHeaderSignature;
         XBinary::_MEMORY_MAP memoryMap;
         QMap<RECORD_NAME,_SCANS_STRUCT> mapHeaderDetects;
@@ -1559,7 +1559,7 @@ public:
     static BASIC_PE_INFO _ArrayToBasicPEInfo(const QByteArray *pbaArray);
 
     static void memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,SpecAbstract::SIGNATURE_RECORD *pRecords,qint32 nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
-    static void signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SIGNATURE_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
+    static void signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SIGNATURE_RECORD *pRecords,qint32 nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
     static void PE_resourcesScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,PE_RESOURCES_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
     static void stringScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QList<QString> *pListStrings,STRING_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
     static void constScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,CONST_RECORD *pRecords,int nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop);
