@@ -19,7 +19,7 @@
  * SOFTWARE.
  */
 #include "specabstract.h"
-#include "signatures.cpp" // Do not include in cmake files!
+#include "signatures.cpp" // Do not include in CMAKE files!
 
 SpecAbstract::SpecAbstract(QObject *pParent)
 {
