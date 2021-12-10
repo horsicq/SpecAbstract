@@ -5249,6 +5249,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
 void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
+    // TODO Check
     XPE pe(pDevice,bIsImage);
 
     if(pe.isValid())
@@ -10302,6 +10303,27 @@ void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAb
                 scan(pDevice,&scanResult,pPEInfo->nOverlayOffset,pPEInfo->nOverlaySize,_parentId,pOptions,false,pbIsStop);
 
                 pPEInfo->listRecursiveDetects.append(scanResult.listRecords);
+            }
+
+            if(pPEInfo->listResources.count())
+            {
+                // TODO filter executable
+                // TODO filter archives
+
+//                qint32 nNumberOfResources=pPEInfo->listResources.count();
+
+//                for(qint32 i=0;(i<nNumberOfResources)&&(!(*pbIsStop));i++)
+//                {
+//                    SpecAbstract::SCAN_RESULT scanResult={0};
+
+//                    XBinary::SCANID _parentId=pPEInfo->basic_info.id;
+//                    _parentId.filePart=XBinary::FILEPART_RESOURCE;
+//                    _parentId.sInfo=XBinary::valueToHexEx(pPEInfo->listResources.at(i).nOffset);
+
+//                    scan(pDevice,&scanResult,pPEInfo->listResources.at(i).nOffset,pPEInfo->listResources.at(i).nSize,_parentId,pOptions,false,pbIsStop);
+
+//                    pPEInfo->listRecursiveDetects.append(scanResult.listRecords);
+//                }
             }
         }
     }
