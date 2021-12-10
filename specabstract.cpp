@@ -5249,6 +5249,62 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
 void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
+    qint32 nNumberOfSections=pPEInfo->listSectionRecords.count();
+
+    bool bDetected=false;
+
+    for(qint32 i=nNumberOfSections-1;i>=0;i--)
+    {
+        if(i==pPEInfo->nRelocsSection)
+        {
+            continue;
+        }
+        if(i==pPEInfo->nResourcesSection)
+        {
+            continue;
+        }
+
+        if(pPEInfo->listSectionRecords.at(i).sName!="")
+        {
+            QString sSectionName=pPEInfo->listSectionRecords.at(i).sName;
+
+            if(     (i>0)&&
+                    (sSectionName.at(sSectionName.size()-1)==QChar('0')))
+            {
+                bDetected=true;
+
+                break;
+            }
+            else if((i>1)&&
+                    (sSectionName.at(sSectionName.size()-1)==QChar('1')))
+            {
+                if(pPEInfo->listSectionRecords.at(i-1).sName!="")
+                {
+                    QString sSectionName=pPEInfo->listSectionRecords.at(i-1).sName;
+
+                    if((sSectionName.at(sSectionName.size()-1)==QChar('0')))
+                    {
+                        bDetected=true;
+
+                        break;
+                    }
+                }
+
+                break;
+            }
+        }
+
+        break;
+    }
+
+    if(bDetected)
+    {
+        // TODO more checks
+        _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_VMPROTECT,"","",0);
+        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+    }
+
+    return;
     // TODO Check
     XPE pe(pDevice,bIsImage);
 
