@@ -5249,6 +5249,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
 void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
+    // TODO
     qint32 nNumberOfSections=pPEInfo->listSectionRecords.count();
 
     bool bDetected=false;
