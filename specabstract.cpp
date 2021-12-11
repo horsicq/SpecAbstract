@@ -4144,7 +4144,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ANDPAKK2)||
                         pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ANDPAKK2))
                 {
-                    // TODO compare entryPoint and import sections
+                    // TODO compare entryPoint and import sections TODO Check
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ANDPAKK2))
                     {
                         _SCANS_STRUCT recordANFpakk2=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ANDPAKK2);
@@ -16701,40 +16701,6 @@ bool SpecAbstract::isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListSc
     return bResult;
 }
 
-bool SpecAbstract::checkVersionString(QString sVersion)
-{
-    bool bResult=false;
-
-    if(sVersion.trimmed()!="")
-    {
-        bResult=true;
-
-        qint32 nStringSize=sVersion.size();
-
-        // TODO
-        for(qint32 i=0;i<nStringSize;i++)
-        {
-            QChar _char=sVersion.at(i);
-
-            if((_char>=QChar('0'))&&(_char<=QChar('9')))
-            {
-
-            }
-            else if(_char==QChar('.'))
-            {
-
-            }
-            else
-            {
-                bResult=false;
-                break;
-            }
-        }
-    }
-
-    return bResult;
-}
-
 SpecAbstract::VI_STRUCT SpecAbstract::get_UPX_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize,XBinary::FT fileType)
 {
     // TODO unknown version
@@ -16753,7 +16719,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_UPX_vi(QIODevice *pDevice, bool bIsIma
         result.sVersion=binary.read_ansiString(nStringOffset1+9,10);
         result.sVersion=result.sVersion.section(" ",0,0);
 
-        if(!checkVersionString(result.sVersion))
+        if(!XBinary::checkVersionString(result.sVersion))
         {
             result.sVersion="";
         }
@@ -16766,7 +16732,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_UPX_vi(QIODevice *pDevice, bool bIsIma
             QString sNRVVersion=binary.read_ansiString(nNRVStringOffset1+9,10);
             sNRVVersion=sNRVVersion.section(" ",0,0);
 
-            if(checkVersionString(sNRVVersion))
+            if(XBinary::checkVersionString(sNRVVersion))
             {
                 result.sInfo=QString("NRV %1").arg(sNRVVersion);
             }
@@ -16796,7 +16762,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_UPX_vi(QIODevice *pDevice, bool bIsIma
         }
     }
 
-    if(!checkVersionString(result.sVersion))
+    if(!XBinary::checkVersionString(result.sVersion))
     {
         result.sVersion="";
     }
