@@ -76,7 +76,7 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
             pScanResult->listRecords.append(mach_info.basic_info.listDetects);
             pScanResult->listHeurs.append(mach_info.basic_info.listHeurs);
         }
-        else if(stFileTypes.contains(XBinary::FT_LE)||stFileTypes.contains(XBinary::FT_LX))
+        else if(stFileTypes.contains(XBinary::FT_LE)||stFileTypes.contains(XBinary::FT_LX)) // TODO for LX
         {
             SpecAbstract::LEINFO_STRUCT le_info=SpecAbstract::getLEInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
