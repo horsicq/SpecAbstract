@@ -2166,17 +2166,17 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XBinar
         result.basic_info.listDetects.append(result.mapResultPackers.values());
         result.basic_info.listDetects.append(result.mapResultProtectors.values());
 
-        if(!result.basic_info.listDetects.count())
-        {
-            _SCANS_STRUCT ssUnknown={};
+//        if(!result.basic_info.listDetects.count())
+//        {
+//            _SCANS_STRUCT ssUnknown={};
 
-            ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
-            ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
+//            ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
+//            ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
 
-            result.basic_info.listDetects.append(scansToScan(&(result.basic_info),&ssUnknown));
+//            result.basic_info.listDetects.append(scansToScan(&(result.basic_info),&ssUnknown));
 
-            result.basic_info.bIsUnknown=true;
-        }
+//            result.basic_info.bIsUnknown=true;
+//        }
 
         result.basic_info.listDetects.append(result.listRecursiveDetects);
     }
@@ -2724,11 +2724,14 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
 
         qDebug("=====================================================================");
 
+        QList<quint32> listImportPositionHashesOld=pe.getImportPositionHashes(&(result.listImports),true);
+
         QList<XPE::IMPORT_HEADER> listImportHeaders=pe.getImports(&(result.basic_info.memoryMap));
 
         for(qint32 i=0;i<listImportHeaders.count();i++)
         {
             qDebug("Import hash: %x",result.listImportPositionHashes.at(i));
+            qDebug("Import hash(OLD): %x",listImportPositionHashesOld.at(i));
             for(qint32 j=0;j<listImportHeaders.at(i).listPositions.count();j++)
             {
                 qDebug("%s %s",listImportHeaders.at(i).sName.toLatin1().data(),
@@ -5459,8 +5462,17 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
     if(bDetected)
     {
         // TODO more checks
-        _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_VMPROTECT,"","",0);
-        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        _SCANS_STRUCT ssVMProtect=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_VMPROTECT,"","",0);
+
+        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_VMPROTECT))
+        {
+            _SCANS_STRUCT ssVersion=pPEInfo->mapImportDetects.value(RECORD_NAME_VMPROTECT);
+
+            ssVMProtect.sVersion=ssVersion.sVersion;
+            ssVMProtect.sInfo=ssVersion.sInfo;
+        }
+
+        pPEInfo->mapResultProtectors.insert(ssVMProtect.name,scansToScan(&(pPEInfo->basic_info),&ssVMProtect));
     }
 
     return;

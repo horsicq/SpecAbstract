@@ -829,8 +829,8 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
 // TODO check
 SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
 {
-    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.59-1.93",        ""},                    0,              0x29188619}, // TODO !!! // 0.59-0.93 exe
-    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.94-1.93",        "exe"},                 0,              0xe6aa8495},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.59-0.93",        ""},                    0,              0xd4fdcab1}, // Fixed
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.94-1.93",        "exe"},                 0,              0x1d51299a}, // Fixed
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "1.94-2.03",        "exe"},                 0,              0xe28a6a4f},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "1.94-2.03",        "dll"},                 0,              0x3778aab9},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "2.90-3.XX",        "exe"},                 0,              0x7bc87a20},
@@ -850,10 +850,7 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PECOMPACT,                    "1.40-1.84",        ""},                    0,              0x2df20f40},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PECOMPACT,                    "2.40-3.XX",        ""},                    0,              0xdb8fbb75},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EXE32PACK,                    "1.3X-1.4X",        ""},                    0,              0x0df29c01},
-    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              ""},                    0xFFFFFFFF,     0xf0a41228}, // KERNEL32.DLL
-    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              ""},                    0xFFFFFFFF,     0x0df29c01}, // KERNEL32.dll
-    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              ""},                    0xFFFFFFFF,     0x6639a206}, // KERNEL32.dll
-    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              ""},                    0xFFFFFFFF,     0x528281ff}, // kernel32.dll
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_EZIP,                         "1.0",              ""},                    0xFFFFFFFF,     0x051946f7}, // Fixed
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_JDPACK,                       "2.00",             ""},                    0,              0x45d48065},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SHRINKER,                     "3.2",              ""},                    0,              0x3eed31e3},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_SHRINKER,                     "3.2",              ""},                    0,              0x47ce503a},
@@ -872,6 +869,8 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "",                 ""},                    0xFFFFFFFF,     0x8c357aef}, // KERNEL32.DLL
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXPRESSOR_KERNEL32,           "1.4.5.X",          ""},                    0,              0x5c1c45e2},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXPRESSOR_USER32,             "1.4.5.X",          ""},                    1,              0x8348d305},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "3.0.0",            ""},                    0xFFFFFFFF,     0x1e5500c1}, // Fixed
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "3.0.9",            ""},                    0xFFFFFFFF,     0xc5fb6a4b}, // 3.0.9.695 Fixed
 };
 
 SpecAbstract::PE_RESOURCES_RECORD _PE_resources_records[]=

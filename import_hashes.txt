@@ -14535,6 +14535,10 @@ Import hash: 528281ff
 kernel32.dll GetProcAddress
 kernel32.dll GetModuleHandleA
 
+Import hash(without Library Name): 051946f7
+kernel32.dll GetProcAddress
+kernel32.dll GetModuleHandleA
+
 Import hash: 42f4ff4ba d0e26d
 KERNEL32.DLL LoadLibraryA
 KERNEL32.DLL GetModuleHandleA
@@ -16569,3 +16573,49 @@ KERNEL32.DLL VirtualAlloc
 KERNEL32.DLL VirtualFree
 KERNEL32.DLL CreateMutexA
 USER32.DLL MessageBoxA
+
+Import hash: d4fdcab1
+Import hash(OLD): 29188619
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL GetProcAddress
+
+Import hash: 1d51299a
+Import hash(OLD): e6aa8495
+KERNEL32.DLL LoadLibraryA
+KERNEL32.DLL GetProcAddress
+KERNEL32.DLL ExitProcess
+
+Import hash: 1e5500c1
+Import hash(OLD): b317f2cb
+KERNEL32.dll LocalAlloc
+KERNEL32.dll GetCurrentProcess
+KERNEL32.dll GetCurrentThread
+KERNEL32.dll LocalFree
+KERNEL32.dll GetModuleFileNameW
+KERNEL32.dll GetProcessAffinityMask
+KERNEL32.dll SetProcessAffinityMask
+KERNEL32.dll SetThreadAffinityMask
+KERNEL32.dll Sleep
+KERNEL32.dll ExitProcess
+KERNEL32.dll GetLastError
+KERNEL32.dll FreeLibrary
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll GetModuleHandleA
+
+Import hash: c5fb6a4b
+Import hash(OLD): 1276bba
+KERNEL32.dll LocalAlloc
+KERNEL32.dll GetCurrentProcess
+KERNEL32.dll GetCurrentThread
+KERNEL32.dll LocalFree
+KERNEL32.dll GetModuleFileNameW
+KERNEL32.dll GetProcessAffinityMask
+KERNEL32.dll SetProcessAffinityMask
+KERNEL32.dll SetThreadAffinityMask
+KERNEL32.dll Sleep
+KERNEL32.dll ExitProcess
+KERNEL32.dll GetLastError
+KERNEL32.dll FreeLibrary
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll GetProcAddress
