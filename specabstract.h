@@ -1196,6 +1196,7 @@ public:
         QList<XPE::SECTION_RECORD> listSectionRecords;
         QList<QString> listSectionNames;
         QList<XPE::IMPORT_HEADER> listImports;
+        QList<XPE::IMPORT_RECORD> listImportRecords;
         quint64 nImportHash64;
         quint32 nImportHash32;
         QList<quint32> listImportPositionHashes;
@@ -1386,7 +1387,7 @@ public:
     static QString createFullResultString(const SCAN_STRUCT *pScanStruct);
     static QString createFullResultString2(const SCAN_STRUCT *pScanStruct);
     static QString createTypeString(const SCAN_STRUCT *pScanStruct);
-//    static SCAN_STRUCT createHeaderScanStruct(const SCAN_STRUCT *pScanStruct);
+    static SCAN_STRUCT createHeaderScanStruct(const SCAN_STRUCT *pScanStruct);
 
     static BINARYINFO_STRUCT getBinaryInfo(QIODevice *pDevice,XBinary::SCANID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);
     static COMINFO_STRUCT getCOMInfo(QIODevice *pDevice,XBinary::SCANID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop);

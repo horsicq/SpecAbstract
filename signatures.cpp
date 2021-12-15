@@ -826,6 +826,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "8.60",             ""},                    0x263ed9b5a,    0x804c7692},
 };
 
+// TODO check
 SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
 {
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_UPX,                          "0.59-1.93",        ""},                    0,              0x29188619}, // TODO !!! // 0.59-0.93 exe

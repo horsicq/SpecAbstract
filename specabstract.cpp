@@ -1160,18 +1160,18 @@ QString SpecAbstract::createTypeString(const SpecAbstract::SCAN_STRUCT *pScanStr
     return sResult;
 }
 
-//SpecAbstract::SCAN_STRUCT SpecAbstract::createHeaderScanStruct(const SpecAbstract::SCAN_STRUCT *pScanStruct)
-//{
-//    SCAN_STRUCT result=*pScanStruct;
+SpecAbstract::SCAN_STRUCT SpecAbstract::createHeaderScanStruct(const SpecAbstract::SCAN_STRUCT *pScanStruct)
+{
+    SCAN_STRUCT result=*pScanStruct;
 
-//    result.id.sUuid=XBinary::generateUUID();
-//    result.type=RECORD_TYPE_GENERIC;
-//    result.name=RECORD_NAME_GENERIC;
-//    result.sVersion="";
-//    result.sInfo="";
+    result.id.sUuid=XBinary::generateUUID();
+    result.type=RECORD_TYPE_GENERIC;
+    result.name=RECORD_NAME_GENERIC;
+    result.sVersion="";
+    result.sInfo="";
 
-//    return result;
-//}
+    return result;
+}
 
 SpecAbstract::VI_STRUCT SpecAbstract::get_Enigma_vi(QIODevice *pDevice,bool bIsImage, qint64 nOffset, qint64 nSize)
 {
@@ -2694,6 +2694,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
         result.listSectionNames=XPE::getSectionNames(&(result.listSectionRecords));
 
         result.listImports=pe.getImports(&(result.basic_info.memoryMap));
+        result.listImportRecords=pe.getImportRecords(&(result.basic_info.memoryMap));
         //        for(qint32 i=0;i<result.listImports.count();i++)
         //        {
         //            qDebug(result.listImports.at(i).sName.toLatin1().data());
@@ -2702,8 +2703,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
         //                qDebug("%d %s",j,result.listImports.at(i).listPositions.at(j).sFunction.toLatin1().data());
         //            }
         //        }
-        result.nImportHash64=pe.getImportHash64(&(result.basic_info.memoryMap));
-        result.nImportHash32=pe.getImportHash32(&(result.basic_info.memoryMap));
+        result.nImportHash64=pe.getImportHash64(&(result.listImportRecords));
+        result.nImportHash32=pe.getImportHash32(&(result.listImportRecords));
         result.listImportPositionHashes=pe.getImportPositionHashes(&(result.listImports));
 
 #ifdef QT_DEBUG
