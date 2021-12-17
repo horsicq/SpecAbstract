@@ -10521,6 +10521,40 @@ void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAb
 
         if(pe.isValid())
         {
+            if(pPEInfo->listResources.count())
+            {
+                qint32 nNumberOfResources=pPEInfo->listResources.count();
+
+                for(qint32 i=0;(i<nNumberOfResources)&&(!(*pbIsStop));i++)
+                {
+                    qint64 nResourceOffset=pPEInfo->listResources.at(i).nOffset;
+                    qint64 nResourceSize=pPEInfo->listResources.at(i).nSize;
+
+                    QSet<XBinary::FT> stFT=XFormats::getFileTypes(pDevice,nResourceOffset,nResourceSize);
+
+                    if( stFT.contains(XBinary::FT_MSDOS)||
+                        stFT.contains(XBinary::FT_NE)||
+                        stFT.contains(XBinary::FT_LE)||
+                        stFT.contains(XBinary::FT_LX)||
+                        stFT.contains(XBinary::FT_PE)||
+                        stFT.contains(XBinary::FT_ELF)||
+                        stFT.contains(XBinary::FT_MACHO)||
+                        stFT.contains(XBinary::FT_DEX)||
+                        stFT.contains(XBinary::FT_ARCHIVE))
+                    {
+                        SpecAbstract::SCAN_RESULT scanResult={0};
+
+                        XBinary::SCANID _parentId=pPEInfo->basic_info.id;
+                        _parentId.filePart=XBinary::FILEPART_RESOURCE;
+                        _parentId.sInfo=XBinary::valueToHexEx(nResourceOffset);
+
+                        scan(pDevice,&scanResult,nResourceOffset,nResourceSize,_parentId,pOptions,false,pbIsStop);
+
+                        pPEInfo->listRecursiveDetects.append(scanResult.listRecords);
+                    }
+                }
+            }
+
             if(pPEInfo->nOverlaySize)
             {
                 SpecAbstract::SCAN_RESULT scanResult={0};
@@ -10530,27 +10564,6 @@ void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAb
                 scan(pDevice,&scanResult,pPEInfo->nOverlayOffset,pPEInfo->nOverlaySize,_parentId,pOptions,false,pbIsStop);
 
                 pPEInfo->listRecursiveDetects.append(scanResult.listRecords);
-            }
-
-            if(pPEInfo->listResources.count())
-            {
-                // TODO filter executable
-                // TODO filter archives
-
-//                qint32 nNumberOfResources=pPEInfo->listResources.count();
-
-//                for(qint32 i=0;(i<nNumberOfResources)&&(!(*pbIsStop));i++)
-//                {
-//                    SpecAbstract::SCAN_RESULT scanResult={0};
-
-//                    XBinary::SCANID _parentId=pPEInfo->basic_info.id;
-//                    _parentId.filePart=XBinary::FILEPART_RESOURCE;
-//                    _parentId.sInfo=XBinary::valueToHexEx(pPEInfo->listResources.at(i).nOffset);
-
-//                    scan(pDevice,&scanResult,pPEInfo->listResources.at(i).nOffset,pPEInfo->listResources.at(i).nSize,_parentId,pOptions,false,pbIsStop);
-
-//                    pPEInfo->listRecursiveDetects.append(scanResult.listRecords);
-//                }
             }
         }
     }
