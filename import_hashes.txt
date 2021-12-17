@@ -16619,3 +16619,32 @@ KERNEL32.dll FreeLibrary
 KERNEL32.dll LoadLibraryA
 KERNEL32.dll GetModuleHandleA
 KERNEL32.dll GetProcAddress
+
+Import hash: 5caa99c7
+Import hash(OLD): f859468a
+KERNEL32.dll LocalAlloc
+KERNEL32.dll LocalFree
+KERNEL32.dll GetModuleFileNameW
+KERNEL32.dll GetProcessAffinityMask
+KERNEL32.dll SetProcessAffinityMask
+KERNEL32.dll SetThreadAffinityMask
+KERNEL32.dll Sleep
+KERNEL32.dll ExitProcess
+KERNEL32.dll FreeLibrary
+KERNEL32.dll LoadLibraryA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll GetProcAddress
+
+Import hash: 427816ab
+Import hash(OLD): 5c1c45e2
+KERNEL32.dll VirtualFree
+KERNEL32.dll VirtualAlloc
+KERNEL32.dll GetProcAddress
+KERNEL32.dll LoadLibraryExA
+KERNEL32.dll GetModuleHandleA
+KERNEL32.dll VirtualProtect
+KERNEL32.dll ExitProcess
+KERNEL32.dll GetModuleFileNameA
+Import hash: c16df2d
+Import hash(OLD): 8348d305
+USER32.dll MessageBoxA
