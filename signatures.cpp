@@ -871,7 +871,7 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXPRESSOR_USER32,             "1.4.5.X",          ""},                    1,              0x0c16df2d}, // Fixed
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "3.0.0",            ""},                    0xFFFFFFFF,     0x1e5500c1}, // 3.0.0 beta Fixed
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "3.0.9",            ""},                    0xFFFFFFFF,     0xc5fb6a4b}, // 3.0.9.695 Fixed
-    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "3.2.0",            ""},                    0xFFFFFFFF,     0x5caa99c7}, // 3.2.0.976 Fixed
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "3.2.0-3.5.0",      ""},                    0xFFFFFFFF,     0x5caa99c7}, // 3.2.0.976 Fixed
 };
 
 SpecAbstract::PE_RESOURCES_RECORD _PE_resources_records[]=
