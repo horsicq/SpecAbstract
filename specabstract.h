@@ -1432,7 +1432,6 @@ public:
     static void PE_handle_DongleProtection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_NeoLite(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_PrivateEXEProtector(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
-
     static void PE_handle_VisualBasicCryptors(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_DelphiCryptors(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 
