@@ -5415,6 +5415,8 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
 
     bool bDetected=false;
 
+    QString sVMPSectionName;
+
     for(qint32 i=nNumberOfSections-1;i>=0;i--)
     {
         if(i==pPEInfo->nRelocsSection)
@@ -5428,17 +5430,17 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
 
         if(pPEInfo->listSectionRecords.at(i).sName!="")
         {
-            QString sSectionName=pPEInfo->listSectionRecords.at(i).sName;
+            sVMPSectionName=pPEInfo->listSectionRecords.at(i).sName;
 
             if(     (i>0)&&
-                    (sSectionName.at(sSectionName.size()-1)==QChar('0')))
+                    (sVMPSectionName.at(sVMPSectionName.size()-1)==QChar('0')))
             {
                 bDetected=true;
 
                 break;
             }
             else if((i>1)&&
-                    (sSectionName.at(sSectionName.size()-1)==QChar('1')))
+                    (sVMPSectionName.at(sVMPSectionName.size()-1)==QChar('1')))
             {
                 if(pPEInfo->listSectionRecords.at(i-1).sName!="")
                 {
@@ -5461,9 +5463,22 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
 
     if(bDetected)
     {
-        // TODO more checks
         _SCANS_STRUCT ssVMProtect=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_VMPROTECT,"","",0);
 
+        if(sVMPSectionName!="")
+        {
+            if((sVMPSectionName!=".vmp0")&&(sVMPSectionName!=".vmp1"))
+            {
+                ssVMProtect.sVersion="3.XX";
+            }
+
+            if(sVMPSectionName.at(sVMPSectionName.size()-1)==QChar('0'))
+            {
+                ssVMProtect.sInfo="Minimal protection";
+            }
+        }
+
+        // TODO more checks
         if(pPEInfo->mapImportDetects.contains(RECORD_NAME_VMPROTECT))
         {
             _SCANS_STRUCT ssVersion=pPEInfo->mapImportDetects.value(RECORD_NAME_VMPROTECT);
@@ -5484,58 +5499,6 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
         if(!pPEInfo->cliInfo.bValid)
         {
             bool bSuccess=false;
-
-            QSet<QString> stDetects;
-
-            qint32 nNumberOfImports=pPEInfo->listImports.count();
-
-            // TODO Check!
-            if(nNumberOfImports>=2)
-            {
-                if(pPEInfo->listImports.at(nNumberOfImports-2).sName.toUpper()=="KERNEL32.DLL")
-                {
-                    if(pPEInfo->listImports.at(nNumberOfImports-2).listPositions.count()==12)
-                    {
-                        if( (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(0).sName=="LocalAlloc")&&
-                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(1).sName=="LocalFree")&&
-                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(2).sName=="GetModuleFileNameW")&&
-                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(3).sName=="GetProcessAffinityMask")&&
-                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(4).sName=="SetProcessAffinityMask")&&
-                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(5).sName=="SetThreadAffinityMask")&&
-                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(6).sName=="Sleep")&&
-                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(7).sName=="ExitProcess")&&
-                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(8).sName=="FreeLibrary")&&
-                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(9).sName=="LoadLibraryA")&&
-                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(10).sName=="GetModuleHandleA")&&
-                            (pPEInfo->listImports.at(nNumberOfImports-2).listPositions.at(11).sName=="GetProcAddress"))
-                        {
-                            stDetects.insert("kernel32_3");
-                        }
-                    }
-                }
-
-                if(pPEInfo->listImports.at(nNumberOfImports-1).sName.toUpper()=="USER32.DLL")
-                {
-                    if(pPEInfo->listImports.at(nNumberOfImports-1).listPositions.count()==2)
-                    {
-                        if( (pPEInfo->listImports.at(nNumberOfImports-1).listPositions.at(0).sName=="GetProcessWindowStation")&&
-                            (pPEInfo->listImports.at(nNumberOfImports-1).listPositions.at(1).sName=="GetUserObjectInformationW"))
-                        {
-                            stDetects.insert("user32_3");
-                        }
-                    }
-                }
-            }
-
-            if( stDetects.contains("kernel32_3")&&
-                stDetects.contains("user32_3"))
-            {
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_VMPROTECT,"","",0);
-                ss.sVersion="3.X";
-                pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-
-                bSuccess=true;
-            }
 
             // Import
             if(!bSuccess)
@@ -13568,6 +13531,7 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
 
     if(elf.isValid())
     {
+        // TODO move to XELF
         _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_UNIX,"","",0);
 
         quint8 osabi=elf.getIdent_osabi();
