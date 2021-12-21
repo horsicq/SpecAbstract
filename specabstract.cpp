@@ -4390,7 +4390,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
-                // EZIP
+                // EZIP TODO CHECK
                 if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EZIP))
                 {
                     if(pPEInfo->nOverlaySize)
