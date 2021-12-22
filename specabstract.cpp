@@ -18233,14 +18233,14 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
     qint32 nNumberOfArchives=pListArchiveRecords->count();
     qint32 nNumberOfSignatures=nRecordsSize/sizeof(STRING_RECORD);
 
-    for(qint32 i=0;i<nNumberOfArchives;i++)
+    for(qint32 i=0;(i<nNumberOfArchives)&&(!(*pbIsStop));i++)
     {
 //        qDebug("%s", pListArchiveRecords->at(i).sFileName.toLatin1().data());
         quint32 nCRC=XBinary::getStringCustomCRC32(pListArchiveRecords->at(i).sFileName);
         listStringCRC.append(nCRC);
     }
 
-    for(qint32 i=0;i<nNumberOfSignatures;i++)
+    for(qint32 i=0;(i<nNumberOfSignatures)&&(!(*pbIsStop));i++)
     {
 //        qDebug("%s", pRecords[i].pszString);
         quint32 nCRC=XBinary::getStringCustomCRC32(pRecords[i].pszString);
