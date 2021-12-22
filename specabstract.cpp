@@ -4822,8 +4822,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
-                // Alloy
-                // 4.X
+                // Alloy 4.X
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ALLOY))
                 {
                     if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ALLOY))
