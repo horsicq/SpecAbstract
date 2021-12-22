@@ -16657,3 +16657,9 @@ KERNEL32.dll LocalAlloc
 KERNEL32.dll LocalFree
 KERNEL32.dll GetModuleFileNameA
 KERNEL32.dll ExitProcess
+
+Import hash: 1ff3103f
+Import hash(OLD): 2c3d1182
+KERNEL32.dll VirtualProtect
+KERNEL32.dll GetModuleFileNameA
+KERNEL32.dll ExitProcess

@@ -866,7 +866,8 @@ SpecAbstract::CONST_RECORD _PE_importpositionhash_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PCGUARD,                      "5.04-5.05",        ""},                    0,              0x5aa42950}, // TODO Check version
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXPRESSOR_KERNEL32,           "1.4.5.X",          ""},                    0,              0x427816ab}, // Fixed
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXPRESSOR_USER32,             "1.4.5.X",          ""},                    1,              0x0c16df2d}, // Fixed
-    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "2.09",            ""},                     0xFFFFFFFF,     0x9d12b153}, // 2.09 Fixed
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "1.70.4",           ""},                    0xFFFFFFFF,     0x1ff3103f}, // 1.70.4 Fixed
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "2.0.3-2.13",       ""},                    0xFFFFFFFF,     0x9d12b153}, // 2.0.3-2.12 Fixed 2.09 no .vmp2
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "3.0.0",            ""},                    0xFFFFFFFF,     0x1e5500c1}, // 3.0.0 beta Fixed
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "3.0.9",            ""},                    0xFFFFFFFF,     0xc5fb6a4b}, // 3.0.9.695 Fixed
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "3.2.0-3.5.0",      ""},                    0xFFFFFFFF,     0x5caa99c7}, // 3.2.0.976 Fixed
@@ -1310,6 +1311,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "",                 ""},                    ".vmp0"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "",                 ""},                    ".vmp1"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "",                 ""},                    ".vmp2"},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                    "",                 ""},                    ".vmp3"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PETOOL,           SpecAbstract::RECORD_NAME_VMUNPACKER,                   "",                 ""},                    ".dswlab"},// TODO Check
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WINKRIPT,                     "1.0",              ""},                    ".wkt0"},// TODO Check!
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_WINUPACK,                     "",                 ""},                    ".Upack"}, // TODO Version

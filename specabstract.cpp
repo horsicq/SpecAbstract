@@ -5456,6 +5456,29 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
 
                 break;
             }
+            else if((i>2)&&
+                    (sVMPSectionName==".vmp2"))
+            {
+                if( XPE::isSectionNamePresent(".vmp1",&(pPEInfo->listSectionHeaders))&&
+                    XPE::isSectionNamePresent(".vmp0",&(pPEInfo->listSectionHeaders)))
+                {
+                    bDetected=true;
+
+                    break;
+                }
+            }
+            else if((i>3)&&
+                    (sVMPSectionName==".vmp3"))
+            {
+                if( XPE::isSectionNamePresent(".vmp2",&(pPEInfo->listSectionHeaders))&&
+                    XPE::isSectionNamePresent(".vmp1",&(pPEInfo->listSectionHeaders))&&
+                    XPE::isSectionNamePresent(".vmp0",&(pPEInfo->listSectionHeaders)))
+                {
+                    bDetected=true;
+
+                    break;
+                }
+            }
         }
 
         break;
@@ -5465,9 +5488,19 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
     {
         _SCANS_STRUCT ssVMProtect=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_VMPROTECT,"","",0);
 
+        if(pPEInfo->bIs64)
+        {
+            ssVMProtect.sVersion="2.XX-3.XX";
+        }
+
         if(sVMPSectionName!="")
         {
-            if((sVMPSectionName!=".vmp0")&&(sVMPSectionName!=".vmp1"))
+
+
+            if( (sVMPSectionName!=".vmp0")&&
+                (sVMPSectionName!=".vmp1")&&
+                (sVMPSectionName!=".vmp2")&&
+                (sVMPSectionName!=".vmp3"))
             {
                 ssVMProtect.sVersion="3.XX";
             }
