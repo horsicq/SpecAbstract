@@ -4592,8 +4592,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     }
                 }
 
-                // ACProtect
-                // 1.X-2.X
+                // ACProtect 1.X-2.X
                 if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ACPROTECT))
                 {
                     if(pe.checkOffsetSize(pPEInfo->osImportSection)&&(pPEInfo->basic_info.bIsDeepScan))
