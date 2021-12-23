@@ -5408,6 +5408,9 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
 
 void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
+    Q_UNUSED(pDevice)
+    Q_UNUSED(bIsImage)
+
     // TODO
     qint32 nNumberOfSections=pPEInfo->listSectionRecords.count();
 
@@ -5527,73 +5530,73 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
         pPEInfo->mapResultProtectors.insert(ssVMProtect.name,scansToScan(&(pPEInfo->basic_info),&ssVMProtect));
     }
 
-    return;
-    // TODO Check
-    XPE pe(pDevice,bIsImage);
+//    return;
+//    // TODO Check
+//    XPE pe(pDevice,bIsImage);
 
-    if(pe.isValid())
-    {
-        if(!pPEInfo->cliInfo.bValid)
-        {
-            bool bSuccess=false;
+//    if(pe.isValid())
+//    {
+//        if(!pPEInfo->cliInfo.bValid)
+//        {
+//            bool bSuccess=false;
 
-            // Import
-            if(!bSuccess)
-            {
-                bSuccess=pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_VMPROTECT);
-            }
+//            // Import
+//            if(!bSuccess)
+//            {
+//                bSuccess=pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_VMPROTECT);
+//            }
 
-            if(!bSuccess)
-            {
-                bSuccess=pPEInfo->mapImportDetects.contains(RECORD_NAME_VMPROTECT);
-            }
+//            if(!bSuccess)
+//            {
+//                bSuccess=pPEInfo->mapImportDetects.contains(RECORD_NAME_VMPROTECT);
+//            }
 
-            if(!bSuccess)
-            {
-                if(pPEInfo->nEntryPointSection>=3)
-                {
-                    bSuccess=true;
+//            if(!bSuccess)
+//            {
+//                if(pPEInfo->nEntryPointSection>=3)
+//                {
+//                    bSuccess=true;
 
-                    qint32 nNumberOfSections=pPEInfo->listSectionHeaders.count();
+//                    qint32 nNumberOfSections=pPEInfo->listSectionHeaders.count();
 
-                    for(qint32 i=0;i<nNumberOfSections;i++)
-                    {
-                        if( (i==pPEInfo->nEntryPointSection)||
-                            (i==pPEInfo->nResourcesSection)||
-                            (i==pPEInfo->nTLSSection)||
-                            (i==pPEInfo->nRelocsSection)||
-                            (QString((char *)pPEInfo->listSectionHeaders.at(i).Name)==".INIT")||
-                            (QString((char *)pPEInfo->listSectionHeaders.at(i).Name)==".tls")||
-                            (QString((char *)pPEInfo->listSectionHeaders.at(i).Name).contains("0"))
-                          )
-                        {
-                            continue;
-                        }
+//                    for(qint32 i=0;i<nNumberOfSections;i++)
+//                    {
+//                        if( (i==pPEInfo->nEntryPointSection)||
+//                            (i==pPEInfo->nResourcesSection)||
+//                            (i==pPEInfo->nTLSSection)||
+//                            (i==pPEInfo->nRelocsSection)||
+//                            (QString((char *)pPEInfo->listSectionHeaders.at(i).Name)==".INIT")||
+//                            (QString((char *)pPEInfo->listSectionHeaders.at(i).Name)==".tls")||
+//                            (QString((char *)pPEInfo->listSectionHeaders.at(i).Name).contains("0"))
+//                          )
+//                        {
+//                            continue;
+//                        }
 
-                        if(pPEInfo->listSectionHeaders.at(i).SizeOfRawData)
-                        {
-                            bSuccess=false;
-                            break;
-                        }
-                    }
-                }
-            }
+//                        if(pPEInfo->listSectionHeaders.at(i).SizeOfRawData)
+//                        {
+//                            bSuccess=false;
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
 
-            if(bSuccess)
-            {
-                if( pe.compareEntryPoint("68........E8")||
-                    pe.compareEntryPoint("68........E9")||
-                    pe.compareEntryPoint("9C60")||
-                    pe.compareEntryPoint("EB$$E9$$$$$$$$68........E8")||
-                    pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_VMPROTECT))
-                {
-                    // TODO more checks
-                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_VMPROTECT,"","",0);
-                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
-                }
-            }
-        }
-    }
+//            if(bSuccess)
+//            {
+//                if( pe.compareEntryPoint("68........E8")||
+//                    pe.compareEntryPoint("68........E9")||
+//                    pe.compareEntryPoint("9C60")||
+//                    pe.compareEntryPoint("EB$$E9$$$$$$$$68........E8")||
+//                    pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_VMPROTECT))
+//                {
+//                    // TODO more checks
+//                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_VMPROTECT,"","",0);
+//                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+//                }
+//            }
+//        }
+//    }
 }
 
 void SpecAbstract::PE_handle_VProtect(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
