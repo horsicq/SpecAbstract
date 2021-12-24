@@ -1439,7 +1439,6 @@ public:
 
     static bool PE_isProtectionPresent(PEINFO_STRUCT *pPEInfo);
     static void PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
-
     static void PE_handle_FixDetects(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);
 
     static void PE_handleLanguages(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo);

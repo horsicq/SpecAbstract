@@ -16663,3 +16663,10 @@ Import hash(OLD): 2c3d1182
 KERNEL32.dll VirtualProtect
 KERNEL32.dll GetModuleFileNameA
 KERNEL32.dll ExitProcess
+
+Import hash: 9c35b161
+Import hash(OLD): e91e7290
+kernel32.dll LoadLibraryA
+kernel32.dll VirtualProtect
+kernel32.dll GetModuleFileNameA
+kernel32.dll ExitProcess

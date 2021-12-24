@@ -5514,7 +5514,7 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
 
             if(sVMPSectionName.at(sVMPSectionName.size()-1)==QChar('0'))
             {
-                ssVMProtect.sInfo="Minimal protection";
+                ssVMProtect.sInfo="Min protection";
             }
         }
 
