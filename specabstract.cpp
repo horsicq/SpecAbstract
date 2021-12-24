@@ -5415,7 +5415,6 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
     qint32 nNumberOfSections=pPEInfo->listSectionRecords.count();
 
     bool bDetected=false;
-    bool bOldVersion=false;
 
     QString sVMPSectionName;
 
@@ -5459,26 +5458,28 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
                 break;
             }
             else if((i>2)&&
-                    (sVMPSectionName==".vmp2"))
+                    (sVMPSectionName.at(sVMPSectionName.size()-1)==QChar('2')))
             {
-                if( XPE::isSectionNamePresent(".vmp1",&(pPEInfo->listSectionHeaders))&&
-                    XPE::isSectionNamePresent(".vmp0",&(pPEInfo->listSectionHeaders)))
+                QString sCollision=XBinary::getStringCollision(&(pPEInfo->listSectionNames),"0","1");
+
+                if( XPE::isSectionNamePresent(sCollision+"1",&(pPEInfo->listSectionHeaders))&&
+                    XPE::isSectionNamePresent(sCollision+"0",&(pPEInfo->listSectionHeaders)))
                 {
                     bDetected=true;
-                    bOldVersion=true;
 
                     break;
                 }
             }
             else if((i>3)&&
-                    (sVMPSectionName==".vmp3"))
+                    (sVMPSectionName.at(sVMPSectionName.size()-1)==QChar('3')))
             {
-                if( XPE::isSectionNamePresent(".vmp2",&(pPEInfo->listSectionHeaders))&&
-                    XPE::isSectionNamePresent(".vmp1",&(pPEInfo->listSectionHeaders))&&
-                    XPE::isSectionNamePresent(".vmp0",&(pPEInfo->listSectionHeaders)))
+                QString sCollision=XBinary::getStringCollision(&(pPEInfo->listSectionNames),"0","1");
+
+                if( XPE::isSectionNamePresent(sCollision+"2",&(pPEInfo->listSectionHeaders))&&
+                    XPE::isSectionNamePresent(sCollision+"1",&(pPEInfo->listSectionHeaders))&&
+                    XPE::isSectionNamePresent(sCollision+"0",&(pPEInfo->listSectionHeaders)))
                 {
                     bDetected=true;
-                    bOldVersion=true;
 
                     break;
                 }
@@ -5497,21 +5498,8 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
             ssVMProtect.sVersion="2.XX-3.XX";
         }
 
-        if(bOldVersion)
-        {
-            ssVMProtect.sVersion="1.XX-2.08";
-        }
-
         if(sVMPSectionName!="")
         {
-            if( (sVMPSectionName!=".vmp0")&&
-                (sVMPSectionName!=".vmp1")&&
-                (sVMPSectionName!=".vmp2")&&
-                (sVMPSectionName!=".vmp3"))
-            {
-                ssVMProtect.sVersion="3.XX";
-            }
-
             if(sVMPSectionName.at(sVMPSectionName.size()-1)==QChar('0'))
             {
                 ssVMProtect.sInfo="Min protection";
@@ -18143,7 +18131,7 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
     {
         if((pRecords[i].basicInfo.fileType==fileType1)||(pRecords[i].basicInfo.fileType==fileType2))
         {
-            if((!pMapRecords->contains(pRecords[i].basicInfo.name))||(pBasicInfo->bShowDetects))
+            if((!pMapRecords->contains(pRecords[i].basicInfo.name))||(pBasicInfo->bShowDetects)||(pRecords[i].nConst1==0xFFFFFFFF))
             {
                 bool bSuccess=false;
 
@@ -18152,7 +18140,7 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
 
                 if(bSuccess)
                 {
-                    if(!pMapRecords->contains(pRecords[i].basicInfo.name))
+                    if((!pMapRecords->contains(pRecords[i].basicInfo.name))||(pRecords[i].nConst1==0xFFFFFFFF))
                     {
                         _SCANS_STRUCT record={};
                         record.nVariant=pRecords[i].basicInfo.nVariant;
