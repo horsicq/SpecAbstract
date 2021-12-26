@@ -1223,6 +1223,18 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Enigma_vi(QIODevice *pDevice,bool bIsI
         }
     }
 
+    if(!result.bIsValid)
+    {
+        qint64 _nOffset=binary.find_ansiString(nOffset,nSize,"Enigma Protector");
+
+        if(_nOffset!=-1)
+        {
+            // TODO version
+            result.sVersion="5.XX";
+            result.bIsValid=true;
+        }
+    }
+
     return result;
 }
 
