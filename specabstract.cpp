@@ -650,6 +650,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MOBILETENCENTPROTECT:                  sResult=QString("Mobile Tencent Protect");                      break;
         case RECORD_NAME_MODESTO:                               sResult=QString("Novell Modesto");                              break;
         case RECORD_NAME_MODGUARD:                              sResult=QString("ModGuard");                                    break;
+        case RECORD_NAME_MOLD:                                  sResult=QString("mold");                                        break;
         case RECORD_NAME_MOLEBOX:                               sResult=QString("MoleBox");                                     break;
         case RECORD_NAME_MOLEBOXULTRA:                          sResult=QString("MoleBox Ultra");                               break;
         case RECORD_NAME_MONEYCRYPTER:                          sResult=QString("Money Crypter");                               break;
@@ -1864,6 +1865,21 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_LLD_string(QString sString)
         result.bIsValid=true;
 
         result.sVersion=sString.section("Linker: LLD ",1,1).section("(",0,0);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_mold_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(XBinary::isRegExpPresent("^mold ",sString))
+    {
+        // TODO version
+        result.bIsValid=true;
+
+//        result.sVersion=sString.section("mold ",1,1).section("(",0,0);
     }
 
     return result;
@@ -13996,6 +14012,18 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
             if(vi.bIsValid)
             {
                 ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_LINKER,RECORD_NAME_LLD,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
+            vi=_get_mold_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_LINKER,RECORD_NAME_MOLD,vi.sVersion,vi.sInfo,0);
 
                 pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
             }

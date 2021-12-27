@@ -486,6 +486,7 @@ public:
         RECORD_NAME_MOBILETENCENTPROTECT,
         RECORD_NAME_MODESTO,
         RECORD_NAME_MODGUARD,
+        RECORD_NAME_MOLD,
         RECORD_NAME_MOLEBOX,
         RECORD_NAME_MOLEBOXULTRA,
         RECORD_NAME_MONEYCRYPTER,
@@ -1578,6 +1579,7 @@ public:
     static VI_STRUCT _get_DynASM_string(QString sString);
     static VI_STRUCT _get_Delphi_string(QString sString);
     static VI_STRUCT _get_LLD_string(QString sString);
+    static VI_STRUCT _get_mold_string(QString sString);
     static VI_STRUCT _get_OracleSolarisLinkEditors_string(QString sString);
     static VI_STRUCT _get_SunWorkShop_string(QString sString);
     static VI_STRUCT _get_SnapdragonLLVMARM_string(QString sString);
