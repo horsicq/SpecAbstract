@@ -5471,24 +5471,19 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
             else if((i>1)&&
                     (sVMPSectionName.at(sVMPSectionName.size()-1)==QChar('1')))
             {
-                if(pPEInfo->listSectionRecords.at(i-1).sName!="")
+                QString sCollision=XBinary::getStringCollision(&(pPEInfo->listSectionNames),"0","1");
+
+                if(XPE::isSectionNamePresent(sCollision+"0",&(pPEInfo->listSectionHeaders)))
                 {
-                    QString sSectionName=pPEInfo->listSectionRecords.at(i-1).sName;
+                    bDetected=true;
 
-                    if((sSectionName.at(sSectionName.size()-1)==QChar('0')))
-                    {
-                        bDetected=true;
-
-                        break;
-                    }
+                    break;
                 }
-
-                break;
             }
             else if((i>2)&&
                     (sVMPSectionName.at(sVMPSectionName.size()-1)==QChar('2')))
             {
-                QString sCollision=XBinary::getStringCollision(&(pPEInfo->listSectionNames),"0","1");
+                QString sCollision=XBinary::getStringCollision(&(pPEInfo->listSectionNames),"1","2");
 
                 if( XPE::isSectionNamePresent(sCollision+"1",&(pPEInfo->listSectionHeaders))&&
                     XPE::isSectionNamePresent(sCollision+"0",&(pPEInfo->listSectionHeaders)))
@@ -5501,7 +5496,7 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,bool bIsImage, SpecAbs
             else if((i>3)&&
                     (sVMPSectionName.at(sVMPSectionName.size()-1)==QChar('3')))
             {
-                QString sCollision=XBinary::getStringCollision(&(pPEInfo->listSectionNames),"0","1");
+                QString sCollision=XBinary::getStringCollision(&(pPEInfo->listSectionNames),"2","3");
 
                 if( XPE::isSectionNamePresent(sCollision+"2",&(pPEInfo->listSectionHeaders))&&
                     XPE::isSectionNamePresent(sCollision+"1",&(pPEInfo->listSectionHeaders))&&
