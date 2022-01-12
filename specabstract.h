@@ -1625,7 +1625,7 @@ public:
     static void getLanguage(QMap<RECORD_NAME,SCAN_STRUCT> *pMapDetects,QMap<RECORD_NAME,SCAN_STRUCT> *pMapLanguages);
     static void fixLanguage(QMap<RECORD_NAME,SCAN_STRUCT> *pMapLanguages);
 
-    static _SCANS_STRUCT getScansStructFromOsInfo(XBinary::OSINFO osinfo);
+    static _SCANS_STRUCT getScansStructFromOsInfo(XBinary::OSINFO osInfo);
 
     static QString getMsRichString(quint16 nId,quint16 nBuild);
 

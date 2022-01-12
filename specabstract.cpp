@@ -13582,188 +13582,7 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, bool bIsImage
 
     if(elf.isValid())
     {
-        // TODO move to XELF
-        _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_UNIX,"","",0);
-
-        quint8 osabi=elf.getIdent_osabi();
-
-        if      (osabi==XELF_DEF::ELFOSABI_HPUX)        ssOperationSystem.name=RECORD_NAME_HPUX;
-        else if (osabi==XELF_DEF::ELFOSABI_NETBSD)      ssOperationSystem.name=RECORD_NAME_NETBSD;
-        else if (osabi==XELF_DEF::ELFOSABI_LINUX)       ssOperationSystem.name=RECORD_NAME_LINUX;
-        else if (osabi==XELF_DEF::ELFOSABI_SOLARIS)     ssOperationSystem.name=RECORD_NAME_SOLARIS;
-        else if (osabi==XELF_DEF::ELFOSABI_AIX)         ssOperationSystem.name=RECORD_NAME_AIX;
-        else if (osabi==XELF_DEF::ELFOSABI_IRIX)        ssOperationSystem.name=RECORD_NAME_IRIX;
-        else if (osabi==XELF_DEF::ELFOSABI_FREEBSD)     ssOperationSystem.name=RECORD_NAME_FREEBSD;
-        else if (osabi==XELF_DEF::ELFOSABI_TRU64)       ssOperationSystem.name=RECORD_NAME_TRU64;
-        else if (osabi==XELF_DEF::ELFOSABI_MODESTO)     ssOperationSystem.name=RECORD_NAME_MODESTO;
-        else if (osabi==XELF_DEF::ELFOSABI_OPENBSD)     ssOperationSystem.name=RECORD_NAME_OPENBSD;
-        else if (osabi==XELF_DEF::ELFOSABI_OPENVMS)     ssOperationSystem.name=RECORD_NAME_OPENVMS;
-        else if (osabi==XELF_DEF::ELFOSABI_NSK)         ssOperationSystem.name=RECORD_NAME_NSK;
-        else if (osabi==XELF_DEF::ELFOSABI_AROS)        ssOperationSystem.name=RECORD_NAME_AROS;
-        else if (osabi==XELF_DEF::ELFOSABI_FENIXOS)     ssOperationSystem.name=RECORD_NAME_FENIXOS;
-
-        if(ssOperationSystem.name==RECORD_NAME_UNIX)
-        {
-            if(XELF::isNotePresent(&(pELFInfo->listNotes),"Android"))
-            {
-                ssOperationSystem.name=RECORD_NAME_ANDROID;
-
-                XELF::NOTE note=XELF::getNote(&(pELFInfo->listNotes),"Android");
-
-                _SCANS_STRUCT ssAndroidSDK=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDSDK,"","",0);
-                _SCANS_STRUCT ssAndroidNDK=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDNDK,"","",0);
-
-                if(note.nSize>=4)
-                {
-                    quint32 nSDKVersion=elf.read_uint32(note.nDataOffset);
-                    ssAndroidSDK.sVersion=QString("API %1").arg(nSDKVersion);
-
-                    ssOperationSystem.sVersion=getAndroidVersionFromApi(nSDKVersion);
-                }
-
-                if(note.nSize>=4+64*2)
-                {
-                    QString sNdkVersion=elf.read_ansiString(note.nDataOffset+4);
-                    QString sNdkBuild=elf.read_ansiString(note.nDataOffset+4+64);
-
-                    ssAndroidNDK.sVersion=QString("%1(%2)").arg(sNdkVersion).arg(sNdkBuild);
-                }
-
-                pELFInfo->mapResultTools.insert(ssAndroidSDK.name,scansToScan(&(pELFInfo->basic_info),&ssAndroidSDK));
-                pELFInfo->mapResultTools.insert(ssAndroidNDK.name,scansToScan(&(pELFInfo->basic_info),&ssAndroidNDK));
-            }
-        }
-
-        if(ssOperationSystem.name==RECORD_NAME_UNIX)
-        {
-            if(XELF::isSectionNamePresent(".note.android.ident",&(pELFInfo->listSectionRecords)))
-            {
-                ssOperationSystem.name=RECORD_NAME_ANDROID;
-            }
-        }
-
-        if((ssOperationSystem.name==RECORD_NAME_UNIX)||(ssOperationSystem.name==RECORD_NAME_LINUX))
-        {
-            qint32 nNumberOfComments=pELFInfo->listComments.count();
-
-            for(qint32 i=0;i<nNumberOfComments;i++)
-            {
-                bool bFound=false;
-
-                QString sComment=pELFInfo->listComments.at(i);
-
-                if(sComment.contains("Ubuntu")||sComment.contains("ubuntu"))
-                {
-                    ssOperationSystem.name=RECORD_NAME_UBUNTULINUX;
-
-                    if(sComment.contains("ubuntu1~"))
-                    {
-                        ssOperationSystem.sVersion=sComment.section("ubuntu1~",1,-1).section(")",0,0);
-                    }
-
-                    bFound=true;
-                }
-                else if(sComment.contains("Debian")||sComment.contains("debian"))
-                {
-                    ssOperationSystem.name=RECORD_NAME_DEBIANLINUX;
-
-                    bFound=true;
-                }
-                else if(sComment.contains("StartOS"))
-                {
-                    ssOperationSystem.name=RECORD_NAME_STARTOSLINUX;
-
-                    bFound=true;
-                }
-                else if(sComment.contains("Gentoo"))
-                {
-                    ssOperationSystem.name=RECORD_NAME_GENTOOLINUX;
-
-                    bFound=true;
-                }
-                else if(sComment.contains("Alpine"))
-                {
-                    ssOperationSystem.name=RECORD_NAME_ALPINELINUX;
-
-                    bFound=true;
-                }
-                else if(sComment.contains("Wind River Linux"))
-                {
-                    ssOperationSystem.name=RECORD_NAME_WINDRIVERLINUX;
-
-                    bFound=true;
-                }
-                else if(sComment.contains("SuSE")||sComment.contains("SUSE Linux"))
-                {
-                    ssOperationSystem.name=RECORD_NAME_SUSELINUX;
-
-                    bFound=true;
-                }
-                else if(sComment.contains("Mandrakelinux")||sComment.contains("Linux-Mandrake")||sComment.contains("Mandrake Linux"))
-                {
-                    ssOperationSystem.name=RECORD_NAME_MANDRAKELINUX;
-
-                    bFound=true;
-                }
-                else if(sComment.contains("ASPLinux"))
-                {
-                    ssOperationSystem.name=RECORD_NAME_ASPLINUX;
-
-                    bFound=true;
-                }
-                else if(sComment.contains("Red Hat"))
-                {
-                    ssOperationSystem.name=RECORD_NAME_REDHATLINUX;
-
-                    bFound=true;
-                }
-                else if(sComment.contains("Hancom Linux"))
-                {
-                    ssOperationSystem.name=RECORD_NAME_HANCOMLINUX;
-
-                    bFound=true;
-                }
-                else if(sComment.contains("TurboLinux"))
-                {
-                    ssOperationSystem.name=RECORD_NAME_TURBOLINUX;
-
-                    bFound=true;
-                }
-                else if(sComment.contains("Vine Linux"))
-                {
-                    ssOperationSystem.name=RECORD_NAME_VINELINUX;
-
-                    bFound=true;
-                }
-
-                if(ssOperationSystem.name!=RECORD_NAME_LINUX)
-                {
-                    if(sComment.contains("SunOS"))
-                    {
-                        ssOperationSystem.name=RECORD_NAME_SUNOS;
-
-                        if(sComment.contains("@(#)SunOS "))
-                        {
-                            ssOperationSystem.sVersion=sComment.section("@(#)SunOS ",1,-1);
-                        }
-
-                        bFound=true;
-                    }
-                }
-
-                if(bFound)
-                {
-                    break;
-                }
-            }
-        }
-
-        if(ssOperationSystem.name==RECORD_NAME_UNIX)
-        {
-            ssOperationSystem.sVersion=QString("%1").arg(osabi);
-        }
-
-        ssOperationSystem.sInfo=QString("%1, %2, %3").arg(elf.getArch(),(pELFInfo->bIs64)?("64-bit"):("32-bit"),elf.getTypeAsString());
+        _SCANS_STRUCT ssOperationSystem=getScansStructFromOsInfo(elf.getOsInfo());
 
         pELFInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pELFInfo->basic_info),&ssOperationSystem));
     }
@@ -14330,6 +14149,31 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
             recordSS.sVersion=XBinary::regExp("version=(.*?)\\\n",sVersionString,1);
 
             pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+        }
+
+        if(XELF::isNotePresent(&(pELFInfo->listNotes),"Android"))
+        {
+            XELF::NOTE note=XELF::getNote(&(pELFInfo->listNotes),"Android");
+
+            _SCANS_STRUCT ssAndroidSDK=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDSDK,"","",0);
+            _SCANS_STRUCT ssAndroidNDK=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_TOOL,RECORD_NAME_ANDROIDNDK,"","",0);
+
+            if(note.nSize>=4)
+            {
+                quint32 nSDKVersion=elf.read_uint32(note.nDataOffset);
+                ssAndroidSDK.sVersion=QString("API %1(Android %2)").arg(QString::number(nSDKVersion),getAndroidVersionFromApi(nSDKVersion));
+            }
+
+            if(note.nSize>=4+64*2)
+            {
+                QString sNdkVersion=elf.read_ansiString(note.nDataOffset+4);
+                QString sNdkBuild=elf.read_ansiString(note.nDataOffset+4+64);
+
+                ssAndroidNDK.sVersion=QString("%1(%2)").arg(sNdkVersion).arg(sNdkBuild);
+            }
+
+            pELFInfo->mapResultTools.insert(ssAndroidSDK.name,scansToScan(&(pELFInfo->basic_info),&ssAndroidSDK));
+            pELFInfo->mapResultTools.insert(ssAndroidNDK.name,scansToScan(&(pELFInfo->basic_info),&ssAndroidNDK));
         }
 
         // gold
@@ -18755,46 +18599,62 @@ void SpecAbstract::fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages)
     //    }
 }
 
-SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSINFO osinfo)
+SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSINFO osInfo)
 {
     _SCANS_STRUCT result={};
 
     result.type=RECORD_TYPE_OPERATIONSYSTEM;
 
-    if      (osinfo.osName==XBinary::OSNAME_MSDOS)              result.name=RECORD_NAME_MSDOS;
-    else if (osinfo.osName==XBinary::OSNAME_POSIX)              result.name=RECORD_NAME_POSIX;
-    else if (osinfo.osName==XBinary::OSNAME_UNIX)               result.name=RECORD_NAME_UNIX;
-    else if (osinfo.osName==XBinary::OSNAME_LINUX)              result.name=RECORD_NAME_LINUX;
-    else if (osinfo.osName==XBinary::OSNAME_WINDOWS)            result.name=RECORD_NAME_WINDOWS;
-    else if (osinfo.osName==XBinary::OSNAME_WINDOWSCE)          result.name=RECORD_NAME_WINDOWSCE;
-    else if (osinfo.osName==XBinary::OSNAME_XBOX)               result.name=RECORD_NAME_XBOX;
-    else if (osinfo.osName==XBinary::OSNAME_OS2)                result.name=RECORD_NAME_OS2;
-    else if (osinfo.osName==XBinary::OSNAME_MAC_OS)             result.name=RECORD_NAME_MAC_OS;
-    else if (osinfo.osName==XBinary::OSNAME_MAC_OS_X)           result.name=RECORD_NAME_MAC_OS_X;
-    else if (osinfo.osName==XBinary::OSNAME_OS_X)               result.name=RECORD_NAME_OS_X;
-    else if (osinfo.osName==XBinary::OSNAME_MACOS)              result.name=RECORD_NAME_MACOS;
-    else if (osinfo.osName==XBinary::OSNAME_IPHONEOS)           result.name=RECORD_NAME_IPHONEOS;
-    else if (osinfo.osName==XBinary::OSNAME_IPADOS)             result.name=RECORD_NAME_IPADOS;
-    else if (osinfo.osName==XBinary::OSNAME_IOS)                result.name=RECORD_NAME_IOS;
-    else if (osinfo.osName==XBinary::OSNAME_WATCHOS)            result.name=RECORD_NAME_WATCHOS;
-    else if (osinfo.osName==XBinary::OSNAME_TVOS)               result.name=RECORD_NAME_TVOS;
-    else if (osinfo.osName==XBinary::OSNAME_BRIDGEOS)           result.name=RECORD_NAME_BRIDGEOS;
-    else if (osinfo.osName==XBinary::OSNAME_ANDROID)            result.name=RECORD_NAME_ANDROID;
-    else if (osinfo.osName==XBinary::OSNAME_FREEBSD)            result.name=RECORD_NAME_FREEBSD;
-    else if (osinfo.osName==XBinary::OSNAME_OPENBSD)            result.name=RECORD_NAME_OPENBSD;
-    else if (osinfo.osName==XBinary::OSNAME_NETBSD)             result.name=RECORD_NAME_NETBSD;
-    else if (osinfo.osName==XBinary::OSNAME_HPUX)               result.name=RECORD_NAME_HPUX;
-    else if (osinfo.osName==XBinary::OSNAME_SOLARIS)            result.name=RECORD_NAME_SOLARIS;
-    else if (osinfo.osName==XBinary::OSNAME_AIX)                result.name=RECORD_NAME_AIX;
-    else if (osinfo.osName==XBinary::OSNAME_IRIX)               result.name=RECORD_NAME_IRIX;
-    else if (osinfo.osName==XBinary::OSNAME_TRU64)              result.name=RECORD_NAME_TRU64;
-    else if (osinfo.osName==XBinary::OSNAME_MODESTO)            result.name=RECORD_NAME_MODESTO;
-    else if (osinfo.osName==XBinary::OSNAME_OPENVMS)            result.name=RECORD_NAME_OPENVMS;
-    else if (osinfo.osName==XBinary::OSNAME_FENIXOS)            result.name=RECORD_NAME_FENIXOS;
-    else if (osinfo.osName==XBinary::OSNAME_BORLANDOSSERVICES)  result.name=RECORD_NAME_BORLANDOSSERVICES;
+    if      (osInfo.osName==XBinary::OSNAME_MSDOS)              result.name=RECORD_NAME_MSDOS;
+    else if (osInfo.osName==XBinary::OSNAME_POSIX)              result.name=RECORD_NAME_POSIX;
+    else if (osInfo.osName==XBinary::OSNAME_UNIX)               result.name=RECORD_NAME_UNIX;
+    else if (osInfo.osName==XBinary::OSNAME_LINUX)              result.name=RECORD_NAME_LINUX;
+    else if (osInfo.osName==XBinary::OSNAME_WINDOWS)            result.name=RECORD_NAME_WINDOWS;
+    else if (osInfo.osName==XBinary::OSNAME_WINDOWSCE)          result.name=RECORD_NAME_WINDOWSCE;
+    else if (osInfo.osName==XBinary::OSNAME_XBOX)               result.name=RECORD_NAME_XBOX;
+    else if (osInfo.osName==XBinary::OSNAME_OS2)                result.name=RECORD_NAME_OS2;
+    else if (osInfo.osName==XBinary::OSNAME_MAC_OS)             result.name=RECORD_NAME_MAC_OS;
+    else if (osInfo.osName==XBinary::OSNAME_MAC_OS_X)           result.name=RECORD_NAME_MAC_OS_X;
+    else if (osInfo.osName==XBinary::OSNAME_OS_X)               result.name=RECORD_NAME_OS_X;
+    else if (osInfo.osName==XBinary::OSNAME_MACOS)              result.name=RECORD_NAME_MACOS;
+    else if (osInfo.osName==XBinary::OSNAME_IPHONEOS)           result.name=RECORD_NAME_IPHONEOS;
+    else if (osInfo.osName==XBinary::OSNAME_IPADOS)             result.name=RECORD_NAME_IPADOS;
+    else if (osInfo.osName==XBinary::OSNAME_IOS)                result.name=RECORD_NAME_IOS;
+    else if (osInfo.osName==XBinary::OSNAME_WATCHOS)            result.name=RECORD_NAME_WATCHOS;
+    else if (osInfo.osName==XBinary::OSNAME_TVOS)               result.name=RECORD_NAME_TVOS;
+    else if (osInfo.osName==XBinary::OSNAME_BRIDGEOS)           result.name=RECORD_NAME_BRIDGEOS;
+    else if (osInfo.osName==XBinary::OSNAME_ANDROID)            result.name=RECORD_NAME_ANDROID;
+    else if (osInfo.osName==XBinary::OSNAME_FREEBSD)            result.name=RECORD_NAME_FREEBSD;
+    else if (osInfo.osName==XBinary::OSNAME_OPENBSD)            result.name=RECORD_NAME_OPENBSD;
+    else if (osInfo.osName==XBinary::OSNAME_NETBSD)             result.name=RECORD_NAME_NETBSD;
+    else if (osInfo.osName==XBinary::OSNAME_HPUX)               result.name=RECORD_NAME_HPUX;
+    else if (osInfo.osName==XBinary::OSNAME_SOLARIS)            result.name=RECORD_NAME_SOLARIS;
+    else if (osInfo.osName==XBinary::OSNAME_AIX)                result.name=RECORD_NAME_AIX;
+    else if (osInfo.osName==XBinary::OSNAME_IRIX)               result.name=RECORD_NAME_IRIX;
+    else if (osInfo.osName==XBinary::OSNAME_TRU64)              result.name=RECORD_NAME_TRU64;
+    else if (osInfo.osName==XBinary::OSNAME_MODESTO)            result.name=RECORD_NAME_MODESTO;
+    else if (osInfo.osName==XBinary::OSNAME_OPENVMS)            result.name=RECORD_NAME_OPENVMS;
+    else if (osInfo.osName==XBinary::OSNAME_FENIXOS)            result.name=RECORD_NAME_FENIXOS;
+    else if (osInfo.osName==XBinary::OSNAME_BORLANDOSSERVICES)  result.name=RECORD_NAME_BORLANDOSSERVICES;
+    else if (osInfo.osName==XBinary::OSNAME_NSK)                result.name=RECORD_NAME_NSK;
+    else if (osInfo.osName==XBinary::OSNAME_AROS)               result.name=RECORD_NAME_AROS;
+    else if (osInfo.osName==XBinary::OSNAME_UBUNTULINUX)        result.name=RECORD_NAME_UBUNTULINUX;
+    else if (osInfo.osName==XBinary::OSNAME_DEBIANLINUX)        result.name=RECORD_NAME_DEBIANLINUX;
+    else if (osInfo.osName==XBinary::OSNAME_STARTOSLINUX)       result.name=RECORD_NAME_STARTOSLINUX;
+    else if (osInfo.osName==XBinary::OSNAME_GENTOOLINUX)        result.name=RECORD_NAME_GENTOOLINUX;
+    else if (osInfo.osName==XBinary::OSNAME_ALPINELINUX)        result.name=RECORD_NAME_ALPINELINUX;
+    else if (osInfo.osName==XBinary::OSNAME_WINDRIVERLINUX)     result.name=RECORD_NAME_WINDRIVERLINUX;
+    else if (osInfo.osName==XBinary::OSNAME_SUSELINUX)          result.name=RECORD_NAME_SUSELINUX;
+    else if (osInfo.osName==XBinary::OSNAME_MANDRAKELINUX)      result.name=RECORD_NAME_MANDRAKELINUX;
+    else if (osInfo.osName==XBinary::OSNAME_ASPLINUX)           result.name=RECORD_NAME_ASPLINUX;
+    else if (osInfo.osName==XBinary::OSNAME_REDHATLINUX)        result.name=RECORD_NAME_REDHATLINUX;
+    else if (osInfo.osName==XBinary::OSNAME_HANCOMLINUX)        result.name=RECORD_NAME_HANCOMLINUX;
+    else if (osInfo.osName==XBinary::OSNAME_TURBOLINUX)         result.name=RECORD_NAME_TURBOLINUX;
+    else if (osInfo.osName==XBinary::OSNAME_VINELINUX)          result.name=RECORD_NAME_VINELINUX;
+    else if (osInfo.osName==XBinary::OSNAME_SUNOS)              result.name=RECORD_NAME_SUNOS;
 
-    result.sVersion=osinfo.sOsVersion;
-    result.sInfo=QString("%1, %2, %3").arg(osinfo.sArch,XBinary::modeIdToString(osinfo.mode),osinfo.sType);
+    result.sVersion=osInfo.sOsVersion;
+    result.sInfo=QString("%1, %2, %3").arg(osInfo.sArch,XBinary::modeIdToString(osInfo.mode),osInfo.sType);
 
     return result;
 }
