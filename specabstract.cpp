@@ -17948,7 +17948,7 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
 
     for(qint32 i=0;(i<nNumberOfStrings)&&(!(*pbIsStop));i++)
     {
-        for(qint32 j=0; j<nNumberOfSignatures; j++)
+        for(qint32 j=0;j<nNumberOfSignatures;j++)
         {
             if((pRecords[j].basicInfo.fileType==fileType1)||(pRecords[j].basicInfo.fileType==fileType2))
             {
