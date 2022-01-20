@@ -1019,7 +1019,7 @@ QString SpecAbstract::heurTypeIdToString(SpecAbstract::DETECTTYPE id)
 
 SpecAbstract::UNPACK_OPTIONS SpecAbstract::getPossibleUnpackOptions(QIODevice *pDevice,bool bIsImage)
 {
-    // TODO
+    // TODO mb Remove
     UNPACK_OPTIONS result={};
 
     QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(pDevice);
