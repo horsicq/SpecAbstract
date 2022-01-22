@@ -825,7 +825,7 @@ public:
         RECORD_NAME_UNKNOWN9
     };
 
-    // TODO flags(static scan/emul/heur)
+    // TODO flags(static scan/emul/heur) ? Check
     struct SCAN_STRUCT
     {
         bool bIsHeuristic;
