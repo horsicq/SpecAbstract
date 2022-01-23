@@ -2107,9 +2107,8 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         Binary_handle_ProtectorData(pDevice,pOptions->bIsImage,&result);
         Binary_handle_LibraryData(pDevice,pOptions->bIsImage,&result);
 
-        Binary_handleLanguages(pDevice,pOptions->bIsImage,&result);
-
         Binary_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
+        Binary_handleLanguages(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultTexts.values());
         result.basic_info.listDetects.append(result.mapResultArchives.values());
@@ -2267,9 +2266,8 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XB
         MSDOS_handle_SFX(pDevice,pOptions->bIsImage,&result);
         MSDOS_handle_DosExtenders(pDevice,pOptions->bIsImage,&result);
 
-        MSDOS_handleLanguages(pDevice,pOptions->bIsImage,&result);
-
         MSDOS_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
+        MSDOS_handleLanguages(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultDosExtenders.values());
@@ -2371,9 +2369,8 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XBinar
 
         ELF_handle_UnknownProtection(pDevice,pOptions->bIsImage,&result);
 
-        ELF_handleLanguages(pDevice,pOptions->bIsImage,&result);
-
         ELF_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
+        ELF_handleLanguages(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
@@ -2447,9 +2444,8 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XB
         MACHO_handle_Tools(pDevice,pOptions->bIsImage,&result);
         MACHO_handle_Protection(pDevice,pOptions->bIsImage,&result);
 
-        MACHO_handleLanguages(pDevice,pOptions->bIsImage,&result);
-
         MACHO_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
+        MACHO_handleLanguages(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultLinkers.values());
@@ -2994,9 +2990,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
             PE_handle_UnknownProtection(pDevice,pOptions->bIsImage,&result);
         }
 
-        PE_handleLanguages(pDevice,pOptions->bIsImage,&result);
-
         PE_handle_FixDetects(pDevice,pOptions->bIsImage,&result); 
+        PE_handleLanguages(pDevice,pOptions->bIsImage,&result);
 
         PE_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
 
@@ -3208,9 +3203,8 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XBinar
 
         Zip_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
 
-        Zip_handleLanguages(pDevice,pOptions->bIsImage,&result);
-
         Zip_handle_FixDetects(pDevice,pOptions->bIsImage,&result);
+        Zip_handleLanguages(pDevice,pOptions->bIsImage,&result);
 
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultArchives.values());
@@ -14182,10 +14176,6 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
             pELFInfo->mapResultTools.insert(ssAndroidNDK.name,scansToScan(&(pELFInfo->basic_info),&ssAndroidNDK));
         }
 
-        {
-            // Virbox Protector
-        }
-
         // gold
         if(XELF::isSectionNamePresent(".note.gnu.gold-version",&(pELFInfo->listSectionRecords)))
         {
@@ -14569,6 +14559,40 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_OLLVMTLL);
 
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        {
+            // Virbox Protector
+            QList<XELF_DEF::Elf_Phdr> listNotes=elf._getPrograms(&(pELFInfo->listProgramHeaders),XELF_DEF::PT_NOTE);
+
+            qint32 nNumberOfNotes=listNotes.count();
+
+            for(qint32 i=0;i<nNumberOfNotes;i++)
+            {
+                qint64 nOffset=0;
+
+                if(bIsImage)
+                {
+                    nOffset=listNotes.at(i).p_vaddr; // TODO Check
+                }
+                else
+                {
+                    nOffset=listNotes.at(i).p_offset;
+                }
+
+                qint64 nSize=listNotes.at(i).p_filesz;
+
+                QString sString=elf.read_ansiString(nOffset,nSize);
+
+                if(sString=="Virbox Protector")
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_VIRBOXPROTECTOR,"","",0);
+
+                    pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+                }
+
+                break;
+            }
         }
     }
 }
