@@ -903,6 +903,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_VDOG:                                  sResult=QString("VDog");                                        break;
         case RECORD_NAME_VERACRYPT:                             sResult=QString("VeraCrypt");                                   break;
         case RECORD_NAME_VINELINUX:                             sResult=QString("Vine Linux");                                  break;
+        case RECORD_NAME_VIRBOXPROTECTOR:                       sResult=QString("Virbox Protector");                            break;
         case RECORD_NAME_VIRTUALIZEPROTECT:                     sResult=QString("VirtualizeProtect");                           break;
         case RECORD_NAME_VIRTUALPASCAL:                         sResult=QString("Virtual Pascal");                              break;
         case RECORD_NAME_VISE:                                  sResult=QString("Vise");                                        break;
@@ -2345,6 +2346,11 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XBinar
 
         result.listSectionRecords=XELF::getSectionRecords(&result.listSectionHeaders,pOptions->bIsImage,&result.baStringTable);
         result.listNotes=elf.getNotes(&result.listProgramHeaders);
+
+        if(result.listNotes.count()==0)
+        {
+            result.listNotes=elf.getNotes(&result.listSectionHeaders);
+        }
 
         result.nCommentSection=XELF::getSectionNumber(".comment",&result.listSectionRecords);
 
@@ -14174,6 +14180,10 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
 
             pELFInfo->mapResultTools.insert(ssAndroidSDK.name,scansToScan(&(pELFInfo->basic_info),&ssAndroidSDK));
             pELFInfo->mapResultTools.insert(ssAndroidNDK.name,scansToScan(&(pELFInfo->basic_info),&ssAndroidNDK));
+        }
+
+        {
+            // Virbox Protector
         }
 
         // gold
