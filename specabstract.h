@@ -216,6 +216,7 @@ public:
         RECORD_NAME_CODEGEARCPPBUILDER,
         RECORD_NAME_CODEGEARDELPHI,
         RECORD_NAME_CODEGEAROBJECTPASCALDELPHI,
+        RECORD_NAME_CODESIGN,
         RECORD_NAME_CODEVEIL,
         RECORD_NAME_CODEWALL,
         RECORD_NAME_COFF,
@@ -1177,6 +1178,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultProtectors;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultTools;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultSigntools;
     };
 
     struct PEINFO_STRUCT

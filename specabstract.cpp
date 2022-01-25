@@ -380,6 +380,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_CODEGEARCPPBUILDER:                    sResult=QString("CodeGear C++ Builder");                        break;
         case RECORD_NAME_CODEGEARDELPHI:                        sResult=QString("CodeGear Delphi");                             break;
         case RECORD_NAME_CODEGEAROBJECTPASCALDELPHI:            sResult=QString("Codegear Object Pascal(Delphi)");              break;
+        case RECORD_NAME_CODESIGN:                              sResult=QString("codesign");                                    break;
         case RECORD_NAME_CODEVEIL:                              sResult=QString("CodeVeil");                                    break;
         case RECORD_NAME_CODEWALL:                              sResult=QString("CodeWall");                                    break;
         case RECORD_NAME_COFF:                                  sResult=QString("COFF");                                        break;
@@ -2453,6 +2454,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XB
         result.basic_info.listDetects.append(result.mapResultLanguages.values());
         result.basic_info.listDetects.append(result.mapResultLibraries.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
+        result.basic_info.listDetects.append(result.mapResultSigntools.values());
         result.basic_info.listDetects.append(result.mapResultProtectors.values());
 
         if(!result.basic_info.listDetects.count())
@@ -14690,6 +14692,13 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbs
         _SCANS_STRUCT ssOperationSystem=getScansStructFromOsInfo(osInfo);
 
         pMACHInfo->mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pMACHInfo->basic_info),&ssOperationSystem));
+
+        if(mach.isCommandPresent(XMACH_DEF::S_LC_CODE_SIGNATURE,&(pMACHInfo->listCommandRecords)))
+        {
+            _SCANS_STRUCT recordSS=getScansStruct(0,XBinary::FT_MACHO,RECORD_TYPE_SIGNTOOL,RECORD_NAME_CODESIGN,"","",0);
+            // TODO more info
+            pMACHInfo->mapResultSigntools.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
+        }
 
         // Foundation
         if(XMACH::isLibraryRecordNamePresent("Foundation",&(pMACHInfo->listLibraryRecords)))
