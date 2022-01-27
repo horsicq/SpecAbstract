@@ -949,6 +949,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WWPACK32:                              sResult=QString("WWPack32");                                    break;
         case RECORD_NAME_WWPACK:                                sResult=QString("WWPack");                                      break;
         case RECORD_NAME_WXWIDGETS:                             sResult=QString("wxWidgets");                                   break;
+        case RECORD_NAME_X86ASSEMBLER:                          sResult=QString("x86 Assembler");                               break;
         case RECORD_NAME_XAR:                                   sResult=QString("xar");                                         break;
         case RECORD_NAME_XBOX:                                  sResult=QString("XBOX");                                        break;
         case RECORD_NAME_XCODE:                                 sResult=QString("Xcode");                                       break;
@@ -18520,13 +18521,15 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
                 break;
             case RECORD_NAME_ASSEMBLER:
             case RECORD_NAME_ARMTHUMBMACROASSEMBLER:
-            case RECORD_NAME_FASM:
             case RECORD_NAME_GNUASSEMBLER:
+                ssLanguage.name=RECORD_NAME_ASSEMBLER; // TODO Check architecture if X86 -> RECORD_NAME_X86ASSEMBLER
+                break;
+            case RECORD_NAME_FASM:
             case RECORD_NAME_GOASM:
             case RECORD_NAME_MASM:
             case RECORD_NAME_MASM32:
             case RECORD_NAME_NASM:
-                ssLanguage.name=RECORD_NAME_ASSEMBLER;
+                ssLanguage.name=RECORD_NAME_X86ASSEMBLER;
                 break;
             case RECORD_NAME_AUTOIT:
                 ssLanguage.name=RECORD_NAME_AUTOIT;
@@ -18698,6 +18701,11 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
 
     result.sVersion=osInfo.sOsVersion;
     result.sInfo=QString("%1, %2, %3").arg(osInfo.sArch,XBinary::modeIdToString(osInfo.mode),osInfo.sType);
+
+    if(osInfo.bIsBigEndian)
+    {
+        result.sInfo.append(QString(", %1").arg(XBinary::endiannessToString(osInfo.bIsBigEndian)));
+    }
 
     return result;
 }
