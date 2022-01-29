@@ -708,6 +708,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_OPENJDK:                               sResult=QString("OpenJDK");                                     break;
         case RECORD_NAME_OPENSOURCECODECRYPTER:                 sResult=QString("Open Source Code Crypter");                    break;
         case RECORD_NAME_OPENVMS:                               sResult=QString("Open VMS");                                    break;
+        case RECORD_NAME_OPENVOS:                               sResult=QString("Open VOS");                                    break;
         case RECORD_NAME_OPERA:                                 sResult=QString("Opera");                                       break;
         case RECORD_NAME_ORACLESOLARISLINKEDITORS:              sResult=QString("Oracle Solaris Link Editors");                 break;
         case RECORD_NAME_ORIEN:                                 sResult=QString("ORiEN");                                       break;
@@ -18698,6 +18699,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     else if (osInfo.osName==XBinary::OSNAME_TURBOLINUX)         result.name=RECORD_NAME_TURBOLINUX;
     else if (osInfo.osName==XBinary::OSNAME_VINELINUX)          result.name=RECORD_NAME_VINELINUX;
     else if (osInfo.osName==XBinary::OSNAME_SUNOS)              result.name=RECORD_NAME_SUNOS;
+    else if (osInfo.osName==XBinary::OSNAME_OPENVOS)            result.name=RECORD_NAME_OPENVOS;
 
     result.sVersion=osInfo.sOsVersion;
     result.sInfo=QString("%1, %2, %3").arg(osInfo.sArch,XBinary::modeIdToString(osInfo.mode),osInfo.sType);
