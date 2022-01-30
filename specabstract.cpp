@@ -13880,7 +13880,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
             if(vi.bIsValid)
             {
-                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_LINKER,RECORD_NAME_SUNWORKSHOP,vi.sVersion,vi.sInfo,0);
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_TOOL,RECORD_NAME_SUNWORKSHOP,vi.sVersion,vi.sInfo,0);
 
                 pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
             }
