@@ -14210,6 +14210,13 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
             pELFInfo->mapResultTools.insert(ssAndroidNDK.name,scansToScan(&(pELFInfo->basic_info),&ssAndroidNDK));
         }
 
+        if(XELF::isNotePresent(&(pELFInfo->listNotes),"Go"))
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_GO,"","",0);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
         // gold
         if(XELF::isSectionNamePresent(".note.gnu.gold-version",&(pELFInfo->listSectionRecords)))
         {
@@ -14669,23 +14676,47 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
         {
             // TODO names of note sections
 
-            QSet<QString> stRecords;
-
-            qint32 nNumberOfRecords=pELFInfo->listComments.count();
-
-            for(qint32 i=0;i<nNumberOfRecords;i++)
             {
-                if(!stRecords.contains(pELFInfo->listComments.at(i)))
+                QSet<QString> stRecords;
+
+                qint32 nNumberOfRecords=pELFInfo->listComments.count();
+
+                for(qint32 i=0;i<nNumberOfRecords;i++)
                 {
-                    _SCANS_STRUCT recordSS={};
+                    if(!stRecords.contains(pELFInfo->listComments.at(i)))
+                    {
+                        _SCANS_STRUCT recordSS={};
 
-                    recordSS.type=RECORD_TYPE_LIBRARY;
-                    recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+i+1);
-                    recordSS.sVersion=pELFInfo->listComments.at(i);
+                        recordSS.type=RECORD_TYPE_LIBRARY;
+                        recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+i+1);
+                        recordSS.sVersion=pELFInfo->listComments.at(i);
 
-                    pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+                        pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
 
-                    stRecords.insert(pELFInfo->listComments.at(i));
+                        stRecords.insert(pELFInfo->listComments.at(i));
+                    }
+                }
+            }
+
+            {
+                QSet<QString> stRecords;
+
+                qint32 nNumberOfRecords=pELFInfo->listNotes.count();
+
+                for(qint32 i=0;i<nNumberOfRecords;i++)
+                {
+                    if(!stRecords.contains(pELFInfo->listNotes.at(i).sName))
+                    {
+                        _SCANS_STRUCT recordSS={};
+
+                        recordSS.type=RECORD_TYPE_LIBRARY;
+                        recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+i+1);
+                        recordSS.sVersion=QString("NOTE_")+pELFInfo->listNotes.at(i).sName;
+
+                        pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+
+                        stRecords.insert(pELFInfo->listNotes.at(i).sName);
+                    }
                 }
             }
         }
