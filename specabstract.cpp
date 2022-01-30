@@ -357,6 +357,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BRIDGEOSSDK:                           sResult=QString("bridgeOS SDK");                                break;
         case RECORD_NAME_BTWORKSCODEGUARD:                      sResult=QString("Btworks CodeGuard");                           break;
         case RECORD_NAME_BUNDLETOOL:                            sResult=QString("BundleTool");                                  break;
+        case RECORD_NAME_BURNEYE:                               sResult=QString("Burneye");                                     break;
         case RECORD_NAME_BYTEDANCESECCOMPILER:                  sResult=QString("ByteDance-SecCompiler");                       break;
         case RECORD_NAME_BYTEGUARD:                             sResult=QString("ByteGuard");                                   break;
         case RECORD_NAME_BZIP2:                                 sResult=QString("bzip2");                                       break;
@@ -2377,6 +2378,8 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XBinar
 
             result.listComments=elf.getStringsFromSection(result.nCommentSection).values();
         }
+
+        signatureScan(&result.mapEntryPointDetects,result.sEntryPointSignature,_ELF_entrypoint_records,sizeof(_ELF_entrypoint_records),result.basic_info.id.fileType,XBinary::FT_ELF,&(result.basic_info),DETECTTYPE_ENTRYPOINT,pbIsStop);
 
         ELF_handle_CommentSection(pDevice,pOptions->bIsImage,&result);
 
@@ -14488,6 +14491,13 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         else if(viUPXEnd.nValue==0x214d4a41) // "AJM!"
         {
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_PROTECTOR,RECORD_NAME_IJIAMI,"","UPX",0);
+            pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Burneye
+        if(pELFInfo->mapEntryPointDetects.contains(RECORD_NAME_BURNEYE))
+        {
+            _SCANS_STRUCT ss=pELFInfo->mapEntryPointDetects.value(RECORD_NAME_BURNEYE);
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
