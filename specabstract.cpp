@@ -846,6 +846,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_STONESPEENCRYPTOR:                     sResult=QString("Stone's PE Encryptor");                        break;
         case RECORD_NAME_SUNOS:                                 sResult=QString("SunOS");                                       break;
         case RECORD_NAME_SUNWORKSHOP:                           sResult=QString("Sun WorkShop");                                break;
+        case RECORD_NAME_SUNWORKSHOPCOMPILERS:                  sResult=QString("Sun WorkShop Compilers");                      break;
         case RECORD_NAME_SUSELINUX:                             sResult=QString("SUSE Linux");                                  break;
         case RECORD_NAME_SVKPROTECTOR:                          sResult=QString("SVK Protector");                               break;
         case RECORD_NAME_SWF:                                   sResult=QString("SWF");                                         break;
@@ -1912,6 +1913,20 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SunWorkShop_string(QString sString)
         result.bIsValid=true;
 
         result.sVersion=sString.section("Sun WorkShop ",1,1).section(" ",0,1).section("\r",0,0).section("\n",0,0);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_SunWorkShopCompilers_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(XBinary::isRegExpPresent("WorkShop Compilers",sString))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section("WorkShop Compilers ",1,1).section("\r",0,0).section("\n",0,0);
     }
 
     return result;
@@ -13873,6 +13888,18 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
         if(!vi.bIsValid)
         {
+            vi=_get_SunWorkShopCompilers_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_TOOL,RECORD_NAME_SUNWORKSHOPCOMPILERS,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
             vi=_get_SnapdragonLLVMARM_string(sComment);
 
             if(vi.bIsValid)
@@ -14364,6 +14391,14 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SUNWORKSHOP))
         {
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SUNWORKSHOP);
+
+            pELFInfo->mapResultTools.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Sun WorkShop Compilers
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SUNWORKSHOPCOMPILERS))
+        {
+            _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SUNWORKSHOPCOMPILERS);
 
             pELFInfo->mapResultTools.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }

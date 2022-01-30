@@ -682,6 +682,7 @@ public:
         RECORD_NAME_STONESPEENCRYPTOR, // TODO Check name from .Stone Section // TODO EP !!!
         RECORD_NAME_SUNOS,
         RECORD_NAME_SUNWORKSHOP,
+        RECORD_NAME_SUNWORKSHOPCOMPILERS,
         RECORD_NAME_SUSELINUX,
         RECORD_NAME_SVKPROTECTOR,
         RECORD_NAME_SWF,
@@ -1587,6 +1588,7 @@ public:
     static VI_STRUCT _get_mold_string(QString sString);
     static VI_STRUCT _get_OracleSolarisLinkEditors_string(QString sString);
     static VI_STRUCT _get_SunWorkShop_string(QString sString);
+    static VI_STRUCT _get_SunWorkShopCompilers_string(QString sString);
     static VI_STRUCT _get_SnapdragonLLVMARM_string(QString sString);
     static VI_STRUCT _get_NASM_string(QString sString);
     static VI_STRUCT _get_TencentLegu_string(QString sString);
