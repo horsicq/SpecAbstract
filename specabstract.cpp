@@ -3750,7 +3750,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecA
                     {
                         _SCANS_STRUCT recordUPX=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_UPX);
 
-                        recordUPX.sInfo=append(recordUPX.sInfo,"modified");
+                        recordUPX.sInfo=append(recordUPX.sInfo,"Modified");
 
                         pPEInfo->mapResultPackers.insert(recordUPX.name,scansToScan(&(pPEInfo->basic_info),&recordUPX));
                     }
@@ -9474,7 +9474,7 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice,bool bIsImage, SpecAbstract:
             if((!pPEInfo->mapResultSFX.contains(RECORD_NAME_7Z))&&(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_7Z)))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_SFX,RECORD_NAME_7Z,"","",0);
-                ss.sInfo="modified";
+                ss.sInfo="Modified";
                 pPEInfo->mapResultSFX.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
@@ -14498,6 +14498,17 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, bool bIsImage, Spec
         if(pELFInfo->mapEntryPointDetects.contains(RECORD_NAME_BURNEYE))
         {
             _SCANS_STRUCT ss=pELFInfo->mapEntryPointDetects.value(RECORD_NAME_BURNEYE);
+
+            qint64 _nOffset=0x1000;
+            qint64 _nSize=0x200;
+
+            qint64 nOffset_Id=elf.find_ansiString(_nOffset,_nSize,"TEEE burneye - TESO ELF Encryption Engine");
+
+            if(nOffset_Id==-1)
+            {
+                ss.sInfo="Modified";
+            }
+
             pELFInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
 
