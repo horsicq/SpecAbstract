@@ -18879,7 +18879,7 @@ QList<XBinary::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListScanSt
         }
         else
         {
-            record.colText=QApplication::palette().text().color();
+            record.colText=QColor(Qt::black);
         }
     #endif
 

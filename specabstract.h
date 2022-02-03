@@ -29,9 +29,6 @@
 #endif
 
 #include "xformats.h"
-#ifdef QT_GUI_LIB
-#include <QApplication>
-#endif
 
 class SpecAbstract : public QObject
 {
