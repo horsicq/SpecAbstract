@@ -1023,28 +1023,28 @@ QString SpecAbstract::heurTypeIdToString(SpecAbstract::DETECTTYPE id)
     return sResult;
 }
 
-SpecAbstract::UNPACK_OPTIONS SpecAbstract::getPossibleUnpackOptions(QIODevice *pDevice,bool bIsImage)
-{
-    // TODO mb Remove !!!
-    UNPACK_OPTIONS result={};
+//SpecAbstract::UNPACK_OPTIONS SpecAbstract::getPossibleUnpackOptions(QIODevice *pDevice,bool bIsImage)
+//{
+//    // TODO mb Remove !!!
+//    UNPACK_OPTIONS result={};
 
-    QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(pDevice);
+//    QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(pDevice);
 
-    if(stFileTypes.contains(XBinary::FT_PE32)||stFileTypes.contains(XBinary::FT_PE64))
-    {
-        XPE pe(pDevice,bIsImage);
+//    if(stFileTypes.contains(XBinary::FT_PE32)||stFileTypes.contains(XBinary::FT_PE64))
+//    {
+//        XPE pe(pDevice,bIsImage);
 
-        if(pe.isValid())
-        {
-            if(pe.isValid())
-            {
-                result.bCopyOverlay=pe.isOverlayPresent();
-            }
-        }
-    }
+//        if(pe.isValid())
+//        {
+//            if(pe.isValid())
+//            {
+//                result.bCopyOverlay=pe.isOverlayPresent();
+//            }
+//        }
+//    }
 
-    return result;
-}
+//    return result;
+//}
 
 QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, bool bShowType)
 {

@@ -1383,7 +1383,7 @@ public:
     static QString recordNameIdToString(RECORD_NAME id);
     static QString heurTypeIdToString(DETECTTYPE id);
 
-    static SpecAbstract::UNPACK_OPTIONS getPossibleUnpackOptions(QIODevice *pDevice,bool bIsImage); // TODO Check
+//    static SpecAbstract::UNPACK_OPTIONS getPossibleUnpackOptions(QIODevice *pDevice,bool bIsImage); // TODO Check
 
     static QString _SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct,bool bShowType=true);
 
