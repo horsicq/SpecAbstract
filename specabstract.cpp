@@ -186,7 +186,7 @@ void SpecAbstract::scan(QIODevice *pDevice,SpecAbstract::SCAN_RESULT *pScanResul
     }
 }
 
-QString SpecAbstract::append(QString sResult, QString sString)
+QString SpecAbstract::append(QString sResult,QString sString)
 {
     return XBinary::appendText(sResult,sString,",");
 }
