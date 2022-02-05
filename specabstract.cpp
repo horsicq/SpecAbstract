@@ -26,7 +26,7 @@ SpecAbstract::SpecAbstract(QObject *pParent)
     Q_UNUSED(pParent)
 }
 
-void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, bool bInit, bool *pbIsStop)
+void SpecAbstract::scan(QIODevice *pDevice,SpecAbstract::SCAN_RESULT *pScanResult,qint64 nOffset,qint64 nSize,XBinary::SCANID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,bool bInit,bool *pbIsStop)
 {
     bool __bIsStop=false;
 
