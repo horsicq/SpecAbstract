@@ -1046,7 +1046,7 @@ QString SpecAbstract::heurTypeIdToString(SpecAbstract::DETECTTYPE id)
 //    return result;
 //}
 
-QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, bool bShowType)
+QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct,bool bShowType)
 {
     QString sResult;
 
