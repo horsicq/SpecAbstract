@@ -48,7 +48,7 @@ void SpecAbstract::scan(QIODevice *pDevice,SpecAbstract::SCAN_RESULT *pScanResul
 
     if(sd.open(QIODevice::ReadOnly)&&(!(*pbIsStop)))
     {
-        QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(&sd,true);
+        QSet<XBinary::FT> stFileTypes=XFormats::getFileTypes(&sd,true);
 
         if((pOptions->fileType!=XBinary::FT_UNKNOWN)&&(bInit))
         {
@@ -119,7 +119,7 @@ void SpecAbstract::scan(QIODevice *pDevice,SpecAbstract::SCAN_RESULT *pScanResul
             pScanResult->listRecords.append(msdos_info.basic_info.listDetects);
             pScanResult->listHeurs.append(msdos_info.basic_info.listHeurs);
         }
-        else if(stFileTypes.contains(XBinary::FT_ZIP))
+        else if(stFileTypes.contains(XBinary::FT_ZIP)||stFileTypes.contains(XBinary::FT_JAR)||stFileTypes.contains(XBinary::FT_APK)||stFileTypes.contains(XBinary::FT_IPA))
         {
             SpecAbstract::ZIPINFO_STRUCT zip_info=SpecAbstract::getZIPInfo(&sd,parentId,pOptions,nOffset,pbIsStop);
 
