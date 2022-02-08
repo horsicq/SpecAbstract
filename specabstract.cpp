@@ -14676,6 +14676,25 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
         {
             // TODO names of note sections
 
+            int nIndex=1;
+
+            {
+                XBinary::OS_ANSISTRING asInterpeter=elf.getProgramInterpreterName();
+
+                if(asInterpeter.nSize)
+                {
+                    _SCANS_STRUCT recordSS={};
+
+                    recordSS.type=RECORD_TYPE_LIBRARY;
+                    recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+nIndex);
+                    recordSS.sVersion=QString("Interpreter_")+asInterpeter.sAnsiString;
+
+                    pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+
+                    nIndex++;
+                }
+            }
+
             {
                 QSet<QString> stRecords;
 
@@ -14688,12 +14707,14 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
                         _SCANS_STRUCT recordSS={};
 
                         recordSS.type=RECORD_TYPE_LIBRARY;
-                        recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+i+1);
-                        recordSS.sVersion=pELFInfo->listComments.at(i);
+                        recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+nIndex);
+                        recordSS.sVersion=QString("COMMENT_")+pELFInfo->listComments.at(i);
 
                         pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
 
                         stRecords.insert(pELFInfo->listComments.at(i));
+
+                        nIndex++;
                     }
                 }
             }
@@ -14710,12 +14731,14 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
                         _SCANS_STRUCT recordSS={};
 
                         recordSS.type=RECORD_TYPE_LIBRARY;
-                        recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+i+1);
+                        recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+nIndex);
                         recordSS.sVersion=QString("NOTE_")+pELFInfo->listNotes.at(i).sName;
 
                         pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
 
                         stRecords.insert(pELFInfo->listNotes.at(i).sName);
+
+                        nIndex++;
                     }
                 }
             }
