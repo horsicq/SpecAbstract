@@ -626,6 +626,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MASM32:                                sResult=QString("MASM32");                                      break;
         case RECORD_NAME_MASM:                                  sResult=QString("MASM");                                        break;
         case RECORD_NAME_MAXTOCODE:                             sResult=QString("MaxtoCode");                                   break;
+        case RECORD_NAME_MCLINUX:                               sResult=QString("mClinux");                                     break;
         case RECORD_NAME_MEDUSAH:                               sResult=QString("Medusah");                                     break;
         case RECORD_NAME_MEW10:                                 sResult=QString("MEW10");                                       break;
         case RECORD_NAME_MEW11SE:                               sResult=QString("MEW11 SE");                                    break;
@@ -775,6 +776,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_PYTHON:                                sResult=QString("Python");                                      break;
         case RECORD_NAME_QDBH:                                  sResult=QString("qdbh");                                        break;
         case RECORD_NAME_QIHOO360PROTECTION:                    sResult=QString("Qihoo 360 Protection");                        break;
+        case RECORD_NAME_QNX:                                   sResult=QString("QNX");                                         break;
         case RECORD_NAME_QRYPT0R:                               sResult=QString("QrYPt0r");                                     break;
         case RECORD_NAME_QT:                                    sResult=QString("Qt");                                          break;
         case RECORD_NAME_QTINSTALLER:                           sResult=QString("Qt Installer");                                break;
@@ -14679,6 +14681,23 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
             int nIndex=1;
 
             {
+                qint32 nNumberOfRecords=pELFInfo->listLibraries.count();
+
+                for(qint32 i=0;i<nNumberOfRecords;i++)
+                {
+                    _SCANS_STRUCT recordSS={};
+
+                    recordSS.type=RECORD_TYPE_LIBRARY;
+                    recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+nIndex);
+                    recordSS.sVersion=QString("LIBRARY_")+pELFInfo->listLibraries.at(i);
+
+                    pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+
+                    nIndex++;
+                }
+            }
+
+            {
                 XBinary::OS_ANSISTRING asInterpeter=elf.getProgramInterpreterName();
 
                 if(asInterpeter.nSize)
@@ -18810,6 +18829,8 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     else if (osInfo.osName==XBinary::OSNAME_VINELINUX)          result.name=RECORD_NAME_VINELINUX;
     else if (osInfo.osName==XBinary::OSNAME_SUNOS)              result.name=RECORD_NAME_SUNOS;
     else if (osInfo.osName==XBinary::OSNAME_OPENVOS)            result.name=RECORD_NAME_OPENVOS;
+    else if (osInfo.osName==XBinary::OSNAME_MCLINUX)            result.name=RECORD_NAME_MCLINUX;
+    else if (osInfo.osName==XBinary::OSNAME_QNX)                result.name=RECORD_NAME_QNX;
 
     result.sVersion=osInfo.sOsVersion;
     result.sInfo=QString("%1, %2, %3").arg(osInfo.sArch,XBinary::modeIdToString(osInfo.mode),osInfo.sType);
