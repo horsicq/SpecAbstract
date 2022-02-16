@@ -27,6 +27,9 @@
 #ifndef USE_DEX
 #define USE_DEX
 #endif
+#ifndef USE_PDF
+#define USE_PDF
+#endif
 
 #include "xformats.h"
 

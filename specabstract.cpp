@@ -3563,7 +3563,7 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, bool bIsImage, SpecAbstr
     // Import
 }
 
-void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     XPE pe(pDevice,bIsImage);
 

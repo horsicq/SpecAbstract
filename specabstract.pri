@@ -5,6 +5,10 @@ DEPENDPATH += $$PWD
     XCONFIG += use_dex
 }
 
+!contains(XCONFIG, use_pdf) {
+    XCONFIG += use_pdf
+}
+
 !contains(XCONFIG, use_archive) {
     XCONFIG += use_archive
 }
