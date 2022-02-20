@@ -3575,7 +3575,7 @@ void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice,bool bIsImage,S
     }
 }
 
-void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo, bool *pbIsStop)
+void SpecAbstract::PE_handle_Protection(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo,bool *pbIsStop)
 {
     XPE pe(pDevice,bIsImage);
 
