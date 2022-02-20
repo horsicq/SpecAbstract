@@ -1290,7 +1290,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_SmartAssembly_vi(QIODevice *pDevice,bo
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::get_R8_marker_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+SpecAbstract::VI_STRUCT SpecAbstract::get_R8_marker_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize)
 {
     VI_STRUCT result={};
 
