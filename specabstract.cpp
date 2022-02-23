@@ -2422,7 +2422,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice,XBinary
     return result;
 }
 
-SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice,XBinary::SCANID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
