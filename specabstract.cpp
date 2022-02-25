@@ -2497,7 +2497,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice,XBi
     return result;
 }
 
-SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, bool *pbIsStop)
+SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice,XBinary::SCANID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,bool *pbIsStop)
 {
     QElapsedTimer timer;
     timer.start();
