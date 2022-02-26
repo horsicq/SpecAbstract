@@ -267,6 +267,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALEXPROTECTOR:                         sResult=QString("Alex Protector");                              break;
         case RECORD_NAME_ALIASOBJ:                              sResult=QString("ALIASOBJ");                                    break;
         case RECORD_NAME_ALIBABAPROTECTION:                     sResult=QString("Alibaba Protection");                          break;
+        case RECORD_NAME_ALIPAYCLANG:                           sResult=QString("Alipay clang");                                break;
         case RECORD_NAME_ALIPAYOBFUSCATOR:                      sResult=QString("Alipay Obfuscator");                           break;
         case RECORD_NAME_ALLATORIOBFUSCATOR:                    sResult=QString("Allatori Obfuscator");                         break;
         case RECORD_NAME_ALLOY:                                 sResult=QString("Alloy");                                       break;
@@ -1468,6 +1469,20 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AndroidClang_string(QString sString)
         result.bIsValid=true;
 
         result.sVersion=sString.section(" clang version ",1,1).section(" ",0,0);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_AlipayClang_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("Alipay clang"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",3,3);
     }
 
     return result;
@@ -13678,6 +13693,18 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
 
         if(!vi.bIsValid)
         {
+            vi=_get_AlipayClang_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_ALIPAYCLANG,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
             vi=_get_PlexClang_string(sComment);
 
             if(vi.bIsValid)
@@ -13940,7 +13967,6 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
             }
         }
 
-        if(!vi.bIsValid)
         {
             vi=_get_AlipayObfuscator_string(sComment);
 
@@ -14264,6 +14290,14 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstr
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ANDROIDCLANG))
         {
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ANDROIDCLANG);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Alipay clang
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ALIPAYCLANG))
+        {
+            _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ALIPAYCLANG);
 
             pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
@@ -18626,6 +18660,7 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
                 break;
             case RECORD_NAME_CLANG:
             case RECORD_NAME_GCC:
+            case RECORD_NAME_ALIPAYCLANG:
             case RECORD_NAME_ANDROIDCLANG:
             case RECORD_NAME_APPORTABLECLANG:
             case RECORD_NAME_PLEXCLANG:

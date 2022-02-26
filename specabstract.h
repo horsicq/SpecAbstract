@@ -103,6 +103,7 @@ public:
         RECORD_NAME_ALEXPROTECTOR,
         RECORD_NAME_ALIASOBJ,
         RECORD_NAME_ALIBABAPROTECTION,
+        RECORD_NAME_ALIPAYCLANG,
         RECORD_NAME_ALIPAYOBFUSCATOR,
         RECORD_NAME_ALLATORIOBFUSCATOR,
         RECORD_NAME_ALLOY,
@@ -1560,6 +1561,7 @@ public:
     static VI_STRUCT _get_ObfuscatorLLVM_string(QString sString);
     static VI_STRUCT get_AndroidClang_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize);
     static VI_STRUCT _get_AndroidClang_string(QString sString);
+    static VI_STRUCT _get_AlipayClang_string(QString sString);
     static VI_STRUCT _get_PlexClang_string(QString sString);
     static VI_STRUCT _get_UbuntuClang_string(QString sString);
     static VI_STRUCT _get_AlipayObfuscator_string(QString sString);
