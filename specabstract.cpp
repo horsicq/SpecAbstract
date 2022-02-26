@@ -11720,7 +11720,7 @@ void SpecAbstract::Zip_handle_Microsoftoffice(QIODevice *pDevice, bool bIsImage,
     }
 }
 
-void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice, bool bIsImage, ZIPINFO_STRUCT *pZipInfo)
+void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo)
 {
     Q_UNUSED(bIsImage)
 
