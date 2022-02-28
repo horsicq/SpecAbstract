@@ -3355,7 +3355,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
     return result;
 }
 
-SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStruct(quint32 nVariant, XBinary::FT fileType, SpecAbstract::RECORD_TYPE type, SpecAbstract::RECORD_NAME name, QString sVersion, QString sInfo, qint64 nOffset)
+SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStruct(quint32 nVariant,XBinary::FT fileType,SpecAbstract::RECORD_TYPE type,SpecAbstract::RECORD_NAME name,QString sVersion,QString sInfo,qint64 nOffset)
 {
     // TODO bIsHeuristic;
     _SCANS_STRUCT result={};
