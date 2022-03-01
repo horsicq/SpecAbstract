@@ -18969,7 +18969,7 @@ QList<XBinary::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListScanSt
     return listResult;
 }
 
-bool SpecAbstract::MSDOS_compareRichRecord(_SCANS_STRUCT *pResult,SpecAbstract::MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, XBinary::FT fileType1, XBinary::FT fileType2)
+bool SpecAbstract::MSDOS_compareRichRecord(_SCANS_STRUCT *pResult,SpecAbstract::MSRICH_RECORD *pRecord,quint16 nID,quint32 nBuild,XBinary::FT fileType1,XBinary::FT fileType2)
 {
     bool bResult=false;
 
