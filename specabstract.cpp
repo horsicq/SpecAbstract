@@ -6045,7 +6045,7 @@ void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, bool bIsImage, SpecAbst
     }
 }
 
-void SpecAbstract::PE_handle_StarForce(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+void SpecAbstract::PE_handle_StarForce(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     XPE pe(pDevice,bIsImage);
 
