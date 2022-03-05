@@ -5798,7 +5798,7 @@ void SpecAbstract::PE_handle_tElock(QIODevice *pDevice, bool bIsImage, SpecAbstr
     }
 }
 
-void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     XPE pe(pDevice,bIsImage);
 
