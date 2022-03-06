@@ -16988,12 +16988,20 @@ void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice, SpecAbstract::DEXIN
             pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
         }
 
-        if(pDEXInfo->basic_info.bIsDeepScan)
+        if(pDEXInfo->mapTypeDetects.contains(RECORD_NAME_PROGUARD))
         {
-            if(XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings),"\\/proguard\\/",pbIsStop))
+            _SCANS_STRUCT ss=pDEXInfo->mapTypeDetects.value(RECORD_NAME_PROGUARD);
+            pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+        }
+        else
+        {
+            if(pDEXInfo->basic_info.bIsDeepScan)
             {
-                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_PROGUARD,"","",0);
-                pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+                if(XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings),"\\/proguard\\/",pbIsStop))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_DEX,RECORD_TYPE_PROTECTOR,RECORD_NAME_PROGUARD,"","",0);
+                    pDEXInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pDEXInfo->basic_info),&ss));
+                }
             }
         }
     }
