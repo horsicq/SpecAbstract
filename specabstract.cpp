@@ -317,6 +317,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ARMTHUMBCCPP:                          sResult=QString("ARM/Thumb C/C++");                             break;
         case RECORD_NAME_ARMTHUMBMACROASSEMBLER:                sResult=QString("ARM/Thumb Macro Assembler");                   break;
         case RECORD_NAME_AROS:                                  sResult=QString("Amiga Research OS");                           break;
+        case RECORD_NAME_ARXAN:                                 sResult=QString("Arxan");                                       break;
         case RECORD_NAME_ASDPACK:                               sResult=QString("ASDPack");                                     break;
         case RECORD_NAME_ASPACK:                                sResult=QString("ASPack");                                      break;
         case RECORD_NAME_ASPLINUX:                              sResult=QString("ASPLinux");                                    break;
