@@ -3237,9 +3237,20 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice,XBinary
         Zip_handle_Microsoftoffice(pDevice,pOptions->bIsImage,&result);
         Zip_handle_OpenOffice(pDevice,pOptions->bIsImage,&result);
 
-        Zip_handle_JAR(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
-        Zip_handle_APK(pDevice,pOptions->bIsImage,&result);
-        Zip_handle_IPA(pDevice,pOptions->bIsImage,&result);
+        if(result.bIsJAR)
+        {
+            Zip_handle_JAR(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
+        }
+
+        if(result.bIsAPK)
+        {
+            Zip_handle_APK(pDevice,pOptions->bIsImage,&result);
+        }
+
+        if(result.bIsIPA)
+        {
+            Zip_handle_IPA(pDevice,pOptions->bIsImage,&result);
+        }
 
         Zip_handle_Recursive(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop);
 
@@ -12850,14 +12861,17 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
 
                     QByteArray baRecordData=xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)),true);
 
-                    QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(&baRecordData,true);
+                    QSet<XBinary::FT> stFileTypes=XFormats::getFileTypes(&baRecordData,true);
 
                     if( stFileTypes.contains(XBinary::FT_DEX)||
                         stFileTypes.contains(XBinary::FT_ELF32)||
                         stFileTypes.contains(XBinary::FT_ELF64)||
                         stFileTypes.contains(XBinary::FT_MACHOFAT)||
                         stFileTypes.contains(XBinary::FT_MACHO32)||
-                        stFileTypes.contains(XBinary::FT_MACHO64))
+                        stFileTypes.contains(XBinary::FT_MACHO64)||
+                        stFileTypes.contains(XBinary::FT_APK)||
+                        stFileTypes.contains(XBinary::FT_IPA)||
+                        stFileTypes.contains(XBinary::FT_JAR))
                     {
                         SpecAbstract::SCAN_RESULT scanResult={0};
 
