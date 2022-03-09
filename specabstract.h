@@ -131,6 +131,7 @@ public:
         RECORD_NAME_APKMODIFIERSIGNAPK,
         RECORD_NAME_APKPROTECT,
         RECORD_NAME_APKPROTECTOR,
+        RECORD_NAME_APKS,
         RECORD_NAME_APKSIGNATURESCHEME,
         RECORD_NAME_APKSIGNER,
         RECORD_NAME_APKTOOLPLUS,
@@ -991,11 +992,12 @@ public:
 
         QList<XArchive::RECORD> listArchiveRecords;
 
-        bool bIsJAR=false;
-        bool bIsAPK=false;
-        bool bIsIPA=false;
-        bool bIsJava=false;
-        bool bIsKotlin=false;
+        bool bIsJAR;
+        bool bIsAPK;
+        bool bIsIPA;
+        bool bIsAPKS;
+        bool bIsJava;
+        bool bIsKotlin;
 
         DEXINFO_STRUCT dexInfoClasses;
 
@@ -1295,6 +1297,7 @@ public:
         bool bIsImage;
         bool bIsTest;
         XBinary::FT fileType; // Optional
+        QString sStatus;
     };
 
     struct UNPACK_OPTIONS
@@ -1385,6 +1388,7 @@ public:
     static void scan(QIODevice *pDevice,SpecAbstract::SCAN_RESULT *pScanResult,qint64 nOffset,qint64 nSize,XBinary::SCANID parentId,SpecAbstract::SCAN_OPTIONS *pOptions,bool bInit,bool *pbIsStop);
 
     static QString append(QString sResult,QString sString);
+    static void setStatus(SpecAbstract::SCAN_OPTIONS *pOptions,QString sStatus);
 
     static QString recordTypeIdToString(RECORD_TYPE id);
     static QString recordNameIdToString(RECORD_NAME id);

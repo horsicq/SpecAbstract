@@ -191,6 +191,11 @@ QString SpecAbstract::append(QString sResult,QString sString)
     return XBinary::appendText(sResult,sString,",");
 }
 
+void SpecAbstract::setStatus(SCAN_OPTIONS *pOptions, QString sStatus)
+{
+    pOptions->sStatus=sStatus;
+}
+
 QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
 {
     QString sResult=tr("Unknown");
@@ -295,6 +300,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_APKMODIFIERSIGNAPK:                    sResult=QString("ApkModifier SignApk");                         break;
         case RECORD_NAME_APKPROTECT:                            sResult=QString("APKProtect");                                  break;
         case RECORD_NAME_APKPROTECTOR:                          sResult=QString("ApkProtector");                                break;
+        case RECORD_NAME_APKS:                                  sResult=QString("APKS");                                        break;
         case RECORD_NAME_APKSIGNATURESCHEME:                    sResult=QString("APK Signature Scheme");                        break;
         case RECORD_NAME_APKSIGNER:                             sResult=QString("ApkSigner");                                   break;
         case RECORD_NAME_APKTOOLPLUS:                           sResult=QString("ApkToolPlus");                                 break;
@@ -2099,6 +2105,8 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice,X
         result.basic_info.id.nSize=pDevice->size();
         result.basic_info.id.nOffset=nOffset;
 
+//        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
+
         // Scan Header
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_binary_records,sizeof(_binary_records),result.basic_info.id.fileType,XBinary::FT_BINARY,&(result.basic_info),DETECTTYPE_HEADER,pbIsStop);
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_archive_records,sizeof(_archive_records),result.basic_info.id.fileType,XBinary::FT_ARCHIVE,&(result.basic_info),DETECTTYPE_HEADER,pbIsStop);
@@ -2210,6 +2218,8 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice,XBinary
         result.basic_info.id.nSize=pDevice->size();
         result.basic_info.id.nOffset=nOffset;
 
+//        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
+
         // Scan Header
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_COM_records,sizeof(_COM_records),result.basic_info.id.fileType,XBinary::FT_COM,&(result.basic_info),DETECTTYPE_HEADER,pbIsStop);
         signatureExpScan(&com,&(result.basic_info.memoryMap),&result.basic_info.mapHeaderDetects,0,_COM_Exp_records,sizeof(_COM_Exp_records),result.basic_info.id.fileType,XBinary::FT_COM,&(result.basic_info),DETECTTYPE_HEADER,pbIsStop);
@@ -2278,6 +2288,8 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice,XBi
         result.basic_info.id.sType=result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize=pDevice->size();
         result.basic_info.id.nOffset=nOffset;
+
+//        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
         result.nOverlayOffset=msdos.getOverlayOffset(&(result.basic_info.memoryMap));
         result.nOverlaySize=msdos.getOverlaySize(&(result.basic_info.memoryMap));
@@ -2367,6 +2379,8 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice,XBinary
         result.basic_info.id.sType=result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize=pDevice->size();
         result.basic_info.id.nOffset=nOffset;
+
+//        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
         result.sEntryPointSignature=elf.getSignature(elf.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
@@ -2469,6 +2483,8 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice,XBi
         result.basic_info.id.nSize=pDevice->size();
         result.basic_info.id.nOffset=nOffset;
 
+//        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
+
         result.sEntryPointSignature=mach.getSignature(mach.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
         result.listCommandRecords=mach.getCommandRecords();
@@ -2542,6 +2558,8 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice,XBinary::
         result.basic_info.id.nSize=pDevice->size();
         result.basic_info.id.nOffset=nOffset;
 
+//        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
+
         result.sEntryPointSignature=le.getSignature(le.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
         result.listRichSignatures=le.getRichSignatureRecords();
@@ -2608,6 +2626,8 @@ SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice,XBinary::
         result.basic_info.id.nSize=pDevice->size();
         result.basic_info.id.nOffset=nOffset;
 
+//        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
+
         result.sEntryPointSignature=lx.getSignature(lx.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
         result.listRichSignatures=lx.getRichSignatureRecords();
@@ -2673,6 +2693,8 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice,XBinary::
         result.basic_info.id.nSize=pDevice->size();
         result.basic_info.id.nOffset=nOffset;
 
+//        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
+
         result.sEntryPointSignature=ne.getSignature(ne.getEntryPointOffset(&(result.basic_info.memoryMap)),150);
 
         signatureScan(&result.basic_info.mapHeaderDetects,result.basic_info.sHeaderSignature,_MSDOS_linker_header_records,sizeof(_MSDOS_linker_header_records),result.basic_info.id.fileType,XBinary::FT_MSDOS,&(result.basic_info),DETECTTYPE_HEADER,pbIsStop);
@@ -2736,6 +2758,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice,XBinary::
         result.basic_info.id.sType=result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize=pDevice->size();
         result.basic_info.id.nOffset=nOffset;
+
+//        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
         result.nEntryPointOffset=pe.getEntryPointOffset(&(result.basic_info.memoryMap));
         result.sEntryPointSignature=pe.getSignature(result.nEntryPointOffset,150);
@@ -3101,6 +3125,8 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice,XBinary
         result.basic_info.id.nSize=pDevice->size();
         result.basic_info.id.nOffset=nOffset;
 
+//        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
+
         result.header=dex.getHeader();
         result.mapItems=dex.getMapItems();
 
@@ -3205,11 +3231,16 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice,XBinary
         result.basic_info.id.nSize=pDevice->size();
         result.basic_info.id.nOffset=nOffset;
 
+//        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
         result.listArchiveRecords=xzip.getRecords();
 
-        result.bIsJAR=XArchive::isArchiveRecordPresent("META-INF/MANIFEST.MF",&(result.listArchiveRecords));
-        result.bIsAPK=XArchive::isArchiveRecordPresent("classes.dex",&(result.listArchiveRecords));
-        result.bIsIPA=XArchive::isArchiveRecordPresent("Payload/",&(result.listArchiveRecords));
+        QSet<XBinary::FT> stFT=XFormats::getFileTypesZIP(pDevice,&(result.listArchiveRecords));
+
+        result.bIsJAR=stFT.contains(XBinary::FT_JAR);
+        result.bIsAPK=stFT.contains(XBinary::FT_APK);
+        result.bIsAPKS=stFT.contains(XBinary::FT_APKS);
+        result.bIsIPA=stFT.contains(XBinary::FT_IPA);
+
         result.bIsKotlin=   XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version",&(result.listArchiveRecords))||
                             XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins",&(result.listArchiveRecords));
 
@@ -3225,12 +3256,20 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice,XBinary
         {
             result.basic_info.id.fileType=XBinary::FT_APK;
         }
+        else if(result.bIsAPKS)
+        {
+            result.basic_info.id.fileType=XBinary::FT_APKS;
+        }
 
         if(result.bIsAPK)
         {
             archiveScan(&(result.mapArchiveDetects),&(result.listArchiveRecords),_APK_file_records,sizeof(_APK_file_records),result.basic_info.id.fileType,XBinary::FT_APK,&(result.basic_info),DETECTTYPE_ARCHIVE,pbIsStop);
             archiveExpScan(&(result.mapArchiveDetects),&(result.listArchiveRecords),_APK_fileExp_records,sizeof(_APK_fileExp_records),result.basic_info.id.fileType,XBinary::FT_APK,&(result.basic_info),DETECTTYPE_ARCHIVE,pbIsStop);
-            result.dexInfoClasses=Zip_scan_DEX(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop,"classes.dex");
+
+            if(XArchive::isArchiveRecordPresent("classes.dex",&(result.listArchiveRecords)))
+            {
+                result.dexInfoClasses=Zip_scan_DEX(pDevice,pOptions->bIsImage,&result,pOptions,pbIsStop,"classes.dex");
+            }
         }
 
         Zip_handle_Metainfos(pDevice,pOptions->bIsImage,&result);
@@ -3314,6 +3353,8 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
         result.basic_info.id.nSize=pDevice->size();
         result.basic_info.id.nOffset=nOffset;
 
+//        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
+
         result.listArchiveRecords=xmachofat.getRecords();
 
         qint32 nNumberOfRecords=result.listArchiveRecords.count();
@@ -3326,6 +3367,8 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
             _parentId.filePart=XBinary::FILEPART_ARCHIVERECORD;
             _parentId.sInfo=result.listArchiveRecords.at(i).sFileName;
             _parentId.bVirtual=true; // TODO Check
+
+            setStatus(pOptions,result.listArchiveRecords.at(i).sFileName);
 
             QTemporaryFile fileTemp;
 
@@ -3350,7 +3393,6 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
 
             result.listRecursiveDetects.append(scanResult.listRecords);
         }
-
 
         _SCANS_STRUCT ssFormat=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_MACHOFAT,"","",0);
 
@@ -12826,7 +12868,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
 
     if(xzip.isValid())
     {
-        if(((pZipInfo->bIsAPK)||(pZipInfo->bIsIPA))&&(pOptions->bRecursiveScan))
+        if(((pZipInfo->bIsAPK)||(pZipInfo->bIsAPKS)||(pZipInfo->bIsIPA))&&(pOptions->bRecursiveScan))
         {
             if(pOptions->bDeepScan)
             {
@@ -12859,6 +12901,8 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
                         }
                     }
 
+                    setStatus(pOptions,pZipInfo->listArchiveRecords.at(i).sFileName);
+
                     QByteArray baRecordData=xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)),true);
 
                     QSet<XBinary::FT> stFileTypes=XFormats::getFileTypes(&baRecordData,true);
@@ -12866,12 +12910,12 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecA
                     if( stFileTypes.contains(XBinary::FT_DEX)||
                         stFileTypes.contains(XBinary::FT_ELF32)||
                         stFileTypes.contains(XBinary::FT_ELF64)||
+                        stFileTypes.contains(XBinary::FT_PE32)||
+                        stFileTypes.contains(XBinary::FT_PE64)||
                         stFileTypes.contains(XBinary::FT_MACHOFAT)||
                         stFileTypes.contains(XBinary::FT_MACHO32)||
                         stFileTypes.contains(XBinary::FT_MACHO64)||
-                        stFileTypes.contains(XBinary::FT_APK)||
-                        stFileTypes.contains(XBinary::FT_IPA)||
-                        stFileTypes.contains(XBinary::FT_JAR))
+                        stFileTypes.contains(XBinary::FT_ZIP))
                     {
                         SpecAbstract::SCAN_RESULT scanResult={0};
 
@@ -12944,7 +12988,7 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Spec
 
     if(xzip.isValid())
     {
-        if( pZipInfo->basic_info.id.fileType==XBinary::FT_ZIP)
+        if(pZipInfo->basic_info.id.fileType==XBinary::FT_ZIP)
         {
             pZipInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
             // TODO deep scan
@@ -12959,6 +13003,15 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Spec
             }
 
             // TODO files
+            pZipInfo->mapResultArchives.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+        }
+        else if(pZipInfo->basic_info.id.fileType==XBinary::FT_APKS)
+        {
+            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_ZIP,"","",0);
+
+            ss.sVersion=xzip.getVersion();
+            ss.sInfo=QString("%1 records").arg(xzip.getNumberOfRecords());
+
             pZipInfo->mapResultArchives.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
         }
 
