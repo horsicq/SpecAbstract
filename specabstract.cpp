@@ -18995,14 +18995,13 @@ QList<XBinary::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListScanSt
         record.sVersion=pListScanStructs->at(i).sVersion;
         record.sInfo=pListScanStructs->at(i).sInfo;
 
-    #ifdef QT_GUI_LIB
         RECORD_TYPE rt=pListScanStructs->at(i).type;
 
         // TODO more
         if(     (rt==SpecAbstract::RECORD_TYPE_INSTALLER)||
                 (rt==SpecAbstract::RECORD_TYPE_SFX))
         {
-            record.colText=QColor(Qt::blue);
+            record.globalColor=Qt::blue;
         }
         else if((rt==SpecAbstract::RECORD_TYPE_PROTECTOR)||
                 (rt==SpecAbstract::RECORD_TYPE_APKOBFUSCATOR)||
@@ -19013,31 +19012,30 @@ QList<XBinary::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListScanSt
                 (rt==SpecAbstract::RECORD_TYPE_JOINER)||
                 (rt==SpecAbstract::RECORD_TYPE_PACKER))
         {
-            record.colText=QColor(Qt::red);
+            record.globalColor=Qt::red;
         }
         else if((rt==SpecAbstract::RECORD_TYPE_PETOOL)||
                 (rt==SpecAbstract::RECORD_TYPE_APKTOOL))
         {
-            record.colText=QColor(Qt::green);
+            record.globalColor=Qt::green;
         }
         else if((rt==SpecAbstract::RECORD_TYPE_OPERATIONSYSTEM)||
                 (rt==SpecAbstract::RECORD_TYPE_VIRTUALMACHINE))
         {
-            record.colText=QColor(Qt::darkYellow);
+            record.globalColor=Qt::darkYellow;
         }
         else if(rt==SpecAbstract::RECORD_TYPE_SIGNTOOL)
         {
-            record.colText=QColor(Qt::darkMagenta);
+            record.globalColor=Qt::darkMagenta;
         }
         else if(rt==SpecAbstract::RECORD_TYPE_LANGUAGE)
         {
-            record.colText=QColor(Qt::darkCyan);
+            record.globalColor=Qt::darkCyan;
         }
         else
         {
-            record.colText=QColor(Qt::black);
+            record.globalColor=Qt::transparent;
         }
-    #endif
 
         listResult.append(record);
     }
