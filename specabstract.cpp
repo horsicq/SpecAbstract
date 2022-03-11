@@ -16725,9 +16725,6 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
 
         if(pDEXInfo->basic_info.bIsDeepScan)
         {
-            bool bIsFieldNamesUnicode=dex.isFieldNamesUnicode(&(pDEXInfo->listFieldIDs),&(pDEXInfo->listStrings));
-            bool bIsMethodNamesUnicode=dex.isMethodNamesUnicode(&(pDEXInfo->listMethodIDs),&(pDEXInfo->listStrings));
-
             bool bInvalidHeaderSize=(pDEXInfo->header.header_size!=0x70);
             bool bLink=(pDEXInfo->header.link_off||pDEXInfo->header.link_size);
 
@@ -16735,6 +16732,9 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_ST
 
             if(pDEXInfo->basic_info.bIsTest)
             {
+                bool bIsFieldNamesUnicode=dex.isFieldNamesUnicode(&(pDEXInfo->listFieldIDs),&(pDEXInfo->listStrings));
+                bool bIsMethodNamesUnicode=dex.isMethodNamesUnicode(&(pDEXInfo->listMethodIDs),&(pDEXInfo->listStrings));
+
                 sOverlay=QString("Maps %1").arg(dex.getMapItemsHash());
 
                 if(pDEXInfo->bIsOverlayPresent)
