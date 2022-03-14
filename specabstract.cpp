@@ -6659,7 +6659,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,bool bIsImage,Spec
     }
 }
 
-void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo, bool *pbIsStop)
+void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo,bool *pbIsStop)
 {
     _SCANS_STRUCT ssLinker={};
     _SCANS_STRUCT ssCompiler={};
