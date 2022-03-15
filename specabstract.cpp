@@ -10810,7 +10810,7 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,bool bIsImage, SpecAbs
     }
 }
 
-void SpecAbstract::COM_handle_Protection(QIODevice *pDevice, bool bIsImage, COMINFO_STRUCT *pCOMInfo)
+void SpecAbstract::COM_handle_Protection(QIODevice *pDevice,bool bIsImage,COMINFO_STRUCT *pCOMInfo)
 {
     XCOM com(pDevice,bIsImage);
 
