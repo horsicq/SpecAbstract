@@ -13073,7 +13073,7 @@ void SpecAbstract::Zip_handleLanguages(QIODevice *pDevice, bool bIsImage, ZIPINF
     fixLanguage(&(pZipInfo->mapResultLanguages));
 }
 
-SpecAbstract::DEXINFO_STRUCT SpecAbstract::Zip_scan_DEX(QIODevice *pDevice, bool bIsImage, SpecAbstract::ZIPINFO_STRUCT *pZipInfo, SCAN_OPTIONS *pOptions, bool *pbIsStop, QString sFileName)
+SpecAbstract::DEXINFO_STRUCT SpecAbstract::Zip_scan_DEX(QIODevice *pDevice,bool bIsImage,SpecAbstract::ZIPINFO_STRUCT *pZipInfo,SCAN_OPTIONS *pOptions,bool *pbIsStop,QString sFileName)
 {
     Q_UNUSED(bIsImage)
 
