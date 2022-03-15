@@ -9600,7 +9600,7 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice,bool bIsImage,SpecAbstract::
     }
 }
 
-void SpecAbstract::PE_handle_PolyMorph(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+void SpecAbstract::PE_handle_PolyMorph(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
