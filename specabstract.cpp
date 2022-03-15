@@ -13525,7 +13525,7 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
     }
 }
 
-void SpecAbstract::MSDOS_handle_SFX(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
+void SpecAbstract::MSDOS_handle_SFX(QIODevice *pDevice,bool bIsImage,SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
 {
     XMSDOS msdos(pDevice,bIsImage);
 
