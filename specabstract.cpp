@@ -6686,6 +6686,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage,SpecAbst
     mapVersions.insert("14.15","19.15");
     mapVersions.insert("14.16","19.16");
     mapVersions.insert("14.20","19.20");
+    mapVersions.insert("14.29","19.29");
 
     XPE pe(pDevice,bIsImage);
 
@@ -6799,6 +6800,8 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage,SpecAbst
         {
             listRichDescriptions.append(MSDOS_richScan(pPEInfo->listRichSignatures.at(i).nId,pPEInfo->listRichSignatures.at(i).nVersion,_MS_rich_records,sizeof(_MS_rich_records),pPEInfo->basic_info.id.fileType,XBinary::FT_MSDOS,&(pPEInfo->basic_info),DETECTTYPE_RICH,pbIsStop));
         }
+
+        _fixRichSignatures(&listRichDescriptions,pPEInfo->nMajorLinkerVersion,pPEInfo->nMinorLinkerVersion);
 
         qint32 nRichDescriptionsCount=listRichDescriptions.count();
 
@@ -19097,6 +19100,67 @@ void SpecAbstract::filterResult(QList<SpecAbstract::SCAN_STRUCT> *pListRecords, 
     }
 
     *pListRecords=listRecords;
+}
+
+void SpecAbstract::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorVersion, qint32 nMinorVersion)
+{
+    qint32 nNumberOfRecords=pListRichSignatures->count();
+
+    for(qint32 i=0;i<nNumberOfRecords;i++)
+    {
+        QString sMajor=pListRichSignatures->at(i).sVersion.section(".",0,0);
+        QString sMinor=pListRichSignatures->at(i).sVersion.section(".",1,1);
+        QString sBuild=pListRichSignatures->at(i).sVersion.section(".",2,2);
+
+        qint32 nBuild=sBuild.toInt();
+
+        if(sMinor.toInt()!=nMinorVersion)
+        {
+            bool bSuccess=false;
+
+            if((nMinorVersion==10)&&((nBuild>=3052)&&(nBuild<=6030)))
+            {
+                bSuccess=true;
+            }
+            else if((nMinorVersion==10)&&((nBuild>=25000)&&(nBuild<25547)))
+            {
+                bSuccess=true;
+            }
+            else if((nMinorVersion==11)&&((nBuild>=25547)&&(nBuild<25834)))
+            {
+                bSuccess=true;
+            }
+            else if((nMinorVersion==12)&&((nBuild>=25834)&&(nBuild<26128)))
+            {
+                bSuccess=true;
+            }
+            else if((nMinorVersion==13)&&((nBuild>=26128)&&(nBuild<26428)))
+            {
+                bSuccess=true;
+            }
+            else if((nMinorVersion==14)&&((nBuild>=26428)&&(nBuild<26726)))
+            {
+                bSuccess=true;
+            }
+            else if((nMinorVersion==15)&&((nBuild>=26726)&&(nBuild<26926)))
+            {
+                bSuccess=true;
+            }
+            else if((nMinorVersion==16)&&((nBuild>=26926)&&(nBuild<27004)))
+            {
+                bSuccess=true;
+            }
+            else if((nMinorVersion>=20)&&(nBuild>=27004))
+            {
+                bSuccess=true;
+            }
+
+            if(bSuccess)
+            {
+                (*pListRichSignatures)[i].sVersion=QString("%1.%2.%3").arg(sMajor,QString::number(nMinorVersion),sBuild);
+            }
+        }
+    }
 }
 
 QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,bool bIs64)
