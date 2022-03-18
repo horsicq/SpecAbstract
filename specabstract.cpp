@@ -14784,7 +14784,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
         {
             // TODO names of note sections
 
-            int nIndex=1;
+            qint32 nIndex=1;
 
             {
                 qint32 nNumberOfRecords=pELFInfo->listLibraries.count();
