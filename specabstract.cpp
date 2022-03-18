@@ -12843,7 +12843,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUC
     }
 }
 
-void SpecAbstract::Zip_handle_IPA(QIODevice *pDevice, bool bIsImage, SpecAbstract::ZIPINFO_STRUCT *pZipInfo)
+void SpecAbstract::Zip_handle_IPA(QIODevice *pDevice,bool bIsImage,SpecAbstract::ZIPINFO_STRUCT *pZipInfo)
 {
     Q_UNUSED(bIsImage)
 
