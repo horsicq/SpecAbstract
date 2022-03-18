@@ -8571,7 +8571,7 @@ void SpecAbstract::PE_handle_wxWidgets(QIODevice *pDevice,bool bIsImage,SpecAbst
     }
 }
 
-void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+void SpecAbstract::PE_handle_GCC(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     _SCANS_STRUCT ssLinker={};
     _SCANS_STRUCT ssCompiler={};
@@ -8892,7 +8892,7 @@ void SpecAbstract::PE_handle_Signtools(QIODevice *pDevice,bool bIsImage,SpecAbst
     }
 }
 
-void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     XPE pe(pDevice,bIsImage);
 
