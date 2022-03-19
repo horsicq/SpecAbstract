@@ -5769,7 +5769,7 @@ void SpecAbstract::PE_handle_TTProtect(QIODevice *pDevice,bool bIsImage,SpecAbst
     }
 }
 
-void SpecAbstract::PE_handle_SafeengineShielden(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+void SpecAbstract::PE_handle_SafeengineShielden(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     XPE pe(pDevice,bIsImage);
 
