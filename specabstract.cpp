@@ -9627,7 +9627,7 @@ void SpecAbstract::PE_handle_DongleProtection(QIODevice *pDevice,bool bIsImage,S
     }
 }
 
-//void SpecAbstract::PE_handle_AnslymPacker(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+//void SpecAbstract::PE_handle_AnslymPacker(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 //{
 //    XPE pe(pDevice,bIsImage);
 
