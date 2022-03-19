@@ -14230,7 +14230,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, 
     }
 }
 
-void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstract::ELFINFO_STRUCT *pELFInfo)
+void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice,bool bIsImage,SpecAbstract::ELFINFO_STRUCT *pELFInfo)
 {
     XELF elf(pDevice,bIsImage);
 
