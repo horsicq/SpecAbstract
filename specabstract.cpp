@@ -16228,7 +16228,7 @@ void SpecAbstract::LE_handleLanguages(QIODevice *pDevice, bool bIsImage, LEINFO_
     fixLanguage(&(pLEInfo->mapResultLanguages));
 }
 
-void SpecAbstract::LX_handle_OperationSystems(QIODevice *pDevice, bool bIsImage, LXINFO_STRUCT *pLXInfo)
+void SpecAbstract::LX_handle_OperationSystems(QIODevice *pDevice,bool bIsImage,LXINFO_STRUCT *pLXInfo)
 {
     XLE lx(pDevice,bIsImage);
 
