@@ -16112,7 +16112,7 @@ void SpecAbstract::LE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage,
     }
 }
 
-void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LEINFO_STRUCT *pLEInfo, bool *pbIsStop)
+void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice,bool bIsImage,LEINFO_STRUCT *pLEInfo,bool *pbIsStop)
 {
     XLE le(pDevice,bIsImage);
 
