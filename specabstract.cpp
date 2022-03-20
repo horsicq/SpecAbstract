@@ -14899,7 +14899,7 @@ void SpecAbstract::ELF_handleLanguages(QIODevice *pDevice, bool bIsImage, ELFINF
     fixLanguage(&(pELFInfo->mapResultLanguages));
 }
 
-void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstract::MACHOINFO_STRUCT *pMACHInfo)
+void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice,bool bIsImage,SpecAbstract::MACHOINFO_STRUCT *pMACHInfo)
 {
     XMACH mach(pDevice,bIsImage);
 
