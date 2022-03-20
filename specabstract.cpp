@@ -16186,7 +16186,7 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice,bool bIsImage,LEINFO_S
     }
 }
 
-void SpecAbstract::LE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbstract::LEINFO_STRUCT *pLEInfo)
+void SpecAbstract::LE_handle_Borland(QIODevice *pDevice,bool bIsImage,SpecAbstract::LEINFO_STRUCT *pLEInfo)
 {
     XLE le(pDevice,bIsImage);
 
