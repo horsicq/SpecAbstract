@@ -14871,7 +14871,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImag
     }
 }
 
-void SpecAbstract::ELF_handle_FixDetects(QIODevice *pDevice, bool bIsImage, SpecAbstract::ELFINFO_STRUCT *pELFInfo)
+void SpecAbstract::ELF_handle_FixDetects(QIODevice *pDevice,bool bIsImage,SpecAbstract::ELFINFO_STRUCT *pELFInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
