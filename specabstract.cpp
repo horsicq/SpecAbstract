@@ -13652,7 +13652,7 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, bool bIsImage, 
     }
 }
 
-void SpecAbstract::MSDOS_handleLanguages(QIODevice *pDevice, bool bIsImage, MSDOSINFO_STRUCT *pMSDOSInfo)
+void SpecAbstract::MSDOS_handleLanguages(QIODevice *pDevice,bool bIsImage,MSDOSINFO_STRUCT *pMSDOSInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
