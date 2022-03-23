@@ -9672,7 +9672,7 @@ void SpecAbstract::PE_handle_NeoLite(QIODevice *pDevice,bool bIsImage,SpecAbstra
     }
 }
 
-void SpecAbstract::PE_handle_PrivateEXEProtector(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+void SpecAbstract::PE_handle_PrivateEXEProtector(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     XPE pe(pDevice,bIsImage);
 
