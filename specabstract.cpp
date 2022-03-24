@@ -10076,7 +10076,7 @@ void SpecAbstract::PE_handle_VisualBasicCryptors(QIODevice *pDevice, bool bIsIma
     }
 }
 
-void SpecAbstract::PE_handle_DelphiCryptors(QIODevice *pDevice, bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+void SpecAbstract::PE_handle_DelphiCryptors(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     XPE pe(pDevice,bIsImage);
 
