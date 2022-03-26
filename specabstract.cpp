@@ -13065,7 +13065,7 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, bool bIsImage, Spec
     }
 }
 
-void SpecAbstract::Zip_handleLanguages(QIODevice *pDevice, bool bIsImage, ZIPINFO_STRUCT *pZipInfo)
+void SpecAbstract::Zip_handleLanguages(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
