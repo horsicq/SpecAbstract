@@ -11807,7 +11807,7 @@ void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice,bool bIsImage,ZIPINF
     }
 }
 
-void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, bool bIsImage, SpecAbstract::ZIPINFO_STRUCT *pZipInfo)
+void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice,bool bIsImage,SpecAbstract::ZIPINFO_STRUCT *pZipInfo)
 {
     Q_UNUSED(bIsImage)
 
