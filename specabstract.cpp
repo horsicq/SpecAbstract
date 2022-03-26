@@ -11731,7 +11731,7 @@ void SpecAbstract::Binary_handle_LibraryData(QIODevice *pDevice,bool bIsImage,Sp
     }
 }
 
-void SpecAbstract::Zip_handle_Microsoftoffice(QIODevice *pDevice, bool bIsImage, ZIPINFO_STRUCT *pZipInfo)
+void SpecAbstract::Zip_handle_Microsoftoffice(QIODevice *pDevice,bool bIsImage,ZIPINFO_STRUCT *pZipInfo)
 {
     Q_UNUSED(bIsImage)
 
