@@ -12863,7 +12863,7 @@ void SpecAbstract::Zip_handle_IPA(QIODevice *pDevice,bool bIsImage,SpecAbstract:
     }
 }
 
-void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, bool bIsImage, SpecAbstract::ZIPINFO_STRUCT *pZipInfo, SpecAbstract::SCAN_OPTIONS *pOptions, bool *pbIsStop)
+void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice,bool bIsImage,SpecAbstract::ZIPINFO_STRUCT *pZipInfo,SpecAbstract::SCAN_OPTIONS *pOptions,bool *pbIsStop)
 {
     Q_UNUSED(bIsImage)
 
