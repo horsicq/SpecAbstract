@@ -16397,7 +16397,7 @@ void SpecAbstract::NE_handle_Borland(QIODevice *pDevice,bool bIsImage,SpecAbstra
     }
 }
 
-void SpecAbstract::NE_handleLanguages(QIODevice *pDevice, bool bIsImage, NEINFO_STRUCT *pNEInfo)
+void SpecAbstract::NE_handleLanguages(QIODevice *pDevice,bool bIsImage,NEINFO_STRUCT *pNEInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
