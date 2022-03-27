@@ -16028,7 +16028,7 @@ void SpecAbstract::MACHO_handle_Protection(QIODevice *pDevice, bool bIsImage, Sp
     }
 }
 
-void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, bool bIsImage, SpecAbstract::MACHOINFO_STRUCT *pMACHInfo)
+void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice,bool bIsImage,SpecAbstract::MACHOINFO_STRUCT *pMACHInfo)
 {
     XMACH mach(pDevice,bIsImage);
 
