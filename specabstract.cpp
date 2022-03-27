@@ -16368,7 +16368,7 @@ void SpecAbstract::NE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage,
     }
 }
 
-void SpecAbstract::NE_handle_Borland(QIODevice *pDevice, bool bIsImage, SpecAbstract::NEINFO_STRUCT *pNEInfo)
+void SpecAbstract::NE_handle_Borland(QIODevice *pDevice,bool bIsImage,SpecAbstract::NEINFO_STRUCT *pNEInfo)
 {
     XNE ne(pDevice,bIsImage);
 
