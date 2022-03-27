@@ -13115,7 +13115,7 @@ void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, bool bIsImage, S
     }
 }
 
-void SpecAbstract::Binary_handleLanguages(QIODevice *pDevice, bool bIsImage, BINARYINFO_STRUCT *pBinaryInfo)
+void SpecAbstract::Binary_handleLanguages(QIODevice *pDevice,bool bIsImage,BINARYINFO_STRUCT *pBinaryInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
