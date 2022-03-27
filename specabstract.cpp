@@ -16862,7 +16862,7 @@ void SpecAbstract::DEX_handle_Dexguard(QIODevice *pDevice,SpecAbstract::DEXINFO_
     }
 }
 
-void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice, SpecAbstract::DEXINFO_STRUCT *pDEXInfo, bool *pbIsStop)
+void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice,SpecAbstract::DEXINFO_STRUCT *pDEXInfo,bool *pbIsStop)
 {
     XDEX dex(pDevice);
 
