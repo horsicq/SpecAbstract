@@ -14886,7 +14886,7 @@ void SpecAbstract::ELF_handle_FixDetects(QIODevice *pDevice,bool bIsImage,SpecAb
     }
 }
 
-void SpecAbstract::ELF_handleLanguages(QIODevice *pDevice, bool bIsImage, ELFINFO_STRUCT *pELFInfo)
+void SpecAbstract::ELF_handleLanguages(QIODevice *pDevice,bool bIsImage,ELFINFO_STRUCT *pELFInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
