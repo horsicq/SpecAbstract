@@ -16087,7 +16087,7 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice,bool bIsImage,Spec
     }
 }
 
-void SpecAbstract::MACHO_handleLanguages(QIODevice *pDevice, bool bIsImage, MACHOINFO_STRUCT *pMACHInfo)
+void SpecAbstract::MACHO_handleLanguages(QIODevice *pDevice,bool bIsImage,MACHOINFO_STRUCT *pMACHInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
