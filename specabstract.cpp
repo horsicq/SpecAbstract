@@ -10609,7 +10609,7 @@ void SpecAbstract::PE_handle_FixDetects(QIODevice *pDevice,bool bIsImage,SpecAbs
     }
 }
 
-void SpecAbstract::PE_handleLanguages(QIODevice *pDevice, bool bIsImage, PEINFO_STRUCT *pPEInfo)
+void SpecAbstract::PE_handleLanguages(QIODevice *pDevice,bool bIsImage,PEINFO_STRUCT *pPEInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
