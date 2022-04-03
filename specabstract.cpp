@@ -16065,7 +16065,7 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice,bool bIsImage,Spec
 //            }
             QList<XMACH::LIBRARY_RECORD> list=mach.getLibraryRecords();
 
-            QSet<QString> stRecords;# TODO ARM
+            QSet<QString> stRecords;
 
             for(qint32 i=0;i<list.count();i++)
             {
