@@ -16065,7 +16065,7 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice,bool bIsImage,Spec
 //            }
             QList<XMACH::LIBRARY_RECORD> list=mach.getLibraryRecords();
 
-            QSet<QString> stRecords;
+            QSet<QString> stRecords;# TODO ARM
 
             for(qint32 i=0;i<list.count();i++)
             {
@@ -16100,7 +16100,7 @@ void SpecAbstract::MACHO_handleLanguages(QIODevice *pDevice,bool bIsImage,MACHOI
     fixLanguage(&(pMACHInfo->mapResultLanguages));
 }
 
-void SpecAbstract::LE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage, LEINFO_STRUCT *pLEInfo)
+void SpecAbstract::LE_handle_OperationSystems(QIODevice *pDevice,bool bIsImage,LEINFO_STRUCT *pLEInfo)
 {
     XLE le(pDevice,bIsImage);
 
