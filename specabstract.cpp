@@ -16215,7 +16215,7 @@ void SpecAbstract::LE_handle_Borland(QIODevice *pDevice,bool bIsImage,SpecAbstra
     }
 }
 
-void SpecAbstract::LE_handleLanguages(QIODevice *pDevice, bool bIsImage, LEINFO_STRUCT *pLEInfo)
+void SpecAbstract::LE_handleLanguages(QIODevice *pDevice,bool bIsImage,LEINFO_STRUCT *pLEInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
