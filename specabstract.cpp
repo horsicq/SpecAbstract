@@ -13140,7 +13140,7 @@ void SpecAbstract::MSDOS_handle_OperationSystems(QIODevice *pDevice, bool bIsIma
     }
 }
 
-void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
+void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice,bool bIsImage,SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
 {
     XMSDOS msdos(pDevice,bIsImage);
 
