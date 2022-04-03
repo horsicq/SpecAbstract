@@ -16007,7 +16007,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice,bool bIsImage,SpecAbstr
     }
 }
 
-void SpecAbstract::MACHO_handle_Protection(QIODevice *pDevice, bool bIsImage, SpecAbstract::MACHOINFO_STRUCT *pMACHInfo)
+void SpecAbstract::MACHO_handle_Protection(QIODevice *pDevice,bool bIsImage,SpecAbstract::MACHOINFO_STRUCT *pMACHInfo)
 {
     XMACH mach(pDevice,bIsImage);
 
