@@ -19104,6 +19104,8 @@ void SpecAbstract::filterResult(QList<SpecAbstract::SCAN_STRUCT> *pListRecords, 
 
 void SpecAbstract::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorVersion, qint32 nMinorVersion)
 {
+    Q_UNUSED(nMajorVersion)
+
     qint32 nNumberOfRecords=pListRichSignatures->count();
 
     for(qint32 i=0;i<nNumberOfRecords;i++)
