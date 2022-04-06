@@ -16240,7 +16240,7 @@ void SpecAbstract::LX_handle_OperationSystems(QIODevice *pDevice,bool bIsImage,L
     }
 }
 
-void SpecAbstract::LX_handle_Microsoft(QIODevice *pDevice, bool bIsImage, LXINFO_STRUCT *pLXInfo, bool *pbIsStop)
+void SpecAbstract::LX_handle_Microsoft(QIODevice *pDevice,bool bIsImage,LXINFO_STRUCT *pLXInfo,bool *pbIsStop)
 {
     XLE lx(pDevice,bIsImage);
 
