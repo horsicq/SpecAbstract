@@ -13699,7 +13699,7 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice,bool bIsImage,
     }
 }
 
-void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, bool bIsImage, SpecAbstract::ELFINFO_STRUCT *pELFInfo)
+void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice,bool bIsImage,SpecAbstract::ELFINFO_STRUCT *pELFInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
