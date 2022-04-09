@@ -14772,7 +14772,7 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice,bool bIsImage,SpecAb
     }
 }
 
-void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, bool bIsImage, SpecAbstract::ELFINFO_STRUCT *pELFInfo)
+void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,SpecAbstract::ELFINFO_STRUCT *pELFInfo)
 {
     Q_UNUSED(pELFInfo)
 
