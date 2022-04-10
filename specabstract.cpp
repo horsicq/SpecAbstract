@@ -17131,7 +17131,7 @@ void SpecAbstract::updateInfo(QMap<SpecAbstract::RECORD_NAME,SpecAbstract::SCAN_
     }
 }
 
-void SpecAbstract::updateVersionAndInfo(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::SCAN_STRUCT> *pMap, SpecAbstract::RECORD_NAME name, QString sVersion, QString sInfo)
+void SpecAbstract::updateVersionAndInfo(QMap<SpecAbstract::RECORD_NAME,SpecAbstract::SCAN_STRUCT> *pMap,SpecAbstract::RECORD_NAME name,QString sVersion,QString sInfo)
 {
     if(pMap->contains(name))
     {
