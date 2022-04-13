@@ -17519,7 +17519,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_UPX_vi(QIODevice *pDevice, bool bIsIm
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi1(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi1(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize)
 {
     VI_STRUCT result={};
 
