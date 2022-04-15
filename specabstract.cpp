@@ -17715,7 +17715,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_gold_vi(QIODevice *pDevice, bool bIsIm
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::get_TurboLinker_vi(QIODevice *pDevice, bool bIsImage)
+SpecAbstract::VI_STRUCT SpecAbstract::get_TurboLinker_vi(QIODevice *pDevice,bool bIsImage)
 {
     VI_STRUCT result={};
 
