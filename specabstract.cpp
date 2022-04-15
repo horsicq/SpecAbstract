@@ -17589,7 +17589,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Zig_vi(QIODevice *pDevice,bool bIsImag
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::get_PyInstaller_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+SpecAbstract::VI_STRUCT SpecAbstract::get_PyInstaller_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize)
 {
     VI_STRUCT result={};
 
