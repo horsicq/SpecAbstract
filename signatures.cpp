@@ -478,6 +478,8 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_EXECRYPTOR,                   "2.1.X",            ""},                    "E9........669C60508D88........8D90........8BDC8BE1"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_RUST,                         "",                 "i686-pc-windows-msvc"},    "E8........E9........CCCCCCCCCC"},
     {{0, XBinary::FT_PE64,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_RUST,                         "",                 "x86_64-pc-windows-msvc"},  "4883EC28E8........4883C428E9........CCCCCCCC"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ELECKEY,                      "2.00.X",           ""},                    "515257535556E8000000005BB8........2BD8"},
+    {{0, XBinary::FT_PE64,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ELECKEY,                      "2.00.X",           ""},                    "41504151515257535556E8000000005B48B8................482BD8488BEB"},
 
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FAKESIGNATURE,                "",                 "ASPacker 2.12"},       "60E803000000E9EB045D4555C3E801"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FAKESIGNATURE,                "",                 "BJFNT 1.3"},           "EB033A4D3A1EEB02CD209CEB02CD20EB02CD2060"},
@@ -725,6 +727,7 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ROGUEPACK,                    "1.1",              "TEST"},                0xbb132a76d,    0xe23394a8},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ROGUEPACK,                    "3.3.1",            "TEST"},                0x855d9788c,    0x96ed2351},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_TELOCK,                       "0.5X",             ""},                    0x38eada856,    0x37df662a}, // TODO All versions
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ELECKEY,                      "2.00.X",           ""},                    0x3552ed494,    0xccf98822},
     // Delphi cryptors
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ASSCRYPTER,                   "1.0",              "TEST"},                0x12d94ca858,   0x36fb88c9},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_AASE,                         "1.0",              ""},                    0xc06abc0fa,    0x77035a90},
@@ -1205,6 +1208,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DRAGONARMOR,                  "",                 ""},                    "DAStub"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DYAMAR,                       "1.3.5",            ""},                    ".dyamarC"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DYAMAR,                       "1.3.5",            ""},                    ".dyamarD"},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ELECKEY,                      "2.00.X",           ""},                    ".sstb"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "1.XX-2.XX",        ""},                    "EPE0"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENCRYPTPE,                    "1.XX-2.XX",        ""},                    "EPE1"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ENIGMAVIRTUALBOX,             "",                 ""},                    ".enigma1"},

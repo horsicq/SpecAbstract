@@ -464,6 +464,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_EASYPROTECTOR:                         sResult=QString("EasyProtector");                               break;
         case RECORD_NAME_EAZFUSCATOR:                           sResult=QString("Eazfuscator");                                 break;
         case RECORD_NAME_ECLIPSE:                               sResult=QString("Eclipse");                                     break;
+        case RECORD_NAME_ELECKEY:                               sResult=QString("ElecKey");                                     break;
         case RECORD_NAME_EMBARCADEROCPP:                        sResult=QString("Embarcadero C++");                             break;
         case RECORD_NAME_EMBARCADEROCPPBUILDER:                 sResult=QString("Embarcadero C++ Builder");                     break;
         case RECORD_NAME_EMBARCADERODELPHI:                     sResult=QString("Embarcadero Delphi");                          break;
@@ -4009,6 +4010,23 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice,bool bIsImage,SpecAbs
 
                     pPEInfo->mapResultPackers.insert(recordNPACK.name,scansToScan(&(pPEInfo->basic_info),&recordNPACK));
                 }
+            }
+
+            if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ELECKEY))
+            {
+                _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ELECKEY);
+
+                if(pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_ELECKEY))
+                {
+                    ss.sInfo=append(ss.sInfo,"Section");
+                }
+
+                if(pPEInfo->mapImportDetects.contains(RECORD_NAME_ELECKEY))
+                {
+                    ss.sInfo=append(ss.sInfo,"Import");
+                }
+
+                pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
             if(!pPEInfo->bIs64)
