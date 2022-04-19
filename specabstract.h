@@ -1244,8 +1244,8 @@ public:
         qint32 nRelocsSection;
         qint32 nTLSSection;
         QString sEntryPointSectionName;
-        qint64 nEntryPointAddress;
-        qint64 nImageBaseAddress;
+        XADDR nEntryPointAddress;
+        XADDR nImageBaseAddress;
         quint8 nMinorLinkerVersion;
         quint8 nMajorLinkerVersion;
         quint16 nMinorImageVersion;

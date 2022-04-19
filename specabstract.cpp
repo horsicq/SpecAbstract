@@ -17772,7 +17772,7 @@ void SpecAbstract::PE_x86Emul(QIODevice *pDevice, bool bIsImage, SpecAbstract::P
 {
     XBinary binary(pDevice,bIsImage);
 
-    qint64 nAddress=pPEInfo->nImageBaseAddress+pPEInfo->nEntryPointAddress;
+    XADDR nAddress=pPEInfo->nImageBaseAddress+pPEInfo->nEntryPointAddress;
 
     QString sSignature;
 
