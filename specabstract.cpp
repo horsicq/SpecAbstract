@@ -9119,6 +9119,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage,SpecAbs
             if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_QTINSTALLER))
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_QTINSTALLER,"","",0);
+                //ss.sVersion="";
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
