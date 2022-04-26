@@ -10580,6 +10580,79 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,
                 pPEInfo->mapResultPackers.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
             }
         }
+
+        if(!PE_isProtectionPresent(pPEInfo))
+        {
+            bool bLastSectionEntryPoint=false;
+            bool bEmptyFirstSection=false;
+            bool bHighEntropyFirstSection=false;
+            bool bHighEntropy=false;
+
+            qint32 nNumberOfSections=pPEInfo->listSectionRecords.count();
+
+            if(nNumberOfSections>=2)
+            {
+                if(pPEInfo->nEntryPointSection==nNumberOfSections-1)
+                {
+                    bLastSectionEntryPoint=true;
+                }
+            }
+
+            if(nNumberOfSections>0)
+            {
+                if(pPEInfo->listSectionRecords.at(0).nSize==0)
+                {
+                    bEmptyFirstSection=0;
+                }
+            }
+
+            if(pe.isPacked(pe.getEntropy()))
+            {
+                bHighEntropy=true;
+            }
+            else if(nNumberOfSections>0)
+            {
+                double dEntropy=pe.getEntropy(pPEInfo->listSectionRecords.at(0).nOffset,pPEInfo->listSectionRecords.at(0).nSize);
+
+                if(pe.isPacked(dEntropy))
+                {
+                    bHighEntropyFirstSection=true;
+                }
+            }
+
+            if( bLastSectionEntryPoint||
+                bEmptyFirstSection||
+                bHighEntropyFirstSection||
+                bHighEntropy)
+            {
+                _SCANS_STRUCT recordSS={};
+
+                recordSS.type=RECORD_TYPE_PROTECTOR;
+                recordSS.name=RECORD_NAME_GENERIC;
+                recordSS.bIsHeuristic=true;
+
+                if(bLastSectionEntryPoint)
+                {
+                    recordSS.sInfo=append(recordSS.sInfo,"Last section entry point");
+                }
+
+                if(bEmptyFirstSection)
+                {
+                    recordSS.sInfo=append(recordSS.sInfo,"Empty first section");
+                }
+
+                if(bHighEntropy)
+                {
+                    recordSS.sInfo=append(recordSS.sInfo,"High entropy");
+                }
+                else if(bHighEntropyFirstSection)
+                {
+                    recordSS.sInfo=append(recordSS.sInfo,"High entropy first section");
+                }
+
+                pPEInfo->mapResultProtectors.insert(recordSS.name,scansToScan(&(pPEInfo->basic_info),&recordSS));
+            }
+        }
     }
 }
 
