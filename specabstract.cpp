@@ -7391,7 +7391,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,bool bIsImage,SpecAbst
     }
 }
 
-void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+void SpecAbstract::PE_handle_Borland(QIODevice *pDevice,bool bIsImage,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     // TODO Turbo Linker
     // https://delphi.fandom.com/wiki/Determine_Delphi_Application
