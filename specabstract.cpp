@@ -13220,7 +13220,7 @@ void SpecAbstract::Binary_handleLanguages(QIODevice *pDevice,bool bIsImage,BINAR
     // TODO fixes
 }
 
-void SpecAbstract::MSDOS_handle_OperationSystems(QIODevice *pDevice, bool bIsImage, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
+void SpecAbstract::MSDOS_handle_OperationSystems(QIODevice *pDevice,bool bIsImage,SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo)
 {
     XMSDOS msdos(pDevice,bIsImage);
 
