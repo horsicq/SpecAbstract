@@ -861,6 +861,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SUNWORKSHOPCOMPILERS:                  sResult=QString("Sun WorkShop Compilers");                      break;
         case RECORD_NAME_SUSELINUX:                             sResult=QString("SUSE Linux");                                  break;
         case RECORD_NAME_SVKPROTECTOR:                          sResult=QString("SVK Protector");                               break;
+        case RECORD_NAME_SYLLABLE:                              sResult=QString("Syllable");                                    break;
         case RECORD_NAME_SWF:                                   sResult=QString("SWF");                                         break;
         case RECORD_NAME_SWIFT:                                 sResult=QString("Swift");                                       break;
         case RECORD_NAME_TARMAINSTALLER:                        sResult=QString("Tarma Installer");                             break;
@@ -14959,6 +14960,54 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage
                     }
                 }
             }
+
+            {
+                QSet<quint32> stRecords;
+
+                qint32 nNumberOfRecords=pELFInfo->listNotes.count();
+
+                for(qint32 i=0;i<nNumberOfRecords;i++)
+                {
+                    if(!stRecords.contains(pELFInfo->listNotes.at(i).nType))
+                    {
+                        _SCANS_STRUCT recordSS={};
+
+                        recordSS.type=RECORD_TYPE_LIBRARY;
+                        recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+nIndex);
+                        recordSS.sVersion=QString("NOTE_TYPE_%1").arg(pELFInfo->listNotes.at(i).nType);
+
+                        pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+
+                        stRecords.insert(pELFInfo->listNotes.at(i).nType);
+
+                        nIndex++;
+                    }
+                }
+            }
+
+            {
+                QSet<QString> stRecords;
+
+                qint32 nNumberOfRecords=pELFInfo->listSectionRecords.count();
+
+                for(qint32 i=0;i<nNumberOfRecords;i++)
+                {
+                    if(!stRecords.contains(pELFInfo->listSectionRecords.at(i).sName))
+                    {
+                        _SCANS_STRUCT recordSS={};
+
+                        recordSS.type=RECORD_TYPE_LIBRARY;
+                        recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+nIndex);
+                        recordSS.sVersion=QString("SECTION_")+pELFInfo->listSectionRecords.at(i).sName;
+
+                        pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
+
+                        stRecords.insert(pELFInfo->listSectionRecords.at(i).sName);
+
+                        nIndex++;
+                    }
+                }
+            }
         }
     }
 }
@@ -19038,6 +19087,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     else if (osInfo.osName==XBinary::OSNAME_OPENVOS)            result.name=RECORD_NAME_OPENVOS;
     else if (osInfo.osName==XBinary::OSNAME_MCLINUX)            result.name=RECORD_NAME_MCLINUX;
     else if (osInfo.osName==XBinary::OSNAME_QNX)                result.name=RECORD_NAME_QNX;
+    else if (osInfo.osName==XBinary::OSNAME_SYLLABLE)           result.name=RECORD_NAME_SYLLABLE;
 
     result.sVersion=osInfo.sOsVersion;
     result.sInfo=QString("%1, %2, %3").arg(osInfo.sArch,XBinary::modeIdToString(osInfo.mode),osInfo.sType);
