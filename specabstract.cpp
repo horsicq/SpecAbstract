@@ -17374,7 +17374,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_UPX_vi(QIODevice *pDevice,bool bIsImag
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_UPX_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize, XBinary::FT fileType)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_UPX_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize,XBinary::FT fileType)
 {
     VI_STRUCT result={};
 
