@@ -11713,7 +11713,7 @@ void SpecAbstract::Binary_handle_SFXData(QIODevice *pDevice,bool bIsImage,SpecAb
     }
 }
 
-void SpecAbstract::Binary_handle_ProtectorData(QIODevice *pDevice,bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
+void SpecAbstract::Binary_handle_ProtectorData(QIODevice *pDevice,bool bIsImage,SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
 {
     XBinary binary(pDevice,bIsImage);
 
