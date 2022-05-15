@@ -17698,7 +17698,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi2(QIODevice *pDevice,bool bIsIma
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::get_Nim_vi(QIODevice *pDevice, bool bIsImage, qint64 nOffset, qint64 nSize)
+SpecAbstract::VI_STRUCT SpecAbstract::get_Nim_vi(QIODevice *pDevice,bool bIsImage,qint64 nOffset,qint64 nSize)
 {
     VI_STRUCT result={};
 
