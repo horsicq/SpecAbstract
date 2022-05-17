@@ -16551,7 +16551,7 @@ void SpecAbstract::NE_handleLanguages(QIODevice *pDevice,bool bIsImage,NEINFO_ST
     fixLanguage(&(pNEInfo->mapResultLanguages));
 }
 
-void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::DEXINFO_STRUCT *pDEXInfo, bool *pbIsStop)
+void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice,SpecAbstract::DEXINFO_STRUCT *pDEXInfo,bool *pbIsStop)
 {
     Q_UNUSED(pbIsStop)
 
