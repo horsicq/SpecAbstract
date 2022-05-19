@@ -191,7 +191,7 @@ QString SpecAbstract::append(QString sResult,QString sString)
     return XBinary::appendText(sResult,sString,",");
 }
 
-void SpecAbstract::setStatus(SCAN_OPTIONS *pOptions, QString sStatus)
+void SpecAbstract::setStatus(SCAN_OPTIONS *pOptions,QString sStatus)
 {
     pOptions->sStatus=sStatus;
 }
