@@ -9401,6 +9401,23 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,bool bIsImage,SpecAbs
                 pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             }
 
+            if(XPE::getResourcesVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Microsoft Office"))
+            {
+                if(XPE::getResourcesVersionValue("InternalName",&(pPEInfo->resVersion)).contains("Bootstrapper.exe"))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_INSTALLER,RECORD_NAME_MICROSOFTOFFICE,"","",0);
+                    ss.sVersion=XPE::getResourcesVersionValue("ProductVersion",&(pPEInfo->resVersion)).trimmed();
+
+                    if(ss.sVersion.contains(","))
+                    {
+                        ss.sVersion=ss.sVersion.remove(" ");
+                        ss.sVersion=ss.sVersion.replace(",",".");
+                    }
+
+                    pPEInfo->mapResultInstallers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
+
             if( XPE::getResourcesVersionValue("FileDescription",&(pPEInfo->resVersion)).contains("Java")&&
                 XPE::getResourcesVersionValue("InternalName",&(pPEInfo->resVersion)).contains("Setup Launcher"))
             {
