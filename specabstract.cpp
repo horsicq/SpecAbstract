@@ -13093,7 +13093,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice,bool bIsImage,SpecAbs
     }
 }
 
-void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, bool bIsImage, SpecAbstract::ZIPINFO_STRUCT *pZipInfo)
+void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice,bool bIsImage,SpecAbstract::ZIPINFO_STRUCT *pZipInfo)
 {
     Q_UNUSED(bIsImage)
 
