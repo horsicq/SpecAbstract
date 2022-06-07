@@ -864,6 +864,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SYLLABLE:                              sResult=QString("Syllable");                                    break;
         case RECORD_NAME_SWF:                                   sResult=QString("SWF");                                         break;
         case RECORD_NAME_SWIFT:                                 sResult=QString("Swift");                                       break;
+        case RECORD_NAME_TAR:                                   sResult=QString("tar");                                         break;
         case RECORD_NAME_TARMAINSTALLER:                        sResult=QString("Tarma Installer");                             break;
         case RECORD_NAME_TELOCK:                                sResult=QString("tElock");                                      break;
         case RECORD_NAME_TENCENTLEGU:                           sResult=QString("Tencent Legu");                                break;
@@ -11190,6 +11191,17 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,bool bIsImage,SpecA
         // TODO files
         pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
+    // TAR
+    else if((pBinaryInfo->basic_info.id.nSize>=500)&&(binary.getSignature(0x100,6)=="007573746172")) // "00'ustar'"
+    {
+        pBinaryInfo->basic_info.id.fileType=XBinary::FT_ARCHIVE;
+
+        _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_TAR,"","",0);
+
+        // TODO options
+        // TODO files
+        pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
 }
 
 void SpecAbstract::Binary_handle_Certificates(QIODevice *pDevice,bool bIsImage,SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
@@ -16501,7 +16513,7 @@ void SpecAbstract::LX_handle_Borland(QIODevice *pDevice, bool bIsImage, LXINFO_S
     }
 }
 
-void SpecAbstract::LX_handleLanguages(QIODevice *pDevice, bool bIsImage, LXINFO_STRUCT *pLXInfo)
+void SpecAbstract::LX_handleLanguages(QIODevice *pDevice,bool bIsImage,LXINFO_STRUCT *pLXInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
