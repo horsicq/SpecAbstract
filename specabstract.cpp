@@ -11221,7 +11221,7 @@ void SpecAbstract::Binary_handle_Certificates(QIODevice *pDevice,bool bIsImage,S
     }
 }
 
-void SpecAbstract::Binary_handle_DebugData(QIODevice *pDevice,bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
+void SpecAbstract::Binary_handle_DebugData(QIODevice *pDevice,bool bIsImage,SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
 {
     XBinary binary(pDevice,bIsImage);
 
