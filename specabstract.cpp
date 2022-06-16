@@ -13223,7 +13223,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::Zip_scan_DEX(QIODevice *pDevice,bool 
     return result;
 }
 
-void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
+void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice,bool bIsImage,SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(bIsImage)
