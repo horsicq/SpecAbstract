@@ -11489,7 +11489,7 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice,bool bIsImage,SpecAb
     }
 }
 
-void SpecAbstract::Binary_handle_Databases(QIODevice *pDevice, bool bIsImage, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
+void SpecAbstract::Binary_handle_Databases(QIODevice *pDevice,bool bIsImage,SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
 {
     XBinary binary(pDevice,bIsImage);
 
