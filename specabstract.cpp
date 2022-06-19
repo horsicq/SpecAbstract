@@ -14661,7 +14661,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice,bool bIsImage,SpecAbstrac
     }
 }
 
-void SpecAbstract::ELF_handle_GCC(QIODevice *pDevice, bool bIsImage, SpecAbstract::ELFINFO_STRUCT *pELFInfo)
+void SpecAbstract::ELF_handle_GCC(QIODevice *pDevice,bool bIsImage,SpecAbstract::ELFINFO_STRUCT *pELFInfo)
 {
     XELF elf(pDevice,bIsImage);
 
