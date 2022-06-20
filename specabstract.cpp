@@ -16526,7 +16526,7 @@ void SpecAbstract::LX_handleLanguages(QIODevice *pDevice,bool bIsImage,LXINFO_ST
     fixLanguage(&(pLXInfo->mapResultLanguages));
 }
 
-void SpecAbstract::NE_handle_OperationSystems(QIODevice *pDevice, bool bIsImage, NEINFO_STRUCT *pNEInfo)
+void SpecAbstract::NE_handle_OperationSystems(QIODevice *pDevice,bool bIsImage,NEINFO_STRUCT *pNEInfo)
 {
     XNE ne(pDevice,bIsImage);
 
