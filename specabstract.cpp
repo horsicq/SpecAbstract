@@ -4276,7 +4276,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice,bool bIsImage,SpecAbs
                                 (pPEInfo->listSectionHeaders.at(0).Characteristics==0xe00000a0))
                             {
                                 bool bDetect1=(pPEInfo->nEntryPointSection==1);
-                                bool bDetect2=(pe.getEntropy(pPEInfo->listSectionRecords.at(2).nOffset,pPEInfo->listSectionRecords.at(2).nSize)>7.6);
+                                bool bDetect2=(pe.getEntropy(pPEInfo->listSectionRecords.at(2).nOffset,pPEInfo->listSectionRecords.at(2).nSize)>7.6);  // TODO ProcessData
 
                                 if(bDetect1||bDetect2)
                                 {
@@ -10625,13 +10625,13 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice,bool bIsImage,
                 }
             }
 
-            if(pe.isPacked(pe.getEntropy()))
+            if(pe.isPacked(pe.getEntropy()))  // TODO ProcessData
             {
                 bHighEntropy=true;
             }
             else if(nNumberOfSections>0)
             {
-                double dEntropy=pe.getEntropy(pPEInfo->listSectionRecords.at(0).nOffset,pPEInfo->listSectionRecords.at(0).nSize);
+                double dEntropy=pe.getEntropy(pPEInfo->listSectionRecords.at(0).nOffset,pPEInfo->listSectionRecords.at(0).nSize);  // TODO ProcessData
 
                 if(pe.isPacked(dEntropy))
                 {
