@@ -18242,7 +18242,7 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMmREcords,QIODev
     }
 }
 
-void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QString sSignature, SpecAbstract::SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, bool *pbIsStop)
+void SpecAbstract::signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QString sSignature,SpecAbstract::SIGNATURE_RECORD *pRecords,qint32 nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,bool *pbIsStop)
 {
     qint32 nSignaturesCount=nRecordsSize/(int)sizeof(SIGNATURE_RECORD);
 
