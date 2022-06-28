@@ -1434,7 +1434,7 @@ public:
     static void PE_handle_Themida(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_StarForce(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Petite(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo);
-    static void PE_handle_NETProtection(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_NETProtection(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo,XBinary::PDSTRUCT *pPdStruct);
     static void PE_handle_Microsoft(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo,XBinary::PDSTRUCT *pPdStruct);
     static void PE_handle_Borland(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Watcom(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo);
@@ -1557,7 +1557,7 @@ public:
     static VI_STRUCT get_WindowsInstaller_vi(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_gold_vi(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_TurboLinker_vi(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions);
-    static VI_STRUCT get_Enigma_vi(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,qint64 nSize);
+    static VI_STRUCT get_Enigma_vi(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,qint64 nSize,XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT get_DeepSea_vi(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_SmartAssembly_vi(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,qint64 nSize);
     static VI_STRUCT get_R8_marker_vi(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,qint64 nSize);
