@@ -3035,7 +3035,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice,XBinary::
         PE_handle_GCC(pDevice,pOptions,&result);
         PE_handle_Signtools(pDevice,pOptions,&result);
         PE_handle_SFX(pDevice,pOptions,&result);
-        PE_handle_Installers(pDevice,pOptions,&result);
+        PE_handle_Installers(pDevice,pOptions,&result,pPdStruct);
         PE_handle_DongleProtection(pDevice,pOptions,&result);
 //        PE_handle_AnslymPacker(pDevice,pOptions,&result);
         PE_handle_NeoLite(pDevice,pOptions,&result);
@@ -8907,7 +8907,7 @@ void SpecAbstract::PE_handle_Signtools(QIODevice *pDevice,SpecAbstract::SCAN_OPT
     }
 }
 
-void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::PEINFO_STRUCT *pPEInfo)
+void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice,pOptions->bIsImage);
 
@@ -8929,7 +8929,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,SpecAbstract::SCAN_OP
                         qint64 _nOffset=pPEInfo->osCodeSection.nOffset;
                         qint64 _nSize=pPEInfo->osCodeSection.nSize;
 
-                        qint64 nOffsetVersion=pe.find_ansiString(_nOffset,_nSize,"Setup version: Inno Setup version "); // TODO ProcessData
+                        qint64 nOffsetVersion=pe.find_ansiString(_nOffset,_nSize,"Setup version: Inno Setup version ",pPdStruct);
 
                         if(nOffsetVersion!=-1)
                         {
@@ -8954,7 +8954,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,SpecAbstract::SCAN_OP
                     qint64 _nOffset=pPEInfo->nOverlayOffset;
                     qint64 _nSize=pPEInfo->nOverlaySize;
 
-                    qint64 nOffsetVersion=pe.find_ansiString(_nOffset,_nSize,"Inno Setup Messages ("); // TODO ProcessData
+                    qint64 nOffsetVersion=pe.find_ansiString(_nOffset,_nSize,"Inno Setup Messages (",pPdStruct);
 
                     if(nOffsetVersion!=-1)
                     {
