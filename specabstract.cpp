@@ -6286,7 +6286,7 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice,SpecAbstract::SCAN_OPTION
     }
 }
 
-void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::PEINFO_STRUCT *pPEInfo,XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice,pOptions->bIsImage);
 
