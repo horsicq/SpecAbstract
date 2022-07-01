@@ -3181,7 +3181,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice,XBinary
 
         // TODO Check Strings
 
-        DEX_handle_Tools(pDevice,&result,pPdStruct);
+        DEX_handle_Tools(pDevice,pOptions,&result,pPdStruct);
         DEX_handle_Protection(pDevice,&result,pPdStruct);
         DEX_handle_Dexguard(pDevice,&result,pPdStruct);
 
@@ -16578,7 +16578,7 @@ void SpecAbstract::NE_handleLanguages(QIODevice *pDevice,SpecAbstract::SCAN_OPTI
     fixLanguage(&(pNEInfo->mapResultLanguages));
 }
 
-void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice,SpecAbstract::DEXINFO_STRUCT *pDEXInfo,XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::DEXINFO_STRUCT *pDEXInfo,XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pPdStruct)
 
@@ -16803,7 +16803,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice,SpecAbstract::DEXINFO_STR
         // https://r8.googlesource.com/r8/+/refs/heads/master/src/main/java/com/android/tools/r8/dex/Marker.java
         // Example: X~~D8{"compilation-mode":"release","has-checksums":false,"min-api":14,"version":"2.0.88"}
 
-        VI_STRUCT viR8=get_R8_marker_vi(pDevice,false,0,pDEXInfo->basic_info.id.nSize);
+        VI_STRUCT viR8=get_R8_marker_vi(pDevice,pOptions,0,pDEXInfo->basic_info.id.nSize);
         bool bR8_map=XDEX::compareMapItems(&listMaps,&listR8);
         bool bDX_map=XDEX::compareMapItems(&listMaps,&listDx);
 //        bool bDexLib_map=XDEX::compareMapItems(&listMaps,&listDexLib);

@@ -1522,7 +1522,7 @@ public:
 
     static void NE_handleLanguages(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,NEINFO_STRUCT *pNEInfo);
 
-    static void DEX_handle_Tools(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo,XBinary::PDSTRUCT *pPdStruct);
+    static void DEX_handle_Tools(QIODevice *pDevice,SCAN_OPTIONS *pOptions,DEXINFO_STRUCT *pDEXInfo,XBinary::PDSTRUCT *pPdStruct);
     static void DEX_handle_Dexguard(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo,XBinary::PDSTRUCT *pPdStruct);
     static void DEX_handle_Protection(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo,XBinary::PDSTRUCT *pPdStruct);
 
