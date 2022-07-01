@@ -10729,7 +10729,7 @@ void SpecAbstract::PE_handleLanguages(QIODevice *pDevice,SpecAbstract::SCAN_OPTI
     fixLanguage(&(pPEInfo->mapResultLanguages));
 }
 
-void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::PEINFO_STRUCT *pPEInfo,XBinary::PDSTRUCT *pPdStruct)
 {
     if(pOptions->bRecursiveScan)
     {
