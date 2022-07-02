@@ -5542,7 +5542,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice,SpecAbstract::SCAN_OP
     }
 }
 
-void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
