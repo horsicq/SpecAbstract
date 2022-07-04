@@ -2049,6 +2049,10 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_DelphiVersionFromCompiler(QString sSt
         {
             result.sVersion="10.4 Sydney";
         }
+        else if(sString=="35.0")
+        {
+            result.sVersion="11.0 Alexandria";
+        }
     }
 
     return result;
@@ -8907,7 +8911,7 @@ void SpecAbstract::PE_handle_Signtools(QIODevice *pDevice,SpecAbstract::SCAN_OPT
     }
 }
 
-void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::PE_handle_Installers(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::PEINFO_STRUCT *pPEInfo,XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice,pOptions->bIsImage);
 
