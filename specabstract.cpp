@@ -13789,7 +13789,7 @@ void SpecAbstract::MSDOS_handleLanguages(QIODevice *pDevice,SpecAbstract::SCAN_O
     fixLanguage(&(pMSDOSInfo->mapResultLanguages));
 }
 
-void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,XBinary::PDSTRUCT *pPdStruct)
 {
     if(pOptions->bRecursiveScan)
     {
