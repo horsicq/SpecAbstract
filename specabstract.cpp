@@ -183,6 +183,7 @@ void SpecAbstract::scan(QIODevice *pDevice,SpecAbstract::SCAN_RESULT *pScanResul
     if(pScanTimer)
     {
         pScanResult->nScanTime=pScanTimer->elapsed();
+        delete pScanTimer;
     }
 }
 
@@ -3370,7 +3371,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
             _parentId.sInfo=result.listArchiveRecords.at(i).sFileName;
             _parentId.bVirtual=true; // TODO Check
 
-            pPdStruct->pdRecord.sStatus=result.listArchiveRecords.at(i).sFileName;
+            pPdStruct->pdRecordOpt.sStatus=result.listArchiveRecords.at(i).sFileName; // TODO More
 
             QTemporaryFile fileTemp;
 
@@ -12244,7 +12245,7 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice,SpecAbstract::SCAN_OP
     }
 }
 
-void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
     Q_UNUSED(pOptions)
@@ -13028,7 +13029,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
                         }
                     }
 
-                    pPdStruct->pdRecord.sStatus=pZipInfo->listArchiveRecords.at(i).sFileName;
+                    pPdStruct->pdRecordOpt.sStatus=pZipInfo->listArchiveRecords.at(i).sFileName; // TODO More
 
                     QByteArray baRecordData=xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)),true);
 
