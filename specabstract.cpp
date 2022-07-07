@@ -2098,6 +2098,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice,X
         result.basic_info.sHeaderSignature=binary.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bIsVerbose=pOptions->bVerbose;
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=binary.getMemoryMap();
@@ -2211,6 +2212,7 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice,XBinary
         result.basic_info.sHeaderSignature=com.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bIsVerbose=pOptions->bVerbose;
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=com.getMemoryMap();
@@ -2282,6 +2284,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice,XBi
         result.basic_info.sHeaderSignature=msdos.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bIsVerbose=pOptions->bVerbose;
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=msdos.getMemoryMap();
@@ -2373,6 +2376,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice,XBinary
         result.basic_info.sHeaderSignature=elf.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bIsVerbose=pOptions->bVerbose;
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=elf.getMemoryMap();
@@ -2476,6 +2480,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice,XBi
         result.basic_info.sHeaderSignature=mach.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bIsVerbose=pOptions->bVerbose;
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=mach.getMemoryMap();
@@ -2551,6 +2556,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice,XBinary::
         result.basic_info.sHeaderSignature=le.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bIsVerbose=pOptions->bVerbose;
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=le.getMemoryMap();
@@ -2619,6 +2625,7 @@ SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice,XBinary::
         result.basic_info.sHeaderSignature=lx.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bIsVerbose=pOptions->bVerbose;
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=lx.getMemoryMap();
@@ -2686,6 +2693,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice,XBinary::
         result.basic_info.sHeaderSignature=ne.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bIsVerbose=pOptions->bVerbose;
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=ne.getMemoryMap();
@@ -2752,6 +2760,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice,XBinary::
         result.basic_info.sHeaderSignature=pe.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bIsVerbose=pOptions->bVerbose;
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=pe.getMemoryMap();
@@ -3118,6 +3127,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice,XBinary
         result.basic_info.sHeaderSignature=dex.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bIsVerbose=pOptions->bVerbose;
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=dex.getMemoryMap();
@@ -3224,6 +3234,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice,XBinary
         result.basic_info.sHeaderSignature=xzip.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bIsVerbose=pOptions->bVerbose;
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=xzip.getMemoryMap();
@@ -3275,9 +3286,9 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice,XBinary
             }
         }
 
-        Zip_handle_Metainfos(pDevice,pOptions,&result);
-        Zip_handle_Microsoftoffice(pDevice,pOptions,&result);
-        Zip_handle_OpenOffice(pDevice,pOptions,&result);
+        Zip_handle_Metainfos(pDevice,pOptions,&result,pPdStruct);
+        Zip_handle_Microsoftoffice(pDevice,pOptions,&result,pPdStruct);
+        Zip_handle_OpenOffice(pDevice,pOptions,&result,pPdStruct);
 
         if(result.bIsJAR)
         {
@@ -3346,6 +3357,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
         result.basic_info.sHeaderSignature=xmachofat.getSignature(0,150);
         result.basic_info.bIsDeepScan=pOptions->bDeepScan;
         result.basic_info.bIsHeuristicScan=pOptions->bHeuristicScan;
+        result.basic_info.bIsVerbose=pOptions->bVerbose;
         result.basic_info.bShowDetects=pOptions->bShowDetects;
         result.basic_info.bIsTest=pOptions->bIsTest;
         result.basic_info.memoryMap=xmachofat.getMemoryMap();
@@ -3371,7 +3383,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
             _parentId.sInfo=result.listArchiveRecords.at(i).sFileName;
             _parentId.bVirtual=true; // TODO Check
 
-            pPdStruct->pdRecordOpt.sStatus=result.listArchiveRecords.at(i).sFileName; // TODO More
+            pPdStruct->pdRecord.sStatus=result.listArchiveRecords.at(i).sFileName; // TODO More
 
             QTemporaryFile fileTemp;
 
@@ -11853,7 +11865,7 @@ void SpecAbstract::Binary_handle_LibraryData(QIODevice *pDevice,SpecAbstract::SC
     }
 }
 
-void SpecAbstract::Zip_handle_Microsoftoffice(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo)
+void SpecAbstract::Zip_handle_Microsoftoffice(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
 
@@ -11869,7 +11881,7 @@ void SpecAbstract::Zip_handle_Microsoftoffice(QIODevice *pDevice,SpecAbstract::S
             {
                 pZipInfo->basic_info.id.fileType=XBinary::FT_DOCUMENT;
 
-                QString sData=xzip.decompress(&record).data();
+                QString sData=xzip.decompress(&record,false,pPdStruct).data();
                 QString sApplication=XBinary::regExp("<Application>(.*?)</Application>",sData,1);
 
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_BINARY,RECORD_TYPE_FORMAT,RECORD_NAME_MICROSOFTOFFICE,"","",0);
@@ -11899,7 +11911,7 @@ void SpecAbstract::Zip_handle_Microsoftoffice(QIODevice *pDevice,SpecAbstract::S
     }
 }
 
-void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo)
+void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
 
@@ -11913,7 +11925,7 @@ void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice,SpecAbstract::SCAN_O
         {
             if((record.nUncompressedSize)&&(record.nUncompressedSize<=0x4000))
             {
-                QString sData=xzip.decompress(&record).data();
+                QString sData=xzip.decompress(&record,false,pPdStruct).data();
 
                 // TODO
                 if(sData.contains(":opendocument:"))
@@ -11929,7 +11941,7 @@ void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice,SpecAbstract::SCAN_O
     }
 }
 
-void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::ZIPINFO_STRUCT *pZipInfo)
+void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
 
@@ -11939,7 +11951,7 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice,SpecAbstract::SCAN_OP
 
         if(xzip.isValid())
         {
-            QString sDataManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/MANIFEST.MF").data();
+            QString sDataManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"META-INF/MANIFEST.MF",pPdStruct).data();
 
             if(sDataManifest!="")
             {
@@ -12399,7 +12411,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
                 }
             }
 
-            QByteArray baAndroidManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"AndroidManifest.xml");
+            QByteArray baAndroidManifest=xzip.decompress(&(pZipInfo->listArchiveRecords),"AndroidManifest.xml",pPdStruct);
 
             QString sAndroidManifest=XAndroidBinary::getDecoded(&baAndroidManifest);
 
@@ -13029,9 +13041,9 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
                         }
                     }
 
-                    pPdStruct->pdRecordOpt.sStatus=pZipInfo->listArchiveRecords.at(i).sFileName; // TODO More
+                    pPdStruct->pdRecord.sStatus=pZipInfo->listArchiveRecords.at(i).sFileName; // TODO More
 
-                    QByteArray baRecordData=xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)),true);
+                    QByteArray baRecordData=xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)),true,pPdStruct);
 
                     QSet<XBinary::FT> stFileTypes=XFormats::getFileTypes(&baRecordData,true);
 
@@ -13060,7 +13072,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
                             {
                                 QString sTempFileName=fileTemp.fileName();
 
-                                if(xzip.decompressToFile(&(pZipInfo->listArchiveRecords.at(i)),sTempFileName))
+                                if(xzip.decompressToFile(&(pZipInfo->listArchiveRecords.at(i)),sTempFileName,pPdStruct))
                                 {
                                     QFile file;
 
@@ -13211,7 +13223,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::Zip_scan_DEX(QIODevice *pDevice,SpecA
 
     if(xzip.isValid())
     {
-        QByteArray baRecordData=xzip.decompress(&(pZipInfo->listArchiveRecords),sFileName);
+        QByteArray baRecordData=xzip.decompress(&(pZipInfo->listArchiveRecords),sFileName,pPdStruct);
 
         QBuffer buffer(&baRecordData);
 

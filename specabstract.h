@@ -929,6 +929,7 @@ public:
         QList<SCAN_STRUCT> listDetects;
         bool bIsDeepScan;
         bool bIsHeuristicScan;
+        bool bIsVerbose;
         bool bShowDetects;
         bool bIsUnknown;
         bool bIsTest;
@@ -1290,6 +1291,7 @@ public:
         bool bRecursiveScan;
         bool bDeepScan;
         bool bHeuristicScan;
+        bool bVerbose;
         bool bAllTypesScan;
         bool bShowDetects;
         bool bResultAsXML;
@@ -1528,9 +1530,9 @@ public:
 
     static void DEX_handleLanguages(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo);
 
-    static void Zip_handle_Microsoftoffice(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo);
-    static void Zip_handle_OpenOffice(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo);
-    static void Zip_handle_Metainfos(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo);
+    static void Zip_handle_Microsoftoffice(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct);
+    static void Zip_handle_OpenOffice(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct);
+    static void Zip_handle_Metainfos(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_JAR(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_APK(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_IPA(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct);
