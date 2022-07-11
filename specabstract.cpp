@@ -12325,7 +12325,7 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS 
     }
 }
 
-void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::Zip_handle_APK(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
     Q_UNUSED(pOptions)
