@@ -17935,7 +17935,7 @@ bool SpecAbstract::PE_isValid_UPX(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS 
     return bResult;
 }
 
-void SpecAbstract::PE_x86Emul(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+void SpecAbstract::PE_x86Emul(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     XBinary binary(pDevice,pOptions->bIsImage);
 
