@@ -18534,7 +18534,7 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
     }
 }
 
-void SpecAbstract::MSDOS_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::MSDOS_richScan(QMap<SpecAbstract::RECORD_NAME,SpecAbstract::_SCANS_STRUCT> *pMapRecords,quint16 nID,quint32 nBuild,SpecAbstract::MSRICH_RECORD *pRecords,qint32 nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,XBinary::PDSTRUCT *pPdStruct)
 {
     qint32 nSignaturesCount=nRecordsSize/(int)sizeof(MSRICH_RECORD);
 
