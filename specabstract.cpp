@@ -17723,7 +17723,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi1(QIODevice *pDevice,SpecAbstrac
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi2(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize)
+SpecAbstract::VI_STRUCT SpecAbstract::get_GCC_vi2(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,qint64 nSize)
 {
     VI_STRUCT result={};
 
