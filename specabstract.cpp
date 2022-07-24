@@ -18651,7 +18651,7 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
     }
 }
 
-void SpecAbstract::archiveExpScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, SpecAbstract::STRING_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, SpecAbstract::BASIC_INFO *pBasicInfo, SpecAbstract::DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::archiveExpScan(QMap<SpecAbstract::RECORD_NAME,SpecAbstract::_SCANS_STRUCT> *pMapRecords,QList<XArchive::RECORD> *pListArchiveRecords,SpecAbstract::STRING_RECORD *pRecords,qint32 nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,SpecAbstract::BASIC_INFO *pBasicInfo,SpecAbstract::DETECTTYPE detectType,XBinary::PDSTRUCT *pPdStruct)
 {
     qint32 nNumberOfArchives=pListArchiveRecords->count();
     qint32 nNumberOfSignatures=nRecordsSize/sizeof(STRING_RECORD);
