@@ -18475,7 +18475,7 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
     }
 }
 
-void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, SpecAbstract::CONST_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME,SpecAbstract::_SCANS_STRUCT> *pMapRecords,quint64 nCost1,quint64 nCost2,SpecAbstract::CONST_RECORD *pRecords,qint32 nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
     qint32 nSignaturesCount=nRecordsSize/(int)sizeof(CONST_RECORD);
 
