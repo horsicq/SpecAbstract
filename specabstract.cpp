@@ -18763,7 +18763,7 @@ void SpecAbstract::signatureExpScan(XBinary *pXBinary,XBinary::_MEMORY_MAP *pMem
     }
 }
 
-QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
+QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID,quint32 nBuild,SpecAbstract::MSRICH_RECORD *pRecords,qint32 nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,XBinary::PDSTRUCT *pPdStruct)
 {
     QList<_SCANS_STRUCT> listResult;
 
