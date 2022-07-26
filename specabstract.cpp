@@ -19404,7 +19404,7 @@ QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice
     return listResult;
 }
 
-SpecAbstract::VCL_PACKAGEINFO SpecAbstract::PE_getVCLPackageInfo(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions, QList<XPE::RESOURCE_RECORD> *pListResources)
+SpecAbstract::VCL_PACKAGEINFO SpecAbstract::PE_getVCLPackageInfo(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,QList<XPE::RESOURCE_RECORD> *pListResources)
 {
     VCL_PACKAGEINFO result={};
 
