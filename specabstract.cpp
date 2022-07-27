@@ -11911,7 +11911,7 @@ void SpecAbstract::Zip_handle_Microsoftoffice(QIODevice *pDevice, SpecAbstract::
     }
 }
 
-void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
 
