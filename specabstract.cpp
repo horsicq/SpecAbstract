@@ -16499,7 +16499,7 @@ void SpecAbstract::LX_handle_Microsoft(QIODevice *pDevice,SpecAbstract::SCAN_OPT
     }
 }
 
-void SpecAbstract::LX_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo)
+void SpecAbstract::LX_handle_Borland(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,LXINFO_STRUCT *pLXInfo)
 {
     XLE le(pDevice,pOptions->bIsImage);
 
