@@ -18091,7 +18091,7 @@ void SpecAbstract::PE_x86Emul(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOp
     }
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::PE_get_PECompact_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+SpecAbstract::VI_STRUCT SpecAbstract::PE_get_PECompact_vi(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
