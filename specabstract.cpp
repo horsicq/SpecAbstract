@@ -18821,7 +18821,7 @@ QByteArray SpecAbstract::serializeScanStruct(SCAN_STRUCT scanStruct, bool bIsHea
     return baResult;
 }
 
-SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(QByteArray baData, bool *pbIsHeader)
+SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(QByteArray baData,bool *pbIsHeader)
 {
     SCAN_STRUCT ssResult={};
 
