@@ -18311,7 +18311,7 @@ void SpecAbstract::signatureScan(QMap<RECORD_NAME,_SCANS_STRUCT> *pMapRecords,QS
     }
 }
 
-void SpecAbstract::PE_resourcesScan(QMap<SpecAbstract::RECORD_NAME,SpecAbstract::_SCANS_STRUCT> *pMapRecords,QList<XPE::RESOURCE_RECORD> *pListResources,PE_RESOURCES_RECORD *pRecords,qint32 nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::PE_resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources, PE_RESOURCES_RECORD *pRecords,qint32 nRecordsSize,XBinary::FT fileType1,XBinary::FT fileType2,BASIC_INFO *pBasicInfo,DETECTTYPE detectType,XBinary::PDSTRUCT *pPdStruct)
 {
     qint32 nSignaturesCount=nRecordsSize/sizeof(PE_RESOURCES_RECORD);
 
@@ -18821,7 +18821,7 @@ QByteArray SpecAbstract::serializeScanStruct(SCAN_STRUCT scanStruct, bool bIsHea
     return baResult;
 }
 
-SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(QByteArray baData,bool *pbIsHeader)
+SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(QByteArray baData, bool *pbIsHeader)
 {
     SCAN_STRUCT ssResult={};
 
@@ -18886,7 +18886,7 @@ QString SpecAbstract::getAndroidVersionFromApi(quint32 nAPI)
     return sResult;
 }
 
-void SpecAbstract::getLanguage(QMap<RECORD_NAME,SCAN_STRUCT> *pMapDetects,QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages)
+void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages)
 {
     QMapIterator<RECORD_NAME,SCAN_STRUCT> i(*pMapDetects);
     while (i.hasNext())
