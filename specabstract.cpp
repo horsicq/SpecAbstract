@@ -19144,7 +19144,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     return result;
 }
 
-QString SpecAbstract::getMsRichString(quint16 nId, quint16 nBuild)
+QString SpecAbstract::getMsRichString(quint16 nId,quint16 nBuild)
 {
     QString sResult;
 
