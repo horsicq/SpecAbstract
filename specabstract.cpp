@@ -11865,7 +11865,7 @@ void SpecAbstract::Binary_handle_LibraryData(QIODevice *pDevice,SpecAbstract::SC
     }
 }
 
-void SpecAbstract::Zip_handle_Microsoftoffice(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::Zip_handle_Microsoftoffice(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
 
