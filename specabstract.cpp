@@ -18886,7 +18886,7 @@ QString SpecAbstract::getAndroidVersionFromApi(quint32 nAPI)
     return sResult;
 }
 
-void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages)
+void SpecAbstract::getLanguage(QMap<RECORD_NAME,SCAN_STRUCT> *pMapDetects,QMap<RECORD_NAME,SCAN_STRUCT> *pMapLanguages)
 {
     QMapIterator<RECORD_NAME,SCAN_STRUCT> i(*pMapDetects);
     while (i.hasNext())
