@@ -18800,7 +18800,7 @@ QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID,quin
     return listResult;
 }
 
-QByteArray SpecAbstract::serializeScanStruct(SCAN_STRUCT scanStruct, bool bIsHeader)
+QByteArray SpecAbstract::serializeScanStruct(SCAN_STRUCT scanStruct,bool bIsHeader)
 {
     QByteArray baResult;
 
