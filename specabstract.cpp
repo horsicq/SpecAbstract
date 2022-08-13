@@ -17916,7 +17916,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_TurboLinker_vi(QIODevice *pDevice,Spec
     return result;
 }
 
-bool SpecAbstract::PE_isValid_UPX(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo)
+bool SpecAbstract::PE_isValid_UPX(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
