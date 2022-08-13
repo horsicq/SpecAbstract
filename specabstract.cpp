@@ -19050,7 +19050,7 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME,SCAN_STRUCT> *pMapDetects,QMap<R
     }
 }
 
-void SpecAbstract::fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages)
+void SpecAbstract::fixLanguage(QMap<RECORD_NAME,SCAN_STRUCT> *pMapLanguages)
 {
     if(pMapLanguages->contains(RECORD_NAME_C)&&pMapLanguages->contains(RECORD_NAME_CPP))
     {
