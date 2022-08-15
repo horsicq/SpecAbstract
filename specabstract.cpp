@@ -17263,7 +17263,7 @@ void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice,SpecAbstract::DEXINF
     }
 }
 
-void SpecAbstract::DEX_handleLanguages(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo)
+void SpecAbstract::DEX_handleLanguages(QIODevice *pDevice,DEXINFO_STRUCT *pDEXInfo)
 {
     Q_UNUSED(pDevice)
 
