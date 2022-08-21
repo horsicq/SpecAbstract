@@ -18163,7 +18163,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::PE_get_PECompact_vi(QIODevice *pDevice,Spe
     return result;
 }
 
-SpecAbstract::SCAN_STRUCT SpecAbstract::scansToScan(SpecAbstract::BASIC_INFO *pBasicInfo, SpecAbstract::_SCANS_STRUCT *pScansStruct)
+SpecAbstract::SCAN_STRUCT SpecAbstract::scansToScan(SpecAbstract::BASIC_INFO *pBasicInfo,SpecAbstract::_SCANS_STRUCT *pScansStruct)
 {
     SCAN_STRUCT result={};
 
