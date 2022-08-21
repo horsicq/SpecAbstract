@@ -10802,7 +10802,7 @@ void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice,SpecAbstract::SCAN_OPT
     }
 }
 
-void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
+void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
 {
     XBinary binary(pDevice,pOptions->bIsImage);
 
