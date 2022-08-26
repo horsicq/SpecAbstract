@@ -307,6 +307,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_APPLELLVM:                             sResult=QString("Apple LLVM");                                  break;
         case RECORD_NAME_APPORTABLECLANG:                       sResult=QString("Apportable clang");                            break;
         case RECORD_NAME_APPSOLID:                              sResult=QString("AppSolid");                                    break;
+        case RECORD_NAME_AR:                                    sResult=QString("ar");                                          break;
         case RECORD_NAME_ARCRYPT:                               sResult=QString("AR Crypt");                                    break;
         case RECORD_NAME_ARJ:                                   sResult=QString("ARJ");                                         break;
         case RECORD_NAME_ARMADILLO:                             sResult=QString("Armadillo");                                   break;
@@ -11486,6 +11487,13 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice,SpecAbstract::SCAN_O
     else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ANDROIDXML))&&(pBinaryInfo->basic_info.id.nSize>=8))
     {
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ANDROIDXML);
+        // TODO Version
+        pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+    }
+    else if((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_AR))&&(pBinaryInfo->basic_info.id.nSize>=8))
+    {
+        // AR
+        _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_AR);
         // TODO Version
         pBinaryInfo->mapResultFormats.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
