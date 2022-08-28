@@ -1017,6 +1017,7 @@ public:
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultFormats;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultAPKProtectors;
         QMap<RECORD_NAME,SCAN_STRUCT> mapResultLibraries;
+        QMap<RECORD_NAME,SCAN_STRUCT> mapResultCompilers;
 
         QList<SCAN_STRUCT> listRecursiveDetects;
     };

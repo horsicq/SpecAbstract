@@ -3314,6 +3314,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice,XBinary
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
         result.basic_info.listDetects.append(result.mapResultArchives.values());
         result.basic_info.listDetects.append(result.mapResultFormats.values());
+        result.basic_info.listDetects.append(result.mapResultCompilers.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
         result.basic_info.listDetects.append(result.mapResultSigntools.values());
         result.basic_info.listDetects.append(result.mapResultLanguages.values());
@@ -12205,7 +12206,13 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice,SpecAbstract::SCAN_OP
                 {
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_JAR,RECORD_TYPE_TOOL,RECORD_NAME_BEAWEBLOGIC,"","",0);
                     pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
-                } 
+                }
+                else if(sCreatedBy.contains("dx "))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_COMPILER,RECORD_NAME_DX,"","",0);
+                    ss.sVersion=sCreatedBy.section("dx ",1,1);
+                    pZipInfo->mapMetainfosDetects.insert(ss.name,ss);
+                }
 
                 if(sAntVersion.contains("Apache Ant"))
                 {
@@ -12638,6 +12645,12 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS 
             {
                 _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_HIAPKCOM);
                 pZipInfo->mapResultTools.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
+            }
+
+            if(pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DX))
+            {
+                _SCANS_STRUCT ss=pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DX);
+                pZipInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
             }
 
             if(pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SECSHELL))
@@ -13217,6 +13230,7 @@ void SpecAbstract::Zip_handleLanguages(QIODevice *pDevice,SpecAbstract::SCAN_OPT
 
     getLanguage(&(pZipInfo->mapResultLibraries),&(pZipInfo->mapResultLanguages));
     getLanguage(&(pZipInfo->mapResultTools),&(pZipInfo->mapResultLanguages));
+    getLanguage(&(pZipInfo->mapResultCompilers),&(pZipInfo->mapResultLanguages));
 
     fixLanguage(&(pZipInfo->mapResultLanguages));
 }
@@ -19006,6 +19020,7 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME,SCAN_STRUCT> *pMapDetects,QMap<R
             case RECORD_NAME_OPENJDK:
             case RECORD_NAME_IBMJDK:
             case RECORD_NAME_APPLEJDK:
+            //case RECORD_NAME_DX:
                 ssLanguage.name=RECORD_NAME_JAVA;
                 break;
             case RECORD_NAME_KOTLIN:
