@@ -19043,6 +19043,8 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME,SCAN_STRUCT> *pMapDetects,QMap<R
             case RECORD_NAME_SWIFT:
                 ssLanguage.name=RECORD_NAME_SWIFT;
                 break;
+            default:
+                ssLanguage.name=RECORD_NAME_UNKNOWN;
         }
 
         if(ssLanguage.name!=RECORD_NAME_UNKNOWN)
