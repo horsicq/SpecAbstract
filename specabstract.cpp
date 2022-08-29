@@ -12403,7 +12403,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS 
                 pZipInfo->mapResultLanguages.insert(ssJava.name,scansToScan(&(pZipInfo->basic_info),&ssJava));
             }
 
-            if(pZipInfo->basic_info.bIsTest)
+            if(pZipInfo->basic_info.bIsVerbose)
             {
                 _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_SIGNTOOL,RECORD_NAME_UNKNOWN,"","",0);
 
@@ -13037,7 +13037,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice,SpecAbstract::SCAN_OP
 
                 for(qint32 i=0;(i<nNumberOfRecords)&&(!(pPdStruct->bIsStop));i++)
                 {
-                    if(pZipInfo->basic_info.bIsTest)
+                    if(pZipInfo->basic_info.bIsTest&&pZipInfo->basic_info.bIsVerbose)
                     {
                         _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_UNKNOWN,"","",0);
 
@@ -13176,7 +13176,7 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice,SpecAbstract::SCAN_O
             pZipInfo->mapResultArchives.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
         }
 
-        if(pZipInfo->basic_info.bIsTest)
+        if(pZipInfo->basic_info.bIsVerbose)
         {
             if(pZipInfo->mapMetainfosDetects.count()==0)
             {
@@ -13217,6 +13217,20 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice,SpecAbstract::SCAN_O
                     recordSS.sVersion="Built: "+sBuiltBy;
 
                     pZipInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pZipInfo->basic_info),&recordSS));
+                }
+
+                if((sProtectedBy!="")&&(sCreatedBy!="")&&(sBuiltBy!=""))
+                {
+                    if(sDataManifest.contains("-By"))
+                    {
+                        _SCANS_STRUCT recordSS={};
+
+                        recordSS.type=RECORD_TYPE_PROTECTOR;
+                        recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN0);
+                        recordSS.sVersion="CHECK";
+
+                        pZipInfo->mapResultAPKProtectors.insert(recordSS.name,scansToScan(&(pZipInfo->basic_info),&recordSS));
+                    }
                 }
             }
         }
@@ -14365,7 +14379,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice,SpecAbstract::SC
             }
         }
 
-        if(pELFInfo->basic_info.bIsTest)
+        if(pELFInfo->basic_info.bIsTest&&pELFInfo->basic_info.bIsVerbose)
         {
             if(ss.name==RECORD_NAME_UNKNOWN)
             {
@@ -14939,7 +14953,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice,SpecAbstract:
 
     if(elf.isValid())
     {
-        if(pELFInfo->basic_info.bIsTest)
+        if(pELFInfo->basic_info.bIsTest&&pELFInfo->basic_info.bIsVerbose)
         {
             // TODO names of note sections
 
@@ -16247,7 +16261,7 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice,SpecAbstract::SCAN
             pMACHInfo->mapResultLanguages.remove(RECORD_NAME_CCPP);
         }
 
-        if(pMACHInfo->basic_info.bIsTest)
+        if(pMACHInfo->basic_info.bIsTest&&pMACHInfo->basic_info.bIsVerbose)
         {
 //            QMap<quint64,QString> mapCommands=XMACH::getLoadCommandTypesS();
 
@@ -16270,6 +16284,7 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice,SpecAbstract::SCAN
 //                    stRecords.insert(list.at(i).nType);
 //                }
 //            }
+
             QList<XMACH::LIBRARY_RECORD> list=mach.getLibraryRecords();
 
             QSet<QString> stRecords;
@@ -16940,7 +16955,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice,SpecAbstract::SCAN_OPTION
 
             QString sOverlay;
 
-            if(pDEXInfo->basic_info.bIsTest)
+            if(pDEXInfo->basic_info.bIsVerbose)
             {
                 bool bIsFieldNamesUnicode=dex.isFieldNamesUnicode(&(pDEXInfo->listFieldIDs),&(pDEXInfo->listStrings));
                 bool bIsMethodNamesUnicode=dex.isMethodNamesUnicode(&(pDEXInfo->listMethodIDs),&(pDEXInfo->listStrings));
@@ -17000,7 +17015,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice,SpecAbstract::SCAN_OPTION
 
             for(qint32 i=0;(i<nNumberOfRecords);i++)
             {
-                if(pDEXInfo->basic_info.bIsTest)
+                if(pDEXInfo->basic_info.bIsTest&&pDEXInfo->basic_info.bIsVerbose)
                 {
                     // TODO find!
                     _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_APK,RECORD_TYPE_PROTECTOR,RECORD_NAME_UNKNOWN,"","",0);
