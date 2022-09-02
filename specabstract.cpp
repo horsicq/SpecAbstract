@@ -7063,7 +7063,6 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,SpecAbstract::SCAN_OPT
         if( (ssCompiler.name==RECORD_NAME_VISUALCCPP)||
             (ssCompiler.name==RECORD_NAME_VISUALCSHARP))
         {
-            QString sLinkerVersion=ssLinker.sVersion;
             QString sCompilerVersion=ssCompiler.sVersion;
             QString sCompilerMajorVersion=sCompilerVersion.section(".",0,1);
 
@@ -7072,290 +7071,77 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice,SpecAbstract::SCAN_OPT
 
             // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warnings-by-compiler-version?view=vs-2019
 
-            if(sCompilerVersion=="12.00.8168")
-            {
-                ssTool.sVersion="6.0";
-            }
-            else if(sCompilerVersion=="12.00.8804")
-            {
-                ssTool.sVersion="6.0 SP5-SP6";
-            }
-            else if(sCompilerVersion=="12.00.8447")
-            {
-                ssTool.sVersion="6.0 SP5";
-            }
-            else if((sLinkerVersion=="7.00.9466")&&(sCompilerVersion=="13.00.9466"))
-            {
-                ssTool.sVersion="2002";
-            }
-            else if((sLinkerVersion=="7.10.3052")&&(sCompilerVersion=="13.10.3052"))
-            {
-                ssTool.sVersion="2003";
-            }
-            else if((sLinkerVersion=="7.10.3077")&&(sCompilerVersion=="13.10.3077"))
-            {
-                ssTool.sVersion="2003";
-            }
-            else if((sLinkerVersion=="7.10.4035")&&(sCompilerVersion=="13.10.4035"))
-            {
-                ssTool.sVersion="2003";
-            }
-            else if((sLinkerVersion=="7.10.6030")&&(sCompilerVersion=="13.10.6030"))
-            {
-                ssTool.sVersion="2003 SP1";
-            }
-            else if((sLinkerVersion=="8.00.40310")&&(sCompilerVersion=="14.00.40310"))
-            {
-                ssTool.sVersion="2005";
-            }
-            else if((sLinkerVersion=="8.00.50727")&&(sCompilerVersion=="14.00.50727"))
-            {
-                ssTool.sVersion="2005";
-            }
-            else if((sLinkerVersion=="9.00.21022")&&(sCompilerVersion=="15.00.21022"))
-            {
-                ssTool.sVersion="2008 RTM";
-            }
-            else if((sLinkerVersion=="9.00.30411")&&(sCompilerVersion=="15.00.30411"))
-            {
-                ssTool.sVersion="2008 with Feature Pack";
-            }
-            else if((sLinkerVersion=="9.00.30729")&&(sCompilerVersion=="15.00.30729"))
-            {
-                ssTool.sVersion="2008 SP1";
-            }
-            else if((sLinkerVersion=="10.00.30319")&&(sCompilerVersion=="16.00.30319"))
-            {
-                ssTool.sVersion="2010 RTM";
-            }
-            else if((sLinkerVersion=="10.00.40219")&&(sCompilerVersion=="16.00.40219"))
-            {
-                ssTool.sVersion="2010 SP1";
-            }
-            else if((sLinkerVersion=="11.00.50727")&&(sCompilerVersion=="17.00.50727"))
-            {
-                ssTool.sVersion="2012";
-            }
-            else if((sLinkerVersion=="11.00.51025")&&(sCompilerVersion=="17.00.51025"))
-            {
-                ssTool.sVersion="2012";
-            }
-            else if((sLinkerVersion=="11.00.51106")&&(sCompilerVersion=="17.00.51106"))
-            {
-                ssTool.sVersion="2012 Update 1";
-            }
-            else if((sLinkerVersion=="11.00.60315")&&(sCompilerVersion=="17.00.60315"))
-            {
-                ssTool.sVersion="2012 Update 2";
-            }
-            else if((sLinkerVersion=="11.00.60610")&&(sCompilerVersion=="17.00.60610"))
-            {
-                ssTool.sVersion="2012 Update 3";
-            }
-            else if((sLinkerVersion=="11.00.61030")&&(sCompilerVersion=="17.00.61030"))
-            {
-                ssTool.sVersion="2012 Update 4";
-            }
-            else if((sLinkerVersion=="12.00.21005")&&(sCompilerVersion=="18.00.21005"))
-            {
-                ssTool.sVersion="2013 RTM";
-            }
-            else if((sLinkerVersion=="12.00.30501")&&(sCompilerVersion=="18.00.30501"))
-            {
-                ssTool.sVersion="2013 Update 2";
-            }
-            else if((sLinkerVersion=="12.00.30723")&&(sCompilerVersion=="18.00.30723"))
-            {
-                ssTool.sVersion="2013 Update 3";
-            }
-            else if((sLinkerVersion=="12.00.31101")&&(sCompilerVersion=="18.00.31101"))
-            {
-                ssTool.sVersion="2013 Update 4";
-            }
-            else if((sLinkerVersion=="12.00.40629")&&(sCompilerVersion=="18.00.40629"))
-            {
-                ssTool.sVersion="2013 SP5";
-            }
-            else if((sLinkerVersion=="14.00.22215")&&(sCompilerVersion=="19.00.22215"))
-            {
-                ssTool.sVersion="2015";
-            }
-            else if((sLinkerVersion=="14.00.23007")&&(sCompilerVersion=="19.00.23007"))
-            {
-                ssTool.sVersion="2015";
-            }
-            else if((sLinkerVersion=="14.00.23013")&&(sCompilerVersion=="19.00.23013"))
-            {
-                ssTool.sVersion="2015";
-            }
-            else if((sLinkerVersion=="14.00.23026")&&(sCompilerVersion=="19.00.23026"))
-            {
-                ssTool.sVersion="2015 RTM";
-            }
-            else if((sLinkerVersion=="14.00.23506")&&(sCompilerVersion=="19.00.23506"))
-            {
-                ssTool.sVersion="2015 Update 1";
-            }
-            else if((sLinkerVersion=="14.00.23918")&&(sCompilerVersion=="19.00.23918"))
-            {
-                ssTool.sVersion="2015 Update 2";
-            }
-            else if((sLinkerVersion=="14.00.24103")&&(sCompilerVersion=="19.00.24103"))
-            {
-                ssTool.sVersion="2015 SP1"; // ???
-            }
-            else if((sLinkerVersion=="14.00.24118")&&(sCompilerVersion=="19.00.24118"))
-            {
-                ssTool.sVersion="2015 SP1"; // ???
-            }
-            else if((sLinkerVersion=="14.00.24123")&&(sCompilerVersion=="19.00.24123"))
-            {
-                ssTool.sVersion="2015 Update 3";
-            }
-            else if((sLinkerVersion=="14.00.24210")&&(sCompilerVersion=="19.00.24210"))
-            {
-                ssTool.sVersion="2015 Update 3";
-            }
-            else if((sLinkerVersion=="14.00.24212")&&(sCompilerVersion=="19.00.24212"))
-            {
-                ssTool.sVersion="2015 Update 3";
-            }
-            else if((sLinkerVersion=="14.00.24213")&&(sCompilerVersion=="19.00.24213"))
-            {
-                ssTool.sVersion="2015 Update 3";
-            }
-            else if((sLinkerVersion=="14.00.24215")&&(sCompilerVersion=="19.00.24215"))
-            {
-                ssTool.sVersion="2015 Update 3.1";
-            }
-            else if((sLinkerVersion=="14.00.24218")&&(sCompilerVersion=="19.00.24218"))
-            {
-                ssTool.sVersion="2015 Update 3.1";
-            }
-            else if((sLinkerVersion=="14.00.24723")&&(sCompilerVersion=="19.00.24723"))
-            {
-                ssTool.sVersion="2015"; // Update 4? 2017?
-            }
-            else if((sLinkerVersion=="14.10.25017")&&(sCompilerVersion=="19.10.25017"))
-            {
-                ssTool.sVersion="2017 RTM";
-            }
-            else if((sLinkerVersion=="14.10.25019")&&(sCompilerVersion=="19.10.25019"))
-            {
-                ssTool.sVersion="2017"; // 15.2?
-            }
-            else if((sLinkerVersion=="14.10.25506")&&(sCompilerVersion=="19.10.25506"))
-            {
-                ssTool.sVersion="2017 version 15.3";
-            }
-            else if((sLinkerVersion=="14.11.25547")&&(sCompilerVersion=="19.11.25547"))
-            {
-                ssTool.sVersion="2017";
-            }
-            else if((sLinkerVersion=="14.11.25830")&&(sCompilerVersion=="19.11.25830"))
-            {
-                ssTool.sVersion="2017 version 15.5";
-            }
-            else if((sLinkerVersion=="14.12.25834")&&(sCompilerVersion=="19.12.25834")) // TODO Check v15.5.4
-            {
-                ssTool.sVersion="2017";
-            }
-            else if((sLinkerVersion=="14.13.26128")&&(sCompilerVersion=="19.13.26128"))
-            {
-                ssTool.sVersion="2017 version 15.6";
-            }
-            else if((sLinkerVersion=="14.14.26428")&&(sCompilerVersion=="19.14.26428"))
-            {
-                ssTool.sVersion="2017 version 15.7";
-            }
-            else if((sLinkerVersion=="14.15.26726")&&(sCompilerVersion=="19.15.26726"))
-            {
-                ssTool.sVersion="2017 version 15.8";
-            }
-            else if((sLinkerVersion=="14.16.26926")&&(sCompilerVersion=="19.16.26926"))
-            {
-                ssTool.sVersion="2017 version 15.9";
-            }
-            else if((sLinkerVersion=="14.16.27027")&&(sCompilerVersion=="19.16.27027")) // TODO Check
-            {
-                ssTool.sVersion="2017";
-            }
-            else if((sLinkerVersion=="14.20.27004")&&(sCompilerVersion=="19.20.27004"))
-            {
-                ssTool.sVersion="2019 RTM";
-            }
-            else if((sLinkerVersion=="14.20.27508")&&(sCompilerVersion=="19.20.27508"))
-            {
-                ssTool.sVersion="2019";
-            }
-            else if(sCompilerMajorVersion=="12.00")
-            {
-                ssTool.sVersion="6.0";
-            }
-            else if(sCompilerMajorVersion=="13.00")
-            {
-                ssTool.sVersion="2002";
-            }
-            else if(sCompilerMajorVersion=="13.10")
-            {
-                ssTool.sVersion="2003";
-            }
-            else if(sCompilerMajorVersion=="14.00")
-            {
-                ssTool.sVersion="2005";
-            }
-            else if(sCompilerMajorVersion=="15.00")
-            {
-                ssTool.sVersion="2008";
-            }
-            else if(sCompilerMajorVersion=="16.00")
-            {
-                ssTool.sVersion="2010";
-            }
-            else if(sCompilerMajorVersion=="17.00")
-            {
-                ssTool.sVersion="2012";
-            }
-            else if(sCompilerMajorVersion=="18.00")
-            {
-                ssTool.sVersion="2013";
-            }
-            else if(sCompilerMajorVersion=="19.00")
-            {
-                ssTool.sVersion="2015";
-            }
-            else if(sCompilerMajorVersion=="19.10") // TODO ???
-            {
-                ssTool.sVersion="2017 RTM";
-            }
-            else if(sCompilerMajorVersion=="19.11")
-            {
-                ssTool.sVersion="2017 version 15.3";
-            }
-            else if(sCompilerMajorVersion=="19.12")
-            {
-                ssTool.sVersion="2017 version 15.5";
-            }
-            else if(sCompilerMajorVersion=="19.13")
-            {
-                ssTool.sVersion="2017 version 15.6";
-            }
-            else if(sCompilerMajorVersion=="19.14")
-            {
-                ssTool.sVersion="2017 version 15.7";
-            }
-            else if(sCompilerMajorVersion=="19.15")
-            {
-                ssTool.sVersion="2017 version 15.8";
-            }
-            else if(sCompilerMajorVersion=="19.16")
-            {
-                ssTool.sVersion="2017 version 15.9";
-            }
-            else if(sCompilerMajorVersion=="19.20")
-            {
-                ssTool.sVersion="2019";
-            }
+            if      (sCompilerVersion=="12.00.8168")    ssTool.sVersion="6.0";
+            else if (sCompilerVersion=="12.00.8804")    ssTool.sVersion="6.0 SP5-SP6";
+            else if (sCompilerVersion=="12.00.8447")    ssTool.sVersion="6.0 SP5";
+            else if (sCompilerVersion=="13.00.9466")    ssTool.sVersion="2002";
+            else if (sCompilerVersion=="13.10.3052")    ssTool.sVersion="2003";
+            else if (sCompilerVersion=="13.10.3077")    ssTool.sVersion="2003";
+            else if (sCompilerVersion=="13.10.4035")    ssTool.sVersion="2003";
+            else if (sCompilerVersion=="13.10.6030")    ssTool.sVersion="2003 SP1";
+            else if (sCompilerVersion=="14.00.40310")   ssTool.sVersion="2005";
+            else if (sCompilerVersion=="14.00.50727")   ssTool.sVersion="2005";
+            else if (sCompilerVersion=="15.00.21022")   ssTool.sVersion="2008 RTM";
+            else if (sCompilerVersion=="15.00.30411")   ssTool.sVersion="2008 with Feature Pack";
+            else if (sCompilerVersion=="15.00.30729")   ssTool.sVersion="2008 SP1";
+            else if (sCompilerVersion=="16.00.30319")   ssTool.sVersion="2010 RTM";
+            else if (sCompilerVersion=="16.00.40219")   ssTool.sVersion="2010 SP1";
+            else if (sCompilerVersion=="17.00.50727")   ssTool.sVersion="2012";
+            else if (sCompilerVersion=="17.00.51025")   ssTool.sVersion="2012";
+            else if (sCompilerVersion=="17.00.51106")   ssTool.sVersion="2012 Update 1";
+            else if (sCompilerVersion=="17.00.60315")   ssTool.sVersion="2012 Update 2";
+            else if (sCompilerVersion=="17.00.60610")   ssTool.sVersion="2012 Update 3";
+            else if (sCompilerVersion=="17.00.61030")   ssTool.sVersion="2012 Update 4";
+            else if (sCompilerVersion=="18.00.21005")   ssTool.sVersion="2013 RTM";
+            else if (sCompilerVersion=="18.00.30501")   ssTool.sVersion="2013 Update 2";
+            else if (sCompilerVersion=="18.00.30723")   ssTool.sVersion="2013 Update 3";
+            else if (sCompilerVersion=="18.00.31101")   ssTool.sVersion="2013 Update 4";
+            else if (sCompilerVersion=="18.00.40629")   ssTool.sVersion="2013 SP5";
+            else if (sCompilerVersion=="19.00.22215")   ssTool.sVersion="2015";
+            else if (sCompilerVersion=="19.00.23007")   ssTool.sVersion="2015";
+            else if (sCompilerVersion=="19.00.23013")   ssTool.sVersion="2015";
+            else if (sCompilerVersion=="19.00.23026")   ssTool.sVersion="2015 RTM";
+            else if (sCompilerVersion=="19.00.23506")   ssTool.sVersion="2015 Update 1";
+            else if (sCompilerVersion=="19.00.23918")   ssTool.sVersion="2015 Update 2";
+            else if (sCompilerVersion=="19.00.24103")   ssTool.sVersion="2015 SP1"; // ???
+            else if (sCompilerVersion=="19.00.24118")   ssTool.sVersion="2015 SP1"; // ???
+            else if (sCompilerVersion=="19.00.24123")   ssTool.sVersion="2015 Update 3";
+            else if (sCompilerVersion=="19.00.24210")   ssTool.sVersion="2015 Update 3";
+            else if (sCompilerVersion=="19.00.24212")   ssTool.sVersion="2015 Update 3";
+            else if (sCompilerVersion=="19.00.24213")   ssTool.sVersion="2015 Update 3";
+            else if (sCompilerVersion=="19.00.24215")   ssTool.sVersion="2015 Update 3.1";
+            else if (sCompilerVersion=="19.00.24218")   ssTool.sVersion="2015 Update 3.1";
+            else if (sCompilerVersion=="19.00.24723")   ssTool.sVersion="2015";  // Update 4? 2017?
+            else if (sCompilerVersion=="19.10.25017")   ssTool.sVersion="2017 RTM";
+            else if (sCompilerVersion=="19.10.25019")   ssTool.sVersion="2017"; // 15.2?
+            else if (sCompilerVersion=="19.10.25506")   ssTool.sVersion="2017 version 15.3";
+            else if (sCompilerVersion=="19.11.25547")   ssTool.sVersion="2017";
+            else if (sCompilerVersion=="19.11.25830")   ssTool.sVersion="2017 version 15.5";
+            else if (sCompilerVersion=="19.12.25834")   ssTool.sVersion="2017"; // TODO Check v15.5.4
+            else if (sCompilerVersion=="19.13.26128")   ssTool.sVersion="2017 version 15.6";
+            else if (sCompilerVersion=="19.14.26428")   ssTool.sVersion="2017 version 15.7";
+            else if (sCompilerVersion=="19.15.26726")   ssTool.sVersion="2017 version 15.8";
+            else if (sCompilerVersion=="19.16.26926")   ssTool.sVersion="2017 version 15.9";
+            else if (sCompilerVersion=="19.16.27027")   ssTool.sVersion="2017"; // TODO Check
+            else if (sCompilerVersion=="19.20.27004")   ssTool.sVersion="2019 RTM";
+            else if (sCompilerVersion=="19.20.27508")   ssTool.sVersion="2019";
+            else if (sCompilerMajorVersion=="12.00")    ssTool.sVersion="6.0";
+            else if (sCompilerMajorVersion=="13.00")    ssTool.sVersion="2002";
+            else if (sCompilerMajorVersion=="13.10")    ssTool.sVersion="2003";
+            else if (sCompilerMajorVersion=="14.00")    ssTool.sVersion="2005";
+            else if (sCompilerMajorVersion=="15.00")    ssTool.sVersion="2008";
+            else if (sCompilerMajorVersion=="16.00")    ssTool.sVersion="2010";
+            else if (sCompilerMajorVersion=="17.00")    ssTool.sVersion="2012";
+            else if (sCompilerMajorVersion=="18.00")    ssTool.sVersion="2013";
+            else if (sCompilerMajorVersion=="19.00")    ssTool.sVersion="2015";
+            else if (sCompilerMajorVersion=="19.10")    ssTool.sVersion="2017 RTM";  // TODO ???
+            else if (sCompilerMajorVersion=="19.11")    ssTool.sVersion="2017 version 15.3";
+            else if (sCompilerMajorVersion=="19.12")    ssTool.sVersion="2017 version 15.5";
+            else if (sCompilerMajorVersion=="19.13")    ssTool.sVersion="2017 version 15.6";
+            else if (sCompilerMajorVersion=="19.14")    ssTool.sVersion="2017 version 15.7";
+            else if (sCompilerMajorVersion=="19.15")    ssTool.sVersion="2017 version 15.8";
+            else if (sCompilerMajorVersion=="19.16")    ssTool.sVersion="2017 version 15.9";
+            else if (sCompilerMajorVersion=="19.20")    ssTool.sVersion="2019";
 
             if(ssTool.sVersion=="")
             {
@@ -19497,372 +19283,6 @@ SpecAbstract::VCL_PACKAGEINFO SpecAbstract::PE_getVCLPackageInfo(QIODevice *pDev
 
                     result.listModules.append(vpm);
                 }
-            }
-        }
-    }
-
-    return result;
-}
-
-SpecAbstract::_SCANS_STRUCT SpecAbstract::PE_getRichSignatureDescription(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo,quint32 nRichID)
-{
-    _SCANS_STRUCT result={};
-
-    XPE pe(pDevice,pOptions->bIsImage);
-
-    if(pe.isValid())
-    {
-        if(nRichID)
-        {
-            quint32 nMajor=nRichID>>16;
-            quint32 nMinor=nRichID&0xFFFF;
-
-            switch(nMajor)
-            {
-                case 0x00D:
-                    result.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                    result.name=SpecAbstract::RECORD_NAME_VISUALBASIC;
-                    break;
-
-                case 0x006:
-                case 0x045:
-                case 0x05e:
-                case 0x07c:
-                case 0x094:
-                case 0x09a:
-                case 0x0c9:
-                case 0x0db:
-                case 0x0ff:
-                    result.type=SpecAbstract::RECORD_TYPE_CONVERTER;
-                    result.name=SpecAbstract::RECORD_NAME_RESOURCE;
-                    break;
-
-                case 0x03f:
-                case 0x05c:
-                case 0x07a:
-                case 0x092:
-                case 0x09b:
-                case 0x0ca:
-                case 0x0dc:
-                case 0x100:
-                    result.type=SpecAbstract::RECORD_TYPE_LIBRARY;
-                    result.name=SpecAbstract::RECORD_NAME_EXPORT;
-                    break;
-
-                //            case 0x001: Total Import
-                case 0x002:
-                case 0x019:
-                case 0x09c:
-                case 0x05d:
-                case 0x07b:
-                case 0x093:
-                case 0x0cb:
-                case 0x0dd:
-                case 0x101:
-                    result.type=SpecAbstract::RECORD_TYPE_LIBRARY;
-                    result.name=SpecAbstract::RECORD_NAME_IMPORT;
-                    break;
-
-                case 0x004:
-                case 0x013:
-                case 0x03d:
-                case 0x05a:
-                case 0x078:
-                case 0x091:
-                case 0x09d:
-                case 0x0cc:
-                case 0x0de:
-                case 0x102:
-                    result.type=SpecAbstract::RECORD_TYPE_LINKER;
-                    result.name=SpecAbstract::RECORD_NAME_MICROSOFTLINKER;
-                    break;
-
-                case 0x00f:
-                case 0x012:
-                case 0x040:
-                case 0x07d:
-                case 0x095:
-                case 0x09e:
-                case 0x0cd:
-                case 0x0df:
-                case 0x103:
-                    result.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                    result.name=SpecAbstract::RECORD_NAME_MASM;
-                    break;
-
-                case 0x00a:
-                case 0x015:
-                case 0x01c:
-                case 0x05f:
-                case 0x06d:
-                case 0x083:
-                case 0x0aa:
-                case 0x0ce:
-                case 0x0e0:
-                case 0x104:
-                    result.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                    //            result.name=SpecAbstract::RECORD_NAME_MICROSOFTC;
-                    result.name=SpecAbstract::RECORD_NAME_VISUALCCPP; // TODO Visual C++
-                    result.sInfo="C";
-                    break;
-
-                case 0x00b:
-                case 0x016:
-                case 0x01d:
-                case 0x060:
-                case 0x06e:
-                case 0x084:
-                case 0x0ab:
-                case 0x0cf:
-                case 0x0e1:
-                case 0x105:
-                    result.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                    result.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
-                    result.sInfo="C++";
-                    break;
-
-                case 0x089:
-                    result.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                    result.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
-                    result.sInfo="C/LTCG";
-                    break;
-
-                case 0x08a:
-                    result.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                    result.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
-                    result.sInfo="C++/LTCG";
-                    break;
-
-                //
-                case 0x085: // auto
-                case 0x086: // auto
-                case 0x087: // auto
-                case 0x088: // auto
-
-                //
-                case 0x0d0: // auto
-                case 0x0d1: // auto
-                case 0x0d2: // auto
-                case 0x0d3: // auto
-                case 0x0d4: // auto
-                case 0x0d5: // auto
-                case 0x0d6: // auto
-
-                //
-                case 0x0e2: // auto
-                case 0x0e3: // auto
-                case 0x0e4: // auto
-                case 0x0e5: // auto
-                case 0x0e6: // auto
-                case 0x0e7: // auto
-                case 0x0e8: // auto
-
-                //
-                case 0x0ac:
-                case 0x0ad:
-                case 0x0ae:
-                case 0x0af:
-                case 0x0b0:
-                case 0x0b1:
-                case 0x0b2:
-
-                //
-                case 0x106:
-                case 0x107:
-                case 0x108:
-                case 0x109:
-                case 0x10a:
-                case 0x10b:
-                case 0x10c:
-                    result.type=SpecAbstract::RECORD_TYPE_COMPILER;
-                    result.name=SpecAbstract::RECORD_NAME_VISUALCCPP;
-                    break;
-            }
-
-            switch(nMajor)
-            {
-                case 0x006:
-                    result.sVersion="5.00";
-                    break;
-
-                case 0x002:
-                    result.sVersion="5.10";
-                    break;
-
-                case 0x013:
-                    result.sVersion="5.12";
-                    break;
-
-                case 0x004:
-                case 0x00d:
-                    result.sVersion="6.00";
-                    break;
-
-                case 0x00a:
-                case 0x00b:
-                case 0x015:
-                case 0x016:
-                    result.sVersion="12.00";
-                    break;
-
-                case 0x012:
-                    result.sVersion="6.14";
-                    break;
-
-                case 0x040:
-                case 0x03d:
-                case 0x045:
-                case 0x03f:
-                case 0x019:
-                    result.sVersion="7.00";
-                    break;
-
-                case 0x01c:
-                case 0x01d:
-                    result.sVersion="13.00";
-                    break;
-
-                case 0x00f:
-                case 0x05e:
-                case 0x05c:
-                case 0x05d:
-                case 0x05a:
-                    result.sVersion="7.10";
-                    break;
-
-                case 0x05f:
-                case 0x060:
-                    result.sVersion="13.10";
-                    break;
-
-                case 0x078:
-                case 0x07a:
-                case 0x07b:
-                case 0x07c:
-                case 0x07d:
-                    result.sVersion="8.00";
-                    break;
-
-                case 0x06d:
-                case 0x06e:
-                    result.sVersion="14.00";
-                    break;
-
-                case 0x091:
-                case 0x092:
-                case 0x093:
-                case 0x094:
-                case 0x095:
-                    result.sVersion="9.00";
-                    break;
-
-                case 0x083:
-                case 0x084:
-                case 0x085: // auto
-                case 0x086: // auto
-                case 0x087: // auto
-                case 0x088: // auto
-                case 0x089:
-                case 0x08a:
-                    result.sVersion="15.00";
-                    break;
-
-                case 0x09a:
-                case 0x09b:
-                case 0x09c:
-                case 0x09d:
-                case 0x09e:
-                    result.sVersion="10.00";
-                    break;
-
-                case 0x0aa:
-                case 0x0ab:
-                case 0x0ac:
-                case 0x0ad:
-                case 0x0ae:
-                case 0x0af:
-                case 0x0b0:
-                case 0x0b1:
-                case 0x0b2:
-                    result.sVersion="16.00";
-                    break;
-
-                case 0x0c9:
-                case 0x0ca:
-                case 0x0cb:
-                case 0x0cc:
-                case 0x0cd:
-                    result.sVersion="11.00";
-                    break;
-
-                case 0x0ce:
-                case 0x0cf:
-                case 0x0d0: // auto
-                case 0x0d1: // auto
-                case 0x0d2: // auto
-                case 0x0d3: // auto
-                case 0x0d4: // auto
-                case 0x0d5: // auto
-                case 0x0d6: // auto
-                    result.sVersion="17.00";
-                    break;
-
-                case 0x0db:
-                case 0x0dc:
-                case 0x0dd:
-                case 0x0de:
-                case 0x0df:
-                    result.sVersion="12.00";
-                    break;
-
-                case 0x0e0:
-                case 0x0e1:
-                case 0x0e2: // auto
-                case 0x0e3: // auto
-                case 0x0e4: // auto
-                case 0x0e5: // auto
-                case 0x0e6: // auto
-                case 0x0e7: // auto
-                case 0x0e8: // auto
-                    result.sVersion="18.00";
-                    break;
-
-                case 0x0ff:
-                case 0x100:
-                case 0x101:
-                case 0x102:
-                case 0x103:
-                    result.sVersion="14.00";
-                    break;
-
-                case 0x104:
-                case 0x105:
-                case 0x106:
-                case 0x107:
-                case 0x108:
-                case 0x109:
-                case 0x10a:
-                case 0x10b:
-                case 0x10c:
-                    result.sVersion="19.00";
-                    break;
-            }
-
-            if(nMinor>=25008)
-            {
-                if(result.sVersion=="14.00")
-                {
-                    result.sVersion=QString("14.%1").arg(pPEInfo->nMinorLinkerVersion,2,10,QChar('0'));
-                }
-                else if(result.sVersion=="19.00")
-                {
-                    result.sVersion=QString("19.%1").arg(pPEInfo->nMinorLinkerVersion,2,10,QChar('0'));
-                }
-            }
-
-            if(result.type!=SpecAbstract::RECORD_TYPE_UNKNOWN)
-            {
-                result.sVersion+=QString(".%1").arg(nMinor,2,10,QChar('0'));
             }
         }
     }

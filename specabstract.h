@@ -1618,7 +1618,6 @@ public:
 
     static QList<VCL_STRUCT> PE_getVCLstruct(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,qint64 nOffset,qint64 nSize,bool bIs64);
     static VCL_PACKAGEINFO PE_getVCLPackageInfo(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,QList<XPE::RESOURCE_RECORD> *pListResources);
-    static SpecAbstract::_SCANS_STRUCT PE_getRichSignatureDescription(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo,quint32 nRichID); // TODO remove
 
     static SCAN_STRUCT scansToScan(BASIC_INFO *pBasicInfo,_SCANS_STRUCT *pScansStruct);
 
