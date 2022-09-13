@@ -2149,7 +2149,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice,X
         Binary_handle_Formats(pDevice,pOptions,&result);
         Binary_handle_Databases(pDevice,pOptions,&result);
         Binary_handle_Images(pDevice,pOptions,&result);
-        Binary_handle_Archives(pDevice,pOptions,&result);
+        Binary_handle_Archives(pDevice,pOptions,&result,pPdStruct);
         Binary_handle_Certificates(pDevice,pOptions,&result);
         Binary_handle_DebugData(pDevice,pOptions,&result);
         Binary_handle_InstallerData(pDevice,pOptions,&result);
@@ -3247,7 +3247,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice,XBinary
         result.basic_info.id.nOffset=nOffset;
 
 //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
-        result.listArchiveRecords=xzip.getRecords();
+        result.listArchiveRecords=xzip.getRecords(-1,pPdStruct);
 
         QSet<XBinary::FT> stFT=XFormats::getFileTypesZIP(pDevice,&(result.listArchiveRecords));
 
@@ -3308,7 +3308,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice,XBinary
 
         Zip_handle_Recursive(pDevice,pOptions,&result,pPdStruct);
 
-        Zip_handle_FixDetects(pDevice,pOptions,&result);
+        Zip_handle_FixDetects(pDevice,pOptions,&result,pPdStruct);
         Zip_handleLanguages(pDevice,pOptions,&result);
 
         result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
@@ -3372,7 +3372,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
 
 //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
-        result.listArchiveRecords=xmachofat.getRecords();
+        result.listArchiveRecords=xmachofat.getRecords(-1,pPdStruct);
 
         qint32 nNumberOfRecords=result.listArchiveRecords.count();
 
@@ -3414,7 +3414,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
         _SCANS_STRUCT ssFormat=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_MACHOFAT,"","",0);
 
         ssFormat.sVersion=xmachofat.getVersion();
-        ssFormat.sInfo=QString("%1 records").arg(xmachofat.getNumberOfRecords());
+        ssFormat.sInfo=QString("%1 records").arg(xmachofat.getNumberOfRecords(pPdStruct));
 
         result.basic_info.listDetects.append(scansToScan(&(result.basic_info),&ssFormat));
 
@@ -10785,7 +10785,7 @@ void SpecAbstract::COM_handle_Protection(QIODevice *pDevice,SpecAbstract::SCAN_O
     }
 }
 
-void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
+void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XBinary binary(pDevice,pOptions->bIsImage);
 
@@ -10829,7 +10829,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,SpecAbstract::SCAN_
             _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ZIP);
 
             ss.sVersion=xzip.getVersion();
-            ss.sInfo=QString("%1 records").arg(xzip.getNumberOfRecords());
+            ss.sInfo=QString("%1 records").arg(xzip.getNumberOfRecords(pPdStruct));
 
             if(xzip.isEncrypted())
             {
@@ -10881,7 +10881,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,SpecAbstract::SCAN_
             _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CAB);
 
             ss.sVersion=xcab.getVersion();
-            ss.sInfo=QString("%1 records").arg(xcab.getNumberOfRecords());
+            ss.sInfo=QString("%1 records").arg(xcab.getNumberOfRecords(pPdStruct));
 
             // TODO options
             // TODO files
@@ -10899,7 +10899,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,SpecAbstract::SCAN_
             _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MACHOFAT);
 
             ss.sVersion=xmachofat.getVersion();
-            ss.sInfo=QString("%1 records").arg(xmachofat.getNumberOfRecords());
+            ss.sInfo=QString("%1 records").arg(xmachofat.getNumberOfRecords(pPdStruct));
 
             // TODO options
             // TODO files
@@ -12800,7 +12800,7 @@ void SpecAbstract::Zip_handle_IPA(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS 
             _SCANS_STRUCT ssFormat=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_IPA,"","",0);
 
             ssFormat.sVersion=xzip.getVersion();
-            ssFormat.sInfo=QString("%1 records").arg(xzip.getNumberOfRecords());
+            ssFormat.sInfo=QString("%1 records").arg(xzip.getNumberOfRecords(pPdStruct));
 
             pZipInfo->basic_info.listDetects.append(scansToScan(&(pZipInfo->basic_info),&ssFormat));
         }
@@ -12927,7 +12927,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice,SpecAbstract::SCAN_OP
     }
 }
 
-void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::ZIPINFO_STRUCT *pZipInfo)
+void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
 
@@ -12942,7 +12942,7 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice,SpecAbstract::SCAN_O
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_ZIP,"","",0);
 
             ss.sVersion=xzip.getVersion();
-            ss.sInfo=QString("%1 records").arg(xzip.getNumberOfRecords());
+            ss.sInfo=QString("%1 records").arg(xzip.getNumberOfRecords(pPdStruct));
 
             if(xzip.isEncrypted())
             {
@@ -12957,7 +12957,7 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice,SpecAbstract::SCAN_O
             _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_ZIP,"","",0);
 
             ss.sVersion=xzip.getVersion();
-            ss.sInfo=QString("%1 records").arg(xzip.getNumberOfRecords());
+            ss.sInfo=QString("%1 records").arg(xzip.getNumberOfRecords(pPdStruct));
 
             pZipInfo->mapResultArchives.insert(ss.name,scansToScan(&(pZipInfo->basic_info),&ss));
         }

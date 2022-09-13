@@ -1468,7 +1468,7 @@ public:
 
     static void Binary_handle_Texts(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,BINARYINFO_STRUCT *pBinaryInfo);
     static void COM_handle_Protection(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,COMINFO_STRUCT *pCOMInfo);
-    static void Binary_handle_Archives(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,BINARYINFO_STRUCT *pBinaryInfo);
+    static void Binary_handle_Archives(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,BINARYINFO_STRUCT *pBinaryInfo,XBinary::PDSTRUCT *pPdStruct);
     static void Binary_handle_Certificates(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_DebugData(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_Formats(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,BINARYINFO_STRUCT *pBinaryInfo);
@@ -1539,7 +1539,7 @@ public:
     static void Zip_handle_APK(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_IPA(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_Recursive(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct);
-    static void Zip_handle_FixDetects(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo);
+    static void Zip_handle_FixDetects(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handleLanguages(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo);
 
     static DEXINFO_STRUCT Zip_scan_DEX(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct,QString sFileName);
