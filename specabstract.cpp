@@ -12927,7 +12927,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice,SpecAbstract::SCAN_OP
     }
 }
 
-void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::ZIPINFO_STRUCT *pZipInfo,XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
 
