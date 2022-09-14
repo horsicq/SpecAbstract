@@ -10785,7 +10785,7 @@ void SpecAbstract::COM_handle_Protection(QIODevice *pDevice,SpecAbstract::SCAN_O
     }
 }
 
-void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo,XBinary::PDSTRUCT *pPdStruct)
 {
     XBinary binary(pDevice,pOptions->bIsImage);
 
