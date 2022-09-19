@@ -267,6 +267,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALCHEMYMINDWORKS:                      sResult=QString("Alchemy Mindworks");                           break;
         case RECORD_NAME_ALEXPROTECTOR:                         sResult=QString("Alex Protector");                              break;
         case RECORD_NAME_ALIASOBJ:                              sResult=QString("ALIASOBJ");                                    break;
+        case RECORD_NAME_ALIBABACLANG:                          sResult=QString("Alibaba clang");                               break;
         case RECORD_NAME_ALIBABAPROTECTION:                     sResult=QString("Alibaba Protection");                          break;
         case RECORD_NAME_ALIPAYCLANG:                           sResult=QString("Alipay clang");                                break;
         case RECORD_NAME_ALIPAYOBFUSCATOR:                      sResult=QString("Alipay Obfuscator");                           break;
@@ -1486,6 +1487,20 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AlipayClang_string(QString sString)
     VI_STRUCT result={};
 
     if(sString.contains("Alipay clang"))
+    {
+        result.bIsValid=true;
+
+        result.sVersion=sString.section(" ",3,3);
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::_get_AlibabaClang_string(QString sString)
+{
+    VI_STRUCT result={};
+
+    if(sString.contains("Alibaba clang"))
     {
         result.bIsValid=true;
 
@@ -13735,6 +13750,18 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice,SpecAbstract::SC
 
         if(!vi.bIsValid)
         {
+            vi=_get_AlibabaClang_string(sComment);
+
+            if(vi.bIsValid)
+            {
+                ss=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_COMPILER,RECORD_NAME_ALIBABACLANG,vi.sVersion,vi.sInfo,0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name,ss);
+            }
+        }
+
+        if(!vi.bIsValid)
+        {
             vi=_get_PlexClang_string(sComment);
 
             if(vi.bIsValid)
@@ -14328,6 +14355,14 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice,SpecAbstract::SCAN_OPTION
         if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ALIPAYCLANG))
         {
             _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ALIPAYCLANG);
+
+            pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
+        }
+
+        // Alibaba clang
+        if(pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ALIBABACLANG))
+        {
+            _SCANS_STRUCT ss=pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ALIBABACLANG);
 
             pELFInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pELFInfo->basic_info),&ss));
         }
