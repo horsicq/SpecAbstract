@@ -10862,6 +10862,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice,SpecAbstract::SCAN_
         _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_GZIP);
 
         // TODO options
+        // TODO type gzip
         // TODO files
         pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
     }
