@@ -16111,7 +16111,9 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice,SpecAbstract::SCAN
 
             QSet<QString> stRecords;
 
-            for(qint32 i=0;i<list.count();i++)
+            qint32 nNumberOfRecords=list.count();
+
+            for(qint32 i=0;i<nNumberOfRecords;i++)
             {
                 if(!stRecords.contains(list.at(i).sName))
                 {
