@@ -1024,7 +1024,7 @@ QString SpecAbstract::heurTypeIdToString(SpecAbstract::DETECTTYPE id)
         case DETECTTYPE_ENTRYPOINTSECTION:                sResult=tr("Entry point section");                            break;
         case DETECTTYPE_NETANSISTRING:                    sResult=QString(".NET ANSI %1").arg(tr("String"));            break;
         case DETECTTYPE_NETUNICODESTRING:                 sResult=QString(".NET Unicode %1").arg(tr("String"));         break;
-        case DETECTTYPE_RICH:                             sResult=QString("RICH");                                      break;
+        case DETECTTYPE_RICH:                             sResult=QString("Rich");                                      break;
         case DETECTTYPE_ARCHIVE:                          sResult=tr("Archive");                                        break;
         case DETECTTYPE_RESOURCES:                        sResult=tr("Resources");                                      break;
         case DETECTTYPE_DEXSTRING:                        sResult=QString("DEX %1").arg(tr("String"));                  break;
@@ -19125,7 +19125,7 @@ bool SpecAbstract::MSDOS_compareRichRecord(_SCANS_STRUCT *pResult,SpecAbstract::
             record.nOffset=0;
 
 #ifdef QT_DEBUG
-            qDebug("RICH SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
+            qDebug("Rich SCAN: %s",_SCANS_STRUCT_toString(&record).toLatin1().data());
 #endif
             *pResult=record;
 
