@@ -1461,8 +1461,8 @@ public:
 
     static bool PE_isProtectionPresent(PEINFO_STRUCT *pPEInfo);
     static void PE_handle_UnknownProtection(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo);
-    static void PE_handle_FixDetects(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo);
 
+    static void PE_handle_FixDetects(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo);
     static void PE_handleLanguages(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo);
 
     static void PE_handle_Recursive(QIODevice *pDevice,SpecAbstract::SCAN_OPTIONS *pOptions,PEINFO_STRUCT *pPEInfo,XBinary::PDSTRUCT *pPdStruct);
