@@ -3788,6 +3788,19 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice,SpecAbstract::SCAN_OP
             }
         }
 
+        // NativeCryptor by DosX
+        if(pPEInfo->listSectionNames.count()>=3)
+        {
+            if(pPEInfo->listSectionRecords.at(0).nSize==0)
+            {
+                if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_NATIVECRYPTORBYDOSX))
+                {
+                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_NATIVECRYPTORBYDOSX,"","",0);
+                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                }
+            }
+        }
+
         if(pPEInfo->mapOverlayDetects.contains(RECORD_NAME_ACTIVEMARK))
         {
             _SCANS_STRUCT ssOverlay=pPEInfo->mapOverlayDetects.value(RECORD_NAME_ACTIVEMARK);

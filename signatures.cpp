@@ -157,6 +157,7 @@ SpecAbstract::SIGNATURE_RECORD _PE_overlay_records[]=
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_INSTALLERDATA,    SpecAbstract::RECORD_NAME_NOSINSTALLER,                 "",                 ""},                    "'NOS_PO'"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_SECUROM,                      "",                 ""},                    "'AddD'03"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_SERGREENAPPACKER,             "",                 ""},                    "'<SerGreen>'"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_NATIVECRYPTORBYDOSX,          "",                 ""},                    "'7stgc_hdr'00"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _COM_records[]=
@@ -1252,6 +1253,9 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MSLRH,                        "",                 ""},                    ".mslrh"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NAKEDPACKER,                  "1.0",              ""},                    ".naked1"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NAKEDPACKER,                  "1.0",              ""},                    ".naked2"},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NATIVECRYPTORBYDOSX,          "",                 ""},                    "NATIVES~"},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NATIVECRYPTORBYDOSX,          "",                 ""},                    "CONFIG~"},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NATIVECRYPTORBYDOSX,          "",                 ""},                    "CRYPT~"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_NCODE,                        "",                 ""},                    ".n-coder"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NEOLITE,                      "1.0",              ""},                    ".neolit"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NOODLECRYPT,                  "",                 ""},                    ".Ncryo  "},
