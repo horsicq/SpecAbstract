@@ -14813,7 +14813,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice,SpecAbstract:
             }
 
             {
-                XBinary::OS_ANSISTRING asInterpeter=elf.getProgramInterpreterName();
+                XBinary::OS_STRING asInterpeter=elf.getProgramInterpreterName();
 
                 if(asInterpeter.nSize)
                 {
@@ -14821,7 +14821,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice,SpecAbstract:
 
                     recordSS.type=RECORD_TYPE_LIBRARY;
                     recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+nIndex);
-                    recordSS.sVersion=QString("Interpreter_")+asInterpeter.sAnsiString;
+                    recordSS.sVersion=QString("Interpreter_")+asInterpeter.sString;
 
                     pELFInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pELFInfo->basic_info),&recordSS));
 
