@@ -3392,6 +3392,9 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
 
         qint32 nNumberOfRecords=result.listArchiveRecords.count();
 
+        qint32 _nFreeIndex=XBinary::getFreeIndex(pPdStruct);
+        XBinary::setPdStructInit(pPdStruct,_nFreeIndex,nNumberOfRecords);
+
         for(qint32 i=0;(i<nNumberOfRecords)&&(!(pPdStruct->bIsStop));i++)
         {
             SpecAbstract::SCAN_RESULT scanResult={0};
@@ -3401,7 +3404,8 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
             _parentId.sInfo=result.listArchiveRecords.at(i).sFileName;
             _parentId.bVirtual=true; // TODO Check
 
-            pPdStruct->pdRecord.sStatus=result.listArchiveRecords.at(i).sFileName; // TODO More
+            XBinary::setPdStructCurrent(pPdStruct,_nFreeIndex,i);
+            XBinary::setPdStructStatus(pPdStruct,_nFreeIndex,result.listArchiveRecords.at(i).sFileName);
 
             QTemporaryFile fileTemp;
 
@@ -3426,6 +3430,8 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
 
             result.listRecursiveDetects.append(scanResult.listRecords);
         }
+
+        XBinary::setPdStructFinished(pPdStruct,_nFreeIndex);
 
         _SCANS_STRUCT ssFormat=getScansStruct(0,XBinary::FT_ARCHIVE,RECORD_TYPE_FORMAT,RECORD_NAME_MACHOFAT,"","",0);
 
@@ -12851,6 +12857,9 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice,SpecAbstract::SCAN_OP
             {
                 qint32 nNumberOfRecords=pZipInfo->listArchiveRecords.count();
 
+                qint32 _nFreeIndex=XBinary::getFreeIndex(pPdStruct);
+                XBinary::setPdStructInit(pPdStruct,_nFreeIndex,nNumberOfRecords);
+
                 for(qint32 i=0;(i<nNumberOfRecords)&&(!(pPdStruct->bIsStop));i++)
                 {
                     if(pZipInfo->basic_info.bIsTest&&pZipInfo->basic_info.bIsVerbose)
@@ -12878,7 +12887,8 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice,SpecAbstract::SCAN_OP
                         }
                     }
 
-                    pPdStruct->pdRecord.sStatus=pZipInfo->listArchiveRecords.at(i).sFileName; // TODO More
+                    XBinary::setPdStructCurrent(pPdStruct,_nFreeIndex,i);
+                    XBinary::setPdStructStatus(pPdStruct,_nFreeIndex,pZipInfo->listArchiveRecords.at(i).sFileName);
 
                     QByteArray baRecordData=xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)),true,pPdStruct);
 
@@ -12952,6 +12962,8 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice,SpecAbstract::SCAN_OP
                         pZipInfo->listRecursiveDetects.append(scanResult.listRecords);
                     }
                 }
+
+                XBinary::setPdStructFinished(pPdStruct,_nFreeIndex);
             }
         }
     }
