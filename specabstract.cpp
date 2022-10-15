@@ -16863,7 +16863,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice,SpecAbstract::SCAN_OPTION
 
             qint32 nNumberOfRecords=pDEXInfo->listStrings.count();
 
-            for(qint32 i=0;(i<nNumberOfRecords);i++)
+            for(qint32 i=0;(i<nNumberOfRecords);i++) // TODO PDStruct
             {
                 if(pDEXInfo->basic_info.bIsTest&&pDEXInfo->basic_info.bIsVerbose)
                 {
