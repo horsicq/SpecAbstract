@@ -1080,14 +1080,11 @@ public:
     {
         BASIC_INFO basic_info;
         QString sEntryPointSignature;
-
         bool bIs64;
         bool bIsBigEndian; // TODO move to basic
-
         QList<XELF::TAG_STRUCT> listTags;
         QList<QString> listLibraries;
         QList<QString> listComments;
-
         QList<XELF_DEF::Elf_Shdr> listSectionHeaders;
         QList<XELF_DEF::Elf_Phdr> listProgramHeaders;
         QList<XELF::SECTION_RECORD> listSectionRecords;
