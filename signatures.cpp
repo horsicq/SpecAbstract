@@ -192,7 +192,7 @@ SpecAbstract::SIGNATURE_RECORD _COM_Exp_records[]=
     {{0, XBinary::FT_COM,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTCOM,                     "2.0",              ""},                    "E9$$$$BE....56B9....C704....C644....8134....4646E2..31F631C9C3"},
 };
 
-// MSDOS,NE,LE,PE
+// MSDOS,NE,LE,LX,PE
 SpecAbstract::SIGNATURE_RECORD _MSDOS_linker_header_records[]=
 {
     {{0, XBinary::FT_MSDOS,     SpecAbstract::RECORD_TYPE_LINKER,           SpecAbstract::RECORD_NAME_TURBOLINKER,                  "",                 ""},                    "'MZ'50000200000004000F00FFFF0000B80000000000000040001A000000000000000000000000000000000000000000000000000000000000000000....0000BA10000E1FB409CD21B8014CCD219090'This program must be run under Win'....'\r\n$'370000000000"},
