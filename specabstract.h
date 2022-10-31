@@ -75,6 +75,7 @@ public:
         RECORD_TYPE_STUB,
         RECORD_TYPE_TOOL,
         RECORD_TYPE_VIRTUALMACHINE
+        // TODO more
     };
 
     enum RECORD_NAME

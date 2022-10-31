@@ -5624,7 +5624,7 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,SpecAbstract::SCAN_OPT
             sVMPSectionName=pPEInfo->listSectionRecords.at(i).sName;
 
             if(     (i>0)&&
-                    (sVMPSectionName.at(sVMPSectionName.size()-1)==QChar('0')))
+                    (sVMPSectionName.at(sVMPSectionName.size()-1)==QChar('0'))&&(sVMPSectionName.at(0)!="/"))
             {
                 bDetected=true;
 
@@ -5685,7 +5685,7 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice,SpecAbstract::SCAN_OPT
 
         if(sVMPSectionName!="")
         {
-            if(sVMPSectionName.at(sVMPSectionName.size()-1)==QChar('0'))
+            if((sVMPSectionName.at(sVMPSectionName.size()-1)==QChar('0'))&&(sVMPSectionName.at(0)!="/"))
             {
                 ssVMProtect.sInfo="Min protection";
             }
