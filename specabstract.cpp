@@ -655,6 +655,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_MICROSOFTVISUALSTUDIO:                 sResult=QString("Microsoft Visual Studio");                     break;
         case RECORD_NAME_MICROSOFTWINHELP:                      sResult=QString("Microsoft WinHelp");                           break;
         case RECORD_NAME_MINGW:                                 sResult=QString("MinGW");                                       break;
+        case RECORD_NAME_MINIX:                                 sResult=QString("Minix");                                       break;
         case RECORD_NAME_MINKE:                                 sResult=QString("Minke");                                       break;
         case RECORD_NAME_MKFPACK:                               sResult=QString("MKFPack");                                     break;
         case RECORD_NAME_MOBILETENCENTPROTECT:                  sResult=QString("Mobile Tencent Protect");                      break;
@@ -19022,6 +19023,8 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     else if (osInfo.osName==XBinary::OSNAME_MCLINUX)            result.name=RECORD_NAME_MCLINUX;
     else if (osInfo.osName==XBinary::OSNAME_QNX)                result.name=RECORD_NAME_QNX;
     else if (osInfo.osName==XBinary::OSNAME_SYLLABLE)           result.name=RECORD_NAME_SYLLABLE;
+    else if (osInfo.osName==XBinary::OSNAME_MINIX)              result.name=RECORD_NAME_MINIX;
+    // TODO more
 
     result.sVersion=osInfo.sOsVersion;
     result.sInfo=QString("%1, %2, %3").arg(osInfo.sArch,XBinary::modeIdToString(osInfo.mode),osInfo.sType);
