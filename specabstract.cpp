@@ -931,6 +931,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id) {
         case RECORD_NAME_ECLIPSE:
             sResult = QString("Eclipse");
             break;
+        case RECORD_NAME_ECMASCRIPT:
+            sResult = QString("ECMAScript");
+            break;
         case RECORD_NAME_ELECKEY:
             sResult = QString("ElecKey");
             break;
@@ -1308,6 +1311,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id) {
             break;
         case RECORD_NAME_JPEG:
             sResult = QString("JPEG");
+            break;
+        case RECORD_NAME_JSCRIPT:
+            sResult = QString("JScript");
             break;
         case RECORD_NAME_JVM:
             sResult = QString("JVM");
@@ -7840,6 +7846,11 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
             if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_VBNET)) {
                 ssCompiler.type = RECORD_TYPE_COMPILER;
                 ssCompiler.name = RECORD_NAME_VBNET;
+            }
+
+            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_JSCRIPT)) {
+                ssCompiler.type = RECORD_TYPE_COMPILER;
+                ssCompiler.name = RECORD_NAME_JSCRIPT;
             }
         }
 
@@ -18012,6 +18023,9 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
             case RECORD_NAME_APPLEJDK:
                 // case RECORD_NAME_DX:
                 ssLanguage.name = RECORD_NAME_JAVA;
+                break;
+            case RECORD_NAME_JSCRIPT:
+                ssLanguage.name = RECORD_NAME_ECMASCRIPT;
                 break;
             case RECORD_NAME_KOTLIN:
                 ssLanguage.name = RECORD_NAME_KOTLIN;

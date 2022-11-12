@@ -1342,6 +1342,7 @@ SpecAbstract::STRING_RECORD _PE_dot_ansistrings_records[]=
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_DOTFUSCATOR,                  "",                 ""},                    "DotfuscatorAttribute"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_VCL,                          "",                 ".NET"},                 "Borland.Vcl.Types"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_VBNET,                        "",                 ""},                    "Microsoft.VisualBasic"},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_JSCRIPT,                      "",                 ""},                    "Microsoft.JScript.Vsa"},
     //    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_TOOL,              SpecAbstract::RECORD_NAME_EMBARCADERODELPHIDOTNET,  "",                 ""},                    "Embarcadero."},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_YANO,                         "1.X",              ""},                    "YanoAttribute"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_NETOBFUSCATOR,    SpecAbstract::RECORD_NAME_AGILENET,                     "",                 ""},                    "ObfuscatedByAgileDotNetAttribute"},
