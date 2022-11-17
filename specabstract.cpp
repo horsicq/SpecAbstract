@@ -822,6 +822,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DEB:
             sResult = QString("DEB");
             break;
+        case RECORD_NAME_DEBIANCLANG:
+            sResult = QString("Debian clang");
+            break;
         case RECORD_NAME_DEBIANLINUX:
             sResult = QString("Debian Linux");
             break;
@@ -3102,6 +3105,19 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_UbuntuClang_string(QString sString)
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::_get_DebianClang_string(QString sString)
+{
+    VI_STRUCT result = {};
+
+    if (sString.contains("Debian clang")) {
+        result.bIsValid = true;
+
+        result.sVersion = sString.section(" ", 3, 3);
+    }
+
+    return result;
+}
+
 SpecAbstract::VI_STRUCT SpecAbstract::_get_AlipayObfuscator_string(QString sString)
 {
     VI_STRUCT result = {};
@@ -4649,11 +4665,23 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
         result.header = dex.getHeader();
         result.mapItems = dex.getMapItems();
 
-        result.bIsStringPoolSorted = dex.isStringPoolSorted();
+#ifdef QT_DEBUG
+    qDebug("%d msec",timer.elapsed());
+#endif
+
+        result.bIsStringPoolSorted = dex.isStringPoolSorted(&(result.mapItems));
         result.bIsOverlayPresent = dex.isOverlayPresent(&(result.basic_info.memoryMap));
+
+#ifdef QT_DEBUG
+    qDebug("%d msec",timer.elapsed());
+#endif
 
         result.listStrings = dex.getStrings(&(result.mapItems), pPdStruct);
         result.listTypeItemStrings = dex.getTypeItemStrings(&(result.mapItems), &result.listStrings, pPdStruct);
+
+#ifdef QT_DEBUG
+    qDebug("%d msec",timer.elapsed());
+#endif
 
         stringScan(&result.mapStringDetects, &result.listStrings, _DEX_string_records, sizeof(_DEX_string_records), result.basic_info.id.fileType, XBinary::FT_DEX,
                    &(result.basic_info), DETECTTYPE_DEXSTRING, pPdStruct);
@@ -4719,6 +4747,10 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
+
+#ifdef QT_DEBUG
+    qDebug("%d msec",result.basic_info.nElapsedTime);
+#endif
 
     return result;
 }
@@ -12380,482 +12412,484 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
 
             QByteArray baAndroidManifest = xzip.decompress(&(pZipInfo->listArchiveRecords), "AndroidManifest.xml", pPdStruct);
 
-            QString sAndroidManifest = XAndroidBinary::getDecoded(&baAndroidManifest);
+            if (baAndroidManifest.size() > 0) {
+                QString sAndroidManifest = XAndroidBinary::getDecoded(&baAndroidManifest);
 
-            QString sCompileSdkVersion = XBinary::regExp("android:compileSdkVersion=\"(.*?)\"", sAndroidManifest, 1);
-            QString sCompileSdkVersionCodename = XBinary::regExp("android:compileSdkVersionCodename=\"(.*?)\"", sAndroidManifest, 1);
-            QString sPlatformBuildVersionCode = XBinary::regExp("platformBuildVersionCode=\"(.*?)\"", sAndroidManifest, 1);
-            QString sPlatformBuildVersionName = XBinary::regExp("platformBuildVersionName=\"(.*?)\"", sAndroidManifest, 1);
-            QString sTargetSdkVersion = XBinary::regExp("android:targetSdkVersion=\"(.*?)\"", sAndroidManifest, 1);
-            QString sMinSdkVersion = XBinary::regExp("android:minSdkVersion=\"(.*?)\"", sAndroidManifest, 1);
-            QString sAndroid = XBinary::regExp("android:=\"(.*?)\"", sAndroidManifest, 1);
-            QString sAndroidVersionName = XBinary::regExp("android:versionName=\"(.*?)\"", sAndroidManifest, 1);
+                QString sCompileSdkVersion = XBinary::regExp("android:compileSdkVersion=\"(.*?)\"", sAndroidManifest, 1);
+                QString sCompileSdkVersionCodename = XBinary::regExp("android:compileSdkVersionCodename=\"(.*?)\"", sAndroidManifest, 1);
+                QString sPlatformBuildVersionCode = XBinary::regExp("platformBuildVersionCode=\"(.*?)\"", sAndroidManifest, 1);
+                QString sPlatformBuildVersionName = XBinary::regExp("platformBuildVersionName=\"(.*?)\"", sAndroidManifest, 1);
+                QString sTargetSdkVersion = XBinary::regExp("android:targetSdkVersion=\"(.*?)\"", sAndroidManifest, 1);
+                QString sMinSdkVersion = XBinary::regExp("android:minSdkVersion=\"(.*?)\"", sAndroidManifest, 1);
+                QString sAndroid = XBinary::regExp("android:=\"(.*?)\"", sAndroidManifest, 1);
+                QString sAndroidVersionName = XBinary::regExp("android:versionName=\"(.*?)\"", sAndroidManifest, 1);
 
-            // Check
-            if (!XBinary::checkStringNumber(sCompileSdkVersion, 1, 40)) sCompileSdkVersion = "";
-            if (!XBinary::checkStringNumber(sPlatformBuildVersionCode, 1, 40)) sPlatformBuildVersionCode = "";
-            if (!XBinary::checkStringNumber(sTargetSdkVersion, 1, 40)) sTargetSdkVersion = "";
-            if (!XBinary::checkStringNumber(sMinSdkVersion, 1, 40)) sMinSdkVersion = "";
-            if (!XBinary::checkStringNumber(sAndroid, 1, 40)) sAndroid = "";
+                // Check
+                if (!XBinary::checkStringNumber(sCompileSdkVersion, 1, 40)) sCompileSdkVersion = "";
+                if (!XBinary::checkStringNumber(sPlatformBuildVersionCode, 1, 40)) sPlatformBuildVersionCode = "";
+                if (!XBinary::checkStringNumber(sTargetSdkVersion, 1, 40)) sTargetSdkVersion = "";
+                if (!XBinary::checkStringNumber(sMinSdkVersion, 1, 40)) sMinSdkVersion = "";
+                if (!XBinary::checkStringNumber(sAndroid, 1, 40)) sAndroid = "";
 
-            if (!XBinary::checkStringNumber(sCompileSdkVersionCodename.section(".", 0, 0), 1, 15)) sCompileSdkVersionCodename = "";
-            if (!XBinary::checkStringNumber(sPlatformBuildVersionName.section(".", 0, 0), 1, 15)) sPlatformBuildVersionName = "";
+                if (!XBinary::checkStringNumber(sCompileSdkVersionCodename.section(".", 0, 0), 1, 15)) sCompileSdkVersionCodename = "";
+                if (!XBinary::checkStringNumber(sPlatformBuildVersionName.section(".", 0, 0), 1, 15)) sPlatformBuildVersionName = "";
 
-            if ((sCompileSdkVersion != "") || (sCompileSdkVersionCodename != "") || (sPlatformBuildVersionCode != "") || (sPlatformBuildVersionName != "") ||
-                (sTargetSdkVersion != "") || (sMinSdkVersion != "") || (sAndroid != "")) {
-                _SCANS_STRUCT ssAndroidSDK = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_ANDROIDSDK, "", "", 0);
-                _SCANS_STRUCT ssAndroid = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_OPERATIONSYSTEM, RECORD_NAME_ANDROID, "", "", 0);
+                if ((sCompileSdkVersion != "") || (sCompileSdkVersionCodename != "") || (sPlatformBuildVersionCode != "") || (sPlatformBuildVersionName != "") ||
+                    (sTargetSdkVersion != "") || (sMinSdkVersion != "") || (sAndroid != "")) {
+                    _SCANS_STRUCT ssAndroidSDK = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_ANDROIDSDK, "", "", 0);
+                    _SCANS_STRUCT ssAndroid = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_OPERATIONSYSTEM, RECORD_NAME_ANDROID, "", "", 0);
 
-                QString _sVersion;
-                QString _sAndroidVersion;
+                    QString _sVersion;
+                    QString _sAndroidVersion;
 
-                _sVersion = sCompileSdkVersion;
-                _sAndroidVersion = sCompileSdkVersionCodename;
+                    _sVersion = sCompileSdkVersion;
+                    _sAndroidVersion = sCompileSdkVersionCodename;
 
-                if (_sVersion == "") _sVersion = sCompileSdkVersion;
-                if (_sVersion == "") _sVersion = sPlatformBuildVersionCode;
-                if (_sVersion == "") _sVersion = sTargetSdkVersion;
-                if (_sVersion == "") _sVersion = sMinSdkVersion;
-                if (_sVersion == "") _sVersion = sAndroid;
+                    if (_sVersion == "") _sVersion = sCompileSdkVersion;
+                    if (_sVersion == "") _sVersion = sPlatformBuildVersionCode;
+                    if (_sVersion == "") _sVersion = sTargetSdkVersion;
+                    if (_sVersion == "") _sVersion = sMinSdkVersion;
+                    if (_sVersion == "") _sVersion = sAndroid;
 
-                if (_sAndroidVersion == "") _sAndroidVersion = sCompileSdkVersionCodename;
-                if (_sAndroidVersion == "") _sAndroidVersion = sPlatformBuildVersionName;
-                if (_sAndroidVersion == "") _sAndroidVersion = sAndroidVersionName;
+                    if (_sAndroidVersion == "") _sAndroidVersion = sCompileSdkVersionCodename;
+                    if (_sAndroidVersion == "") _sAndroidVersion = sPlatformBuildVersionName;
+                    if (_sAndroidVersion == "") _sAndroidVersion = sAndroidVersionName;
 
-                if (_sAndroidVersion == "") {
-                    _sAndroidVersion = getAndroidVersionFromApi(_sVersion.toUInt());
-                }
-
-                if (_sVersion != "") {
-                    ssAndroidSDK.sVersion = QString("API %1").arg(_sVersion);
-
-                    pZipInfo->mapResultTools.insert(ssAndroidSDK.name, scansToScan(&(pZipInfo->basic_info), &ssAndroidSDK));
-                }
-
-                ssAndroid.sVersion = QString("%1").arg(_sAndroidVersion);
-
-                pZipInfo->mapResultOperationSystems.insert(ssAndroid.name, scansToScan(&(pZipInfo->basic_info), &ssAndroid));
-            }
-
-            QString sJetpack = xzip.decompress(&(pZipInfo->listArchiveRecords), "META-INF/androidx.core_core.version").data();
-            if (sJetpack != "") {
-                QString sJetpackVersion = XBinary::regExp("(.*?)\n", sJetpack, 1).remove("\r");
-
-                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_LIBRARY, RECORD_NAME_ANDROIDJETPACK, "", "", 0);
-                ss.sVersion = sJetpackVersion;
-                pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDGRADLE)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDGRADLE);
-                pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDMAVENPLUGIN)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDMAVENPLUGIN);
-                pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_RADIALIX)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_RADIALIX);
-                pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_MOTODEVSTUDIOFORANDROID)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_MOTODEVSTUDIOFORANDROID);
-                pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANTILVL)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANTILVL);
-                pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKEDITOR)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKEDITOR);
-                pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_BUNDLETOOL)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_BUNDLETOOL);
-                pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEX2JAR)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DEX2JAR);
-                pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_D2JAPKSIGN)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_D2JAPKSIGN);
-                pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_PSEUDOAPKSIGNER)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_PSEUDOAPKSIGNER);
-                pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKSIGNER)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKSIGNER);
-                pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APK_SIGNER)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APK_SIGNER);
-                pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_NETEASEAPKSIGNER)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_NETEASEAPKSIGNER);
-                pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDSIGNAPK)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDSIGNAPK);
-                pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DOTOOLSSIGNAPK)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DOTOOLSSIGNAPK);
-                pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_SIGNATORY)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_SIGNATORY);
-                pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_SIGNUPDATE)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_SIGNUPDATE);
-                pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDAPKSIGNER)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDAPKSIGNER);
-                pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKMODIFIERSIGNAPK)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKMODIFIERSIGNAPK);
-                pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_BAIDUSIGNATUREPLATFORM)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_BAIDUSIGNATUREPLATFORM);
-                pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_TINYSIGN)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_TINYSIGN);
-                pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_COMEXSIGNAPK)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_COMEXSIGNAPK);
-                pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ECLIPSE)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ECLIPSE);
-                pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_HIAPKCOM)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_HIAPKCOM);
-                pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DX)) {
-                _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DX);
-                pZipInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SECSHELL)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_SECSHELL);
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_JIAGU)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_JIAGU);
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_IJIAMI)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_IJIAMI);
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTPROTECTION)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_TENCENTPROTECTION);
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTLEGU) || pZipInfo->mapArchiveDetects.contains(RECORD_NAME_MOBILETENCENTPROTECT)) {
-                _SCANS_STRUCT ss = {};
-
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTLEGU)) {
-                    ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_TENCENTLEGU);
-                } else if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_MOBILETENCENTPROTECT)) {
-                    ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_MOBILETENCENTPROTECT);
-                }
-
-                qint32 nNumberOfRecords = pZipInfo->listArchiveRecords.count();
-
-                for (qint32 i = 0; i < (nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
-                    if (pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/arm64-v8a/libshella-")) {
-                        ss.sVersion = XBinary::regExp("lib/arm64-v8a/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).sFileName, 1);
-
-                        break;
-                    } else if (pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/armeabi-v7a/libshella-")) {
-                        ss.sVersion = XBinary::regExp("lib/armeabi-v7a/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).sFileName, 1);
-
-                        break;
-                    } else if (pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/armeabi/libshella-")) {
-                        ss.sVersion = XBinary::regExp("lib/armeabi/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).sFileName, 1);
-
-                        break;
-                    } else if (pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/x86/libshella-")) {
-                        ss.sVersion = XBinary::regExp("lib/x86/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).sFileName, 1);
-
-                        break;
+                    if (_sAndroidVersion == "") {
+                        _sAndroidVersion = getAndroidVersionFromApi(_sVersion.toUInt());
                     }
+
+                    if (_sVersion != "") {
+                        ssAndroidSDK.sVersion = QString("API %1").arg(_sVersion);
+
+                        pZipInfo->mapResultTools.insert(ssAndroidSDK.name, scansToScan(&(pZipInfo->basic_info), &ssAndroidSDK));
+                    }
+
+                    ssAndroid.sVersion = QString("%1").arg(_sAndroidVersion);
+
+                    pZipInfo->mapResultOperationSystems.insert(ssAndroid.name, scansToScan(&(pZipInfo->basic_info), &ssAndroid));
                 }
 
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
+                QString sJetpack = xzip.decompress(&(pZipInfo->listArchiveRecords), "META-INF/androidx.core_core.version").data();
+                if (sJetpack != "") {
+                    QString sJetpackVersion = XBinary::regExp("(.*?)\n", sJetpack, 1).remove("\r");
 
-            // AppGuard
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APPGUARD)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APPGUARD);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // Kiro
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_KIRO)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_KIRO);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // DxShield
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_DXSHIELD)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_DXSHIELD);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // qdbh
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_QDBH)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_QDBH);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // Bangcle Protection
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_BANGCLEPROTECTION)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_BANGCLEPROTECTION);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // Qihoo 360 Protection
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_QIHOO360PROTECTION)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_QIHOO360PROTECTION);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // Alibaba Protection
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_ALIBABAPROTECTION)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_ALIBABAPROTECTION);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // Baidu Protection
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_BAIDUPROTECTION)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_BAIDUPROTECTION);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // NQ Shield
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_NQSHIELD)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_NQSHIELD);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // Nagapt Protection
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_NAGAPTPROTECTION)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_NAGAPTPROTECTION);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // SecNeo
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SECNEO)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_SECNEO);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // LIAPP
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_LIAPP)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_LIAPP);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // yidun
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_YIDUN)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_YIDUN);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // PangXie
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_PANGXIE)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_PANGXIE);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // Hdus-Wjus
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_HDUS_WJUS)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_HDUS_WJUS);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // Medusah
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_MEDUSAH)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_MEDUSAH);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // AppSolid
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APPSOLID)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APPSOLID);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // Proguard
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_PROGUARD)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_PROGUARD);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // VDog
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_VDOG)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_VDOG);
-
-                QString sVersion = xzip.decompress(&(pZipInfo->listArchiveRecords), "assets/version").data();
-
-                if (sVersion != "") {
-                    // V4.1.0_VDOG-1.8.5.3_AOP-7.23
-                    ss.sVersion = sVersion.section("VDOG-", 1, 1).section("_", 0, 0);
+                    _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_LIBRARY, RECORD_NAME_ANDROIDJETPACK, "", "", 0);
+                    ss.sVersion = sJetpackVersion;
+                    pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // APKProtect
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECT)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APKPROTECT);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // ollvm-tll
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_OLLVMTLL)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_OLLVMTLL);
-
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            // DexGuard
-            if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXGUARD) || pZipInfo->dexInfoClasses.mapResultProtectors.contains(RECORD_NAME_DEXGUARD)) {
-                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXGUARD, "", "", 0);
-
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXGUARD)) {
-                    ss.sVersion = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DEXGUARD).sVersion;
-                } else if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_GENERIC)) {
-                    ss.sVersion = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_GENERIC).sVersion;
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDGRADLE)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDGRADLE);
+                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_DEXPROTECTOR) || pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXPROTECTOR)) {
-                _SCANS_STRUCT ss = {};
-
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXPROTECTOR)) {
-                    ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DEXPROTECTOR);
-                } else {
-                    ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_DEXPROTECTOR);
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDMAVENPLUGIN)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDMAVENPLUGIN);
+                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
-
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECTOR) || pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKPROTECTOR)) {
-                _SCANS_STRUCT ss = {};
-
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKPROTECTOR)) {
-                    ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKPROTECTOR);
-                } else {
-                    ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APKPROTECTOR);
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_RADIALIX)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_RADIALIX);
+                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_MOTODEVSTUDIOFORANDROID)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_MOTODEVSTUDIOFORANDROID);
+                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
 
-            // SandHook
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SANDHOOK)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_SANDHOOK);
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANTILVL)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANTILVL);
+                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
 
-                pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKEDITOR)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKEDITOR);
+                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
 
-            // Unicom SDK
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_UNICOMSDK)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_UNICOMSDK);
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_BUNDLETOOL)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_BUNDLETOOL);
+                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
 
-                pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEX2JAR)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DEX2JAR);
+                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
 
-            // Unity
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_UNITY)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_UNITY);
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_D2JAPKSIGN)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_D2JAPKSIGN);
+                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
 
-                pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_PSEUDOAPKSIGNER)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_PSEUDOAPKSIGNER);
+                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
 
-            // IL2CPP
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_IL2CPP)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_IL2CPP);
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKSIGNER)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKSIGNER);
+                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
 
-                pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APK_SIGNER)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APK_SIGNER);
+                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
 
-            // Basic4Android
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_BASIC4ANDROID)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_BASIC4ANDROID);
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_NETEASEAPKSIGNER)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_NETEASEAPKSIGNER);
+                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
 
-                pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-            }
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDSIGNAPK)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDSIGNAPK);
+                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
 
-            // ApkToolPlus
-            if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKTOOLPLUS)) {
-                _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APKTOOLPLUS);
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DOTOOLSSIGNAPK)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DOTOOLSSIGNAPK);
+                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
 
-                pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_SIGNATORY)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_SIGNATORY);
+                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_SIGNUPDATE)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_SIGNUPDATE);
+                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDAPKSIGNER)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDAPKSIGNER);
+                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKMODIFIERSIGNAPK)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKMODIFIERSIGNAPK);
+                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_BAIDUSIGNATUREPLATFORM)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_BAIDUSIGNATUREPLATFORM);
+                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_TINYSIGN)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_TINYSIGN);
+                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_COMEXSIGNAPK)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_COMEXSIGNAPK);
+                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ECLIPSE)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ECLIPSE);
+                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_HIAPKCOM)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_HIAPKCOM);
+                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DX)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DX);
+                    pZipInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SECSHELL)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_SECSHELL);
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_JIAGU)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_JIAGU);
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_IJIAMI)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_IJIAMI);
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTPROTECTION)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_TENCENTPROTECTION);
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTLEGU) || pZipInfo->mapArchiveDetects.contains(RECORD_NAME_MOBILETENCENTPROTECT)) {
+                    _SCANS_STRUCT ss = {};
+
+                    if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTLEGU)) {
+                        ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_TENCENTLEGU);
+                    } else if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_MOBILETENCENTPROTECT)) {
+                        ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_MOBILETENCENTPROTECT);
+                    }
+
+                    qint32 nNumberOfRecords = pZipInfo->listArchiveRecords.count();
+
+                    for (qint32 i = 0; i < (nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
+                        if (pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/arm64-v8a/libshella-")) {
+                            ss.sVersion = XBinary::regExp("lib/arm64-v8a/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).sFileName, 1);
+
+                            break;
+                        } else if (pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/armeabi-v7a/libshella-")) {
+                            ss.sVersion = XBinary::regExp("lib/armeabi-v7a/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).sFileName, 1);
+
+                            break;
+                        } else if (pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/armeabi/libshella-")) {
+                            ss.sVersion = XBinary::regExp("lib/armeabi/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).sFileName, 1);
+
+                            break;
+                        } else if (pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/x86/libshella-")) {
+                            ss.sVersion = XBinary::regExp("lib/x86/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).sFileName, 1);
+
+                            break;
+                        }
+                    }
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // AppGuard
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APPGUARD)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APPGUARD);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // Kiro
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_KIRO)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_KIRO);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // DxShield
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_DXSHIELD)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_DXSHIELD);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // qdbh
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_QDBH)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_QDBH);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // Bangcle Protection
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_BANGCLEPROTECTION)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_BANGCLEPROTECTION);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // Qihoo 360 Protection
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_QIHOO360PROTECTION)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_QIHOO360PROTECTION);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // Alibaba Protection
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_ALIBABAPROTECTION)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_ALIBABAPROTECTION);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // Baidu Protection
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_BAIDUPROTECTION)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_BAIDUPROTECTION);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // NQ Shield
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_NQSHIELD)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_NQSHIELD);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // Nagapt Protection
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_NAGAPTPROTECTION)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_NAGAPTPROTECTION);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // SecNeo
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SECNEO)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_SECNEO);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // LIAPP
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_LIAPP)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_LIAPP);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // yidun
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_YIDUN)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_YIDUN);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // PangXie
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_PANGXIE)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_PANGXIE);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // Hdus-Wjus
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_HDUS_WJUS)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_HDUS_WJUS);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // Medusah
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_MEDUSAH)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_MEDUSAH);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // AppSolid
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APPSOLID)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APPSOLID);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // Proguard
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_PROGUARD)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_PROGUARD);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // VDog
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_VDOG)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_VDOG);
+
+                    QString sVersion = xzip.decompress(&(pZipInfo->listArchiveRecords), "assets/version").data();
+
+                    if (sVersion != "") {
+                        // V4.1.0_VDOG-1.8.5.3_AOP-7.23
+                        ss.sVersion = sVersion.section("VDOG-", 1, 1).section("_", 0, 0);
+                    }
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // APKProtect
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECT)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APKPROTECT);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // ollvm-tll
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_OLLVMTLL)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_OLLVMTLL);
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // DexGuard
+                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXGUARD) || pZipInfo->dexInfoClasses.mapResultProtectors.contains(RECORD_NAME_DEXGUARD)) {
+                    _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXGUARD, "", "", 0);
+
+                    if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXGUARD)) {
+                        ss.sVersion = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DEXGUARD).sVersion;
+                    } else if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_GENERIC)) {
+                        ss.sVersion = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_GENERIC).sVersion;
+                    }
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_DEXPROTECTOR) || pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXPROTECTOR)) {
+                    _SCANS_STRUCT ss = {};
+
+                    if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXPROTECTOR)) {
+                        ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DEXPROTECTOR);
+                    } else {
+                        ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_DEXPROTECTOR);
+                    }
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECTOR) || pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKPROTECTOR)) {
+                    _SCANS_STRUCT ss = {};
+
+                    if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKPROTECTOR)) {
+                        ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKPROTECTOR);
+                    } else {
+                        ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APKPROTECTOR);
+                    }
+
+                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // SandHook
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SANDHOOK)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_SANDHOOK);
+
+                    pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // Unicom SDK
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_UNICOMSDK)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_UNICOMSDK);
+
+                    pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // Unity
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_UNITY)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_UNITY);
+
+                    pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // IL2CPP
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_IL2CPP)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_IL2CPP);
+
+                    pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // Basic4Android
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_BASIC4ANDROID)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_BASIC4ANDROID);
+
+                    pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
+
+                // ApkToolPlus
+                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKTOOLPLUS)) {
+                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APKTOOLPLUS);
+
+                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
             }
         }
     }
@@ -12915,6 +12949,13 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
 
                     XBinary::setPdStructCurrent(pPdStruct, _nFreeIndex, i);
                     XBinary::setPdStructStatus(pPdStruct, _nFreeIndex, pZipInfo->listArchiveRecords.at(i).sFileName);
+#ifdef QT_DEBUG
+                    qDebug("%s", pZipInfo->listArchiveRecords.at(i).sFileName.toLatin1().data());
+#endif
+//                    if(pZipInfo->listArchiveRecords.at(i).sFileName == "res/raw/pinapp")
+//                    {
+//                        qDebug("%s", pZipInfo->listArchiveRecords.at(i).sFileName.toLatin1().data());
+//                    }
 
                     QByteArray baRecordData = xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)), true, pPdStruct);
 
@@ -12930,7 +12971,10 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
                         _parentId.sInfo = pZipInfo->listArchiveRecords.at(i).sFileName;
                         _parentId.bVirtual = true;  // TODO Check
 
-                        if (pZipInfo->listArchiveRecords.at(i).nUncompressedSize > baRecordData.size()) {
+                        qint64 _nUncompressedSize = pZipInfo->listArchiveRecords.at(i).nUncompressedSize;
+                        qint64 _nRecordDataSize = baRecordData.size();
+
+                        if (_nUncompressedSize > _nRecordDataSize) {
                             QTemporaryFile fileTemp;
 
                             if (fileTemp.open()) {
@@ -13694,6 +13738,16 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
         }
 
         if (!vi.bIsValid) {
+            vi = _get_DebianClang_string(sComment);
+
+            if (vi.bIsValid) {
+                ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_DEBIANCLANG, vi.sVersion, vi.sInfo, 0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
+
+        if (!vi.bIsValid) {
             vi = _get_ApportableClang_string(sComment);
 
             if (vi.bIsValid) {
@@ -14192,6 +14246,13 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
         // Ubuntu clang
         if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_UBUNTUCLANG)) {
             _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_UBUNTUCLANG);
+
+            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // Debian clang
+        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_DEBIANCLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_DEBIANCLANG);
 
             pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
@@ -17582,62 +17643,86 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
     qint32 nNumberOfStrings = pListStrings->count();
     qint32 nNumberOfSignatures = nRecordsSize / sizeof(STRING_RECORD);
 
-    for (qint32 i = 0; i < nNumberOfStrings; i++) {
-        quint32 nCRC = XBinary::getStringCustomCRC32(pListStrings->at(i));
-        listStringCRC.append(nCRC);
+    {
+        qint32 _nFreeIndex = XBinary::getFreeIndex(pPdStruct);
+        XBinary::setPdStructInit(pPdStruct, _nFreeIndex, nNumberOfStrings);
+
+        for (qint32 i = 0; (i < nNumberOfStrings) && (!(pPdStruct->bIsStop)); i++) {
+            quint32 nCRC = XBinary::getStringCustomCRC32(pListStrings->at(i));
+            listStringCRC.append(nCRC);
+            XBinary::setPdStructCurrentIncrement(pPdStruct, _nFreeIndex);
+        }
+
+        XBinary::setPdStructFinished(pPdStruct, _nFreeIndex);
+    }
+    {
+        qint32 _nFreeIndex = XBinary::getFreeIndex(pPdStruct);
+        XBinary::setPdStructInit(pPdStruct, _nFreeIndex, nNumberOfStrings);
+
+        for (qint32 i = 0; (i < nNumberOfSignatures) && (!(pPdStruct->bIsStop)); i++) {
+            quint32 nCRC = XBinary::getStringCustomCRC32(pRecords[i].pszString);
+            listSignatureCRC.append(nCRC);
+            XBinary::setPdStructCurrentIncrement(pPdStruct, _nFreeIndex);
+        }
+
+        XBinary::setPdStructFinished(pPdStruct, _nFreeIndex);
     }
 
-    for (qint32 i = 0; i < nNumberOfSignatures; i++) {
-        quint32 nCRC = XBinary::getStringCustomCRC32(pRecords[i].pszString);
-        listSignatureCRC.append(nCRC);
-    }
+    {
+        qint32 _nFreeIndex = XBinary::getFreeIndex(pPdStruct);
+        XBinary::setPdStructInit(pPdStruct, _nFreeIndex, nNumberOfStrings);
 
-    for (qint32 i = 0; (i < nNumberOfStrings) && (!(pPdStruct->bIsStop)); i++) {
-        for (qint32 j = 0; j < nNumberOfSignatures; j++) {
-            if ((pRecords[j].basicInfo.fileType == fileType1) || (pRecords[j].basicInfo.fileType == fileType2)) {
-                if ((!pMapRecords->contains(pRecords[j].basicInfo.name)) || (pBasicInfo->bShowDetects)) {
-                    quint32 nCRC1 = listStringCRC[i];
-                    quint32 nCRC2 = listSignatureCRC[j];
+        for (qint32 i = 0; (i < nNumberOfStrings) && (!(pPdStruct->bIsStop)); i++) {
+            for (qint32 j = 0; j < nNumberOfSignatures; j++) {
+                if ((pRecords[j].basicInfo.fileType == fileType1) || (pRecords[j].basicInfo.fileType == fileType2)) {
+                    if ((!pMapRecords->contains(pRecords[j].basicInfo.name)) || (pBasicInfo->bShowDetects)) {
+                        quint32 nCRC1 = listStringCRC[i];
+                        quint32 nCRC2 = listSignatureCRC[j];
 
-                    if (nCRC1 == nCRC2) {
-                        if (!pMapRecords->contains(pRecords[j].basicInfo.name)) {
-                            _SCANS_STRUCT record = {};
-                            record.nVariant = pRecords[j].basicInfo.nVariant;
-                            record.fileType = pRecords[j].basicInfo.fileType;
-                            record.type = pRecords[j].basicInfo.type;
-                            record.name = pRecords[j].basicInfo.name;
-                            record.sVersion = pRecords[j].basicInfo.pszVersion;
-                            record.sInfo = pRecords[j].basicInfo.pszInfo;
+                        if (nCRC1 == nCRC2) {
+                            if (!pMapRecords->contains(pRecords[j].basicInfo.name)) {
+                                _SCANS_STRUCT record = {};
+                                record.nVariant = pRecords[j].basicInfo.nVariant;
+                                record.fileType = pRecords[j].basicInfo.fileType;
+                                record.type = pRecords[j].basicInfo.type;
+                                record.name = pRecords[j].basicInfo.name;
+                                record.sVersion = pRecords[j].basicInfo.pszVersion;
+                                record.sInfo = pRecords[j].basicInfo.pszInfo;
 
-                            record.nOffset = 0;
+                                record.nOffset = 0;
 
-                            pMapRecords->insert(record.name, record);
+                                pMapRecords->insert(record.name, record);
 
-#ifdef QT_DEBUG
-                            qDebug("STRING SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
-#endif
-                        }
+    #ifdef QT_DEBUG
+                                qDebug("STRING SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
+    #endif
+                            }
 
-                        if (pBasicInfo->bShowDetects) {
-                            DETECT_RECORD heurRecord = {};
+                            if (pBasicInfo->bShowDetects) {
+                                DETECT_RECORD heurRecord = {};
 
-                            heurRecord.nVariant = pRecords[j].basicInfo.nVariant;
-                            heurRecord.fileType = pRecords[j].basicInfo.fileType;
-                            heurRecord.type = pRecords[j].basicInfo.type;
-                            heurRecord.name = pRecords[j].basicInfo.name;
-                            heurRecord.sVersion = pRecords[j].basicInfo.pszVersion;
-                            heurRecord.sInfo = pRecords[j].basicInfo.pszInfo;
-                            heurRecord.nOffset = 0;
-                            heurRecord.filepart = pBasicInfo->id.filePart;
-                            heurRecord.detectType = detectType;
-                            heurRecord.sValue = pRecords[j].pszString;
+                                heurRecord.nVariant = pRecords[j].basicInfo.nVariant;
+                                heurRecord.fileType = pRecords[j].basicInfo.fileType;
+                                heurRecord.type = pRecords[j].basicInfo.type;
+                                heurRecord.name = pRecords[j].basicInfo.name;
+                                heurRecord.sVersion = pRecords[j].basicInfo.pszVersion;
+                                heurRecord.sInfo = pRecords[j].basicInfo.pszInfo;
+                                heurRecord.nOffset = 0;
+                                heurRecord.filepart = pBasicInfo->id.filePart;
+                                heurRecord.detectType = detectType;
+                                heurRecord.sValue = pRecords[j].pszString;
 
-                            pBasicInfo->listHeurs.append(heurRecord);
+                                pBasicInfo->listHeurs.append(heurRecord);
+                            }
                         }
                     }
                 }
             }
+
+            XBinary::setPdStructCurrentIncrement(pPdStruct, _nFreeIndex);
         }
+
+        XBinary::setPdStructFinished(pPdStruct, _nFreeIndex);
     }
 }
 
@@ -18065,6 +18150,7 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
             case RECORD_NAME_APPORTABLECLANG:
             case RECORD_NAME_PLEXCLANG:
             case RECORD_NAME_UBUNTUCLANG:
+            case RECORD_NAME_DEBIANCLANG:
                 if (ssDetect.sInfo.contains("Objective-C")) {
                     ssLanguage.name = RECORD_NAME_OBJECTIVEC;
                 } else {

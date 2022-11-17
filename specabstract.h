@@ -257,6 +257,7 @@ public:
         RECORD_NAME_DBPE,
         RECORD_NAME_DCRYPTPRIVATE,
         RECORD_NAME_DEB,
+        RECORD_NAME_DEBIANCLANG,
         RECORD_NAME_DEBIANLINUX,
         RECORD_NAME_DEEPSEA,
         RECORD_NAME_DEPACK,
@@ -1544,6 +1545,7 @@ public:
     static VI_STRUCT _get_AlibabaClang_string(QString sString);
     static VI_STRUCT _get_PlexClang_string(QString sString);
     static VI_STRUCT _get_UbuntuClang_string(QString sString);
+    static VI_STRUCT _get_DebianClang_string(QString sString);
     static VI_STRUCT _get_AlipayObfuscator_string(QString sString);
     static VI_STRUCT _get_wangzehuaLLVM_string(QString sString);
     static VI_STRUCT _get_ByteGuard_string(QString sString);
