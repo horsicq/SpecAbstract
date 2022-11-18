@@ -4666,21 +4666,21 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
         result.mapItems = dex.getMapItems();
 
 #ifdef QT_DEBUG
-    qDebug("%d msec",timer.elapsed());
+        qDebug("%d msec", timer.elapsed());
 #endif
 
         result.bIsStringPoolSorted = dex.isStringPoolSorted(&(result.mapItems));
         result.bIsOverlayPresent = dex.isOverlayPresent(&(result.basic_info.memoryMap));
 
 #ifdef QT_DEBUG
-    qDebug("%d msec",timer.elapsed());
+        qDebug("%d msec", timer.elapsed());
 #endif
 
         result.listStrings = dex.getStrings(&(result.mapItems), pPdStruct);
         result.listTypeItemStrings = dex.getTypeItemStrings(&(result.mapItems), &result.listStrings, pPdStruct);
 
 #ifdef QT_DEBUG
-    qDebug("%d msec",timer.elapsed());
+        qDebug("%d msec", timer.elapsed());
 #endif
 
         stringScan(&result.mapStringDetects, &result.listStrings, _DEX_string_records, sizeof(_DEX_string_records), result.basic_info.id.fileType, XBinary::FT_DEX,
@@ -4749,7 +4749,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
     result.basic_info.nElapsedTime = timer.elapsed();
 
 #ifdef QT_DEBUG
-    qDebug("%d msec",result.basic_info.nElapsedTime);
+    qDebug("%d msec", result.basic_info.nElapsedTime);
 #endif
 
     return result;
@@ -12952,10 +12952,10 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
 #ifdef QT_DEBUG
                     qDebug("%s", pZipInfo->listArchiveRecords.at(i).sFileName.toLatin1().data());
 #endif
-//                    if(pZipInfo->listArchiveRecords.at(i).sFileName == "res/raw/pinapp")
-//                    {
-//                        qDebug("%s", pZipInfo->listArchiveRecords.at(i).sFileName.toLatin1().data());
-//                    }
+                    //                    if(pZipInfo->listArchiveRecords.at(i).sFileName == "res/raw/pinapp")
+                    //                    {
+                    //                        qDebug("%s", pZipInfo->listArchiveRecords.at(i).sFileName.toLatin1().data());
+                    //                    }
 
                     QByteArray baRecordData = xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)), true, pPdStruct);
 
@@ -17693,9 +17693,9 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
 
                                 pMapRecords->insert(record.name, record);
 
-    #ifdef QT_DEBUG
+#ifdef QT_DEBUG
                                 qDebug("STRING SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
-    #endif
+#endif
                             }
 
                             if (pBasicInfo->bShowDetects) {
