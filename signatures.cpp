@@ -1197,7 +1197,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_BAMBAM,                       "",                 ""},                    ".bedrock"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_BEROEXEPACKER,                "",                 ""},                    "bero^fr "},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_BEROEXEPACKER,                "",                 ""},                    "packerBY"},
-    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_CHROMIUMCRASHPAD,                     "",                 ""},                    "CPADinfo"},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_CHROMIUMCRASHPAD,             "",                 ""},                    "CPADinfo"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRUNCH,                       "1.0",              ""},                    "BitArts"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTER,                      "",                 ""},                    "SCRYPT"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTER,                      "",                 ""},                    "FCKCrypt"}, // TODO CHeck
