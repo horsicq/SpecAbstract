@@ -3637,7 +3637,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         result.basic_info.bIsVerbose = pOptions->bVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = binary.getMemoryMap();
+        result.basic_info.memoryMap = binary.getMemoryMap(pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -3748,7 +3748,7 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XBinar
         result.basic_info.bIsVerbose = pOptions->bVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = com.getMemoryMap();
+        result.basic_info.memoryMap = com.getMemoryMap(pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -3821,7 +3821,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XB
         result.basic_info.bIsVerbose = pOptions->bVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = msdos.getMemoryMap();
+        result.basic_info.memoryMap = msdos.getMemoryMap(pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -3915,7 +3915,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XBinar
         result.basic_info.bIsVerbose = pOptions->bVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = elf.getMemoryMap();
+        result.basic_info.memoryMap = elf.getMemoryMap(pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -4017,7 +4017,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XB
         result.basic_info.bIsVerbose = pOptions->bVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = mach.getMemoryMap();
+        result.basic_info.memoryMap = mach.getMemoryMap(pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -4092,7 +4092,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XBinary:
         result.basic_info.bIsVerbose = pOptions->bVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = le.getMemoryMap();
+        result.basic_info.memoryMap = le.getMemoryMap(pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -4160,7 +4160,7 @@ SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice, XBinary:
         result.basic_info.bIsVerbose = pOptions->bVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = lx.getMemoryMap();
+        result.basic_info.memoryMap = lx.getMemoryMap(pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -4228,7 +4228,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, XBinary:
         result.basic_info.bIsVerbose = pOptions->bVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = ne.getMemoryMap();
+        result.basic_info.memoryMap = ne.getMemoryMap(pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -4295,7 +4295,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
         result.basic_info.bIsVerbose = pOptions->bVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = pe.getMemoryMap();
+        result.basic_info.memoryMap = pe.getMemoryMap(pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -4652,7 +4652,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
         result.basic_info.bIsVerbose = pOptions->bVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = dex.getMemoryMap();
+        result.basic_info.memoryMap = dex.getMemoryMap(pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -4776,7 +4776,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XBinar
         result.basic_info.bIsVerbose = pOptions->bVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = xzip.getMemoryMap();
+        result.basic_info.memoryMap = xzip.getMemoryMap(pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -4889,7 +4889,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
         result.basic_info.bIsVerbose = pOptions->bVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = xmachofat.getMemoryMap();
+        result.basic_info.memoryMap = xmachofat.getMemoryMap(pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
