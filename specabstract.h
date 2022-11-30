@@ -1359,8 +1359,8 @@ public:
 
     explicit SpecAbstract(QObject *pParent = nullptr);
 
-    static void scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions,
-                     bool bInit, XBinary::PDSTRUCT *pPdStruct = nullptr);
+    static void scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, XBinary::SCANID parentId,
+                     SpecAbstract::SCAN_OPTIONS *pOptions, bool bInit, XBinary::PDSTRUCT *pPdStruct = nullptr);
 
     static QString append(QString sResult, QString sString);
 
@@ -1379,11 +1379,14 @@ public:
     static QString createTypeString(const SCAN_STRUCT *pScanStruct);
     static SCAN_STRUCT createHeaderScanStruct(const SCAN_STRUCT *pScanStruct);
 
-    static BINARYINFO_STRUCT getBinaryInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
+    static BINARYINFO_STRUCT getBinaryInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                           XBinary::PDSTRUCT *pPdStruct);
     static COMINFO_STRUCT getCOMInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
-    static MSDOSINFO_STRUCT getMSDOSInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
+    static MSDOSINFO_STRUCT getMSDOSInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                         XBinary::PDSTRUCT *pPdStruct);
     static ELFINFO_STRUCT getELFInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
-    static MACHOINFO_STRUCT getMACHOInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
+    static MACHOINFO_STRUCT getMACHOInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                         XBinary::PDSTRUCT *pPdStruct);
     static LEINFO_STRUCT getLEInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static LXINFO_STRUCT getLXInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static NEINFO_STRUCT getNEInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
@@ -1512,7 +1515,8 @@ public:
     static void Zip_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo);
 
-    static DEXINFO_STRUCT Zip_scan_DEX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct, QString sFileName);
+    static DEXINFO_STRUCT Zip_scan_DEX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct,
+                                       QString sFileName);
 
     static void updateVersion(QMap<RECORD_NAME, SCAN_STRUCT> *pMap, RECORD_NAME name, QString sVersion);
     static void updateInfo(QMap<RECORD_NAME, SCAN_STRUCT> *pMap, RECORD_NAME name, QString sInfo);
@@ -1521,7 +1525,8 @@ public:
     static bool isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListScanStructs, XBinary::FT fileType, RECORD_TYPE type = RECORD_TYPE_UNKNOWN,
                                     RECORD_NAME name = RECORD_NAME_UNKNOWN, QString sVersion = "", QString sInfo = "");
 
-    static VI_STRUCT get_UPX_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::FT fileType, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_UPX_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::FT fileType,
+                                XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT _get_UPX_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::FT fileType);
     static VI_STRUCT get_GCC_vi1(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT get_GCC_vi2(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
@@ -1605,12 +1610,12 @@ public:
     static void PE_resourcesScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources, PE_RESOURCES_RECORD *pRecords,
                                  qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
                                  XBinary::PDSTRUCT *pPdStruct);
-    static void stringScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QList<QString> *pListStrings, STRING_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1,
-                           XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-    static void constScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, CONST_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1,
-                          XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-    static void MSDOS_richScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1,
-                               XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+    static void stringScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QList<QString> *pListStrings, STRING_RECORD *pRecords, qint32 nRecordsSize,
+                           XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+    static void constScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, CONST_RECORD *pRecords, qint32 nRecordsSize,
+                          XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+    static void MSDOS_richScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, qint32 nRecordsSize,
+                               XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
 
     static void archiveScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, STRING_RECORD *pRecords, qint32 nRecordsSize,
                             XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
@@ -1618,8 +1623,8 @@ public:
                                XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
 
     static void signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemoryMap, QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, qint64 nOffset,
-                                 SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
-                                 XBinary::PDSTRUCT *pPdStruct);
+                                 SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
+                                 DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
 
     static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
                                                BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);

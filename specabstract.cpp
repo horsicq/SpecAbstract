@@ -2888,7 +2888,8 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_SmartAssembly_vi(QIODevice *pDevice, S
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::get_R8_marker_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
+SpecAbstract::VI_STRUCT SpecAbstract::get_R8_marker_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                                       XBinary::PDSTRUCT *pPdStruct)
 {
     VI_STRUCT result = {};
 
@@ -3022,7 +3023,8 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_ObfuscatorLLVM_string(QString sString
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::get_AndroidClang_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
+SpecAbstract::VI_STRUCT SpecAbstract::get_AndroidClang_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                                          XBinary::PDSTRUCT *pPdStruct)
 {
     VI_STRUCT result = {};
 
@@ -3620,7 +3622,8 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SourceryCodeBench_string(QString sStr
     return result;
 }
 
-SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, XBinary::SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
+SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, XBinary::SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                                            XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
     timer.start();
@@ -3848,8 +3851,8 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XB
                       result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
         signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _MSDOS_header_records, sizeof(_MSDOS_header_records),
                       result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
-        signatureScan(&result.mapEntryPointDetects, result.sEntryPointSignature, _MSDOS_entrypoint_records, sizeof(_MSDOS_entrypoint_records), result.basic_info.id.fileType,
-                      XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
+        signatureScan(&result.mapEntryPointDetects, result.sEntryPointSignature, _MSDOS_entrypoint_records, sizeof(_MSDOS_entrypoint_records),
+                      result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
 
         signatureExpScan(&msdos, &(result.basic_info.memoryMap), &result.mapEntryPointDetects, result.nEntryPointOffset, _MSDOS_entrypointExp_records,
                          sizeof(_MSDOS_entrypointExp_records), result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
@@ -4380,10 +4383,13 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
         result.sResourceManifest = pe.getResourceManifest(&result.listResources);
         result.resVersion = pe.getResourcesVersion(&result.listResources);
 
-        result.nEntryPointAddress = result.bIs64 ? result.optional_header.optionalHeader64.AddressOfEntryPoint : result.optional_header.optionalHeader32.AddressOfEntryPoint;
+        result.nEntryPointAddress =
+            result.bIs64 ? result.optional_header.optionalHeader64.AddressOfEntryPoint : result.optional_header.optionalHeader32.AddressOfEntryPoint;
         result.nImageBaseAddress = result.bIs64 ? result.optional_header.optionalHeader64.ImageBase : result.optional_header.optionalHeader32.ImageBase;
-        result.nMinorLinkerVersion = result.bIs64 ? result.optional_header.optionalHeader64.MinorLinkerVersion : result.optional_header.optionalHeader32.MinorLinkerVersion;
-        result.nMajorLinkerVersion = result.bIs64 ? result.optional_header.optionalHeader64.MajorLinkerVersion : result.optional_header.optionalHeader32.MajorLinkerVersion;
+        result.nMinorLinkerVersion =
+            result.bIs64 ? result.optional_header.optionalHeader64.MinorLinkerVersion : result.optional_header.optionalHeader32.MinorLinkerVersion;
+        result.nMajorLinkerVersion =
+            result.bIs64 ? result.optional_header.optionalHeader64.MajorLinkerVersion : result.optional_header.optionalHeader32.MajorLinkerVersion;
         result.nMinorImageVersion = result.bIs64 ? result.optional_header.optionalHeader64.MinorImageVersion : result.optional_header.optionalHeader32.MinorImageVersion;
         result.nMajorImageVersion = result.bIs64 ? result.optional_header.optionalHeader64.MajorImageVersion : result.optional_header.optionalHeader32.MajorImageVersion;
 
@@ -4458,8 +4464,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
 
         signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _MSDOS_linker_header_records, sizeof(_MSDOS_linker_header_records),
                       result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
-        signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_header_records, sizeof(_PE_header_records), result.basic_info.id.fileType,
-                      XBinary::FT_PE, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
+        signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_header_records, sizeof(_PE_header_records),
+                      result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
         signatureScan(&result.mapEntryPointDetects, result.sEntryPointSignature, _PE_entrypoint_records, sizeof(_PE_entrypoint_records), result.basic_info.id.fileType,
                       XBinary::FT_PE, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
         signatureExpScan(&pe, &(result.basic_info.memoryMap), &result.mapEntryPointDetects, result.nEntryPointOffset, _PE_entrypointExp_records,
@@ -4468,8 +4474,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
                       &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
         signatureScan(&result.mapOverlayDetects, result.sOverlaySignature, _archive_records, sizeof(_archive_records), result.basic_info.id.fileType, XBinary::FT_ARCHIVE,
                       &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
-        signatureScan(&result.mapOverlayDetects, result.sOverlaySignature, _PE_overlay_records, sizeof(_PE_overlay_records), result.basic_info.id.fileType, XBinary::FT_BINARY,
-                      &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
+        signatureScan(&result.mapOverlayDetects, result.sOverlaySignature, _PE_overlay_records, sizeof(_PE_overlay_records), result.basic_info.id.fileType,
+                      XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
 
         stringScan(&result.mapSectionNamesDetects, &result.listSectionNames, _PE_sectionNames_records, sizeof(_PE_sectionNames_records), result.basic_info.id.fileType,
                    XBinary::FT_PE, &(result.basic_info), DETECTTYPE_SECTIONNAME, pPdStruct);
@@ -4516,7 +4522,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
             stringScan(&result.mapDotAnsiStringsDetects, &result.cliInfo.metaData.listAnsiStrings, _PE_dot_ansistrings_records, sizeof(_PE_dot_ansistrings_records),
                        result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_NETANSISTRING, pPdStruct);
             stringScan(&result.mapDotUnicodeStringsDetects, &result.cliInfo.metaData.listUnicodeStrings, _PE_dot_unicodestrings_records,
-                       sizeof(_PE_dot_unicodestrings_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_NETUNICODESTRING, pPdStruct);
+                       sizeof(_PE_dot_unicodestrings_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_NETUNICODESTRING,
+                       pPdStruct);
 
             //            for(qint32 i=0;i<result.cliInfo.listUnicodeStrings.count();i++)
             //            {
@@ -4529,7 +4536,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
                     qint64 nSectionSize = result.osCodeSection.nSize;
 
                     memoryScan(&result.mapCodeSectionDetects, pDevice, pOptions, nSectionOffset, nSectionSize, _PE_dot_codesection_records,
-                               sizeof(_PE_dot_codesection_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_CODESECTION, pPdStruct);
+                               sizeof(_PE_dot_codesection_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_CODESECTION,
+                               pPdStruct);
                 }
             }
         }
@@ -4997,11 +5005,13 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
     if (pPEInfo->listImports.count() >= 1) {
         if (pPEInfo->listImports.at(0).sName.toUpper() == "KERNEL32.DLL") {
             if (pPEInfo->listImports.at(0).listPositions.count() == 2) {
-                if ((pPEInfo->listImports.at(0).listPositions.at(0).sName == "GetProcAddress") && (pPEInfo->listImports.at(0).listPositions.at(1).sName == "LoadLibraryA")) {
+                if ((pPEInfo->listImports.at(0).listPositions.at(0).sName == "GetProcAddress") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(1).sName == "LoadLibraryA")) {
                     stDetects.insert("kernel32_zprotect");
                 }
             } else if (pPEInfo->listImports.at(0).listPositions.count() == 13) {
-                if ((pPEInfo->listImports.at(0).listPositions.at(0).sName == "LoadLibraryA") && (pPEInfo->listImports.at(0).listPositions.at(1).sName == "GetProcAddress") &&
+                if ((pPEInfo->listImports.at(0).listPositions.at(0).sName == "LoadLibraryA") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(1).sName == "GetProcAddress") &&
                     (pPEInfo->listImports.at(0).listPositions.at(2).sName == "VirtualAlloc") && (pPEInfo->listImports.at(0).listPositions.at(3).sName == "VirtualFree") &&
                     (pPEInfo->listImports.at(0).listPositions.at(4).sName == "ExitProcess") && (pPEInfo->listImports.at(0).listPositions.at(5).sName == "CreateFileA") &&
                     (pPEInfo->listImports.at(0).listPositions.at(6).sName == "CloseHandle") && (pPEInfo->listImports.at(0).listPositions.at(7).sName == "WriteFile") &&
@@ -5014,7 +5024,8 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
                     }
                 }
             } else if (pPEInfo->listImports.at(0).listPositions.count() == 15) {
-                if ((pPEInfo->listImports.at(0).listPositions.at(0).sName == "LoadLibraryA") && (pPEInfo->listImports.at(0).listPositions.at(1).sName == "GetProcAddress") &&
+                if ((pPEInfo->listImports.at(0).listPositions.at(0).sName == "LoadLibraryA") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(1).sName == "GetProcAddress") &&
                     (pPEInfo->listImports.at(0).listPositions.at(2).sName == "VirtualAlloc") && (pPEInfo->listImports.at(0).listPositions.at(3).sName == "VirtualFree") &&
                     (pPEInfo->listImports.at(0).listPositions.at(4).sName == "ExitProcess") && (pPEInfo->listImports.at(0).listPositions.at(5).sName == "CreateFileA") &&
                     (pPEInfo->listImports.at(0).listPositions.at(6).sName == "CloseHandle") && (pPEInfo->listImports.at(0).listPositions.at(7).sName == "WriteFile") &&
@@ -5070,13 +5081,15 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
     if (pPEInfo->listImports.count() >= 3) {
         if (pPEInfo->listImports.at(2).sName.toUpper() == "KERNEL32.DLL") {
             if (pPEInfo->listImports.at(2).listPositions.count() == 2) {
-                if ((pPEInfo->listImports.at(2).listPositions.at(0).sName == "LoadLibraryA") && (pPEInfo->listImports.at(2).listPositions.at(1).sName == "GetProcAddress")) {
+                if ((pPEInfo->listImports.at(2).listPositions.at(0).sName == "LoadLibraryA") &&
+                    (pPEInfo->listImports.at(2).listPositions.at(1).sName == "GetProcAddress")) {
                     if (pPEInfo->listImports.count() == 3) {
                         stDetects.insert("kernel32_pespinx");
                     }
                 }
             } else if (pPEInfo->listImports.at(2).listPositions.count() == 4) {
-                if ((pPEInfo->listImports.at(2).listPositions.at(0).sName == "LoadLibraryA") && (pPEInfo->listImports.at(2).listPositions.at(1).sName == "GetProcAddress") &&
+                if ((pPEInfo->listImports.at(2).listPositions.at(0).sName == "LoadLibraryA") &&
+                    (pPEInfo->listImports.at(2).listPositions.at(1).sName == "GetProcAddress") &&
                     (pPEInfo->listImports.at(2).listPositions.at(2).sName == "VirtualAlloc") && (pPEInfo->listImports.at(2).listPositions.at(3).sName == "VirtualFree")) {
                     if (pPEInfo->listImports.count() == 3) {
                         stDetects.insert("kernel32_pespin");
@@ -5678,7 +5691,8 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                             if ((pPEInfo->listSectionHeaders.at(0).PointerToRawData == 0) && (pPEInfo->listSectionHeaders.at(0).SizeOfRawData == 0) &&
                                 (pPEInfo->listSectionHeaders.at(0).Characteristics == 0xe00000a0)) {
                                 bool bDetect1 = (pPEInfo->nEntryPointSection == 1);
-                                bool bDetect2 = (pe.getEntropy(pPEInfo->listSectionRecords.at(2).nOffset, pPEInfo->listSectionRecords.at(2).nSize) > 7.6);  // TODO ProcessData
+                                bool bDetect2 =
+                                    (pe.getEntropy(pPEInfo->listSectionRecords.at(2).nOffset, pPEInfo->listSectionRecords.at(2).nSize) > 7.6);  // TODO ProcessData
 
                                 if (bDetect1 || bDetect2) {
                                     _SCANS_STRUCT recordZProtect = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_ZPROTECT, "1.XX", "", 0);
@@ -7805,8 +7819,8 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
         for (qint32 i = 0; i < nRichSignaturesCount; i++) {
             listRichDescriptions.append(MSDOS_richScan(pPEInfo->listRichSignatures.at(i).nId, pPEInfo->listRichSignatures.at(i).nVersion, _MS_rich_records,
-                                                       sizeof(_MS_rich_records), pPEInfo->basic_info.id.fileType, XBinary::FT_MSDOS, &(pPEInfo->basic_info), DETECTTYPE_RICH,
-                                                       pPdStruct));
+                                                       sizeof(_MS_rich_records), pPEInfo->basic_info.id.fileType, XBinary::FT_MSDOS, &(pPEInfo->basic_info),
+                                                       DETECTTYPE_RICH, pPdStruct));
         }
 
         _fixRichSignatures(&listRichDescriptions, pPEInfo->nMajorLinkerVersion, pPEInfo->nMinorLinkerVersion);
@@ -9354,7 +9368,8 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
             }
 
             if (ssCompiler.type == RECORD_TYPE_UNKNOWN) {
-                if ((ssTool.name == RECORD_NAME_MINGW) || (ssTool.name == RECORD_NAME_MSYS) || (ssTool.name == RECORD_NAME_MSYS2) || (ssTool.name == RECORD_NAME_CYGWIN)) {
+                if ((ssTool.name == RECORD_NAME_MINGW) || (ssTool.name == RECORD_NAME_MSYS) || (ssTool.name == RECORD_NAME_MSYS2) ||
+                    (ssTool.name == RECORD_NAME_CYGWIN)) {
                     ssCompiler.type = RECORD_TYPE_COMPILER;
                     ssCompiler.name = RECORD_NAME_GCC;
                 }
@@ -9940,8 +9955,8 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                     if ((pPEInfo->exportHeader.listPositions.at(0).sFunctionName == "_LanguageDlg@16") ||
                         (pPEInfo->exportHeader.listPositions.at(1).sFunctionName == "_PasswordDlg@16") ||
                         (pPEInfo->exportHeader.listPositions.at(2).sFunctionName == "_ProgressDlg@16") ||
-                        (pPEInfo->exportHeader.listPositions.at(3).sFunctionName == "_UpdateCRC@8") || (pPEInfo->exportHeader.listPositions.at(4).sFunctionName == "_t1@40") ||
-                        (pPEInfo->exportHeader.listPositions.at(5).sFunctionName == "_t2@12")) {
+                        (pPEInfo->exportHeader.listPositions.at(3).sFunctionName == "_UpdateCRC@8") ||
+                        (pPEInfo->exportHeader.listPositions.at(4).sFunctionName == "_t1@40") || (pPEInfo->exportHeader.listPositions.at(5).sFunctionName == "_t2@12")) {
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_WISE, "", "", 0);
 
                         // Check version
@@ -10823,7 +10838,8 @@ bool SpecAbstract::PE_isProtectionPresent(SpecAbstract::PEINFO_STRUCT *pPEInfo)
             pPEInfo->mapResultNETObfuscators.count() || pPEInfo->mapResultDongleProtection.count());
 }
 
-void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo,
+                                               XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -11259,7 +11275,8 @@ void SpecAbstract::COM_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_
     }
 }
 
-void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo,
+                                          XBinary::PDSTRUCT *pPdStruct)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
@@ -12197,11 +12214,11 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, SpecAbstract::SCAN_O
                     }
 
                     pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
-                } else if (sCreatedBy.contains("(Sun Microsystems Inc.)") || sCreatedBy.contains("(BEA Systems, Inc.)") || sCreatedBy.contains("(The FreeBSD Foundation)") ||
-                           sCreatedBy.contains("(d2j-null)") || sCreatedBy.contains("(d2j-2.1-SNAPSHOT)") || sCreatedBy.contains("(Oracle Corporation)") ||
-                           sCreatedBy.contains("(Apple Inc.)") || sCreatedBy.contains("(Google Inc.)") || sCreatedBy.contains("(Jeroen Frijters)") ||
-                           sCreatedBy.contains("(IBM Corporation)") || sCreatedBy.contains("(JetBrains s.r.o)") || sCreatedBy.contains("(Alibaba)") ||
-                           sCreatedBy.contains("(AdoptOpenJdk)")) {
+                } else if (sCreatedBy.contains("(Sun Microsystems Inc.)") || sCreatedBy.contains("(BEA Systems, Inc.)") ||
+                           sCreatedBy.contains("(The FreeBSD Foundation)") || sCreatedBy.contains("(d2j-null)") || sCreatedBy.contains("(d2j-2.1-SNAPSHOT)") ||
+                           sCreatedBy.contains("(Oracle Corporation)") || sCreatedBy.contains("(Apple Inc.)") || sCreatedBy.contains("(Google Inc.)") ||
+                           sCreatedBy.contains("(Jeroen Frijters)") || sCreatedBy.contains("(IBM Corporation)") || sCreatedBy.contains("(JetBrains s.r.o)") ||
+                           sCreatedBy.contains("(Alibaba)") || sCreatedBy.contains("(AdoptOpenJdk)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_JAR, RECORD_TYPE_TOOL, RECORD_NAME_JDK, "", "", 0);
                     ss.sVersion = sCreatedBy.section(" ", 0, 0);
 
@@ -12956,8 +12973,10 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
                             pZipInfo->listArchiveRecords.at(i).sFileName.contains("libUnpacker.so") ||
                             pZipInfo->listArchiveRecords.at(i).sFileName.contains("libcovault.so") ||
                             pZipInfo->listArchiveRecords.at(i).sFileName.contains("libcovault-appsec.so") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libsecenh.so") || pZipInfo->listArchiveRecords.at(i).sFileName.contains("guardit4j.fin") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libmedl.so") || pZipInfo->listArchiveRecords.at(i).sFileName.contains("libCodeGuard.so") ||
+                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libsecenh.so") ||
+                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("guardit4j.fin") ||
+                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libmedl.so") ||
+                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libCodeGuard.so") ||
                             pZipInfo->listArchiveRecords.at(i).sFileName.contains("libshield.so") ||
                             pZipInfo->listArchiveRecords.at(i).sFileName.contains("libvosWrapperEx.so")) {
                             ss.sVersion = pZipInfo->listArchiveRecords.at(i).sFileName;
@@ -13340,7 +13359,8 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_O
     }
 }
 
-void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,
+                                           XBinary::PDSTRUCT *pPdStruct)
 {
     XMSDOS msdos(pDevice, pOptions->bIsImage);
 
@@ -13631,7 +13651,8 @@ void SpecAbstract::MSDOS_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_
     fixLanguage(&(pMSDOSInfo->mapResultLanguages));
 }
 
-void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,
+                                          XBinary::PDSTRUCT *pPdStruct)
 {
     if (pOptions->bRecursiveScan) {
         XMSDOS msdos(pDevice, pOptions->bIsImage);
@@ -15816,8 +15837,8 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
         for (qint32 i = 0; i < nRichSignaturesCount; i++) {
             listRichDescriptions.append(MSDOS_richScan(pLEInfo->listRichSignatures.at(i).nId, pLEInfo->listRichSignatures.at(i).nVersion, _MS_rich_records,
-                                                       sizeof(_MS_rich_records), pLEInfo->basic_info.id.fileType, XBinary::FT_MSDOS, &(pLEInfo->basic_info), DETECTTYPE_RICH,
-                                                       pPdStruct));
+                                                       sizeof(_MS_rich_records), pLEInfo->basic_info.id.fileType, XBinary::FT_MSDOS, &(pLEInfo->basic_info),
+                                                       DETECTTYPE_RICH, pPdStruct));
         }
 
         qint32 nRichDescriptionsCount = listRichDescriptions.count();
@@ -15929,8 +15950,8 @@ void SpecAbstract::LX_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
         for (qint32 i = 0; i < nRichSignaturesCount; i++) {
             listRichDescriptions.append(MSDOS_richScan(pLXInfo->listRichSignatures.at(i).nId, pLXInfo->listRichSignatures.at(i).nVersion, _MS_rich_records,
-                                                       sizeof(_MS_rich_records), pLXInfo->basic_info.id.fileType, XBinary::FT_MSDOS, &(pLXInfo->basic_info), DETECTTYPE_RICH,
-                                                       pPdStruct));
+                                                       sizeof(_MS_rich_records), pLXInfo->basic_info.id.fileType, XBinary::FT_MSDOS, &(pLXInfo->basic_info),
+                                                       DETECTTYPE_RICH, pPdStruct));
         }
 
         qint32 nRichDescriptionsCount = listRichDescriptions.count();
@@ -16697,8 +16718,8 @@ bool SpecAbstract::isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListSc
     for (qint32 i = 0; i < nNumberOfRecords; i++) {
         if (((pListScanStructs->at(i).id.fileType == fileType) || (fileType == XBinary::FT_UNKNOWN)) &&
             ((pListScanStructs->at(i).type == type) || (type == SpecAbstract::RECORD_TYPE_UNKNOWN)) &&
-            ((pListScanStructs->at(i).name == name) || (name == SpecAbstract::RECORD_NAME_UNKNOWN)) && ((pListScanStructs->at(i).sVersion == sVersion) || (sVersion == "")) &&
-            ((pListScanStructs->at(i).sInfo == sInfo) || (sInfo == ""))) {
+            ((pListScanStructs->at(i).name == name) || (name == SpecAbstract::RECORD_NAME_UNKNOWN)) &&
+            ((pListScanStructs->at(i).sVersion == sVersion) || (sVersion == "")) && ((pListScanStructs->at(i).sInfo == sInfo) || (sInfo == ""))) {
             bResult = true;
             break;
         }
@@ -17097,7 +17118,8 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Zig_vi(QIODevice *pDevice, SpecAbstrac
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::get_PyInstaller_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
+SpecAbstract::VI_STRUCT SpecAbstract::get_PyInstaller_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                                         XBinary::PDSTRUCT *pPdStruct)
 {
     VI_STRUCT result = {};
 
@@ -17522,8 +17544,8 @@ SpecAbstract::BASIC_PE_INFO SpecAbstract::_ArrayToBasicPEInfo(const QByteArray *
 }
 
 void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
-                              SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
-                              XBinary::PDSTRUCT *pPdStruct)
+                              SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
+                              DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
     if (nSize) {
         XBinary binary(pDevice, pOptions->bIsImage);
@@ -17696,8 +17718,9 @@ void SpecAbstract::PE_resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract
     }
 }
 
-void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<QString> *pListStrings, SpecAbstract::STRING_RECORD *pRecords,
-                              qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<QString> *pListStrings,
+                              SpecAbstract::STRING_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
+                              DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
     QList<quint32> listStringCRC;
     QList<quint32> listSignatureCRC;
@@ -17788,8 +17811,9 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
     }
 }
 
-void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, SpecAbstract::CONST_RECORD *pRecords,
-                             qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2,
+                             SpecAbstract::CONST_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
+                             DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
     qint32 nSignaturesCount = nRecordsSize / (int)sizeof(CONST_RECORD);
 
@@ -17879,8 +17903,8 @@ void SpecAbstract::MSDOS_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
 }
 
 void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords,
-                               SpecAbstract::STRING_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, SpecAbstract::BASIC_INFO *pBasicInfo,
-                               SpecAbstract::DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
+                               SpecAbstract::STRING_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
+                               SpecAbstract::BASIC_INFO *pBasicInfo, SpecAbstract::DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
     QList<quint32> listStringCRC;
     QList<quint32> listSignatureCRC;
@@ -18052,8 +18076,9 @@ void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMe
     }
 }
 
-QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1,
-                                                                XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
+QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, qint32 nRecordsSize,
+                                                                XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
+                                                                XBinary::PDSTRUCT *pPdStruct)
 {
     QList<_SCANS_STRUCT> listResult;
 
@@ -18531,8 +18556,8 @@ QList<XBinary::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListScanSt
         if ((rt == SpecAbstract::RECORD_TYPE_INSTALLER) || (rt == SpecAbstract::RECORD_TYPE_SFX)) {
             record.globalColor = Qt::blue;
         } else if ((rt == SpecAbstract::RECORD_TYPE_PROTECTOR) || (rt == SpecAbstract::RECORD_TYPE_APKOBFUSCATOR) || (rt == SpecAbstract::RECORD_TYPE_JAROBFUSCATOR) ||
-                   (rt == SpecAbstract::RECORD_TYPE_NETOBFUSCATOR) || (rt == SpecAbstract::RECORD_TYPE_NETCOMPRESSOR) || (rt == SpecAbstract::RECORD_TYPE_DONGLEPROTECTION) ||
-                   (rt == SpecAbstract::RECORD_TYPE_JOINER) || (rt == SpecAbstract::RECORD_TYPE_PACKER)) {
+                   (rt == SpecAbstract::RECORD_TYPE_NETOBFUSCATOR) || (rt == SpecAbstract::RECORD_TYPE_NETCOMPRESSOR) ||
+                   (rt == SpecAbstract::RECORD_TYPE_DONGLEPROTECTION) || (rt == SpecAbstract::RECORD_TYPE_JOINER) || (rt == SpecAbstract::RECORD_TYPE_PACKER)) {
             record.globalColor = Qt::red;
         } else if ((rt == SpecAbstract::RECORD_TYPE_PETOOL) || (rt == SpecAbstract::RECORD_TYPE_APKTOOL)) {
             record.globalColor = Qt::green;
