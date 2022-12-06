@@ -2382,6 +2382,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_WDOSX:
             sResult = QString("WDOSX");
             break;
+        case RECORD_NAME_WEBP:
+            sResult = QString("WebP");
+            break;
         case RECORD_NAME_WHITELLCRYPT:
             sResult = QString("Whitell Crypt");
             break;
@@ -11711,8 +11714,11 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice, SpecAbstract::SCAN_
         // TODO Version
         pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_AVI)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
-        // DEB
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_AVI);
+        // TODO Version
+        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WEBP)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WEBP);
         // TODO Version
         pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_TTF)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
