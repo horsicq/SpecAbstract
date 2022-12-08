@@ -1402,31 +1402,31 @@ public:
     static void PE_handle_import(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);  // TODO remove !!!
     static void PE_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void PE_handle_VMProtect(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
-    static void PE_handle_VProtect(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);   // TODO move to protection
+    static void PE_handle_VMProtect(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
+    static void PE_handle_VProtect(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);   // TODO move to protection
     static void PE_handle_TTProtect(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);  // TODO move to protection
-    static void PE_handle_SafeengineShielden(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_SafeengineShielden(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void PE_handle_tElock(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Armadillo(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Obsidium(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
-    static void PE_handle_Themida(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
-    static void PE_handle_StarForce(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
-    static void PE_handle_Petite(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_Themida(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
+    static void PE_handle_StarForce(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
+    static void PE_handle_Petite(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void PE_handle_NETProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void PE_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void PE_handle_Watcom(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void PE_handle_PETools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
-    static void PE_handle_wxWidgets(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_wxWidgets(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void PE_handle_GCC(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void PE_handle_Signtools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
     static void PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void PE_handle_SFX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_SFX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void PE_handle_PolyMorph(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
     static void PE_handle_DongleProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
-    static void PE_handle_NeoLite(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
-    static void PE_handle_PrivateEXEProtector(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
+    static void PE_handle_NeoLite(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
+    static void PE_handle_PrivateEXEProtector(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void PE_handle_VisualBasicCryptors(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
     static void PE_handle_DelphiCryptors(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
 
@@ -1436,11 +1436,11 @@ public:
     static void PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void PE_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
-    static void PE_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
+    static void PE_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void PE_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
 
-    static void Binary_handle_Texts(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
+    static void Binary_handle_Texts(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct);
     static void COM_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, COMINFO_STRUCT *pCOMInfo);
     static void Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Binary_handle_Certificates(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
@@ -1458,53 +1458,53 @@ public:
 
     static void MSDOS_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo);
     static void MSDOS_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo);
-    static void MSDOS_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo);
+    static void MSDOS_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
     static void MSDOS_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
     static void MSDOS_handle_SFX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo);
-    static void MSDOS_handle_DosExtenders(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo);
+    static void MSDOS_handle_DosExtenders(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
 
-    static void MSDOS_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo);
+    static void MSDOS_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void MSDOS_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void ELF_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo);
-    static void ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo);
+    static void ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct);
     static void ELF_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct);
     static void ELF_handle_GCC(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo);
     static void ELF_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo);
+    static void ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void ELF_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo);
-    static void ELF_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo);
+    static void ELF_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct);
     static void MACHO_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo);
-    static void MACHO_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo);
+    static void MACHO_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct);
 
-    static void MACHO_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo);
+    static void MACHO_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void LE_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo);
     static void LE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void LE_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo);
 
-    static void LE_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo);
+    static void LE_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void LX_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo);
     static void LX_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct);
     static void LX_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo);
 
-    static void LX_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo);
+    static void LX_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void NE_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo);
     static void NE_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo);
 
-    static void NE_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo);
+    static void NE_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void DEX_handle_Tools(QIODevice *pDevice, SCAN_OPTIONS *pOptions, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
     static void DEX_handle_Dexguard(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
     static void DEX_handle_Protection(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
 
-    static void DEX_handleLanguages(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo);
+    static void DEX_handleLanguages(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void Zip_handle_Microsoftoffice(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_OpenOffice(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
@@ -1514,7 +1514,7 @@ public:
     static void Zip_handle_IPA(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void Zip_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo);
+    static void Zip_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static DEXINFO_STRUCT Zip_scan_DEX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct,
                                        QString sFileName);
@@ -1591,12 +1591,12 @@ public:
     static VI_STRUCT _get_SourceryCodeBench_string(QString sString);
 
     static bool PE_isValid_UPX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
-    static void PE_x86Emul(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
+    static void PE_x86Emul(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static VI_STRUCT PE_get_PECompact_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
 
-    static QList<VCL_STRUCT> PE_getVCLstruct(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, bool bIs64);
-    static VCL_PACKAGEINFO PE_getVCLPackageInfo(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, QList<XPE::RESOURCE_RECORD> *pListResources);
+    static QList<VCL_STRUCT> PE_getVCLstruct(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, bool bIs64, XBinary::PDSTRUCT *pPdStruct);
+    static VCL_PACKAGEINFO PE_getVCLPackageInfo(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, QList<XPE::RESOURCE_RECORD> *pListResources, XBinary::PDSTRUCT *pPdStruct);
 
     static SCAN_STRUCT scansToScan(BASIC_INFO *pBasicInfo, _SCANS_STRUCT *pScansStruct);
 
@@ -1635,19 +1635,19 @@ public:
 
     static QString getAndroidVersionFromApi(quint32 nAPI);
 
-    static void getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages);
+    static void getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages, XBinary::PDSTRUCT *pPdStruct);
     static void fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages);
 
     static _SCANS_STRUCT getScansStructFromOsInfo(XBinary::OSINFO osInfo);
 
-    static QString getMsRichString(quint16 nId, quint16 nBuild);
+    static QString getMsRichString(quint16 nId, quint16 nBuild, XBinary::PDSTRUCT *pPdStruct);
 
     static QList<XBinary::SCANSTRUCT> convert(QList<SCAN_STRUCT> *pListScanStructs);
 
 private:
     static bool MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, XBinary::FT fileType1, XBinary::FT fileType2);
-    static void filterResult(QList<SCAN_STRUCT> *pListRecords, QSet<RECORD_TYPE> stRecordTypes);
-    static void _fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorVersion, qint32 nMinorVersion);
+    static void filterResult(QList<SCAN_STRUCT> *pListRecords, QSet<RECORD_TYPE> stRecordTypes, XBinary::PDSTRUCT *pPdStruct);
+    static void _fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorVersion, qint32 nMinorVersion, XBinary::PDSTRUCT *pPdStruct);
 
 protected:
     void _errorMessage(QString sErrorMessage);
