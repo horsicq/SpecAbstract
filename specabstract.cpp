@@ -171,106 +171,106 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
             sResult = tr("Unknown");
             break;
         case RECORD_TYPE_APKOBFUSCATOR:
-            sResult = QString("APK %1").arg(tr("obfuscator"));
+            sResult = QString("APK obfuscator");
             break;
         case RECORD_TYPE_APKTOOL:
-            sResult = QString("APK %1").arg(tr("Tool"));
+            sResult = QString("APK Tool");
             break;
         case RECORD_TYPE_CERTIFICATE:
-            sResult = tr("Certificate");
+            sResult = QString("Certificate");
             break;
         case RECORD_TYPE_COMPILER:
-            sResult = tr("Compiler");
+            sResult = QString("Compiler");
             break;
         case RECORD_TYPE_CONVERTER:
-            sResult = tr("Converter");
+            sResult = QString("Converter");
             break;
         case RECORD_TYPE_CRYPTOR:
-            sResult = tr("Cryptor");
+            sResult = QString("Cryptor");
             break;
         case RECORD_TYPE_DATABASE:
-            sResult = tr("Database");
+            sResult = QString("Database");
             break;
         case RECORD_TYPE_DEBUGDATA:
-            sResult = tr("Debug data");
+            sResult = QString("Debug data");
             break;
         case RECORD_TYPE_DONGLEPROTECTION:
-            sResult = QString("Dongle %1").arg(tr("protection"));
+            sResult = QString("Dongle protection");
             break;
         case RECORD_TYPE_DOSEXTENDER:
-            sResult = QString("DOS %1").arg(tr("extender"));
+            sResult = QString("DOS extender");
             break;
         case RECORD_TYPE_FORMAT:
-            sResult = tr("Format");
+            sResult = QString("Format");
             break;
         case RECORD_TYPE_GENERIC:
-            sResult = tr("Generic");
+            sResult = QString("Generic");
             break;
         case RECORD_TYPE_IMAGE:
-            sResult = tr("Image");
+            sResult = QString("Image");
             break;
         case RECORD_TYPE_INSTALLER:
-            sResult = tr("Installer");
+            sResult = QString("Installer");
             break;
         case RECORD_TYPE_INSTALLERDATA:
-            sResult = tr("Installer data");
+            sResult = QString("Installer data");
             break;
         case RECORD_TYPE_JAROBFUSCATOR:
-            sResult = QString("JAR %1").arg(tr("obfuscator"));
+            sResult = QString("JAR obfuscator");
             break;
         case RECORD_TYPE_JOINER:
-            sResult = tr("Joiner");
+            sResult = QString("Joiner");
             break;
         case RECORD_TYPE_LANGUAGE:
-            sResult = tr("Language");
+            sResult = QString("Language");
             break;
         case RECORD_TYPE_LIBRARY:
-            sResult = tr("Library");
+            sResult = QString("Library");
             break;
         case RECORD_TYPE_LINKER:
-            sResult = tr("Linker");
+            sResult = QString("Linker");
             break;
         case RECORD_TYPE_NETCOMPRESSOR:
-            sResult = QString(".NET %1").arg(tr("compressor"));
+            sResult = QString(".NET compressor");
             break;
         case RECORD_TYPE_NETOBFUSCATOR:
-            sResult = QString(".NET %1").arg(tr("obfuscator"));
+            sResult = QString(".NET obfuscator");
             break;
         case RECORD_TYPE_OPERATIONSYSTEM:
-            sResult = tr("Operation system");
+            sResult = QString("Operation system");
             break;
         case RECORD_TYPE_PACKER:
-            sResult = tr("Packer");
+            sResult = QString("Packer");
             break;
         case RECORD_TYPE_PETOOL:
-            sResult = QString("PE %1").arg(tr("Tool"));
+            sResult = QString("PE Tool");
             break;
         case RECORD_TYPE_PROTECTOR:
-            sResult = tr("Protector");
+            sResult = QString("Protector");
             break;
         case RECORD_TYPE_PROTECTORDATA:
-            sResult = tr("Protector data");
+            sResult = QString("Protector data");
             break;
         case RECORD_TYPE_SFX:
             sResult = QString("SFX");
             break;
         case RECORD_TYPE_SFXDATA:
-            sResult = QString("SFX %1").arg(tr("data"));
+            sResult = QString("SFX data");
             break;
         case RECORD_TYPE_SIGNTOOL:
-            sResult = tr("Sign tool");
+            sResult = QString("Sign tool");
             break;
         case RECORD_TYPE_SOURCECODE:
-            sResult = tr("Source code");
+            sResult = QString("Source code");
             break;
         case RECORD_TYPE_STUB:
-            sResult = tr("Stub");
+            sResult = QString("Stub");
             break;
         case RECORD_TYPE_TOOL:
-            sResult = tr("Tool");
+            sResult = QString("Tool");
             break;
         case RECORD_TYPE_VIRTUALMACHINE:
-            sResult = tr("Virtual machine");
+            sResult = QString("Virtual machine");
             break;
     }
 
@@ -18558,26 +18558,8 @@ QList<XBinary::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListScanSt
         record.sVersion = pListScanStructs->at(i).sVersion;
         record.sInfo = pListScanStructs->at(i).sInfo;
 
-        RECORD_TYPE rt = pListScanStructs->at(i).type;
-
-        // TODO more
-        if ((rt == SpecAbstract::RECORD_TYPE_INSTALLER) || (rt == SpecAbstract::RECORD_TYPE_SFX)) {
-            record.globalColor = Qt::blue;
-        } else if ((rt == SpecAbstract::RECORD_TYPE_PROTECTOR) || (rt == SpecAbstract::RECORD_TYPE_APKOBFUSCATOR) || (rt == SpecAbstract::RECORD_TYPE_JAROBFUSCATOR) ||
-                   (rt == SpecAbstract::RECORD_TYPE_NETOBFUSCATOR) || (rt == SpecAbstract::RECORD_TYPE_NETCOMPRESSOR) ||
-                   (rt == SpecAbstract::RECORD_TYPE_DONGLEPROTECTION) || (rt == SpecAbstract::RECORD_TYPE_JOINER) || (rt == SpecAbstract::RECORD_TYPE_PACKER)) {
-            record.globalColor = Qt::red;
-        } else if ((rt == SpecAbstract::RECORD_TYPE_PETOOL) || (rt == SpecAbstract::RECORD_TYPE_APKTOOL)) {
-            record.globalColor = Qt::green;
-        } else if ((rt == SpecAbstract::RECORD_TYPE_OPERATIONSYSTEM) || (rt == SpecAbstract::RECORD_TYPE_VIRTUALMACHINE)) {
-            record.globalColor = Qt::darkYellow;
-        } else if (rt == SpecAbstract::RECORD_TYPE_SIGNTOOL) {
-            record.globalColor = Qt::darkMagenta;
-        } else if (rt == SpecAbstract::RECORD_TYPE_LANGUAGE) {
-            record.globalColor = Qt::darkCyan;
-        } else {
-            record.globalColor = Qt::transparent;
-        }
+        record.globalColor = XFormats::typeToColor(record.sType);
+        record.sType = XFormats::translateType(record.sType);
 
         listResult.append(record);
     }
