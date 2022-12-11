@@ -2936,7 +2936,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Go_vi(QIODevice *pDevice, SpecAbstract
 
     qint64 nMaxVersion = 0;
 
-    while ((_nSize > 0)&&(!(pPdStruct->bIsStop))) {
+    while ((_nSize > 0) && (!(pPdStruct->bIsStop))) {
         _nOffset = binary.find_ansiString(_nOffset, _nSize, "go1.", pPdStruct);
 
         if (_nOffset == -1) {
@@ -4358,7 +4358,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
 
         qint32 _nNumberOfImports = listImports.count();
 
-        for (qint32 i = 0; (i < _nNumberOfImports)&&(!(pPdStruct->bIsStop)); i++) {
+        for (qint32 i = 0; (i < _nNumberOfImports) && (!(pPdStruct->bIsStop)); i++) {
             QString sRecord = listImports.at(i).sLibrary + " " + listImports.at(i).sFunction;
 
             qDebug("%s", sRecord.toLatin1().data());
@@ -4370,10 +4370,10 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
 
         QList<XPE::IMPORT_HEADER> listImportHeaders = pe.getImports(&(result.basic_info.memoryMap));
 
-        for (qint32 i = 0; (i < listImportHeaders.count())&&(!(pPdStruct->bIsStop)); i++) {
+        for (qint32 i = 0; (i < listImportHeaders.count()) && (!(pPdStruct->bIsStop)); i++) {
             qDebug("Import hash: %x", result.listImportPositionHashes.at(i));
             qDebug("Import hash(OLD): %x", listImportPositionHashesOld.at(i));
-            for (qint32 j = 0; (j < listImportHeaders.at(i).listPositions.count())&&(!(pPdStruct->bIsStop)); j++) {
+            for (qint32 j = 0; (j < listImportHeaders.at(i).listPositions.count()) && (!(pPdStruct->bIsStop)); j++) {
                 qDebug("%s %s", listImportHeaders.at(i).sName.toLatin1().data(), listImportHeaders.at(i).listPositions.at(j).sFunction.toLatin1().data());
             }
         }
@@ -4490,7 +4490,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
         // Export
         qint32 nNumberOfImports = result.listImportPositionHashes.count();
 
-        for (qint32 i = 0; (i < nNumberOfImports)&&(!(pPdStruct->bIsStop)); i++) {
+        for (qint32 i = 0; (i < nNumberOfImports) && (!(pPdStruct->bIsStop)); i++) {
             constScan(&(result.mapImportDetects), i, result.listImportPositionHashes.at(i), _PE_importpositionhash_records, sizeof(_PE_importpositionhash_records),
                       result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_IMPORTHASH, pPdStruct);
         }
@@ -6787,7 +6787,7 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
     QString sVMPSectionName;
 
-    for (qint32 i = nNumberOfSections - 1; (i >= 0)&&(!(pPdStruct->bIsStop)); i--) {
+    for (qint32 i = nNumberOfSections - 1; (i >= 0) && (!(pPdStruct->bIsStop)); i--) {
         if (i == pPEInfo->nRelocsSection) {
             continue;
         }
@@ -6984,7 +6984,8 @@ void SpecAbstract::PE_handle_TTProtect(QIODevice *pDevice, SpecAbstract::SCAN_OP
     }
 }
 
-void SpecAbstract::PE_handle_SafeengineShielden(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::PE_handle_SafeengineShielden(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo,
+                                                XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -7211,7 +7212,7 @@ void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
 
                 bool bSuccess = true;
 
-                for (qint32 i = 0; (i < nNumbersOfImport)&&(!(pPdStruct->bIsStop)); i++) {
+                for (qint32 i = 0; (i < nNumbersOfImport) && (!(pPdStruct->bIsStop)); i++) {
                     if (pPEInfo->listImports.at(i).listPositions.count() != 1) {
                         bSuccess = false;
                         break;
@@ -7266,7 +7267,7 @@ void SpecAbstract::PE_handle_StarForce(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
             qint32 nNumberOfImports = pPEInfo->listImports.count();
 
-            for (qint32 i = 0; (i < nNumberOfImports)&&(!(pPdStruct->bIsStop)); i++) {
+            for (qint32 i = 0; (i < nNumberOfImports) && (!(pPdStruct->bIsStop)); i++) {
                 if (pPEInfo->listImports.at(i).listPositions.count() == 1) {
                     if ((pPEInfo->listImports.at(i).listPositions.at(0).sName == "") || (pPEInfo->listImports.at(i).listPositions.at(0).sName == "1")) {
                         sInfo = pPEInfo->listImports.at(i).sName;
@@ -7296,7 +7297,7 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
 
                 qint32 nNumberOfImports = pPEInfo->listImports.count();
 
-                for (qint32 i = 0; (i < nNumberOfImports)&&(!(pPdStruct->bIsStop)); i++) {
+                for (qint32 i = 0; (i < nNumberOfImports) && (!(pPdStruct->bIsStop)); i++) {
                     if (pPEInfo->listImports.at(i).sName.toUpper() == "USER32.DLL") {
                         if (pPEInfo->listImports.at(i).listPositions.count() == 2) {
                             if ((pPEInfo->listImports.at(i).listPositions.at(0).sName == "MessageBoxA") &&
@@ -7771,7 +7772,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
         qint32 nNumberOfImports = pPEInfo->listImports.count();
 
-        for (qint32 i = 0; (i < nNumberOfImports)&&(!(pPdStruct->bIsStop)); i++) {
+        for (qint32 i = 0; (i < nNumberOfImports) && (!(pPdStruct->bIsStop)); i++) {
             // https://en.wikipedia.org/wiki/Microsoft_Foundation_Class_Library
             // TODO eMbedded Visual C++ 4.0 		mfcce400.dll 	MFC 6.0
             if (XBinary::isRegExpPresent("^MFC", pPEInfo->listImports.at(i).sName.toUpper())) {
@@ -7820,7 +7821,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
         QList<_SCANS_STRUCT> listRichDescriptions;
 
-        for (qint32 i = 0; (i < nRichSignaturesCount)&&(!(pPdStruct->bIsStop)); i++) {
+        for (qint32 i = 0; (i < nRichSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
             listRichDescriptions.append(MSDOS_richScan(pPEInfo->listRichSignatures.at(i).nId, pPEInfo->listRichSignatures.at(i).nVersion, _MS_rich_records,
                                                        sizeof(_MS_rich_records), pPEInfo->basic_info.id.fileType, XBinary::FT_MSDOS, &(pPEInfo->basic_info),
                                                        DETECTTYPE_RICH, pPdStruct));
@@ -7831,7 +7832,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
         qint32 nRichDescriptionsCount = listRichDescriptions.count();
 
         bool bVB = false;
-        for (qint32 i = nRichDescriptionsCount - 1; (i >= 0)&&(!(pPdStruct->bIsStop)); i--) {
+        for (qint32 i = nRichDescriptionsCount - 1; (i >= 0) && (!(pPdStruct->bIsStop)); i--) {
             if (listRichDescriptions.at(i).type == SpecAbstract::RECORD_TYPE_LINKER) {
                 ssLinker.name = listRichDescriptions.at(i).name;
                 ssLinker.sVersion = listRichDescriptions.at(i).sVersion;
@@ -8284,8 +8285,8 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
 
                     if (nOffset_CodegearCPP == -1) {
                         nOffset_EmbarcaderoCPP_old =
-                            pe.find_ansiString(_nOffset, _nSize, "Embarcadero RAD Studio - Copyright ", pPdStruct);  // Embarcadero RAD Studio - Copyright 2009 Embarcadero
-                                                                                                          // Technologies, Inc.
+                            pe.find_ansiString(_nOffset, _nSize, "Embarcadero RAD Studio - Copyright ", pPdStruct);  // Embarcadero RAD Studio - Copyright 2009
+                                                                                                                     // Embarcadero Technologies, Inc.
 
                         if (nOffset_EmbarcaderoCPP_old == -1) {
                             nOffset_EmbarcaderoCPP_new =
@@ -8934,8 +8935,8 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
                     //                        // TODO Version
                     //                        pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     //                    }
-                    qint64 nOffset_RunTimeError = pe.find_array(_nOffset, _nSize, "\x0e\x52\x75\x6e\x74\x69\x6d\x65\x20\x65\x72\x72\x6f\x72\x20",
-                                                                15, pPdStruct);  // Runtime Error TODO: use findAnsiString
+                    qint64 nOffset_RunTimeError = pe.find_array(_nOffset, _nSize, "\x0e\x52\x75\x6e\x74\x69\x6d\x65\x20\x65\x72\x72\x6f\x72\x20", 15,
+                                                                pPdStruct);  // Runtime Error TODO: use findAnsiString
 
                     if (nOffset_RunTimeError != -1) {
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_FPC, "", "", 0);
@@ -8950,7 +8951,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
             // TODO Create function
             qint32 nNumberOfImports = pPEInfo->listImports.count();
 
-            for (qint32 i = 0; (i < nNumberOfImports)&&(!(pPdStruct->bIsStop)); i++) {
+            for (qint32 i = 0; (i < nNumberOfImports) && (!(pPdStruct->bIsStop)); i++) {
                 if (XBinary::isRegExpPresent("^PYTHON", pPEInfo->listImports.at(i).sName.toUpper())) {
                     QString sVersion = XBinary::regExp("(\\d+)", pPEInfo->listImports.at(i).sName.toUpper(), 0);
 
@@ -8986,7 +8987,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
 
             // Perl
             // TODO Create function
-            for (qint32 i = 0; (i < nNumberOfImports)&&(!(pPdStruct->bIsStop)); i++) {
+            for (qint32 i = 0; (i < nNumberOfImports) && (!(pPdStruct->bIsStop)); i++) {
                 if (XBinary::isRegExpPresent("^PERL", pPEInfo->listImports.at(i).sName.toUpper())) {
                     QString sVersion = XBinary::regExp("(\\d+)", pPEInfo->listImports.at(i).sName.toUpper(), 0);
 
@@ -9011,7 +9012,8 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
                 qint64 _nSize = pPEInfo->osDataSection.nSize;
                 // TODO VP Version in Major and Minor linker
 
-                qint64 nOffset_VP = pe.find_ansiString(_nOffset, _nSize, "Virtual Pascal - Copyright (C) ", pPdStruct);  // "Virtual Pascal - Copyright (C) 1996-2000 vpascal.com"
+                qint64 nOffset_VP =
+                    pe.find_ansiString(_nOffset, _nSize, "Virtual Pascal - Copyright (C) ", pPdStruct);  // "Virtual Pascal - Copyright (C) 1996-2000 vpascal.com"
 
                 if (nOffset_VP != -1) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_VIRTUALPASCAL, "", "", 0);
@@ -9103,7 +9105,7 @@ void SpecAbstract::PE_handle_wxWidgets(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
             qint32 nNumberOfImports = pPEInfo->listImports.count();
 
-            for (qint32 i = 0; (i < nNumberOfImports)&&(!(pPdStruct->bIsStop)); i++) {
+            for (qint32 i = 0; (i < nNumberOfImports) && (!(pPdStruct->bIsStop)); i++) {
                 if (XBinary::isRegExpPresent("^WX", pPEInfo->listImports.at(i).sName.toUpper())) {
                     QString sDllVersion = XBinary::regExp("(\\d+)", pPEInfo->listImports.at(i).sName.toUpper(), 0);
 
@@ -9295,8 +9297,8 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
 
                 if (!bDetectGCC) {
                     if (pPEInfo->basic_info.bIsDeepScan) {
-                        qint64 nGCC_MinGW = pe.find_ansiString(pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize,
-                                                               "Mingw-w64 runtime failure:", pPdStruct);
+                        qint64 nGCC_MinGW =
+                            pe.find_ansiString(pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, "Mingw-w64 runtime failure:", pPdStruct);
 
                         if (nGCC_MinGW != -1) {
                             ssTool.type = RECORD_TYPE_TOOL;
@@ -9315,7 +9317,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
 
             qint32 nNumberOfImports = pPEInfo->listImports.count();
 
-            for (qint32 i = 0; (i < nNumberOfImports)&&(!(pPdStruct->bIsStop)); i++) {
+            for (qint32 i = 0; (i < nNumberOfImports) && (!(pPdStruct->bIsStop)); i++) {
                 if (XBinary::isRegExpPresent("^CYGWIN", pPEInfo->listImports.at(i).sName.toUpper())) {
                     QString sVersion = XBinary::regExp("(\\d+)", pPEInfo->listImports.at(i).sName.toUpper(), 0);
 
@@ -9917,7 +9919,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
             if (!pPEInfo->mapResultInstallers.contains(RECORD_NAME_WINDOWSINSTALLER)) {
                 qint32 nNumberOfResources = pPEInfo->listResources.count();
 
-                for (qint32 i = 0; (i < nNumberOfResources)&&(!(pPdStruct->bIsStop)); i++) {
+                for (qint32 i = 0; (i < nNumberOfResources) && (!(pPdStruct->bIsStop)); i++) {
                     qint64 _nOffset = pPEInfo->listResources.at(i).nOffset;
                     qint64 _nSize = pPEInfo->listResources.at(i).nSize;
                     qint64 _nSignatureSize = qMin(_nSize, (qint64)8);
@@ -10127,7 +10129,8 @@ void SpecAbstract::PE_handle_NeoLite(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
     }
 }
 
-void SpecAbstract::PE_handle_PrivateEXEProtector(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::PE_handle_PrivateEXEProtector(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo,
+                                                 XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -10162,7 +10165,7 @@ void SpecAbstract::PE_handle_PrivateEXEProtector(QIODevice *pDevice, SpecAbstrac
 
             qint32 nNumberOfSections = pPEInfo->listSectionHeaders.count();
 
-            for (qint32 i = 0; (i < nNumberOfSections)&&(!(pPdStruct->bIsStop)); i++) {
+            for (qint32 i = 0; (i < nNumberOfSections) && (!(pPdStruct->bIsStop)); i++) {
                 if ((pPEInfo->listSectionHeaders.at(i).Characteristics & 0xFFFF) == 0) {
                     bCharacteristics = true;
                     break;
@@ -10886,7 +10889,7 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract:
         if (!PE_isProtectionPresent(pPEInfo)) {
             QMapIterator<RECORD_NAME, _SCANS_STRUCT> i(pPEInfo->mapEntryPointDetects);
 
-            while (i.hasNext()&&(!(pPdStruct->bIsStop))) {
+            while (i.hasNext() && (!(pPdStruct->bIsStop))) {
                 i.next();
 
                 _SCANS_STRUCT recordSS = i.value();
@@ -11111,14 +11114,15 @@ void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OP
     }
 }
 
-void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo,
+                                       XBinary::PDSTRUCT *pPdStruct)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
     if ((pBinaryInfo->bIsPlainText) || (pBinaryInfo->unicodeType != XBinary::UNICODE_TYPE_NONE) || (pBinaryInfo->bIsUTF8)) {
         qint32 nSignaturesCount = sizeof(_TEXT_Exp_records) / sizeof(STRING_RECORD);
 
-        for (qint32 i = 0; (i < nSignaturesCount)&&(!(pPdStruct->bIsStop)); i++)  // TODO move to an own function !!!
+        for (qint32 i = 0; (i < nSignaturesCount) && (!(pPdStruct->bIsStop)); i++)  // TODO move to an own function !!!
         {
             if (XBinary::isRegExpPresent(_TEXT_Exp_records[i].pszString, pBinaryInfo->sHeaderText)) {
                 _SCANS_STRUCT record = {};
@@ -13251,7 +13255,8 @@ void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
     }
 }
 
-void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,
+                                        XBinary::PDSTRUCT *pPdStruct)
 {
     XMSDOS msdos(pDevice, pOptions->bIsImage);
 
@@ -13559,7 +13564,8 @@ void SpecAbstract::MSDOS_handle_SFX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
     }
 }
 
-void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,
+                                             XBinary::PDSTRUCT *pPdStruct)
 {
     XMSDOS msdos(pDevice, pOptions->bIsImage);
 
@@ -13622,8 +13628,8 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, SpecAbstract::S
 
         // DOS/16M
         if (pMSDOSInfo->basic_info.bIsDeepScan) {
-            qint64 nVersionOffset = msdos.find_ansiString(0, qMin(pMSDOSInfo->basic_info.id.nSize, (qint64)0x1000),
-                                                          "DOS/16M Copyright (C) Tenberry Software Inc", pPdStruct);
+            qint64 nVersionOffset =
+                msdos.find_ansiString(0, qMin(pMSDOSInfo->basic_info.id.nSize, (qint64)0x1000), "DOS/16M Copyright (C) Tenberry Software Inc", pPdStruct);
 
             if (nVersionOffset != -1) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_MSDOS, RECORD_TYPE_DOSEXTENDER, RECORD_NAME_DOS16M, "", "", 0);
@@ -13690,14 +13696,15 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, SpecAbstract:
     }
 }
 
-void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::ELFINFO_STRUCT *pELFInfo,
+                                             XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
 
     qint32 nNumberOfComments = pELFInfo->listComments.count();
 
-    for (qint32 i = 0; (i < nNumberOfComments)&&(!(pPdStruct->bIsStop)); i++) {
+    for (qint32 i = 0; (i < nNumberOfComments) && (!(pPdStruct->bIsStop)); i++) {
         QString sComment = pELFInfo->listComments.at(i);
 
         VI_STRUCT vi = {};
@@ -14634,7 +14641,7 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_
 
             qint32 nNumberOfNotes = listNotes.count();
 
-            for (qint32 i = 0; (i < nNumberOfNotes)&&(!(pPdStruct->bIsStop)); i++) {
+            for (qint32 i = 0; (i < nNumberOfNotes) && (!(pPdStruct->bIsStop)); i++) {
                 qint64 nOffset = 0;
 
                 if (pOptions->bIsImage) {
@@ -14659,7 +14666,8 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_
     }
 }
 
-void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::ELFINFO_STRUCT *pELFInfo,
+                                                XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pELFInfo)
 
@@ -14674,7 +14682,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract
             {
                 qint32 nNumberOfRecords = pELFInfo->listLibraries.count();
 
-                for (qint32 i = 0; (i < nNumberOfRecords)&&(!(pPdStruct->bIsStop)); i++) {
+                for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
                     _SCANS_STRUCT recordSS = {};
 
                     recordSS.type = RECORD_TYPE_LIBRARY;
@@ -14708,7 +14716,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract
 
                 qint32 nNumberOfRecords = pELFInfo->listComments.count();
 
-                for (qint32 i = 0; (i < nNumberOfRecords)&&(!(pPdStruct->bIsStop)); i++) {
+                for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
                     if (!stRecords.contains(pELFInfo->listComments.at(i))) {
                         _SCANS_STRUCT recordSS = {};
 
@@ -14730,7 +14738,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract
 
                 qint32 nNumberOfRecords = pELFInfo->listNotes.count();
 
-                for (qint32 i = 0; (i < nNumberOfRecords)&&(!(pPdStruct->bIsStop)); i++) {
+                for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
                     if (!stRecords.contains(pELFInfo->listNotes.at(i).sName)) {
                         _SCANS_STRUCT recordSS = {};
 
@@ -14752,7 +14760,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract
 
                 qint32 nNumberOfRecords = pELFInfo->listNotes.count();
 
-                for (qint32 i = 0; (i < nNumberOfRecords)&&(!(pPdStruct->bIsStop)); i++) {
+                for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
                     if (!stRecords.contains(pELFInfo->listNotes.at(i).nType)) {
                         _SCANS_STRUCT recordSS = {};
 
@@ -14774,7 +14782,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract
 
                 qint32 nNumberOfRecords = pELFInfo->listSectionRecords.count();
 
-                for (qint32 i = 0; (i < nNumberOfRecords)&&(!(pPdStruct->bIsStop)); i++) {
+                for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
                     if (!stRecords.contains(pELFInfo->listSectionRecords.at(i).sName)) {
                         _SCANS_STRUCT recordSS = {};
 
@@ -15740,7 +15748,8 @@ void SpecAbstract::MACHO_handle_Protection(QIODevice *pDevice, SpecAbstract::SCA
     }
 }
 
-void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MACHOINFO_STRUCT *pMACHInfo,
+                                           XBinary::PDSTRUCT *pPdStruct)
 {
     XMACH mach(pDevice, pOptions->bIsImage);
 
@@ -15778,7 +15787,7 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCA
 
             qint32 nNumberOfRecords = list.count();
 
-            for (qint32 i = 0; (i < nNumberOfRecords)&&(!(pPdStruct->bIsStop)); i++) {
+            for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
                 if (!stRecords.contains(list.at(i).sName)) {
                     _SCANS_STRUCT recordSS = {};
 
@@ -15843,7 +15852,7 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
         QList<_SCANS_STRUCT> listRichDescriptions;
 
-        for (qint32 i = 0; (i < nRichSignaturesCount)&&(!(pPdStruct->bIsStop)); i++) {
+        for (qint32 i = 0; (i < nRichSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
             listRichDescriptions.append(MSDOS_richScan(pLEInfo->listRichSignatures.at(i).nId, pLEInfo->listRichSignatures.at(i).nVersion, _MS_rich_records,
                                                        sizeof(_MS_rich_records), pLEInfo->basic_info.id.fileType, XBinary::FT_MSDOS, &(pLEInfo->basic_info),
                                                        DETECTTYPE_RICH, pPdStruct));
@@ -15851,7 +15860,7 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
         qint32 nRichDescriptionsCount = listRichDescriptions.count();
 
-        for (qint32 i = nRichDescriptionsCount - 1; (i >= 0)&&(!(pPdStruct->bIsStop)); i--) {
+        for (qint32 i = nRichDescriptionsCount - 1; (i >= 0) && (!(pPdStruct->bIsStop)); i--) {
             if (listRichDescriptions.at(i).type == SpecAbstract::RECORD_TYPE_LINKER) {
                 recordLinker.name = listRichDescriptions.at(i).name;
                 recordLinker.sVersion = listRichDescriptions.at(i).sVersion;
@@ -15956,7 +15965,7 @@ void SpecAbstract::LX_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
         QList<_SCANS_STRUCT> listRichDescriptions;
 
-        for (qint32 i = 0; (i < nRichSignaturesCount)&&(!(pPdStruct->bIsStop)); i++) {
+        for (qint32 i = 0; (i < nRichSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
             listRichDescriptions.append(MSDOS_richScan(pLXInfo->listRichSignatures.at(i).nId, pLXInfo->listRichSignatures.at(i).nVersion, _MS_rich_records,
                                                        sizeof(_MS_rich_records), pLXInfo->basic_info.id.fileType, XBinary::FT_MSDOS, &(pLXInfo->basic_info),
                                                        DETECTTYPE_RICH, pPdStruct));
@@ -15964,7 +15973,7 @@ void SpecAbstract::LX_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
         qint32 nRichDescriptionsCount = listRichDescriptions.count();
 
-        for (qint32 i = nRichDescriptionsCount - 1; (i >= 0)&&(!(pPdStruct->bIsStop)); i--) {
+        for (qint32 i = nRichDescriptionsCount - 1; (i >= 0) && (!(pPdStruct->bIsStop)); i--) {
             if (listRichDescriptions.at(i).type == SpecAbstract::RECORD_TYPE_LINKER) {
                 recordLinker.name = listRichDescriptions.at(i).name;
                 recordLinker.sVersion = listRichDescriptions.at(i).sVersion;
@@ -16423,8 +16432,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
 
             qint32 nNumberOfRecords = pDEXInfo->listStrings.count();
 
-            for (qint32 i = 0; (i < nNumberOfRecords)&&(!(pPdStruct->bIsStop)); i++)
-            {
+            for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
                 if (pDEXInfo->basic_info.bIsTest && pDEXInfo->basic_info.bIsVerbose) {
                     // TODO find!
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_PROTECTOR, RECORD_NAME_UNKNOWN, "", "", 0);
@@ -17272,7 +17280,7 @@ void SpecAbstract::PE_x86Emul(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pO
 
     qint32 nCount = 10;
 
-    for (qint32 i = 0; (i < nCount)&&(!(pPdStruct->bIsStop)); i++) {
+    for (qint32 i = 0; (i < nCount) && (!(pPdStruct->bIsStop)); i++) {
         qint64 nOffset = XBinary::addressToOffset(&(pPEInfo->basic_info.memoryMap), nAddress);
 
         if (nOffset == -1) {
@@ -18209,7 +18217,7 @@ QString SpecAbstract::getAndroidVersionFromApi(quint32 nAPI)
 void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages, XBinary::PDSTRUCT *pPdStruct)
 {
     QMapIterator<RECORD_NAME, SCAN_STRUCT> i(*pMapDetects);
-    while (i.hasNext()&&(!(pPdStruct->bIsStop))) {
+    while (i.hasNext() && (!(pPdStruct->bIsStop))) {
         i.next();
 
         SCAN_STRUCT ssDetect = i.value();
@@ -18530,7 +18538,7 @@ QString SpecAbstract::getMsRichString(quint16 nId, quint16 nBuild, XBinary::PDST
 
     qint32 nSignaturesCount = nRecordsSize / (int)sizeof(MSRICH_RECORD);
 
-    for (qint32 i = 0; (i < nSignaturesCount)&&(!(pPdStruct->bIsStop)); i++) {
+    for (qint32 i = 0; (i < nSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
         _SCANS_STRUCT record = {};
 
         if (MSDOS_compareRichRecord(&record, &(pRecords[i]), nId, nBuild, XBinary::FT_PE, XBinary::FT_MSDOS)) {
@@ -18609,7 +18617,7 @@ void SpecAbstract::filterResult(QList<SpecAbstract::SCAN_STRUCT> *pListRecords, 
     QList<SpecAbstract::SCAN_STRUCT> listRecords;
     qint32 nNumberOfRecords = pListRecords->count();
 
-    for (qint32 i = 0; (i < nNumberOfRecords)&&(!(pPdStruct->bIsStop)); i++) {
+    for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
         if (stRecordTypes.contains(pListRecords->at(i).type)) {
             listRecords.append(pListRecords->at(i));
         }
@@ -18624,7 +18632,7 @@ void SpecAbstract::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures,
 
     qint32 nNumberOfRecords = pListRichSignatures->count();
 
-    for (qint32 i = 0; (i < nNumberOfRecords)&&(!(pPdStruct->bIsStop)); i++) {
+    for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
         QString sMajor = pListRichSignatures->at(i).sVersion.section(".", 0, 0);
         QString sMinor = pListRichSignatures->at(i).sVersion.section(".", 1, 1);
         QString sBuild = pListRichSignatures->at(i).sVersion.section(".", 2, 2);
@@ -18661,7 +18669,8 @@ void SpecAbstract::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures,
     }
 }
 
-QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, bool bIs64, XBinary::PDSTRUCT *pPdStruct)
+QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, bool bIs64,
+                                                              XBinary::PDSTRUCT *pPdStruct)
 {
     QList<VCL_STRUCT> listResult;
 
@@ -18672,7 +18681,7 @@ QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice
 
     qint32 nAddressSize = bIs64 ? 8 : 4;
 
-    while ((_nSize > 0)&&(!(pPdStruct->bIsStop))) {
+    while ((_nSize > 0) && (!(pPdStruct->bIsStop))) {
         qint64 nClassOffset = pe.find_array(_nOffset, _nSize, "\x07\x08\x54\x43\x6f\x6e\x74\x72\x6f\x6c", 10, pPdStruct);  // 0708'TControl'
 
         if (nClassOffset == -1) {
@@ -18683,7 +18692,7 @@ QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice
         qint64 nClassOffset2 = pe.addressToOffset(nDword);
 
         if (nClassOffset2 != -1) {
-            for (qint32 i = 0; (i < 20)&&(!(pPdStruct->bIsStop)); i++) {
+            for (qint32 i = 0; (i < 20) && (!(pPdStruct->bIsStop)); i++) {
                 quint32 nValue = pe.read_uint32(nClassOffset2 - nAddressSize * (i + 1));
 
                 if (nValue <= 0xFFFF) {
@@ -18709,7 +18718,8 @@ QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice
     return listResult;
 }
 
-SpecAbstract::VCL_PACKAGEINFO SpecAbstract::PE_getVCLPackageInfo(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, QList<XPE::RESOURCE_RECORD> *pListResources, XBinary::PDSTRUCT *pPdStruct)
+SpecAbstract::VCL_PACKAGEINFO SpecAbstract::PE_getVCLPackageInfo(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, QList<XPE::RESOURCE_RECORD> *pListResources,
+                                                                 XBinary::PDSTRUCT *pPdStruct)
 {
     VCL_PACKAGEINFO result = {};
 
@@ -18739,7 +18749,7 @@ SpecAbstract::VCL_PACKAGEINFO SpecAbstract::PE_getVCLPackageInfo(QIODevice *pDev
 
                 qint32 nCount = result.nRequiresCount ? result.nRequiresCount : 1000;
 
-                for (qint32 i = 0; (i < nCount)&&(!(pPdStruct->bIsStop)); i++) {
+                for (qint32 i = 0; (i < nCount) && (!(pPdStruct->bIsStop)); i++) {
                     if (nOffset - rh.nOffset > rh.nSize) {
                         break;
                     }
