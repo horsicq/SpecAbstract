@@ -1249,7 +1249,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MEW11SE,                      "",                 ""},                    "MEW"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MOLEBOXULTRA,                 "",                 ""},                    ".ultra"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MORPHNAH,                     "",                 ""},                    ".nah"},
-    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPRESS,                       "",                 ""},                    ".MPRESS1"}, // TODO
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPRESS,                       "",                 ""},                    ".MPRESS1"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPRESS,                       "",                 ""},                    ".MPRESS2"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MSLRH,                        "",                 ""},                    ".mslrh"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NAKEDPACKER,                  "1.0",              ""},                    ".naked1"},
@@ -1326,7 +1326,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_WINUPACK,                     "",                 ""},                    ".Upack"}, // TODO Version
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_INSTALLER,        SpecAbstract::RECORD_NAME_WISE,                         "",                 ""},                    ".WISE"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_INSTALLER,        SpecAbstract::RECORD_NAME_WIXTOOLSET,                   "",                 ""},                    ".wixburn"},
-    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_INSTALLER,        SpecAbstract::RECORD_NAME_XENOCODE,                     "",                 ""},                    ".xcpad"},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_XENOCODE,                     "",                 ""},                    ".xcpad"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_XTREMEPROTECTOR,              "",                 ""},                    "CODE    "},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_XTREMEPROTECTOR,              "",                 ""},                    ".idata  "},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_XTREMEPROTECTOR,              "",                 ""},                    "XPROT   "},
