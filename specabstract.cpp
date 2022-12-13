@@ -2976,6 +2976,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Rust_vi(QIODevice *pDevice, SpecAbstra
     qint64 nOffset_Version = -1;
 
     if (nOffset_Version == -1) {
+        // TODO false positives in die.exe
         nOffset_Version = binary.find_ansiString(nOffset, nSize, "Local\\RustBacktraceMutex", pPdStruct);
 
         if (nOffset_Version != -1) {
@@ -17112,6 +17113,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Nim_vi(QIODevice *pDevice, SpecAbstrac
 
     XBinary binary(pDevice, pOptions->bIsImage);
 
+    // TODO false positives in die.exe
     if ((binary.find_ansiString(nOffset, nSize, "io.nim", pPdStruct) != -1) || (binary.find_ansiString(nOffset, nSize, "fatal.nim", pPdStruct) != -1)) {
         result.bIsValid = true;
         // TODO Version

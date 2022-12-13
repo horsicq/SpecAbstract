@@ -1201,7 +1201,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_CHROMIUMCRASHPAD,             "",                 ""},                    "CPADinfo"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRUNCH,                       "1.0",              ""},                    "BitArts"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTER,                      "",                 ""},                    "SCRYPT"},
-    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTER,                      "",                 ""},                    "FCKCrypt"}, // TODO CHeck
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTER,                      "",                 ""},                    "FCKCrypt"}, // TODO Check
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_CRYPTOCRACKPEPROTECTOR,       "",                 ""},                    ".ccp3p"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DALKRYPT,                     "1.0",              ""},                    ".DalKiT"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_DEPACK,                       "",                 ""},                    ".depack"},
@@ -1249,7 +1249,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MEW11SE,                      "",                 ""},                    "MEW"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MOLEBOXULTRA,                 "",                 ""},                    ".ultra"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MORPHNAH,                     "",                 ""},                    ".nah"},
-    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPRESS,                       "",                 ""},                    ".MPRESS1"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPRESS,                       "",                 ""},                    ".MPRESS1"}, // TODO
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_MPRESS,                       "",                 ""},                    ".MPRESS2"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MSLRH,                        "",                 ""},                    ".mslrh"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_NAKEDPACKER,                  "1.0",              ""},                    ".naked1"},
