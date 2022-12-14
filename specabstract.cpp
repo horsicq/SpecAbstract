@@ -2671,7 +2671,7 @@ QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, b
     }
 
     if (bShowType) {
-        sResult += QString("%1: ").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type));
+        sResult += QString("%1: ").arg(XFormats::translateType(SpecAbstract::recordTypeIdToString(pScanStruct->type)));
     }
 
     sResult += QString("%1").arg(SpecAbstract::recordNameIdToString(pScanStruct->name));
@@ -2697,7 +2697,7 @@ QString SpecAbstract::createResultString(const SpecAbstract::SCAN_STRUCT *pScanS
 
     sResult +=
         QString("%1: %2(%3)[%4]")
-            .arg(SpecAbstract::recordTypeIdToString(pScanStruct->type), SpecAbstract::recordNameIdToString(pScanStruct->name), pScanStruct->sVersion, pScanStruct->sInfo);
+            .arg(XFormats::translateType(SpecAbstract::recordTypeIdToString(pScanStruct->type)), SpecAbstract::recordNameIdToString(pScanStruct->name), pScanStruct->sVersion, pScanStruct->sInfo);
 
     return sResult;
 }
@@ -2710,7 +2710,7 @@ QString SpecAbstract::createResultString2(const SpecAbstract::SCAN_STRUCT *pScan
         sResult += "(Heuristic)";
     }
 
-    sResult += QString("%1: %2").arg(SpecAbstract::recordTypeIdToString(pScanStruct->type), SpecAbstract::recordNameIdToString(pScanStruct->name));
+    sResult += QString("%1: %2").arg(XFormats::translateType(SpecAbstract::recordTypeIdToString(pScanStruct->type)), SpecAbstract::recordNameIdToString(pScanStruct->name));
 
     if (pScanStruct->sVersion != "") {
         sResult += QString("(%1)").arg(pScanStruct->sVersion);
