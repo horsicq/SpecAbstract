@@ -7503,7 +7503,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, SpecAbstract::SCA
                     qint32 _nCharacteristics = pPEInfo->listSectionRecords.at(1).nCharacteristics;
 
                     if (_nCharacteristics & (XPE_DEF::S_IMAGE_SCN_MEM_EXECUTE)) {
-                        qint64 nOffset_CliSecure = pe.find_unicodeString(_nOffset, _nSize, "CliSecure", pPdStruct);
+                        qint64 nOffset_CliSecure = pe.find_unicodeString(_nOffset, _nSize, "CliSecure", false, pPdStruct);
 
                         if (nOffset_CliSecure != -1) {
                             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_NETOBFUSCATOR, RECORD_NAME_CLISECURE, "4.X", "", 0);
@@ -17128,7 +17128,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Zig_vi(QIODevice *pDevice, SpecAbstrac
 
     XBinary binary(pDevice, pOptions->bIsImage);
 
-    if ((binary.find_unicodeString(nOffset, nSize, "ZIG_DEBUG_COLOR", pPdStruct) != -1) || (binary.find_ansiString(nOffset, nSize, "ZIG_DEBUG_COLOR", pPdStruct) != -1)) {
+    if ((binary.find_unicodeString(nOffset, nSize, "ZIG_DEBUG_COLOR", false, pPdStruct) != -1) || (binary.find_ansiString(nOffset, nSize, "ZIG_DEBUG_COLOR", pPdStruct) != -1)) {
         result.bIsValid = true;
         // TODO Version
     }
