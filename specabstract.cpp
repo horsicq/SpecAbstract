@@ -2695,9 +2695,9 @@ QString SpecAbstract::createResultString(const SpecAbstract::SCAN_STRUCT *pScanS
         sResult += "(Heuristic)";
     }
 
-    sResult +=
-        QString("%1: %2(%3)[%4]")
-            .arg(XFormats::translateType(SpecAbstract::recordTypeIdToString(pScanStruct->type)), SpecAbstract::recordNameIdToString(pScanStruct->name), pScanStruct->sVersion, pScanStruct->sInfo);
+    sResult += QString("%1: %2(%3)[%4]")
+                   .arg(XFormats::translateType(SpecAbstract::recordTypeIdToString(pScanStruct->type)), SpecAbstract::recordNameIdToString(pScanStruct->name),
+                        pScanStruct->sVersion, pScanStruct->sInfo);
 
     return sResult;
 }
@@ -2710,7 +2710,8 @@ QString SpecAbstract::createResultString2(const SpecAbstract::SCAN_STRUCT *pScan
         sResult += "(Heuristic)";
     }
 
-    sResult += QString("%1: %2").arg(XFormats::translateType(SpecAbstract::recordTypeIdToString(pScanStruct->type)), SpecAbstract::recordNameIdToString(pScanStruct->name));
+    sResult +=
+        QString("%1: %2").arg(XFormats::translateType(SpecAbstract::recordTypeIdToString(pScanStruct->type)), SpecAbstract::recordNameIdToString(pScanStruct->name));
 
     if (pScanStruct->sVersion != "") {
         sResult += QString("(%1)").arg(pScanStruct->sVersion);
@@ -17128,7 +17129,8 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Zig_vi(QIODevice *pDevice, SpecAbstrac
 
     XBinary binary(pDevice, pOptions->bIsImage);
 
-    if ((binary.find_unicodeString(nOffset, nSize, "ZIG_DEBUG_COLOR", false, pPdStruct) != -1) || (binary.find_ansiString(nOffset, nSize, "ZIG_DEBUG_COLOR", pPdStruct) != -1)) {
+    if ((binary.find_unicodeString(nOffset, nSize, "ZIG_DEBUG_COLOR", false, pPdStruct) != -1) ||
+        (binary.find_ansiString(nOffset, nSize, "ZIG_DEBUG_COLOR", pPdStruct) != -1)) {
         result.bIsValid = true;
         // TODO Version
     }
