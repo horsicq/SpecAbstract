@@ -2773,6 +2773,27 @@ QString SpecAbstract::createTypeString(const SpecAbstract::SCAN_STRUCT *pScanStr
     return sResult;
 }
 
+QString SpecAbstract::createShortResultString(const SCAN_RESULT scanResult)
+{
+    QString sResult;
+
+    qint64 nNumberOfRecords = scanResult.listRecords.count();
+
+    for (qint32 i = 0; i < nNumberOfRecords; i++) {
+        SCAN_STRUCT scanStruct = scanResult.listRecords.at(i);
+
+        if (scanStruct.id.fileType != XBinary::FT_BINARY) {
+            sResult = createFullResultString2(&scanStruct);
+            break;
+        } else if (scanStruct.name != RECORD_NAME_UNKNOWN){
+            sResult = createResultString2(&scanStruct);
+            break;
+        }
+    }
+
+    return sResult;
+}
+
 SpecAbstract::SCAN_STRUCT SpecAbstract::createHeaderScanStruct(const SpecAbstract::SCAN_STRUCT *pScanStruct)
 {
     SCAN_STRUCT result = *pScanStruct;

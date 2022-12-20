@@ -1378,6 +1378,9 @@ public:
     static QString createFullResultString(const SCAN_STRUCT *pScanStruct);
     static QString createFullResultString2(const SCAN_STRUCT *pScanStruct);
     static QString createTypeString(const SCAN_STRUCT *pScanStruct);
+
+    static QString createShortResultString(const SCAN_RESULT scanResult);
+
     static SCAN_STRUCT createHeaderScanStruct(const SCAN_STRUCT *pScanStruct);
 
     static BINARYINFO_STRUCT getBinaryInfo(QIODevice *pDevice, XBinary::SCANID parentId, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset,
