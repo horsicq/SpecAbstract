@@ -1956,6 +1956,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_RESOURCE:
             sResult = QString("Resource");
             break;
+        case RECORD_NAME_RESOURCE_VERSIONINFO:
+            sResult = QString("Resource Version Info");
+            break;
         case RECORD_NAME_REVPROT:
             sResult = QString("REVProt");
             break;
@@ -3689,8 +3692,13 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         signatureExpScan(&binary, &(result.basic_info.memoryMap), &result.basic_info.mapHeaderDetects, 0, _COM_Exp_records, sizeof(_COM_Exp_records),
                          result.basic_info.id.fileType, XBinary::FT_COM, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
 
-        if (result.basic_info.parentId.fileType != XBinary::FT_UNKNOWN) {
+        if (result.basic_info.parentId.filePart == XBinary::FILEPART_OVERLAY) {
             signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_overlay_records, sizeof(_PE_overlay_records),
+                          result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
+        }
+
+        if (result.basic_info.parentId.filePart == XBinary::FILEPART_RESOURCE) {
+            signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_resource_records, sizeof(_PE_resource_records),
                           result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
         }
 
@@ -3722,6 +3730,10 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         Binary_handle_SFXData(pDevice, pOptions, &result);
         Binary_handle_ProtectorData(pDevice, pOptions, &result);
         Binary_handle_LibraryData(pDevice, pOptions, &result);
+
+        if (result.basic_info.parentId.filePart == XBinary::FILEPART_RESOURCE) {
+            Binary_handle_Resources(pDevice, pOptions, &result);
+        }
 
         Binary_handle_FixDetects(pDevice, pOptions, &result);
         Binary_handleLanguages(pDevice, pOptions, &result);
@@ -12052,6 +12064,18 @@ void SpecAbstract::Binary_handle_LibraryData(QIODevice *pDevice, SpecAbstract::S
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_LIBRARY, RECORD_NAME_PYTHON, "", "", 0);
             pBinaryInfo->mapResultLibraryData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
+    }
+}
+
+void SpecAbstract::Binary_handle_Resources(QIODevice *pDevice, SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(pOptions)
+
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RESOURCE_VERSIONINFO)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
+        _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RESOURCE_VERSIONINFO);
+        // TODO
+        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
 }
 

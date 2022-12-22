@@ -161,6 +161,11 @@ SpecAbstract::SIGNATURE_RECORD _PE_overlay_records[]=
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_NATIVECRYPTORBYDOSX,          "",                 ""},                    "'7stgc_hdr'00"},
 };
 
+SpecAbstract::SIGNATURE_RECORD _PE_resource_records[]=
+{
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_RESOURCE_VERSIONINFO,         "",                 ""},                    "........0000560053005F00560045005200530049004F004E005F0049004E0046004F00"},
+};
+
 SpecAbstract::SIGNATURE_RECORD _COM_records[]=
 {
     {{0, XBinary::FT_COM,       SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_PKLITE,                       "1.00, 1.03",       "exe2com"},             "B8....BA....8CDB03D83B1E....73..83EB..FA8ED3BC....FB83EB..8EC353B9....33FF57BE....FCF3A5CB"},

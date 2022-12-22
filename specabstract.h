@@ -635,6 +635,7 @@ public:
         RECORD_NAME_RELPACK,
         RECORD_NAME_RENETPACK,
         RECORD_NAME_RESOURCE,
+        RECORD_NAME_RESOURCE_VERSIONINFO,
         RECORD_NAME_REVPROT,
         RECORD_NAME_RJCRUSH,
         RECORD_NAME_RLP,
@@ -1284,6 +1285,7 @@ public:
         bool bIsImage;
         bool bIsTest;
         XBinary::FT fileType;  // Optional
+        XBinary::FILEPART initFilePart; // Optional
     };
 
     struct UNPACK_OPTIONS {
@@ -1456,6 +1458,7 @@ public:
     static void Binary_handle_SFXData(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_ProtectorData(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_LibraryData(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
+    static void Binary_handle_Resources(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
 
     static void Binary_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
