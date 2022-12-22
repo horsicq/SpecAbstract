@@ -2786,7 +2786,8 @@ QString SpecAbstract::createShortResultString(const SCAN_RESULT scanResult)
         SCAN_STRUCT scanStruct = scanResult.listRecords.at(i);
 
         if (scanStruct.id.fileType != XBinary::FT_BINARY) {
-            sResult = createFullResultString2(&scanStruct);
+            //sResult = createFullResultString2(&scanStruct);
+            sResult = createResultString2(&scanStruct);
             break;
         } else if (scanStruct.name != RECORD_NAME_UNKNOWN){
             sResult = createResultString2(&scanStruct);
