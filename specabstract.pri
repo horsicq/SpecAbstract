@@ -39,6 +39,22 @@ SOURCES += \
     include($$PWD/../Formats/xformats.pri)
 }
 
+contains(XCONFIG, use_dex) {
+    DEFINES += USE_DEX
+    !contains(XCONFIG, xdex) {
+        XCONFIG += xdex
+        include($$PWD/../XDEX/xdex.pri)
+    }
+}
+
+contains(XCONFIG, use_pdf) {
+    DEFINES += USE_PDF
+    !contains(XCONFIG, xpdf) {
+        XCONFIG += xpdf
+        include($$PWD/../XPDF/xpdf.pri)
+    }
+}
+
 DISTFILES += \
     $$PWD/LICENSE \
     $$PWD/README.md \
