@@ -181,6 +181,7 @@ public:
         RECORD_NAME_BEAWEBLOGIC,
         RECORD_NAME_BEROEXEPACKER,
         RECORD_NAME_BIOHAZARDCRYPTER,
+        RECORD_NAME_BITMAPINFOHEADER,
         RECORD_NAME_BITROCKINSTALLER,
         RECORD_NAME_BITSHAPEPECRYPT,
         RECORD_NAME_BLADEJOINER,
@@ -635,6 +636,11 @@ public:
         RECORD_NAME_RELPACK,
         RECORD_NAME_RENETPACK,
         RECORD_NAME_RESOURCE,
+        RECORD_NAME_RESOURCE_CURSOR,
+        RECORD_NAME_RESOURCE_DIALOG,
+        RECORD_NAME_RESOURCE_ICON,
+        RECORD_NAME_RESOURCE_MENU,
+        RECORD_NAME_RESOURCE_STRINGTABLE,
         RECORD_NAME_RESOURCE_VERSIONINFO,
         RECORD_NAME_REVPROT,
         RECORD_NAME_RJCRUSH,
@@ -786,6 +792,7 @@ public:
         RECORD_NAME_WINDOWS,
         RECORD_NAME_WINDOWSBITMAP,
         RECORD_NAME_WINDOWSCE,
+        RECORD_NAME_WINDOWSCURSOR,
         RECORD_NAME_WINDOWSICON,
         RECORD_NAME_WINDOWSINSTALLER,
         RECORD_NAME_WINDOWSMEDIA,
@@ -959,6 +966,7 @@ public:
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultImages;
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultProtectorData;
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultLibraryData;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultResources;
 
         QList<SCAN_STRUCT> listRecursiveDetects;
     };
@@ -1286,6 +1294,7 @@ public:
         bool bIsTest;
         XBinary::FT fileType;  // Optional
         XBinary::FILEPART initFilePart; // Optional
+        QVariant varInfo; // Optional
     };
 
     struct UNPACK_OPTIONS {

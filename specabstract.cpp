@@ -594,6 +594,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BIOHAZARDCRYPTER:
             sResult = QString("Biohazard Crypter");
             break;
+        case RECORD_NAME_BITMAPINFOHEADER:
+            sResult = QString("Bitmap Info Header");
+            break;
         case RECORD_NAME_BITROCKINSTALLER:
             sResult = QString("BitRock Installer");
             break;
@@ -1956,6 +1959,21 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_RESOURCE:
             sResult = QString("Resource");
             break;
+        case RECORD_NAME_RESOURCE_CURSOR:
+            sResult = QString("Resource Cursor");
+            break;
+        case RECORD_NAME_RESOURCE_DIALOG:
+            sResult = QString("Resource Dialog");
+            break;
+        case RECORD_NAME_RESOURCE_ICON:
+            sResult = QString("Resource Icon");
+            break;
+        case RECORD_NAME_RESOURCE_MENU:
+            sResult = QString("Resource Menu");
+            break;
+        case RECORD_NAME_RESOURCE_STRINGTABLE:
+            sResult = QString("Resource String Table");
+            break;
         case RECORD_NAME_RESOURCE_VERSIONINFO:
             sResult = QString("Resource Version Info");
             break;
@@ -2408,6 +2426,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             break;
         case RECORD_NAME_WINDOWSCE:
             sResult = QString("Windows CE");
+            break;
+        case RECORD_NAME_WINDOWSCURSOR:
+            sResult = QString("Windows Cursor");
             break;
         case RECORD_NAME_WINDOWSICON:
             sResult = QString("Windows Icon");
@@ -3699,8 +3720,36 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         }
 
         if (result.basic_info.parentId.filePart == XBinary::FILEPART_RESOURCE) {
-            signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_resource_records, sizeof(_PE_resource_records),
-                          result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
+//            signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_resource_records, sizeof(_PE_resource_records),
+//                          result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
+
+            // TODO a function
+
+            if (result.basic_info.mapHeaderDetects.count() == 0) {
+                _SCANS_STRUCT ss = {};
+                ss.fileType = result.basic_info.id.fileType;
+                ss.type = RECORD_TYPE_FORMAT;
+
+                quint32 nId = pOptions->varInfo.toUInt();
+
+                if (nId == XPE_DEF::S_RT_DIALOG) {
+                    ss.name = RECORD_NAME_RESOURCE_DIALOG;
+                } else if (nId == XPE_DEF::S_RT_STRING) {
+                    ss.name = RECORD_NAME_RESOURCE_STRINGTABLE;
+                } else if (nId == XPE_DEF::S_RT_VERSION) {
+                    ss.name = RECORD_NAME_RESOURCE_VERSIONINFO;
+                } else if (nId == XPE_DEF::S_RT_ICON) {
+                    ss.name = RECORD_NAME_RESOURCE_ICON;
+                } else if (nId == XPE_DEF::S_RT_CURSOR) {
+                    ss.name = RECORD_NAME_RESOURCE_CURSOR;
+                } else if (nId == XPE_DEF::S_RT_MENU) {
+                    ss.name = RECORD_NAME_RESOURCE_MENU;
+                }
+
+                if (ss.name != RECORD_NAME_UNKNOWN) {
+                    result.basic_info.mapHeaderDetects.insert(ss.name, ss);
+                }
+            }
         }
 
         // TODO header data!
@@ -3748,6 +3797,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         result.basic_info.listDetects.append(result.mapResultSFXData.values());
         result.basic_info.listDetects.append(result.mapResultProtectorData.values());
         result.basic_info.listDetects.append(result.mapResultLibraryData.values());
+        result.basic_info.listDetects.append(result.mapResultResources.values());
         result.basic_info.listDetects.append(result.mapResultDatabases.values());
         result.basic_info.listDetects.append(result.mapResultImages.values());
         result.basic_info.listDetects.append(result.mapResultTools.values());
@@ -11854,11 +11904,16 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, SpecAbstract::SCAN_O
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_TIFF);
         // More information
         pBinaryInfo->mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
-    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINDOWSICON)) && (pBinaryInfo->basic_info.id.nSize >= 40)) {
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINDOWSICON)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
         // Windows Icon
         // TODO more information
         pBinaryInfo->basic_info.id.fileType = XBinary::FT_IMAGE;
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINDOWSICON);
+        pBinaryInfo->mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINDOWSCURSOR)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
+        // Windows Cursor
+        // TODO more information
+        _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINDOWSCURSOR);
         pBinaryInfo->mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINDOWSBITMAP)) && (pBinaryInfo->basic_info.id.nSize >= 40)) {
         // Windows Bitmap
@@ -12070,13 +12125,38 @@ void SpecAbstract::Binary_handle_LibraryData(QIODevice *pDevice, SpecAbstract::S
 
 void SpecAbstract::Binary_handle_Resources(QIODevice *pDevice, SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo)
 {
-    Q_UNUSED(pDevice)
-    Q_UNUSED(pOptions)
+    XBinary binary(pDevice, pOptions->bIsImage);
 
     if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RESOURCE_VERSIONINFO)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RESOURCE_VERSIONINFO);
         // TODO
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_BITMAPINFOHEADER)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
+        _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_BITMAPINFOHEADER);
+
+        ss.sInfo = QString("%1x%2").arg(binary.read_uint32(4)).arg(binary.read_uint32(8));
+        // TODO
+        pBinaryInfo->mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RESOURCE_STRINGTABLE)) {
+        _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RESOURCE_STRINGTABLE);
+
+        pBinaryInfo->mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RESOURCE_DIALOG)) {
+        _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RESOURCE_DIALOG);
+
+        pBinaryInfo->mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RESOURCE_ICON)) {
+        _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RESOURCE_ICON);
+
+        pBinaryInfo->mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RESOURCE_CURSOR)) {
+        _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RESOURCE_CURSOR);
+
+        pBinaryInfo->mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RESOURCE_MENU)) {
+        _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RESOURCE_MENU);
+
+        pBinaryInfo->mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
 }
 

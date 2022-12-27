@@ -55,6 +55,7 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_PNG,                          "",                 ""},                    "89'PNG\r\n'1A0A........'IHDR'"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_WINDOWSBITMAP,                "",                 ""},                    "'BM'"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_WINDOWSICON,                  "",                 ""},                    "00000100"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_WINDOWSCURSOR,                "",                 ""},                    "00000200"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_AU,                           "",                 ""},                    "'.snd'"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_DEB,                          "",                 ""},                    "'!<arch>'0a'debian-binary'"}, // TODO Check
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_AVI,                          "",                 ""},                    "'RIFF'........'AVI '"},
@@ -161,10 +162,11 @@ SpecAbstract::SIGNATURE_RECORD _PE_overlay_records[]=
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_PROTECTORDATA,    SpecAbstract::RECORD_NAME_NATIVECRYPTORBYDOSX,          "",                 ""},                    "'7stgc_hdr'00"},
 };
 
-SpecAbstract::SIGNATURE_RECORD _PE_resource_records[]=
-{
-    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_RESOURCE_VERSIONINFO,         "",                 ""},                    "........0000560053005F00560045005200530049004F004E005F0049004E0046004F00"},
-};
+//SpecAbstract::SIGNATURE_RECORD _PE_resource_records[]=
+//{
+//    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_RESOURCE_VERSIONINFO,         "",                 ""},                    "........0000560053005F00560045005200530049004F004E005F0049004E0046004F00"},
+//    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_BITMAPINFOHEADER,             "",                 ""},                    "28000000................0100"},
+//};
 
 SpecAbstract::SIGNATURE_RECORD _COM_records[]=
 {
