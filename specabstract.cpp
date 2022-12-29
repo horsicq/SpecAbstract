@@ -30,10 +30,9 @@ SpecAbstract::SpecAbstract(QObject *pParent)
 void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, XBinary::SCANID parentId,
                         SpecAbstract::SCAN_OPTIONS *pOptions, bool bInit, XBinary::PDSTRUCT *pPdStruct)
 {
-    XBinary::PDSTRUCT pdStructEmpty = {};
+    XBinary::PDSTRUCT pdStructEmpty = XBinary::createPdStruct();
 
     if (!pPdStruct) {
-        XBinary::_pdStructInit(&pdStructEmpty);
         pPdStruct = &pdStructEmpty;
     }
 
