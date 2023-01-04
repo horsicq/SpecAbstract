@@ -1728,6 +1728,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ORACLESOLARISLINKEDITORS:
             sResult = QString("Oracle Solaris Link Editors");
             break;
+        case RECORD_NAME_OREANSCODEVIRTUALIZER:
+            sResult = QString("Oreans CodeVirtualizer");
+            break;
         case RECORD_NAME_ORIEN:
             sResult = QString("ORiEN");
             break;
@@ -4419,7 +4422,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
         }
 
         result.listSectionHeaders = pe.getSectionHeaders();
-        result.listSectionRecords = XPE::getSectionRecords(&result.listSectionHeaders, pe.isImage());
+        result.listSectionRecords = pe.getSectionRecords(&result.listSectionHeaders);
         result.listSectionNames = XPE::getSectionNames(&(result.listSectionRecords));
 
         result.listImports = pe.getImports(&(result.basic_info.memoryMap));
@@ -5581,6 +5584,13 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                 pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
+            // Oreans CodeVirtualizer
+            if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_OREANSCODEVIRTUALIZER)) {
+                _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_OREANSCODEVIRTUALIZER);
+
+                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            }
+
             if (!pPEInfo->bIs64) {
                 // MaskPE
                 if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_MASKPE)) {
@@ -6351,7 +6361,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                 }
 
                 if (pPEInfo->mapImportDetects.contains(RECORD_NAME_HMIMYSPACKER)) {
-                    if (XPE::isSectionNamePresent(".hmimys", &(pPEInfo->listSectionHeaders)))  // TODO Check
+                    if (XPE::isSectionNamePresent(".hmimys", &(pPEInfo->listSectionRecords)))  // TODO Check
                     {
                         _SCANS_STRUCT recordSS = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PACKER, RECORD_NAME_HMIMYSPACKER, "", "", 0);
                         pPEInfo->mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
@@ -6891,7 +6901,7 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice, SpecAbstract::SCAN_OP
             } else if ((i > 1) && (sVMPSectionName.at(sVMPSectionName.size() - 1) == QChar('1'))) {
                 QString sCollision = XBinary::getStringCollision(&(pPEInfo->listSectionNames), "0", "1");
 
-                if (XPE::isSectionNamePresent(sCollision + "0", &(pPEInfo->listSectionHeaders))) {
+                if (XPE::isSectionNamePresent(sCollision + "0", &(pPEInfo->listSectionRecords))) {
                     bDetected = true;
 
                     break;
@@ -6899,8 +6909,8 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice, SpecAbstract::SCAN_OP
             } else if ((i > 2) && (sVMPSectionName.at(sVMPSectionName.size() - 1) == QChar('2'))) {
                 QString sCollision = XBinary::getStringCollision(&(pPEInfo->listSectionNames), "1", "2");
 
-                if (XPE::isSectionNamePresent(sCollision + "1", &(pPEInfo->listSectionHeaders)) &&
-                    XPE::isSectionNamePresent(sCollision + "0", &(pPEInfo->listSectionHeaders))) {
+                if (XPE::isSectionNamePresent(sCollision + "1", &(pPEInfo->listSectionRecords)) &&
+                    XPE::isSectionNamePresent(sCollision + "0", &(pPEInfo->listSectionRecords))) {
                     bDetected = true;
 
                     break;
@@ -6908,9 +6918,9 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice, SpecAbstract::SCAN_OP
             } else if ((i > 3) && (sVMPSectionName.at(sVMPSectionName.size() - 1) == QChar('3'))) {
                 QString sCollision = XBinary::getStringCollision(&(pPEInfo->listSectionNames), "2", "3");
 
-                if (XPE::isSectionNamePresent(sCollision + "2", &(pPEInfo->listSectionHeaders)) &&
-                    XPE::isSectionNamePresent(sCollision + "1", &(pPEInfo->listSectionHeaders)) &&
-                    XPE::isSectionNamePresent(sCollision + "0", &(pPEInfo->listSectionHeaders))) {
+                if (XPE::isSectionNamePresent(sCollision + "2", &(pPEInfo->listSectionRecords)) &&
+                    XPE::isSectionNamePresent(sCollision + "1", &(pPEInfo->listSectionRecords)) &&
+                    XPE::isSectionNamePresent(sCollision + "0", &(pPEInfo->listSectionRecords))) {
                     bDetected = true;
 
                     break;
@@ -7312,10 +7322,10 @@ void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
 
                             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_THEMIDAWINLICENSE, "3.XX", "", 0);
 
-                            if (XPE::isSectionNamePresent(".themida", &(pPEInfo->listSectionHeaders))) {
+                            if (XPE::isSectionNamePresent(".themida", &(pPEInfo->listSectionRecords))) {
                                 ss.sInfo = "Themida";
                                 bSuccess = true;
-                            } else if (XPE::isSectionNamePresent(".winlice", &(pPEInfo->listSectionHeaders))) {
+                            } else if (XPE::isSectionNamePresent(".winlice", &(pPEInfo->listSectionRecords))) {
                                 ss.sInfo = "Winlicense";
                                 bSuccess = true;
                             }
@@ -7336,8 +7346,8 @@ void SpecAbstract::PE_handle_StarForce(QIODevice *pDevice, SpecAbstract::SCAN_OP
     XPE pe(pDevice, pOptions->bIsImage);
 
     if (pe.isValid()) {
-        bool bSF3 = XPE::isSectionNamePresent(".sforce3", &(pPEInfo->listSectionHeaders));  // TODO
-        bool bSF4 = XPE::isSectionNamePresent(".ps4", &(pPEInfo->listSectionHeaders));      // TODO
+        bool bSF3 = XPE::isSectionNamePresent(".sforce3", &(pPEInfo->listSectionRecords));  // TODO
+        bool bSF4 = XPE::isSectionNamePresent(".ps4", &(pPEInfo->listSectionRecords));      // TODO
 
         if (bSF3 || bSF4) {
             QString sVersion;
@@ -9423,7 +9433,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
             }
 
             if (ssCompiler.type == RECORD_TYPE_UNKNOWN) {
-                if (XPE::isSectionNamePresent(".stabstr", &(pPEInfo->listSectionHeaders)))  // TODO
+                if (XPE::isSectionNamePresent(".stabstr", &(pPEInfo->listSectionRecords)))  // TODO
                 {
                     XPE::SECTION_RECORD sr = XPE::getSectionRecordByName(".stabstr", &(pPEInfo->listSectionRecords));
 
@@ -9658,7 +9668,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
 
             if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_CAB)) {
                 // Wix Tools
-                if (XPE::isSectionNamePresent(".wixburn", &(pPEInfo->listSectionHeaders)))  // TODO
+                if (XPE::isSectionNamePresent(".wixburn", &(pPEInfo->listSectionRecords)))  // TODO
                 {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_WIXTOOLSET, "", "", 0);
                     ss.sVersion = "3.X";  // TODO check "E:\delivery\Dev\wix37\build\ship\x86\burn.pdb"
@@ -10128,7 +10138,7 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
             }
 
             // WinZip
-            if ((pPEInfo->sResourceManifest.contains("WinZipComputing.WinZip")) || (XPE::isSectionNamePresent("_winzip_", &(pPEInfo->listSectionHeaders))))  // TODO
+            if ((pPEInfo->sResourceManifest.contains("WinZipComputing.WinZip")) || (XPE::isSectionNamePresent("_winzip_", &(pPEInfo->listSectionRecords))))  // TODO
             {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_SFX, RECORD_NAME_WINZIP, "", "", 0);
 
@@ -11009,7 +11019,7 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract:
         }
 
         if (!pPEInfo->mapResultPackers.contains(RECORD_NAME_ASPACK)) {
-            if (XPE::isSectionNamePresent(".aspack", &(pPEInfo->listSectionHeaders)) && XPE::isSectionNamePresent(".adata", &(pPEInfo->listSectionHeaders))) {
+            if (XPE::isSectionNamePresent(".aspack", &(pPEInfo->listSectionRecords)) && XPE::isSectionNamePresent(".adata", &(pPEInfo->listSectionRecords))) {
                 _SCANS_STRUCT recordSS = {};
 
                 recordSS.type = RECORD_TYPE_PACKER;
