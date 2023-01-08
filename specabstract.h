@@ -1293,9 +1293,9 @@ public:
         bool bSubdirectories;
         bool bIsImage;
         bool bIsTest;
-        XBinary::FT fileType;  // Optional
-        XBinary::FILEPART initFilePart; // Optional
-        QVariant varInfo; // Optional
+        XBinary::FT fileType;            // Optional
+        XBinary::FILEPART initFilePart;  // Optional
+        QVariant varInfo;                // Optional
     };
 
     struct UNPACK_OPTIONS {

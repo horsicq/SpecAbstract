@@ -2810,10 +2810,10 @@ QString SpecAbstract::createShortResultString(const SCAN_RESULT scanResult)
         SCAN_STRUCT scanStruct = scanResult.listRecords.at(i);
 
         if (scanStruct.id.fileType != XBinary::FT_BINARY) {
-            //sResult = createFullResultString2(&scanStruct);
-            sResult = QString("%1: %2").arg(XBinary::fileTypeIdToString(scanStruct.id.fileType),createResultString2(&scanStruct));
+            // sResult = createFullResultString2(&scanStruct);
+            sResult = QString("%1: %2").arg(XBinary::fileTypeIdToString(scanStruct.id.fileType), createResultString2(&scanStruct));
             break;
-        } else if (scanStruct.name != RECORD_NAME_UNKNOWN){
+        } else if (scanStruct.name != RECORD_NAME_UNKNOWN) {
             sResult = createResultString2(&scanStruct);
             break;
         }
@@ -3723,8 +3723,8 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         }
 
         if (result.basic_info.parentId.filePart == XBinary::FILEPART_RESOURCE) {
-//            signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_resource_records, sizeof(_PE_resource_records),
-//                          result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
+            //            signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_resource_records, sizeof(_PE_resource_records),
+            //                          result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
 
             // TODO a function
 
