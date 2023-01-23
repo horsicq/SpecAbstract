@@ -15368,6 +15368,22 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                     recordXcode.sVersion = "13.1";
                     recordCLANG.sVersion = "13.0.0";
                     recordSwift.sVersion = "5.5.1";
+                } else if (recordSDK.sVersion == "12.1.0") {
+                    recordXcode.sVersion = "13.2-13.2.1";
+                    recordCLANG.sVersion = "13.0.0";
+                    recordSwift.sVersion = "5.5.2";
+                } else if (recordSDK.sVersion == "12.3.0") {
+                    recordXcode.sVersion = "13.3-14.0.1";
+                    recordCLANG.sVersion = "13.1.6-14.0.0";
+                    recordSwift.sVersion = "5.6-5.7";
+                } else if (recordSDK.sVersion == "13.0.0") {
+                    recordXcode.sVersion = "14.1";
+                    recordCLANG.sVersion = "14.0.0";
+                    recordSwift.sVersion = "5.7.1";
+                } else if (recordSDK.sVersion == "13.1.0") {
+                    recordXcode.sVersion = "14.2";
+                    recordCLANG.sVersion = "14.0.0";
+                    recordSwift.sVersion = "5.7.2";
                 }
             } else if (recordSDK.name == SpecAbstract::RECORD_NAME_IOSSDK) {
                 if (recordSDK.sVersion == "1.0.0") {
@@ -15596,6 +15612,30 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                     recordXcode.sVersion = "13.0-13.1";
                     recordCLANG.sVersion = "13.0.0";
                     recordSwift.sVersion = "5.5-5.5.1";
+                } else if (recordSDK.sVersion == "15.2.0") {
+                    recordXcode.sVersion = "13.2-13.2.1";
+                    recordCLANG.sVersion = "13.0.0";
+                    recordSwift.sVersion = "5.5.2";
+                } else if (recordSDK.sVersion == "15.4.0") {
+                    recordXcode.sVersion = "13.3-13.3.1";
+                    recordCLANG.sVersion = "13.1.6";
+                    recordSwift.sVersion = "5.6";
+                } else if (recordSDK.sVersion == "15.5.0") {
+                    recordXcode.sVersion = "13.4-13.4.1";
+                    recordCLANG.sVersion = "13.1.6";
+                    recordSwift.sVersion = "5.6.1";
+                } else if (recordSDK.sVersion == "16.0.0") {
+                    recordXcode.sVersion = "14.0-14.0.1";
+                    recordCLANG.sVersion = "14.0.0";
+                    recordSwift.sVersion = "5.7";
+                } else if (recordSDK.sVersion == "16.1.0") {
+                    recordXcode.sVersion = "14.1";
+                    recordCLANG.sVersion = "14.0.0";
+                    recordSwift.sVersion = "5.7.1";
+                } else if (recordSDK.sVersion == "16.2.0") {
+                    recordXcode.sVersion = "14.2";
+                    recordCLANG.sVersion = "14.0.0";
+                    recordSwift.sVersion = "5.7.2";
                 }
             } else if (recordSDK.name == SpecAbstract::RECORD_NAME_WATCHOSSDK) {
                 if (recordSDK.sVersion == "2.0.0") {
@@ -15690,6 +15730,22 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                     recordXcode.sVersion = "13.1";
                     recordCLANG.sVersion = "13.0.0";
                     recordSwift.sVersion = "5.5.1";
+                } else if (recordSDK.sVersion == "8.3.0") {
+                    recordXcode.sVersion = "13.2-13.2.1";
+                    recordCLANG.sVersion = "13.0.0";
+                    recordSwift.sVersion = "5.5.2";
+                } else if (recordSDK.sVersion == "8.5.0") {
+                    recordXcode.sVersion = "13.3-13.4.1";
+                    recordCLANG.sVersion = "13.1.6";
+                    recordSwift.sVersion = "5.6-5.6.1";
+                } else if (recordSDK.sVersion == "9.0.0") {
+                    recordXcode.sVersion = "14.0-14.0.1";
+                    recordCLANG.sVersion = "14.0.0";
+                    recordSwift.sVersion = "5.7";
+                } else if (recordSDK.sVersion == "9.1.0") {
+                    recordXcode.sVersion = "14.1-14.2";
+                    recordCLANG.sVersion = "14.0.0";
+                    recordSwift.sVersion = "5.7.1-5.7.2";
                 }
             } else if (recordSDK.name == SpecAbstract::RECORD_NAME_TVOS) {
                 if (recordSDK.sVersion == "9.0.0") {
@@ -15784,6 +15840,22 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                     recordXcode.sVersion = "13.0-13.1";
                     recordCLANG.sVersion = "13.0.0";
                     recordSwift.sVersion = "5.5-5.5.1";
+                } else if (recordSDK.sVersion == "15.2.0") {
+                    recordXcode.sVersion = "13.2-13.2.1";
+                    recordCLANG.sVersion = "13.0.0";
+                    recordSwift.sVersion = "5.5.2";
+                } else if (recordSDK.sVersion == "15.4.0") {
+                    recordXcode.sVersion = "13.3-13.4.1";
+                    recordCLANG.sVersion = "13.1.6";
+                    recordSwift.sVersion = "5.6-5.6.1";
+                } else if (recordSDK.sVersion == "16.0.0") {
+                    recordXcode.sVersion = "14.0-14.0.1";
+                    recordCLANG.sVersion = "14.0.0";
+                    recordSwift.sVersion = "5.7";
+                } else if (recordSDK.sVersion == "16.1.0") {
+                    recordXcode.sVersion = "14.1-14.2";
+                    recordCLANG.sVersion = "14.0.0";
+                    recordSwift.sVersion = "5.7.1-5.7.2";
                 }
             }
         }
