@@ -105,10 +105,10 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
             pScanResult->listRecords.append(zip_info.basic_info.listDetects);
             pScanResult->listHeurs.append(zip_info.basic_info.listHeurs);
         } else if (stFileTypes.contains(XBinary::FT_MACHOFAT)) {
-            SpecAbstract::MACHOFATINFO_STRUCT zip_info = SpecAbstract::getMACHOFATInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
+            SpecAbstract::MACHOFATINFO_STRUCT machofat_info = SpecAbstract::getMACHOFATInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
 
-            pScanResult->listRecords.append(zip_info.basic_info.listDetects);
-            pScanResult->listHeurs.append(zip_info.basic_info.listHeurs);
+            pScanResult->listRecords.append(machofat_info.basic_info.listDetects);
+            pScanResult->listHeurs.append(machofat_info.basic_info.listHeurs);
         } else if (stFileTypes.contains(XBinary::FT_DEX)) {
             SpecAbstract::DEXINFO_STRUCT dex_info = SpecAbstract::getDEXInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
 
