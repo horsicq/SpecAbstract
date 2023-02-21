@@ -1402,7 +1402,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Lightning Crypter ScanTime");
             break;
         case RECORD_NAME_LINUX:
-            sResult = QString("Linux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_LINUX);
             break;
         case RECORD_NAME_LLD:
             sResult = QString("LDD");
@@ -1588,7 +1588,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Mr Undectetable");
             break;
         case RECORD_NAME_MSDOS:
-            sResult = QString("MS-DOS");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MSDOS);
             break;
         case RECORD_NAME_MSLRH:
             sResult = QString("MSLRH");
@@ -1735,7 +1735,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("ORiEN");
             break;
         case RECORD_NAME_OS2:
-            sResult = QString("OS/2");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_OS2);
             break;
         case RECORD_NAME_OSCCRYPTER:
             sResult = QString("OSC-Crypter");
@@ -1876,7 +1876,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("PolyCrypt PE");
             break;
         case RECORD_NAME_POSIX:
-            sResult = QString("Posix");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_POSIX);
             break;
         case RECORD_NAME_POWERBASIC:
             sResult = QString("PowerBASIC");
@@ -2299,7 +2299,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Universal Tuple Compiler");
             break;
         case RECORD_NAME_UNIX:
-            sResult = QString("Unix");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_UNIX);
             break;
         case RECORD_NAME_UNKOWNCRYPTER:
             sResult = QString("unkOwn Crypter");
@@ -2422,13 +2422,13 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("WindOfCrypt");
             break;
         case RECORD_NAME_WINDOWS:
-            sResult = QString("Windows");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_WINDOWS);
             break;
         case RECORD_NAME_WINDOWSBITMAP:
             sResult = QString("Windows Bitmap");
             break;
         case RECORD_NAME_WINDOWSCE:
-            sResult = QString("Windows CE");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_WINDOWSCE);
             break;
         case RECORD_NAME_WINDOWSCURSOR:
             sResult = QString("Windows Cursor");
@@ -2491,7 +2491,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("xar");
             break;
         case RECORD_NAME_XBOX:
-            sResult = QString("XBOX");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_XBOX);
             break;
         case RECORD_NAME_XCODE:
             sResult = QString("Xcode");
@@ -15021,6 +15021,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
             if ((osInfo.osName == XBinary::OSNAME_MAC_OS_X) || (osInfo.osName == XBinary::OSNAME_OS_X) || (osInfo.osName == XBinary::OSNAME_MACOS)) {
                 recordSDK.name = RECORD_NAME_MACOSSDK;
 
+                // https://developer.apple.com/documentation/foundation/object_runtime/foundation_framework_version_numbers
                 if ((nVersion >= S_FULL_VERSION(397, 40, 0)) && (nVersion < S_FULL_VERSION(425, 0, 0)))
                     recordSDK.sVersion = "10.0.0";
                 else if (nVersion < S_FULL_VERSION(462, 0, 0))
@@ -18643,7 +18644,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
         result.name = RECORD_NAME_WINDOWSCE;
     else if (osInfo.osName == XBinary::OSNAME_XBOX)
         result.name = RECORD_NAME_XBOX;
-    else if (osInfo.osName == XBinary::OSNAME_OS2)
+    else if (osInfo.osName == XBinary::OSNAME_OS2) // TODO
         result.name = RECORD_NAME_OS2;
     else if (osInfo.osName == XBinary::OSNAME_MAC_OS)
         result.name = RECORD_NAME_MAC_OS;
