@@ -340,7 +340,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("AINEXE");
             break;
         case RECORD_NAME_AIX:
-            sResult = QString("AIX");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_AIX);
             break;
         case RECORD_NAME_ALCHEMYMINDWORKS:
             sResult = QString("Alchemy Mindworks");
@@ -376,7 +376,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("ANDpakk2");
             break;
         case RECORD_NAME_ANDROID:
-            sResult = QString("Android");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_ANDROID);
             break;
         case RECORD_NAME_ANDROIDAPKSIGNER:
             sResult = QString("Android apksigner");
@@ -631,7 +631,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Break Into Pattern");
             break;
         case RECORD_NAME_BRIDGEOS:
-            sResult = QString("bridgeOS");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_BRIDGEOS);
             break;
         case RECORD_NAME_BRIDGEOSSDK:
             sResult = QString("bridgeOS SDK");
@@ -1054,7 +1054,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("fEaRz Packer");
             break;
         case RECORD_NAME_FENIXOS:
-            sResult = QString("FenixOS");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_FENIXOS);
             break;
         case RECORD_NAME_FILESHIELD:
             sResult = QString("FileShield");
@@ -1087,7 +1087,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Free Pascal");
             break;
         case RECORD_NAME_FREEBSD:
-            sResult = QString("FreeBSD");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_FREEBSD);
             break;
         case RECORD_NAME_FREECRYPTOR:
             sResult = QString("FreeCryptor");
@@ -1210,7 +1210,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Hound Hack Crypter");
             break;
         case RECORD_NAME_HPUX:
-            sResult = QString("Hewlett-Packard HP-UX");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_HPUX);
             break;
         case RECORD_NAME_HTML:
             sResult = QString("HTML");
@@ -1270,7 +1270,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("InstallShield");
             break;
         case RECORD_NAME_IOS:
-            sResult = QString("iOS");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_IOS);
             break;
         case RECORD_NAME_IOSSDK:
             sResult = QString("iOS SDK");
@@ -1279,16 +1279,16 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("iOS App Store Package");
             break;
         case RECORD_NAME_IPADOS:
-            sResult = QString("iPadOS");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_IPADOS);
             break;
         case RECORD_NAME_IPHONEOS:
-            sResult = QString("iPhone OS");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_IPHONEOS);
             break;
         case RECORD_NAME_IPBPROTECT:
             sResult = QString("iPB Protect");
             break;
         case RECORD_NAME_IRIX:
-            sResult = QString("IRIX");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_IRIX);
             break;
         case RECORD_NAME_ISO9660:
             sResult = QString("ISO 9660");
@@ -1429,13 +1429,13 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Mach-O FAT");
             break;
         case RECORD_NAME_MAC_OS:
-            sResult = QString("Mac OS");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MAC_OS);
             break;
         case RECORD_NAME_MAC_OS_X:
-            sResult = QString("Mac OS X");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MAC_OS_X);
             break;
         case RECORD_NAME_MACOS:
-            sResult = QString("macOS");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MACOS);
             break;
         case RECORD_NAME_MACOSSDK:
             sResult = QString("macOS SDK");
@@ -1540,7 +1540,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Mobile Tencent Protect");
             break;
         case RECORD_NAME_MODESTO:
-            sResult = QString("Novell Modesto");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MODESTO);
             break;
         case RECORD_NAME_MODGUARD:
             sResult = QString("ModGuard");
@@ -1624,7 +1624,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("NeoLite");
             break;
         case RECORD_NAME_NETBSD:
-            sResult = QString("NetBSD");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_NETBSD);
             break;
         case RECORD_NAME_NETEASEAPKSIGNER:
             sResult = QString("NetEase ApkSigner");
@@ -1705,7 +1705,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("OneSpan Protection");
             break;
         case RECORD_NAME_OPENBSD:
-            sResult = QString("OpenBSD");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_OPENBSD);
             break;
         case RECORD_NAME_OPENDOCUMENT:
             sResult = QString("Open Document");
@@ -1717,7 +1717,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Open Source Code Crypter");
             break;
         case RECORD_NAME_OPENVMS:
-            sResult = QString("Open VMS");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_OPENVMS);
             break;
         case RECORD_NAME_OPENVOS:
             sResult = QString("Open VOS");
@@ -1741,7 +1741,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("OSC-Crypter");
             break;
         case RECORD_NAME_OS_X:
-            sResult = QString("OS X");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_OS_X);
             break;
         case RECORD_NAME_P0KESCRAMBLER:
             sResult = QString("p0ke Scrambler");
@@ -2113,7 +2113,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("SoftwareZator");
             break;
         case RECORD_NAME_SOLARIS:
-            sResult = QString("Sun Solaris");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_SOLARIS);
             break;
         case RECORD_NAME_SOURCERYCODEBENCH:
             sResult = QString("Sourcery CodeBench");
@@ -2227,7 +2227,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("TTP Pack");
             break;
         case RECORD_NAME_TRU64:
-            sResult = QString("Compaq TRU64 UNIX");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_TRU64);
             break;
         case RECORD_NAME_TSTCRYPTER:
             sResult = QString("TsT Crypter");
@@ -2263,7 +2263,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Turkojan Crypter");
             break;
         case RECORD_NAME_TVOS:
-            sResult = QString("tvOS");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_TVOS);
             break;
         case RECORD_NAME_TVOSSDK:
             sResult = QString("tvOS SDK");
@@ -2386,7 +2386,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("wangzehua LLVM");
             break;
         case RECORD_NAME_WATCHOS:
-            sResult = QString("watchOS");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_WATCHOS);
             break;
         case RECORD_NAME_WATCHOSSDK:
             sResult = QString("watchOS SDK");
@@ -18644,7 +18644,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
         result.name = RECORD_NAME_WINDOWSCE;
     else if (osInfo.osName == XBinary::OSNAME_XBOX)
         result.name = RECORD_NAME_XBOX;
-    else if (osInfo.osName == XBinary::OSNAME_OS2) // TODO
+    else if (osInfo.osName == XBinary::OSNAME_OS2)
         result.name = RECORD_NAME_OS2;
     else if (osInfo.osName == XBinary::OSNAME_MAC_OS)
         result.name = RECORD_NAME_MAC_OS;
@@ -18690,7 +18690,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
         result.name = RECORD_NAME_OPENVMS;
     else if (osInfo.osName == XBinary::OSNAME_FENIXOS)
         result.name = RECORD_NAME_FENIXOS;
-    else if (osInfo.osName == XBinary::OSNAME_BORLANDOSSERVICES)
+    else if (osInfo.osName == XBinary::OSNAME_BORLANDOSSERVICES) // TODO
         result.name = RECORD_NAME_BORLANDOSSERVICES;
     else if (osInfo.osName == XBinary::OSNAME_NSK)
         result.name = RECORD_NAME_NSK;
