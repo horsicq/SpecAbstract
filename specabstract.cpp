@@ -5082,15 +5082,15 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
     Q_UNUSED(pOptions)
     // Import Check
 
-    //#ifdef QT_DEBUG
-    //    for(qint32 j=0;j<pPEInfo->listImports.count();j++)
-    //    {
-    //        for(qint32 i=0;i<pPEInfo->listImports.at(j).listPositions.count();i++)
-    //        {
-    //            qDebug("(pPEInfo->listImports.at(%d).listPositions.at(%d).sName==\"%s\")&&",j,i,pPEInfo->listImports.at(j).listPositions.at(i).sName.toLatin1().data());
-    //        }
-    //    }
-    //#endif
+    // #ifdef QT_DEBUG
+    //     for(qint32 j=0;j<pPEInfo->listImports.count();j++)
+    //     {
+    //         for(qint32 i=0;i<pPEInfo->listImports.at(j).listPositions.count();i++)
+    //         {
+    //             qDebug("(pPEInfo->listImports.at(%d).listPositions.at(%d).sName==\"%s\")&&",j,i,pPEInfo->listImports.at(j).listPositions.at(i).sName.toLatin1().data());
+    //         }
+    //     }
+    // #endif
 
     QSet<QString> stDetects;
 
@@ -17226,9 +17226,9 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_UPX_vi(QIODevice *pDevice, SpecAbstra
 
                 switch (nMethod)  // From https://github.com/upx/upx/blob/master/src/conf.h
                 {
-                    //#define M_CL1B_LE32     11
-                    //#define M_CL1B_8        12
-                    //#define M_CL1B_LE16     13
+                    // #define M_CL1B_LE32     11
+                    // #define M_CL1B_8        12
+                    // #define M_CL1B_LE16     13
                     case 2:
                         result.sInfo = append(result.sInfo, "NRV2B_LE32");
                         break;
@@ -18712,7 +18712,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
         result.name = RECORD_NAME_SUSELINUX;
     else if (osInfo.osName == XBinary::OSNAME_MANDRAKELINUX)
         result.name = RECORD_NAME_MANDRAKELINUX;
-    else if (osInfo.osName == XBinary::OSNAME_ASPLINUX) // TODO
+    else if (osInfo.osName == XBinary::OSNAME_ASPLINUX)  // TODO
         result.name = RECORD_NAME_ASPLINUX;
     else if (osInfo.osName == XBinary::OSNAME_REDHATLINUX)
         result.name = RECORD_NAME_REDHATLINUX;
