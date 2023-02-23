@@ -370,7 +370,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Alloy");
             break;
         case RECORD_NAME_ALPINELINUX:
-            sResult = QString("Alpine Linux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_ALPINELINUX);
             break;
         case RECORD_NAME_ANDPAKK2:
             sResult = QString("ANDpakk2");
@@ -511,7 +511,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("ARM/Thumb Macro Assembler");
             break;
         case RECORD_NAME_AROS:
-            sResult = QString("Amiga Research OS");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_AROS);
             break;
         case RECORD_NAME_ARXAN:
             sResult = QString("Arxan");
@@ -625,7 +625,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Borland Object Pascal(Delphi)");
             break;
         case RECORD_NAME_BORLANDOSSERVICES:
-            sResult = QString("Borland OS Services");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_BORLANDOSSERVICES);
             break;
         case RECORD_NAME_BREAKINTOPATTERN:
             sResult = QString("Break Into Pattern");
@@ -829,7 +829,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Debian clang");
             break;
         case RECORD_NAME_DEBIANLINUX:
-            sResult = QString("Debian Linux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_DEBIANLINUX);
             break;
         case RECORD_NAME_DEEPSEA:
             sResult = QString("DeepSea");
@@ -1108,7 +1108,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Gentee Installer");
             break;
         case RECORD_NAME_GENTOOLINUX:
-            sResult = QString("Gentoo Linux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_GENTOOLINUX);
             break;
         case RECORD_NAME_GHAZZACRYPTER:
             sResult = QString("GhaZza CryPter");
@@ -1447,7 +1447,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Mal Packer");
             break;
         case RECORD_NAME_MANDRAKELINUX:
-            sResult = QString("Mandrake Linux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MANDRAKELINUX);
             break;
         case RECORD_NAME_MASKPE:
             sResult = QString("MaskPE");
@@ -1672,7 +1672,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Nullsoft Scriptable Install System");
             break;
         case RECORD_NAME_NSK:
-            sResult = QString("Hewlett-Packard Non-Stop Kernel");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_NSK);
             break;
         case RECORD_NAME_NSPACK:
             sResult = QString("NsPack");
@@ -2143,7 +2143,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("StarForce");
             break;
         case RECORD_NAME_STARTOSLINUX:
-            sResult = QString("StartOS Linux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_STARTOSLINUX);
             break;
         case RECORD_NAME_STASFODIDOCRYPTOR:
             sResult = QString("StasFodidoCryptor");
@@ -2161,7 +2161,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Sun WorkShop Compilers");
             break;
         case RECORD_NAME_SUSELINUX:
-            sResult = QString("SUSE Linux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_SUSELINUX);
             break;
         case RECORD_NAME_SVKPROTECTOR:
             sResult = QString("SVK Protector");
@@ -2272,7 +2272,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Ubuntu clang");
             break;
         case RECORD_NAME_UBUNTULINUX:
-            sResult = QString("Ubuntu Linux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_UBUNTULINUX);
             break;
         case RECORD_NAME_UCEXE:
             sResult = QString("UCEXE");
@@ -2443,7 +2443,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Windows Media");
             break;
         case RECORD_NAME_WINDRIVERLINUX:
-            sResult = QString("Wind River Linux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_WINDRIVERLINUX);
             break;
         case RECORD_NAME_WINGSCRYPT:
             sResult = QString("WingsCrypt");
@@ -18690,7 +18690,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
         result.name = RECORD_NAME_OPENVMS;
     else if (osInfo.osName == XBinary::OSNAME_FENIXOS)
         result.name = RECORD_NAME_FENIXOS;
-    else if (osInfo.osName == XBinary::OSNAME_BORLANDOSSERVICES) // TODO
+    else if (osInfo.osName == XBinary::OSNAME_BORLANDOSSERVICES)
         result.name = RECORD_NAME_BORLANDOSSERVICES;
     else if (osInfo.osName == XBinary::OSNAME_NSK)
         result.name = RECORD_NAME_NSK;
@@ -18712,7 +18712,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
         result.name = RECORD_NAME_SUSELINUX;
     else if (osInfo.osName == XBinary::OSNAME_MANDRAKELINUX)
         result.name = RECORD_NAME_MANDRAKELINUX;
-    else if (osInfo.osName == XBinary::OSNAME_ASPLINUX)
+    else if (osInfo.osName == XBinary::OSNAME_ASPLINUX) // TODO
         result.name = RECORD_NAME_ASPLINUX;
     else if (osInfo.osName == XBinary::OSNAME_REDHATLINUX)
         result.name = RECORD_NAME_REDHATLINUX;
