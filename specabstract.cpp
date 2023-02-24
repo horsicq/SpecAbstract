@@ -523,7 +523,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("ASPack");
             break;
         case RECORD_NAME_ASPLINUX:
-            sResult = QString("ASPLinux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_ASPLINUX);
             break;
         case RECORD_NAME_ASPROTECT:
             sResult = QString("ASProtect");
@@ -1180,7 +1180,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("HaLV Crypter");
             break;
         case RECORD_NAME_HANCOMLINUX:
-            sResult = QString("Hancom Linux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_HANCOMLINUX);
             break;
         case RECORD_NAME_HDUS_WJUS:
             sResult = QString("Hdus-Wjus");
@@ -1462,7 +1462,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("MaxtoCode");
             break;
         case RECORD_NAME_MCLINUX:
-            sResult = QString("mClinux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MCLINUX);
             break;
         case RECORD_NAME_MEDUSAH:
             sResult = QString("Medusah");
@@ -1528,7 +1528,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("MinGW");
             break;
         case RECORD_NAME_MINIX:
-            sResult = QString("Minix");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MINIX);
             break;
         case RECORD_NAME_MINKE:
             sResult = QString("Minke");
@@ -1720,7 +1720,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = XBinary::osNameIdToString(XBinary::OSNAME_OPENVMS);
             break;
         case RECORD_NAME_OPENVOS:
-            sResult = QString("Open VOS");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_OPENVOS);
             break;
         case RECORD_NAME_OPERA:
             sResult = QString("Opera");
@@ -1921,7 +1921,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Qihoo 360 Protection");
             break;
         case RECORD_NAME_QNX:
-            sResult = QString("QNX");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_QNX);
             break;
         case RECORD_NAME_QRYPT0R:
             sResult = QString("QrYPt0r");
@@ -1951,7 +1951,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("RDG Tejon Crypter");
             break;
         case RECORD_NAME_REDHATLINUX:
-            sResult = QString("Red Hat Linux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_REDHATLINUX);
             break;
         case RECORD_NAME_RELPACK:
             sResult = QString("Relpack");
@@ -2152,7 +2152,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Stone's PE Encryptor");
             break;
         case RECORD_NAME_SUNOS:
-            sResult = QString("SunOS");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_SUNOS);
             break;
         case RECORD_NAME_SUNWORKSHOP:
             sResult = QString("Sun WorkShop");
@@ -2167,7 +2167,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("SVK Protector");
             break;
         case RECORD_NAME_SYLLABLE:
-            sResult = QString("Syllable");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_SYLLABLE);
             break;
         case RECORD_NAME_SWF:
             sResult = QString("SWF");
@@ -2251,7 +2251,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("Turbo linker");
             break;
         case RECORD_NAME_TURBOLINUX:
-            sResult = QString("Turbolinux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_TURBOLINUX);
             break;
         case RECORD_NAME_TURBOSTUDIO:
             sResult = QString("Turbo Studio");
@@ -2341,7 +2341,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("VeraCrypt");
             break;
         case RECORD_NAME_VINELINUX:
-            sResult = QString("Vine Linux");
+            sResult = XBinary::osNameIdToString(XBinary::OSNAME_VINELINUX);
             break;
         case RECORD_NAME_VIRBOXPROTECTOR:
             sResult = QString("Virbox Protector");
@@ -18712,7 +18712,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
         result.name = RECORD_NAME_SUSELINUX;
     else if (osInfo.osName == XBinary::OSNAME_MANDRAKELINUX)
         result.name = RECORD_NAME_MANDRAKELINUX;
-    else if (osInfo.osName == XBinary::OSNAME_ASPLINUX)  // TODO
+    else if (osInfo.osName == XBinary::OSNAME_ASPLINUX)
         result.name = RECORD_NAME_ASPLINUX;
     else if (osInfo.osName == XBinary::OSNAME_REDHATLINUX)
         result.name = RECORD_NAME_REDHATLINUX;
