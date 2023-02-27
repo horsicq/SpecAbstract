@@ -18630,6 +18630,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
 
     result.type = RECORD_TYPE_OPERATIONSYSTEM;
 
+    // TODO reactOS
     if (osInfo.osName == XBinary::OSNAME_MSDOS)
         result.name = RECORD_NAME_MSDOS;
     else if (osInfo.osName == XBinary::OSNAME_POSIX)
