@@ -1298,10 +1298,10 @@ public:
         QVariant varInfo;                // Optional
     };
 
-    struct UNPACK_OPTIONS {
-        // PE/PE+
-        bool bCopyOverlay;  // In
-    };
+//    struct UNPACK_OPTIONS {
+//        // PE/PE+
+//        bool bCopyOverlay;  // In
+//    };
 
     struct _BASICINFO {
         quint32 nVariant;
