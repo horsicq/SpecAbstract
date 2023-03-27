@@ -1063,8 +1063,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
             sResult = QString("FISH .NET");
             break;
         case RECORD_NAME_FISHPEPACKER:
-            sResult = QString("Fish PE Packer");
-            break;  // TODO Check name
+            sResult = QString("Fish PE Packer");   // TODO Check name
+            break;
         case RECORD_NAME_FISHPESHIELD:
             sResult = QString("FishPE Shield");
             break;
