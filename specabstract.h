@@ -1298,6 +1298,7 @@ public:
         QVariant varInfo;                // Optional
     };
 
+    // TODO Check
     //    struct UNPACK_OPTIONS {
     //        // PE/PE+
     //        bool bCopyOverlay;  // In
