@@ -4853,7 +4853,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
     result.basic_info.nElapsedTime = timer.elapsed();
 
 #ifdef QT_DEBUG
-    qDebug("%d msec", result.basic_info.nElapsedTime);
+    qDebug("%lld msec", result.basic_info.nElapsedTime);
 #endif
 
     return result;
