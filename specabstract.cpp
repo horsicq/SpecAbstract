@@ -5011,7 +5011,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
         XBinary::setPdStructInit(pPdStruct, _nFreeIndex, nNumberOfRecords);
 
         for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
-            SpecAbstract::SCAN_RESULT scanResult = {0};
+            SpecAbstract::SCAN_RESULT scanResult = {};
 
             XBinary::SCANID _parentId = result.basic_info.id;
             _parentId.filePart = XBinary::FILEPART_ARCHIVERECORD;
