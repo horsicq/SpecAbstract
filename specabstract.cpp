@@ -11183,7 +11183,7 @@ void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OP
                         if (stFT.contains(XBinary::FT_MSDOS) || stFT.contains(XBinary::FT_NE) || stFT.contains(XBinary::FT_LE) || stFT.contains(XBinary::FT_LX) ||
                             stFT.contains(XBinary::FT_PE) || stFT.contains(XBinary::FT_ELF) || stFT.contains(XBinary::FT_MACHO) || stFT.contains(XBinary::FT_DEX) ||
                             stFT.contains(XBinary::FT_ARCHIVE)) {
-                            SpecAbstract::SCAN_RESULT scanResult = {0};
+                            SpecAbstract::SCAN_RESULT scanResult = {};
 
                             XBinary::SCANID _parentId = pPEInfo->basic_info.id;
                             _parentId.filePart = XBinary::FILEPART_RESOURCE;
