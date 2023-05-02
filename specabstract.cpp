@@ -11198,7 +11198,7 @@ void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OP
             }
 
             if (pPEInfo->nOverlaySize) {
-                SpecAbstract::SCAN_RESULT scanResult = {0};
+                SpecAbstract::SCAN_RESULT scanResult = {};
 
                 XBinary::SCANID _parentId = pPEInfo->basic_info.id;
                 _parentId.filePart = XBinary::FILEPART_OVERLAY;
