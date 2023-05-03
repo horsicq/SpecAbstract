@@ -1376,7 +1376,7 @@ public:
     static void scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, XBinary::SCANID parentId,
                      SpecAbstract::SCAN_OPTIONS *pOptions, bool bInit, XBinary::PDSTRUCT *pPdStruct = nullptr);
 
-    static QString append(QString sResult, QString sString);
+    static QString append(const QString &sResult, const QString &sString);
 
     static QString recordTypeIdToString(RECORD_TYPE id);
     static QString recordNameIdToString(RECORD_NAME id);

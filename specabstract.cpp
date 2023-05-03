@@ -157,7 +157,7 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
     }
 }
 
-QString SpecAbstract::append(QString sResult, QString sString)
+QString SpecAbstract::append(const QString &sResult, const QString &sString)
 {
     return XBinary::appendText(sResult, sString, ",");
 }
@@ -13151,7 +13151,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
                     if (stFileTypes.contains(XBinary::FT_DEX) || stFileTypes.contains(XBinary::FT_ELF32) || stFileTypes.contains(XBinary::FT_ELF64) ||
                         stFileTypes.contains(XBinary::FT_PE32) || stFileTypes.contains(XBinary::FT_PE64) || stFileTypes.contains(XBinary::FT_MACHOFAT) ||
                         stFileTypes.contains(XBinary::FT_MACHO32) || stFileTypes.contains(XBinary::FT_MACHO64) || stFileTypes.contains(XBinary::FT_ZIP)) {
-                        SpecAbstract::SCAN_RESULT scanResult = {0};
+                        SpecAbstract::SCAN_RESULT scanResult = {};
 
                         XBinary::SCANID _parentId = pZipInfo->basic_info.id;
                         _parentId.filePart = XBinary::FILEPART_ARCHIVERECORD;
