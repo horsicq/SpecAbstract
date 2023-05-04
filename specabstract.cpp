@@ -13811,7 +13811,7 @@ void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN
 
         if (msdos.isValid()) {
             if (pMSDOSInfo->nOverlaySize) {
-                SpecAbstract::SCAN_RESULT scanResult = {0};
+                SpecAbstract::SCAN_RESULT scanResult = {};
 
                 XBinary::SCANID _parentId = pMSDOSInfo->basic_info.id;
                 _parentId.filePart = XBinary::FILEPART_OVERLAY;
