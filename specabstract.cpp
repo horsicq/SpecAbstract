@@ -5060,7 +5060,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
 }
 
 SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStruct(quint32 nVariant, XBinary::FT fileType, SpecAbstract::RECORD_TYPE type, SpecAbstract::RECORD_NAME name,
-                                                         QString sVersion, QString sInfo, qint64 nOffset)
+                                                         const QString &sVersion, const QString &sInfo, qint64 nOffset)
 {
     // TODO bIsHeuristic;
     _SCANS_STRUCT result = {};
