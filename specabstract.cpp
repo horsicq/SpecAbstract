@@ -13308,7 +13308,7 @@ void SpecAbstract::Zip_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OP
 }
 
 SpecAbstract::DEXINFO_STRUCT SpecAbstract::Zip_scan_DEX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::ZIPINFO_STRUCT *pZipInfo,
-                                                        XBinary::PDSTRUCT *pPdStruct, QString sFileName)
+                                                        XBinary::PDSTRUCT *pPdStruct, const QString &sFileName)
 {
     Q_UNUSED(pOptions)
 

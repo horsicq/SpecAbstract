@@ -1535,7 +1535,7 @@ public:
     static void Zip_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static DEXINFO_STRUCT Zip_scan_DEX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct,
-                                       QString sFileName);
+                                       const QString &sFileName);
 
     static void updateVersion(QMap<RECORD_NAME, SCAN_STRUCT> *pMap, RECORD_NAME name, QString sVersion);
     static void updateInfo(QMap<RECORD_NAME, SCAN_STRUCT> *pMap, RECORD_NAME name, QString sInfo);
