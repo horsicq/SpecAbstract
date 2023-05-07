@@ -16911,7 +16911,7 @@ void SpecAbstract::DEX_handleLanguages(QIODevice *pDevice, DEXINFO_STRUCT *pDEXI
 //    }
 //}
 
-void SpecAbstract::updateVersion(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::SCAN_STRUCT> *pMap, SpecAbstract::RECORD_NAME name, QString sVersion)
+void SpecAbstract::updateVersion(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::SCAN_STRUCT> *pMap, SpecAbstract::RECORD_NAME name, const QString &sVersion)
 {
     if (pMap->contains(name)) {
         SpecAbstract::SCAN_STRUCT record = pMap->value(name);
