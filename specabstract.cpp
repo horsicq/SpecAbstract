@@ -17368,7 +17368,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_PyInstaller_vi(QIODevice *pDevice, Spe
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_GCC_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_GCC_string(const QString &sString)
 {
     VI_STRUCT result = {};
 

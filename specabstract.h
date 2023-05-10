@@ -1553,7 +1553,7 @@ public:
     static VI_STRUCT get_Nim_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT get_Zig_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT get_PyInstaller_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT _get_GCC_string(QString sString);
+    static VI_STRUCT _get_GCC_string(const QString &sString);
     static VI_STRUCT get_WindowsInstaller_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT get_gold_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT get_TurboLinker_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions);
