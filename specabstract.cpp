@@ -3060,7 +3060,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_ObfuscatorLLVM_vi(QIODevice *pDevice, 
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_ObfuscatorLLVM_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ObfuscatorLLVM_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
