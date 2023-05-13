@@ -3095,7 +3095,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_AndroidClang_vi(QIODevice *pDevice, Sp
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_AndroidClang_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_AndroidClang_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
