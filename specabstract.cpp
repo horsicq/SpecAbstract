@@ -3112,7 +3112,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AndroidClang_string(const QString &sS
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_AlipayClang_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_AlipayClang_string(const QString &sString)
 {
     VI_STRUCT result = {};
 

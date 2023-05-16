@@ -1567,7 +1567,7 @@ public:
     static VI_STRUCT _get_ObfuscatorLLVM_string(const QString &sString);
     static VI_STRUCT get_AndroidClang_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT _get_AndroidClang_string(const QString &sString);
-    static VI_STRUCT _get_AlipayClang_string(QString sString);
+    static VI_STRUCT _get_AlipayClang_string(const QString &sString);
     static VI_STRUCT _get_AlibabaClang_string(QString sString);
     static VI_STRUCT _get_PlexClang_string(QString sString);
     static VI_STRUCT _get_UbuntuClang_string(QString sString);
