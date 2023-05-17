@@ -16941,7 +16941,7 @@ void SpecAbstract::updateVersionAndInfo(QMap<SpecAbstract::RECORD_NAME, SpecAbst
 }
 
 bool SpecAbstract::isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListScanStructs, XBinary::FT fileType, SpecAbstract::RECORD_TYPE type,
-                                       SpecAbstract::RECORD_NAME name, const QString &sVersion, QString sInfo)
+                                       SpecAbstract::RECORD_NAME name, const QString &sVersion, const QString &sInfo)
 {
     bool bResult = false;
 

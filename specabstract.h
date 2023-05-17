@@ -1543,7 +1543,7 @@ public:
     static void updateVersionAndInfo(QMap<RECORD_NAME, SCAN_STRUCT> *pMap, RECORD_NAME name, const QString &sVersion, const QString &sInfo);
 
     static bool isScanStructPresent(QList<SpecAbstract::SCAN_STRUCT> *pListScanStructs, XBinary::FT fileType, RECORD_TYPE type = RECORD_TYPE_UNKNOWN,
-                                    RECORD_NAME name = RECORD_NAME_UNKNOWN, const QString &sVersion = "", QString sInfo = "");
+                                    RECORD_NAME name = RECORD_NAME_UNKNOWN, const QString &sVersion = "", const QString &sInfo = "");
 
     static VI_STRUCT get_UPX_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::FT fileType,
                                 XBinary::PDSTRUCT *pPdStruct);
