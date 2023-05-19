@@ -3125,7 +3125,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AlipayClang_string(const QString &sSt
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_AlibabaClang_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_AlibabaClang_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
