@@ -3296,7 +3296,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_DingbaozengNativeObfuscator_string(QS
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_SafeengineLLVM_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_SafeengineLLVM_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
