@@ -3138,7 +3138,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AlibabaClang_string(const QString &sS
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_PlexClang_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_PlexClang_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
