@@ -39,6 +39,11 @@ SOURCES += \
     include($$PWD/../Formats/xformats.pri)
 }
 
+!contains(XCONFIG, scanitem) {
+    XCONFIG += scanitem
+    include($$PWD/../Formats/scanitem.pri)
+}
+
 contains(XCONFIG, use_dex) {
     DEFINES += USE_DEX
     !contains(XCONFIG, xdex) {
