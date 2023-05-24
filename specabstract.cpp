@@ -3413,7 +3413,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMCCPP_string(QString sString)
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMNEONCCPP_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMNEONCCPP_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
