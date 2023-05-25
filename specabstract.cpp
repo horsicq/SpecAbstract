@@ -3151,7 +3151,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_PlexClang_string(const QString &sStri
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_UbuntuClang_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_UbuntuClang_string(const QString &sString)
 {
     VI_STRUCT result = {};
 

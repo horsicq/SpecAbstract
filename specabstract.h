@@ -1570,7 +1570,7 @@ public:
     static VI_STRUCT _get_AlipayClang_string(const QString &sString);
     static VI_STRUCT _get_AlibabaClang_string(const QString &sString);
     static VI_STRUCT _get_PlexClang_string(const QString &sString);
-    static VI_STRUCT _get_UbuntuClang_string(QString sString);
+    static VI_STRUCT _get_UbuntuClang_string(const QString &sString);
     static VI_STRUCT _get_DebianClang_string(QString sString);
     static VI_STRUCT _get_AlipayObfuscator_string(QString sString);
     static VI_STRUCT _get_wangzehuaLLVM_string(QString sString);
