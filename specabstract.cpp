@@ -3177,7 +3177,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_DebianClang_string(const QString &sSt
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_AlipayObfuscator_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_AlipayObfuscator_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
