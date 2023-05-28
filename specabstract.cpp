@@ -3260,7 +3260,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_HikariObfuscator_string(QString sStri
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_SnapProtect_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_SnapProtect_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
