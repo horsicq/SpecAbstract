@@ -3309,7 +3309,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SafeengineLLVM_string(const QString &
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_NagainLLVM_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_NagainLLVM_string(const QString &sString)
 {
     VI_STRUCT result = {};
     // http://www.nagain.com/

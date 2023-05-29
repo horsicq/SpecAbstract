@@ -1582,7 +1582,7 @@ public:
     static VI_STRUCT _get_ByteDanceSecCompiler_string(QString sString);
     static VI_STRUCT _get_DingbaozengNativeObfuscator_string(QString sString);
     static VI_STRUCT _get_SafeengineLLVM_string(const QString &sString);
-    static VI_STRUCT _get_NagainLLVM_string(QString sString);
+    static VI_STRUCT _get_NagainLLVM_string(const QString &sString);
     static VI_STRUCT _get_iJiami_string(QString sString);
     static VI_STRUCT _get_AppleLLVM_string(QString sString);
     static VI_STRUCT _get_ApportableClang_string(QString sString);
