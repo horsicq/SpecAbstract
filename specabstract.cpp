@@ -3194,7 +3194,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AlipayObfuscator_string(const QString
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_wangzehuaLLVM_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_wangzehuaLLVM_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
