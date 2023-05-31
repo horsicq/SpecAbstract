@@ -1606,7 +1606,7 @@ public:
     static VI_STRUCT _get_NASM_string(QString sString);
     static VI_STRUCT _get_TencentLegu_string(QString sString);
     static VI_STRUCT _get_OllvmTll_string(QString sString);
-    static VI_STRUCT _get_DelphiVersionFromCompiler(QString sString);
+    static VI_STRUCT _get_DelphiVersionFromCompiler(const QString &sString);
     static VI_STRUCT _get_SourceryCodeBench_string(QString sString);
 
     static bool PE_isValid_UPX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);

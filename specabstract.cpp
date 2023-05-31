@@ -3625,32 +3625,32 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_OllvmTll_string(QString sString)
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_DelphiVersionFromCompiler(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_DelphiVersionFromCompiler(const QString &sString)
 {
     VI_STRUCT result = {};
 
-    sString = sString.section(" ", 0, 0);
+    QString _sString = sString.section(" ", 0, 0);
 
-    if (sString != "") {
+    if (_sString != "") {
         result.bIsValid = true;
 
         result.sVersion = "XE7+";
 
-        if (sString == "28.0") {
+        if (_sString == "28.0") {
             result.sVersion = "XE7";
-        } else if (sString == "29.0") {
+        } else if (_sString == "29.0") {
             result.sVersion = "XE8";
-        } else if (sString == "30.0") {
+        } else if (_sString == "30.0") {
             result.sVersion = "10 Seattle";
-        } else if (sString == "31.0") {
+        } else if (_sString == "31.0") {
             result.sVersion = "10.1 Berlin";
-        } else if (sString == "32.0") {
+        } else if (_sString == "32.0") {
             result.sVersion = "10.2 Tokyo";
-        } else if (sString == "33.0") {
+        } else if (_sString == "33.0") {
             result.sVersion = "10.3 Rio";
-        } else if (sString == "34.0") {
+        } else if (_sString == "34.0") {
             result.sVersion = "10.4 Sydney";
-        } else if (sString == "35.0") {
+        } else if (_sString == "35.0") {
             result.sVersion = "11.0 Alexandria";
         }
     }
