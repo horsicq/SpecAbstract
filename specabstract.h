@@ -1586,7 +1586,7 @@ public:
     static VI_STRUCT _get_iJiami_string(QString sString);
     static VI_STRUCT _get_AppleLLVM_string(QString sString);
     static VI_STRUCT _get_ApportableClang_string(QString sString);
-    static VI_STRUCT _get_ARMAssembler_string(QString sString);
+    static VI_STRUCT _get_ARMAssembler_string(const QString &sString);
     static VI_STRUCT _get_ARMLinker_string(QString sString);
     static VI_STRUCT _get_ARMC_string(QString sString);
     static VI_STRUCT _get_ARMCCPP_string(QString sString);
