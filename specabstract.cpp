@@ -3207,7 +3207,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_wangzehuaLLVM_string(const QString &s
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_ByteGuard_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ByteGuard_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
@@ -15114,8 +15114,22 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                     recordSDK.sVersion = "10.10.0";
                 else if (nVersion < S_FULL_VERSION(1153, 20, 0))
                     recordSDK.sVersion = "10.10.2";
-                else if (nVersion < S_FULL_VERSION(1200, 0, 0))
-                    recordSDK.sVersion = "10.10.3";  // TODO Check
+                else if (nVersion < S_FULL_VERSION(1154, 0, 0))
+                    recordSDK.sVersion = "10.10.3";
+                else if (nVersion < S_FULL_VERSION(1199, 0, 0))
+                    recordSDK.sVersion = "10.10.5";
+                else if (nVersion < S_FULL_VERSION(1252, 0, 0))
+                    recordSDK.sVersion = "10.10 Max";
+                else if (nVersion < S_FULL_VERSION(1255, 10, 0))
+                    recordSDK.sVersion = "10.11.0";
+                else if (nVersion < S_FULL_VERSION(1256, 10, 0))
+                    recordSDK.sVersion = "10.11.1";
+                else if (nVersion < S_FULL_VERSION(1258, 0, 0))
+                    recordSDK.sVersion = "10.11.3";
+                else if (nVersion < S_FULL_VERSION(1299, 0, 0))
+                    recordSDK.sVersion = "10.11.4";
+                else if (nVersion < S_FULL_VERSION(1400, 10, 0)) // TODO Check
+                    recordSDK.sVersion = "10.11 Max";
             } else if ((osInfo.osName == XBinary::OSNAME_IPHONEOS) || (osInfo.osName == XBinary::OSNAME_IOS) || (osInfo.osName == XBinary::OSNAME_IPADOS)) {
                 recordSDK.name = RECORD_NAME_IOSSDK;
 
@@ -15159,6 +15173,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                     recordSDK.sVersion = "8.2.0";
                 else if (nVersion < S_FULL_VERSION(1200, 0, 0))
                     recordSDK.sVersion = "8.3.0";  // TODO Check
+                // TODO
             }
 
             QString sVersion = XBinary::get_uint32_full_version(nVersion);
@@ -15235,6 +15250,8 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
             }
         }
 
+        // https://xcodereleases.com/
+        // https://en.wikipedia.org/wiki/Xcode
         if (recordSDK.name != RECORD_NAME_UNKNOWN) {
             recordXcode.name = SpecAbstract::RECORD_NAME_XCODE;
 
@@ -15385,6 +15402,10 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                     recordXcode.sVersion = "14.2";
                     recordCLANG.sVersion = "14.0.0";
                     recordSwift.sVersion = "5.7.2";
+                } else if (recordSDK.sVersion == "13.3.0") {
+                    recordXcode.sVersion = "14.3-14.3.1";
+                    recordCLANG.sVersion = "14.0.3";
+                    recordSwift.sVersion = "5.8-5.81";
                 }
             } else if (recordSDK.name == SpecAbstract::RECORD_NAME_IOSSDK) {
                 if (recordSDK.sVersion == "1.0.0") {
@@ -15636,7 +15657,11 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                 } else if (recordSDK.sVersion == "16.2.0") {
                     recordXcode.sVersion = "14.2";
                     recordCLANG.sVersion = "14.0.0";
-                    recordSwift.sVersion = "5.7.2";
+                    recordSwift.sVersion = "5.7.2";    
+                } else if (recordSDK.sVersion == "16.4.0") {
+                    recordXcode.sVersion = "14.3-14.3.1";
+                    recordCLANG.sVersion = "14.0.3";
+                    recordSwift.sVersion = "5.8-5.81";
                 }
             } else if (recordSDK.name == SpecAbstract::RECORD_NAME_WATCHOSSDK) {
                 if (recordSDK.sVersion == "2.0.0") {
@@ -15747,6 +15772,10 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                     recordXcode.sVersion = "14.1-14.2";
                     recordCLANG.sVersion = "14.0.0";
                     recordSwift.sVersion = "5.7.1-5.7.2";
+                } else if (recordSDK.sVersion == "9.4.0") {
+                    recordXcode.sVersion = "14.3-14.3.1";
+                    recordCLANG.sVersion = "14.0.3";
+                    recordSwift.sVersion = "5.8-5.81";
                 }
             } else if (recordSDK.name == SpecAbstract::RECORD_NAME_TVOS) {
                 if (recordSDK.sVersion == "9.0.0") {
@@ -15857,6 +15886,10 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                     recordXcode.sVersion = "14.1-14.2";
                     recordCLANG.sVersion = "14.0.0";
                     recordSwift.sVersion = "5.7.1-5.7.2";
+                } else if (recordSDK.sVersion == "16.4.0") {
+                    recordXcode.sVersion = "14.3-14.3.1";
+                    recordCLANG.sVersion = "14.0.3";
+                    recordSwift.sVersion = "5.8-5.81";
                 }
             }
         }
