@@ -15128,7 +15128,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                     recordSDK.sVersion = "10.11.3";
                 else if (nVersion < S_FULL_VERSION(1299, 0, 0))
                     recordSDK.sVersion = "10.11.4";
-                else if (nVersion < S_FULL_VERSION(1400, 10, 0)) // TODO Check
+                else if (nVersion < S_FULL_VERSION(1400, 10, 0))  // TODO Check
                     recordSDK.sVersion = "10.11 Max";
             } else if ((osInfo.osName == XBinary::OSNAME_IPHONEOS) || (osInfo.osName == XBinary::OSNAME_IOS) || (osInfo.osName == XBinary::OSNAME_IPADOS)) {
                 recordSDK.name = RECORD_NAME_IOSSDK;
@@ -15657,7 +15657,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                 } else if (recordSDK.sVersion == "16.2.0") {
                     recordXcode.sVersion = "14.2";
                     recordCLANG.sVersion = "14.0.0";
-                    recordSwift.sVersion = "5.7.2";    
+                    recordSwift.sVersion = "5.7.2";
                 } else if (recordSDK.sVersion == "16.4.0") {
                     recordXcode.sVersion = "14.3-14.3.1";
                     recordCLANG.sVersion = "14.0.3";
