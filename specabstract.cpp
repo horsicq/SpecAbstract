@@ -3601,7 +3601,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_NASM_string(QString sString)
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_TencentLegu_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_TencentLegu_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
