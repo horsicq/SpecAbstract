@@ -3224,7 +3224,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_ByteGuard_string(const QString &sStri
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_TencentObfuscation_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_TencentObfuscation_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
