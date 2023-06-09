@@ -3549,7 +3549,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_OracleSolarisLinkEditors_string(QStri
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_SunWorkShop_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_SunWorkShop_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
