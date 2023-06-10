@@ -3495,7 +3495,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_DynASM_string(QString sString)
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_Delphi_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_Delphi_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
