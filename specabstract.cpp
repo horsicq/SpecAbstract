@@ -3348,7 +3348,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AppleLLVM_string(QString sString)
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_ApportableClang_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ApportableClang_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
