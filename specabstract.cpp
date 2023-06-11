@@ -3236,7 +3236,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_TencentObfuscation_string(const QStri
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_AppImage_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_AppImage_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
