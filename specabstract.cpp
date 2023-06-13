@@ -3248,7 +3248,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AppImage_string(const QString &sStrin
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_HikariObfuscator_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_HikariObfuscator_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
