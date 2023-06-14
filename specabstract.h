@@ -1598,7 +1598,7 @@ public:
     static VI_STRUCT _get_DynASM_string(QString sString);
     static VI_STRUCT _get_Delphi_string(const QString &sString);
     static VI_STRUCT _get_LLD_string(QString sString);
-    static VI_STRUCT _get_mold_string(QString sString);
+    static VI_STRUCT _get_mold_string(const QString &sString);
     static VI_STRUCT _get_OracleSolarisLinkEditors_string(QString sString);
     static VI_STRUCT _get_SunWorkShop_string(const QString &sString);
     static VI_STRUCT _get_SunWorkShopCompilers_string(QString sString);

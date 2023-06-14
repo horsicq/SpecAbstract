@@ -3522,7 +3522,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_LLD_string(QString sString)
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_mold_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_mold_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
