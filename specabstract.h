@@ -1579,7 +1579,7 @@ public:
     static VI_STRUCT _get_AppImage_string(const QString &sString);
     static VI_STRUCT _get_HikariObfuscator_string(const QString &sString);
     static VI_STRUCT _get_SnapProtect_string(const QString &sString);
-    static VI_STRUCT _get_ByteDanceSecCompiler_string(QString sString);
+    static VI_STRUCT _get_ByteDanceSecCompiler_string(const QString &sString);
     static VI_STRUCT _get_DingbaozengNativeObfuscator_string(QString sString);
     static VI_STRUCT _get_SafeengineLLVM_string(const QString &sString);
     static VI_STRUCT _get_NagainLLVM_string(const QString &sString);

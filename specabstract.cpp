@@ -3272,7 +3272,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SnapProtect_string(const QString &sSt
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_ByteDanceSecCompiler_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ByteDanceSecCompiler_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
