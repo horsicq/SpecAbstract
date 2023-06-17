@@ -1649,8 +1649,8 @@ public:
                                  SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
                                  DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
 
-    static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, quint32 nCount, MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
-                                               BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+    static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, quint32 nCount, MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1,
+                                               XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
 
     static QByteArray serializeScanStruct(SCAN_STRUCT scanStruct, bool bIsHeader = false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData, bool *pbIsHeader = nullptr);
@@ -1666,7 +1666,8 @@ public:
     static QList<XBinary::SCANSTRUCT> convert(QList<SCAN_STRUCT> *pListScanStructs);
 
 private:
-    static bool MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, quint32 nCount, XBinary::FT fileType1, XBinary::FT fileType2);
+    static bool MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, quint32 nCount, XBinary::FT fileType1,
+                                        XBinary::FT fileType2);
     static void filterResult(QList<SCAN_STRUCT> *pListRecords, QSet<RECORD_TYPE> stRecordTypes, XBinary::PDSTRUCT *pPdStruct);
     static void _fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorVersion, qint32 nMinorVersion, XBinary::PDSTRUCT *pPdStruct);
 
