@@ -912,6 +912,7 @@ public:
         QString sVersion;
         QString sInfo;
         bool bIsHeuristic;
+        QVariant varExtra;
     };
 
     struct SCAN_RECORD {
@@ -1603,7 +1604,7 @@ public:
     static VI_STRUCT _get_SunWorkShop_string(const QString &sString);
     static VI_STRUCT _get_SunWorkShopCompilers_string(QString sString);
     static VI_STRUCT _get_SnapdragonLLVMARM_string(QString sString);
-    static VI_STRUCT _get_NASM_string(QString sString);
+    static VI_STRUCT _get_NASM_string(const QString &sString);
     static VI_STRUCT _get_TencentLegu_string(const QString &sString);
     static VI_STRUCT _get_OllvmTll_string(const QString &sString);
     static VI_STRUCT _get_DelphiVersionFromCompiler(const QString &sString);
@@ -1636,7 +1637,7 @@ public:
                            XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
     static void constScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, CONST_RECORD *pRecords, qint32 nRecordsSize,
                           XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-    static void MSDOS_richScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, qint32 nRecordsSize,
+    static void MSDOS_richScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, quint32 nCount, MSRICH_RECORD *pRecords, qint32 nRecordsSize,
                                XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
 
     static void archiveScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, STRING_RECORD *pRecords, qint32 nRecordsSize,
@@ -1648,7 +1649,7 @@ public:
                                  SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
                                  DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
 
-    static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
+    static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, quint32 nCount, MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
                                                BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
 
     static QByteArray serializeScanStruct(SCAN_STRUCT scanStruct, bool bIsHeader = false);
@@ -1660,12 +1661,12 @@ public:
     static void fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages);
 
     static _SCANS_STRUCT getScansStructFromOsInfo(XBinary::OSINFO osInfo);
-    static QString getMsRichString(quint16 nId, quint16 nBuild, XBinary::PDSTRUCT *pPdStruct);
+    static QString getMsRichString(quint16 nId, quint16 nBuild, quint32 nCount, XBinary::PDSTRUCT *pPdStruct);
 
     static QList<XBinary::SCANSTRUCT> convert(QList<SCAN_STRUCT> *pListScanStructs);
 
 private:
-    static bool MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, XBinary::FT fileType1, XBinary::FT fileType2);
+    static bool MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, quint32 nCount, XBinary::FT fileType1, XBinary::FT fileType2);
     static void filterResult(QList<SCAN_STRUCT> *pListRecords, QSet<RECORD_TYPE> stRecordTypes, XBinary::PDSTRUCT *pPdStruct);
     static void _fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorVersion, qint32 nMinorVersion, XBinary::PDSTRUCT *pPdStruct);
 

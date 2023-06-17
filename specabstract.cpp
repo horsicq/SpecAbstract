@@ -3588,7 +3588,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SnapdragonLLVMARM_string(QString sStr
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_NASM_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_NASM_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
@@ -7918,7 +7918,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
         QList<_SCANS_STRUCT> listRichDescriptions;
 
         for (qint32 i = 0; (i < nRichSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
-            listRichDescriptions.append(MSDOS_richScan(pPEInfo->listRichSignatures.at(i).nId, pPEInfo->listRichSignatures.at(i).nVersion, _MS_rich_records,
+            listRichDescriptions.append(MSDOS_richScan(pPEInfo->listRichSignatures.at(i).nId, pPEInfo->listRichSignatures.at(i).nVersion, pPEInfo->listRichSignatures.at(i).nCount, _MS_rich_records,
                                                        sizeof(_MS_rich_records), pPEInfo->basic_info.id.fileType, XBinary::FT_MSDOS, &(pPEInfo->basic_info),
                                                        DETECTTYPE_RICH, pPdStruct));
         }
@@ -7927,44 +7927,53 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
         qint32 nRichDescriptionsCount = listRichDescriptions.count();
 
+        qint32 nLinkerFound = 0;
+        qint32 nCompilerFound = 0;
+
         bool bVB = false;
         for (qint32 i = nRichDescriptionsCount - 1; (i >= 0) && (!(pPdStruct->bIsStop)); i--) {
             if (listRichDescriptions.at(i).type == SpecAbstract::RECORD_TYPE_LINKER) {
-                ssLinker.name = listRichDescriptions.at(i).name;
-                ssLinker.sVersion = listRichDescriptions.at(i).sVersion;
-                ssLinker.sInfo = listRichDescriptions.at(i).sInfo;
-                ssLinker.type = listRichDescriptions.at(i).type;
-            }
+                if (listRichDescriptions.at(i).varExtra.toInt() > nLinkerFound) {
+                    ssLinker.name = listRichDescriptions.at(i).name;
+                    ssLinker.sVersion = listRichDescriptions.at(i).sVersion;
+                    ssLinker.sInfo = listRichDescriptions.at(i).sInfo;
+                    ssLinker.type = listRichDescriptions.at(i).type;
 
-            if (listRichDescriptions.at(i).type == SpecAbstract::RECORD_TYPE_COMPILER) {
-                if (!bVB) {
-                    if (listRichDescriptions.at(i).name == RECORD_NAME_UNIVERSALTUPLECOMPILER) {
-                        if (listRichDescriptions.at(i).sInfo != "Basic") {
-                            ssCompiler.name = RECORD_NAME_VISUALCCPP;
+                    nLinkerFound = listRichDescriptions.at(i).varExtra.toInt();
+                }
+            }else if (listRichDescriptions.at(i).type == SpecAbstract::RECORD_TYPE_COMPILER) {
+                if (listRichDescriptions.at(i).varExtra.toInt() > nCompilerFound) {
+                    if (!bVB) {
+                        if (listRichDescriptions.at(i).name == RECORD_NAME_UNIVERSALTUPLECOMPILER) {
+                            if (listRichDescriptions.at(i).sInfo != "Basic") {
+                                ssCompiler.name = RECORD_NAME_VISUALCCPP;
+                                ssCompiler.sVersion = listRichDescriptions.at(i).sVersion;
+                                ssCompiler.sInfo = listRichDescriptions.at(i).sInfo;
+                                ssCompiler.type = listRichDescriptions.at(i).type;
+                            } else {
+                                ssCompiler.type = RECORD_TYPE_COMPILER;
+                                ssCompiler.name = RECORD_NAME_VISUALBASIC;
+                                ssCompiler.sVersion = listRichDescriptions.at(i).sVersion;
+
+                                QString _sVersion = ssCompiler.sVersion.section(".", 0, 1);
+                                QString _sVersionCompiler = mapVersions.key(_sVersion, "");
+
+                                if (_sVersionCompiler != "") {
+                                    ssCompiler.sVersion = ssCompiler.sVersion.replace(_sVersion, _sVersionCompiler);
+                                }
+
+                                ssCompiler.sInfo = "Native";
+                                bVB = true;
+                            }
+                        } else {
+                            ssCompiler.name = listRichDescriptions.at(i).name;
                             ssCompiler.sVersion = listRichDescriptions.at(i).sVersion;
                             ssCompiler.sInfo = listRichDescriptions.at(i).sInfo;
                             ssCompiler.type = listRichDescriptions.at(i).type;
-                        } else {
-                            ssCompiler.type = RECORD_TYPE_COMPILER;
-                            ssCompiler.name = RECORD_NAME_VISUALBASIC;
-                            ssCompiler.sVersion = listRichDescriptions.at(i).sVersion;
-
-                            QString _sVersion = ssCompiler.sVersion.section(".", 0, 1);
-                            QString _sVersionCompiler = mapVersions.key(_sVersion, "");
-
-                            if (_sVersionCompiler != "") {
-                                ssCompiler.sVersion = ssCompiler.sVersion.replace(_sVersion, _sVersionCompiler);
-                            }
-
-                            ssCompiler.sInfo = "Native";
-                            bVB = true;
                         }
-                    } else {
-                        ssCompiler.name = listRichDescriptions.at(i).name;
-                        ssCompiler.sVersion = listRichDescriptions.at(i).sVersion;
-                        ssCompiler.sInfo = listRichDescriptions.at(i).sInfo;
-                        ssCompiler.type = listRichDescriptions.at(i).type;
                     }
+
+                    nCompilerFound = listRichDescriptions.at(i).varExtra.toInt();
                 }
             }
 
@@ -16101,7 +16110,7 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
         QList<_SCANS_STRUCT> listRichDescriptions;
 
         for (qint32 i = 0; (i < nRichSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
-            listRichDescriptions.append(MSDOS_richScan(pLEInfo->listRichSignatures.at(i).nId, pLEInfo->listRichSignatures.at(i).nVersion, _MS_rich_records,
+            listRichDescriptions.append(MSDOS_richScan(pLEInfo->listRichSignatures.at(i).nId, pLEInfo->listRichSignatures.at(i).nVersion, pLEInfo->listRichSignatures.at(i).nCount, _MS_rich_records,
                                                        sizeof(_MS_rich_records), pLEInfo->basic_info.id.fileType, XBinary::FT_MSDOS, &(pLEInfo->basic_info),
                                                        DETECTTYPE_RICH, pPdStruct));
         }
@@ -16214,7 +16223,7 @@ void SpecAbstract::LX_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
         QList<_SCANS_STRUCT> listRichDescriptions;
 
         for (qint32 i = 0; (i < nRichSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
-            listRichDescriptions.append(MSDOS_richScan(pLXInfo->listRichSignatures.at(i).nId, pLXInfo->listRichSignatures.at(i).nVersion, _MS_rich_records,
+            listRichDescriptions.append(MSDOS_richScan(pLXInfo->listRichSignatures.at(i).nId, pLXInfo->listRichSignatures.at(i).nVersion, pLXInfo->listRichSignatures.at(i).nCount, _MS_rich_records,
                                                        sizeof(_MS_rich_records), pLXInfo->basic_info.id.fileType, XBinary::FT_MSDOS, &(pLXInfo->basic_info),
                                                        DETECTTYPE_RICH, pPdStruct));
         }
@@ -18133,7 +18142,7 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
     }
 }
 
-void SpecAbstract::MSDOS_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild,
+void SpecAbstract::MSDOS_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, quint32 nCount,
                                   SpecAbstract::MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
                                   DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
@@ -18143,7 +18152,7 @@ void SpecAbstract::MSDOS_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
         if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->bShowDetects)) {
             _SCANS_STRUCT record = {};
 
-            if (MSDOS_compareRichRecord(&record, &(pRecords[i]), nID, nBuild, fileType1, fileType2)) {
+            if (MSDOS_compareRichRecord(&record, &(pRecords[i]), nID, nBuild, nCount, fileType1, fileType2)) {
                 if (!pMapRecords->contains(pRecords[i].basicInfo.name)) {
                     pMapRecords->insert(record.name, record);
                 }
@@ -18343,7 +18352,7 @@ void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMe
     }
 }
 
-QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, quint32 nBuild, SpecAbstract::MSRICH_RECORD *pRecords, qint32 nRecordsSize,
+QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, quint32 nBuild, quint32 nCount, SpecAbstract::MSRICH_RECORD *pRecords, qint32 nRecordsSize,
                                                                 XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
                                                                 XBinary::PDSTRUCT *pPdStruct)
 {
@@ -18354,7 +18363,7 @@ QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, qui
     for (qint32 i = 0; (i < nSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
         _SCANS_STRUCT record = {};
 
-        if (MSDOS_compareRichRecord(&record, &(pRecords[i]), nID, nBuild, fileType1, fileType2)) {
+        if (MSDOS_compareRichRecord(&record, &(pRecords[i]), nID, nBuild, nCount, fileType1, fileType2)) {
             listResult.append(record);
 
             if (pBasicInfo->bShowDetects) {
@@ -18781,7 +18790,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSIN
     return result;
 }
 
-QString SpecAbstract::getMsRichString(quint16 nId, quint16 nBuild, XBinary::PDSTRUCT *pPdStruct)
+QString SpecAbstract::getMsRichString(quint16 nId, quint16 nBuild, quint32 nCount, XBinary::PDSTRUCT *pPdStruct)
 {
     QString sResult;
 
@@ -18793,7 +18802,7 @@ QString SpecAbstract::getMsRichString(quint16 nId, quint16 nBuild, XBinary::PDST
     for (qint32 i = 0; (i < nSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
         _SCANS_STRUCT record = {};
 
-        if (MSDOS_compareRichRecord(&record, &(pRecords[i]), nId, nBuild, XBinary::FT_PE, XBinary::FT_MSDOS)) {
+        if (MSDOS_compareRichRecord(&record, &(pRecords[i]), nId, nBuild, nCount, XBinary::FT_PE, XBinary::FT_MSDOS)) {
             sResult = _SCANS_STRUCT_toString(&record);
         }
     }
@@ -18827,7 +18836,7 @@ QList<XBinary::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListScanSt
     return listResult;
 }
 
-bool SpecAbstract::MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, SpecAbstract::MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, XBinary::FT fileType1,
+bool SpecAbstract::MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, SpecAbstract::MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, quint32 nCount, XBinary::FT fileType1,
                                            XBinary::FT fileType2)
 {
     bool bResult = false;
@@ -18849,6 +18858,8 @@ bool SpecAbstract::MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, SpecAbstract:
             if (pRecord->nBuild == (quint32)-1) {
                 record.sVersion += QString(".%1").arg(nBuild);
             }
+
+            record.varExtra = nCount;
 
             record.nOffset = 0;
 
