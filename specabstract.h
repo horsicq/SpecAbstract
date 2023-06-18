@@ -1592,7 +1592,7 @@ public:
     static VI_STRUCT _get_ARMC_string(QString sString);
     static VI_STRUCT _get_ARMCCPP_string(QString sString);
     static VI_STRUCT _get_ARMNEONCCPP_string(const QString &sString);
-    static VI_STRUCT _get_ARMThumbCCPP_string(QString sString);
+    static VI_STRUCT _get_ARMThumbCCPP_string(const QString &sString);
     static VI_STRUCT _get_ARMThumbMacroAssembler_string(QString sString);
     static VI_STRUCT _get_ThumbC_string(const QString &sString);
     static VI_STRUCT _get_clang_string(QString sString);
