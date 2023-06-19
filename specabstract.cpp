@@ -3469,7 +3469,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_ThumbC_string(const QString &sString)
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_clang_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_clang_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
@@ -7913,6 +7913,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
         }
 
         // Rich
+        // https://github.com/dishather/richprint/blob/master/comp_id.txt
         qint32 nRichSignaturesCount = pPEInfo->listRichSignatures.count();
 
         QList<_SCANS_STRUCT> listRichDescriptions;
@@ -8127,6 +8128,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
             ssTool.name = SpecAbstract::RECORD_NAME_MICROSOFTVISUALSTUDIO;
 
             // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warnings-by-compiler-version?view=vs-2019
+            // https://github.com/dishather/richprint/blob/master/comp_id.txt
 
             if (sCompilerVersion == "12.00.8168")
                 ssTool.sVersion = "6.0";
@@ -8134,52 +8136,74 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 ssTool.sVersion = "6.0 SP5-SP6";
             else if (sCompilerVersion == "12.00.8447")
                 ssTool.sVersion = "6.0 SP5";
+            else if (sCompilerVersion == "13.00.9176")
+                ssTool.sVersion = "Windows XP SP1 DDK";
             else if (sCompilerVersion == "13.00.9466")
-                ssTool.sVersion = "2002";
+                ssTool.sVersion = "2002(.NET) 7.0.9466";
             else if (sCompilerVersion == "13.10.3052")
                 ssTool.sVersion = "2003";
             else if (sCompilerVersion == "13.10.3077")
-                ssTool.sVersion = "2003";
+                ssTool.sVersion = "2003(.NET) 7.0.1.3088";
             else if (sCompilerVersion == "13.10.4035")
-                ssTool.sVersion = "2003";
+                ssTool.sVersion = "Windows Server 2003 SP1 DDK";
             else if (sCompilerVersion == "13.10.6030")
-                ssTool.sVersion = "2003 SP1";
+                ssTool.sVersion = "2003(.NET) SP1 (kb918007)";
             else if (sCompilerVersion == "14.00.40310")
-                ssTool.sVersion = "2005";
+                ssTool.sVersion = "Windows Server 2003 SP1 DDK (for AMD64)";
+            else if (sCompilerVersion == "14.00.40607")
+                ssTool.sVersion = "2005 Beta 1 [8.0]";
+            else if (sCompilerVersion == "14.00.50215")
+                ssTool.sVersion = "2005 Beta 2 [8.0]";
+            else if (sCompilerVersion == "14.00.50320")
+                ssTool.sVersion = "2005 [8.0]";
             else if (sCompilerVersion == "14.00.50727")
-                ssTool.sVersion = "2005";
+                ssTool.sVersion = "2005 SP1";
+            else if (sCompilerVersion == "15.00.20706")
+                ssTool.sVersion = "2008 Beta 2 [9.0]";
             else if (sCompilerVersion == "15.00.21022")
-                ssTool.sVersion = "2008 RTM";
+                ssTool.sVersion = "2008 (9.0.21022.8 RTM)";
             else if (sCompilerVersion == "15.00.30411")
                 ssTool.sVersion = "2008 with Feature Pack";
             else if (sCompilerVersion == "15.00.30729")
-                ssTool.sVersion = "2008 SP1";
+                ssTool.sVersion = "2008 SP1 (9.0.30729.1 SP)";
+            else if (sCompilerVersion == "16.00.20506")
+                ssTool.sVersion = "2010 Beta 1";
+            else if (sCompilerVersion == "16.00.21003")
+                ssTool.sVersion = "2010 Beta 2";
             else if (sCompilerVersion == "16.00.30319")
-                ssTool.sVersion = "2010 RTM";
+                ssTool.sVersion = "2010 (10.0.30319.1 RTMRel)";
             else if (sCompilerVersion == "16.00.40219")
-                ssTool.sVersion = "2010 SP1";
+                ssTool.sVersion = "2010 SP1 kb 983509 (10.0.40219.1 SP1Rel)";
             else if (sCompilerVersion == "17.00.50727")
-                ssTool.sVersion = "2012";
+                ssTool.sVersion = "2012 Premium (11.0.50727.1 RTMREL)";
             else if (sCompilerVersion == "17.00.51025")
-                ssTool.sVersion = "2012";
+                ssTool.sVersion = "2012 November CTP [11.0]";
             else if (sCompilerVersion == "17.00.51106")
-                ssTool.sVersion = "2012 Update 1";
+                ssTool.sVersion = "2012 Update 1 (17.00.51106.1 Update 1)";
             else if (sCompilerVersion == "17.00.60315")
-                ssTool.sVersion = "2012 Update 2";
+                ssTool.sVersion = "2012 Update 2 (17.00.60315.1 Update 2)";
             else if (sCompilerVersion == "17.00.60610")
-                ssTool.sVersion = "2012 Update 3";
+                ssTool.sVersion = "2012 Update 3 (17.00.60610.1 Update 3)";
             else if (sCompilerVersion == "17.00.61030")
-                ssTool.sVersion = "2012 Update 4";
+                ssTool.sVersion = "2012 Premium Update 4 (11.0.61030.00 Update 4)";
+            else if (sCompilerVersion == "18.00.20617")
+                ssTool.sVersion = "2013 Preview [12.0]";
+            else if (sCompilerVersion == "18.00.20827")
+                ssTool.sVersion = "2013 RC [12.0]";
             else if (sCompilerVersion == "18.00.21005")
                 ssTool.sVersion = "2013 RTM";
+            else if (sCompilerVersion == "18.00.21114")
+                ssTool.sVersion = "2013 Nobemver CTP [12.0";
+            else if (sCompilerVersion == "18.00.30324")
+                ssTool.sVersion = "2013 Update2 RC [12.0]";
             else if (sCompilerVersion == "18.00.30501")
-                ssTool.sVersion = "2013 Update 2";
+                ssTool.sVersion = "2013 12.0.30501.00 Update 2";
             else if (sCompilerVersion == "18.00.30723")
-                ssTool.sVersion = "2013 Update 3";
+                ssTool.sVersion = "2013 12.0.30723.00 Update 3";
             else if (sCompilerVersion == "18.00.31101")
-                ssTool.sVersion = "2013 Update 4";
+                ssTool.sVersion = "2013 12.0.31101.00 Update 4";
             else if (sCompilerVersion == "18.00.40629")
-                ssTool.sVersion = "2013 SP5";
+                ssTool.sVersion = "2013 12.0.40629.00 Update 5";
             else if (sCompilerVersion == "19.00.22215")
                 ssTool.sVersion = "2015";
             else if (sCompilerVersion == "19.00.23007")
@@ -8187,23 +8211,23 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
             else if (sCompilerVersion == "19.00.23013")
                 ssTool.sVersion = "2015";
             else if (sCompilerVersion == "19.00.23026")
-                ssTool.sVersion = "2015 RTM";
+                ssTool.sVersion = "Community 2015 [14.0]";
             else if (sCompilerVersion == "19.00.23506")
-                ssTool.sVersion = "2015 Update 1";
+                ssTool.sVersion = "Community 2015 14.0.24728.2 (UPD 1)";
             else if (sCompilerVersion == "19.00.23918")
-                ssTool.sVersion = "2015 Update 2";
+                ssTool.sVersion = "Community 2015 UPD2 (14.0.25123.0)";
             else if (sCompilerVersion == "19.00.24103")
                 ssTool.sVersion = "2015 SP1";  // ???
             else if (sCompilerVersion == "19.00.24118")
                 ssTool.sVersion = "2015 SP1";  // ???
             else if (sCompilerVersion == "19.00.24123")
-                ssTool.sVersion = "2015 Update 3";
+                ssTool.sVersion = "Community 2015 UPD3";
             else if (sCompilerVersion == "19.00.24210")
-                ssTool.sVersion = "2015 Update 3";
+                ssTool.sVersion = "2015 Update 3 [14.0]";
             else if (sCompilerVersion == "19.00.24212")
                 ssTool.sVersion = "2015 Update 3";
             else if (sCompilerVersion == "19.00.24213")
-                ssTool.sVersion = "2015 Update 3";
+                ssTool.sVersion = "Community 2015 UPD3.1";
             else if (sCompilerVersion == "19.00.24215")
                 ssTool.sVersion = "2015 Update 3.1";
             else if (sCompilerVersion == "19.00.24218")
@@ -8211,31 +8235,67 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
             else if (sCompilerVersion == "19.00.24723")
                 ssTool.sVersion = "2015";  // Update 4? 2017?
             else if (sCompilerVersion == "19.10.25017")
-                ssTool.sVersion = "2017 RTM";
+                ssTool.sVersion = "2017 version 15.0-15.2";
             else if (sCompilerVersion == "19.10.25019")
                 ssTool.sVersion = "2017";  // 15.2?
             else if (sCompilerVersion == "19.10.25506")
                 ssTool.sVersion = "2017 version 15.3";
+            else if (sCompilerVersion == "19.10.25507")
+                ssTool.sVersion = "2017 version 15.3.3";
+            else if (sCompilerVersion == "19.11.25542")
+                ssTool.sVersion = "2017 version 15.4.4";
             else if (sCompilerVersion == "19.11.25547")
-                ssTool.sVersion = "2017";
+                ssTool.sVersion = "2017 version 15.4.5";
             else if (sCompilerVersion == "19.11.25830")
                 ssTool.sVersion = "2017 version 15.5";
+            else if (sCompilerVersion == "19.11.25831")
+                ssTool.sVersion = "2017 version 15.5.2";
             else if (sCompilerVersion == "19.12.25834")
-                ssTool.sVersion = "2017";  // TODO Check v15.5.4
+                ssTool.sVersion = "2017 version 15.5.3-15.5.4";
+            else if (sCompilerVersion == "19.12.25835")
+                ssTool.sVersion = "2017 version 15.5.6-15.5.7";
             else if (sCompilerVersion == "19.13.26128")
-                ssTool.sVersion = "2017 version 15.6";
+                ssTool.sVersion = "2017 version 15.6.0-15.6.2";
+            else if (sCompilerVersion == "19.13.26129")
+                ssTool.sVersion = "2017 version 15.6.3-15.6.4";
+            else if (sCompilerVersion == "19.13.26131")
+                ssTool.sVersion = "2017 version 15.6.6";
+            else if (sCompilerVersion == "19.13.26132")
+                ssTool.sVersion = "2017 version 15.6.7";
             else if (sCompilerVersion == "19.14.26428")
-                ssTool.sVersion = "2017 version 15.7";
+                ssTool.sVersion = "2017 version 15.7.1";
+            else if (sCompilerVersion == "19.14.26429")
+                ssTool.sVersion = "2017 version 15.7.2";
+            else if (sCompilerVersion == "19.14.26430")
+                ssTool.sVersion = "2017 version 15.7.3";
+            else if (sCompilerVersion == "19.14.26431")
+                ssTool.sVersion = "2017 version 15.7.4";
+            else if (sCompilerVersion == "19.14.26433")
+                ssTool.sVersion = "2017 version 15.7.5";
             else if (sCompilerVersion == "19.15.26726")
-                ssTool.sVersion = "2017 version 15.8";
+                ssTool.sVersion = "2017 version 15.8.0";
+            else if (sCompilerVersion == "19.15.26729")
+                ssTool.sVersion = "2017 version 15.8.4";
+            else if (sCompilerVersion == "19.15.26730")
+                ssTool.sVersion = "2017 version 15.8.9";
+            else if (sCompilerVersion == "19.15.26732")
+                ssTool.sVersion = "2017 version 15.8.5";
             else if (sCompilerVersion == "19.16.26926")
                 ssTool.sVersion = "2017 version 15.9";
+            else if (sCompilerVersion == "19.16.27023")
+                ssTool.sVersion = "2017 version 15.9.1";
+            else if (sCompilerVersion == "19.16.27025")
+                ssTool.sVersion = "2017 version 15.9.4";
+            else if (sCompilerVersion == "19.16.27026")
+                ssTool.sVersion = "2017 version 15.9.5";
             else if (sCompilerVersion == "19.16.27027")
-                ssTool.sVersion = "2017";  // TODO Check
+                ssTool.sVersion = "2017 version 15.9.7";
+            else if (sCompilerVersion == "19.16.27030")
+                ssTool.sVersion = "2017 version 15.9.11";
             else if (sCompilerVersion == "19.20.27004")
-                ssTool.sVersion = "2019 RTM";
+                ssTool.sVersion = "2019 RTM"; // TODO Check
             else if (sCompilerVersion == "19.20.27508")
-                ssTool.sVersion = "2019";
+                ssTool.sVersion = "2019 v16.0.0";
             else if (sCompilerMajorVersion == "12.00")
                 ssTool.sVersion = "6.0";
             else if (sCompilerMajorVersion == "13.00")

@@ -1595,7 +1595,7 @@ public:
     static VI_STRUCT _get_ARMThumbCCPP_string(const QString &sString);
     static VI_STRUCT _get_ARMThumbMacroAssembler_string(QString sString);
     static VI_STRUCT _get_ThumbC_string(const QString &sString);
-    static VI_STRUCT _get_clang_string(QString sString);
+    static VI_STRUCT _get_clang_string(const QString &sString);
     static VI_STRUCT _get_DynASM_string(const QString &sString);
     static VI_STRUCT _get_Delphi_string(const QString &sString);
     static VI_STRUCT _get_LLD_string(QString sString);
