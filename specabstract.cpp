@@ -3509,7 +3509,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_Delphi_string(const QString &sString)
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_LLD_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_LLD_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
@@ -7823,6 +7823,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
     mapVersions.insert("14.16", "19.16");
     mapVersions.insert("14.20", "19.20");
     mapVersions.insert("14.29", "19.29");
+    mapVersions.insert("14.36", "19.36");
 
     XPE pe(pDevice, pOptions->bIsImage);
 
