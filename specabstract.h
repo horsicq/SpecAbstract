@@ -106,6 +106,7 @@ public:
         RECORD_NAME_ALIPAYOBFUSCATOR,
         RECORD_NAME_ALLATORIOBFUSCATOR,
         RECORD_NAME_ALLOY,
+        RECORD_NAME_ALPINECLANG,
         RECORD_NAME_ALPINELINUX,
         RECORD_NAME_ANDPAKK2,
         RECORD_NAME_ANDROID,
@@ -1569,6 +1570,7 @@ public:
     static VI_STRUCT get_AndroidClang_vi(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT _get_AndroidClang_string(const QString &sString);
     static VI_STRUCT _get_AlipayClang_string(const QString &sString);
+    static VI_STRUCT _get_AlpineClang_string(const QString &sString);
     static VI_STRUCT _get_AlibabaClang_string(const QString &sString);
     static VI_STRUCT _get_PlexClang_string(const QString &sString);
     static VI_STRUCT _get_UbuntuClang_string(const QString &sString);
@@ -1588,7 +1590,7 @@ public:
     static VI_STRUCT _get_AppleLLVM_string(QString sString);
     static VI_STRUCT _get_ApportableClang_string(const QString &sString);
     static VI_STRUCT _get_ARMAssembler_string(const QString &sString);
-    static VI_STRUCT _get_ARMLinker_string(QString sString);
+    static VI_STRUCT _get_ARMLinker_string(const QString &sString);
     static VI_STRUCT _get_ARMC_string(QString sString);
     static VI_STRUCT _get_ARMCCPP_string(const QString &sString);
     static VI_STRUCT _get_ARMNEONCCPP_string(const QString &sString);

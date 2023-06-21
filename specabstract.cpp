@@ -369,6 +369,9 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALLOY:
             sResult = QString("Alloy");
             break;
+        case RECORD_NAME_ALPINECLANG:
+            sResult = QString("Alpine clang");
+            break;
         case RECORD_NAME_ALPINELINUX:
             sResult = XBinary::osNameIdToString(XBinary::OSNAME_ALPINELINUX);
             break;
@@ -3125,6 +3128,19 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_AlipayClang_string(const QString &sSt
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::_get_AlpineClang_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+
+    if (sString.contains("Alpine clang")) {
+        result.bIsValid = true;
+
+        result.sVersion = sString.section(" ", 3, 3);
+    }
+
+    return result;
+}
+
 SpecAbstract::VI_STRUCT SpecAbstract::_get_AlibabaClang_string(const QString &sString)
 {
     VI_STRUCT result = {};
@@ -3374,7 +3390,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMAssembler_string(const QString &sS
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMLinker_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMLinker_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
@@ -7798,7 +7814,10 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, SpecAbstract::SCA
 void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     _SCANS_STRUCT ssLinker = {};
-    _SCANS_STRUCT ssCompiler = {};
+    _SCANS_STRUCT ssCompilerCPP = {};
+    _SCANS_STRUCT ssCompilerMASM = {};
+    _SCANS_STRUCT ssCompilerVB = {};
+    _SCANS_STRUCT ssCompilerDot = {};
     _SCANS_STRUCT ssTool = {};
     _SCANS_STRUCT ssMFC = {};
     _SCANS_STRUCT ssNET = {};
@@ -7848,8 +7867,8 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
             ssLinker.type = RECORD_TYPE_LINKER;
             ssLinker.name = RECORD_NAME_MICROSOFTLINKER;
 
-            ssCompiler.type = RECORD_TYPE_COMPILER;
-            ssCompiler.name = RECORD_NAME_VISUALCSHARP;
+            ssCompilerDot.type = RECORD_TYPE_COMPILER;
+            ssCompilerDot.name = RECORD_NAME_VISUALCSHARP;
         }
 
         // MFC
@@ -7929,59 +7948,94 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
         qint32 nRichDescriptionsCount = listRichDescriptions.count();
 
-        qint32 nLinkerFound = 0;
-        qint32 nCompilerFound = 0;
+        _SCANS_STRUCT _ssLinker = {};
+        _SCANS_STRUCT _ssCompilerCPP = {};
+        _SCANS_STRUCT _ssCompilerMASM = {};
+        _SCANS_STRUCT _ssCompilerVB = {};
 
         bool bVB = false;
         for (qint32 i = nRichDescriptionsCount - 1; (i >= 0) && (!(pPdStruct->bIsStop)); i--) {
             if (listRichDescriptions.at(i).type == SpecAbstract::RECORD_TYPE_LINKER) {
-                if (listRichDescriptions.at(i).varExtra.toInt() > nLinkerFound) {
-                    ssLinker.name = listRichDescriptions.at(i).name;
-                    ssLinker.sVersion = listRichDescriptions.at(i).sVersion;
-                    ssLinker.sInfo = listRichDescriptions.at(i).sInfo;
-                    ssLinker.type = listRichDescriptions.at(i).type;
-
-                    nLinkerFound = listRichDescriptions.at(i).varExtra.toInt();
+                if (listRichDescriptions.at(i).sVersion > _ssLinker.sVersion) {
+                    _ssLinker.name = listRichDescriptions.at(i).name;
+                    _ssLinker.sVersion = listRichDescriptions.at(i).sVersion;
+                    _ssLinker.sInfo = listRichDescriptions.at(i).sInfo;
+                    _ssLinker.type = listRichDescriptions.at(i).type;
                 }
             } else if (listRichDescriptions.at(i).type == SpecAbstract::RECORD_TYPE_COMPILER) {
-                if (listRichDescriptions.at(i).varExtra.toInt() > nCompilerFound) {
-                    if (!bVB) {
-                        if (listRichDescriptions.at(i).name == RECORD_NAME_UNIVERSALTUPLECOMPILER) {
-                            if (listRichDescriptions.at(i).sInfo != "Basic") {
-                                ssCompiler.name = RECORD_NAME_VISUALCCPP;
-                                ssCompiler.sVersion = listRichDescriptions.at(i).sVersion;
-                                ssCompiler.sInfo = listRichDescriptions.at(i).sInfo;
-                                ssCompiler.type = listRichDescriptions.at(i).type;
-                            } else {
-                                ssCompiler.type = RECORD_TYPE_COMPILER;
-                                ssCompiler.name = RECORD_NAME_VISUALBASIC;
-                                ssCompiler.sVersion = listRichDescriptions.at(i).sVersion;
+                if (!bVB) {
+                    if (listRichDescriptions.at(i).name == RECORD_NAME_UNIVERSALTUPLECOMPILER) {
+                        if (listRichDescriptions.at(i).sInfo != "Basic") {
+                            if (listRichDescriptions.at(i).sVersion > _ssCompilerCPP.sVersion) {
+                                _ssCompilerCPP.name = RECORD_NAME_VISUALCCPP;
+                                _ssCompilerCPP.sVersion = listRichDescriptions.at(i).sVersion;
+                                _ssCompilerCPP.sInfo = listRichDescriptions.at(i).sInfo;
+                                _ssCompilerCPP.type = listRichDescriptions.at(i).type;
+                            }
+                        } else {
+                            if (listRichDescriptions.at(i).sVersion > _ssCompilerVB.sVersion) {
+                                _ssCompilerVB.type = RECORD_TYPE_COMPILER;
+                                _ssCompilerVB.name = RECORD_NAME_VISUALBASIC;
+                                _ssCompilerVB.sVersion = listRichDescriptions.at(i).sVersion;
 
-                                QString _sVersion = ssCompiler.sVersion.section(".", 0, 1);
+                                QString _sVersion = _ssCompilerVB.sVersion.section(".", 0, 1);
                                 QString _sVersionCompiler = mapVersions.key(_sVersion, "");
 
                                 if (_sVersionCompiler != "") {
-                                    ssCompiler.sVersion = ssCompiler.sVersion.replace(_sVersion, _sVersionCompiler);
+                                    _ssCompilerVB.sVersion = ssCompilerVB.sVersion.replace(_sVersion, _sVersionCompiler);
                                 }
 
-                                ssCompiler.sInfo = "Native";
-                                bVB = true;
+                                _ssCompilerVB.sInfo = "Native";
                             }
-                        } else {
-                            ssCompiler.name = listRichDescriptions.at(i).name;
-                            ssCompiler.sVersion = listRichDescriptions.at(i).sVersion;
-                            ssCompiler.sInfo = listRichDescriptions.at(i).sInfo;
-                            ssCompiler.type = listRichDescriptions.at(i).type;
+
+                            bVB = true;
+                        }
+                    } else if (listRichDescriptions.at(i).name == RECORD_NAME_MASM) {
+                        if (listRichDescriptions.at(i).sVersion > _ssCompilerMASM.sVersion) {
+                            _ssCompilerMASM.name = listRichDescriptions.at(i).name;
+                            _ssCompilerMASM.sVersion = listRichDescriptions.at(i).sVersion;
+                            _ssCompilerMASM.sInfo = listRichDescriptions.at(i).sInfo;
+                            _ssCompilerMASM.type = listRichDescriptions.at(i).type;
+                        }
+                    } else {
+                        if (listRichDescriptions.at(i).sVersion > _ssCompilerCPP.sVersion) {
+                            _ssCompilerCPP.name = listRichDescriptions.at(i).name;
+                            _ssCompilerCPP.sVersion = listRichDescriptions.at(i).sVersion;
+                            _ssCompilerCPP.sInfo = listRichDescriptions.at(i).sInfo;
+                            _ssCompilerCPP.type = listRichDescriptions.at(i).type;
                         }
                     }
-
-                    nCompilerFound = listRichDescriptions.at(i).varExtra.toInt();
                 }
             }
 
             if (listRichDescriptions.at(i).name == SpecAbstract::RECORD_NAME_IMPORT) {
                 break;
             }
+        }
+
+        if (_ssLinker.name != RECORD_NAME_UNKNOWN) {
+            ssLinker.name = _ssLinker.name;
+            ssLinker.sVersion = _ssLinker.sVersion;
+            ssLinker.sInfo = _ssLinker.sInfo;
+            ssLinker.type = _ssLinker.type;
+        }
+        if (_ssCompilerCPP.name != RECORD_NAME_UNKNOWN) {
+            ssCompilerCPP.name = _ssCompilerCPP.name;
+            ssCompilerCPP.sVersion = _ssCompilerCPP.sVersion;
+            ssCompilerCPP.sInfo = _ssCompilerCPP.sInfo;
+            ssCompilerCPP.type = _ssCompilerCPP.type;
+        }
+        if (_ssCompilerMASM.name != RECORD_NAME_UNKNOWN) {
+            ssCompilerMASM.name = _ssCompilerMASM.name;
+            ssCompilerMASM.sVersion = _ssCompilerMASM.sVersion;
+            ssCompilerMASM.sInfo = _ssCompilerMASM.sInfo;
+            ssCompilerMASM.type = _ssCompilerMASM.type;
+        }
+        if (_ssCompilerVB.name != RECORD_NAME_UNKNOWN) {
+            ssCompilerVB.name = _ssCompilerVB.name;
+            ssCompilerVB.sVersion = _ssCompilerVB.sVersion;
+            ssCompilerVB.sInfo = _ssCompilerVB.sInfo;
+            ssCompilerVB.type = _ssCompilerVB.type;
         }
 
         // TODO Check MASM for .NET
@@ -8031,9 +8085,9 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 }
             }
 
-            if (ssCompiler.name != RECORD_NAME_VISUALBASIC) {
+            if (ssCompilerCPP.name != RECORD_NAME_VISUALBASIC) {
                 if (_recordCompiler.name == RECORD_NAME_VISUALBASIC) {
-                    ssCompiler = _recordCompiler;
+                    ssCompilerVB = _recordCompiler;
                 }
             }
         } else {
@@ -8046,43 +8100,43 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
             }
 
             if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_VBNET)) {
-                ssCompiler.type = RECORD_TYPE_COMPILER;
-                ssCompiler.name = RECORD_NAME_VBNET;
+                ssCompilerVB.type = RECORD_TYPE_COMPILER;
+                ssCompilerVB.name = RECORD_NAME_VBNET;
             }
 
             if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_JSCRIPT)) {
-                ssCompiler.type = RECORD_TYPE_COMPILER;
-                ssCompiler.name = RECORD_NAME_JSCRIPT;
+                ssCompilerVB.type = RECORD_TYPE_COMPILER;
+                ssCompilerVB.name = RECORD_NAME_JSCRIPT;
             }
         }
 
-        if ((ssMFC.name == RECORD_NAME_MFC) && (ssCompiler.type == RECORD_TYPE_UNKNOWN)) {
-            ssCompiler.type = SpecAbstract::RECORD_TYPE_COMPILER;
-            ssCompiler.name = SpecAbstract::RECORD_NAME_VISUALCCPP;
+        if ((ssMFC.name == RECORD_NAME_MFC) && (ssCompilerCPP.type == RECORD_TYPE_UNKNOWN)) {
+            ssCompilerCPP.type = SpecAbstract::RECORD_TYPE_COMPILER;
+            ssCompilerCPP.name = SpecAbstract::RECORD_NAME_VISUALCCPP;
 
             QString _sVersion = mapVersions.value(ssMFC.sVersion);
 
             if (_sVersion != "") {
-                ssCompiler.sVersion = _sVersion;
+                ssCompilerCPP.sVersion = _sVersion;
             }
         }
 
-        if (ssCompiler.name != RECORD_NAME_VISUALCCPP) {
+        if (ssCompilerCPP.name != RECORD_NAME_VISUALCCPP) {
             // TODO Check mb MS Linker only
 
             if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_VISUALCCPP)) {
                 _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_VISUALCCPP);
 
-                ssCompiler.type = ss.type;
-                ssCompiler.name = ss.name;
-                ssCompiler.sVersion = ss.sVersion;
+                ssCompilerCPP.type = ss.type;
+                ssCompilerCPP.name = ss.name;
+                ssCompilerCPP.sVersion = ss.sVersion;
             }
         }
 
         // TODO if Export ^? RECORD_NAME_VISUALCCPP/C++
 
         if ((ssMFC.name == RECORD_NAME_MFC) && (ssMFC.sVersion == "")) {
-            if ((ssCompiler.name == RECORD_NAME_VISUALCCPP) && (ssLinker.sVersion != "")) {
+            if ((ssCompilerCPP.name == RECORD_NAME_VISUALCCPP) && (ssLinker.sVersion != "")) {
                 ssMFC.sVersion = ssLinker.sVersion.section(".", 0, 1);
             }
         }
@@ -8092,7 +8146,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
             ssLinker.name = SpecAbstract::RECORD_NAME_MICROSOFTLINKER;
         }
 
-        if ((ssCompiler.name == RECORD_NAME_VISUALCCPP) && (ssLinker.name != RECORD_NAME_MICROSOFTLINKER)) {
+        if ((ssCompilerCPP.name == RECORD_NAME_VISUALCCPP) && (ssLinker.name != RECORD_NAME_MICROSOFTLINKER)) {
             ssLinker.type = SpecAbstract::RECORD_TYPE_LINKER;
             ssLinker.name = SpecAbstract::RECORD_NAME_MICROSOFTLINKER;
         }
@@ -8107,22 +8161,22 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
         }
 
         if (ssLinker.name == RECORD_NAME_MICROSOFTLINKER) {
-            if ((ssCompiler.name == RECORD_NAME_VISUALCCPP) || (ssCompiler.name == RECORD_NAME_VISUALCSHARP)) {
-                if (ssCompiler.sVersion == "") {
+            if (ssCompilerCPP.name == RECORD_NAME_VISUALCCPP) {
+                if (ssCompilerCPP.sVersion == "") {
                     QString sLinkerVersion = ssLinker.sVersion;
                     QString sLinkerMajorVersion = sLinkerVersion.section(".", 0, 1);
 
                     QString _sVersion = mapVersions.value(sLinkerMajorVersion);
 
                     if (_sVersion != "") {
-                        ssCompiler.sVersion = _sVersion;
+                        ssCompilerCPP.sVersion = _sVersion;
                     }
                 }
             }
         }
 
-        if ((ssCompiler.name == RECORD_NAME_VISUALCCPP) || (ssCompiler.name == RECORD_NAME_VISUALCSHARP)) {
-            QString sCompilerVersion = ssCompiler.sVersion;
+        if (ssCompilerCPP.name == RECORD_NAME_VISUALCCPP) {
+            QString sCompilerVersion = ssCompilerCPP.sVersion;
             QString sCompilerMajorVersion = sCompilerVersion.section(".", 0, 1);
 
             ssTool.type = SpecAbstract::RECORD_TYPE_TOOL;
@@ -8335,8 +8389,8 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
             if (ssTool.sVersion == "") {
                 // TODO
             }
-        } else if (ssCompiler.name == SpecAbstract::RECORD_NAME_MASM) {
-            QString sCompilerVersion = ssCompiler.sVersion;
+        } else if (ssCompilerMASM.name == SpecAbstract::RECORD_NAME_MASM) {
+            QString sCompilerVersion = ssCompilerMASM.sVersion;
             QString sLinkerVersion = ssLinker.sVersion;
 
             if ((sLinkerVersion == "5.12.8078") && (sCompilerVersion == "6.14.8444")) {
@@ -8354,8 +8408,20 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
             pPEInfo->mapResultLinkers.insert(ssLinker.name, scansToScan(&(pPEInfo->basic_info), &ssLinker));
         }
 
-        if (ssCompiler.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pPEInfo->basic_info), &ssCompiler));
+        if (ssCompilerCPP.type != RECORD_TYPE_UNKNOWN) {
+            pPEInfo->mapResultCompilers.insert(ssCompilerCPP.name, scansToScan(&(pPEInfo->basic_info), &ssCompilerCPP));
+        }
+
+        if (ssCompilerMASM.type != RECORD_TYPE_UNKNOWN) {
+            pPEInfo->mapResultCompilers.insert(ssCompilerMASM.name, scansToScan(&(pPEInfo->basic_info), &ssCompilerMASM));
+        }
+
+        if (ssCompilerVB.type != RECORD_TYPE_UNKNOWN) {
+            pPEInfo->mapResultCompilers.insert(ssCompilerVB.name, scansToScan(&(pPEInfo->basic_info), &ssCompilerVB));
+        }
+
+        if (ssCompilerDot.type != RECORD_TYPE_UNKNOWN) {
+            pPEInfo->mapResultCompilers.insert(ssCompilerDot.name, scansToScan(&(pPEInfo->basic_info), &ssCompilerDot));
         }
 
         if (ssTool.type != RECORD_TYPE_UNKNOWN) {
@@ -13970,6 +14036,17 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
         }
 
         if (!vi.bIsValid) {
+            vi = _get_AlpineClang_string(sComment);
+
+            if (vi.bIsValid) {
+                ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_ALPINECLANG, vi.sVersion, vi.sInfo, 0);
+
+                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
+
+
+        if (!vi.bIsValid) {
             vi = _get_AlibabaClang_string(sComment);
 
             if (vi.bIsValid) {
@@ -14491,6 +14568,13 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
         // Alipay clang
         if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ALIPAYCLANG)) {
             _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ALIPAYCLANG);
+
+            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // Alpine clang
+        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ALPINECLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ALPINECLANG);
 
             pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
@@ -18966,23 +19050,26 @@ void SpecAbstract::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures,
         if (sMinor.toInt() != nMinorVersion) {
             bool bSuccess = false;
 
-            if ((nMinorVersion == 10) && ((nBuild >= 3052) && (nBuild <= 6030))) {
-                bSuccess = true;
-            } else if ((nMinorVersion == 10) && ((nBuild >= 25000) && (nBuild < 25547))) {
-                bSuccess = true;
-            } else if ((nMinorVersion == 11) && ((nBuild >= 25547) && (nBuild < 25834))) {
-                bSuccess = true;
-            } else if ((nMinorVersion == 12) && ((nBuild >= 25834) && (nBuild < 26128))) {
-                bSuccess = true;
-            } else if ((nMinorVersion == 13) && ((nBuild >= 26128) && (nBuild < 26428))) {
-                bSuccess = true;
-            } else if ((nMinorVersion == 14) && ((nBuild >= 26428) && (nBuild < 26726))) {
-                bSuccess = true;
-            } else if ((nMinorVersion == 15) && ((nBuild >= 26726) && (nBuild < 26926))) {
-                bSuccess = true;
-            } else if ((nMinorVersion == 16) && ((nBuild >= 26926) && (nBuild < 27004))) {
-                bSuccess = true;
-            } else if ((nMinorVersion >= 20) && (nBuild >= 27004)) {
+//            if ((nMinorVersion == 10) && ((nBuild >= 3052) && (nBuild <= 6030))) {
+//                bSuccess = true;
+//            } else if ((nMinorVersion == 10) && ((nBuild >= 25000) && (nBuild < 25547))) {
+//                bSuccess = true;
+//            } else if ((nMinorVersion == 11) && ((nBuild >= 25547) && (nBuild < 25834))) {
+//                bSuccess = true;
+//            } else if ((nMinorVersion == 12) && ((nBuild >= 25834) && (nBuild < 26128))) {
+//                bSuccess = true;
+//            } else if ((nMinorVersion == 13) && ((nBuild >= 26128) && (nBuild < 26428))) {
+//                bSuccess = true;
+//            } else if ((nMinorVersion == 14) && ((nBuild >= 26428) && (nBuild < 26726))) {
+//                bSuccess = true;
+//            } else if ((nMinorVersion == 15) && ((nBuild >= 26726) && (nBuild < 26926))) {
+//                bSuccess = true;
+//            } else if ((nMinorVersion == 16) && ((nBuild >= 26926) && (nBuild < 27004))) {
+//                bSuccess = true;
+//            } else if ((nMinorVersion >= 20) && (nBuild >= 27004)) {
+//                bSuccess = true;
+//            }
+            if ((sMajor.toInt() >= 19) && (nMinorVersion >= 10) && (nBuild >= 25000)) {
                 bSuccess = true;
             }
 
