@@ -1595,7 +1595,7 @@ public:
     static VI_STRUCT _get_ARMCCPP_string(const QString &sString);
     static VI_STRUCT _get_ARMNEONCCPP_string(const QString &sString);
     static VI_STRUCT _get_ARMThumbCCPP_string(const QString &sString);
-    static VI_STRUCT _get_ARMThumbMacroAssembler_string(QString sString);
+    static VI_STRUCT _get_ARMThumbMacroAssembler_string(const QString &sString);
     static VI_STRUCT _get_ThumbC_string(const QString &sString);
     static VI_STRUCT _get_clang_string(const QString &sString);
     static VI_STRUCT _get_DynASM_string(const QString &sString);
@@ -1671,7 +1671,7 @@ private:
     static bool MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, quint32 nCount, XBinary::FT fileType1,
                                         XBinary::FT fileType2);
     static void filterResult(QList<SCAN_STRUCT> *pListRecords, QSet<RECORD_TYPE> stRecordTypes, XBinary::PDSTRUCT *pPdStruct);
-    static void _fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorVersion, qint32 nMinorVersion, XBinary::PDSTRUCT *pPdStruct);
+    static void _fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorLinkerVersion, qint32 nMinorLinkerVersion, XBinary::PDSTRUCT *pPdStruct);
 
 protected:
     void _errorMessage(QString sErrorMessage);

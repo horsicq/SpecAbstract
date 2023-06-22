@@ -3455,7 +3455,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMThumbCCPP_string(const QString &sS
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMThumbMacroAssembler_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMThumbMacroAssembler_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
@@ -7824,25 +7824,15 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
     QMap<QString, QString> mapVersions;
 
-    mapVersions.insert("6.00", "12.00");
-    mapVersions.insert("7.00", "13.00");
-    mapVersions.insert("7.10", "13.10");
-    mapVersions.insert("8.00", "14.00");
-    mapVersions.insert("9.00", "15.00");
-    mapVersions.insert("10.00", "16.00");
-    mapVersions.insert("11.00", "17.00");
-    mapVersions.insert("12.00", "18.00");
-    mapVersions.insert("14.00", "19.00");
-    mapVersions.insert("14.10", "19.10");
-    mapVersions.insert("14.11", "19.11");
-    mapVersions.insert("14.12", "19.12");
-    mapVersions.insert("14.13", "19.13");
-    mapVersions.insert("14.14", "19.14");
-    mapVersions.insert("14.15", "19.15");
-    mapVersions.insert("14.16", "19.16");
-    mapVersions.insert("14.20", "19.20");
-    mapVersions.insert("14.29", "19.29");
-    mapVersions.insert("14.36", "19.36");
+    mapVersions.insert("6", "12");
+    mapVersions.insert("7", "13");
+    mapVersions.insert("7", "13");
+    mapVersions.insert("8", "14");
+    mapVersions.insert("9", "15");
+    mapVersions.insert("10", "16");
+    mapVersions.insert("11", "17");
+    mapVersions.insert("12", "18");
+    mapVersions.insert("14", "19");
 
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -7978,11 +7968,11 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                                 _ssCompilerVB.name = RECORD_NAME_VISUALBASIC;
                                 _ssCompilerVB.sVersion = listRichDescriptions.at(i).sVersion;
 
-                                QString _sVersion = _ssCompilerVB.sVersion.section(".", 0, 1);
+                                QString _sVersion = _ssCompilerVB.sVersion.section(".", 0, 0);
                                 QString _sVersionCompiler = mapVersions.key(_sVersion, "");
 
                                 if (_sVersionCompiler != "") {
-                                    _ssCompilerVB.sVersion = ssCompilerVB.sVersion.replace(_sVersion, _sVersionCompiler);
+                                    _ssCompilerVB.sVersion = _sVersionCompiler + "." + _ssCompilerVB.sVersion.section(".", 1, 2);
                                 }
 
                                 _ssCompilerVB.sInfo = "Native";
@@ -8114,7 +8104,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
             ssCompilerCPP.type = SpecAbstract::RECORD_TYPE_COMPILER;
             ssCompilerCPP.name = SpecAbstract::RECORD_NAME_VISUALCCPP;
 
-            QString _sVersion = mapVersions.value(ssMFC.sVersion);
+            QString _sVersion = mapVersions.value(ssMFC.sVersion.section(".", 0, 0)) + "." + ssMFC.sVersion.section(".", 1, 1);
 
             if (_sVersion != "") {
                 ssCompilerCPP.sVersion = _sVersion;
@@ -8293,17 +8283,17 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 ssTool.sVersion = "2017 version 15.0-15.2";
             else if (sCompilerVersion == "19.10.25019")
                 ssTool.sVersion = "2017";  // 15.2?
-            else if (sCompilerVersion == "19.10.25506")
+            else if (sCompilerVersion == "19.11.25506")
                 ssTool.sVersion = "2017 version 15.3";
-            else if (sCompilerVersion == "19.10.25507")
+            else if (sCompilerVersion == "19.11.25507")
                 ssTool.sVersion = "2017 version 15.3.3";
             else if (sCompilerVersion == "19.11.25542")
                 ssTool.sVersion = "2017 version 15.4.4";
             else if (sCompilerVersion == "19.11.25547")
                 ssTool.sVersion = "2017 version 15.4.5";
-            else if (sCompilerVersion == "19.11.25830")
+            else if (sCompilerVersion == "19.12.25830")
                 ssTool.sVersion = "2017 version 15.5";
-            else if (sCompilerVersion == "19.11.25831")
+            else if (sCompilerVersion == "19.12.25831")
                 ssTool.sVersion = "2017 version 15.5.2";
             else if (sCompilerVersion == "19.12.25834")
                 ssTool.sVersion = "2017 version 15.5.3-15.5.4";
@@ -8385,6 +8375,8 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 ssTool.sVersion = "2017 version 15.9";
             else if (sCompilerMajorVersion == "19.20")
                 ssTool.sVersion = "2019";
+            else if (sCompilerMajorVersion == "19.36")
+                ssTool.sVersion = "2022";
 
             if (ssTool.sVersion == "") {
                 // TODO
@@ -19034,48 +19026,85 @@ void SpecAbstract::filterResult(QList<SpecAbstract::SCAN_STRUCT> *pListRecords, 
     *pListRecords = listRecords;
 }
 
-void SpecAbstract::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorVersion, qint32 nMinorVersion, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorLinkerVersion, qint32 nMinorLinkerVersion, XBinary::PDSTRUCT *pPdStruct)
 {
-    Q_UNUSED(nMajorVersion)
-
     qint32 nNumberOfRecords = pListRichSignatures->count();
 
     for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
         QString sMajor = pListRichSignatures->at(i).sVersion.section(".", 0, 0);
-        QString sMinor = pListRichSignatures->at(i).sVersion.section(".", 1, 1);
         QString sBuild = pListRichSignatures->at(i).sVersion.section(".", 2, 2);
 
         qint32 nBuild = sBuild.toInt();
+        qint32 nMinorVersion = 0;
 
-        if (sMinor.toInt() != nMinorVersion) {
-            bool bSuccess = false;
+        bool bFix = false;
 
-//            if ((nMinorVersion == 10) && ((nBuild >= 3052) && (nBuild <= 6030))) {
-//                bSuccess = true;
-//            } else if ((nMinorVersion == 10) && ((nBuild >= 25000) && (nBuild < 25547))) {
-//                bSuccess = true;
-//            } else if ((nMinorVersion == 11) && ((nBuild >= 25547) && (nBuild < 25834))) {
-//                bSuccess = true;
-//            } else if ((nMinorVersion == 12) && ((nBuild >= 25834) && (nBuild < 26128))) {
-//                bSuccess = true;
-//            } else if ((nMinorVersion == 13) && ((nBuild >= 26128) && (nBuild < 26428))) {
-//                bSuccess = true;
-//            } else if ((nMinorVersion == 14) && ((nBuild >= 26428) && (nBuild < 26726))) {
-//                bSuccess = true;
-//            } else if ((nMinorVersion == 15) && ((nBuild >= 26726) && (nBuild < 26926))) {
-//                bSuccess = true;
-//            } else if ((nMinorVersion == 16) && ((nBuild >= 26926) && (nBuild < 27004))) {
-//                bSuccess = true;
-//            } else if ((nMinorVersion >= 20) && (nBuild >= 27004)) {
-//                bSuccess = true;
-//            }
-            if ((sMajor.toInt() >= 19) && (nMinorVersion >= 10) && (nBuild >= 25000)) {
-                bSuccess = true;
+        if (nBuild > 25000) {
+            if ((pListRichSignatures->at(i).name == RECORD_NAME_UNIVERSALTUPLECOMPILER) && (sMajor.toInt() >= 19)) {
+                bFix = true; // C++
+            } else if (sMajor.toInt() >= 14) {
+                if (pListRichSignatures->at(i).name == RECORD_NAME_MICROSOFTLINKER) {
+                    if ((nMinorLinkerVersion >= 10) && (nMinorLinkerVersion <= 36)) {
+                        nMinorVersion = nMinorLinkerVersion;
+                    }
+                }
+
+                bFix = true; // Linker, MASM ...
+            }
+        }
+
+        if (bFix && (nMinorVersion == 0)) {
+            if ((nBuild < 25506)) {
+                nMinorVersion = 10;
+            } else if (nBuild < 25831) {
+                nMinorVersion = 11;
+            } else if (nBuild < 25930) {
+                nMinorVersion = 12;
+            } else if (nBuild < 26433) {
+                nMinorVersion = 13;
+            } else if (nBuild < 27049) {
+                nMinorVersion = 14;
+//            } else if (nBuild < XXXXX) {
+//                nMinorVersion = 15;
+            } else if (nBuild < 27508) {
+                nMinorVersion = 16;
+            } else if (nBuild < 28105) {
+                nMinorVersion = 20;
+//            } else if (nBuild < XXXXX) {
+//                nMinorVersion = 21;
+//            } else if (nBuild < XXXXX) {
+//                nMinorVersion = 22;
+            } else if (nBuild < 28322) {
+                nMinorVersion = 23;
+            } else if (nBuild < 28900) {
+                nMinorVersion = 24;
+//            } else if (nBuild < XXXXX) {
+//                nMinorVersion = 25;
+            } else if (nBuild < 29111) {
+                nMinorVersion = 26;
+            } else if (nBuild < 29920) {
+                nMinorVersion = 27;
+            } else if (nBuild < 30148) {
+                nMinorVersion = 28;
+            } else if (nBuild < 30795) {
+                nMinorVersion = 29;
+            } else if (nBuild < 31107) {
+                nMinorVersion = 30;
+            } else if (nBuild < 31333) {
+                nMinorVersion = 31;
+            } else if (nBuild < 31629) {
+                nMinorVersion = 32;
+            } else if (nBuild < 31943) {
+                nMinorVersion = 33;
+            } else if (nBuild < 32217) {
+                nMinorVersion = 34;
+            } else if (nBuild < 32522) {
+                nMinorVersion = 35;
+            } else if (nBuild >= 32522) {
+                nMinorVersion = 36;
             }
 
-            if (bSuccess) {
-                (*pListRichSignatures)[i].sVersion = QString("%1.%2.%3").arg(sMajor, QString::number(nMinorVersion), sBuild);
-            }
+            (*pListRichSignatures)[i].sVersion = QString("%1.%2.%3").arg(sMajor, QString::number(nMinorVersion), sBuild);
         }
     }
 }
