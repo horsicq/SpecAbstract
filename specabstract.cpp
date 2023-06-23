@@ -3578,7 +3578,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SunWorkShop_string(const QString &sSt
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_SunWorkShopCompilers_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_SunWorkShopCompilers_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
@@ -3591,7 +3591,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SunWorkShopCompilers_string(QString s
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_SnapdragonLLVMARM_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_SnapdragonLLVMARM_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
@@ -7826,7 +7826,6 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
     mapVersions.insert("6", "12");
     mapVersions.insert("7", "13");
-    mapVersions.insert("7", "13");
     mapVersions.insert("8", "14");
     mapVersions.insert("9", "15");
     mapVersions.insert("10", "16");
@@ -8167,7 +8166,12 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
         if (ssCompilerCPP.name == RECORD_NAME_VISUALCCPP) {
             QString sCompilerVersion = ssCompilerCPP.sVersion;
-            QString sCompilerMajorVersion = sCompilerVersion.section(".", 0, 1);
+            QString sCompilerBuildVersion = sCompilerVersion.section(".", 2, 2);
+
+            bool bNewMSVC = false;
+            if (sCompilerVersion.toInt() == 19) {
+                bNewMSVC = true;
+            }
 
             ssTool.type = SpecAbstract::RECORD_TYPE_TOOL;
             ssTool.name = SpecAbstract::RECORD_NAME_MICROSOFTVISUALSTUDIO;
@@ -8175,208 +8179,205 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
             // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warnings-by-compiler-version?view=vs-2019
             // https://github.com/dishather/richprint/blob/master/comp_id.txt
 
-            if (sCompilerVersion == "12.00.8168")
-                ssTool.sVersion = "6.0";
-            else if (sCompilerVersion == "12.00.8804")
-                ssTool.sVersion = "6.0 SP5-SP6";
-            else if (sCompilerVersion == "12.00.8447")
-                ssTool.sVersion = "6.0 SP5";
-            else if (sCompilerVersion == "13.00.9176")
-                ssTool.sVersion = "Windows XP SP1 DDK";
-            else if (sCompilerVersion == "13.00.9466")
-                ssTool.sVersion = "2002(.NET) 7.0.9466";
-            else if (sCompilerVersion == "13.10.3052")
-                ssTool.sVersion = "2003";
-            else if (sCompilerVersion == "13.10.3077")
-                ssTool.sVersion = "2003(.NET) 7.0.1.3088";
-            else if (sCompilerVersion == "13.10.4035")
-                ssTool.sVersion = "Windows Server 2003 SP1 DDK";
-            else if (sCompilerVersion == "13.10.6030")
-                ssTool.sVersion = "2003(.NET) SP1 (kb918007)";
-            else if (sCompilerVersion == "14.00.40310")
-                ssTool.sVersion = "Windows Server 2003 SP1 DDK (for AMD64)";
-            else if (sCompilerVersion == "14.00.40607")
-                ssTool.sVersion = "2005 Beta 1 [8.0]";
-            else if (sCompilerVersion == "14.00.50215")
-                ssTool.sVersion = "2005 Beta 2 [8.0]";
-            else if (sCompilerVersion == "14.00.50320")
-                ssTool.sVersion = "2005 [8.0]";
-            else if (sCompilerVersion == "14.00.50727")
-                ssTool.sVersion = "2005 SP1";
-            else if (sCompilerVersion == "15.00.20706")
-                ssTool.sVersion = "2008 Beta 2 [9.0]";
-            else if (sCompilerVersion == "15.00.21022")
-                ssTool.sVersion = "2008 (9.0.21022.8 RTM)";
-            else if (sCompilerVersion == "15.00.30411")
-                ssTool.sVersion = "2008 with Feature Pack";
-            else if (sCompilerVersion == "15.00.30729")
-                ssTool.sVersion = "2008 SP1 (9.0.30729.1 SP)";
-            else if (sCompilerVersion == "16.00.20506")
-                ssTool.sVersion = "2010 Beta 1";
-            else if (sCompilerVersion == "16.00.21003")
-                ssTool.sVersion = "2010 Beta 2";
-            else if (sCompilerVersion == "16.00.30319")
-                ssTool.sVersion = "2010 (10.0.30319.1 RTMRel)";
-            else if (sCompilerVersion == "16.00.40219")
-                ssTool.sVersion = "2010 SP1 kb 983509 (10.0.40219.1 SP1Rel)";
-            else if (sCompilerVersion == "17.00.50727")
-                ssTool.sVersion = "2012 Premium (11.0.50727.1 RTMREL)";
-            else if (sCompilerVersion == "17.00.51025")
-                ssTool.sVersion = "2012 November CTP [11.0]";
-            else if (sCompilerVersion == "17.00.51106")
-                ssTool.sVersion = "2012 Update 1 (17.00.51106.1 Update 1)";
-            else if (sCompilerVersion == "17.00.60315")
-                ssTool.sVersion = "2012 Update 2 (17.00.60315.1 Update 2)";
-            else if (sCompilerVersion == "17.00.60610")
-                ssTool.sVersion = "2012 Update 3 (17.00.60610.1 Update 3)";
-            else if (sCompilerVersion == "17.00.61030")
-                ssTool.sVersion = "2012 Premium Update 4 (11.0.61030.00 Update 4)";
-            else if (sCompilerVersion == "18.00.20617")
-                ssTool.sVersion = "2013 Preview [12.0]";
-            else if (sCompilerVersion == "18.00.20827")
-                ssTool.sVersion = "2013 RC [12.0]";
-            else if (sCompilerVersion == "18.00.21005")
-                ssTool.sVersion = "2013 RTM";
-            else if (sCompilerVersion == "18.00.21114")
-                ssTool.sVersion = "2013 Nobemver CTP [12.0";
-            else if (sCompilerVersion == "18.00.30324")
-                ssTool.sVersion = "2013 Update2 RC [12.0]";
-            else if (sCompilerVersion == "18.00.30501")
-                ssTool.sVersion = "2013 12.0.30501.00 Update 2";
-            else if (sCompilerVersion == "18.00.30723")
-                ssTool.sVersion = "2013 12.0.30723.00 Update 3";
-            else if (sCompilerVersion == "18.00.31101")
-                ssTool.sVersion = "2013 12.0.31101.00 Update 4";
-            else if (sCompilerVersion == "18.00.40629")
-                ssTool.sVersion = "2013 12.0.40629.00 Update 5";
-            else if (sCompilerVersion == "19.00.22215")
-                ssTool.sVersion = "2015";
-            else if (sCompilerVersion == "19.00.23007")
-                ssTool.sVersion = "2015";
-            else if (sCompilerVersion == "19.00.23013")
-                ssTool.sVersion = "2015";
-            else if (sCompilerVersion == "19.00.23026")
-                ssTool.sVersion = "Community 2015 [14.0]";
-            else if (sCompilerVersion == "19.00.23506")
-                ssTool.sVersion = "Community 2015 14.0.24728.2 (UPD 1)";
-            else if (sCompilerVersion == "19.00.23918")
-                ssTool.sVersion = "Community 2015 UPD2 (14.0.25123.0)";
-            else if (sCompilerVersion == "19.00.24103")
-                ssTool.sVersion = "2015 SP1";  // ???
-            else if (sCompilerVersion == "19.00.24118")
-                ssTool.sVersion = "2015 SP1";  // ???
-            else if (sCompilerVersion == "19.00.24123")
-                ssTool.sVersion = "Community 2015 UPD3";
-            else if (sCompilerVersion == "19.00.24210")
-                ssTool.sVersion = "2015 Update 3 [14.0]";
-            else if (sCompilerVersion == "19.00.24212")
-                ssTool.sVersion = "2015 Update 3";
-            else if (sCompilerVersion == "19.00.24213")
-                ssTool.sVersion = "Community 2015 UPD3.1";
-            else if (sCompilerVersion == "19.00.24215")
-                ssTool.sVersion = "2015 Update 3.1";
-            else if (sCompilerVersion == "19.00.24218")
-                ssTool.sVersion = "2015 Update 3.1";
-            else if (sCompilerVersion == "19.00.24723")
-                ssTool.sVersion = "2015";  // Update 4? 2017?
-            else if (sCompilerVersion == "19.10.25017")
-                ssTool.sVersion = "2017 version 15.0-15.2";
-            else if (sCompilerVersion == "19.10.25019")
-                ssTool.sVersion = "2017";  // 15.2?
-            else if (sCompilerVersion == "19.11.25506")
-                ssTool.sVersion = "2017 version 15.3";
-            else if (sCompilerVersion == "19.11.25507")
-                ssTool.sVersion = "2017 version 15.3.3";
-            else if (sCompilerVersion == "19.11.25542")
-                ssTool.sVersion = "2017 version 15.4.4";
-            else if (sCompilerVersion == "19.11.25547")
-                ssTool.sVersion = "2017 version 15.4.5";
-            else if (sCompilerVersion == "19.12.25830")
-                ssTool.sVersion = "2017 version 15.5";
-            else if (sCompilerVersion == "19.12.25831")
-                ssTool.sVersion = "2017 version 15.5.2";
-            else if (sCompilerVersion == "19.12.25834")
-                ssTool.sVersion = "2017 version 15.5.3-15.5.4";
-            else if (sCompilerVersion == "19.12.25835")
-                ssTool.sVersion = "2017 version 15.5.6-15.5.7";
-            else if (sCompilerVersion == "19.13.26128")
-                ssTool.sVersion = "2017 version 15.6.0-15.6.2";
-            else if (sCompilerVersion == "19.13.26129")
-                ssTool.sVersion = "2017 version 15.6.3-15.6.4";
-            else if (sCompilerVersion == "19.13.26131")
-                ssTool.sVersion = "2017 version 15.6.6";
-            else if (sCompilerVersion == "19.13.26132")
-                ssTool.sVersion = "2017 version 15.6.7";
-            else if (sCompilerVersion == "19.14.26428")
-                ssTool.sVersion = "2017 version 15.7.1";
-            else if (sCompilerVersion == "19.14.26429")
-                ssTool.sVersion = "2017 version 15.7.2";
-            else if (sCompilerVersion == "19.14.26430")
-                ssTool.sVersion = "2017 version 15.7.3";
-            else if (sCompilerVersion == "19.14.26431")
-                ssTool.sVersion = "2017 version 15.7.4";
-            else if (sCompilerVersion == "19.14.26433")
-                ssTool.sVersion = "2017 version 15.7.5";
-            else if (sCompilerVersion == "19.15.26726")
-                ssTool.sVersion = "2017 version 15.8.0";
-            else if (sCompilerVersion == "19.15.26729")
-                ssTool.sVersion = "2017 version 15.8.4";
-            else if (sCompilerVersion == "19.15.26730")
-                ssTool.sVersion = "2017 version 15.8.9";
-            else if (sCompilerVersion == "19.15.26732")
-                ssTool.sVersion = "2017 version 15.8.5";
-            else if (sCompilerVersion == "19.16.26926")
-                ssTool.sVersion = "2017 version 15.9";
-            else if (sCompilerVersion == "19.16.27023")
-                ssTool.sVersion = "2017 version 15.9.1";
-            else if (sCompilerVersion == "19.16.27025")
-                ssTool.sVersion = "2017 version 15.9.4";
-            else if (sCompilerVersion == "19.16.27026")
-                ssTool.sVersion = "2017 version 15.9.5";
-            else if (sCompilerVersion == "19.16.27027")
-                ssTool.sVersion = "2017 version 15.9.7";
-            else if (sCompilerVersion == "19.16.27030")
-                ssTool.sVersion = "2017 version 15.9.11";
-            else if (sCompilerVersion == "19.20.27004")
-                ssTool.sVersion = "2019 RTM"; // TODO Check
-            else if (sCompilerVersion == "19.20.27508")
-                ssTool.sVersion = "2019 v16.0.0";
-            else if (sCompilerMajorVersion == "12.00")
-                ssTool.sVersion = "6.0";
-            else if (sCompilerMajorVersion == "13.00")
-                ssTool.sVersion = "2002";
-            else if (sCompilerMajorVersion == "13.10")
-                ssTool.sVersion = "2003";
-            else if (sCompilerMajorVersion == "14.00")
-                ssTool.sVersion = "2005";
-            else if (sCompilerMajorVersion == "15.00")
-                ssTool.sVersion = "2008";
-            else if (sCompilerMajorVersion == "16.00")
-                ssTool.sVersion = "2010";
-            else if (sCompilerMajorVersion == "17.00")
-                ssTool.sVersion = "2012";
-            else if (sCompilerMajorVersion == "18.00")
-                ssTool.sVersion = "2013";
-            else if (sCompilerMajorVersion == "19.00")
-                ssTool.sVersion = "2015";
-            else if (sCompilerMajorVersion == "19.10")
-                ssTool.sVersion = "2017 RTM";  // TODO ???
-            else if (sCompilerMajorVersion == "19.11")
-                ssTool.sVersion = "2017 version 15.3";
-            else if (sCompilerMajorVersion == "19.12")
-                ssTool.sVersion = "2017 version 15.5";
-            else if (sCompilerMajorVersion == "19.13")
-                ssTool.sVersion = "2017 version 15.6";
-            else if (sCompilerMajorVersion == "19.14")
-                ssTool.sVersion = "2017 version 15.7";
-            else if (sCompilerMajorVersion == "19.15")
-                ssTool.sVersion = "2017 version 15.8";
-            else if (sCompilerMajorVersion == "19.16")
-                ssTool.sVersion = "2017 version 15.9";
-            else if (sCompilerMajorVersion == "19.20")
-                ssTool.sVersion = "2019";
-            else if (sCompilerMajorVersion == "19.36")
-                ssTool.sVersion = "2022";
+            if (!bNewMSVC) {
+                if (sCompilerVersion == "12.00.8168")
+                    ssTool.sVersion = "6.0";
+                else if (sCompilerVersion == "12.00.8804")
+                    ssTool.sVersion = "6.0 SP5-SP6";
+                else if (sCompilerVersion == "12.00.8447")
+                    ssTool.sVersion = "6.0 SP5";
+                else if (sCompilerVersion == "13.00.9176")
+                    ssTool.sVersion = "Windows XP SP1 DDK";
+                else if (sCompilerVersion == "13.00.9466")
+                    ssTool.sVersion = "2002(.NET) 7.0.9466";
+                else if (sCompilerVersion == "13.10.3052")
+                    ssTool.sVersion = "2003";
+                else if (sCompilerVersion == "13.10.3077")
+                    ssTool.sVersion = "2003(.NET) 7.0.1.3088";
+                else if (sCompilerVersion == "13.10.4035")
+                    ssTool.sVersion = "Windows Server 2003 SP1 DDK";
+                else if (sCompilerVersion == "13.10.6030")
+                    ssTool.sVersion = "2003(.NET) SP1 (kb918007)";
+                else if (sCompilerVersion == "14.00.40310")
+                    ssTool.sVersion = "Windows Server 2003 SP1 DDK (for AMD64)";
+                else if (sCompilerVersion == "14.00.40607")
+                    ssTool.sVersion = "2005 Beta 1 [8.0]";
+                else if (sCompilerVersion == "14.00.50215")
+                    ssTool.sVersion = "2005 Beta 2 [8.0]";
+                else if (sCompilerVersion == "14.00.50320")
+                    ssTool.sVersion = "2005 [8.0]";
+                else if (sCompilerVersion == "14.00.50727")
+                    ssTool.sVersion = "2005 SP1";
+                else if (sCompilerVersion == "15.00.20706")
+                    ssTool.sVersion = "2008 Beta 2 [9.0]";
+                else if (sCompilerVersion == "15.00.21022")
+                    ssTool.sVersion = "2008 (9.0.21022.8 RTM)";
+                else if (sCompilerVersion == "15.00.30411")
+                    ssTool.sVersion = "2008 with Feature Pack";
+                else if (sCompilerVersion == "15.00.30729")
+                    ssTool.sVersion = "2008 SP1 (9.0.30729.1 SP)";
+                else if (sCompilerVersion == "16.00.20506")
+                    ssTool.sVersion = "2010 Beta 1";
+                else if (sCompilerVersion == "16.00.21003")
+                    ssTool.sVersion = "2010 Beta 2";
+                else if (sCompilerVersion == "16.00.30319")
+                    ssTool.sVersion = "2010 (10.0.30319.1 RTMRel)";
+                else if (sCompilerVersion == "16.00.40219")
+                    ssTool.sVersion = "2010 SP1 kb 983509 (10.0.40219.1 SP1Rel)";
+                else if (sCompilerVersion == "17.00.50727")
+                    ssTool.sVersion = "2012 Premium (11.0.50727.1 RTMREL)";
+                else if (sCompilerVersion == "17.00.51025")
+                    ssTool.sVersion = "2012 November CTP [11.0]";
+                else if (sCompilerVersion == "17.00.51106")
+                    ssTool.sVersion = "2012 Update 1 (17.00.51106.1 Update 1)";
+                else if (sCompilerVersion == "17.00.60315")
+                    ssTool.sVersion = "2012 Update 2 (17.00.60315.1 Update 2)";
+                else if (sCompilerVersion == "17.00.60610")
+                    ssTool.sVersion = "2012 Update 3 (17.00.60610.1 Update 3)";
+                else if (sCompilerVersion == "17.00.61030")
+                    ssTool.sVersion = "2012 Premium Update 4 (11.0.61030.00 Update 4)";
+                else if (sCompilerVersion == "18.00.20617")
+                    ssTool.sVersion = "2013 Preview [12.0]";
+                else if (sCompilerVersion == "18.00.20827")
+                    ssTool.sVersion = "2013 RC [12.0]";
+                else if (sCompilerVersion == "18.00.21005")
+                    ssTool.sVersion = "2013 RTM";
+                else if (sCompilerVersion == "18.00.21114")
+                    ssTool.sVersion = "2013 Nobemver CTP [12.0";
+                else if (sCompilerVersion == "18.00.30324")
+                    ssTool.sVersion = "2013 Update2 RC [12.0]";
+                else if (sCompilerVersion == "18.00.30501")
+                    ssTool.sVersion = "2013 12.0.30501.00 Update 2";
+                else if (sCompilerVersion == "18.00.30723")
+                    ssTool.sVersion = "2013 12.0.30723.00 Update 3";
+                else if (sCompilerVersion == "18.00.31101")
+                    ssTool.sVersion = "2013 12.0.31101.00 Update 4";
+                else if (sCompilerVersion == "18.00.40629")
+                    ssTool.sVersion = "2013 12.0.40629.00 Update 5";
+            } else {
+                if      (sCompilerBuildVersion == "22215")      ssTool.sVersion = "2015";
+                else if (sCompilerBuildVersion == "23007")      ssTool.sVersion = "2015";
+                else if (sCompilerBuildVersion == "23013")      ssTool.sVersion = "2015";
+                else if (sCompilerBuildVersion == "23026")      ssTool.sVersion = "Community 2015 [14.0]";
+                else if (sCompilerBuildVersion == "23506")      ssTool.sVersion = "Community 2015 14.0.24728.2 (UPD 1)";
+                else if (sCompilerBuildVersion == "23918")      ssTool.sVersion = "Community 2015 UPD2 (14.0.25123.0)";
+                else if (sCompilerBuildVersion == "24103")      ssTool.sVersion = "2015 SP1";  // ???
+                else if (sCompilerBuildVersion == "24118")      ssTool.sVersion = "2015 SP1";  // ???
+                else if (sCompilerBuildVersion == "24123")      ssTool.sVersion = "Community 2015 UPD3";
+                else if (sCompilerBuildVersion == "24210")      ssTool.sVersion = "2015 Update 3 [14.0]";
+                else if (sCompilerBuildVersion == "24212")      ssTool.sVersion = "2015 Update 3";
+                else if (sCompilerBuildVersion == "24213")      ssTool.sVersion = "Community 2015 UPD3.1";
+                else if (sCompilerBuildVersion == "24215")      ssTool.sVersion = "2015 Update 3.1";
+                else if (sCompilerBuildVersion == "24218")      ssTool.sVersion = "2015 Update 3.1";
+                else if (sCompilerBuildVersion == "24723")      ssTool.sVersion = "2015";  // Update 4? 2017?
+                else if (sCompilerBuildVersion == "25017")      ssTool.sVersion = "2017 version 15.0-15.2";
+                else if (sCompilerBuildVersion == "25019")      ssTool.sVersion = "2017";  // 15.2?
+                else if (sCompilerBuildVersion == "25506")      ssTool.sVersion = "2017 version 15.3.0";
+                else if (sCompilerBuildVersion == "25507")      ssTool.sVersion = "2017 version 15.3.3";
+                else if (sCompilerBuildVersion == "25542")      ssTool.sVersion = "2017 version 15.4.4";
+                else if (sCompilerBuildVersion == "25547")      ssTool.sVersion = "2017 version 15.4.5";
+                else if (sCompilerBuildVersion == "25830")      ssTool.sVersion = "2017 version 15.5.0";
+                else if (sCompilerBuildVersion == "25831")      ssTool.sVersion = "2017 version 15.5.2";
+                else if (sCompilerBuildVersion == "25834")      ssTool.sVersion = "2017 version 15.5.3-15.5.4";
+                else if (sCompilerBuildVersion == "25835")      ssTool.sVersion = "2017 version 15.5.6-15.5.7";
+                else if (sCompilerBuildVersion == "26128")      ssTool.sVersion = "2017 version 15.6.0-15.6.2";
+                else if (sCompilerBuildVersion == "26129")      ssTool.sVersion = "2017 version 15.6.3-15.6.4";
+                else if (sCompilerBuildVersion == "26131")      ssTool.sVersion = "2017 version 15.6.6";
+                else if (sCompilerBuildVersion == "26132")      ssTool.sVersion = "2017 version 15.6.7";
+                else if (sCompilerBuildVersion == "26428")      ssTool.sVersion = "2017 version 15.7.1";
+                else if (sCompilerBuildVersion == "26429")      ssTool.sVersion = "2017 version 15.7.2";
+                else if (sCompilerBuildVersion == "26430")      ssTool.sVersion = "2017 version 15.7.3";
+                else if (sCompilerBuildVersion == "26431")      ssTool.sVersion = "2017 version 15.7.4";
+                else if (sCompilerBuildVersion == "26433")      ssTool.sVersion = "2017 version 15.7.5";
+                else if (sCompilerBuildVersion == "26726")      ssTool.sVersion = "2017 version 15.8.0";
+                else if (sCompilerBuildVersion == "26729")      ssTool.sVersion = "2017 version 15.8.4";
+                else if (sCompilerBuildVersion == "26730")      ssTool.sVersion = "2017 version 15.8.9";
+                else if (sCompilerBuildVersion == "26732")      ssTool.sVersion = "2017 version 15.8.5";
+                else if (sCompilerBuildVersion == "26926")      ssTool.sVersion = "2017 version 15.9.0";
+                else if (sCompilerBuildVersion == "27023")      ssTool.sVersion = "2017 version 15.9.1";
+                else if (sCompilerBuildVersion == "27025")      ssTool.sVersion = "2017 version 15.9.4";
+                else if (sCompilerBuildVersion == "27026")      ssTool.sVersion = "2017 version 15.9.5";
+                else if (sCompilerBuildVersion == "27027")      ssTool.sVersion = "2017 version 15.9.7";
+                else if (sCompilerBuildVersion == "27030")      ssTool.sVersion = "2017 version 15.9.11";
+                else if (sCompilerBuildVersion == "27508")      ssTool.sVersion = "2019 version 16.0.0";
+                else if (sCompilerBuildVersion == "27702")      ssTool.sVersion = "2019 version 16.1.2";
+                else if (sCompilerBuildVersion == "27905")      ssTool.sVersion = "2019 version 16.2.3";
+                else if (sCompilerBuildVersion == "28105")      ssTool.sVersion = "2019 version 16.3.2";
+                else if (sCompilerBuildVersion == "28314")      ssTool.sVersion = "2019 version 16.4.0";
+                else if (sCompilerBuildVersion == "28315")      ssTool.sVersion = "2019 version 16.4.3";
+                else if (sCompilerBuildVersion == "28316")      ssTool.sVersion = "2019 version 16.4.4";
+                else if (sCompilerBuildVersion == "28319")      ssTool.sVersion = "2019 version 16.4.6";
+                else if (sCompilerBuildVersion == "28610")      ssTool.sVersion = "2019 version 16.5.0";
+                else if (sCompilerBuildVersion == "28611")      ssTool.sVersion = "2019 version 16.5.1";
+                else if (sCompilerBuildVersion == "28612")      ssTool.sVersion = "2019 version 16.5.2";
+                else if (sCompilerBuildVersion == "28614")      ssTool.sVersion = "2019 version 16.5.4";
+                else if (sCompilerBuildVersion == "28805")      ssTool.sVersion = "2019 version 16.6.0";
+                else if (sCompilerBuildVersion == "28806")      ssTool.sVersion = "2019 version 16.6.2-16.6.5";
+                else if (sCompilerBuildVersion == "29110")      ssTool.sVersion = "2019 version 16.7.0";
+                else if (sCompilerBuildVersion == "29111")      ssTool.sVersion = "2019 version 16.7.1-16.7.4";
+                else if (sCompilerBuildVersion == "29112")      ssTool.sVersion = "2019 version 16.7.5";
+                else if (sCompilerBuildVersion == "29333")      ssTool.sVersion = "2019 version 16.8.0";
+                else if (sCompilerBuildVersion == "29334")      ssTool.sVersion = "2019 version 16.8.2";
+                else if (sCompilerBuildVersion == "29335")      ssTool.sVersion = "2019 version 16.8.3";
+                else if (sCompilerBuildVersion == "29336")      ssTool.sVersion = "2019 version 16.8.4";
+                else if (sCompilerBuildVersion == "29337")      ssTool.sVersion = "2019 version 16.8.5";
+                else if (sCompilerBuildVersion == "29910")      ssTool.sVersion = "2019 version 16.9.0";
+                else if (sCompilerBuildVersion == "29913")      ssTool.sVersion = "2019 version 16.9.2";
+                else if (sCompilerBuildVersion == "29914")      ssTool.sVersion = "2019 version 16.9.4";
+                else if (sCompilerBuildVersion == "29915")      ssTool.sVersion = "2019 version 16.9.5";
+                else if (sCompilerBuildVersion == "30037")      ssTool.sVersion = "2019 version 16.10.0";
+                else if (sCompilerBuildVersion == "30038")      ssTool.sVersion = "2019 version 16.10.3";
+                else if (sCompilerBuildVersion == "30040")      ssTool.sVersion = "2019 version 16.10.4";
+                else if (sCompilerBuildVersion == "30133")      ssTool.sVersion = "2019 version 16.11.1";
+                else if (sCompilerBuildVersion == "30136")      ssTool.sVersion = "2019 version 16.11.5";
+                else if (sCompilerBuildVersion == "30137")      ssTool.sVersion = "2019 version 16.11.6";
+                else if (sCompilerBuildVersion == "30138")      ssTool.sVersion = "2019 version 16.11.8";
+                else if (sCompilerBuildVersion == "30139")      ssTool.sVersion = "2019 version 16.11.9";
+                else if (sCompilerBuildVersion == "30140")      ssTool.sVersion = "2019 version 16.11.10";
+                else if (sCompilerBuildVersion == "30141")      ssTool.sVersion = "2019 version 16.11.11";
+                else if (sCompilerBuildVersion == "30142")      ssTool.sVersion = "2019 version 16.11.12";
+                else if (sCompilerBuildVersion == "30143")      ssTool.sVersion = "2019 version 16.11.13";
+            }
+
+            if (ssTool.sVersion == "") {
+                QString sLinkerMajorVersion = ssLinker.sVersion.section(".", 0, 1);
+
+                if (sLinkerMajorVersion != "") {
+                    if      (sLinkerMajorVersion == "6.00")     ssTool.sVersion = "6.0";
+                    else if (sLinkerMajorVersion == "7.00")     ssTool.sVersion = "2002";
+                    else if (sLinkerMajorVersion == "7.10")     ssTool.sVersion = "2003";
+                    else if (sLinkerMajorVersion == "8.00")     ssTool.sVersion = "2005";
+                    else if (sLinkerMajorVersion == "9.00")     ssTool.sVersion = "2008";
+                    else if (sLinkerMajorVersion == "10.00")    ssTool.sVersion = "2010";
+                    else if (sLinkerMajorVersion == "11.00")    ssTool.sVersion = "2012";
+                    else if (sLinkerMajorVersion == "12.00")    ssTool.sVersion = "2013";
+                    else if (sLinkerMajorVersion == "14.00")    ssTool.sVersion = "2015";
+                    else if (sLinkerMajorVersion == "14.10")    ssTool.sVersion = "2017 version 15.0";
+                    else if (sLinkerMajorVersion == "14.11")    ssTool.sVersion = "2017 version 15.3";
+                    else if (sLinkerMajorVersion == "14.12")    ssTool.sVersion = "2017 version 15.5";
+                    else if (sLinkerMajorVersion == "14.13")    ssTool.sVersion = "2017 version 15.6";
+                    else if (sLinkerMajorVersion == "14.14")    ssTool.sVersion = "2017 version 15.7";
+                    else if (sLinkerMajorVersion == "14.15")    ssTool.sVersion = "2017 version 15.8";
+                    else if (sLinkerMajorVersion == "14.16")    ssTool.sVersion = "2017 version 15.9";
+                    else if (sLinkerMajorVersion == "14.20")    ssTool.sVersion = "2019 version 16.0";
+                    else if (sLinkerMajorVersion == "14.21")    ssTool.sVersion = "2019 version 16.1";
+                    else if (sLinkerMajorVersion == "14.22")    ssTool.sVersion = "2019 version 16.2";
+                    else if (sLinkerMajorVersion == "14.23")    ssTool.sVersion = "2019 version 16.3";
+                    else if (sLinkerMajorVersion == "14.24")    ssTool.sVersion = "2019 version 16.4";
+                    else if (sLinkerMajorVersion == "14.25")    ssTool.sVersion = "2019 version 16.5";
+                    else if (sLinkerMajorVersion == "14.26")    ssTool.sVersion = "2019 version 16.6";
+                    else if (sLinkerMajorVersion == "14.27")    ssTool.sVersion = "2019 version 16.7";
+                    else if (sLinkerMajorVersion == "14.28")    ssTool.sVersion = "2019 version 16.8-16.10";
+                    else if (sLinkerMajorVersion == "14.29")    ssTool.sVersion = "2019 version 16.11";
+                    else if (sLinkerMajorVersion == "14.30")    ssTool.sVersion = "2022 version 17.0";
+                    else if (sLinkerMajorVersion == "14.31")    ssTool.sVersion = "2022 version 17.1";
+                    else if (sLinkerMajorVersion == "14.32")    ssTool.sVersion = "2022 version 17.2";
+                    else if (sLinkerMajorVersion == "14.33")    ssTool.sVersion = "2022 version 17.3";
+                    else if (sLinkerMajorVersion == "14.34")    ssTool.sVersion = "2022 version 17.4";
+                    else if (sLinkerMajorVersion == "14.35")    ssTool.sVersion = "2022 version 17.5";
+                    else if (sLinkerMajorVersion == "14.36")    ssTool.sVersion = "2022 version 17.6";
+                }
+            }
 
             if (ssTool.sVersion == "") {
                 // TODO
@@ -19028,6 +19029,8 @@ void SpecAbstract::filterResult(QList<SpecAbstract::SCAN_STRUCT> *pListRecords, 
 
 void SpecAbstract::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorLinkerVersion, qint32 nMinorLinkerVersion, XBinary::PDSTRUCT *pPdStruct)
 {
+    Q_UNUSED(nMajorLinkerVersion)
+
     qint32 nNumberOfRecords = pListRichSignatures->count();
 
     for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
@@ -19044,7 +19047,7 @@ void SpecAbstract::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures,
                 bFix = true; // C++
             } else if (sMajor.toInt() >= 14) {
                 if (pListRichSignatures->at(i).name == RECORD_NAME_MICROSOFTLINKER) {
-                    if ((nMinorLinkerVersion >= 10) && (nMinorLinkerVersion <= 36)) {
+                    if ((nMinorLinkerVersion >= 10) && (nMinorLinkerVersion <= 40)) {
                         nMinorVersion = nMinorLinkerVersion;
                     }
                 }
@@ -19053,55 +19056,57 @@ void SpecAbstract::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures,
             }
         }
 
-        if (bFix && (nMinorVersion == 0)) {
-            if ((nBuild < 25506)) {
-                nMinorVersion = 10;
-            } else if (nBuild < 25831) {
-                nMinorVersion = 11;
-            } else if (nBuild < 25930) {
-                nMinorVersion = 12;
-            } else if (nBuild < 26433) {
-                nMinorVersion = 13;
-            } else if (nBuild < 27049) {
-                nMinorVersion = 14;
-//            } else if (nBuild < XXXXX) {
-//                nMinorVersion = 15;
-            } else if (nBuild < 27508) {
-                nMinorVersion = 16;
-            } else if (nBuild < 28105) {
-                nMinorVersion = 20;
-//            } else if (nBuild < XXXXX) {
-//                nMinorVersion = 21;
-//            } else if (nBuild < XXXXX) {
-//                nMinorVersion = 22;
-            } else if (nBuild < 28322) {
-                nMinorVersion = 23;
-            } else if (nBuild < 28900) {
-                nMinorVersion = 24;
-//            } else if (nBuild < XXXXX) {
-//                nMinorVersion = 25;
-            } else if (nBuild < 29111) {
-                nMinorVersion = 26;
-            } else if (nBuild < 29920) {
-                nMinorVersion = 27;
-            } else if (nBuild < 30148) {
-                nMinorVersion = 28;
-            } else if (nBuild < 30795) {
-                nMinorVersion = 29;
-            } else if (nBuild < 31107) {
-                nMinorVersion = 30;
-            } else if (nBuild < 31333) {
-                nMinorVersion = 31;
-            } else if (nBuild < 31629) {
-                nMinorVersion = 32;
-            } else if (nBuild < 31943) {
-                nMinorVersion = 33;
-            } else if (nBuild < 32217) {
-                nMinorVersion = 34;
-            } else if (nBuild < 32522) {
-                nMinorVersion = 35;
-            } else if (nBuild >= 32522) {
-                nMinorVersion = 36;
+        if (bFix) {
+            if (nMinorVersion == 0) {
+                if ((nBuild < 25506)) {
+                    nMinorVersion = 10;
+                } else if (nBuild < 25711) {
+                    nMinorVersion = 11;
+                } else if (nBuild < 25930) {
+                    nMinorVersion = 12;
+                } else if (nBuild < 26429) {
+                    nMinorVersion = 13;
+                } else if (nBuild < 26715) {
+                    nMinorVersion = 14;
+                } else if (nBuild < 27025) {
+                    nMinorVersion = 15;
+                } else if (nBuild < 27412) {
+                    nMinorVersion = 16;
+                } else if (nBuild < 28105) {
+                    nMinorVersion = 20;
+    //            } else if (nBuild < XXXXX) {
+    //                nMinorVersion = 21;
+    //            } else if (nBuild < XXXXX) {
+    //                nMinorVersion = 22;
+                } else if (nBuild < 28314) {
+                    nMinorVersion = 23;
+                } else if (nBuild < 28806) {
+                    nMinorVersion = 24;
+    //            } else if (nBuild < XXXXX) {
+    //                nMinorVersion = 25;
+                } else if (nBuild < 29111) {
+                    nMinorVersion = 26;
+                } else if (nBuild < 29336) {
+                    nMinorVersion = 27;
+                } else if (nBuild < 29922) {
+                    nMinorVersion = 28;
+                } else if (nBuild < 30705) {
+                    nMinorVersion = 29;
+                } else if (nBuild < 30818) {
+                    nMinorVersion = 30;
+                } else if (nBuild < 31328) {
+                    nMinorVersion = 31;
+                } else if (nBuild < 31629) {
+                    nMinorVersion = 32;
+                } else if (nBuild < 31823) {
+                    nMinorVersion = 33;
+                } else if (nBuild < 32215) {
+                    nMinorVersion = 34;
+                } else if (nBuild < 32323) {
+                    nMinorVersion = 35;
+                } else if (nBuild >= 32323) {
+                    nMinorVersion = 36;
+                }
             }
 
             (*pListRichSignatures)[i].sVersion = QString("%1.%2.%3").arg(sMajor, QString::number(nMinorVersion), sBuild);

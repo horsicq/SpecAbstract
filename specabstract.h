@@ -1604,8 +1604,8 @@ public:
     static VI_STRUCT _get_mold_string(const QString &sString);
     static VI_STRUCT _get_OracleSolarisLinkEditors_string(const QString &sString);
     static VI_STRUCT _get_SunWorkShop_string(const QString &sString);
-    static VI_STRUCT _get_SunWorkShopCompilers_string(QString sString);
-    static VI_STRUCT _get_SnapdragonLLVMARM_string(QString sString);
+    static VI_STRUCT _get_SunWorkShopCompilers_string(const QString &sString);
+    static VI_STRUCT _get_SnapdragonLLVMARM_string(const QString &sString);
     static VI_STRUCT _get_NASM_string(const QString &sString);
     static VI_STRUCT _get_TencentLegu_string(const QString &sString);
     static VI_STRUCT _get_OllvmTll_string(const QString &sString);
