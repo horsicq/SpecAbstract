@@ -167,111 +167,41 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
     QString sResult = tr("Unknown");
 
     switch (id) {
-        case RECORD_TYPE_UNKNOWN:
-            sResult = tr("Unknown");
-            break;
-        case RECORD_TYPE_APKOBFUSCATOR:
-            sResult = QString("APK obfuscator");
-            break;
-        case RECORD_TYPE_APKTOOL:
-            sResult = QString("APK Tool");
-            break;
-        case RECORD_TYPE_CERTIFICATE:
-            sResult = QString("Certificate");
-            break;
-        case RECORD_TYPE_COMPILER:
-            sResult = QString("Compiler");
-            break;
-        case RECORD_TYPE_CONVERTER:
-            sResult = QString("Converter");
-            break;
-        case RECORD_TYPE_CRYPTOR:
-            sResult = QString("Cryptor");
-            break;
-        case RECORD_TYPE_DATABASE:
-            sResult = QString("Database");
-            break;
-        case RECORD_TYPE_DEBUGDATA:
-            sResult = QString("Debug data");
-            break;
-        case RECORD_TYPE_DONGLEPROTECTION:
-            sResult = QString("Dongle protection");
-            break;
-        case RECORD_TYPE_DOSEXTENDER:
-            sResult = QString("DOS extender");
-            break;
-        case RECORD_TYPE_FORMAT:
-            sResult = QString("Format");
-            break;
-        case RECORD_TYPE_GENERIC:
-            sResult = QString("Generic");
-            break;
-        case RECORD_TYPE_IMAGE:
-            sResult = QString("Image");
-            break;
-        case RECORD_TYPE_INSTALLER:
-            sResult = QString("Installer");
-            break;
-        case RECORD_TYPE_INSTALLERDATA:
-            sResult = QString("Installer data");
-            break;
-        case RECORD_TYPE_JAROBFUSCATOR:
-            sResult = QString("JAR obfuscator");
-            break;
-        case RECORD_TYPE_JOINER:
-            sResult = QString("Joiner");
-            break;
-        case RECORD_TYPE_LANGUAGE:
-            sResult = QString("Language");
-            break;
-        case RECORD_TYPE_LIBRARY:
-            sResult = QString("Library");
-            break;
-        case RECORD_TYPE_LINKER:
-            sResult = QString("Linker");
-            break;
-        case RECORD_TYPE_NETCOMPRESSOR:
-            sResult = QString(".NET compressor");
-            break;
-        case RECORD_TYPE_NETOBFUSCATOR:
-            sResult = QString(".NET obfuscator");
-            break;
-        case RECORD_TYPE_OPERATIONSYSTEM:
-            sResult = QString("Operation system");
-            break;
-        case RECORD_TYPE_PACKER:
-            sResult = QString("Packer");
-            break;
-        case RECORD_TYPE_PETOOL:
-            sResult = QString("PE Tool");
-            break;
-        case RECORD_TYPE_PROTECTOR:
-            sResult = QString("Protector");
-            break;
-        case RECORD_TYPE_PROTECTORDATA:
-            sResult = QString("Protector data");
-            break;
-        case RECORD_TYPE_SFX:
-            sResult = QString("SFX");
-            break;
-        case RECORD_TYPE_SFXDATA:
-            sResult = QString("SFX data");
-            break;
-        case RECORD_TYPE_SIGNTOOL:
-            sResult = QString("Sign tool");
-            break;
-        case RECORD_TYPE_SOURCECODE:
-            sResult = QString("Source code");
-            break;
-        case RECORD_TYPE_STUB:
-            sResult = QString("Stub");
-            break;
-        case RECORD_TYPE_TOOL:
-            sResult = QString("Tool");
-            break;
-        case RECORD_TYPE_VIRTUALMACHINE:
-            sResult = QString("Virtual machine");
-            break;
+        case RECORD_TYPE_UNKNOWN: sResult = tr("Unknown"); break;
+        case RECORD_TYPE_APKOBFUSCATOR: sResult = QString("APK obfuscator"); break;
+        case RECORD_TYPE_APKTOOL: sResult = QString("APK Tool"); break;
+        case RECORD_TYPE_CERTIFICATE: sResult = QString("Certificate"); break;
+        case RECORD_TYPE_COMPILER: sResult = QString("Compiler"); break;
+        case RECORD_TYPE_CONVERTER: sResult = QString("Converter"); break;
+        case RECORD_TYPE_CRYPTOR: sResult = QString("Cryptor"); break;
+        case RECORD_TYPE_DATABASE: sResult = QString("Database"); break;
+        case RECORD_TYPE_DEBUGDATA: sResult = QString("Debug data"); break;
+        case RECORD_TYPE_DONGLEPROTECTION: sResult = QString("Dongle protection"); break;
+        case RECORD_TYPE_DOSEXTENDER: sResult = QString("DOS extender"); break;
+        case RECORD_TYPE_FORMAT: sResult = QString("Format"); break;
+        case RECORD_TYPE_GENERIC: sResult = QString("Generic"); break;
+        case RECORD_TYPE_IMAGE: sResult = QString("Image"); break;
+        case RECORD_TYPE_INSTALLER: sResult = QString("Installer"); break;
+        case RECORD_TYPE_INSTALLERDATA: sResult = QString("Installer data"); break;
+        case RECORD_TYPE_JAROBFUSCATOR: sResult = QString("JAR obfuscator"); break;
+        case RECORD_TYPE_JOINER: sResult = QString("Joiner"); break;
+        case RECORD_TYPE_LANGUAGE: sResult = QString("Language"); break;
+        case RECORD_TYPE_LIBRARY: sResult = QString("Library"); break;
+        case RECORD_TYPE_LINKER: sResult = QString("Linker"); break;
+        case RECORD_TYPE_NETCOMPRESSOR: sResult = QString(".NET compressor"); break;
+        case RECORD_TYPE_NETOBFUSCATOR: sResult = QString(".NET obfuscator"); break;
+        case RECORD_TYPE_OPERATIONSYSTEM: sResult = QString("Operation system"); break;
+        case RECORD_TYPE_PACKER: sResult = QString("Packer"); break;
+        case RECORD_TYPE_PETOOL: sResult = QString("PE Tool"); break;
+        case RECORD_TYPE_PROTECTOR: sResult = QString("Protector"); break;
+        case RECORD_TYPE_PROTECTORDATA: sResult = QString("Protector data"); break;
+        case RECORD_TYPE_SFX: sResult = QString("SFX"); break;
+        case RECORD_TYPE_SFXDATA: sResult = QString("SFX data"); break;
+        case RECORD_TYPE_SIGNTOOL: sResult = QString("Sign tool"); break;
+        case RECORD_TYPE_SOURCECODE: sResult = QString("Source code"); break;
+        case RECORD_TYPE_STUB: sResult = QString("Stub"); break;
+        case RECORD_TYPE_TOOL: sResult = QString("Tool"); break;
+        case RECORD_TYPE_VIRTUALMACHINE: sResult = QString("Virtual machine"); break;
     }
 
     return sResult;
@@ -282,2334 +212,784 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
     QString sResult = tr("Unknown");
 
     switch (id) {
-        case RECORD_NAME_UNKNOWN:
-            sResult = tr("Unknown");
-            break;
-        case RECORD_NAME_12311134:
-            sResult = QString("12311134");
-            break;
-        case RECORD_NAME_1337EXECRYPTER:
-            sResult = QString("1337 Exe Crypter");
-            break;
-        case RECORD_NAME_32LITE:
-            sResult = QString("32Lite");
-            break;
-        case RECORD_NAME_7Z:
-            sResult = QString("7-Zip");
-            break;
-        case RECORD_NAME_AASE:
-            sResult = QString("Aase");
-            break;
-        case RECORD_NAME_ABCCRYPTOR:
-            sResult = QString("ABC Cryptor");
-            break;
-        case RECORD_NAME_ACPROTECT:
-            sResult = QString("ACProtect");
-            break;
-        case RECORD_NAME_ACTIVEMARK:
-            sResult = QString("ActiveMARK");
-            break;
-        case RECORD_NAME_ACTUALINSTALLER:
-            sResult = QString("Actual Installer");
-            break;
-        case RECORD_NAME_ADVANCEDINSTALLER:
-            sResult = QString("Advanced Installer");
-            break;
-        case RECORD_NAME_ADVANCEDUPXSCRAMMBLER:
-            sResult = QString("Advanced UPX Scrammbler");
-            break;
-        case RECORD_NAME_AESOBFUSCATOR:
-            sResult = QString("AESObfuscator");
-            break;
-        case RECORD_NAME_AFFILLIATEEXE:
-            sResult = QString("AffilliateEXE");
-            break;
-        case RECORD_NAME_AGAINNATIVITYCRYPTER:
-            sResult = QString("Again Nativity Crypter");
-            break;
-        case RECORD_NAME_AGILENET:
-            sResult = QString("Agile .NET");
-            break;
-        case RECORD_NAME_AHPACKER:
-            sResult = QString("AHPacker");
-            break;
-        case RECORD_NAME_AHTEAMEPPROTECTOR:
-            sResult = QString("AHTeam EP Protector");
-            break;
-        case RECORD_NAME_AINEXE:
-            sResult = QString("AINEXE");
-            break;
-        case RECORD_NAME_AIX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_AIX);
-            break;
-        case RECORD_NAME_ALCHEMYMINDWORKS:
-            sResult = QString("Alchemy Mindworks");
-            break;
-        case RECORD_NAME_ALEXPROTECTOR:
-            sResult = QString("Alex Protector");
-            break;
-        case RECORD_NAME_ALIASOBJ:
-            sResult = QString("ALIASOBJ");
-            break;
-        case RECORD_NAME_ALIBABACLANG:
-            sResult = QString("Alibaba clang");
-            break;
-        case RECORD_NAME_ALIBABAPROTECTION:
-            sResult = QString("Alibaba Protection");
-            break;
-        case RECORD_NAME_ALIPAYCLANG:
-            sResult = QString("Alipay clang");
-            break;
-        case RECORD_NAME_ALIPAYOBFUSCATOR:
-            sResult = QString("Alipay Obfuscator");
-            break;
-        case RECORD_NAME_ALLATORIOBFUSCATOR:
-            sResult = QString("Allatori Obfuscator");
-            break;
-        case RECORD_NAME_ALLOY:
-            sResult = QString("Alloy");
-            break;
-        case RECORD_NAME_ALPINECLANG:
-            sResult = QString("Alpine clang");
-            break;
-        case RECORD_NAME_ALPINELINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_ALPINELINUX);
-            break;
-        case RECORD_NAME_ANDPAKK2:
-            sResult = QString("ANDpakk2");
-            break;
-        case RECORD_NAME_ANDROID:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_ANDROID);
-            break;
-        case RECORD_NAME_ANDROIDAPKSIGNER:
-            sResult = QString("Android apksigner");
-            break;
-        case RECORD_NAME_ANDROIDARSC:
-            sResult = QString("Android ARSC");
-            break;
-        case RECORD_NAME_ANDROIDCLANG:
-            sResult = QString("Android clang");
-            break;
-        case RECORD_NAME_ANDROIDGRADLE:
-            sResult = QString("Android Gradle");
-            break;
-        case RECORD_NAME_ANDROIDJETPACK:
-            sResult = QString("Android Jetpack");
-            break;
-        case RECORD_NAME_ANDROIDMAVENPLUGIN:
-            sResult = QString("Android Maven Plugin");
-            break;
-        case RECORD_NAME_ANDROIDNDK:
-            sResult = QString("Android NDK");
-            break;
-        case RECORD_NAME_ANDROIDSDK:
-            sResult = QString("Android SDK");
-            break;
-        case RECORD_NAME_ANDROIDSIGNAPK:
-            sResult = QString("Android SignApk");
-            break;
-        case RECORD_NAME_ANDROIDXML:
-            sResult = QString("Android XML");
-            break;
-        case RECORD_NAME_ANSKYAPOLYMORPHICPACKER:
-            sResult = QString("Anskya Polymorphic Packer");
-            break;
-        case RECORD_NAME_ANSLYMPACKER:
-            sResult = QString("AnslymPacker");
-            break;
-        case RECORD_NAME_ANTIDOTE:
-            sResult = QString("AntiDote");
-            break;
-        case RECORD_NAME_ANTILVL:
-            sResult = QString("AntiLVL");
-            break;
-        case RECORD_NAME_APACHEANT:
-            sResult = QString("Apache Ant");
-            break;
-        case RECORD_NAME_APACK:
-            sResult = QString("aPACK");
-            break;
-        case RECORD_NAME_APKEDITOR:
-            sResult = QString("ApkEditor");
-            break;
-        case RECORD_NAME_APKENCRYPTOR:
-            sResult = QString("ApkEncryptor");
-            break;
-        case RECORD_NAME_APKMODIFIERSIGNAPK:
-            sResult = QString("ApkModifier SignApk");
-            break;
-        case RECORD_NAME_APKPROTECT:
-            sResult = QString("APKProtect");
-            break;
-        case RECORD_NAME_APKPROTECTOR:
-            sResult = QString("ApkProtector");
-            break;
-        case RECORD_NAME_APKS:
-            sResult = QString("APKS");
-            break;
-        case RECORD_NAME_APKSIGNATURESCHEME:
-            sResult = QString("APK Signature Scheme");
-            break;
-        case RECORD_NAME_APKSIGNER:
-            sResult = QString("ApkSigner");
-            break;
-        case RECORD_NAME_APKTOOLPLUS:
-            sResult = QString("ApkToolPlus");
-            break;
-        case RECORD_NAME_APK_SIGNER:
-            sResult = QString("apk-signer");
-            break;
-        case RECORD_NAME_APPGUARD:
-            sResult = QString("AppGuard");
-            break;
-        case RECORD_NAME_APPIMAGE:
-            sResult = QString("AppImage");
-            break;
-        case RECORD_NAME_APPLEJDK:
-            sResult = QString("Apple JDK");
-            break;
-        case RECORD_NAME_APPLELLVM:
-            sResult = QString("Apple LLVM");
-            break;
-        case RECORD_NAME_APPORTABLECLANG:
-            sResult = QString("Apportable clang");
-            break;
-        case RECORD_NAME_APPSOLID:
-            sResult = QString("AppSolid");
-            break;
-        case RECORD_NAME_AR:
-            sResult = QString("ar");
-            break;
-        case RECORD_NAME_ARCRYPT:
-            sResult = QString("AR Crypt");
-            break;
-        case RECORD_NAME_ARJ:
-            sResult = QString("ARJ");
-            break;
-        case RECORD_NAME_ARMADILLO:
-            sResult = QString("Armadillo");
-            break;
-        case RECORD_NAME_ARMASSEMBLER:
-            sResult = QString("ARM Assembler");
-            break;
-        case RECORD_NAME_ARMC:
-            sResult = QString("ARM C");
-            break;
-        case RECORD_NAME_ARMCCPP:
-            sResult = QString("ARM C/C++");
-            break;
-        case RECORD_NAME_ARMLINKER:
-            sResult = QString("ARM Linker");
-            break;
-        case RECORD_NAME_ARMNEONCCPP:
-            sResult = QString("ARM NEON C/C++");
-            break;
-        case RECORD_NAME_ARMPROTECTOR:
-            sResult = QString("ARM Protector");
-            break;
-        case RECORD_NAME_ARMTHUMBCCPP:
-            sResult = QString("ARM/Thumb C/C++");
-            break;
-        case RECORD_NAME_ARMTHUMBMACROASSEMBLER:
-            sResult = QString("ARM/Thumb Macro Assembler");
-            break;
-        case RECORD_NAME_AROS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_AROS);
-            break;
-        case RECORD_NAME_ARXAN:
-            sResult = QString("Arxan");
-            break;
-        case RECORD_NAME_ASDPACK:
-            sResult = QString("ASDPack");
-            break;
-        case RECORD_NAME_ASPACK:
-            sResult = QString("ASPack");
-            break;
-        case RECORD_NAME_ASPLINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_ASPLINUX);
-            break;
-        case RECORD_NAME_ASPROTECT:
-            sResult = QString("ASProtect");
-            break;
-        case RECORD_NAME_ASSCRYPTER:
-            sResult = QString("Ass Crypter");
-            break;
-        case RECORD_NAME_ASSEMBLER:
-            sResult = QString("Assembler");
-            break;
-        case RECORD_NAME_ASSEMBLYINVOKE:
-            sResult = QString("AssemblyInvoke");
-            break;
-        case RECORD_NAME_AU:
-            sResult = QString("AU");
-            break;
-        case RECORD_NAME_AUTOIT:
-            sResult = QString("AutoIt");
-            break;
-        case RECORD_NAME_AVASTANTIVIRUS:
-            sResult = QString("Avast Antivirus");
-            break;
-        case RECORD_NAME_AVERCRYPTOR:
-            sResult = QString("AverCryptor");
-            break;
-        case RECORD_NAME_AVI:
-            sResult = QString("AVI");
-            break;
-        case RECORD_NAME_AVPACK:
-            sResult = QString("AVPACK");
-            break;
-        case RECORD_NAME_AZPROTECT:
-            sResult = QString("AZProtect");
-            break;
-        case RECORD_NAME_BABELNET:
-            sResult = QString("Babel .NET");
-            break;
-        case RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR:
-            sResult = QString("Backdoor PE Compress Protector");
-            break;
-        case RECORD_NAME_BAIDUPROTECTION:
-            sResult = QString("Baidu Protection");
-            break;
-        case RECORD_NAME_BAIDUSIGNATUREPLATFORM:
-            sResult = QString("Baidu Signature platform");
-            break;
-        case RECORD_NAME_BAMBAM:
-            sResult = QString("bambam");
-            break;
-        case RECORD_NAME_BANGCLEPROTECTION:
-            sResult = QString("Bangcle Protection");
-            break;
-        case RECORD_NAME_BASIC4ANDROID:
-            sResult = QString("Basic4Android");
-            break;
-        case RECORD_NAME_BASIC:
-            sResult = QString("BASIC");
-            break;
-        case RECORD_NAME_BAT2EXEC:
-            sResult = QString("BAT2EXEC");
-            break;
-        case RECORD_NAME_BEAWEBLOGIC:
-            sResult = QString("BEA WebLogic");
-            break;
-        case RECORD_NAME_BEROEXEPACKER:
-            sResult = QString("BeRoEXEPacker");
-            break;
-        case RECORD_NAME_BIOHAZARDCRYPTER:
-            sResult = QString("Biohazard Crypter");
-            break;
-        case RECORD_NAME_BITMAPINFOHEADER:
-            sResult = QString("Bitmap Info Header");
-            break;
-        case RECORD_NAME_BITROCKINSTALLER:
-            sResult = QString("BitRock Installer");
-            break;
-        case RECORD_NAME_BITSHAPEPECRYPT:
-            sResult = QString("BitShape PE Crypt");
-            break;
-        case RECORD_NAME_BLADEJOINER:
-            sResult = QString("Blade Joiner");
-            break;
-        case RECORD_NAME_BORLANDCCPP:
-            sResult = QString("Borland C/C++");
-            break;
-        case RECORD_NAME_BORLANDCPP:
-            sResult = QString("Borland C++");
-            break;
-        case RECORD_NAME_BORLANDCPPBUILDER:
-            sResult = QString("Borland C++ Builder");
-            break;
-        case RECORD_NAME_BORLANDDELPHI:
-            sResult = QString("Borland Delphi");
-            break;
-        case RECORD_NAME_BORLANDDELPHIDOTNET:
-            sResult = QString("Borland Delphi .NET");
-            break;
-        case RECORD_NAME_BORLANDOBJECTPASCALDELPHI:
-            sResult = QString("Borland Object Pascal(Delphi)");
-            break;
-        case RECORD_NAME_BORLANDOSSERVICES:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_BORLANDOSSERVICES);
-            break;
-        case RECORD_NAME_BREAKINTOPATTERN:
-            sResult = QString("Break Into Pattern");
-            break;
-        case RECORD_NAME_BRIDGEOS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_BRIDGEOS);
-            break;
-        case RECORD_NAME_BRIDGEOSSDK:
-            sResult = QString("bridgeOS SDK");
-            break;
-        case RECORD_NAME_BTWORKSCODEGUARD:
-            sResult = QString("Btworks CodeGuard");
-            break;
-        case RECORD_NAME_BUNDLETOOL:
-            sResult = QString("BundleTool");
-            break;
-        case RECORD_NAME_BURNEYE:
-            sResult = QString("Burneye");
-            break;
-        case RECORD_NAME_BYTEDANCESECCOMPILER:
-            sResult = QString("ByteDance-SecCompiler");
-            break;
-        case RECORD_NAME_BYTEGUARD:
-            sResult = QString("ByteGuard");
-            break;
-        case RECORD_NAME_BZIP2:
-            sResult = QString("bzip2");
-            break;
-        case RECORD_NAME_C:
-            sResult = QString("C");
-            break;
-        case RECORD_NAME_CAB:
-            sResult = QString("CAB");
-            break;
-        case RECORD_NAME_CARBON:
-            sResult = QString("Carbon");
-            break;
-        case RECORD_NAME_CAUSEWAY:
-            sResult = QString("CauseWay");
-            break;
-        case RECORD_NAME_CCBYUNIHACKERS:
-            sResult = QString("CC by UniHackers");
-            break;
-        case RECORD_NAME_CCBYVORONTSOV:
-            sResult = QString("CC by Vorontsov");
-            break;
-        case RECORD_NAME_CCPP:
-            sResult = QString("C/C++");
-            break;
-        case RECORD_NAME_CELESTYFILEBINDER:
-            sResult = QString("Celesty File Binder");
-            break;
-        case RECORD_NAME_CEXE:
-            sResult = QString("CExe");
-            break;
-        case RECORD_NAME_CHROMIUMCRASHPAD:
-            sResult = QString("Chromium Crashpad");
-            break;
-        case RECORD_NAME_CIGICIGICRYPTER:
-            sResult = QString("Cigicigi Crypter");
-            break;
-        case RECORD_NAME_CIL:
-            sResult = QString("cil");
-            break;
-        case RECORD_NAME_CLANG:
-            sResult = QString("clang");
-            break;
-        case RECORD_NAME_CLICKTEAM:
-            sResult = QString("ClickTeam");
-            break;
-        case RECORD_NAME_CLISECURE:
-            sResult = QString("CliSecure");
-            break;
-        case RECORD_NAME_COCOA:
-            sResult = QString("Cocoa");
-            break;
-        case RECORD_NAME_CODEGEARCPP:
-            sResult = QString("CodeGear C++");
-            break;
-        case RECORD_NAME_CODEGEARCPPBUILDER:
-            sResult = QString("CodeGear C++ Builder");
-            break;
-        case RECORD_NAME_CODEGEARDELPHI:
-            sResult = QString("CodeGear Delphi");
-            break;
-        case RECORD_NAME_CODEGEAROBJECTPASCALDELPHI:
-            sResult = QString("Codegear Object Pascal(Delphi)");
-            break;
-        case RECORD_NAME_CODESIGN:
-            sResult = QString("codesign");
-            break;
-        case RECORD_NAME_CODEVEIL:
-            sResult = QString("CodeVeil");
-            break;
-        case RECORD_NAME_CODEWALL:
-            sResult = QString("CodeWall");
-            break;
-        case RECORD_NAME_COFF:
-            sResult = QString("COFF");
-            break;
-        case RECORD_NAME_COMEXSIGNAPK:
-            sResult = QString("COMEX SignApk");
-            break;
-        case RECORD_NAME_COMPOUNDFILEBINARYFORMAT:
-            sResult = QString("Compound File Binary Format");
-            break;
-        case RECORD_NAME_CONFUSER:
-            sResult = QString("Confuser");
-            break;
-        case RECORD_NAME_CONFUSEREX:
-            sResult = QString("ConfuserEx");
-            break;
-        case RECORD_NAME_COPYMINDER:
-            sResult = QString("CopyMinder");
-            break;
-        case RECORD_NAME_CPP:
-            sResult = QString("C++");
-            break;
-        case RECORD_NAME_CREATEINSTALL:
-            sResult = QString("CreateInstall");
-            break;
-        case RECORD_NAME_CRINKLER:
-            sResult = QString("Crinkler");
-            break;
-        case RECORD_NAME_CRUNCH:
-            sResult = QString("Crunch");
-            break;
-        case RECORD_NAME_CRYEXE:
-            sResult = QString("CryEXE");
-            break;
-        case RECORD_NAME_CRYPTABLESEDUCATION:
-            sResult = QString("Cryptable Seduction");
-            break;
-        case RECORD_NAME_CRYPTCOM:
-            sResult = QString("CryptCom");
-            break;
-        case RECORD_NAME_CRYPTDISMEMBER:
-            sResult = QString("Crypt(Dismember)");
-            break;
-        case RECORD_NAME_CRYPTER:
-            sResult = QString("Crypter");
-            break;
-        case RECORD_NAME_CRYPTIC:
-            sResult = QString("Cryptic");
-            break;
-        case RECORD_NAME_CRYPTOCRACKPEPROTECTOR:
-            sResult = QString("CrypToCrack Pe Protector");
-            break;
-        case RECORD_NAME_CRYPTOOBFUSCATORFORNET:
-            sResult = QString("Crypto Obfuscator For .Net");
-            break;
-        case RECORD_NAME_CRYPTORBYDISMEMBER:
-            sResult = QString("Cryptor by Dismember");
-            break;
-        case RECORD_NAME_CRYPTOZ:
-            sResult = QString("CRyptOZ");
-            break;
-        case RECORD_NAME_CRYPTRROADS:
-            sResult = QString("Crypt R.roads");
-            break;
-        case RECORD_NAME_CSHARP:
-            sResult = QString("C#");
-            break;
-        case RECORD_NAME_CVTOMF:
-            sResult = QString("CVTOMF");
-            break;
-        case RECORD_NAME_CVTPGD:
-            sResult = QString("Cvtpgd");
-            break;
-        case RECORD_NAME_CVTRES:
-            sResult = QString("CVTRES");
-            break;
-        case RECORD_NAME_CWSDPMI:
-            sResult = QString("CWSDPMI");
-            break;
-        case RECORD_NAME_CYGWIN:
-            sResult = QString("Cygwin");
-            break;
-        case RECORD_NAME_D2JAPKSIGN:
-            sResult = QString("d2j-apk-sign");
-            break;
-        case RECORD_NAME_D:
-            sResult = QString("D");
-            break;
-        case RECORD_NAME_DALKRYPT:
-            sResult = QString("DalKrypt");
-            break;
-        case RECORD_NAME_DALVIK:
-            sResult = QString("Dalvik");
-            break;
-        case RECORD_NAME_DBPE:
-            sResult = QString("DBPE");
-            break;
-        case RECORD_NAME_DCRYPTPRIVATE:
-            sResult = QString("DCrypt Private");
-            break;
-        case RECORD_NAME_DEB:
-            sResult = QString("DEB");
-            break;
-        case RECORD_NAME_DEBIANCLANG:
-            sResult = QString("Debian clang");
-            break;
-        case RECORD_NAME_DEBIANLINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_DEBIANLINUX);
-            break;
-        case RECORD_NAME_DEEPSEA:
-            sResult = QString("DeepSea");
-            break;
-        case RECORD_NAME_DEPACK:
-            sResult = QString("dePack");
-            break;
-        case RECORD_NAME_DEPLOYMASTER:
-            sResult = QString("DeployMaster");
-            break;
-        case RECORD_NAME_DEX2JAR:
-            sResult = QString("dex2jar");
-            break;
-        case RECORD_NAME_DEX:
-            sResult = QString("DEX");
-            break;
-        case RECORD_NAME_DEXGUARD:
-            sResult = QString("DexGuard");
-            break;
-        case RECORD_NAME_DEXLIB2:
-            sResult = QString("dexlib2");
-            break;
-        case RECORD_NAME_DEXLIB:
-            sResult = QString("dexlib");
-            break;
-        case RECORD_NAME_DEXMERGE:
-            sResult = QString("DexMerge");
-            break;
-        case RECORD_NAME_DEXPROTECTOR:
-            sResult = QString("DexProtector");
-            break;
-        case RECORD_NAME_DIET:
-            sResult = QString("DIET");
-            break;
-        case RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR:
-            sResult = QString("Dingbaozeng native obfuscator");
-            break;
-        case RECORD_NAME_DIRTYCRYPTOR:
-            sResult = QString("DirTy Cryptor");
-            break;
-        case RECORD_NAME_DJVU:
-            sResult = QString("DjVu");
-            break;
-        case RECORD_NAME_DMD32D:
-            sResult = QString("DMD32 D");
-            break;
-        case RECORD_NAME_DNGUARD:
-            sResult = QString("DNGuard");
-            break;
-        case RECORD_NAME_DOS16M:
-            sResult = QString("DOS/16M");
-            break;
-        case RECORD_NAME_DOS4G:
-            sResult = QString("DOS/4G");
-            break;
-        case RECORD_NAME_DOTBJFNT:
-            sResult = QString(".BJFnt");
-            break;
-        case RECORD_NAME_DOTFIXNICEPROTECT:
-            sResult = QString("DotFix Nice Protect");
-            break;
-        case RECORD_NAME_DOTFUSCATOR:
-            sResult = QString("Dotfuscator");
-            break;
-        case RECORD_NAME_DOTNET:
-            sResult = QString(".NET");
-            break;
-        case RECORD_NAME_DOTNETREACTOR:
-            sResult = QString(".NET Reactor");
-            break;
-        case RECORD_NAME_DOTNETSHRINK:
-            sResult = QString(".netshrink");
-            break;
-        case RECORD_NAME_DOTNETSPIDER:
-            sResult = QString(".NET Spider");
-            break;
-        case RECORD_NAME_DOTNETZ:
-            sResult = QString(".NETZ");
-            break;
-        case RECORD_NAME_DOTOOLSSIGNAPK:
-            sResult = QString("dotools sign apk");
-            break;
-        case RECORD_NAME_DRAGONARMOR:
-            sResult = QString("DragonArmor");
-            break;
-        case RECORD_NAME_DROPBOX:
-            sResult = QString("Dropbox");
-            break;
-        case RECORD_NAME_DVCLAL:
-            sResult = QString("DVCLAL");
-            break;
-        case RECORD_NAME_DX:
-            sResult = QString("dx");
-            break;
-        case RECORD_NAME_DXSHIELD:
-            sResult = QString("DxShield");
-            break;
-        case RECORD_NAME_DYAMAR:
-            sResult = QString("DYAMAR");
-            break;
-        case RECORD_NAME_DYNASM:
-            sResult = QString("DynASM");
-            break;
-        case RECORD_NAME_EASYPROTECTOR:
-            sResult = QString("EasyProtector");
-            break;
-        case RECORD_NAME_EAZFUSCATOR:
-            sResult = QString("Eazfuscator");
-            break;
-        case RECORD_NAME_ECLIPSE:
-            sResult = QString("Eclipse");
-            break;
-        case RECORD_NAME_ECMASCRIPT:
-            sResult = QString("ECMAScript");
-            break;
-        case RECORD_NAME_ELECKEY:
-            sResult = QString("ElecKey");
-            break;
-        case RECORD_NAME_EMBARCADEROCPP:
-            sResult = QString("Embarcadero C++");
-            break;
-        case RECORD_NAME_EMBARCADEROCPPBUILDER:
-            sResult = QString("Embarcadero C++ Builder");
-            break;
-        case RECORD_NAME_EMBARCADERODELPHI:
-            sResult = QString("Embarcadero Delphi");
-            break;
-        case RECORD_NAME_EMBARCADERODELPHIDOTNET:
-            sResult = QString("Embarcadero Delphi .NET");
-            break;
-        case RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI:
-            sResult = QString("Embarcadero Object Pascal(Delphi)");
-            break;
-        case RECORD_NAME_EMPTYFILE:
-            sResult = QString("Empty File");
-            break;
-        case RECORD_NAME_ENCRYPTPE:
-            sResult = QString("EncryptPE");
-            break;
-        case RECORD_NAME_ENIGMA:
-            sResult = QString("ENIGMA");
-            break;
-        case RECORD_NAME_ENIGMAVIRTUALBOX:
-            sResult = QString("Enigma Virtual Box");
-            break;
-        case RECORD_NAME_EPEXEPACK:
-            sResult = QString("!EP(EXE Pack)");
-            break;
-        case RECORD_NAME_EPROT:
-            sResult = QString("!EProt");
-            break;
-        case RECORD_NAME_EXCELSIORJET:
-            sResult = QString("Excelsior JET");
-            break;
-        case RECORD_NAME_EXE32PACK:
-            sResult = QString("exe32pack");
-            break;
-        case RECORD_NAME_EXECRYPT:
-            sResult = QString("EXECrypt");
-            break;
-        case RECORD_NAME_EXECRYPTOR:
-            sResult = QString("EXECryptor");
-            break;
-        case RECORD_NAME_EXEFOG:
-            sResult = QString("ExeFog");
-            break;
-        case RECORD_NAME_EXEJOINER:
-            sResult = QString("ExeJoiner");
-            break;
-        case RECORD_NAME_EXEMPLARINSTALLER:
-            sResult = QString("Exemplar Installer");
-            break;
-        case RECORD_NAME_EXEPACK:
-            sResult = QString("EXEPACK");
-            break;
-        case RECORD_NAME_EXEPASSWORDPROTECTOR:
-            sResult = QString("EXE Password Protector");
-            break;
-        case RECORD_NAME_EXESAX:
-            sResult = QString("ExeSax");
-            break;
-        case RECORD_NAME_EXESHIELD:
-            sResult = QString("Exe Shield");
-            break;
-        case RECORD_NAME_EXESTEALTH:
-            sResult = QString("ExeStealth");
-            break;
-        case RECORD_NAME_EXPORT:
-            sResult = QString("Export");
-            break;
-        case RECORD_NAME_EXPRESSOR:
-            sResult = QString("eXPressor");
-            break;
-        case RECORD_NAME_EXPRESSOR_KERNEL32:
-            sResult = QString("eXPressor[Kernel32]");
-            break;
-        case RECORD_NAME_EXPRESSOR_USER32:
-            sResult = QString("eXPressor[User32]");
-            break;
-        case RECORD_NAME_EZIP:
-            sResult = QString("EZIP");
-            break;
-        case RECORD_NAME_FAKESIGNATURE:
-            sResult = QString("Fake signature");
-            break;
-        case RECORD_NAME_FAKUSCRYPTOR:
-            sResult = QString("Fakus Cryptor");
-            break;
-        case RECORD_NAME_FASM:
-            sResult = QString("FASM");
-            break;
-        case RECORD_NAME_FASTFILECRYPT:
-            sResult = QString("Fast File Crypt");
-            break;
-        case RECORD_NAME_FASTPROXY:
-            sResult = QString("fast-proxy");
-            break;
-        case RECORD_NAME_FEARZCRYPTER:
-            sResult = QString("fEaRz Crypter");
-            break;
-        case RECORD_NAME_FEARZPACKER:
-            sResult = QString("fEaRz Packer");
-            break;
-        case RECORD_NAME_FENIXOS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_FENIXOS);
-            break;
-        case RECORD_NAME_FILESHIELD:
-            sResult = QString("FileShield");
-            break;
-        case RECORD_NAME_FISHNET:
-            sResult = QString("FISH .NET");
-            break;
+        case RECORD_NAME_UNKNOWN: sResult = tr("Unknown"); break;
+        case RECORD_NAME_12311134: sResult = QString("12311134"); break;
+        case RECORD_NAME_1337EXECRYPTER: sResult = QString("1337 Exe Crypter"); break;
+        case RECORD_NAME_32LITE: sResult = QString("32Lite"); break;
+        case RECORD_NAME_7Z: sResult = QString("7-Zip"); break;
+        case RECORD_NAME_AASE: sResult = QString("Aase"); break;
+        case RECORD_NAME_ABCCRYPTOR: sResult = QString("ABC Cryptor"); break;
+        case RECORD_NAME_ACPROTECT: sResult = QString("ACProtect"); break;
+        case RECORD_NAME_ACTIVEMARK: sResult = QString("ActiveMARK"); break;
+        case RECORD_NAME_ACTUALINSTALLER: sResult = QString("Actual Installer"); break;
+        case RECORD_NAME_ADVANCEDINSTALLER: sResult = QString("Advanced Installer"); break;
+        case RECORD_NAME_ADVANCEDUPXSCRAMMBLER: sResult = QString("Advanced UPX Scrammbler"); break;
+        case RECORD_NAME_AESOBFUSCATOR: sResult = QString("AESObfuscator"); break;
+        case RECORD_NAME_AFFILLIATEEXE: sResult = QString("AffilliateEXE"); break;
+        case RECORD_NAME_AGAINNATIVITYCRYPTER: sResult = QString("Again Nativity Crypter"); break;
+        case RECORD_NAME_AGILENET: sResult = QString("Agile .NET"); break;
+        case RECORD_NAME_AHPACKER: sResult = QString("AHPacker"); break;
+        case RECORD_NAME_AHTEAMEPPROTECTOR: sResult = QString("AHTeam EP Protector"); break;
+        case RECORD_NAME_AINEXE: sResult = QString("AINEXE"); break;
+        case RECORD_NAME_AIX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_AIX); break;
+        case RECORD_NAME_ALCHEMYMINDWORKS: sResult = QString("Alchemy Mindworks"); break;
+        case RECORD_NAME_ALEXPROTECTOR: sResult = QString("Alex Protector"); break;
+        case RECORD_NAME_ALIASOBJ: sResult = QString("ALIASOBJ"); break;
+        case RECORD_NAME_ALIBABACLANG: sResult = QString("Alibaba clang"); break;
+        case RECORD_NAME_ALIBABAPROTECTION: sResult = QString("Alibaba Protection"); break;
+        case RECORD_NAME_ALIPAYCLANG: sResult = QString("Alipay clang"); break;
+        case RECORD_NAME_ALIPAYOBFUSCATOR: sResult = QString("Alipay Obfuscator"); break;
+        case RECORD_NAME_ALLATORIOBFUSCATOR: sResult = QString("Allatori Obfuscator"); break;
+        case RECORD_NAME_ALLOY: sResult = QString("Alloy"); break;
+        case RECORD_NAME_ALPINECLANG: sResult = QString("Alpine clang"); break;
+        case RECORD_NAME_ALPINELINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_ALPINELINUX); break;
+        case RECORD_NAME_ANDPAKK2: sResult = QString("ANDpakk2"); break;
+        case RECORD_NAME_ANDROID: sResult = XBinary::osNameIdToString(XBinary::OSNAME_ANDROID); break;
+        case RECORD_NAME_ANDROIDAPKSIGNER: sResult = QString("Android apksigner"); break;
+        case RECORD_NAME_ANDROIDARSC: sResult = QString("Android ARSC"); break;
+        case RECORD_NAME_ANDROIDCLANG: sResult = QString("Android clang"); break;
+        case RECORD_NAME_ANDROIDGRADLE: sResult = QString("Android Gradle"); break;
+        case RECORD_NAME_ANDROIDJETPACK: sResult = QString("Android Jetpack"); break;
+        case RECORD_NAME_ANDROIDMAVENPLUGIN: sResult = QString("Android Maven Plugin"); break;
+        case RECORD_NAME_ANDROIDNDK: sResult = QString("Android NDK"); break;
+        case RECORD_NAME_ANDROIDSDK: sResult = QString("Android SDK"); break;
+        case RECORD_NAME_ANDROIDSIGNAPK: sResult = QString("Android SignApk"); break;
+        case RECORD_NAME_ANDROIDXML: sResult = QString("Android XML"); break;
+        case RECORD_NAME_ANSKYAPOLYMORPHICPACKER: sResult = QString("Anskya Polymorphic Packer"); break;
+        case RECORD_NAME_ANSLYMPACKER: sResult = QString("AnslymPacker"); break;
+        case RECORD_NAME_ANTIDOTE: sResult = QString("AntiDote"); break;
+        case RECORD_NAME_ANTILVL: sResult = QString("AntiLVL"); break;
+        case RECORD_NAME_APACHEANT: sResult = QString("Apache Ant"); break;
+        case RECORD_NAME_APACK: sResult = QString("aPACK"); break;
+        case RECORD_NAME_APKEDITOR: sResult = QString("ApkEditor"); break;
+        case RECORD_NAME_APKENCRYPTOR: sResult = QString("ApkEncryptor"); break;
+        case RECORD_NAME_APKMODIFIERSIGNAPK: sResult = QString("ApkModifier SignApk"); break;
+        case RECORD_NAME_APKPROTECT: sResult = QString("APKProtect"); break;
+        case RECORD_NAME_APKPROTECTOR: sResult = QString("ApkProtector"); break;
+        case RECORD_NAME_APKS: sResult = QString("APKS"); break;
+        case RECORD_NAME_APKSIGNATURESCHEME: sResult = QString("APK Signature Scheme"); break;
+        case RECORD_NAME_APKSIGNER: sResult = QString("ApkSigner"); break;
+        case RECORD_NAME_APKTOOLPLUS: sResult = QString("ApkToolPlus"); break;
+        case RECORD_NAME_APK_SIGNER: sResult = QString("apk-signer"); break;
+        case RECORD_NAME_APPGUARD: sResult = QString("AppGuard"); break;
+        case RECORD_NAME_APPIMAGE: sResult = QString("AppImage"); break;
+        case RECORD_NAME_APPLEJDK: sResult = QString("Apple JDK"); break;
+        case RECORD_NAME_APPLELLVM: sResult = QString("Apple LLVM"); break;
+        case RECORD_NAME_APPORTABLECLANG: sResult = QString("Apportable clang"); break;
+        case RECORD_NAME_APPSOLID: sResult = QString("AppSolid"); break;
+        case RECORD_NAME_AR: sResult = QString("ar"); break;
+        case RECORD_NAME_ARCRYPT: sResult = QString("AR Crypt"); break;
+        case RECORD_NAME_ARJ: sResult = QString("ARJ"); break;
+        case RECORD_NAME_ARMADILLO: sResult = QString("Armadillo"); break;
+        case RECORD_NAME_ARMASSEMBLER: sResult = QString("ARM Assembler"); break;
+        case RECORD_NAME_ARMC: sResult = QString("ARM C"); break;
+        case RECORD_NAME_ARMCCPP: sResult = QString("ARM C/C++"); break;
+        case RECORD_NAME_ARMLINKER: sResult = QString("ARM Linker"); break;
+        case RECORD_NAME_ARMNEONCCPP: sResult = QString("ARM NEON C/C++"); break;
+        case RECORD_NAME_ARMPROTECTOR: sResult = QString("ARM Protector"); break;
+        case RECORD_NAME_ARMTHUMBCCPP: sResult = QString("ARM/Thumb C/C++"); break;
+        case RECORD_NAME_ARMTHUMBMACROASSEMBLER: sResult = QString("ARM/Thumb Macro Assembler"); break;
+        case RECORD_NAME_AROS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_AROS); break;
+        case RECORD_NAME_ARXAN: sResult = QString("Arxan"); break;
+        case RECORD_NAME_ASDPACK: sResult = QString("ASDPack"); break;
+        case RECORD_NAME_ASPACK: sResult = QString("ASPack"); break;
+        case RECORD_NAME_ASPLINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_ASPLINUX); break;
+        case RECORD_NAME_ASPROTECT: sResult = QString("ASProtect"); break;
+        case RECORD_NAME_ASSCRYPTER: sResult = QString("Ass Crypter"); break;
+        case RECORD_NAME_ASSEMBLER: sResult = QString("Assembler"); break;
+        case RECORD_NAME_ASSEMBLYINVOKE: sResult = QString("AssemblyInvoke"); break;
+        case RECORD_NAME_AU: sResult = QString("AU"); break;
+        case RECORD_NAME_AUTOIT: sResult = QString("AutoIt"); break;
+        case RECORD_NAME_AVASTANTIVIRUS: sResult = QString("Avast Antivirus"); break;
+        case RECORD_NAME_AVERCRYPTOR: sResult = QString("AverCryptor"); break;
+        case RECORD_NAME_AVI: sResult = QString("AVI"); break;
+        case RECORD_NAME_AVPACK: sResult = QString("AVPACK"); break;
+        case RECORD_NAME_AZPROTECT: sResult = QString("AZProtect"); break;
+        case RECORD_NAME_BABELNET: sResult = QString("Babel .NET"); break;
+        case RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR: sResult = QString("Backdoor PE Compress Protector"); break;
+        case RECORD_NAME_BAIDUPROTECTION: sResult = QString("Baidu Protection"); break;
+        case RECORD_NAME_BAIDUSIGNATUREPLATFORM: sResult = QString("Baidu Signature platform"); break;
+        case RECORD_NAME_BAMBAM: sResult = QString("bambam"); break;
+        case RECORD_NAME_BANGCLEPROTECTION: sResult = QString("Bangcle Protection"); break;
+        case RECORD_NAME_BASIC4ANDROID: sResult = QString("Basic4Android"); break;
+        case RECORD_NAME_BASIC: sResult = QString("BASIC"); break;
+        case RECORD_NAME_BAT2EXEC: sResult = QString("BAT2EXEC"); break;
+        case RECORD_NAME_BEAWEBLOGIC: sResult = QString("BEA WebLogic"); break;
+        case RECORD_NAME_BEROEXEPACKER: sResult = QString("BeRoEXEPacker"); break;
+        case RECORD_NAME_BIOHAZARDCRYPTER: sResult = QString("Biohazard Crypter"); break;
+        case RECORD_NAME_BITMAPINFOHEADER: sResult = QString("Bitmap Info Header"); break;
+        case RECORD_NAME_BITROCKINSTALLER: sResult = QString("BitRock Installer"); break;
+        case RECORD_NAME_BITSHAPEPECRYPT: sResult = QString("BitShape PE Crypt"); break;
+        case RECORD_NAME_BLADEJOINER: sResult = QString("Blade Joiner"); break;
+        case RECORD_NAME_BORLANDCCPP: sResult = QString("Borland C/C++"); break;
+        case RECORD_NAME_BORLANDCPP: sResult = QString("Borland C++"); break;
+        case RECORD_NAME_BORLANDCPPBUILDER: sResult = QString("Borland C++ Builder"); break;
+        case RECORD_NAME_BORLANDDELPHI: sResult = QString("Borland Delphi"); break;
+        case RECORD_NAME_BORLANDDELPHIDOTNET: sResult = QString("Borland Delphi .NET"); break;
+        case RECORD_NAME_BORLANDOBJECTPASCALDELPHI: sResult = QString("Borland Object Pascal(Delphi)"); break;
+        case RECORD_NAME_BORLANDOSSERVICES: sResult = XBinary::osNameIdToString(XBinary::OSNAME_BORLANDOSSERVICES); break;
+        case RECORD_NAME_BREAKINTOPATTERN: sResult = QString("Break Into Pattern"); break;
+        case RECORD_NAME_BRIDGEOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_BRIDGEOS); break;
+        case RECORD_NAME_BRIDGEOSSDK: sResult = QString("bridgeOS SDK"); break;
+        case RECORD_NAME_BTWORKSCODEGUARD: sResult = QString("Btworks CodeGuard"); break;
+        case RECORD_NAME_BUNDLETOOL: sResult = QString("BundleTool"); break;
+        case RECORD_NAME_BURNEYE: sResult = QString("Burneye"); break;
+        case RECORD_NAME_BYTEDANCESECCOMPILER: sResult = QString("ByteDance-SecCompiler"); break;
+        case RECORD_NAME_BYTEGUARD: sResult = QString("ByteGuard"); break;
+        case RECORD_NAME_BZIP2: sResult = QString("bzip2"); break;
+        case RECORD_NAME_C: sResult = QString("C"); break;
+        case RECORD_NAME_CAB: sResult = QString("CAB"); break;
+        case RECORD_NAME_CARBON: sResult = QString("Carbon"); break;
+        case RECORD_NAME_CAUSEWAY: sResult = QString("CauseWay"); break;
+        case RECORD_NAME_CCBYUNIHACKERS: sResult = QString("CC by UniHackers"); break;
+        case RECORD_NAME_CCBYVORONTSOV: sResult = QString("CC by Vorontsov"); break;
+        case RECORD_NAME_CCPP: sResult = QString("C/C++"); break;
+        case RECORD_NAME_CELESTYFILEBINDER: sResult = QString("Celesty File Binder"); break;
+        case RECORD_NAME_CEXE: sResult = QString("CExe"); break;
+        case RECORD_NAME_CHROMIUMCRASHPAD: sResult = QString("Chromium Crashpad"); break;
+        case RECORD_NAME_CIGICIGICRYPTER: sResult = QString("Cigicigi Crypter"); break;
+        case RECORD_NAME_CIL: sResult = QString("cil"); break;
+        case RECORD_NAME_CLANG: sResult = QString("clang"); break;
+        case RECORD_NAME_CLICKTEAM: sResult = QString("ClickTeam"); break;
+        case RECORD_NAME_CLISECURE: sResult = QString("CliSecure"); break;
+        case RECORD_NAME_COCOA: sResult = QString("Cocoa"); break;
+        case RECORD_NAME_CODEGEARCPP: sResult = QString("CodeGear C++"); break;
+        case RECORD_NAME_CODEGEARCPPBUILDER: sResult = QString("CodeGear C++ Builder"); break;
+        case RECORD_NAME_CODEGEARDELPHI: sResult = QString("CodeGear Delphi"); break;
+        case RECORD_NAME_CODEGEAROBJECTPASCALDELPHI: sResult = QString("Codegear Object Pascal(Delphi)"); break;
+        case RECORD_NAME_CODESIGN: sResult = QString("codesign"); break;
+        case RECORD_NAME_CODEVEIL: sResult = QString("CodeVeil"); break;
+        case RECORD_NAME_CODEWALL: sResult = QString("CodeWall"); break;
+        case RECORD_NAME_COFF: sResult = QString("COFF"); break;
+        case RECORD_NAME_COMEXSIGNAPK: sResult = QString("COMEX SignApk"); break;
+        case RECORD_NAME_COMPOUNDFILEBINARYFORMAT: sResult = QString("Compound File Binary Format"); break;
+        case RECORD_NAME_CONFUSER: sResult = QString("Confuser"); break;
+        case RECORD_NAME_CONFUSEREX: sResult = QString("ConfuserEx"); break;
+        case RECORD_NAME_COPYMINDER: sResult = QString("CopyMinder"); break;
+        case RECORD_NAME_CPP: sResult = QString("C++"); break;
+        case RECORD_NAME_CREATEINSTALL: sResult = QString("CreateInstall"); break;
+        case RECORD_NAME_CRINKLER: sResult = QString("Crinkler"); break;
+        case RECORD_NAME_CRUNCH: sResult = QString("Crunch"); break;
+        case RECORD_NAME_CRYEXE: sResult = QString("CryEXE"); break;
+        case RECORD_NAME_CRYPTABLESEDUCATION: sResult = QString("Cryptable Seduction"); break;
+        case RECORD_NAME_CRYPTCOM: sResult = QString("CryptCom"); break;
+        case RECORD_NAME_CRYPTDISMEMBER: sResult = QString("Crypt(Dismember)"); break;
+        case RECORD_NAME_CRYPTER: sResult = QString("Crypter"); break;
+        case RECORD_NAME_CRYPTIC: sResult = QString("Cryptic"); break;
+        case RECORD_NAME_CRYPTOCRACKPEPROTECTOR: sResult = QString("CrypToCrack Pe Protector"); break;
+        case RECORD_NAME_CRYPTOOBFUSCATORFORNET: sResult = QString("Crypto Obfuscator For .Net"); break;
+        case RECORD_NAME_CRYPTORBYDISMEMBER: sResult = QString("Cryptor by Dismember"); break;
+        case RECORD_NAME_CRYPTOZ: sResult = QString("CRyptOZ"); break;
+        case RECORD_NAME_CRYPTRROADS: sResult = QString("Crypt R.roads"); break;
+        case RECORD_NAME_CSHARP: sResult = QString("C#"); break;
+        case RECORD_NAME_CVTOMF: sResult = QString("CVTOMF"); break;
+        case RECORD_NAME_CVTPGD: sResult = QString("Cvtpgd"); break;
+        case RECORD_NAME_CVTRES: sResult = QString("CVTRES"); break;
+        case RECORD_NAME_CWSDPMI: sResult = QString("CWSDPMI"); break;
+        case RECORD_NAME_CYGWIN: sResult = QString("Cygwin"); break;
+        case RECORD_NAME_D2JAPKSIGN: sResult = QString("d2j-apk-sign"); break;
+        case RECORD_NAME_D: sResult = QString("D"); break;
+        case RECORD_NAME_DALKRYPT: sResult = QString("DalKrypt"); break;
+        case RECORD_NAME_DALVIK: sResult = QString("Dalvik"); break;
+        case RECORD_NAME_DBPE: sResult = QString("DBPE"); break;
+        case RECORD_NAME_DCRYPTPRIVATE: sResult = QString("DCrypt Private"); break;
+        case RECORD_NAME_DEB: sResult = QString("DEB"); break;
+        case RECORD_NAME_DEBIANCLANG: sResult = QString("Debian clang"); break;
+        case RECORD_NAME_DEBIANLINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_DEBIANLINUX); break;
+        case RECORD_NAME_DEEPSEA: sResult = QString("DeepSea"); break;
+        case RECORD_NAME_DEPACK: sResult = QString("dePack"); break;
+        case RECORD_NAME_DEPLOYMASTER: sResult = QString("DeployMaster"); break;
+        case RECORD_NAME_DEX2JAR: sResult = QString("dex2jar"); break;
+        case RECORD_NAME_DEX: sResult = QString("DEX"); break;
+        case RECORD_NAME_DEXGUARD: sResult = QString("DexGuard"); break;
+        case RECORD_NAME_DEXLIB2: sResult = QString("dexlib2"); break;
+        case RECORD_NAME_DEXLIB: sResult = QString("dexlib"); break;
+        case RECORD_NAME_DEXMERGE: sResult = QString("DexMerge"); break;
+        case RECORD_NAME_DEXPROTECTOR: sResult = QString("DexProtector"); break;
+        case RECORD_NAME_DIET: sResult = QString("DIET"); break;
+        case RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR: sResult = QString("Dingbaozeng native obfuscator"); break;
+        case RECORD_NAME_DIRTYCRYPTOR: sResult = QString("DirTy Cryptor"); break;
+        case RECORD_NAME_DJVU: sResult = QString("DjVu"); break;
+        case RECORD_NAME_DMD32D: sResult = QString("DMD32 D"); break;
+        case RECORD_NAME_DNGUARD: sResult = QString("DNGuard"); break;
+        case RECORD_NAME_DOS16M: sResult = QString("DOS/16M"); break;
+        case RECORD_NAME_DOS4G: sResult = QString("DOS/4G"); break;
+        case RECORD_NAME_DOTBJFNT: sResult = QString(".BJFnt"); break;
+        case RECORD_NAME_DOTFIXNICEPROTECT: sResult = QString("DotFix Nice Protect"); break;
+        case RECORD_NAME_DOTFUSCATOR: sResult = QString("Dotfuscator"); break;
+        case RECORD_NAME_DOTNET: sResult = QString(".NET"); break;
+        case RECORD_NAME_DOTNETREACTOR: sResult = QString(".NET Reactor"); break;
+        case RECORD_NAME_DOTNETSHRINK: sResult = QString(".netshrink"); break;
+        case RECORD_NAME_DOTNETSPIDER: sResult = QString(".NET Spider"); break;
+        case RECORD_NAME_DOTNETZ: sResult = QString(".NETZ"); break;
+        case RECORD_NAME_DOTOOLSSIGNAPK: sResult = QString("dotools sign apk"); break;
+        case RECORD_NAME_DRAGONARMOR: sResult = QString("DragonArmor"); break;
+        case RECORD_NAME_DROPBOX: sResult = QString("Dropbox"); break;
+        case RECORD_NAME_DVCLAL: sResult = QString("DVCLAL"); break;
+        case RECORD_NAME_DX: sResult = QString("dx"); break;
+        case RECORD_NAME_DXSHIELD: sResult = QString("DxShield"); break;
+        case RECORD_NAME_DYAMAR: sResult = QString("DYAMAR"); break;
+        case RECORD_NAME_DYNASM: sResult = QString("DynASM"); break;
+        case RECORD_NAME_EASYPROTECTOR: sResult = QString("EasyProtector"); break;
+        case RECORD_NAME_EAZFUSCATOR: sResult = QString("Eazfuscator"); break;
+        case RECORD_NAME_ECLIPSE: sResult = QString("Eclipse"); break;
+        case RECORD_NAME_ECMASCRIPT: sResult = QString("ECMAScript"); break;
+        case RECORD_NAME_ELECKEY: sResult = QString("ElecKey"); break;
+        case RECORD_NAME_EMBARCADEROCPP: sResult = QString("Embarcadero C++"); break;
+        case RECORD_NAME_EMBARCADEROCPPBUILDER: sResult = QString("Embarcadero C++ Builder"); break;
+        case RECORD_NAME_EMBARCADERODELPHI: sResult = QString("Embarcadero Delphi"); break;
+        case RECORD_NAME_EMBARCADERODELPHIDOTNET: sResult = QString("Embarcadero Delphi .NET"); break;
+        case RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI: sResult = QString("Embarcadero Object Pascal(Delphi)"); break;
+        case RECORD_NAME_EMPTYFILE: sResult = QString("Empty File"); break;
+        case RECORD_NAME_ENCRYPTPE: sResult = QString("EncryptPE"); break;
+        case RECORD_NAME_ENIGMA: sResult = QString("ENIGMA"); break;
+        case RECORD_NAME_ENIGMAVIRTUALBOX: sResult = QString("Enigma Virtual Box"); break;
+        case RECORD_NAME_EPEXEPACK: sResult = QString("!EP(EXE Pack)"); break;
+        case RECORD_NAME_EPROT: sResult = QString("!EProt"); break;
+        case RECORD_NAME_EXCELSIORJET: sResult = QString("Excelsior JET"); break;
+        case RECORD_NAME_EXE32PACK: sResult = QString("exe32pack"); break;
+        case RECORD_NAME_EXECRYPT: sResult = QString("EXECrypt"); break;
+        case RECORD_NAME_EXECRYPTOR: sResult = QString("EXECryptor"); break;
+        case RECORD_NAME_EXEFOG: sResult = QString("ExeFog"); break;
+        case RECORD_NAME_EXEJOINER: sResult = QString("ExeJoiner"); break;
+        case RECORD_NAME_EXEMPLARINSTALLER: sResult = QString("Exemplar Installer"); break;
+        case RECORD_NAME_EXEPACK: sResult = QString("EXEPACK"); break;
+        case RECORD_NAME_EXEPASSWORDPROTECTOR: sResult = QString("EXE Password Protector"); break;
+        case RECORD_NAME_EXESAX: sResult = QString("ExeSax"); break;
+        case RECORD_NAME_EXESHIELD: sResult = QString("Exe Shield"); break;
+        case RECORD_NAME_EXESTEALTH: sResult = QString("ExeStealth"); break;
+        case RECORD_NAME_EXPORT: sResult = QString("Export"); break;
+        case RECORD_NAME_EXPRESSOR: sResult = QString("eXPressor"); break;
+        case RECORD_NAME_EXPRESSOR_KERNEL32: sResult = QString("eXPressor[Kernel32]"); break;
+        case RECORD_NAME_EXPRESSOR_USER32: sResult = QString("eXPressor[User32]"); break;
+        case RECORD_NAME_EZIP: sResult = QString("EZIP"); break;
+        case RECORD_NAME_FAKESIGNATURE: sResult = QString("Fake signature"); break;
+        case RECORD_NAME_FAKUSCRYPTOR: sResult = QString("Fakus Cryptor"); break;
+        case RECORD_NAME_FASM: sResult = QString("FASM"); break;
+        case RECORD_NAME_FASTFILECRYPT: sResult = QString("Fast File Crypt"); break;
+        case RECORD_NAME_FASTPROXY: sResult = QString("fast-proxy"); break;
+        case RECORD_NAME_FEARZCRYPTER: sResult = QString("fEaRz Crypter"); break;
+        case RECORD_NAME_FEARZPACKER: sResult = QString("fEaRz Packer"); break;
+        case RECORD_NAME_FENIXOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_FENIXOS); break;
+        case RECORD_NAME_FILESHIELD: sResult = QString("FileShield"); break;
+        case RECORD_NAME_FISHNET: sResult = QString("FISH .NET"); break;
         case RECORD_NAME_FISHPEPACKER:
             sResult = QString("Fish PE Packer");  // TODO Check name
             break;
-        case RECORD_NAME_FISHPESHIELD:
-            sResult = QString("FishPE Shield");
-            break;
-        case RECORD_NAME_FLASHVIDEO:
-            sResult = QString("Flash Video");
-            break;
-        case RECORD_NAME_FLEXLM:
-            sResult = QString("Flex License Manager");
-            break;
-        case RECORD_NAME_FLEXNET:
-            sResult = QString("FlexNet Licensing");
-            break;
-        case RECORD_NAME_FORTRAN:
-            sResult = QString("Fortran");
-            break;
-        case RECORD_NAME_FOUNDATION:
-            sResult = QString("Foundation");
-            break;
-        case RECORD_NAME_FPC:
-            sResult = QString("Free Pascal");
-            break;
-        case RECORD_NAME_FREEBSD:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_FREEBSD);
-            break;
-        case RECORD_NAME_FREECRYPTOR:
-            sResult = QString("FreeCryptor");
-            break;
-        case RECORD_NAME_FSG:
-            sResult = QString("FSG");
-            break;
-        case RECORD_NAME_GCC:
-            sResult = QString("GCC");
-            break;
-        case RECORD_NAME_GENERIC:
-            sResult = QString("Generic");
-            break;
-        case RECORD_NAME_GENERICLINKER:
-            sResult = QString("Generic Linker");
-            break;
-        case RECORD_NAME_GENTEEINSTALLER:
-            sResult = QString("Gentee Installer");
-            break;
-        case RECORD_NAME_GENTOOLINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_GENTOOLINUX);
-            break;
-        case RECORD_NAME_GHAZZACRYPTER:
-            sResult = QString("GhaZza CryPter");
-            break;  // st
-        case RECORD_NAME_GHOSTINSTALLER:
-            sResult = QString("Ghost Installer");
-            break;
-        case RECORD_NAME_GIF:
-            sResult = QString("GIF");
-            break;
-        case RECORD_NAME_GIXPROTECTOR:
-            sResult = QString("G!X Protector");
-            break;
-        case RECORD_NAME_GKRIPTO:
-            sResult = QString("GKripto");
-            break;
-        case RECORD_NAME_GKSETUPSFX:
-            sResult = QString("GkSetup SFX");
-            break;
-        case RECORD_NAME_GNUASSEMBLER:
-            sResult = QString("GNU Assembler");
-            break;
-        case RECORD_NAME_GNULINKER:
-            sResult = QString("GNU ld");
-            break;
-        case RECORD_NAME_GO:
-            sResult = QString("Go");
-            break;
-        case RECORD_NAME_GOASM:
-            sResult = QString("GoAsm");
-            break;
-        case RECORD_NAME_GOATSPEMUTILATOR:
-            sResult = QString("Goat's PE Mutilator");
-            break;
-        case RECORD_NAME_GOLD:
-            sResult = QString("gold");
-            break;
-        case RECORD_NAME_GOLIATHNET:
-            sResult = QString("Goliath .NET");
-            break;
-        case RECORD_NAME_GOLINK:
-            sResult = QString("GoLink");
-            break;
-        case RECORD_NAME_GOOGLE:
-            sResult = QString("Google");
-            break;
-        case RECORD_NAME_GOOGLEPLAY:
-            sResult = QString("Google Play");
-            break;
-        case RECORD_NAME_GPINSTALL:
-            sResult = QString("GP-Install");
-            break;
-        case RECORD_NAME_GUARDIANSTEALTH:
-            sResult = QString("Guardian Stealth");
-            break;
-        case RECORD_NAME_GZIP:
-            sResult = QString("GZIP");
-            break;
-        case RECORD_NAME_H4CKY0UORGCRYPTER:
-            sResult = QString("H4ck-y0u.org Crypter");
-            break;
-        case RECORD_NAME_HACCREWCRYPTER:
-            sResult = QString("HAC Crew Crypter");
-            break;
-        case RECORD_NAME_HACKSTOP:
-            sResult = QString("HackStop");
-            break;
-        case RECORD_NAME_HALVCRYPTER:
-            sResult = QString("HaLV Crypter");
-            break;
-        case RECORD_NAME_HANCOMLINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_HANCOMLINUX);
-            break;
-        case RECORD_NAME_HDUS_WJUS:
-            sResult = QString("Hdus-Wjus");
-            break;
-        case RECORD_NAME_HIAPKCOM:
-            sResult = QString("www.HiAPK.com");
-            break;
-        case RECORD_NAME_HIDEANDPROTECT:
-            sResult = QString("Hide&Protect");
-            break;
-        case RECORD_NAME_HIDEPE:
-            sResult = QString("HidePE");
-            break;
-        case RECORD_NAME_HIKARIOBFUSCATOR:
-            sResult = QString("HikariObfuscator");
-            break;
-        case RECORD_NAME_HMIMYSPACKER:
-            sResult = QString("Hmimys Packer");
-            break;
-        case RECORD_NAME_HMIMYSPROTECTOR:
-            sResult = QString("Hmimys's Protector");
-            break;
-        case RECORD_NAME_HOODLUM:
-            sResult = QString("HOODLUM");
-            break;
-        case RECORD_NAME_HOUNDHACKCRYPTER:
-            sResult = QString("Hound Hack Crypter");
-            break;
-        case RECORD_NAME_HPUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_HPUX);
-            break;
-        case RECORD_NAME_HTML:
-            sResult = QString("HTML");
-            break;
-        case RECORD_NAME_HXS:
-            sResult = QString("HXS");
-            break;
-        case RECORD_NAME_HYPERTECHCRACKPROOF:
-            sResult = QString("HyperTech Crackproof");
-            break;
-        case RECORD_NAME_IBMJDK:
-            sResult = QString("IBM JDK");
-            break;
-        case RECORD_NAME_IBMPCPASCAL:
-            sResult = QString("IBM PC Pascal");
-            break;
-        case RECORD_NAME_ICE:
-            sResult = QString("ICE");
-            break;
-        case RECORD_NAME_ICRYPT:
-            sResult = QString("ICrypt");
-            break;
-        case RECORD_NAME_IJIAMI:
-            sResult = QString("iJiami");
-            break;
-        case RECORD_NAME_IJIAMILLVM:
-            sResult = QString("iJiami LLVM");
-            break;
-        case RECORD_NAME_IKVMDOTNET:
-            sResult = QString("IKVM.NET");
-            break;
-        case RECORD_NAME_IL2CPP:
-            sResult = QString("IL2CPP");
-            break;
-        case RECORD_NAME_ILASM:
-            sResult = QString("ILAsm");
-            break;
-        case RECORD_NAME_IMPORT:
-            sResult = QString("Import");
-            break;
-        case RECORD_NAME_INFCRYPTOR:
-            sResult = QString("INF Cryptor");
-            break;
-        case RECORD_NAME_INNOSETUP:
-            sResult = QString("Inno Setup");
-            break;
-        case RECORD_NAME_INQUARTOSOBFUSCATOR:
-            sResult = QString("Inquartos Obfuscator");
-            break;
-        case RECORD_NAME_INSTALL4J:
-            sResult = QString("install4j");
-            break;
-        case RECORD_NAME_INSTALLANYWHERE:
-            sResult = QString("InstallAnywhere");
-            break;
-        case RECORD_NAME_INSTALLSHIELD:
-            sResult = QString("InstallShield");
-            break;
-        case RECORD_NAME_IOS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_IOS);
-            break;
-        case RECORD_NAME_IOSSDK:
-            sResult = QString("iOS SDK");
-            break;
-        case RECORD_NAME_IPA:
-            sResult = QString("iOS App Store Package");
-            break;
-        case RECORD_NAME_IPADOS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_IPADOS);
-            break;
-        case RECORD_NAME_IPHONEOS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_IPHONEOS);
-            break;
-        case RECORD_NAME_IPBPROTECT:
-            sResult = QString("iPB Protect");
-            break;
-        case RECORD_NAME_IRIX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_IRIX);
-            break;
-        case RECORD_NAME_ISO9660:
-            sResult = QString("ISO 9660");
-            break;
-        case RECORD_NAME_JACK:
-            sResult = QString("Jack");
-            break;
-        case RECORD_NAME_JAM:
-            sResult = QString("JAM");
-            break;
-        case RECORD_NAME_JAR:
-            sResult = QString("JAR");
-            break;
-        case RECORD_NAME_JAVA:
-            sResult = QString("Java");
-            break;
-        case RECORD_NAME_JAVACOMPILEDCLASS:
-            sResult = QString("Java compiled class");
-            break;
-        case RECORD_NAME_JDK:
-            sResult = QString("JDK");
-            break;
-        case RECORD_NAME_JDPACK:
-            sResult = QString("JDPack");
-            break;
-        case RECORD_NAME_JETBRAINS:
-            sResult = QString("JetBrains");
-            break;
-        case RECORD_NAME_JIAGU:
-            sResult = QString("jiagu");
-            break;
-        case RECORD_NAME_JPEG:
-            sResult = QString("JPEG");
-            break;
-        case RECORD_NAME_JSCRIPT:
-            sResult = QString("JScript");
-            break;
-        case RECORD_NAME_JVM:
-            sResult = QString("JVM");
-            break;
-        case RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER:
-            sResult = QString("KaOs PE-DLL eXecutable Undetecter");
-            break;
-        case RECORD_NAME_KBYS:
-            sResult = QString("KByS");
-            break;
-        case RECORD_NAME_KCRYPTOR:
-            sResult = QString("K!Cryptor");
-            break;
-        case RECORD_NAME_KGBCRYPTER:
-            sResult = QString("KGB Crypter");
-            break;
-        case RECORD_NAME_KIAMSCRYPTOR:
-            sResult = QString("KiAms Cryptor");
-            break;
-        case RECORD_NAME_KIRO:
-            sResult = QString("Kiro");
-            break;
-        case RECORD_NAME_KIWIVERSIONOBFUSCATOR:
-            sResult = QString("Kiwi Version Obfuscator");
-            break;
-        case RECORD_NAME_KKRUNCHY:
-            sResult = QString("kkrunchy");
-            break;
-        case RECORD_NAME_KOTLIN:
-            sResult = QString("Kotlin");
-            break;
-        case RECORD_NAME_KRATOSCRYPTER:
-            sResult = QString("Kratos Crypter");
-            break;
-        case RECORD_NAME_KRYPTON:
-            sResult = QString("Krypton");
-            break;
-        case RECORD_NAME_KUR0KX2TO:
-            sResult = QString("Kur0k.X2.to");
-            break;
-        case RECORD_NAME_LAMECRYPT:
-            sResult = QString("LameCrypt");
-            break;
-        case RECORD_NAME_LARP64:
-            sResult = QString("lARP64");
-            break;
-        case RECORD_NAME_LAYHEYFORTRAN90:
-            sResult = QString("Lahey Fortran 90");
-            break;
-        case RECORD_NAME_LAZARUS:
-            sResult = QString("Lazarus");
-            break;
-        case RECORD_NAME_LCCLNK:
-            sResult = QString("lcclnk");
-            break;
-        case RECORD_NAME_LCCWIN:
-            sResult = QString("lcc-win");
-            break;
-        case RECORD_NAME_LGLZ:
-            sResult = QString("LGLZ");
-            break;
-        case RECORD_NAME_LHA:
-            sResult = QString("LHA");
-            break;
-        case RECORD_NAME_LHASSFX:
-            sResult = QString("LHA's SFX");
-            break;
-        case RECORD_NAME_LIAPP:
-            sResult = QString("LIAPP");
-            break;
-        case RECORD_NAME_LIGHTNINGCRYPTERPRIVATE:
-            sResult = QString("Lightning Crypter Private");
-            break;
-        case RECORD_NAME_LIGHTNINGCRYPTERSCANTIME:
-            sResult = QString("Lightning Crypter ScanTime");
-            break;
-        case RECORD_NAME_LINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_LINUX);
-            break;
-        case RECORD_NAME_LLD:
-            sResult = QString("LDD");
-            break;
-        case RECORD_NAME_LOCKTITE:
-            sResult = QString("LockTite+");
-            break;
-        case RECORD_NAME_LSCRYPRT:
-            sResult = QString("LSCRYPT");
-            break;
-        case RECORD_NAME_LUACOMPILED:
-            sResult = QString("Lua compiled");
-            break;
-        case RECORD_NAME_LUCYPHER:
-            sResult = QString("LuCypher");
-            break;
-        case RECORD_NAME_LZEXE:
-            sResult = QString("LZEXE");
-            break;
-        case RECORD_NAME_LZFSE:
-            sResult = QString("LZFSE");
-            break;
-        case RECORD_NAME_MACHOFAT:
-            sResult = QString("Mach-O FAT");
-            break;
-        case RECORD_NAME_MAC_OS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MAC_OS);
-            break;
-        case RECORD_NAME_MAC_OS_X:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MAC_OS_X);
-            break;
-        case RECORD_NAME_MACOS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MACOS);
-            break;
-        case RECORD_NAME_MACOSSDK:
-            sResult = QString("macOS SDK");
-            break;
-        case RECORD_NAME_MACROBJECT:
-            sResult = QString("Macrobject");
-            break;
-        case RECORD_NAME_MALPACKER:
-            sResult = QString("Mal Packer");
-            break;
-        case RECORD_NAME_MANDRAKELINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MANDRAKELINUX);
-            break;
-        case RECORD_NAME_MASKPE:
-            sResult = QString("MaskPE");
-            break;
-        case RECORD_NAME_MASM32:
-            sResult = QString("MASM32");
-            break;
-        case RECORD_NAME_MASM:
-            sResult = QString("MASM");
-            break;
-        case RECORD_NAME_MAXTOCODE:
-            sResult = QString("MaxtoCode");
-            break;
-        case RECORD_NAME_MCLINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MCLINUX);
-            break;
-        case RECORD_NAME_MEDUSAH:
-            sResult = QString("Medusah");
-            break;
-        case RECORD_NAME_MEW10:
-            sResult = QString("MEW10");
-            break;
-        case RECORD_NAME_MEW11SE:
-            sResult = QString("MEW11 SE");
-            break;
-        case RECORD_NAME_MFC:
-            sResult = QString("MFC");
-            break;
-        case RECORD_NAME_MICROSOFTACCESS:
-            sResult = QString("Microsoft Access");
-            break;
-        case RECORD_NAME_MICROSOFTC:
-            sResult = QString("Microsoft C");
-            break;
-        case RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP:
-            sResult = QString("Microsoft Compiled HTML Help");
-            break;
-        case RECORD_NAME_MICROSOFTCOMPOUND:
-            sResult = QString("Microsoft Compound");
-            break;
-        case RECORD_NAME_MICROSOFTCPP:
-            sResult = QString("Microsoft C++");
-            break;
-        case RECORD_NAME_MICROSOFTDOTNETFRAMEWORK:
-            sResult = QString("Microsoft .NET Framework");
-            break;
-        case RECORD_NAME_MICROSOFTEXCEL:
-            sResult = QString("Microsoft Excel");
-            break;
-        case RECORD_NAME_MICROSOFTINSTALLER:
-            sResult = QString("Microsoft Installer(MSI)");
-            break;
-        case RECORD_NAME_MICROSOFTLINKER:
-            sResult = QString("Microsoft linker");
-            break;
-        case RECORD_NAME_MICROSOFTLINKERDATABASE:
-            sResult = QString("Microsoft Linker Database");
-            break;
-        case RECORD_NAME_MICROSOFTOFFICE:
-            sResult = QString("Microsoft Office");
-            break;
-        case RECORD_NAME_MICROSOFTOFFICEWORD:
-            sResult = QString("Microsoft Office Word");
-            break;
-        case RECORD_NAME_MICROSOFTPHOENIX:
-            sResult = QString("Microsoft Phoenix");
-            break;
-        case RECORD_NAME_MICROSOFTVISIO:
-            sResult = QString("Microsoft Visio");
-            break;
-        case RECORD_NAME_MICROSOFTVISUALSTUDIO:
-            sResult = QString("Microsoft Visual Studio");
-            break;
-        case RECORD_NAME_MICROSOFTWINHELP:
-            sResult = QString("Microsoft WinHelp");
-            break;
-        case RECORD_NAME_MINGW:
-            sResult = QString("MinGW");
-            break;
-        case RECORD_NAME_MINIX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MINIX);
-            break;
-        case RECORD_NAME_MINKE:
-            sResult = QString("Minke");
-            break;
-        case RECORD_NAME_MKFPACK:
-            sResult = QString("MKFPack");
-            break;
-        case RECORD_NAME_MOBILETENCENTPROTECT:
-            sResult = QString("Mobile Tencent Protect");
-            break;
-        case RECORD_NAME_MODESTO:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MODESTO);
-            break;
-        case RECORD_NAME_MODGUARD:
-            sResult = QString("ModGuard");
-            break;
-        case RECORD_NAME_MOLD:
-            sResult = QString("mold");
-            break;
-        case RECORD_NAME_MOLEBOX:
-            sResult = QString("MoleBox");
-            break;
-        case RECORD_NAME_MOLEBOXULTRA:
-            sResult = QString("MoleBox Ultra");
-            break;
-        case RECORD_NAME_MONEYCRYPTER:
-            sResult = QString("Money Crypter");
-            break;
-        case RECORD_NAME_MORPHNAH:
-            sResult = QString("Morphnah");
-            break;
-        case RECORD_NAME_MORTALTEAMCRYPTER2:
-            sResult = QString("Mortal Team Crypter 2");
-            break;
-        case RECORD_NAME_MORTALTEAMCRYPTER:
-            sResult = QString("Mortal Team Crypter");
-            break;
-        case RECORD_NAME_MORUKCREWCRYPTERPRIVATE:
-            sResult = QString("MoruK creW Crypter Private");
-            break;
-        case RECORD_NAME_MOTODEVSTUDIOFORANDROID:
-            sResult = QString("MOTODEV Studio for Android");
-            break;
-        case RECORD_NAME_MP3:
-            sResult = QString("MP3");
-            break;
-        case RECORD_NAME_MP4:
-            sResult = QString("MP4");
-            break;
-        case RECORD_NAME_MPACK:
-            sResult = QString("mPack");
-            break;
-        case RECORD_NAME_MPRESS:
-            sResult = QString("MPRESS");
-            break;
-        case RECORD_NAME_MRUNDECTETABLE:
-            sResult = QString("Mr Undectetable");
-            break;
-        case RECORD_NAME_MSDOS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_MSDOS);
-            break;
-        case RECORD_NAME_MSLRH:
-            sResult = QString("MSLRH");
-            break;
-        case RECORD_NAME_MSYS2:
-            sResult = QString("MSYS2");
-            break;
-        case RECORD_NAME_MSYS:
-            sResult = QString("Msys");
-            break;
-        case RECORD_NAME_MZ0OPE:
-            sResult = QString("MZ0oPE");
-            break;
-        case RECORD_NAME_NAGAINLLVM:
-            sResult = QString("Nagain LLVM");
-            break;
-        case RECORD_NAME_NAGAPTPROTECTION:
-            sResult = QString("Nagapt Protection");
-            break;
-        case RECORD_NAME_NAKEDPACKER:
-            sResult = QString("NakedPacker");
-            break;
-        case RECORD_NAME_NASM:
-            sResult = QString("NASM");
-            break;
-        case RECORD_NAME_NATIVECRYPTORBYDOSX:
-            sResult = QString("NativeCryptor by DosX");
-            break;
-        case RECORD_NAME_NCODE:
-            sResult = QString("N-Code");
-            break;
-        case RECORD_NAME_NEOLITE:
-            sResult = QString("NeoLite");
-            break;
-        case RECORD_NAME_NETBSD:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_NETBSD);
-            break;
-        case RECORD_NAME_NETEASEAPKSIGNER:
-            sResult = QString("NetEase ApkSigner");
-            break;
-        case RECORD_NAME_NIDHOGG:
-            sResult = QString("Nidhogg");
-            break;
-        case RECORD_NAME_NIM:
-            sResult = QString("Nim");
-            break;
-        case RECORD_NAME_NJOINER:
-            sResult = QString("N-Joiner");
-            break;
-        case RECORD_NAME_NJOY:
-            sResult = QString("N-Joy");
-            break;
-        case RECORD_NAME_NME:
-            sResult = QString("NME");
-            break;
-        case RECORD_NAME_NOOBYPROTECT:
-            sResult = QString("NoobyProtect");
-            break;
-        case RECORD_NAME_NOODLECRYPT:
-            sResult = QString("NoodleCrypt");
-            break;
-        case RECORD_NAME_NORTHSTARPESHRINKER:
-            sResult = QString("North Star PE Shrinker");
-            break;
-        case RECORD_NAME_NOSINSTALLER:
-            sResult = QString("NOS Installer");
-            break;
-        case RECORD_NAME_NOSTUBLINKER:
-            sResult = QString("NOSTUBLINKER");
-            break;
-        case RECORD_NAME_NOXCRYPT:
-            sResult = QString("noX Crypt");
-            break;
-        case RECORD_NAME_NPACK:
-            sResult = QString("nPack");
-            break;
-        case RECORD_NAME_NQSHIELD:
-            sResult = QString("NQ Shield");
-            break;
-        case RECORD_NAME_NSIS:
-            sResult = QString("Nullsoft Scriptable Install System");
-            break;
-        case RECORD_NAME_NSK:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_NSK);
-            break;
-        case RECORD_NAME_NSPACK:
-            sResult = QString("NsPack");
-            break;
-        case RECORD_NAME_OBFUSCAR:
-            sResult = QString("Obfuscar");
-            break;
-        case RECORD_NAME_OBFUSCATORLLVM:
-            sResult = QString("Obfuscator-LLVM");
-            break;
-        case RECORD_NAME_OBFUSCATORNET2009:
-            sResult = QString("Obfuscator.NET 2009");
-            break;
-        case RECORD_NAME_OBJECTIVEC:
-            sResult = QString("Objective-C");
-            break;
-        case RECORD_NAME_OBJECTPASCAL:
-            sResult = QString("Object Pascal");
-            break;
-        case RECORD_NAME_OBJECTPASCALDELPHI:
-            sResult = QString("Object Pascal(Delphi)");
-            break;
-        case RECORD_NAME_OBSIDIUM:
-            sResult = QString("Obsidium");
-            break;
-        case RECORD_NAME_OLLVMTLL:
-            sResult = QString("ollvm-tll(LLVM 6.0+Ollvm+Armariris)");
-            break;
-        case RECORD_NAME_ONESPANPROTECTION:
-            sResult = QString("OneSpan Protection");
-            break;
-        case RECORD_NAME_OPENBSD:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_OPENBSD);
-            break;
-        case RECORD_NAME_OPENDOCUMENT:
-            sResult = QString("Open Document");
-            break;
-        case RECORD_NAME_OPENJDK:
-            sResult = QString("OpenJDK");
-            break;
-        case RECORD_NAME_OPENSOURCECODECRYPTER:
-            sResult = QString("Open Source Code Crypter");
-            break;
-        case RECORD_NAME_OPENVMS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_OPENVMS);
-            break;
-        case RECORD_NAME_OPENVOS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_OPENVOS);
-            break;
-        case RECORD_NAME_OPERA:
-            sResult = QString("Opera");
-            break;
-        case RECORD_NAME_ORACLESOLARISLINKEDITORS:
-            sResult = QString("Oracle Solaris Link Editors");
-            break;
-        case RECORD_NAME_OREANSCODEVIRTUALIZER:
-            sResult = QString("Oreans CodeVirtualizer");
-            break;
-        case RECORD_NAME_ORIEN:
-            sResult = QString("ORiEN");
-            break;
-        case RECORD_NAME_OS2:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_OS2);
-            break;
-        case RECORD_NAME_OSCCRYPTER:
-            sResult = QString("OSC-Crypter");
-            break;
-        case RECORD_NAME_OS_X:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_OS_X);
-            break;
-        case RECORD_NAME_P0KESCRAMBLER:
-            sResult = QString("p0ke Scrambler");
-            break;
-        case RECORD_NAME_PACKMAN:
-            sResult = QString("Packman");
-            break;
-        case RECORD_NAME_PACKWIN:
-            sResult = QString("PACKWIN");
-            break;
-        case RECORD_NAME_PANDORA:
-            sResult = QString("Pandora");
-            break;
-        case RECORD_NAME_PANGXIE:
-            sResult = QString("PangXie");
-            break;
-        case RECORD_NAME_PCGUARD:
-            sResult = QString("PC Guard");
-            break;
-        case RECORD_NAME_PCOM:
-            sResult = QString("PCOM");
-            break;
-        case RECORD_NAME_PCSHRINK:
-            sResult = QString("PCShrink");
-            break;
-        case RECORD_NAME_PDB:
-            sResult = QString("PDB");
-            break;
-        case RECORD_NAME_PDBFILELINK:
-            sResult = QString("PDB file link");
-            break;
-        case RECORD_NAME_PDF:
-            sResult = QString("PDF");
-            break;
-        case RECORD_NAME_PEARMOR:
-            sResult = QString("PE-Armor");
-            break;
-        case RECORD_NAME_PEBUNDLE:
-            sResult = QString("PEBundle");
-            break;
-        case RECORD_NAME_PECOMPACT:
-            sResult = QString("PECompact");
-            break;
-        case RECORD_NAME_PECRYPT32:
-            sResult = QString("PECRYPT32");
-            break;
-        case RECORD_NAME_PEDIMINISHER:
-            sResult = QString("PE Diminisher");
-            break;
-        case RECORD_NAME_PEENCRYPT:
-            sResult = QString("PE Encrypt");
-            break;
-        case RECORD_NAME_PELOCK:
-            sResult = QString("PELock");
-            break;
-        case RECORD_NAME_PELOCKNT:
-            sResult = QString("PELOCKnt");
-            break;
-        case RECORD_NAME_PENGUINCRYPT:
-            sResult = QString("PEnguinCrypt");
-            break;  // TODO Check name
-        case RECORD_NAME_PEPACK:
-            sResult = QString("PE-PACK");
-            break;
-        case RECORD_NAME_PEPACKSPROTECT:
-            sResult = QString("pepack's Protect");
-            break;
-        case RECORD_NAME_PEQUAKE:
-            sResult = QString("PE Quake");
-            break;
-        case RECORD_NAME_PERL:
-            sResult = QString("Perl");
-            break;
-        case RECORD_NAME_PESHIELD:
-            sResult = QString("PE-SHiELD");
-            break;  // TODO Check name
-        case RECORD_NAME_PESPIN:
-            sResult = QString("PESpin");
-            break;
-        case RECORD_NAME_PETITE:
-            sResult = QString("Petite");
-            break;
-        case RECORD_NAME_PETITE_KERNEL32:
-            sResult = QString("Petite.kernel32");
-            break;
-        case RECORD_NAME_PETITE_USER32:
-            sResult = QString("Petite.user32");
-            break;
-        case RECORD_NAME_PEX:
-            sResult = QString("PeX");
-            break;
-        case RECORD_NAME_PFECX:
-            sResult = QString("PFE CX");
-            break;
-        case RECORD_NAME_PGMPAK:
-            sResult = QString("PGMPAK");
-            break;
-        case RECORD_NAME_PHOENIXPROTECTOR:
-            sResult = QString("Phoenix Protector");
-            break;
-        case RECORD_NAME_PHP:
-            sResult = QString("PHP");
-            break;
-        case RECORD_NAME_PICRYPTOR:
-            sResult = QString("PI Cryptor");
-            break;
-        case RECORD_NAME_PKLITE32:
-            sResult = QString("PKLITE32");
-            break;
-        case RECORD_NAME_PKLITE:
-            sResult = QString("PKLITE");
-            break;
-        case RECORD_NAME_PKZIPMINISFX:
-            sResult = QString("PKZIP mini-sfx");
-            break;
-        case RECORD_NAME_PLAIN:
-            sResult = QString("Plain");
-            break;
-        case RECORD_NAME_PLEXCLANG:
-            sResult = QString("Plex clang");
-            break;
-        case RECORD_NAME_PMODEW:
-            sResult = QString("PMODE/W");
-            break;
-        case RECORD_NAME_PNG:
-            sResult = QString("PNG");
-            break;
-        case RECORD_NAME_POKECRYPTER:
-            sResult = QString("Poke Crypter");
-            break;
-        case RECORD_NAME_POLYCRYPTPE:
-            sResult = QString("PolyCrypt PE");
-            break;
-        case RECORD_NAME_POSIX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_POSIX);
-            break;
-        case RECORD_NAME_POWERBASIC:
-            sResult = QString("PowerBASIC");
-            break;
-        case RECORD_NAME_PRIVATEEXEPROTECTOR:
-            sResult = QString("Private EXE Protector");
-            break;
-        case RECORD_NAME_PROGUARD:
-            sResult = QString("Proguard");
-            break;
-        case RECORD_NAME_PROPACK:
-            sResult = QString("PRO-PACK");
-            break;
-        case RECORD_NAME_PROTECTEXE:
-            sResult = QString("PROTECT! EXE");
-            break;
-        case RECORD_NAME_PSEUDOAPKSIGNER:
-            sResult = QString("PseudoApkSigner");
-            break;
-        case RECORD_NAME_PUBCRYPTER:
-            sResult = QString("Pub Crypter");
-            break;
-        case RECORD_NAME_PUNISHER:
-            sResult = QString("PUNiSHER");
-            break;
-        case RECORD_NAME_PUREBASIC:
-            sResult = QString("PureBasic");
-            break;
-        case RECORD_NAME_PUSSYCRYPTER:
-            sResult = QString("PussyCrypter");
-            break;
-        case RECORD_NAME_PYINSTALLER:
-            sResult = QString("PyInstaller");
-            break;
-        case RECORD_NAME_PYTHON:
-            sResult = QString("Python");
-            break;
-        case RECORD_NAME_QDBH:
-            sResult = QString("qdbh");
-            break;
-        case RECORD_NAME_QIHOO360PROTECTION:
-            sResult = QString("Qihoo 360 Protection");
-            break;
-        case RECORD_NAME_QNX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_QNX);
-            break;
-        case RECORD_NAME_QRYPT0R:
-            sResult = QString("QrYPt0r");
-            break;
-        case RECORD_NAME_QT:
-            sResult = QString("Qt");
-            break;
-        case RECORD_NAME_QTINSTALLER:
-            sResult = QString("Qt Installer");
-            break;
-        case RECORD_NAME_QUICKPACKNT:
-            sResult = QString("QuickPack NT");
-            break;
-        case RECORD_NAME_R8:
-            sResult = QString("R8");
-            break;
-        case RECORD_NAME_RADIALIX:
-            sResult = QString("Radialix");
-            break;
-        case RECORD_NAME_RAR:
-            sResult = QString("RAR");
-            break;
-        case RECORD_NAME_RCRYPTOR:
-            sResult = QString("RCryptor(Russian Cryptor)");
-            break;
-        case RECORD_NAME_RDGTEJONCRYPTER:
-            sResult = QString("RDG Tejon Crypter");
-            break;
-        case RECORD_NAME_REDHATLINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_REDHATLINUX);
-            break;
-        case RECORD_NAME_RELPACK:
-            sResult = QString("Relpack");
-            break;
-        case RECORD_NAME_RENETPACK:
-            sResult = QString("ReNET-pack");
-            break;
-        case RECORD_NAME_RESOURCE:
-            sResult = QString("Resource");
-            break;
-        case RECORD_NAME_RESOURCE_CURSOR:
-            sResult = QString("Resource Cursor");
-            break;
-        case RECORD_NAME_RESOURCE_DIALOG:
-            sResult = QString("Resource Dialog");
-            break;
-        case RECORD_NAME_RESOURCE_ICON:
-            sResult = QString("Resource Icon");
-            break;
-        case RECORD_NAME_RESOURCE_MENU:
-            sResult = QString("Resource Menu");
-            break;
-        case RECORD_NAME_RESOURCE_STRINGTABLE:
-            sResult = QString("Resource String Table");
-            break;
-        case RECORD_NAME_RESOURCE_VERSIONINFO:
-            sResult = QString("Resource Version Info");
-            break;
-        case RECORD_NAME_REVPROT:
-            sResult = QString("REVProt");
-            break;
-        case RECORD_NAME_RJCRUSH:
-            sResult = QString("RJcrush");
-            break;
-        case RECORD_NAME_RLP:
-            sResult = QString("RLP");
-            break;
-        case RECORD_NAME_RLPACK:
-            sResult = QString("RLPack");
-            break;
-        case RECORD_NAME_ROGUEPACK:
-            sResult = QString("RoguePack");
-            break;
-        case RECORD_NAME_ROSASM:
-            sResult = QString("RosAsm");
-            break;
-        case RECORD_NAME_RTF:
-            sResult = QString("Rich Text Format");
-            break;
-        case RECORD_NAME_RUBY:
-            sResult = QString("Ruby");
-            break;
-        case RECORD_NAME_RUST:
-            sResult = QString("Rust");
-            break;
-        case RECORD_NAME_SAFEENGINELLVM:
-            sResult = QString("Safengine LLVM");
-            break;
-        case RECORD_NAME_SAFEENGINESHIELDEN:
-            sResult = QString("Safengine Shielden");
-            break;
-        case RECORD_NAME_SANDHOOK:
-            sResult = QString("SandHook");
-            break;
-        case RECORD_NAME_SCOBFUSCATOR:
-            sResult = QString("SC Obfuscator");
-            break;
-        case RECORD_NAME_SCPACK:
-            sResult = QString("SC Pack");
-            break;
-        case RECORD_NAME_SCRNCH:
-            sResult = QString("SCRNCH");
-            break;
-        case RECORD_NAME_SDPROTECTORPRO:
-            sResult = QString("SDProtector Pro");
-            break;
-        case RECORD_NAME_SECNEO:
-            sResult = QString("SecNeo");
-            break;
-        case RECORD_NAME_SECSHELL:
-            sResult = QString("SecShell");
-            break;
-        case RECORD_NAME_SECURESHADE:
-            sResult = QString("Secure Shade");
-            break;
-        case RECORD_NAME_SECUROM:
-            sResult = QString("SecuROM");
-            break;
-        case RECORD_NAME_SERGREENAPPACKER:
-            sResult = QString("SerGreen Appacker");
-            break;
-        case RECORD_NAME_SETUPFACTORY:
-            sResult = QString("Setup Factory");
-            break;
-        case RECORD_NAME_SEXECRYPTER:
-            sResult = QString("Sexe Crypter");
-            break;
-        case RECORD_NAME_SHELL:
-            sResult = QString("Shell");
-            break;
-        case RECORD_NAME_SHRINKER:
-            sResult = QString("Shrinker");
-            break;
-        case RECORD_NAME_SIGNATORY:
-            sResult = QString("signatory");
-            break;
-        case RECORD_NAME_SIGNUPDATE:
-            sResult = QString("signupdate");
-            break;
-        case RECORD_NAME_SIMBIOZ:
-            sResult = QString("SimbiOZ");
-            break;
-        case RECORD_NAME_SIMCRYPTER:
-            sResult = QString("Sim Crypter");
-            break;
-        case RECORD_NAME_SIMPLECRYPTER:
-            sResult = QString("Simple Crypter");
-            break;
-        case RECORD_NAME_SIMPLEPACK:
-            sResult = QString("Simple Pack");
-            break;
-        case RECORD_NAME_SINGLEJAR:
-            sResult = QString("SingleJar");
-            break;
-        case RECORD_NAME_SIXXPACK:
-            sResult = QString("Sixxpack");
-            break;
-        case RECORD_NAME_SKATER:
-            sResult = QString("Skater");
-            break;
-        case RECORD_NAME_SMARTASSEMBLY:
-            sResult = QString("Smart Assembly");
-            break;
-        case RECORD_NAME_SMARTINSTALLMAKER:
-            sResult = QString("Smart Install Maker");
-            break;
-        case RECORD_NAME_SMOKESCREENCRYPTER:
-            sResult = QString("SmokeScreen Crypter");
-            break;
-        case RECORD_NAME_SNAPDRAGONLLVMARM:
-            sResult = QString("Snapdragon LLVM ARM");
-            break;
-        case RECORD_NAME_SNAPPROTECT:
-            sResult = QString("SnapProtect");
-            break;
-        case RECORD_NAME_SNOOPCRYPT:
-            sResult = QString("Snoop Crypt");
-            break;
-        case RECORD_NAME_SOFTDEFENDER:
-            sResult = QString("Soft Defender");
-            break;
-        case RECORD_NAME_SOFTSENTRY:
-            sResult = QString("SoftSentry");
-            break;
-        case RECORD_NAME_SOFTWARECOMPRESS:
-            sResult = QString("Software Compress");
-            break;
-        case RECORD_NAME_SOFTWAREZATOR:
-            sResult = QString("SoftwareZator");
-            break;
-        case RECORD_NAME_SOLARIS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_SOLARIS);
-            break;
-        case RECORD_NAME_SOURCERYCODEBENCH:
-            sResult = QString("Sourcery CodeBench");
-            break;
-        case RECORD_NAME_SOURCERYCODEBENCHLITE:
-            sResult = QString("Sourcery CodeBench Lite");
-            break;
-        case RECORD_NAME_SPICESNET:
-            sResult = QString("Spices.Net");
-            break;
-        case RECORD_NAME_SPIRIT:
-            sResult = QString("$pirit");
-            break;
-        case RECORD_NAME_SPOONINSTALLER:
-            sResult = QString("Spoon Installer");
-            break;
-        case RECORD_NAME_SPOONSTUDIO2011:
-            sResult = QString("Spoon Studio 2011");
-            break;
-        case RECORD_NAME_SPOONSTUDIO:
-            sResult = QString("Spoon Studio");
-            break;
-        case RECORD_NAME_SQUEEZSFX:
-            sResult = QString("Squeez Self Extractor");
-            break;
-        case RECORD_NAME_STARFORCE:
-            sResult = QString("StarForce");
-            break;
-        case RECORD_NAME_STARTOSLINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_STARTOSLINUX);
-            break;
-        case RECORD_NAME_STASFODIDOCRYPTOR:
-            sResult = QString("StasFodidoCryptor");
-            break;
-        case RECORD_NAME_STONESPEENCRYPTOR:
-            sResult = QString("Stone's PE Encryptor");
-            break;
-        case RECORD_NAME_SUNOS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_SUNOS);
-            break;
-        case RECORD_NAME_SUNWORKSHOP:
-            sResult = QString("Sun WorkShop");
-            break;
-        case RECORD_NAME_SUNWORKSHOPCOMPILERS:
-            sResult = QString("Sun WorkShop Compilers");
-            break;
-        case RECORD_NAME_SUSELINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_SUSELINUX);
-            break;
-        case RECORD_NAME_SVKPROTECTOR:
-            sResult = QString("SVK Protector");
-            break;
-        case RECORD_NAME_SYLLABLE:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_SYLLABLE);
-            break;
-        case RECORD_NAME_SWF:
-            sResult = QString("SWF");
-            break;
-        case RECORD_NAME_SWIFT:
-            sResult = QString("Swift");
-            break;
-        case RECORD_NAME_TAR:
-            sResult = QString("tar");
-            break;
-        case RECORD_NAME_TARMAINSTALLER:
-            sResult = QString("Tarma Installer");
-            break;
-        case RECORD_NAME_TELOCK:
-            sResult = QString("tElock");
-            break;
-        case RECORD_NAME_TENCENTLEGU:
-            sResult = QString("Tencent Legu");
-            break;
-        case RECORD_NAME_TENCENTPROTECTION:
-            sResult = QString("Tencent Protection");
-            break;
-        case RECORD_NAME_TGRCRYPTER:
-            sResult = QString("TGR Crypter");
-            break;
-        case RECORD_NAME_THEBESTCRYPTORBYFSK:
-            sResult = QString("The Best Cryptor [by FsK]");
-            break;
-        case RECORD_NAME_THEMIDAWINLICENSE:
-            sResult = QString("Themida/Winlicense");
-            break;
-        case RECORD_NAME_THEZONECRYPTER:
-            sResult = QString("The Zone Crypter");
-            break;
-        case RECORD_NAME_THINSTALL:
-            sResult = QString("Thinstall(VMware ThinApp)");
-            break;
-        case RECORD_NAME_THUMBC:
-            sResult = QString("Thumb C");
-            break;
-        case RECORD_NAME_TIFF:
-            sResult = QString("TIFF");
-            break;
-        case RECORD_NAME_TINYC:
-            sResult = QString("Tiny C");
-            break;
-        case RECORD_NAME_TINYPROG:
-            sResult = QString("TinyProg");
-            break;
-        case RECORD_NAME_TINYSIGN:
-            sResult = QString("tiny-sign");
-            break;
-        case RECORD_NAME_TOTALCOMMANDERINSTALLER:
-            sResult = QString("Total Commander Installer");
-            break;
-        case RECORD_NAME_TPPPACK:
-            sResult = QString("TTP Pack");
-            break;
-        case RECORD_NAME_TRU64:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_TRU64);
-            break;
-        case RECORD_NAME_TSTCRYPTER:
-            sResult = QString("TsT Crypter");
-            break;
-        case RECORD_NAME_TTF:
-            sResult = QString("True Type Font");
-            break;
-        case RECORD_NAME_TTPROTECT:
-            sResult = QString("TTprotect");
-            break;
-        case RECORD_NAME_TURBOBASIC:
-            sResult = QString("Turbo Basic");
-            break;
-        case RECORD_NAME_TURBOC:
-            sResult = QString("Turbo C");
-            break;
-        case RECORD_NAME_TURBOCPP:
-            sResult = QString("Turbo C++");
-            break;
-        case RECORD_NAME_TURBOLINKER:
-            sResult = QString("Turbo linker");
-            break;
-        case RECORD_NAME_TURBOLINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_TURBOLINUX);
-            break;
-        case RECORD_NAME_TURBOSTUDIO:
-            sResult = QString("Turbo Studio");
-            break;
-        case RECORD_NAME_TURKISHCYBERSIGNATURE:
-            sResult = QString("Turkish Cyber Signature");
-            break;
-        case RECORD_NAME_TURKOJANCRYPTER:
-            sResult = QString("Turkojan Crypter");
-            break;
-        case RECORD_NAME_TVOS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_TVOS);
-            break;
-        case RECORD_NAME_TVOSSDK:
-            sResult = QString("tvOS SDK");
-            break;
-        case RECORD_NAME_UBUNTUCLANG:
-            sResult = QString("Ubuntu clang");
-            break;
-        case RECORD_NAME_UBUNTULINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_UBUNTULINUX);
-            break;
-        case RECORD_NAME_UCEXE:
-            sResult = QString("UCEXE");
-            break;
-        case RECORD_NAME_UNDERGROUNDCRYPTER:
-            sResult = QString("UnderGround Crypter");
-            break;
-        case RECORD_NAME_UNDOCRYPTER:
-            sResult = QString("UnDo Crypter");
-            break;
-        case RECORD_NAME_UNICODE:
-            sResult = QString("Unicode");
-            break;
-        case RECORD_NAME_UNICOMSDK:
-            sResult = QString("Unicom SDK");
-            break;
-        case RECORD_NAME_UNILINK:
-            sResult = QString("UniLink");
-            break;
-        case RECORD_NAME_UNITY:
-            sResult = QString("Unity");
-            break;
-        case RECORD_NAME_UNIVERSALTUPLECOMPILER:
-            sResult = QString("Universal Tuple Compiler");
-            break;
-        case RECORD_NAME_UNIX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_UNIX);
-            break;
-        case RECORD_NAME_UNKOWNCRYPTER:
-            sResult = QString("unkOwn Crypter");
-            break;
-        case RECORD_NAME_UNK_UPXLIKE:
-            sResult = QString("(Unknown)UPX-like");
-            break;
-        case RECORD_NAME_UNOPIX:
-            sResult = QString("Unopix");
-            break;
-        case RECORD_NAME_UPX:
-            sResult = QString("UPX");
-            break;
-        case RECORD_NAME_UTF8:
-            sResult = QString("UTF-8");
-            break;
-        case RECORD_NAME_VALVE:
-            sResult = QString("Valve");
-            break;
-        case RECORD_NAME_VBNET:
-            sResult = QString("VB .NET");
-            break;
-        case RECORD_NAME_VBSTOEXE:
-            sResult = QString("Vbs To Exe");
-            break;
-        case RECORD_NAME_VCASMPROTECTOR:
-            sResult = QString("VCasm-Protector");
-            break;
-        case RECORD_NAME_VCL:
-            sResult = QString("Visual Component Library");
-            break;
-        case RECORD_NAME_VCLPACKAGEINFO:
-            sResult = QString("VCL PackageInfo");
-            break;
-        case RECORD_NAME_VDOG:
-            sResult = QString("VDog");
-            break;
-        case RECORD_NAME_VERACRYPT:
-            sResult = QString("VeraCrypt");
-            break;
-        case RECORD_NAME_VINELINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_VINELINUX);
-            break;
-        case RECORD_NAME_VIRBOXPROTECTOR:
-            sResult = QString("Virbox Protector");
-            break;
-        case RECORD_NAME_VIRTUALIZEPROTECT:
-            sResult = QString("VirtualizeProtect");
-            break;
-        case RECORD_NAME_VIRTUALPASCAL:
-            sResult = QString("Virtual Pascal");
-            break;
-        case RECORD_NAME_VISE:
-            sResult = QString("Vise");
-            break;
-        case RECORD_NAME_VISUALBASIC:
-            sResult = QString("Visual Basic");
-            break;
-        case RECORD_NAME_VISUALCCPP:
-            sResult = QString("Visual C/C++");
-            break;
-        case RECORD_NAME_VISUALCSHARP:
-            sResult = QString("Visual C#");
-            break;
-        case RECORD_NAME_VISUALOBJECTS:
-            sResult = QString("Visual Objects");
-            break;
-        case RECORD_NAME_VMPROTECT:
-            sResult = QString("VMProtect");
-            break;
-        case RECORD_NAME_VMUNPACKER:
-            sResult = QString("VMUnpacker");
-            break;
-        case RECORD_NAME_VMWARE:
-            sResult = QString("VMware");
-            break;
-        case RECORD_NAME_VPACKER:
-            sResult = QString("VPacker");
-            break;
-        case RECORD_NAME_WALLE:
-            sResult = QString("Walle");
-            break;
-        case RECORD_NAME_WANGZEHUALLVM:
-            sResult = QString("wangzehua LLVM");
-            break;
-        case RECORD_NAME_WATCHOS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_WATCHOS);
-            break;
-        case RECORD_NAME_WATCHOSSDK:
-            sResult = QString("watchOS SDK");
-            break;
-        case RECORD_NAME_WATCOMC:
-            sResult = QString("Watcom C");
-            break;
-        case RECORD_NAME_WATCOMCCPP:
-            sResult = QString("Watcom C/C++");
-            break;
-        case RECORD_NAME_WATCOMLINKER:
-            sResult = QString("Watcom linker");
-            break;
-        case RECORD_NAME_WAV:
-            sResult = QString("WAV");
-            break;
-        case RECORD_NAME_WDOSX:
-            sResult = QString("WDOSX");
-            break;
-        case RECORD_NAME_WEBP:
-            sResult = QString("WebP");
-            break;
-        case RECORD_NAME_WHITELLCRYPT:
-            sResult = QString("Whitell Crypt");
-            break;
-        case RECORD_NAME_WINACE:
-            sResult = QString("WinACE");
-            break;
-        case RECORD_NAME_WINAUTH:
-            sResult = QString("Windows Authenticode");
-            break;
-        case RECORD_NAME_WINDOFCRYPT:
-            sResult = QString("WindOfCrypt");
-            break;
-        case RECORD_NAME_WINDOWS:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_WINDOWS);
-            break;
-        case RECORD_NAME_WINDOWSBITMAP:
-            sResult = QString("Windows Bitmap");
-            break;
-        case RECORD_NAME_WINDOWSCE:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_WINDOWSCE);
-            break;
-        case RECORD_NAME_WINDOWSCURSOR:
-            sResult = QString("Windows Cursor");
-            break;
-        case RECORD_NAME_WINDOWSICON:
-            sResult = QString("Windows Icon");
-            break;
-        case RECORD_NAME_WINDOWSINSTALLER:
-            sResult = QString("Windows Installer");
-            break;
-        case RECORD_NAME_WINDOWSMEDIA:
-            sResult = QString("Windows Media");
-            break;
-        case RECORD_NAME_WINDRIVERLINUX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_WINDRIVERLINUX);
-            break;
-        case RECORD_NAME_WINGSCRYPT:
-            sResult = QString("WingsCrypt");
-            break;
-        case RECORD_NAME_WINKRIPT:
-            sResult = QString("WinKript");
-            break;
-        case RECORD_NAME_WINRAR:
-            sResult = QString("WinRAR");
-            break;
-        case RECORD_NAME_WINUPACK:
-            sResult = QString("(Win)Upack");
-            break;
-        case RECORD_NAME_WINZIP:
-            sResult = QString("WinZip");
-            break;
-        case RECORD_NAME_WISE:
-            sResult = QString("Wise");
-            break;
-        case RECORD_NAME_WIXTOOLSET:
-            sResult = QString("WiX Toolset");
-            break;
-        case RECORD_NAME_WLCRYPT:
-            sResult = QString("WL-Crypt");
-            break;
-        case RECORD_NAME_WLGROUPCRYPTER:
-            sResult = QString("WL-Group Crypter");
-            break;
-        case RECORD_NAME_WOUTHRSEXECRYPTER:
-            sResult = QString("WouThrs EXE Crypter");
-            break;
-        case RECORD_NAME_WWPACK32:
-            sResult = QString("WWPack32");
-            break;
-        case RECORD_NAME_WWPACK:
-            sResult = QString("WWPack");
-            break;
-        case RECORD_NAME_WXWIDGETS:
-            sResult = QString("wxWidgets");
-            break;
-        case RECORD_NAME_X86ASSEMBLER:
-            sResult = QString("x86 Assembler");
-            break;
-        case RECORD_NAME_XAR:
-            sResult = QString("xar");
-            break;
-        case RECORD_NAME_XBOX:
-            sResult = XBinary::osNameIdToString(XBinary::OSNAME_XBOX);
-            break;
-        case RECORD_NAME_XCODE:
-            sResult = QString("Xcode");
-            break;
-        case RECORD_NAME_XCOMP:
-            sResult = QString("XComp");
-            break;
-        case RECORD_NAME_XENOCODE:
-            sResult = QString("Xenocode");
-            break;
-        case RECORD_NAME_XENOCODEPOSTBUILD2009FORDOTNET:
-            sResult = QString("Xenocode Postbuild 2009 for .NET");
-            break;
-        case RECORD_NAME_XENOCODEPOSTBUILD2010FORDOTNET:
-            sResult = QString("Xenocode Postbuild 2010 for .NET");
-            break;
-        case RECORD_NAME_XENOCODEPOSTBUILD:
-            sResult = QString("Xenocode Postbuild");
-            break;
-        case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2009:
-            sResult = QString("Xenocode Virtual Application Studio 2009");
-            break;
-        case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010:
-            sResult = QString("Xenocode Virtual Application Studio 2010");
-            break;
-        case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010ISVEDITION:
-            sResult = QString("Xenocode Virtual Application Studio 2010 ISV Edition");
-            break;
-        case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2012ISVEDITION:
-            sResult = QString("Xenocode Virtual Application Studio 2012 ISV Edition");
-            break;
-        case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2013ISVEDITION:
-            sResult = QString("Xenocode Virtual Application Studio 2013 ISV Edition");
-            break;
-        case RECORD_NAME_XML:
-            sResult = QString("XML");
-            break;
-        case RECORD_NAME_XPACK:
-            sResult = QString("XPack");
-            break;
-        case RECORD_NAME_XTREAMLOK:
-            sResult = QString("Xtreamlok");
-            break;
-        case RECORD_NAME_XTREMEPROTECTOR:
-            sResult = QString("Xtreme-Protector");
-            break;
-        case RECORD_NAME_XVOLKOLAK:
-            sResult = QString("XVolkolak");
-            break;
-        case RECORD_NAME_XZ:
-            sResult = QString("XZ");
-            break;
-        case RECORD_NAME_YANDEX:
-            sResult = QString("Yandex");
-            break;
-        case RECORD_NAME_YANO:
-            sResult = QString("Yano");
-            break;
-        case RECORD_NAME_YIDUN:
-            sResult = QString("yidun");
-            break;
-        case RECORD_NAME_YODASCRYPTER:
-            sResult = QString("Yoda's Crypter");
-            break;
-        case RECORD_NAME_YODASPROTECTOR:
-            sResult = QString("Yoda's Protector");
-            break;
-        case RECORD_NAME_YZPACK:
-            sResult = QString("YZPack");
-            break;
-        case RECORD_NAME_ZELDACRYPT:
-            sResult = QString("ZeldaCrypt");
-            break;
-        case RECORD_NAME_ZIG:
-            sResult = QString("Zig");
-            break;
-        case RECORD_NAME_ZIP:
-            sResult = QString("ZIP");
-            break;
-        case RECORD_NAME_ZLIB:
-            sResult = QString("zlib");
-            break;
-        case RECORD_NAME_ZPROTECT:
-            sResult = QString("ZProtect");
-            break;
-        case RECORD_NAME_UNKNOWN0:
-            sResult = QString("_Unknown");
-            break;
-        case RECORD_NAME_UNKNOWN1:
-            sResult = QString("_Unknown");
-            break;
-        case RECORD_NAME_UNKNOWN2:
-            sResult = QString("_Unknown");
-            break;
-        case RECORD_NAME_UNKNOWN3:
-            sResult = QString("_Unknown");
-            break;
-        case RECORD_NAME_UNKNOWN4:
-            sResult = QString("_Unknown");
-            break;
-        case RECORD_NAME_UNKNOWN5:
-            sResult = QString("_Unknown");
-            break;
-        case RECORD_NAME_UNKNOWN6:
-            sResult = QString("_Unknown");
-            break;
-        case RECORD_NAME_UNKNOWN7:
-            sResult = QString("_Unknown");
-            break;
-        case RECORD_NAME_UNKNOWN8:
-            sResult = QString("_Unknown");
-            break;
-        case RECORD_NAME_UNKNOWN9:
-            sResult = QString("_Unknown");
-            break;
+        case RECORD_NAME_FISHPESHIELD: sResult = QString("FishPE Shield"); break;
+        case RECORD_NAME_FLASHVIDEO: sResult = QString("Flash Video"); break;
+        case RECORD_NAME_FLEXLM: sResult = QString("Flex License Manager"); break;
+        case RECORD_NAME_FLEXNET: sResult = QString("FlexNet Licensing"); break;
+        case RECORD_NAME_FORTRAN: sResult = QString("Fortran"); break;
+        case RECORD_NAME_FOUNDATION: sResult = QString("Foundation"); break;
+        case RECORD_NAME_FPC: sResult = QString("Free Pascal"); break;
+        case RECORD_NAME_FREEBSD: sResult = XBinary::osNameIdToString(XBinary::OSNAME_FREEBSD); break;
+        case RECORD_NAME_FREECRYPTOR: sResult = QString("FreeCryptor"); break;
+        case RECORD_NAME_FSG: sResult = QString("FSG"); break;
+        case RECORD_NAME_GCC: sResult = QString("GCC"); break;
+        case RECORD_NAME_GENERIC: sResult = QString("Generic"); break;
+        case RECORD_NAME_GENERICLINKER: sResult = QString("Generic Linker"); break;
+        case RECORD_NAME_GENTEEINSTALLER: sResult = QString("Gentee Installer"); break;
+        case RECORD_NAME_GENTOOLINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_GENTOOLINUX); break;
+        case RECORD_NAME_GHAZZACRYPTER: sResult = QString("GhaZza CryPter"); break;  // st
+        case RECORD_NAME_GHOSTINSTALLER: sResult = QString("Ghost Installer"); break;
+        case RECORD_NAME_GIF: sResult = QString("GIF"); break;
+        case RECORD_NAME_GIXPROTECTOR: sResult = QString("G!X Protector"); break;
+        case RECORD_NAME_GKRIPTO: sResult = QString("GKripto"); break;
+        case RECORD_NAME_GKSETUPSFX: sResult = QString("GkSetup SFX"); break;
+        case RECORD_NAME_GNUASSEMBLER: sResult = QString("GNU Assembler"); break;
+        case RECORD_NAME_GNULINKER: sResult = QString("GNU ld"); break;
+        case RECORD_NAME_GO: sResult = QString("Go"); break;
+        case RECORD_NAME_GOASM: sResult = QString("GoAsm"); break;
+        case RECORD_NAME_GOATSPEMUTILATOR: sResult = QString("Goat's PE Mutilator"); break;
+        case RECORD_NAME_GOLD: sResult = QString("gold"); break;
+        case RECORD_NAME_GOLIATHNET: sResult = QString("Goliath .NET"); break;
+        case RECORD_NAME_GOLINK: sResult = QString("GoLink"); break;
+        case RECORD_NAME_GOOGLE: sResult = QString("Google"); break;
+        case RECORD_NAME_GOOGLEPLAY: sResult = QString("Google Play"); break;
+        case RECORD_NAME_GPINSTALL: sResult = QString("GP-Install"); break;
+        case RECORD_NAME_GUARDIANSTEALTH: sResult = QString("Guardian Stealth"); break;
+        case RECORD_NAME_GZIP: sResult = QString("GZIP"); break;
+        case RECORD_NAME_H4CKY0UORGCRYPTER: sResult = QString("H4ck-y0u.org Crypter"); break;
+        case RECORD_NAME_HACCREWCRYPTER: sResult = QString("HAC Crew Crypter"); break;
+        case RECORD_NAME_HACKSTOP: sResult = QString("HackStop"); break;
+        case RECORD_NAME_HALVCRYPTER: sResult = QString("HaLV Crypter"); break;
+        case RECORD_NAME_HANCOMLINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_HANCOMLINUX); break;
+        case RECORD_NAME_HDUS_WJUS: sResult = QString("Hdus-Wjus"); break;
+        case RECORD_NAME_HIAPKCOM: sResult = QString("www.HiAPK.com"); break;
+        case RECORD_NAME_HIDEANDPROTECT: sResult = QString("Hide&Protect"); break;
+        case RECORD_NAME_HIDEPE: sResult = QString("HidePE"); break;
+        case RECORD_NAME_HIKARIOBFUSCATOR: sResult = QString("HikariObfuscator"); break;
+        case RECORD_NAME_HMIMYSPACKER: sResult = QString("Hmimys Packer"); break;
+        case RECORD_NAME_HMIMYSPROTECTOR: sResult = QString("Hmimys's Protector"); break;
+        case RECORD_NAME_HOODLUM: sResult = QString("HOODLUM"); break;
+        case RECORD_NAME_HOUNDHACKCRYPTER: sResult = QString("Hound Hack Crypter"); break;
+        case RECORD_NAME_HPUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_HPUX); break;
+        case RECORD_NAME_HTML: sResult = QString("HTML"); break;
+        case RECORD_NAME_HXS: sResult = QString("HXS"); break;
+        case RECORD_NAME_HYPERTECHCRACKPROOF: sResult = QString("HyperTech Crackproof"); break;
+        case RECORD_NAME_IBMJDK: sResult = QString("IBM JDK"); break;
+        case RECORD_NAME_IBMPCPASCAL: sResult = QString("IBM PC Pascal"); break;
+        case RECORD_NAME_ICE: sResult = QString("ICE"); break;
+        case RECORD_NAME_ICRYPT: sResult = QString("ICrypt"); break;
+        case RECORD_NAME_IJIAMI: sResult = QString("iJiami"); break;
+        case RECORD_NAME_IJIAMILLVM: sResult = QString("iJiami LLVM"); break;
+        case RECORD_NAME_IKVMDOTNET: sResult = QString("IKVM.NET"); break;
+        case RECORD_NAME_IL2CPP: sResult = QString("IL2CPP"); break;
+        case RECORD_NAME_ILASM: sResult = QString("ILAsm"); break;
+        case RECORD_NAME_IMPORT: sResult = QString("Import"); break;
+        case RECORD_NAME_INFCRYPTOR: sResult = QString("INF Cryptor"); break;
+        case RECORD_NAME_INNOSETUP: sResult = QString("Inno Setup"); break;
+        case RECORD_NAME_INQUARTOSOBFUSCATOR: sResult = QString("Inquartos Obfuscator"); break;
+        case RECORD_NAME_INSTALL4J: sResult = QString("install4j"); break;
+        case RECORD_NAME_INSTALLANYWHERE: sResult = QString("InstallAnywhere"); break;
+        case RECORD_NAME_INSTALLSHIELD: sResult = QString("InstallShield"); break;
+        case RECORD_NAME_IOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_IOS); break;
+        case RECORD_NAME_IOSSDK: sResult = QString("iOS SDK"); break;
+        case RECORD_NAME_IPA: sResult = QString("iOS App Store Package"); break;
+        case RECORD_NAME_IPADOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_IPADOS); break;
+        case RECORD_NAME_IPHONEOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_IPHONEOS); break;
+        case RECORD_NAME_IPBPROTECT: sResult = QString("iPB Protect"); break;
+        case RECORD_NAME_IRIX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_IRIX); break;
+        case RECORD_NAME_ISO9660: sResult = QString("ISO 9660"); break;
+        case RECORD_NAME_JACK: sResult = QString("Jack"); break;
+        case RECORD_NAME_JAM: sResult = QString("JAM"); break;
+        case RECORD_NAME_JAR: sResult = QString("JAR"); break;
+        case RECORD_NAME_JAVA: sResult = QString("Java"); break;
+        case RECORD_NAME_JAVACOMPILEDCLASS: sResult = QString("Java compiled class"); break;
+        case RECORD_NAME_JDK: sResult = QString("JDK"); break;
+        case RECORD_NAME_JDPACK: sResult = QString("JDPack"); break;
+        case RECORD_NAME_JETBRAINS: sResult = QString("JetBrains"); break;
+        case RECORD_NAME_JIAGU: sResult = QString("jiagu"); break;
+        case RECORD_NAME_JPEG: sResult = QString("JPEG"); break;
+        case RECORD_NAME_JSCRIPT: sResult = QString("JScript"); break;
+        case RECORD_NAME_JVM: sResult = QString("JVM"); break;
+        case RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER: sResult = QString("KaOs PE-DLL eXecutable Undetecter"); break;
+        case RECORD_NAME_KBYS: sResult = QString("KByS"); break;
+        case RECORD_NAME_KCRYPTOR: sResult = QString("K!Cryptor"); break;
+        case RECORD_NAME_KGBCRYPTER: sResult = QString("KGB Crypter"); break;
+        case RECORD_NAME_KIAMSCRYPTOR: sResult = QString("KiAms Cryptor"); break;
+        case RECORD_NAME_KIRO: sResult = QString("Kiro"); break;
+        case RECORD_NAME_KIWIVERSIONOBFUSCATOR: sResult = QString("Kiwi Version Obfuscator"); break;
+        case RECORD_NAME_KKRUNCHY: sResult = QString("kkrunchy"); break;
+        case RECORD_NAME_KOTLIN: sResult = QString("Kotlin"); break;
+        case RECORD_NAME_KRATOSCRYPTER: sResult = QString("Kratos Crypter"); break;
+        case RECORD_NAME_KRYPTON: sResult = QString("Krypton"); break;
+        case RECORD_NAME_KUR0KX2TO: sResult = QString("Kur0k.X2.to"); break;
+        case RECORD_NAME_LAMECRYPT: sResult = QString("LameCrypt"); break;
+        case RECORD_NAME_LARP64: sResult = QString("lARP64"); break;
+        case RECORD_NAME_LAYHEYFORTRAN90: sResult = QString("Lahey Fortran 90"); break;
+        case RECORD_NAME_LAZARUS: sResult = QString("Lazarus"); break;
+        case RECORD_NAME_LCCLNK: sResult = QString("lcclnk"); break;
+        case RECORD_NAME_LCCWIN: sResult = QString("lcc-win"); break;
+        case RECORD_NAME_LGLZ: sResult = QString("LGLZ"); break;
+        case RECORD_NAME_LHA: sResult = QString("LHA"); break;
+        case RECORD_NAME_LHASSFX: sResult = QString("LHA's SFX"); break;
+        case RECORD_NAME_LIAPP: sResult = QString("LIAPP"); break;
+        case RECORD_NAME_LIGHTNINGCRYPTERPRIVATE: sResult = QString("Lightning Crypter Private"); break;
+        case RECORD_NAME_LIGHTNINGCRYPTERSCANTIME: sResult = QString("Lightning Crypter ScanTime"); break;
+        case RECORD_NAME_LINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_LINUX); break;
+        case RECORD_NAME_LLD: sResult = QString("LDD"); break;
+        case RECORD_NAME_LOCKTITE: sResult = QString("LockTite+"); break;
+        case RECORD_NAME_LSCRYPRT: sResult = QString("LSCRYPT"); break;
+        case RECORD_NAME_LUACOMPILED: sResult = QString("Lua compiled"); break;
+        case RECORD_NAME_LUCYPHER: sResult = QString("LuCypher"); break;
+        case RECORD_NAME_LZEXE: sResult = QString("LZEXE"); break;
+        case RECORD_NAME_LZFSE: sResult = QString("LZFSE"); break;
+        case RECORD_NAME_MACHOFAT: sResult = QString("Mach-O FAT"); break;
+        case RECORD_NAME_MAC_OS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_MAC_OS); break;
+        case RECORD_NAME_MAC_OS_X: sResult = XBinary::osNameIdToString(XBinary::OSNAME_MAC_OS_X); break;
+        case RECORD_NAME_MACOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_MACOS); break;
+        case RECORD_NAME_MACOSSDK: sResult = QString("macOS SDK"); break;
+        case RECORD_NAME_MACROBJECT: sResult = QString("Macrobject"); break;
+        case RECORD_NAME_MALPACKER: sResult = QString("Mal Packer"); break;
+        case RECORD_NAME_MANDRAKELINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_MANDRAKELINUX); break;
+        case RECORD_NAME_MASKPE: sResult = QString("MaskPE"); break;
+        case RECORD_NAME_MASM32: sResult = QString("MASM32"); break;
+        case RECORD_NAME_MASM: sResult = QString("MASM"); break;
+        case RECORD_NAME_MAXTOCODE: sResult = QString("MaxtoCode"); break;
+        case RECORD_NAME_MCLINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_MCLINUX); break;
+        case RECORD_NAME_MEDUSAH: sResult = QString("Medusah"); break;
+        case RECORD_NAME_MEW10: sResult = QString("MEW10"); break;
+        case RECORD_NAME_MEW11SE: sResult = QString("MEW11 SE"); break;
+        case RECORD_NAME_MFC: sResult = QString("MFC"); break;
+        case RECORD_NAME_MICROSOFTACCESS: sResult = QString("Microsoft Access"); break;
+        case RECORD_NAME_MICROSOFTC: sResult = QString("Microsoft C"); break;
+        case RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP: sResult = QString("Microsoft Compiled HTML Help"); break;
+        case RECORD_NAME_MICROSOFTCOMPOUND: sResult = QString("Microsoft Compound"); break;
+        case RECORD_NAME_MICROSOFTCPP: sResult = QString("Microsoft C++"); break;
+        case RECORD_NAME_MICROSOFTDOTNETFRAMEWORK: sResult = QString("Microsoft .NET Framework"); break;
+        case RECORD_NAME_MICROSOFTEXCEL: sResult = QString("Microsoft Excel"); break;
+        case RECORD_NAME_MICROSOFTINSTALLER: sResult = QString("Microsoft Installer(MSI)"); break;
+        case RECORD_NAME_MICROSOFTLINKER: sResult = QString("Microsoft linker"); break;
+        case RECORD_NAME_MICROSOFTLINKERDATABASE: sResult = QString("Microsoft Linker Database"); break;
+        case RECORD_NAME_MICROSOFTOFFICE: sResult = QString("Microsoft Office"); break;
+        case RECORD_NAME_MICROSOFTOFFICEWORD: sResult = QString("Microsoft Office Word"); break;
+        case RECORD_NAME_MICROSOFTPHOENIX: sResult = QString("Microsoft Phoenix"); break;
+        case RECORD_NAME_MICROSOFTVISIO: sResult = QString("Microsoft Visio"); break;
+        case RECORD_NAME_MICROSOFTVISUALSTUDIO: sResult = QString("Microsoft Visual Studio"); break;
+        case RECORD_NAME_MICROSOFTWINHELP: sResult = QString("Microsoft WinHelp"); break;
+        case RECORD_NAME_MINGW: sResult = QString("MinGW"); break;
+        case RECORD_NAME_MINIX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_MINIX); break;
+        case RECORD_NAME_MINKE: sResult = QString("Minke"); break;
+        case RECORD_NAME_MKFPACK: sResult = QString("MKFPack"); break;
+        case RECORD_NAME_MOBILETENCENTPROTECT: sResult = QString("Mobile Tencent Protect"); break;
+        case RECORD_NAME_MODESTO: sResult = XBinary::osNameIdToString(XBinary::OSNAME_MODESTO); break;
+        case RECORD_NAME_MODGUARD: sResult = QString("ModGuard"); break;
+        case RECORD_NAME_MOLD: sResult = QString("mold"); break;
+        case RECORD_NAME_MOLEBOX: sResult = QString("MoleBox"); break;
+        case RECORD_NAME_MOLEBOXULTRA: sResult = QString("MoleBox Ultra"); break;
+        case RECORD_NAME_MONEYCRYPTER: sResult = QString("Money Crypter"); break;
+        case RECORD_NAME_MORPHNAH: sResult = QString("Morphnah"); break;
+        case RECORD_NAME_MORTALTEAMCRYPTER2: sResult = QString("Mortal Team Crypter 2"); break;
+        case RECORD_NAME_MORTALTEAMCRYPTER: sResult = QString("Mortal Team Crypter"); break;
+        case RECORD_NAME_MORUKCREWCRYPTERPRIVATE: sResult = QString("MoruK creW Crypter Private"); break;
+        case RECORD_NAME_MOTODEVSTUDIOFORANDROID: sResult = QString("MOTODEV Studio for Android"); break;
+        case RECORD_NAME_MP3: sResult = QString("MP3"); break;
+        case RECORD_NAME_MP4: sResult = QString("MP4"); break;
+        case RECORD_NAME_MPACK: sResult = QString("mPack"); break;
+        case RECORD_NAME_MPRESS: sResult = QString("MPRESS"); break;
+        case RECORD_NAME_MRUNDECTETABLE: sResult = QString("Mr Undectetable"); break;
+        case RECORD_NAME_MSDOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_MSDOS); break;
+        case RECORD_NAME_MSLRH: sResult = QString("MSLRH"); break;
+        case RECORD_NAME_MSYS2: sResult = QString("MSYS2"); break;
+        case RECORD_NAME_MSYS: sResult = QString("Msys"); break;
+        case RECORD_NAME_MZ0OPE: sResult = QString("MZ0oPE"); break;
+        case RECORD_NAME_NAGAINLLVM: sResult = QString("Nagain LLVM"); break;
+        case RECORD_NAME_NAGAPTPROTECTION: sResult = QString("Nagapt Protection"); break;
+        case RECORD_NAME_NAKEDPACKER: sResult = QString("NakedPacker"); break;
+        case RECORD_NAME_NASM: sResult = QString("NASM"); break;
+        case RECORD_NAME_NATIVECRYPTORBYDOSX: sResult = QString("NativeCryptor by DosX"); break;
+        case RECORD_NAME_NCODE: sResult = QString("N-Code"); break;
+        case RECORD_NAME_NEOLITE: sResult = QString("NeoLite"); break;
+        case RECORD_NAME_NETBSD: sResult = XBinary::osNameIdToString(XBinary::OSNAME_NETBSD); break;
+        case RECORD_NAME_NETEASEAPKSIGNER: sResult = QString("NetEase ApkSigner"); break;
+        case RECORD_NAME_NIDHOGG: sResult = QString("Nidhogg"); break;
+        case RECORD_NAME_NIM: sResult = QString("Nim"); break;
+        case RECORD_NAME_NJOINER: sResult = QString("N-Joiner"); break;
+        case RECORD_NAME_NJOY: sResult = QString("N-Joy"); break;
+        case RECORD_NAME_NME: sResult = QString("NME"); break;
+        case RECORD_NAME_NOOBYPROTECT: sResult = QString("NoobyProtect"); break;
+        case RECORD_NAME_NOODLECRYPT: sResult = QString("NoodleCrypt"); break;
+        case RECORD_NAME_NORTHSTARPESHRINKER: sResult = QString("North Star PE Shrinker"); break;
+        case RECORD_NAME_NOSINSTALLER: sResult = QString("NOS Installer"); break;
+        case RECORD_NAME_NOSTUBLINKER: sResult = QString("NOSTUBLINKER"); break;
+        case RECORD_NAME_NOXCRYPT: sResult = QString("noX Crypt"); break;
+        case RECORD_NAME_NPACK: sResult = QString("nPack"); break;
+        case RECORD_NAME_NQSHIELD: sResult = QString("NQ Shield"); break;
+        case RECORD_NAME_NSIS: sResult = QString("Nullsoft Scriptable Install System"); break;
+        case RECORD_NAME_NSK: sResult = XBinary::osNameIdToString(XBinary::OSNAME_NSK); break;
+        case RECORD_NAME_NSPACK: sResult = QString("NsPack"); break;
+        case RECORD_NAME_OBFUSCAR: sResult = QString("Obfuscar"); break;
+        case RECORD_NAME_OBFUSCATORLLVM: sResult = QString("Obfuscator-LLVM"); break;
+        case RECORD_NAME_OBFUSCATORNET2009: sResult = QString("Obfuscator.NET 2009"); break;
+        case RECORD_NAME_OBJECTIVEC: sResult = QString("Objective-C"); break;
+        case RECORD_NAME_OBJECTPASCAL: sResult = QString("Object Pascal"); break;
+        case RECORD_NAME_OBJECTPASCALDELPHI: sResult = QString("Object Pascal(Delphi)"); break;
+        case RECORD_NAME_OBSIDIUM: sResult = QString("Obsidium"); break;
+        case RECORD_NAME_OLLVMTLL: sResult = QString("ollvm-tll(LLVM 6.0+Ollvm+Armariris)"); break;
+        case RECORD_NAME_ONESPANPROTECTION: sResult = QString("OneSpan Protection"); break;
+        case RECORD_NAME_OPENBSD: sResult = XBinary::osNameIdToString(XBinary::OSNAME_OPENBSD); break;
+        case RECORD_NAME_OPENDOCUMENT: sResult = QString("Open Document"); break;
+        case RECORD_NAME_OPENJDK: sResult = QString("OpenJDK"); break;
+        case RECORD_NAME_OPENSOURCECODECRYPTER: sResult = QString("Open Source Code Crypter"); break;
+        case RECORD_NAME_OPENVMS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_OPENVMS); break;
+        case RECORD_NAME_OPENVOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_OPENVOS); break;
+        case RECORD_NAME_OPERA: sResult = QString("Opera"); break;
+        case RECORD_NAME_ORACLESOLARISLINKEDITORS: sResult = QString("Oracle Solaris Link Editors"); break;
+        case RECORD_NAME_OREANSCODEVIRTUALIZER: sResult = QString("Oreans CodeVirtualizer"); break;
+        case RECORD_NAME_ORIEN: sResult = QString("ORiEN"); break;
+        case RECORD_NAME_OS2: sResult = XBinary::osNameIdToString(XBinary::OSNAME_OS2); break;
+        case RECORD_NAME_OSCCRYPTER: sResult = QString("OSC-Crypter"); break;
+        case RECORD_NAME_OS_X: sResult = XBinary::osNameIdToString(XBinary::OSNAME_OS_X); break;
+        case RECORD_NAME_P0KESCRAMBLER: sResult = QString("p0ke Scrambler"); break;
+        case RECORD_NAME_PACKMAN: sResult = QString("Packman"); break;
+        case RECORD_NAME_PACKWIN: sResult = QString("PACKWIN"); break;
+        case RECORD_NAME_PANDORA: sResult = QString("Pandora"); break;
+        case RECORD_NAME_PANGXIE: sResult = QString("PangXie"); break;
+        case RECORD_NAME_PCGUARD: sResult = QString("PC Guard"); break;
+        case RECORD_NAME_PCOM: sResult = QString("PCOM"); break;
+        case RECORD_NAME_PCSHRINK: sResult = QString("PCShrink"); break;
+        case RECORD_NAME_PDB: sResult = QString("PDB"); break;
+        case RECORD_NAME_PDBFILELINK: sResult = QString("PDB file link"); break;
+        case RECORD_NAME_PDF: sResult = QString("PDF"); break;
+        case RECORD_NAME_PEARMOR: sResult = QString("PE-Armor"); break;
+        case RECORD_NAME_PEBUNDLE: sResult = QString("PEBundle"); break;
+        case RECORD_NAME_PECOMPACT: sResult = QString("PECompact"); break;
+        case RECORD_NAME_PECRYPT32: sResult = QString("PECRYPT32"); break;
+        case RECORD_NAME_PEDIMINISHER: sResult = QString("PE Diminisher"); break;
+        case RECORD_NAME_PEENCRYPT: sResult = QString("PE Encrypt"); break;
+        case RECORD_NAME_PELOCK: sResult = QString("PELock"); break;
+        case RECORD_NAME_PELOCKNT: sResult = QString("PELOCKnt"); break;
+        case RECORD_NAME_PENGUINCRYPT: sResult = QString("PEnguinCrypt"); break;  // TODO Check name
+        case RECORD_NAME_PEPACK: sResult = QString("PE-PACK"); break;
+        case RECORD_NAME_PEPACKSPROTECT: sResult = QString("pepack's Protect"); break;
+        case RECORD_NAME_PEQUAKE: sResult = QString("PE Quake"); break;
+        case RECORD_NAME_PERL: sResult = QString("Perl"); break;
+        case RECORD_NAME_PESHIELD: sResult = QString("PE-SHiELD"); break;  // TODO Check name
+        case RECORD_NAME_PESPIN: sResult = QString("PESpin"); break;
+        case RECORD_NAME_PETITE: sResult = QString("Petite"); break;
+        case RECORD_NAME_PETITE_KERNEL32: sResult = QString("Petite.kernel32"); break;
+        case RECORD_NAME_PETITE_USER32: sResult = QString("Petite.user32"); break;
+        case RECORD_NAME_PEX: sResult = QString("PeX"); break;
+        case RECORD_NAME_PFECX: sResult = QString("PFE CX"); break;
+        case RECORD_NAME_PGMPAK: sResult = QString("PGMPAK"); break;
+        case RECORD_NAME_PHOENIXPROTECTOR: sResult = QString("Phoenix Protector"); break;
+        case RECORD_NAME_PHP: sResult = QString("PHP"); break;
+        case RECORD_NAME_PICRYPTOR: sResult = QString("PI Cryptor"); break;
+        case RECORD_NAME_PKLITE32: sResult = QString("PKLITE32"); break;
+        case RECORD_NAME_PKLITE: sResult = QString("PKLITE"); break;
+        case RECORD_NAME_PKZIPMINISFX: sResult = QString("PKZIP mini-sfx"); break;
+        case RECORD_NAME_PLAIN: sResult = QString("Plain"); break;
+        case RECORD_NAME_PLEXCLANG: sResult = QString("Plex clang"); break;
+        case RECORD_NAME_PMODEW: sResult = QString("PMODE/W"); break;
+        case RECORD_NAME_PNG: sResult = QString("PNG"); break;
+        case RECORD_NAME_POKECRYPTER: sResult = QString("Poke Crypter"); break;
+        case RECORD_NAME_POLYCRYPTPE: sResult = QString("PolyCrypt PE"); break;
+        case RECORD_NAME_POSIX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_POSIX); break;
+        case RECORD_NAME_POWERBASIC: sResult = QString("PowerBASIC"); break;
+        case RECORD_NAME_PRIVATEEXEPROTECTOR: sResult = QString("Private EXE Protector"); break;
+        case RECORD_NAME_PROGUARD: sResult = QString("Proguard"); break;
+        case RECORD_NAME_PROPACK: sResult = QString("PRO-PACK"); break;
+        case RECORD_NAME_PROTECTEXE: sResult = QString("PROTECT! EXE"); break;
+        case RECORD_NAME_PSEUDOAPKSIGNER: sResult = QString("PseudoApkSigner"); break;
+        case RECORD_NAME_PUBCRYPTER: sResult = QString("Pub Crypter"); break;
+        case RECORD_NAME_PUNISHER: sResult = QString("PUNiSHER"); break;
+        case RECORD_NAME_PUREBASIC: sResult = QString("PureBasic"); break;
+        case RECORD_NAME_PUSSYCRYPTER: sResult = QString("PussyCrypter"); break;
+        case RECORD_NAME_PYINSTALLER: sResult = QString("PyInstaller"); break;
+        case RECORD_NAME_PYTHON: sResult = QString("Python"); break;
+        case RECORD_NAME_QDBH: sResult = QString("qdbh"); break;
+        case RECORD_NAME_QIHOO360PROTECTION: sResult = QString("Qihoo 360 Protection"); break;
+        case RECORD_NAME_QNX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_QNX); break;
+        case RECORD_NAME_QRYPT0R: sResult = QString("QrYPt0r"); break;
+        case RECORD_NAME_QT: sResult = QString("Qt"); break;
+        case RECORD_NAME_QTINSTALLER: sResult = QString("Qt Installer"); break;
+        case RECORD_NAME_QUICKPACKNT: sResult = QString("QuickPack NT"); break;
+        case RECORD_NAME_R8: sResult = QString("R8"); break;
+        case RECORD_NAME_RADIALIX: sResult = QString("Radialix"); break;
+        case RECORD_NAME_RAR: sResult = QString("RAR"); break;
+        case RECORD_NAME_RCRYPTOR: sResult = QString("RCryptor(Russian Cryptor)"); break;
+        case RECORD_NAME_RDGTEJONCRYPTER: sResult = QString("RDG Tejon Crypter"); break;
+        case RECORD_NAME_REDHATLINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_REDHATLINUX); break;
+        case RECORD_NAME_RELPACK: sResult = QString("Relpack"); break;
+        case RECORD_NAME_RENETPACK: sResult = QString("ReNET-pack"); break;
+        case RECORD_NAME_RESOURCE: sResult = QString("Resource"); break;
+        case RECORD_NAME_RESOURCE_CURSOR: sResult = QString("Resource Cursor"); break;
+        case RECORD_NAME_RESOURCE_DIALOG: sResult = QString("Resource Dialog"); break;
+        case RECORD_NAME_RESOURCE_ICON: sResult = QString("Resource Icon"); break;
+        case RECORD_NAME_RESOURCE_MENU: sResult = QString("Resource Menu"); break;
+        case RECORD_NAME_RESOURCE_STRINGTABLE: sResult = QString("Resource String Table"); break;
+        case RECORD_NAME_RESOURCE_VERSIONINFO: sResult = QString("Resource Version Info"); break;
+        case RECORD_NAME_REVPROT: sResult = QString("REVProt"); break;
+        case RECORD_NAME_RJCRUSH: sResult = QString("RJcrush"); break;
+        case RECORD_NAME_RLP: sResult = QString("RLP"); break;
+        case RECORD_NAME_RLPACK: sResult = QString("RLPack"); break;
+        case RECORD_NAME_ROGUEPACK: sResult = QString("RoguePack"); break;
+        case RECORD_NAME_ROSASM: sResult = QString("RosAsm"); break;
+        case RECORD_NAME_RTF: sResult = QString("Rich Text Format"); break;
+        case RECORD_NAME_RUBY: sResult = QString("Ruby"); break;
+        case RECORD_NAME_RUST: sResult = QString("Rust"); break;
+        case RECORD_NAME_SAFEENGINELLVM: sResult = QString("Safengine LLVM"); break;
+        case RECORD_NAME_SAFEENGINESHIELDEN: sResult = QString("Safengine Shielden"); break;
+        case RECORD_NAME_SANDHOOK: sResult = QString("SandHook"); break;
+        case RECORD_NAME_SCOBFUSCATOR: sResult = QString("SC Obfuscator"); break;
+        case RECORD_NAME_SCPACK: sResult = QString("SC Pack"); break;
+        case RECORD_NAME_SCRNCH: sResult = QString("SCRNCH"); break;
+        case RECORD_NAME_SDPROTECTORPRO: sResult = QString("SDProtector Pro"); break;
+        case RECORD_NAME_SECNEO: sResult = QString("SecNeo"); break;
+        case RECORD_NAME_SECSHELL: sResult = QString("SecShell"); break;
+        case RECORD_NAME_SECURESHADE: sResult = QString("Secure Shade"); break;
+        case RECORD_NAME_SECUROM: sResult = QString("SecuROM"); break;
+        case RECORD_NAME_SERGREENAPPACKER: sResult = QString("SerGreen Appacker"); break;
+        case RECORD_NAME_SETUPFACTORY: sResult = QString("Setup Factory"); break;
+        case RECORD_NAME_SEXECRYPTER: sResult = QString("Sexe Crypter"); break;
+        case RECORD_NAME_SHELL: sResult = QString("Shell"); break;
+        case RECORD_NAME_SHRINKER: sResult = QString("Shrinker"); break;
+        case RECORD_NAME_SIGNATORY: sResult = QString("signatory"); break;
+        case RECORD_NAME_SIGNUPDATE: sResult = QString("signupdate"); break;
+        case RECORD_NAME_SIMBIOZ: sResult = QString("SimbiOZ"); break;
+        case RECORD_NAME_SIMCRYPTER: sResult = QString("Sim Crypter"); break;
+        case RECORD_NAME_SIMPLECRYPTER: sResult = QString("Simple Crypter"); break;
+        case RECORD_NAME_SIMPLEPACK: sResult = QString("Simple Pack"); break;
+        case RECORD_NAME_SINGLEJAR: sResult = QString("SingleJar"); break;
+        case RECORD_NAME_SIXXPACK: sResult = QString("Sixxpack"); break;
+        case RECORD_NAME_SKATER: sResult = QString("Skater"); break;
+        case RECORD_NAME_SMARTASSEMBLY: sResult = QString("Smart Assembly"); break;
+        case RECORD_NAME_SMARTINSTALLMAKER: sResult = QString("Smart Install Maker"); break;
+        case RECORD_NAME_SMOKESCREENCRYPTER: sResult = QString("SmokeScreen Crypter"); break;
+        case RECORD_NAME_SNAPDRAGONLLVMARM: sResult = QString("Snapdragon LLVM ARM"); break;
+        case RECORD_NAME_SNAPPROTECT: sResult = QString("SnapProtect"); break;
+        case RECORD_NAME_SNOOPCRYPT: sResult = QString("Snoop Crypt"); break;
+        case RECORD_NAME_SOFTDEFENDER: sResult = QString("Soft Defender"); break;
+        case RECORD_NAME_SOFTSENTRY: sResult = QString("SoftSentry"); break;
+        case RECORD_NAME_SOFTWARECOMPRESS: sResult = QString("Software Compress"); break;
+        case RECORD_NAME_SOFTWAREZATOR: sResult = QString("SoftwareZator"); break;
+        case RECORD_NAME_SOLARIS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_SOLARIS); break;
+        case RECORD_NAME_SOURCERYCODEBENCH: sResult = QString("Sourcery CodeBench"); break;
+        case RECORD_NAME_SOURCERYCODEBENCHLITE: sResult = QString("Sourcery CodeBench Lite"); break;
+        case RECORD_NAME_SPICESNET: sResult = QString("Spices.Net"); break;
+        case RECORD_NAME_SPIRIT: sResult = QString("$pirit"); break;
+        case RECORD_NAME_SPOONINSTALLER: sResult = QString("Spoon Installer"); break;
+        case RECORD_NAME_SPOONSTUDIO2011: sResult = QString("Spoon Studio 2011"); break;
+        case RECORD_NAME_SPOONSTUDIO: sResult = QString("Spoon Studio"); break;
+        case RECORD_NAME_SQUEEZSFX: sResult = QString("Squeez Self Extractor"); break;
+        case RECORD_NAME_STARFORCE: sResult = QString("StarForce"); break;
+        case RECORD_NAME_STARTOSLINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_STARTOSLINUX); break;
+        case RECORD_NAME_STASFODIDOCRYPTOR: sResult = QString("StasFodidoCryptor"); break;
+        case RECORD_NAME_STONESPEENCRYPTOR: sResult = QString("Stone's PE Encryptor"); break;
+        case RECORD_NAME_SUNOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_SUNOS); break;
+        case RECORD_NAME_SUNWORKSHOP: sResult = QString("Sun WorkShop"); break;
+        case RECORD_NAME_SUNWORKSHOPCOMPILERS: sResult = QString("Sun WorkShop Compilers"); break;
+        case RECORD_NAME_SUSELINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_SUSELINUX); break;
+        case RECORD_NAME_SVKPROTECTOR: sResult = QString("SVK Protector"); break;
+        case RECORD_NAME_SYLLABLE: sResult = XBinary::osNameIdToString(XBinary::OSNAME_SYLLABLE); break;
+        case RECORD_NAME_SWF: sResult = QString("SWF"); break;
+        case RECORD_NAME_SWIFT: sResult = QString("Swift"); break;
+        case RECORD_NAME_TAR: sResult = QString("tar"); break;
+        case RECORD_NAME_TARMAINSTALLER: sResult = QString("Tarma Installer"); break;
+        case RECORD_NAME_TELOCK: sResult = QString("tElock"); break;
+        case RECORD_NAME_TENCENTLEGU: sResult = QString("Tencent Legu"); break;
+        case RECORD_NAME_TENCENTPROTECTION: sResult = QString("Tencent Protection"); break;
+        case RECORD_NAME_TGRCRYPTER: sResult = QString("TGR Crypter"); break;
+        case RECORD_NAME_THEBESTCRYPTORBYFSK: sResult = QString("The Best Cryptor [by FsK]"); break;
+        case RECORD_NAME_THEMIDAWINLICENSE: sResult = QString("Themida/Winlicense"); break;
+        case RECORD_NAME_THEZONECRYPTER: sResult = QString("The Zone Crypter"); break;
+        case RECORD_NAME_THINSTALL: sResult = QString("Thinstall(VMware ThinApp)"); break;
+        case RECORD_NAME_THUMBC: sResult = QString("Thumb C"); break;
+        case RECORD_NAME_TIFF: sResult = QString("TIFF"); break;
+        case RECORD_NAME_TINYC: sResult = QString("Tiny C"); break;
+        case RECORD_NAME_TINYPROG: sResult = QString("TinyProg"); break;
+        case RECORD_NAME_TINYSIGN: sResult = QString("tiny-sign"); break;
+        case RECORD_NAME_TOTALCOMMANDERINSTALLER: sResult = QString("Total Commander Installer"); break;
+        case RECORD_NAME_TPPPACK: sResult = QString("TTP Pack"); break;
+        case RECORD_NAME_TRU64: sResult = XBinary::osNameIdToString(XBinary::OSNAME_TRU64); break;
+        case RECORD_NAME_TSTCRYPTER: sResult = QString("TsT Crypter"); break;
+        case RECORD_NAME_TTF: sResult = QString("True Type Font"); break;
+        case RECORD_NAME_TTPROTECT: sResult = QString("TTprotect"); break;
+        case RECORD_NAME_TURBOBASIC: sResult = QString("Turbo Basic"); break;
+        case RECORD_NAME_TURBOC: sResult = QString("Turbo C"); break;
+        case RECORD_NAME_TURBOCPP: sResult = QString("Turbo C++"); break;
+        case RECORD_NAME_TURBOLINKER: sResult = QString("Turbo linker"); break;
+        case RECORD_NAME_TURBOLINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_TURBOLINUX); break;
+        case RECORD_NAME_TURBOSTUDIO: sResult = QString("Turbo Studio"); break;
+        case RECORD_NAME_TURKISHCYBERSIGNATURE: sResult = QString("Turkish Cyber Signature"); break;
+        case RECORD_NAME_TURKOJANCRYPTER: sResult = QString("Turkojan Crypter"); break;
+        case RECORD_NAME_TVOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_TVOS); break;
+        case RECORD_NAME_TVOSSDK: sResult = QString("tvOS SDK"); break;
+        case RECORD_NAME_UBUNTUCLANG: sResult = QString("Ubuntu clang"); break;
+        case RECORD_NAME_UBUNTULINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_UBUNTULINUX); break;
+        case RECORD_NAME_UCEXE: sResult = QString("UCEXE"); break;
+        case RECORD_NAME_UNDERGROUNDCRYPTER: sResult = QString("UnderGround Crypter"); break;
+        case RECORD_NAME_UNDOCRYPTER: sResult = QString("UnDo Crypter"); break;
+        case RECORD_NAME_UNICODE: sResult = QString("Unicode"); break;
+        case RECORD_NAME_UNICOMSDK: sResult = QString("Unicom SDK"); break;
+        case RECORD_NAME_UNILINK: sResult = QString("UniLink"); break;
+        case RECORD_NAME_UNITY: sResult = QString("Unity"); break;
+        case RECORD_NAME_UNIVERSALTUPLECOMPILER: sResult = QString("Universal Tuple Compiler"); break;
+        case RECORD_NAME_UNIX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_UNIX); break;
+        case RECORD_NAME_UNKOWNCRYPTER: sResult = QString("unkOwn Crypter"); break;
+        case RECORD_NAME_UNK_UPXLIKE: sResult = QString("(Unknown)UPX-like"); break;
+        case RECORD_NAME_UNOPIX: sResult = QString("Unopix"); break;
+        case RECORD_NAME_UPX: sResult = QString("UPX"); break;
+        case RECORD_NAME_UTF8: sResult = QString("UTF-8"); break;
+        case RECORD_NAME_VALVE: sResult = QString("Valve"); break;
+        case RECORD_NAME_VBNET: sResult = QString("VB .NET"); break;
+        case RECORD_NAME_VBSTOEXE: sResult = QString("Vbs To Exe"); break;
+        case RECORD_NAME_VCASMPROTECTOR: sResult = QString("VCasm-Protector"); break;
+        case RECORD_NAME_VCL: sResult = QString("Visual Component Library"); break;
+        case RECORD_NAME_VCLPACKAGEINFO: sResult = QString("VCL PackageInfo"); break;
+        case RECORD_NAME_VDOG: sResult = QString("VDog"); break;
+        case RECORD_NAME_VERACRYPT: sResult = QString("VeraCrypt"); break;
+        case RECORD_NAME_VINELINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_VINELINUX); break;
+        case RECORD_NAME_VIRBOXPROTECTOR: sResult = QString("Virbox Protector"); break;
+        case RECORD_NAME_VIRTUALIZEPROTECT: sResult = QString("VirtualizeProtect"); break;
+        case RECORD_NAME_VIRTUALPASCAL: sResult = QString("Virtual Pascal"); break;
+        case RECORD_NAME_VISE: sResult = QString("Vise"); break;
+        case RECORD_NAME_VISUALBASIC: sResult = QString("Visual Basic"); break;
+        case RECORD_NAME_VISUALCCPP: sResult = QString("Visual C/C++"); break;
+        case RECORD_NAME_VISUALCSHARP: sResult = QString("Visual C#"); break;
+        case RECORD_NAME_VISUALOBJECTS: sResult = QString("Visual Objects"); break;
+        case RECORD_NAME_VMPROTECT: sResult = QString("VMProtect"); break;
+        case RECORD_NAME_VMUNPACKER: sResult = QString("VMUnpacker"); break;
+        case RECORD_NAME_VMWARE: sResult = QString("VMware"); break;
+        case RECORD_NAME_VPACKER: sResult = QString("VPacker"); break;
+        case RECORD_NAME_WALLE: sResult = QString("Walle"); break;
+        case RECORD_NAME_WANGZEHUALLVM: sResult = QString("wangzehua LLVM"); break;
+        case RECORD_NAME_WATCHOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_WATCHOS); break;
+        case RECORD_NAME_WATCHOSSDK: sResult = QString("watchOS SDK"); break;
+        case RECORD_NAME_WATCOMC: sResult = QString("Watcom C"); break;
+        case RECORD_NAME_WATCOMCCPP: sResult = QString("Watcom C/C++"); break;
+        case RECORD_NAME_WATCOMLINKER: sResult = QString("Watcom linker"); break;
+        case RECORD_NAME_WAV: sResult = QString("WAV"); break;
+        case RECORD_NAME_WDOSX: sResult = QString("WDOSX"); break;
+        case RECORD_NAME_WEBP: sResult = QString("WebP"); break;
+        case RECORD_NAME_WHITELLCRYPT: sResult = QString("Whitell Crypt"); break;
+        case RECORD_NAME_WINACE: sResult = QString("WinACE"); break;
+        case RECORD_NAME_WINAUTH: sResult = QString("Windows Authenticode"); break;
+        case RECORD_NAME_WINDOFCRYPT: sResult = QString("WindOfCrypt"); break;
+        case RECORD_NAME_WINDOWS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_WINDOWS); break;
+        case RECORD_NAME_WINDOWSBITMAP: sResult = QString("Windows Bitmap"); break;
+        case RECORD_NAME_WINDOWSCE: sResult = XBinary::osNameIdToString(XBinary::OSNAME_WINDOWSCE); break;
+        case RECORD_NAME_WINDOWSCURSOR: sResult = QString("Windows Cursor"); break;
+        case RECORD_NAME_WINDOWSICON: sResult = QString("Windows Icon"); break;
+        case RECORD_NAME_WINDOWSINSTALLER: sResult = QString("Windows Installer"); break;
+        case RECORD_NAME_WINDOWSMEDIA: sResult = QString("Windows Media"); break;
+        case RECORD_NAME_WINDRIVERLINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_WINDRIVERLINUX); break;
+        case RECORD_NAME_WINGSCRYPT: sResult = QString("WingsCrypt"); break;
+        case RECORD_NAME_WINKRIPT: sResult = QString("WinKript"); break;
+        case RECORD_NAME_WINRAR: sResult = QString("WinRAR"); break;
+        case RECORD_NAME_WINUPACK: sResult = QString("(Win)Upack"); break;
+        case RECORD_NAME_WINZIP: sResult = QString("WinZip"); break;
+        case RECORD_NAME_WISE: sResult = QString("Wise"); break;
+        case RECORD_NAME_WIXTOOLSET: sResult = QString("WiX Toolset"); break;
+        case RECORD_NAME_WLCRYPT: sResult = QString("WL-Crypt"); break;
+        case RECORD_NAME_WLGROUPCRYPTER: sResult = QString("WL-Group Crypter"); break;
+        case RECORD_NAME_WOUTHRSEXECRYPTER: sResult = QString("WouThrs EXE Crypter"); break;
+        case RECORD_NAME_WWPACK32: sResult = QString("WWPack32"); break;
+        case RECORD_NAME_WWPACK: sResult = QString("WWPack"); break;
+        case RECORD_NAME_WXWIDGETS: sResult = QString("wxWidgets"); break;
+        case RECORD_NAME_X86ASSEMBLER: sResult = QString("x86 Assembler"); break;
+        case RECORD_NAME_XAR: sResult = QString("xar"); break;
+        case RECORD_NAME_XBOX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_XBOX); break;
+        case RECORD_NAME_XCODE: sResult = QString("Xcode"); break;
+        case RECORD_NAME_XCOMP: sResult = QString("XComp"); break;
+        case RECORD_NAME_XENOCODE: sResult = QString("Xenocode"); break;
+        case RECORD_NAME_XENOCODEPOSTBUILD2009FORDOTNET: sResult = QString("Xenocode Postbuild 2009 for .NET"); break;
+        case RECORD_NAME_XENOCODEPOSTBUILD2010FORDOTNET: sResult = QString("Xenocode Postbuild 2010 for .NET"); break;
+        case RECORD_NAME_XENOCODEPOSTBUILD: sResult = QString("Xenocode Postbuild"); break;
+        case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2009: sResult = QString("Xenocode Virtual Application Studio 2009"); break;
+        case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010: sResult = QString("Xenocode Virtual Application Studio 2010"); break;
+        case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010ISVEDITION: sResult = QString("Xenocode Virtual Application Studio 2010 ISV Edition"); break;
+        case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2012ISVEDITION: sResult = QString("Xenocode Virtual Application Studio 2012 ISV Edition"); break;
+        case RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2013ISVEDITION: sResult = QString("Xenocode Virtual Application Studio 2013 ISV Edition"); break;
+        case RECORD_NAME_XML: sResult = QString("XML"); break;
+        case RECORD_NAME_XPACK: sResult = QString("XPack"); break;
+        case RECORD_NAME_XTREAMLOK: sResult = QString("Xtreamlok"); break;
+        case RECORD_NAME_XTREMEPROTECTOR: sResult = QString("Xtreme-Protector"); break;
+        case RECORD_NAME_XVOLKOLAK: sResult = QString("XVolkolak"); break;
+        case RECORD_NAME_XZ: sResult = QString("XZ"); break;
+        case RECORD_NAME_YANDEX: sResult = QString("Yandex"); break;
+        case RECORD_NAME_YANO: sResult = QString("Yano"); break;
+        case RECORD_NAME_YIDUN: sResult = QString("yidun"); break;
+        case RECORD_NAME_YODASCRYPTER: sResult = QString("Yoda's Crypter"); break;
+        case RECORD_NAME_YODASPROTECTOR: sResult = QString("Yoda's Protector"); break;
+        case RECORD_NAME_YZPACK: sResult = QString("YZPack"); break;
+        case RECORD_NAME_ZELDACRYPT: sResult = QString("ZeldaCrypt"); break;
+        case RECORD_NAME_ZIG: sResult = QString("Zig"); break;
+        case RECORD_NAME_ZIP: sResult = QString("ZIP"); break;
+        case RECORD_NAME_ZLIB: sResult = QString("zlib"); break;
+        case RECORD_NAME_ZPROTECT: sResult = QString("ZProtect"); break;
+        case RECORD_NAME_UNKNOWN0: sResult = QString("_Unknown"); break;
+        case RECORD_NAME_UNKNOWN1: sResult = QString("_Unknown"); break;
+        case RECORD_NAME_UNKNOWN2: sResult = QString("_Unknown"); break;
+        case RECORD_NAME_UNKNOWN3: sResult = QString("_Unknown"); break;
+        case RECORD_NAME_UNKNOWN4: sResult = QString("_Unknown"); break;
+        case RECORD_NAME_UNKNOWN5: sResult = QString("_Unknown"); break;
+        case RECORD_NAME_UNKNOWN6: sResult = QString("_Unknown"); break;
+        case RECORD_NAME_UNKNOWN7: sResult = QString("_Unknown"); break;
+        case RECORD_NAME_UNKNOWN8: sResult = QString("_Unknown"); break;
+        case RECORD_NAME_UNKNOWN9: sResult = QString("_Unknown"); break;
     }
     return sResult;
 }
@@ -2619,51 +999,21 @@ QString SpecAbstract::heurTypeIdToString(SpecAbstract::DETECTTYPE id)
     QString sResult = tr("Unknown");
 
     switch (id) {
-        case DETECTTYPE_UNKNOWN:
-            sResult = tr("Unknown");
-            break;
-        case DETECTTYPE_HEADER:
-            sResult = tr("Header");
-            break;
-        case DETECTTYPE_OVERLAY:
-            sResult = tr("Overlay");
-            break;
-        case DETECTTYPE_ENTRYPOINT:
-            sResult = tr("Entry point");
-            break;
-        case DETECTTYPE_SECTIONNAME:
-            sResult = tr("Section name");
-            break;
-        case DETECTTYPE_IMPORTHASH:
-            sResult = tr("Import hash");
-            break;
-        case DETECTTYPE_CODESECTION:
-            sResult = tr("Code section");
-            break;
-        case DETECTTYPE_ENTRYPOINTSECTION:
-            sResult = tr("Entry point section");
-            break;
-        case DETECTTYPE_NETANSISTRING:
-            sResult = QString(".NET ANSI %1").arg(tr("String"));
-            break;
-        case DETECTTYPE_NETUNICODESTRING:
-            sResult = QString(".NET Unicode %1").arg(tr("String"));
-            break;
-        case DETECTTYPE_RICH:
-            sResult = QString("Rich");
-            break;
-        case DETECTTYPE_ARCHIVE:
-            sResult = tr("Archive");
-            break;
-        case DETECTTYPE_RESOURCES:
-            sResult = tr("Resources");
-            break;
-        case DETECTTYPE_DEXSTRING:
-            sResult = QString("DEX %1").arg(tr("String"));
-            break;
-        case DETECTTYPE_DEXTYPE:
-            sResult = QString("DEX %1").arg(tr("Type"));
-            break;
+        case DETECTTYPE_UNKNOWN: sResult = tr("Unknown"); break;
+        case DETECTTYPE_HEADER: sResult = tr("Header"); break;
+        case DETECTTYPE_OVERLAY: sResult = tr("Overlay"); break;
+        case DETECTTYPE_ENTRYPOINT: sResult = tr("Entry point"); break;
+        case DETECTTYPE_SECTIONNAME: sResult = tr("Section name"); break;
+        case DETECTTYPE_IMPORTHASH: sResult = tr("Import hash"); break;
+        case DETECTTYPE_CODESECTION: sResult = tr("Code section"); break;
+        case DETECTTYPE_ENTRYPOINTSECTION: sResult = tr("Entry point section"); break;
+        case DETECTTYPE_NETANSISTRING: sResult = QString(".NET ANSI %1").arg(tr("String")); break;
+        case DETECTTYPE_NETUNICODESTRING: sResult = QString(".NET Unicode %1").arg(tr("String")); break;
+        case DETECTTYPE_RICH: sResult = QString("Rich"); break;
+        case DETECTTYPE_ARCHIVE: sResult = tr("Archive"); break;
+        case DETECTTYPE_RESOURCES: sResult = tr("Resources"); break;
+        case DETECTTYPE_DEXSTRING: sResult = QString("DEX %1").arg(tr("String")); break;
+        case DETECTTYPE_DEXTYPE: sResult = QString("DEX %1").arg(tr("Type")); break;
     }
 
     return sResult;
@@ -5522,39 +3872,17 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                     quint8 nByte = pPEInfo->sEntryPointSignature.mid(54, 2).toUInt(nullptr, 16);
 
                     switch (nByte) {
-                        case 0x5C:
-                            ss.sVersion = "0.1";
-                            break;
-                        case 0xB7:
-                            ss.sVersion = "0.3";
-                            break;
-                        case 0x73:
-                            ss.sVersion = "0.4";
-                            break;
-                        case 0x83:
-                            ss.sVersion = "0.7";
-                            break;
-                        case 0xC8:
-                            ss.sVersion = "1.0";
-                            break;
-                        case 0x7D:
-                            ss.sVersion = "1.1";
-                            break;
-                        case 0x71:
-                            ss.sVersion = "1.3beta";
-                            break;
-                        case 0xAC:
-                            ss.sVersion = "1.3";
-                            break;
-                        case 0x88:
-                            ss.sVersion = "1.3x";
-                            break;
-                        case 0x17:
-                            ss.sVersion = "1.32";
-                            break;
-                        case 0x77:
-                            ss.sVersion = "1.33";
-                            break;
+                        case 0x5C: ss.sVersion = "0.1"; break;
+                        case 0xB7: ss.sVersion = "0.3"; break;
+                        case 0x73: ss.sVersion = "0.4"; break;
+                        case 0x83: ss.sVersion = "0.7"; break;
+                        case 0xC8: ss.sVersion = "1.0"; break;
+                        case 0x7D: ss.sVersion = "1.1"; break;
+                        case 0x71: ss.sVersion = "1.3beta"; break;
+                        case 0xAC: ss.sVersion = "1.3"; break;
+                        case 0x88: ss.sVersion = "1.3x"; break;
+                        case 0x17: ss.sVersion = "1.32"; break;
+                        case 0x77: ss.sVersion = "1.33"; break;
                     }
                 }
 
@@ -5920,66 +4248,26 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                     qDebug("nBuildNumber: %x", nBuildNumber);
 #endif
                     switch (nBuildNumber) {
-                        case 0x21:
-                            ss.sVersion = "0.21";
-                            break;
-                        case 0x22:
-                            ss.sVersion = "0.22";
-                            break;
-                        case 0x23:
-                            ss.sVersion = "0.23";
-                            break;
-                        case 0x24:
-                            ss.sVersion = "0.24";
-                            break;
-                        case 0x25:
-                            ss.sVersion = "0.25";
-                            break;
-                        case 0x26:
-                            ss.sVersion = "0.26";
-                            break;
-                        case 0x27:
-                            ss.sVersion = "0.27";
-                            break;
-                        case 0x28:
-                            ss.sVersion = "0.28";
-                            break;
-                        case 0x29:
-                            ss.sVersion = "0.29";
-                            break;
-                        case 0x30:
-                            ss.sVersion = "0.30";
-                            break;
-                        case 0x31:
-                            ss.sVersion = "0.31";
-                            break;
-                        case 0x32:
-                            ss.sVersion = "0.32";
-                            break;
-                        case 0x33:
-                            ss.sVersion = "0.33";
-                            break;
-                        case 0x34:
-                            ss.sVersion = "0.34";
-                            break;
-                        case 0x35:
-                            ss.sVersion = "0.35";
-                            break;
-                        case 0x36:
-                            ss.sVersion = "0.36 beta";
-                            break;
-                        case 0x37:
-                            ss.sVersion = "0.37 beta";
-                            break;
-                        case 0x38:
-                            ss.sVersion = "0.38 beta";
-                            break;
-                        case 0x39:
-                            ss.sVersion = "0.39 final";
-                            break;
-                        case 0x3A:
-                            ss.sVersion = "0.399";
-                            break;
+                        case 0x21: ss.sVersion = "0.21"; break;
+                        case 0x22: ss.sVersion = "0.22"; break;
+                        case 0x23: ss.sVersion = "0.23"; break;
+                        case 0x24: ss.sVersion = "0.24"; break;
+                        case 0x25: ss.sVersion = "0.25"; break;
+                        case 0x26: ss.sVersion = "0.26"; break;
+                        case 0x27: ss.sVersion = "0.27"; break;
+                        case 0x28: ss.sVersion = "0.28"; break;
+                        case 0x29: ss.sVersion = "0.29"; break;
+                        case 0x30: ss.sVersion = "0.30"; break;
+                        case 0x31: ss.sVersion = "0.31"; break;
+                        case 0x32: ss.sVersion = "0.32"; break;
+                        case 0x33: ss.sVersion = "0.33"; break;
+                        case 0x34: ss.sVersion = "0.34"; break;
+                        case 0x35: ss.sVersion = "0.35"; break;
+                        case 0x36: ss.sVersion = "0.36 beta"; break;
+                        case 0x37: ss.sVersion = "0.37 beta"; break;
+                        case 0x38: ss.sVersion = "0.38 beta"; break;
+                        case 0x39: ss.sVersion = "0.39 final"; break;
+                        case 0x3A: ss.sVersion = "0.399"; break;
                     }
 
                     pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
@@ -9553,9 +7841,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
                             case 34:
                             case 35:
                             case 36:
-                            case 56:
-                                bHeurGCC = true;
-                                break;
+                            case 56: bHeurGCC = true; break;
                         }
 
                         break;
@@ -9736,21 +8022,11 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
                     switch (pPEInfo->nMajorLinkerVersion) {
                         case 2:
                             switch (pPEInfo->nMinorLinkerVersion) {
-                                case 23:
-                                    ssTool.sVersion = "4.7.0-4.8.0";
-                                    break;
-                                case 24:
-                                    ssTool.sVersion = "4.8.2-4.9.2";
-                                    break;
-                                case 25:
-                                    ssTool.sVersion = "5.3.0";
-                                    break;
-                                case 29:
-                                    ssTool.sVersion = "7.3.0";
-                                    break;
-                                case 30:
-                                    ssTool.sVersion = "7.3.0";
-                                    break;  // TODO Check
+                                case 23: ssTool.sVersion = "4.7.0-4.8.0"; break;
+                                case 24: ssTool.sVersion = "4.8.2-4.9.2"; break;
+                                case 25: ssTool.sVersion = "5.3.0"; break;
+                                case 29: ssTool.sVersion = "7.3.0"; break;
+                                case 30: ssTool.sVersion = "7.3.0"; break;  // TODO Check
                             }
                             break;
                     }
@@ -11785,33 +10061,15 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
         bool bDetected = false;
 
         switch (binary.read_uint8(0x5)) {
-            case 0x30:
-                bDetected = 1;
-                break;
-            case 0x31:
-                bDetected = 1;
-                break;
-            case 0x32:
-                bDetected = 1;
-                break;
-            case 0x33:
-                bDetected = 1;
-                break;
-            case 0x34:
-                bDetected = 1;
-                break;
-            case 0x35:
-                bDetected = 1;
-                break;
-            case 0x36:
-                bDetected = 1;
-                break;
-            case 0x64:
-                bDetected = 1;
-                break;
-            case 0x73:
-                bDetected = 1;
-                break;
+            case 0x30: bDetected = 1; break;
+            case 0x31: bDetected = 1; break;
+            case 0x32: bDetected = 1; break;
+            case 0x33: bDetected = 1; break;
+            case 0x34: bDetected = 1; break;
+            case 0x35: bDetected = 1; break;
+            case 0x36: bDetected = 1; break;
+            case 0x64: bDetected = 1; break;
+            case 0x73: bDetected = 1; break;
         }
 
         if (bDetected) {
@@ -11933,42 +10191,18 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice, SpecAbstract::SCAN_
 
         if (nMajor) {
             switch (nMajor) {
-                case 0x2D:
-                    sVersion = "JDK 1.1";
-                    break;
-                case 0x2E:
-                    sVersion = "JDK 1.2";
-                    break;
-                case 0x2F:
-                    sVersion = "JDK 1.3";
-                    break;
-                case 0x30:
-                    sVersion = "JDK 1.4";
-                    break;
-                case 0x31:
-                    sVersion = "Java SE 5.0";
-                    break;
-                case 0x32:
-                    sVersion = "Java SE 6.0";
-                    break;
-                case 0x33:
-                    sVersion = "Java SE 7";
-                    break;
-                case 0x34:
-                    sVersion = "Java SE 8";
-                    break;
-                case 0x35:
-                    sVersion = "Java SE 9";
-                    break;
-                case 0x36:
-                    sVersion = "Java SE 10";
-                    break;
-                case 0x37:
-                    sVersion = "Java SE 11";
-                    break;
-                case 0x38:
-                    sVersion = "Java SE 12";
-                    break;
+                case 0x2D: sVersion = "JDK 1.1"; break;
+                case 0x2E: sVersion = "JDK 1.2"; break;
+                case 0x2F: sVersion = "JDK 1.3"; break;
+                case 0x30: sVersion = "JDK 1.4"; break;
+                case 0x31: sVersion = "Java SE 5.0"; break;
+                case 0x32: sVersion = "Java SE 6.0"; break;
+                case 0x33: sVersion = "Java SE 7"; break;
+                case 0x34: sVersion = "Java SE 8"; break;
+                case 0x35: sVersion = "Java SE 9"; break;
+                case 0x36: sVersion = "Java SE 10"; break;
+                case 0x37: sVersion = "Java SE 11"; break;
+                case 0x38: sVersion = "Java SE 12"; break;
             }
 
             if ((sVersion != "") && (nMinor)) {
@@ -12116,18 +10350,10 @@ void SpecAbstract::Binary_handle_Databases(QIODevice *pDevice, SpecAbstract::SCA
         quint32 nVersion = binary.read_int32(0x14);
 
         switch (nVersion) {
-            case 0x0000:
-                ss.sVersion = "JET3";
-                break;  // TODO
-            case 0x0001:
-                ss.sVersion = "JET4";
-                break;  // TODO
-            case 0x0002:
-                ss.sVersion = "2007";
-                break;
-            case 0x0103:
-                ss.sVersion = "2010";
-                break;
+            case 0x0000: ss.sVersion = "JET3"; break;  // TODO
+            case 0x0001: ss.sVersion = "JET4"; break;  // TODO
+            case 0x0002: ss.sVersion = "2007"; break;
+            case 0x0103: ss.sVersion = "2010"; break;
         }
 
         pBinaryInfo->mapResultDatabases.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
@@ -12178,15 +10404,9 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, SpecAbstract::SCAN_O
             QString sVersion;
 
             switch (qFromBigEndian(pBinaryInfo->basic_info.sHeaderSignature.mid(14 * 2, 8).toUInt(nullptr, 16))) {
-                case 40:
-                    sVersion = "3";
-                    break;
-                case 108:
-                    sVersion = "4";
-                    break;
-                case 124:
-                    sVersion = "5";
-                    break;
+                case 40: sVersion = "3"; break;
+                case 108: sVersion = "4"; break;
+                case 124: sVersion = "5"; break;
             }
 
             if (sVersion != "") {
@@ -17524,39 +15744,17 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_UPX_vi(QIODevice *pDevice, SpecAbstra
                     // #define M_CL1B_LE32     11
                     // #define M_CL1B_8        12
                     // #define M_CL1B_LE16     13
-                    case 2:
-                        result.sInfo = append(result.sInfo, "NRV2B_LE32");
-                        break;
-                    case 3:
-                        result.sInfo = append(result.sInfo, "NRV2B_8");
-                        break;
-                    case 4:
-                        result.sInfo = append(result.sInfo, "NRV2B_LE16");
-                        break;
-                    case 5:
-                        result.sInfo = append(result.sInfo, "NRV2D_LE32");
-                        break;
-                    case 6:
-                        result.sInfo = append(result.sInfo, "NRV2D_8");
-                        break;
-                    case 7:
-                        result.sInfo = append(result.sInfo, "NRV2D_LE16");
-                        break;
-                    case 8:
-                        result.sInfo = append(result.sInfo, "NRV2E_LE32");
-                        break;
-                    case 9:
-                        result.sInfo = append(result.sInfo, "NRV2E_8");
-                        break;
-                    case 10:
-                        result.sInfo = append(result.sInfo, "NRV2E_LE16");
-                        break;
-                    case 14:
-                        result.sInfo = append(result.sInfo, "LZMA");
-                        break;
-                    case 15:
-                        result.sInfo = append(result.sInfo, "zlib");
-                        break;
+                    case 2: result.sInfo = append(result.sInfo, "NRV2B_LE32"); break;
+                    case 3: result.sInfo = append(result.sInfo, "NRV2B_8"); break;
+                    case 4: result.sInfo = append(result.sInfo, "NRV2B_LE16"); break;
+                    case 5: result.sInfo = append(result.sInfo, "NRV2D_LE32"); break;
+                    case 6: result.sInfo = append(result.sInfo, "NRV2D_8"); break;
+                    case 7: result.sInfo = append(result.sInfo, "NRV2D_LE16"); break;
+                    case 8: result.sInfo = append(result.sInfo, "NRV2E_LE32"); break;
+                    case 9: result.sInfo = append(result.sInfo, "NRV2E_8"); break;
+                    case 10: result.sInfo = append(result.sInfo, "NRV2E_LE16"); break;
+                    case 14: result.sInfo = append(result.sInfo, "LZMA"); break;
+                    case 15: result.sInfo = append(result.sInfo, "zlib"); break;
                 }
 
                 if (result.sInfo != "") {
@@ -17925,96 +16123,36 @@ SpecAbstract::VI_STRUCT SpecAbstract::PE_get_PECompact_vi(QIODevice *pDevice, Sp
 
             // TODO !!! more build versions
             switch (nBuildNumber) {
-                case 20206:
-                    result.sVersion = "2.70";
-                    break;
-                case 20240:
-                    result.sVersion = "2.78a";
-                    break;
-                case 20243:
-                    result.sVersion = "2.79b1";
-                    break;
-                case 20245:
-                    result.sVersion = "2.79bB";
-                    break;
-                case 20247:
-                    result.sVersion = "2.79bD";
-                    break;
-                case 20252:
-                    result.sVersion = "2.80b1";
-                    break;
-                case 20256:
-                    result.sVersion = "2.80b5";
-                    break;
-                case 20261:
-                    result.sVersion = "2.82";
-                    break;
-                case 20285:
-                    result.sVersion = "2.92.0";
-                    break;
-                case 20288:
-                    result.sVersion = "2.93b3";
-                    break;
-                case 20294:
-                    result.sVersion = "2.96.2";
-                    break;
-                case 20295:
-                    result.sVersion = "2.97b1";
-                    break;
-                case 20296:
-                    result.sVersion = "2.98";
-                    break;
-                case 20300:
-                    result.sVersion = "2.98.04";
-                    break;
-                case 20301:
-                    result.sVersion = "2.98.05";
-                    break;
-                case 20302:
-                    result.sVersion = "2.98.06";
-                    break;
-                case 20303:
-                    result.sVersion = "2.99b";
-                    break;
-                case 20308:
-                    result.sVersion = "3.00.2";
-                    break;
-                case 20312:
-                    result.sVersion = "3.01.3";
-                    break;
-                case 20317:
-                    result.sVersion = "3.02.1";
-                    break;
-                case 20318:
-                    result.sVersion = "3.02.2";
-                    break;
-                case 20323:
-                    result.sVersion = "3.03.5b";
-                    break;
-                case 20327:
-                    result.sVersion = "3.03.9b";
-                    break;
-                case 20329:
-                    result.sVersion = "3.03.10b";
-                    break;
-                case 20334:
-                    result.sVersion = "3.03.12b";
-                    break;
-                case 20342:
-                    result.sVersion = "3.03.18b";
-                    break;
-                case 20343:
-                    result.sVersion = "3.03.19b";
-                    break;
-                case 20344:
-                    result.sVersion = "3.03.20b";
-                    break;
-                case 20345:
-                    result.sVersion = "3.03.21b";
-                    break;
-                case 20348:
-                    result.sVersion = "3.03.23b";
-                    break;
+                case 20206: result.sVersion = "2.70"; break;
+                case 20240: result.sVersion = "2.78a"; break;
+                case 20243: result.sVersion = "2.79b1"; break;
+                case 20245: result.sVersion = "2.79bB"; break;
+                case 20247: result.sVersion = "2.79bD"; break;
+                case 20252: result.sVersion = "2.80b1"; break;
+                case 20256: result.sVersion = "2.80b5"; break;
+                case 20261: result.sVersion = "2.82"; break;
+                case 20285: result.sVersion = "2.92.0"; break;
+                case 20288: result.sVersion = "2.93b3"; break;
+                case 20294: result.sVersion = "2.96.2"; break;
+                case 20295: result.sVersion = "2.97b1"; break;
+                case 20296: result.sVersion = "2.98"; break;
+                case 20300: result.sVersion = "2.98.04"; break;
+                case 20301: result.sVersion = "2.98.05"; break;
+                case 20302: result.sVersion = "2.98.06"; break;
+                case 20303: result.sVersion = "2.99b"; break;
+                case 20308: result.sVersion = "3.00.2"; break;
+                case 20312: result.sVersion = "3.01.3"; break;
+                case 20317: result.sVersion = "3.02.1"; break;
+                case 20318: result.sVersion = "3.02.2"; break;
+                case 20323: result.sVersion = "3.03.5b"; break;
+                case 20327: result.sVersion = "3.03.9b"; break;
+                case 20329: result.sVersion = "3.03.10b"; break;
+                case 20334: result.sVersion = "3.03.12b"; break;
+                case 20342: result.sVersion = "3.03.18b"; break;
+                case 20343: result.sVersion = "3.03.19b"; break;
+                case 20344: result.sVersion = "3.03.20b"; break;
+                case 20345: result.sVersion = "3.03.21b"; break;
+                case 20348: result.sVersion = "3.03.23b"; break;
                 default: {
                     if (nBuildNumber > 20308) {
                         result.sVersion = QString("3.X(build %1)").arg(nBuildNumber);
@@ -18745,9 +16883,7 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
             case RECORD_NAME_THUMBC:
             case RECORD_NAME_TINYC:
             case RECORD_NAME_TURBOC:
-            case RECORD_NAME_WATCOMC:
-                ssLanguage.name = RECORD_NAME_C;
-                break;
+            case RECORD_NAME_WATCOMC: ssLanguage.name = RECORD_NAME_C; break;
             case RECORD_NAME_CCPP:
             case RECORD_NAME_ARMCCPP:
             case RECORD_NAME_ARMNEONCCPP:
@@ -18757,9 +16893,7 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
             case RECORD_NAME_MSYS:
             case RECORD_NAME_MSYS2:
             case RECORD_NAME_VISUALCCPP:
-            case RECORD_NAME_WATCOMCCPP:
-                ssLanguage.name = RECORD_NAME_CCPP;
-                break;
+            case RECORD_NAME_WATCOMCCPP: ssLanguage.name = RECORD_NAME_CCPP; break;
             case RECORD_NAME_CLANG:
             case RECORD_NAME_GCC:
             case RECORD_NAME_ALIPAYCLANG:
@@ -18782,9 +16916,7 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
             case RECORD_NAME_EMBARCADEROCPP:
             case RECORD_NAME_EMBARCADEROCPPBUILDER:
             case RECORD_NAME_MICROSOFTCPP:
-            case RECORD_NAME_TURBOCPP:
-                ssLanguage.name = RECORD_NAME_CPP;
-                break;
+            case RECORD_NAME_TURBOCPP: ssLanguage.name = RECORD_NAME_CPP; break;
             case RECORD_NAME_ASSEMBLER:
             case RECORD_NAME_ARMTHUMBMACROASSEMBLER:
             case RECORD_NAME_GNUASSEMBLER:
@@ -18794,19 +16926,13 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
             case RECORD_NAME_GOASM:
             case RECORD_NAME_MASM:
             case RECORD_NAME_MASM32:
-            case RECORD_NAME_NASM:
-                ssLanguage.name = RECORD_NAME_X86ASSEMBLER;
-                break;
-            case RECORD_NAME_AUTOIT:
-                ssLanguage.name = RECORD_NAME_AUTOIT;
-                break;
+            case RECORD_NAME_NASM: ssLanguage.name = RECORD_NAME_X86ASSEMBLER; break;
+            case RECORD_NAME_AUTOIT: ssLanguage.name = RECORD_NAME_AUTOIT; break;
             case RECORD_NAME_OBJECTPASCAL:
             case RECORD_NAME_LAZARUS:
             case RECORD_NAME_FPC:
             case RECORD_NAME_VIRTUALPASCAL:
-            case RECORD_NAME_IBMPCPASCAL:
-                ssLanguage.name = RECORD_NAME_OBJECTPASCAL;
-                break;
+            case RECORD_NAME_IBMPCPASCAL: ssLanguage.name = RECORD_NAME_OBJECTPASCAL; break;
             case RECORD_NAME_BORLANDDELPHI:
             case RECORD_NAME_BORLANDDELPHIDOTNET:
             case RECORD_NAME_BORLANDOBJECTPASCALDELPHI:
@@ -18814,20 +16940,12 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
             case RECORD_NAME_CODEGEAROBJECTPASCALDELPHI:
             case RECORD_NAME_EMBARCADERODELPHI:
             case RECORD_NAME_EMBARCADERODELPHIDOTNET:
-            case RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI:
-                ssLanguage.name = RECORD_NAME_OBJECTPASCALDELPHI;
-                break;
+            case RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI: ssLanguage.name = RECORD_NAME_OBJECTPASCALDELPHI; break;
             case RECORD_NAME_D:
-            case RECORD_NAME_DMD32D:
-                ssLanguage.name = RECORD_NAME_D;
-                break;
+            case RECORD_NAME_DMD32D: ssLanguage.name = RECORD_NAME_D; break;
             case RECORD_NAME_CSHARP:
-            case RECORD_NAME_DOTNET:
-                ssLanguage.name = RECORD_NAME_CSHARP;
-                break;
-            case RECORD_NAME_GO:
-                ssLanguage.name = RECORD_NAME_GO;
-                break;
+            case RECORD_NAME_DOTNET: ssLanguage.name = RECORD_NAME_CSHARP; break;
+            case RECORD_NAME_GO: ssLanguage.name = RECORD_NAME_GO; break;
             case RECORD_NAME_JAVA:
             case RECORD_NAME_JVM:
             case RECORD_NAME_JDK:
@@ -18837,52 +16955,27 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
                 // case RECORD_NAME_DX:
                 ssLanguage.name = RECORD_NAME_JAVA;
                 break;
-            case RECORD_NAME_JSCRIPT:
-                ssLanguage.name = RECORD_NAME_ECMASCRIPT;
-                break;
-            case RECORD_NAME_KOTLIN:
-                ssLanguage.name = RECORD_NAME_KOTLIN;
-                break;
+            case RECORD_NAME_JSCRIPT: ssLanguage.name = RECORD_NAME_ECMASCRIPT; break;
+            case RECORD_NAME_KOTLIN: ssLanguage.name = RECORD_NAME_KOTLIN; break;
             case RECORD_NAME_FORTRAN:
-            case RECORD_NAME_LAYHEYFORTRAN90:
-                ssLanguage.name = RECORD_NAME_FORTRAN;
-                break;
-            case RECORD_NAME_NIM:
-                ssLanguage.name = RECORD_NAME_NIM;
-                break;
-            case RECORD_NAME_OBJECTIVEC:
-                ssLanguage.name = RECORD_NAME_OBJECTIVEC;
-                break;
+            case RECORD_NAME_LAYHEYFORTRAN90: ssLanguage.name = RECORD_NAME_FORTRAN; break;
+            case RECORD_NAME_NIM: ssLanguage.name = RECORD_NAME_NIM; break;
+            case RECORD_NAME_OBJECTIVEC: ssLanguage.name = RECORD_NAME_OBJECTIVEC; break;
             case RECORD_NAME_BASIC:
             case RECORD_NAME_BASIC4ANDROID:
             case RECORD_NAME_POWERBASIC:
             case RECORD_NAME_PUREBASIC:
             case RECORD_NAME_TURBOBASIC:
             case RECORD_NAME_VBNET:
-            case RECORD_NAME_VISUALBASIC:
-                ssLanguage.name = RECORD_NAME_BASIC;
-                break;
-            case RECORD_NAME_RUST:
-                ssLanguage.name = RECORD_NAME_RUST;
-                break;
-            case RECORD_NAME_RUBY:
-                ssLanguage.name = RECORD_NAME_RUBY;
-                break;
+            case RECORD_NAME_VISUALBASIC: ssLanguage.name = RECORD_NAME_BASIC; break;
+            case RECORD_NAME_RUST: ssLanguage.name = RECORD_NAME_RUST; break;
+            case RECORD_NAME_RUBY: ssLanguage.name = RECORD_NAME_RUBY; break;
             case RECORD_NAME_PYTHON:
-            case RECORD_NAME_PYINSTALLER:
-                ssLanguage.name = RECORD_NAME_PYTHON;
-                break;
-            case RECORD_NAME_SWIFT:
-                ssLanguage.name = RECORD_NAME_SWIFT;
-                break;
-            case RECORD_NAME_PERL:
-                ssLanguage.name = RECORD_NAME_PERL;
-                break;
-            case RECORD_NAME_ZIG:
-                ssLanguage.name = RECORD_NAME_ZIG;
-                break;
-            default:
-                ssLanguage.name = RECORD_NAME_UNKNOWN;
+            case RECORD_NAME_PYINSTALLER: ssLanguage.name = RECORD_NAME_PYTHON; break;
+            case RECORD_NAME_SWIFT: ssLanguage.name = RECORD_NAME_SWIFT; break;
+            case RECORD_NAME_PERL: ssLanguage.name = RECORD_NAME_PERL; break;
+            case RECORD_NAME_ZIG: ssLanguage.name = RECORD_NAME_ZIG; break;
+            default: ssLanguage.name = RECORD_NAME_UNKNOWN;
         }
 
         if (ssLanguage.name != RECORD_NAME_UNKNOWN) {
