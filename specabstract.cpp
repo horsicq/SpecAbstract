@@ -1688,7 +1688,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_NagainLLVM_string(const QString &sStr
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_iJiami_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_iJiami_string(const QString &sString)
 {
     VI_STRUCT result = {};
     // https://www.ijiami.cn/
@@ -6574,11 +6574,11 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 else if (sCompilerBuildVersion == "24723")
                     ssTool.sVersion = "2015";  // Update 4? 2017?
                 else if (sCompilerBuildVersion == "25017")
-                    ssTool.sVersion = "2017 version 15.0-15.2";
+                    ssTool.sVersion = "2017 version 15.0-15.2";  // 14.10
                 else if (sCompilerBuildVersion == "25019")
                     ssTool.sVersion = "2017";  // 15.2?
                 else if (sCompilerBuildVersion == "25506")
-                    ssTool.sVersion = "2017 version 15.3.0";
+                    ssTool.sVersion = "2017 version 15.3.0";  // 14.11
                 else if (sCompilerBuildVersion == "25507")
                     ssTool.sVersion = "2017 version 15.3.3";
                 else if (sCompilerBuildVersion == "25542")
@@ -6586,7 +6586,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 else if (sCompilerBuildVersion == "25547")
                     ssTool.sVersion = "2017 version 15.4.5";
                 else if (sCompilerBuildVersion == "25830")
-                    ssTool.sVersion = "2017 version 15.5.0";
+                    ssTool.sVersion = "2017 version 15.5.0";  // 14.12
                 else if (sCompilerBuildVersion == "25831")
                     ssTool.sVersion = "2017 version 15.5.2";
                 else if (sCompilerBuildVersion == "25834")
@@ -6594,7 +6594,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 else if (sCompilerBuildVersion == "25835")
                     ssTool.sVersion = "2017 version 15.5.6-15.5.7";
                 else if (sCompilerBuildVersion == "26128")
-                    ssTool.sVersion = "2017 version 15.6.0-15.6.2";
+                    ssTool.sVersion = "2017 version 15.6.0-15.6.2";  // 14.13
                 else if (sCompilerBuildVersion == "26129")
                     ssTool.sVersion = "2017 version 15.6.3-15.6.4";
                 else if (sCompilerBuildVersion == "26131")
@@ -6602,7 +6602,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 else if (sCompilerBuildVersion == "26132")
                     ssTool.sVersion = "2017 version 15.6.7";
                 else if (sCompilerBuildVersion == "26428")
-                    ssTool.sVersion = "2017 version 15.7.1";
+                    ssTool.sVersion = "2017 version 15.7.1";  // 14.14
                 else if (sCompilerBuildVersion == "26429")
                     ssTool.sVersion = "2017 version 15.7.2";
                 else if (sCompilerBuildVersion == "26430")
@@ -6612,7 +6612,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 else if (sCompilerBuildVersion == "26433")
                     ssTool.sVersion = "2017 version 15.7.5";
                 else if (sCompilerBuildVersion == "26726")
-                    ssTool.sVersion = "2017 version 15.8.0";
+                    ssTool.sVersion = "2017 version 15.8.0";  // 14.15
                 else if (sCompilerBuildVersion == "26729")
                     ssTool.sVersion = "2017 version 15.8.4";
                 else if (sCompilerBuildVersion == "26730")
@@ -6620,7 +6620,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 else if (sCompilerBuildVersion == "26732")
                     ssTool.sVersion = "2017 version 15.8.5";
                 else if (sCompilerBuildVersion == "26926")
-                    ssTool.sVersion = "2017 version 15.9.0";
+                    ssTool.sVersion = "2017 version 15.9.0";  // 14.16
                 else if (sCompilerBuildVersion == "27023")
                     ssTool.sVersion = "2017 version 15.9.1";
                 else if (sCompilerBuildVersion == "27025")
@@ -6632,15 +6632,15 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 else if (sCompilerBuildVersion == "27030")
                     ssTool.sVersion = "2017 version 15.9.11";
                 else if (sCompilerBuildVersion == "27508")
-                    ssTool.sVersion = "2019 version 16.0.0";
+                    ssTool.sVersion = "2019 version 16.0.0";  // 14.20
                 else if (sCompilerBuildVersion == "27702")
-                    ssTool.sVersion = "2019 version 16.1.2";
+                    ssTool.sVersion = "2019 version 16.1.2";  // 14.21
                 else if (sCompilerBuildVersion == "27905")
-                    ssTool.sVersion = "2019 version 16.2.3";
+                    ssTool.sVersion = "2019 version 16.2.3";  // 14.22
                 else if (sCompilerBuildVersion == "28105")
-                    ssTool.sVersion = "2019 version 16.3.2";
+                    ssTool.sVersion = "2019 version 16.3.2";  // 14.23
                 else if (sCompilerBuildVersion == "28314")
-                    ssTool.sVersion = "2019 version 16.4.0";
+                    ssTool.sVersion = "2019 version 16.4.0";  // 14.24
                 else if (sCompilerBuildVersion == "28315")
                     ssTool.sVersion = "2019 version 16.4.3";
                 else if (sCompilerBuildVersion == "28316")
@@ -6648,7 +6648,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 else if (sCompilerBuildVersion == "28319")
                     ssTool.sVersion = "2019 version 16.4.6";
                 else if (sCompilerBuildVersion == "28610")
-                    ssTool.sVersion = "2019 version 16.5.0";
+                    ssTool.sVersion = "2019 version 16.5.0";  // 14.25
                 else if (sCompilerBuildVersion == "28611")
                     ssTool.sVersion = "2019 version 16.5.1";
                 else if (sCompilerBuildVersion == "28612")
@@ -6656,17 +6656,17 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 else if (sCompilerBuildVersion == "28614")
                     ssTool.sVersion = "2019 version 16.5.4";
                 else if (sCompilerBuildVersion == "28805")
-                    ssTool.sVersion = "2019 version 16.6.0";
+                    ssTool.sVersion = "2019 version 16.6.0";  // 14.26
                 else if (sCompilerBuildVersion == "28806")
                     ssTool.sVersion = "2019 version 16.6.2-16.6.5";
                 else if (sCompilerBuildVersion == "29110")
-                    ssTool.sVersion = "2019 version 16.7.0";
+                    ssTool.sVersion = "2019 version 16.7.0";  // 14.27
                 else if (sCompilerBuildVersion == "29111")
                     ssTool.sVersion = "2019 version 16.7.1-16.7.4";
                 else if (sCompilerBuildVersion == "29112")
                     ssTool.sVersion = "2019 version 16.7.5";
                 else if (sCompilerBuildVersion == "29333")
-                    ssTool.sVersion = "2019 version 16.8.0";
+                    ssTool.sVersion = "2019 version 16.8.0";  // 14.28
                 else if (sCompilerBuildVersion == "29334")
                     ssTool.sVersion = "2019 version 16.8.2";
                 else if (sCompilerBuildVersion == "29335")
@@ -6690,7 +6690,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 else if (sCompilerBuildVersion == "30040")
                     ssTool.sVersion = "2019 version 16.10.4";
                 else if (sCompilerBuildVersion == "30133")
-                    ssTool.sVersion = "2019 version 16.11.1";
+                    ssTool.sVersion = "2019 version 16.11.1";  // 14.29
                 else if (sCompilerBuildVersion == "30136")
                     ssTool.sVersion = "2019 version 16.11.5";
                 else if (sCompilerBuildVersion == "30137")
@@ -17267,38 +17267,38 @@ void SpecAbstract::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures,
             if (nMinorVersion == 0) {
                 if ((nBuild < 25506)) {
                     nMinorVersion = 10;
-                } else if (nBuild < 25711) {
+                } else if (nBuild < 25830) {
                     nMinorVersion = 11;
-                } else if (nBuild < 25930) {
+                } else if (nBuild < 26128) {
                     nMinorVersion = 12;
-                } else if (nBuild < 26429) {
+                } else if (nBuild < 26428) {
                     nMinorVersion = 13;
-                } else if (nBuild < 26715) {
+                } else if (nBuild < 26726) {
                     nMinorVersion = 14;
-                } else if (nBuild < 27025) {
+                } else if (nBuild < 26926) {
                     nMinorVersion = 15;
-                } else if (nBuild < 27412) {
+                } else if (nBuild < 27508) {
                     nMinorVersion = 16;
-                } else if (nBuild < 28105) {
+                } else if (nBuild < 27702) {
                     nMinorVersion = 20;
-                    //            } else if (nBuild < XXXXX) {
-                    //                nMinorVersion = 21;
-                    //            } else if (nBuild < XXXXX) {
-                    //                nMinorVersion = 22;
+                } else if (nBuild < 27905) {
+                    nMinorVersion = 21;
+                } else if (nBuild < 28105) {
+                    nMinorVersion = 22;
                 } else if (nBuild < 28314) {
                     nMinorVersion = 23;
-                } else if (nBuild < 28806) {
+                } else if (nBuild < 28610) {
                     nMinorVersion = 24;
-                    //            } else if (nBuild < XXXXX) {
-                    //                nMinorVersion = 25;
-                } else if (nBuild < 29111) {
+                } else if (nBuild < 28805) {
+                    nMinorVersion = 25;
+                } else if (nBuild < 29110) {
                     nMinorVersion = 26;
-                } else if (nBuild < 29336) {
+                } else if (nBuild < 29333) {
                     nMinorVersion = 27;
-                } else if (nBuild < 29922) {
+                } else if (nBuild < 30133) {
                     nMinorVersion = 28;
                 } else if (nBuild < 30705) {
-                    nMinorVersion = 29;
+                    nMinorVersion = 29;  // TODO
                 } else if (nBuild < 30818) {
                     nMinorVersion = 30;
                 } else if (nBuild < 31328) {
