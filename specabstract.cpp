@@ -1753,7 +1753,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMLinker_string(const QString &sStri
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMC_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_ARMC_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
@@ -6112,6 +6112,10 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
     QMap<QString, QString> mapVersions;
 
+    mapVersions.insert("1", "8");
+    mapVersions.insert("2", "9");
+    mapVersions.insert("4", "10");
+    mapVersions.insert("5", "11");
     mapVersions.insert("6", "12");
     mapVersions.insert("7", "13");
     mapVersions.insert("8", "14");
@@ -6587,7 +6591,29 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 else if (sCompilerBuildVersion == "30140") ssTool.sVersion = "2019 version 16.11.10";
                 else if (sCompilerBuildVersion == "30141") ssTool.sVersion = "2019 version 16.11.11";
                 else if (sCompilerBuildVersion == "30142") ssTool.sVersion = "2019 version 16.11.12";
-                else if (sCompilerBuildVersion == "30143") ssTool.sVersion = "2019 version 16.11.13";
+                else if (sCompilerBuildVersion == "30143") ssTool.sVersion = "2019 version 16.11.13"; // >>
+                else if (sCompilerBuildVersion == "30144") ssTool.sVersion = "2019 version 16.11.14";
+                else if (sCompilerBuildVersion == "30145") ssTool.sVersion = "2019 version 16.11.15";
+                else if (sCompilerBuildVersion == "30146") ssTool.sVersion = "2019 version 16.11.17";
+                else if (sCompilerBuildVersion == "30147") ssTool.sVersion = "2019 version 16.11.21";
+                else if (sCompilerBuildVersion == "30148") ssTool.sVersion = "2019 version 16.11.24-16.11.26";
+                else if (sCompilerBuildVersion == "30151") ssTool.sVersion = "2019 version 16.11.27";
+                else if (sCompilerBuildVersion == "30401") ssTool.sVersion = "2022 version 17.0.0 preview2";
+                else if (sCompilerBuildVersion == "30423") ssTool.sVersion = "2022 version 17.0.0 pre 3.1";
+                else if (sCompilerBuildVersion == "30528") ssTool.sVersion = "2022 version 17.0.0 pre 4.0";
+                else if (sCompilerBuildVersion == "30704") ssTool.sVersion = "2022 version 17.0.0 pre 5.0";
+                else if (sCompilerBuildVersion == "30705") ssTool.sVersion = "2022 version 17.0.0 pre 7.0";
+                else if (sCompilerBuildVersion == "30818") ssTool.sVersion = "2022 version 17.1.0 pre 1.0";
+                else if (sCompilerBuildVersion == "30919") ssTool.sVersion = "2022 version 17.1.0 pre 2.0";
+                else if (sCompilerBuildVersion == "31103") ssTool.sVersion = "2022 version 17.1.0 pre 3.0";
+                else if (sCompilerBuildVersion == "31104") ssTool.sVersion = "2022 version 17.1.0 pre 5.0";
+                else if (sCompilerBuildVersion == "31114") ssTool.sVersion = "2022 version 17.2.0 pre 1.0";
+                else if (sCompilerBuildVersion == "31302") ssTool.sVersion = "2022 version 17.2.0 pre 2.1";
+                else if (sCompilerBuildVersion == "31326") ssTool.sVersion = "2022 version 17.2.0 pre 3.0";
+                else if (sCompilerBuildVersion == "31328") ssTool.sVersion = "2022 version 17.2.0 pre 5.0";
+                else if (sCompilerBuildVersion == "31424") ssTool.sVersion = "2022 version 17.3.0 pre 1.0";
+                else if (sCompilerBuildVersion == "31517") ssTool.sVersion = "2022 version 17.3.0 pre 2.0";
+                else if (sCompilerBuildVersion == "31627") ssTool.sVersion = "2022 version 17.3.0 pre 3.0";
             }
 
             if (ssTool.sVersion == "") {
@@ -6603,7 +6629,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                     else if (sLinkerMajorVersion == "11.00") ssTool.sVersion = "2012";
                     else if (sLinkerMajorVersion == "12.00") ssTool.sVersion = "2013";
                     else if (sLinkerMajorVersion == "14.00") ssTool.sVersion = "2015";
-                    else if (sLinkerMajorVersion == "14.10") ssTool.sVersion = "2017 version 15.0";
+                    else if (sLinkerMajorVersion == "14.10") ssTool.sVersion = "2017 version 15.0-15.2";
                     else if (sLinkerMajorVersion == "14.11") ssTool.sVersion = "2017 version 15.3";
                     else if (sLinkerMajorVersion == "14.12") ssTool.sVersion = "2017 version 15.5";
                     else if (sLinkerMajorVersion == "14.13") ssTool.sVersion = "2017 version 15.6";
@@ -6617,8 +6643,8 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                     else if (sLinkerMajorVersion == "14.24") ssTool.sVersion = "2019 version 16.4";
                     else if (sLinkerMajorVersion == "14.25") ssTool.sVersion = "2019 version 16.5";
                     else if (sLinkerMajorVersion == "14.26") ssTool.sVersion = "2019 version 16.6";
-                    else if (sLinkerMajorVersion == "14.27") ssTool.sVersion = "2019 version 16.7";
-                    else if (sLinkerMajorVersion == "14.28") ssTool.sVersion = "2019 version 16.8-16.10";
+                    else if (sLinkerMajorVersion == "14.27") ssTool.sVersion = "2019 version 16.7-16.8";
+                    else if (sLinkerMajorVersion == "14.28") ssTool.sVersion = "2019 version 16.9-16.10";
                     else if (sLinkerMajorVersion == "14.29") ssTool.sVersion = "2019 version 16.11";
                     else if (sLinkerMajorVersion == "14.30") ssTool.sVersion = "2022 version 17.0";
                     else if (sLinkerMajorVersion == "14.31") ssTool.sVersion = "2022 version 17.1";
@@ -9480,6 +9506,28 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract:
                 }
 
                 pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+            }
+        }
+
+        if (pPEInfo->basic_info.bIsTest && pPEInfo->basic_info.bIsVerbose) {
+            // TODO names of note sections
+
+            qint32 nIndex = 1;
+
+            {
+                qint32 nNumberOfRecords = pPEInfo->listImportRecords.count();
+
+                for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
+                    _SCANS_STRUCT recordSS = {};
+
+                    recordSS.type = RECORD_TYPE_LIBRARY;
+                    recordSS.name = (RECORD_NAME)(RECORD_NAME_UNKNOWN9 + nIndex);
+                    recordSS.sVersion = QString("LIBRARY_") + pPEInfo->listImportRecords.at(i).sLibrary;
+
+                    pPEInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+
+                    nIndex++;
+                }
             }
         }
     }

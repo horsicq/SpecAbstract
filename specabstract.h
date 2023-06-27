@@ -1591,7 +1591,7 @@ public:
     static VI_STRUCT _get_ApportableClang_string(const QString &sString);
     static VI_STRUCT _get_ARMAssembler_string(const QString &sString);
     static VI_STRUCT _get_ARMLinker_string(const QString &sString);
-    static VI_STRUCT _get_ARMC_string(QString sString);
+    static VI_STRUCT _get_ARMC_string(const QString &sString);
     static VI_STRUCT _get_ARMCCPP_string(const QString &sString);
     static VI_STRUCT _get_ARMNEONCCPP_string(const QString &sString);
     static VI_STRUCT _get_ARMThumbCCPP_string(const QString &sString);
