@@ -6234,7 +6234,6 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
         _SCANS_STRUCT _ssCompilerMASM = {};
         _SCANS_STRUCT _ssCompilerVB = {};
 
-        bool bVB = false;
         for (qint32 i = nRichDescriptionsCount - 1; (i >= 0) && (!(pPdStruct->bIsStop)); i--) {
             if (listRichDescriptions.at(i).type == SpecAbstract::RECORD_TYPE_LINKER) {
                 if (listRichDescriptions.at(i).sVersion > _ssLinker.sVersion) {
@@ -6244,54 +6243,50 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                     _ssLinker.type = listRichDescriptions.at(i).type;
                 }
             } else if (listRichDescriptions.at(i).type == SpecAbstract::RECORD_TYPE_COMPILER) {
-                if (!bVB) {
-                    if (listRichDescriptions.at(i).name == RECORD_NAME_UNIVERSALTUPLECOMPILER) {
-                        if (listRichDescriptions.at(i).sInfo != "Basic") {
-                            if (listRichDescriptions.at(i).sVersion > _ssCompilerCPP.sVersion) {
-                                _ssCompilerCPP.name = RECORD_NAME_VISUALCCPP;
-                                _ssCompilerCPP.sVersion = listRichDescriptions.at(i).sVersion;
-                                _ssCompilerCPP.sInfo = listRichDescriptions.at(i).sInfo;
-                                _ssCompilerCPP.type = listRichDescriptions.at(i).type;
-                            }
-                        } else {
-                            if (listRichDescriptions.at(i).sVersion > _ssCompilerVB.sVersion) {
-                                _ssCompilerVB.type = RECORD_TYPE_COMPILER;
-                                _ssCompilerVB.name = RECORD_NAME_VISUALBASIC;
-                                _ssCompilerVB.sVersion = listRichDescriptions.at(i).sVersion;
-
-                                QString _sVersion = _ssCompilerVB.sVersion.section(".", 0, 0);
-                                QString _sVersionCompiler = mapVersions.key(_sVersion, "");
-
-                                if (_sVersionCompiler != "") {
-                                    _ssCompilerVB.sVersion = _sVersionCompiler + "." + _ssCompilerVB.sVersion.section(".", 1, 2);
-                                }
-
-                                _ssCompilerVB.sInfo = "Native";
-                            }
-
-                            bVB = true;
-                        }
-                    } else if (listRichDescriptions.at(i).name == RECORD_NAME_MASM) {
-                        if (listRichDescriptions.at(i).sVersion > _ssCompilerMASM.sVersion) {
-                            _ssCompilerMASM.name = listRichDescriptions.at(i).name;
-                            _ssCompilerMASM.sVersion = listRichDescriptions.at(i).sVersion;
-                            _ssCompilerMASM.sInfo = listRichDescriptions.at(i).sInfo;
-                            _ssCompilerMASM.type = listRichDescriptions.at(i).type;
-                        }
-                    } else {
+                if (listRichDescriptions.at(i).name == RECORD_NAME_UNIVERSALTUPLECOMPILER) {
+                    if (listRichDescriptions.at(i).sInfo != "Basic") {
                         if (listRichDescriptions.at(i).sVersion > _ssCompilerCPP.sVersion) {
-                            _ssCompilerCPP.name = listRichDescriptions.at(i).name;
+                            _ssCompilerCPP.name = RECORD_NAME_VISUALCCPP;
                             _ssCompilerCPP.sVersion = listRichDescriptions.at(i).sVersion;
                             _ssCompilerCPP.sInfo = listRichDescriptions.at(i).sInfo;
                             _ssCompilerCPP.type = listRichDescriptions.at(i).type;
                         }
+                    } else {
+                        if (listRichDescriptions.at(i).sVersion > _ssCompilerVB.sVersion) {
+                            _ssCompilerVB.type = RECORD_TYPE_COMPILER;
+                            _ssCompilerVB.name = RECORD_NAME_VISUALBASIC;
+                            _ssCompilerVB.sVersion = listRichDescriptions.at(i).sVersion;
+
+                            QString _sVersion = _ssCompilerVB.sVersion.section(".", 0, 0);
+                            QString _sVersionCompiler = mapVersions.key(_sVersion, "");
+
+                            if (_sVersionCompiler != "") {
+                                _ssCompilerVB.sVersion = _sVersionCompiler + "." + _ssCompilerVB.sVersion.section(".", 1, 2);
+                            }
+
+                            _ssCompilerVB.sInfo = "Native";
+                        }
+                    }
+                } else if (listRichDescriptions.at(i).name == RECORD_NAME_MASM) {
+                    if (listRichDescriptions.at(i).sVersion > _ssCompilerMASM.sVersion) {
+                        _ssCompilerMASM.name = listRichDescriptions.at(i).name;
+                        _ssCompilerMASM.sVersion = listRichDescriptions.at(i).sVersion;
+                        _ssCompilerMASM.sInfo = listRichDescriptions.at(i).sInfo;
+                        _ssCompilerMASM.type = listRichDescriptions.at(i).type;
+                    }
+                } else {
+                    if (listRichDescriptions.at(i).sVersion > _ssCompilerCPP.sVersion) {
+                        _ssCompilerCPP.name = listRichDescriptions.at(i).name;
+                        _ssCompilerCPP.sVersion = listRichDescriptions.at(i).sVersion;
+                        _ssCompilerCPP.sInfo = listRichDescriptions.at(i).sInfo;
+                        _ssCompilerCPP.type = listRichDescriptions.at(i).type;
                     }
                 }
             }
 
-            if (listRichDescriptions.at(i).name == SpecAbstract::RECORD_NAME_IMPORT) {
-                break;
-            }
+//            if (listRichDescriptions.at(i).name == SpecAbstract::RECORD_NAME_IMPORT) {
+//                break;
+//            }
         }
 
         if (_ssLinker.name != RECORD_NAME_UNKNOWN) {
@@ -6300,23 +6295,22 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
             ssLinker.sInfo = _ssLinker.sInfo;
             ssLinker.type = _ssLinker.type;
         }
-        if (_ssCompilerCPP.name != RECORD_NAME_UNKNOWN) {
-            ssCompilerCPP.name = _ssCompilerCPP.name;
-            ssCompilerCPP.sVersion = _ssCompilerCPP.sVersion;
-            ssCompilerCPP.sInfo = _ssCompilerCPP.sInfo;
-            ssCompilerCPP.type = _ssCompilerCPP.type;
-        }
-        if (_ssCompilerMASM.name != RECORD_NAME_UNKNOWN) {
-            ssCompilerMASM.name = _ssCompilerMASM.name;
-            ssCompilerMASM.sVersion = _ssCompilerMASM.sVersion;
-            ssCompilerMASM.sInfo = _ssCompilerMASM.sInfo;
-            ssCompilerMASM.type = _ssCompilerMASM.type;
-        }
+
         if (_ssCompilerVB.name != RECORD_NAME_UNKNOWN) {
             ssCompilerVB.name = _ssCompilerVB.name;
             ssCompilerVB.sVersion = _ssCompilerVB.sVersion;
             ssCompilerVB.sInfo = _ssCompilerVB.sInfo;
             ssCompilerVB.type = _ssCompilerVB.type;
+        } else if (_ssCompilerCPP.name != RECORD_NAME_UNKNOWN) {
+            ssCompilerCPP.name = _ssCompilerCPP.name;
+            ssCompilerCPP.sVersion = _ssCompilerCPP.sVersion;
+            ssCompilerCPP.sInfo = _ssCompilerCPP.sInfo;
+            ssCompilerCPP.type = _ssCompilerCPP.type;
+        } else if (_ssCompilerMASM.name != RECORD_NAME_UNKNOWN) {
+            ssCompilerMASM.name = _ssCompilerMASM.name;
+            ssCompilerMASM.sVersion = _ssCompilerMASM.sVersion;
+            ssCompilerMASM.sInfo = _ssCompilerMASM.sInfo;
+            ssCompilerMASM.type = _ssCompilerMASM.type;
         }
 
         // TODO Check MASM for .NET
@@ -6591,29 +6585,59 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 else if (sCompilerBuildVersion == "30140") ssTool.sVersion = "2019 version 16.11.10";
                 else if (sCompilerBuildVersion == "30141") ssTool.sVersion = "2019 version 16.11.11";
                 else if (sCompilerBuildVersion == "30142") ssTool.sVersion = "2019 version 16.11.12";
-                else if (sCompilerBuildVersion == "30143") ssTool.sVersion = "2019 version 16.11.13"; // >>
+                else if (sCompilerBuildVersion == "30143") ssTool.sVersion = "2019 version 16.11.13";
                 else if (sCompilerBuildVersion == "30144") ssTool.sVersion = "2019 version 16.11.14";
                 else if (sCompilerBuildVersion == "30145") ssTool.sVersion = "2019 version 16.11.15";
                 else if (sCompilerBuildVersion == "30146") ssTool.sVersion = "2019 version 16.11.17";
                 else if (sCompilerBuildVersion == "30147") ssTool.sVersion = "2019 version 16.11.21";
                 else if (sCompilerBuildVersion == "30148") ssTool.sVersion = "2019 version 16.11.24-16.11.26";
                 else if (sCompilerBuildVersion == "30151") ssTool.sVersion = "2019 version 16.11.27";
-                else if (sCompilerBuildVersion == "30401") ssTool.sVersion = "2022 version 17.0.0 preview2";
-                else if (sCompilerBuildVersion == "30423") ssTool.sVersion = "2022 version 17.0.0 pre 3.1";
-                else if (sCompilerBuildVersion == "30528") ssTool.sVersion = "2022 version 17.0.0 pre 4.0";
-                else if (sCompilerBuildVersion == "30704") ssTool.sVersion = "2022 version 17.0.0 pre 5.0";
-                else if (sCompilerBuildVersion == "30705") ssTool.sVersion = "2022 version 17.0.0 pre 7.0";
-                else if (sCompilerBuildVersion == "30818") ssTool.sVersion = "2022 version 17.1.0 pre 1.0";
-                else if (sCompilerBuildVersion == "30919") ssTool.sVersion = "2022 version 17.1.0 pre 2.0";
-                else if (sCompilerBuildVersion == "31103") ssTool.sVersion = "2022 version 17.1.0 pre 3.0";
-                else if (sCompilerBuildVersion == "31104") ssTool.sVersion = "2022 version 17.1.0 pre 5.0";
-                else if (sCompilerBuildVersion == "31114") ssTool.sVersion = "2022 version 17.2.0 pre 1.0";
-                else if (sCompilerBuildVersion == "31302") ssTool.sVersion = "2022 version 17.2.0 pre 2.1";
-                else if (sCompilerBuildVersion == "31326") ssTool.sVersion = "2022 version 17.2.0 pre 3.0";
-                else if (sCompilerBuildVersion == "31328") ssTool.sVersion = "2022 version 17.2.0 pre 5.0";
-                else if (sCompilerBuildVersion == "31424") ssTool.sVersion = "2022 version 17.3.0 pre 1.0";
-                else if (sCompilerBuildVersion == "31517") ssTool.sVersion = "2022 version 17.3.0 pre 2.0";
-                else if (sCompilerBuildVersion == "31627") ssTool.sVersion = "2022 version 17.3.0 pre 3.0";
+
+                if (ssTool.sVersion == "") {
+                    if (sCompilerBuildVersion == "30401") ssTool.sVersion = "2022 version 17.0.0 preview2";  // 14.30
+                    else if (sCompilerBuildVersion == "30423") ssTool.sVersion = "2022 version 17.0.0 pre 3.1";
+                    else if (sCompilerBuildVersion == "30528") ssTool.sVersion = "2022 version 17.0.0 pre 4.0";
+                    else if (sCompilerBuildVersion == "30704") ssTool.sVersion = "2022 version 17.0.0 pre 5.0";
+                    else if (sCompilerBuildVersion == "30705") ssTool.sVersion = "2022 version 17.0.0 pre 7.0";
+                    else if (sCompilerBuildVersion == "30818") ssTool.sVersion = "2022 version 17.1.0 pre 1.0";  // 14.31
+                    else if (sCompilerBuildVersion == "30919") ssTool.sVersion = "2022 version 17.1.0 pre 2.0";
+                    else if (sCompilerBuildVersion == "31103") ssTool.sVersion = "2022 version 17.1.0 pre 3.0";
+                    else if (sCompilerBuildVersion == "31104") ssTool.sVersion = "2022 version 17.1.0 pre 5.0";
+                    else if (sCompilerBuildVersion == "31114") ssTool.sVersion = "2022 version 17.2.0 pre 1.0";  // 14.32
+                    else if (sCompilerBuildVersion == "31302") ssTool.sVersion = "2022 version 17.2.0 pre 2.1";
+                    else if (sCompilerBuildVersion == "31326") ssTool.sVersion = "2022 version 17.2.0 pre 3.0";
+                    else if (sCompilerBuildVersion == "31328") ssTool.sVersion = "2022 version 17.2.0 pre 5.0";
+                    else if (sCompilerBuildVersion == "31329") ssTool.sVersion = "2022 version 17.2.1-17.2.4";
+                    else if (sCompilerBuildVersion == "31332") ssTool.sVersion = "2022 version 17.2.5";
+                    else if (sCompilerBuildVersion == "31424") ssTool.sVersion = "2022 version 17.3.0 pre 1.0";  // 14.33
+                    else if (sCompilerBuildVersion == "31517") ssTool.sVersion = "2022 version 17.3.0 pre 2.0";
+                    else if (sCompilerBuildVersion == "31627") ssTool.sVersion = "2022 version 17.3.0 pre 3.0";
+                    else if (sCompilerBuildVersion == "31628") ssTool.sVersion = "2022 version 17.3.0 pre 4.0";
+                    else if (sCompilerBuildVersion == "31629") ssTool.sVersion = "2022 version 17.3.0 pre 5.0";
+                    else if (sCompilerBuildVersion == "31630") ssTool.sVersion = "2022 version 17.3.4";
+                    else if (sCompilerBuildVersion == "31721") ssTool.sVersion = "2022 version 17.4.0 pre 1.0";  // 14.34
+                    else if (sCompilerBuildVersion == "31823") ssTool.sVersion = "2022 version 17.4.0 pre 2.0";
+                    else if (sCompilerBuildVersion == "31921") ssTool.sVersion = "2022 version 17.4.0 pre 4.0";
+                    else if (sCompilerBuildVersion == "31932") ssTool.sVersion = "2022 version 17.4.0 pre 5.0";
+                    else if (sCompilerBuildVersion == "31933") ssTool.sVersion = "2022 version 17.4.0 pre 6.0";
+                    else if (sCompilerBuildVersion == "31935") ssTool.sVersion = "2022 version 17.4.2";
+                    else if (sCompilerBuildVersion == "31937") ssTool.sVersion = "2022 version 17.4.3";
+                    else if (sCompilerBuildVersion == "31942") ssTool.sVersion = "2022 version 17.4.5";
+                    else if (sCompilerBuildVersion == "32019") ssTool.sVersion = "2022 version 17.5.0 pre 1.0";  // 14.35
+                    else if (sCompilerBuildVersion == "32124") ssTool.sVersion = "2022 version 17.5.0 pre 2.0";
+                    else if (sCompilerBuildVersion == "32213") ssTool.sVersion = "2022 version 17.5.0 pre 4.0";
+                    else if (sCompilerBuildVersion == "32215") ssTool.sVersion = "2022 version 17.5.0-17.5.2";
+                    else if (sCompilerBuildVersion == "32216") ssTool.sVersion = "2022 version 17.5.3";
+                    else if (sCompilerBuildVersion == "32217") ssTool.sVersion = "2022 version 17.5.4-17.5.5";
+                    else if (sCompilerBuildVersion == "32323") ssTool.sVersion = "2022 version 17.6.0 pre 1.0";  // 14.36
+                    else if (sCompilerBuildVersion == "32502") ssTool.sVersion = "2022 version 17.6.0 pre 2.0";
+                    else if (sCompilerBuildVersion == "32522") ssTool.sVersion = "2022 version 17.6.0 pre 3.0-4.0";
+                    else if (sCompilerBuildVersion == "32530") ssTool.sVersion = "2022 version 17.6.0 pre 5.0-7.0";
+                    else if (sCompilerBuildVersion == "32532") ssTool.sVersion = "2022 version 17.6.0-17.6.2";
+                    else if (sCompilerBuildVersion == "32534") ssTool.sVersion = "2022 version 17.6.3";
+                    else if (sCompilerBuildVersion == "32535") ssTool.sVersion = "2022 version 17.6.4";
+                    else if (sCompilerBuildVersion == "32705") ssTool.sVersion = "2022 version 17.7.0 pre 1.0-2.0";  // 14.37
+                }
             }
 
             if (ssTool.sVersion == "") {
@@ -6653,6 +6677,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                     else if (sLinkerMajorVersion == "14.34") ssTool.sVersion = "2022 version 17.4";
                     else if (sLinkerMajorVersion == "14.35") ssTool.sVersion = "2022 version 17.5";
                     else if (sLinkerMajorVersion == "14.36") ssTool.sVersion = "2022 version 17.6";
+                    else if (sLinkerMajorVersion == "14.37") ssTool.sVersion = "2022 version 17.7";
                 }
             }
 
@@ -17031,55 +17056,54 @@ void SpecAbstract::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures,
 
         if (bFix) {
             if (nMinorVersion == 0) {
-                if ((nBuild < 25506)) {
+                if (nBuild < 25506)
                     nMinorVersion = 10;
-                } else if (nBuild < 25830) {
+                else if (nBuild < 25830)
                     nMinorVersion = 11;
-                } else if (nBuild < 26128) {
+                else if (nBuild < 26128)
                     nMinorVersion = 12;
-                } else if (nBuild < 26428) {
+                else if (nBuild < 26428)
                     nMinorVersion = 13;
-                } else if (nBuild < 26726) {
+                else if (nBuild < 26726)
                     nMinorVersion = 14;
-                } else if (nBuild < 26926) {
+                else if (nBuild < 26926)
                     nMinorVersion = 15;
-                } else if (nBuild < 27508) {
+                else if (nBuild < 27508)
                     nMinorVersion = 16;
-                } else if (nBuild < 27702) {
+                else if (nBuild < 27702)
                     nMinorVersion = 20;
-                } else if (nBuild < 27905) {
+                else if (nBuild < 27905)
                     nMinorVersion = 21;
-                } else if (nBuild < 28105) {
+                else if (nBuild < 28105)
                     nMinorVersion = 22;
-                } else if (nBuild < 28314) {
+                else if (nBuild < 28314)
                     nMinorVersion = 23;
-                } else if (nBuild < 28610) {
+                else if (nBuild < 28610)
                     nMinorVersion = 24;
-                } else if (nBuild < 28805) {
+                else if (nBuild < 28805)
                     nMinorVersion = 25;
-                } else if (nBuild < 29110) {
+                else if (nBuild < 29110)
                     nMinorVersion = 26;
-                } else if (nBuild < 29333) {
+                else if (nBuild < 29333)
                     nMinorVersion = 27;
-                } else if (nBuild < 30133) {
+                else if (nBuild < 30133)
                     nMinorVersion = 28;
-                } else if (nBuild < 30705) {
-                    nMinorVersion = 29;  // TODO
-                } else if (nBuild < 30818) {
+                else if (nBuild < 30401)
+                    nMinorVersion = 29;
+                else if (nBuild < 30818)
                     nMinorVersion = 30;
-                } else if (nBuild < 31328) {
+                else if (nBuild < 31114)
                     nMinorVersion = 31;
-                } else if (nBuild < 31629) {
+                else if (nBuild < 31424)
                     nMinorVersion = 32;
-                } else if (nBuild < 31823) {
+                else if (nBuild < 31721)
                     nMinorVersion = 33;
-                } else if (nBuild < 32215) {
+                else if (nBuild < 32019)
                     nMinorVersion = 34;
-                } else if (nBuild < 32323) {
+                else if (nBuild < 32323)
                     nMinorVersion = 35;
-                } else if (nBuild >= 32323) {
+                else if (nBuild >= 32323)
                     nMinorVersion = 36;
-                }
             }
 
             (*pListRichSignatures)[i].sVersion = QString("%1.%2.%3").arg(sMajor, QString::number(nMinorVersion), sBuild);
