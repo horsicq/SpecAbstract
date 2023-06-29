@@ -16103,7 +16103,7 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
     }
 }
 
-void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QString sSignature, SpecAbstract::SIGNATURE_RECORD *pRecords, qint32 nRecordsSize,
+void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, const QString &sSignature, SpecAbstract::SIGNATURE_RECORD *pRecords, qint32 nRecordsSize,
                                  XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
     qint32 nSignaturesCount = nRecordsSize / (int)sizeof(SIGNATURE_RECORD);
@@ -17056,54 +17056,30 @@ void SpecAbstract::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures,
 
         if (bFix) {
             if (nMinorVersion == 0) {
-                if (nBuild < 25506)
-                    nMinorVersion = 10;
-                else if (nBuild < 25830)
-                    nMinorVersion = 11;
-                else if (nBuild < 26128)
-                    nMinorVersion = 12;
-                else if (nBuild < 26428)
-                    nMinorVersion = 13;
-                else if (nBuild < 26726)
-                    nMinorVersion = 14;
-                else if (nBuild < 26926)
-                    nMinorVersion = 15;
-                else if (nBuild < 27508)
-                    nMinorVersion = 16;
-                else if (nBuild < 27702)
-                    nMinorVersion = 20;
-                else if (nBuild < 27905)
-                    nMinorVersion = 21;
-                else if (nBuild < 28105)
-                    nMinorVersion = 22;
-                else if (nBuild < 28314)
-                    nMinorVersion = 23;
-                else if (nBuild < 28610)
-                    nMinorVersion = 24;
-                else if (nBuild < 28805)
-                    nMinorVersion = 25;
-                else if (nBuild < 29110)
-                    nMinorVersion = 26;
-                else if (nBuild < 29333)
-                    nMinorVersion = 27;
-                else if (nBuild < 30133)
-                    nMinorVersion = 28;
-                else if (nBuild < 30401)
-                    nMinorVersion = 29;
-                else if (nBuild < 30818)
-                    nMinorVersion = 30;
-                else if (nBuild < 31114)
-                    nMinorVersion = 31;
-                else if (nBuild < 31424)
-                    nMinorVersion = 32;
-                else if (nBuild < 31721)
-                    nMinorVersion = 33;
-                else if (nBuild < 32019)
-                    nMinorVersion = 34;
-                else if (nBuild < 32323)
-                    nMinorVersion = 35;
-                else if (nBuild >= 32323)
-                    nMinorVersion = 36;
+                if (nBuild < 25506) nMinorVersion = 10;
+                else if (nBuild < 25830) nMinorVersion = 11;
+                else if (nBuild < 26128) nMinorVersion = 12;
+                else if (nBuild < 26428) nMinorVersion = 13;
+                else if (nBuild < 26726) nMinorVersion = 14;
+                else if (nBuild < 26926) nMinorVersion = 15;
+                else if (nBuild < 27508) nMinorVersion = 16;
+                else if (nBuild < 27702) nMinorVersion = 20;
+                else if (nBuild < 27905) nMinorVersion = 21;
+                else if (nBuild < 28105) nMinorVersion = 22;
+                else if (nBuild < 28314) nMinorVersion = 23;
+                else if (nBuild < 28610) nMinorVersion = 24;
+                else if (nBuild < 28805) nMinorVersion = 25;
+                else if (nBuild < 29110) nMinorVersion = 26;
+                else if (nBuild < 29333) nMinorVersion = 27;
+                else if (nBuild < 30133) nMinorVersion = 28;
+                else if (nBuild < 30401) nMinorVersion = 29;
+                else if (nBuild < 30818) nMinorVersion = 30;
+                else if (nBuild < 31114) nMinorVersion = 31;
+                else if (nBuild < 31424) nMinorVersion = 32;
+                else if (nBuild < 31721) nMinorVersion = 33;
+                else if (nBuild < 32019) nMinorVersion = 34;
+                else if (nBuild < 32323) nMinorVersion = 35;
+                else if (nBuild >= 32323) nMinorVersion = 36;
             }
 
             (*pListRichSignatures)[i].sVersion = QString("%1.%2.%3").arg(sMajor, QString::number(nMinorVersion), sBuild);
