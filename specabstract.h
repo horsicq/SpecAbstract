@@ -1630,8 +1630,8 @@ public:
     static void memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
                            SpecAbstract::SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
                            DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-    static void signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, const QString &sSignature, SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1,
-                              XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+    static void signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, const QString &sSignature, SIGNATURE_RECORD *pRecords, qint32 nRecordsSize,
+                              XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
     static void PE_resourcesScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources, PE_RESOURCES_RECORD *pRecords,
                                  qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
                                  XBinary::PDSTRUCT *pPdStruct);

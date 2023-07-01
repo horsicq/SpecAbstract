@@ -6284,9 +6284,9 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 }
             }
 
-//            if (listRichDescriptions.at(i).name == SpecAbstract::RECORD_NAME_IMPORT) {
-//                break;
-//            }
+            //            if (listRichDescriptions.at(i).name == SpecAbstract::RECORD_NAME_IMPORT) {
+            //                break;
+            //            }
         }
 
         if (_ssLinker.name != RECORD_NAME_UNKNOWN) {
