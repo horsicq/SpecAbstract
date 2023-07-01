@@ -1650,7 +1650,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_ByteDanceSecCompiler_string(const QSt
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_DingbaozengNativeObfuscator_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_DingbaozengNativeObfuscator_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
@@ -3136,21 +3136,21 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
         result.mapItems = dex.getMapItems();
 
 #ifdef QT_DEBUG
-        qDebug("%d msec", timer.elapsed());
+        qDebug("%lli msec", timer.elapsed());
 #endif
 
         result.bIsStringPoolSorted = dex.isStringPoolSorted(&(result.mapItems));
         result.bIsOverlayPresent = dex.isOverlayPresent(&(result.basic_info.memoryMap));
 
 #ifdef QT_DEBUG
-        qDebug("%d msec", timer.elapsed());
+        qDebug("%lli msec", timer.elapsed());
 #endif
 
         result.listStrings = dex.getStrings(&(result.mapItems), pPdStruct);
         result.listTypeItemStrings = dex.getTypeItemStrings(&(result.mapItems), &result.listStrings, pPdStruct);
 
 #ifdef QT_DEBUG
-        qDebug("%d msec", timer.elapsed());
+        qDebug("%lli msec", timer.elapsed());
 #endif
 
         stringScan(&result.mapStringDetects, &result.listStrings, _DEX_string_records, sizeof(_DEX_string_records), result.basic_info.id.fileType, XBinary::FT_DEX,
@@ -6644,7 +6644,10 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 QString sLinkerMajorVersion = ssLinker.sVersion.section(".", 0, 1);
 
                 if (sLinkerMajorVersion != "") {
-                    if (sLinkerMajorVersion == "6.00") ssTool.sVersion = "6.0";
+                    if (sLinkerMajorVersion == "4.00") ssTool.sVersion = "4.00";
+                    else if (sLinkerMajorVersion == "4.20") ssTool.sVersion = "4.20";
+                    else if (sLinkerMajorVersion == "5.00") ssTool.sVersion = "5.0";
+                    else if (sLinkerMajorVersion == "6.00") ssTool.sVersion = "6.0";
                     else if (sLinkerMajorVersion == "7.00") ssTool.sVersion = "2002";
                     else if (sLinkerMajorVersion == "7.10") ssTool.sVersion = "2003";
                     else if (sLinkerMajorVersion == "8.00") ssTool.sVersion = "2005";
