@@ -1701,7 +1701,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_iJiami_string(const QString &sString)
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_AppleLLVM_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_AppleLLVM_string(const QString &sString)
 {
     VI_STRUCT result = {};
 

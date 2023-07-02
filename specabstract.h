@@ -1587,7 +1587,7 @@ public:
     static VI_STRUCT _get_SafeengineLLVM_string(const QString &sString);
     static VI_STRUCT _get_NagainLLVM_string(const QString &sString);
     static VI_STRUCT _get_iJiami_string(const QString &sString);
-    static VI_STRUCT _get_AppleLLVM_string(QString sString);
+    static VI_STRUCT _get_AppleLLVM_string(const QString &sString);
     static VI_STRUCT _get_ApportableClang_string(const QString &sString);
     static VI_STRUCT _get_ARMAssembler_string(const QString &sString);
     static VI_STRUCT _get_ARMLinker_string(const QString &sString);
