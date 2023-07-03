@@ -1674,7 +1674,7 @@ private:
     static void _fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorLinkerVersion, qint32 nMinorLinkerVersion, XBinary::PDSTRUCT *pPdStruct);
 
 protected:
-    void _errorMessage(QString sErrorMessage);
+    void _errorMessage(const QString &sErrorMessage);
     void _infoMessage(QString sInfoMessage);
 
 signals:

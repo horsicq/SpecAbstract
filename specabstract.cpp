@@ -17192,7 +17192,7 @@ SpecAbstract::VCL_PACKAGEINFO SpecAbstract::PE_getVCLPackageInfo(QIODevice *pDev
     return result;
 }
 
-void SpecAbstract::_errorMessage(QString sErrorMessage)
+void SpecAbstract::_errorMessage(const QString &sErrorMessage)
 {
 #ifdef QT_DEBUG
     qDebug("Error: %s", sErrorMessage.toLatin1().data());
