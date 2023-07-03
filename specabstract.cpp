@@ -2024,7 +2024,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_DelphiVersionFromCompiler(const QStri
     return result;
 }
 
-SpecAbstract::VI_STRUCT SpecAbstract::_get_SourceryCodeBench_string(QString sString)
+SpecAbstract::VI_STRUCT SpecAbstract::_get_SourceryCodeBench_string(const QString &sString)
 {
     VI_STRUCT result = {};
 
