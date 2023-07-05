@@ -17200,7 +17200,7 @@ void SpecAbstract::_errorMessage(const QString &sErrorMessage)
     emit errorMessage(sErrorMessage);
 }
 
-void SpecAbstract::_infoMessage(QString sInfoMessage)
+void SpecAbstract::_infoMessage(const QString &sInfoMessage)
 {
 #ifdef QT_DEBUG
     qDebug("Info: %s", sInfoMessage.toLatin1().data());

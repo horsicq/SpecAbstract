@@ -1675,7 +1675,7 @@ private:
 
 protected:
     void _errorMessage(const QString &sErrorMessage);
-    void _infoMessage(QString sInfoMessage);
+    void _infoMessage(const QString &sInfoMessage);
 
 signals:
     void errorMessage(QString sErrorMessage);
