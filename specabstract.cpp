@@ -6132,18 +6132,18 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
         if ((pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTLINKER)) && (!pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER))) {
             ssLinker.type = RECORD_TYPE_LINKER;
             ssLinker.name = RECORD_NAME_MICROSOFTLINKER;
-//        } else if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER)) {
-//            bool bMicrosoftLinker = false;
+            //        } else if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER)) {
+            //            bool bMicrosoftLinker = false;
 
-//            if ((pPEInfo->nMajorLinkerVersion == 8) && (pPEInfo->nMinorImageVersion == 0))  // 8.0
-//            {
-//                bMicrosoftLinker = true;
-//            }
+            //            if ((pPEInfo->nMajorLinkerVersion == 8) && (pPEInfo->nMinorImageVersion == 0))  // 8.0
+            //            {
+            //                bMicrosoftLinker = true;
+            //            }
 
-//            if (bMicrosoftLinker) {
-//                ssLinker.type = RECORD_TYPE_LINKER;
-//                ssLinker.name = RECORD_NAME_MICROSOFTLINKER;
-//            }
+            //            if (bMicrosoftLinker) {
+            //                ssLinker.type = RECORD_TYPE_LINKER;
+            //                ssLinker.name = RECORD_NAME_MICROSOFTLINKER;
+            //            }
         } else if ((pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER)) && (pPEInfo->cliInfo.bValid)) {
             ssLinker.type = RECORD_TYPE_LINKER;
             ssLinker.name = RECORD_NAME_MICROSOFTLINKER;
