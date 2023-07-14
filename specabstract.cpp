@@ -292,6 +292,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_AROS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_AROS); break;
         case RECORD_NAME_ARXAN: sResult = QString("Arxan"); break;
         case RECORD_NAME_ASDPACK: sResult = QString("ASDPack"); break;
+        case RECORD_NAME_ASMGUARD: sResult = QString("ASM Guard"); break;
         case RECORD_NAME_ASPACK: sResult = QString("ASPack"); break;
         case RECORD_NAME_ASPLINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_ASPLINUX); break;
         case RECORD_NAME_ASPROTECT: sResult = QString("ASProtect"); break;
@@ -3933,6 +3934,15 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                 _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_OREANSCODEVIRTUALIZER);
 
                 pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            }
+
+            if (pPEInfo->nOverlaySize) {
+                qint64 nSize = qMin(pPEInfo->nOverlaySize, (qint64)0x100);
+
+                if (pe.find_ansiString(pPEInfo->nOverlaySize, nSize, "asmg-protected", pPdStruct) != -1) {
+                    _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_ASMGUARD, "2.XX", "", 0);
+                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                }
             }
 
             if (!pPEInfo->bIs64) {
