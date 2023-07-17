@@ -1196,6 +1196,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ALEXPROTECTOR,                "1.0",              ""},                    ".alex"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ALLOY,                        "",                 ""},                    ".alloy32"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ANDPAKK2,                     "",                 ""},                    "ANDpakk2"},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ASMGUARD,                     "2.XX",             ""},                    "ASMGUARD"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASPACK,                       "1.08-2.XX",        ""},                    ".adata"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_ASPACK,                       "2.XX",             ""},                    ".aspack"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ASPROTECT,                    "",                 ""},                    ".adata"},  // TODO Check Version
