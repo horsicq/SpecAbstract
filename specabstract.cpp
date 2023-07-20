@@ -3937,7 +3937,11 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
             }
 
             if (pPEInfo->nOverlaySize) {
-                qint64 nSize = qMin(pPEInfo->nOverlaySize, (qint64)0x100);
+                qint64 nSize = pPEInfo->nOverlaySize;
+
+                if (!pPEInfo->basic_info.bIsDeepScan) {
+                    nSize = qMin(pPEInfo->nOverlaySize, (qint64)0x100);
+                }
 
                 if (pe.find_signature(pPEInfo->nOverlaySize, nSize, "'asmg-protected'00", nullptr,pPdStruct) != -1) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_ASMGUARD, "2.XX", "", 0);
