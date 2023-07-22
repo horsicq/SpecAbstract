@@ -3943,7 +3943,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                     nSize = qMin(pPEInfo->nOverlaySize, (qint64)0x100);
                 }
 
-                if (pe.find_signature(pPEInfo->nOverlaySize, nSize, "'asmg-protected'00", nullptr,pPdStruct) != -1) {
+                if (pe.find_signature(pPEInfo->nOverlaySize, nSize, "'asmg-protected'00", nullptr, pPdStruct) != -1) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_ASMGUARD, "2.XX", "", 0);
                     pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 } else if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_ASMGUARD)) {
