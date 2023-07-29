@@ -3395,7 +3395,6 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
 
                 if (xmachofat.decompressToFile(&(result.listArchiveRecords.at(i)), sTempFileName)) {
                     QFile file;
-
                     file.setFileName(sTempFileName);
 
                     if (file.open(QIODevice::ReadOnly)) {
@@ -11574,7 +11573,6 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
 
                                 if (xzip.decompressToFile(&(pZipInfo->listArchiveRecords.at(i)), sTempFileName, pPdStruct)) {
                                     QFile file;
-
                                     file.setFileName(sTempFileName);
 
                                     if (file.open(QIODevice::ReadOnly)) {
