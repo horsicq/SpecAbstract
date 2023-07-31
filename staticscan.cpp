@@ -243,7 +243,6 @@ SpecAbstract::SCAN_RESULT StaticScan::scanFile(const QString &sFileName, XBinary
 
         if (file.open(QIODevice::ReadOnly)) {
             result = scanDevice(&file, pPdStruct);
-
             file.close();
         }
     }

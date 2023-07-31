@@ -3399,7 +3399,6 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
 
                     if (file.open(QIODevice::ReadOnly)) {
                         scan(&file, &scanResult, 0, file.size(), _parentId, pOptions, false, pPdStruct);
-
                         file.close();
                     }
                 }
@@ -11577,7 +11576,6 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
 
                                     if (file.open(QIODevice::ReadOnly)) {
                                         scan(&file, &scanResult, 0, file.size(), _parentId, pOptions, false, pPdStruct);
-
                                         file.close();
                                     }
                                 }
