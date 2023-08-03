@@ -65,9 +65,9 @@ private:
 
 signals:
     // TODO error and info signals !!!
-    void scanFileStarted(QString sFileName);
+    void scanFileStarted(const QString &sFileName);
     void completed(qint64 nElapsedTime);
-    void scanResult(SpecAbstract::SCAN_RESULT scanResult);
+    void scanResult(const SpecAbstract::SCAN_RESULT &scanResult);
 
 public slots:
     void process();

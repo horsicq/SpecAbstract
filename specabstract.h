@@ -1679,8 +1679,8 @@ protected:
     void _infoMessage(const QString &sInfoMessage);
 
 signals:
-    void errorMessage(QString sErrorMessage);
-    void infoMessage(QString sInfoMessage);
+    void errorMessage(const QString &sErrorMessage);
+    void infoMessage(const QString &sInfoMessage);
 };
 
 #endif  // SPECABSTRACT_H
