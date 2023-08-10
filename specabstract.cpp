@@ -8212,7 +8212,6 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                 }
 
                 // TODO options
-
                 pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
