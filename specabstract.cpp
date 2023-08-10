@@ -834,6 +834,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_SPOONINSTALLER: sResult = QString("Spoon Installer"); break;
         case RECORD_NAME_SPOONSTUDIO2011: sResult = QString("Spoon Studio 2011"); break;
         case RECORD_NAME_SPOONSTUDIO: sResult = QString("Spoon Studio"); break;
+        case RECORD_NAME_SQUIRRELINSTALLER: sResult = QString("Squirrel Installer"); break;
         case RECORD_NAME_SQUEEZSFX: sResult = QString("Squeez Self Extractor"); break;
         case RECORD_NAME_STARFORCE: sResult = QString("StarForce"); break;
         case RECORD_NAME_STARTOSLINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_STARTOSLINUX); break;
@@ -8409,6 +8410,18 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
 
                     pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
+            }
+
+            // Squirrel Installer
+            if (XPE::getResourcesVersionValue("SquirrelAwareVersion", &(pPEInfo->resVersion)) != ""){
+                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_SQUIRRELINSTALLER, "", "", 0);
+                ss.sVersion = XPE::getResourcesVersionValue("SquirrelAwareVersion", &(pPEInfo->resVersion)).trimmed();
+
+                if (ss.sVersion == "1") {
+                    ss.sVersion = "1.0.0-1.9.1";
+                }
+
+                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("Java") &&
