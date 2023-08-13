@@ -8412,7 +8412,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
             }
 
             // Squirrel Installer
-            if (XPE::getResourcesVersionValue("SquirrelAwareVersion", &(pPEInfo->resVersion)) != ""){
+            if (XPE::getResourcesVersionValue("SquirrelAwareVersion", &(pPEInfo->resVersion)) != "") {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_SQUIRRELINSTALLER, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("SquirrelAwareVersion", &(pPEInfo->resVersion)).trimmed();
 
