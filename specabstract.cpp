@@ -9547,17 +9547,17 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract:
                 recordSS.bIsHeuristic = true;
 
                 if (bLastSectionEntryPoint) {
-                    recordSS.sInfo = append(recordSS.sInfo, "Last section entry point");
+                    recordSS.sInfo = append(recordSS.sInfo, "Last section entry point"); // mb TODO translate
                 }
 
                 if (bEmptyFirstSection) {
-                    recordSS.sInfo = append(recordSS.sInfo, "Empty first section");
+                    recordSS.sInfo = append(recordSS.sInfo, "Empty first section"); // mb TODO translate
                 }
 
                 if (bHighEntropy) {
-                    recordSS.sInfo = append(recordSS.sInfo, "High entropy");
+                    recordSS.sInfo = append(recordSS.sInfo, "High entropy"); // mb TODO translate
                 } else if (bHighEntropyFirstSection) {
-                    recordSS.sInfo = append(recordSS.sInfo, "High entropy first section");
+                    recordSS.sInfo = append(recordSS.sInfo, "High entropy first section"); // mb TODO translate
                 }
 
                 pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
