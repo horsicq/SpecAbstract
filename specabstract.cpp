@@ -17039,7 +17039,7 @@ bool SpecAbstract::MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, SpecAbstract:
     return bResult;
 }
 
-void SpecAbstract::filterResult(QList<SpecAbstract::SCAN_STRUCT> *pListRecords, QSet<SpecAbstract::RECORD_TYPE> stRecordTypes, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::filterResult(QList<SpecAbstract::SCAN_STRUCT> *pListRecords, const QSet<SpecAbstract::RECORD_TYPE> &stRecordTypes, XBinary::PDSTRUCT *pPdStruct)
 {
     QList<SpecAbstract::SCAN_STRUCT> listRecords;
     qint32 nNumberOfRecords = pListRecords->count();

@@ -1672,7 +1672,7 @@ public:
 private:
     static bool MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, quint32 nCount, XBinary::FT fileType1,
                                         XBinary::FT fileType2);
-    static void filterResult(QList<SCAN_STRUCT> *pListRecords, QSet<RECORD_TYPE> stRecordTypes, XBinary::PDSTRUCT *pPdStruct);
+    static void filterResult(QList<SCAN_STRUCT> *pListRecords, const QSet<RECORD_TYPE> &stRecordTypes, XBinary::PDSTRUCT *pPdStruct);
     static void _fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorLinkerVersion, qint32 nMinorLinkerVersion, XBinary::PDSTRUCT *pPdStruct);
 
 protected:
