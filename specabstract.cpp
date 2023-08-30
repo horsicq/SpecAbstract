@@ -16883,7 +16883,7 @@ void SpecAbstract::fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages)
     //    }
 }
 
-SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(XBinary::OSINFO osInfo)
+SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(const XBinary::OSINFO &osInfo)
 {
     _SCANS_STRUCT result = {};
 

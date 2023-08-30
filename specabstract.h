@@ -1664,7 +1664,7 @@ public:
     static void getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages, XBinary::PDSTRUCT *pPdStruct);
     static void fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages);
 
-    static _SCANS_STRUCT getScansStructFromOsInfo(XBinary::OSINFO osInfo);
+    static _SCANS_STRUCT getScansStructFromOsInfo(const XBinary::OSINFO &osInfo);
     static QString getMsRichString(quint16 nId, quint16 nBuild, quint32 nCount, XBinary::PDSTRUCT *pPdStruct);
 
     static QList<XBinary::SCANSTRUCT> convert(QList<SCAN_STRUCT> *pListScanStructs);
