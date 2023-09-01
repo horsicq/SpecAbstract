@@ -237,6 +237,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_ALIASOBJ: sResult = QString("ALIASOBJ"); break;
         case RECORD_NAME_ALIBABACLANG: sResult = QString("Alibaba clang"); break;
         case RECORD_NAME_ALIBABAPROTECTION: sResult = QString("Alibaba Protection"); break;
+        case RECORD_NAME_ALIENYZE: sResult = QString("Alienyze"); break;
         case RECORD_NAME_ALIPAYCLANG: sResult = QString("Alipay clang"); break;
         case RECORD_NAME_ALIPAYOBFUSCATOR: sResult = QString("Alipay Obfuscator"); break;
         case RECORD_NAME_ALLATORIOBFUSCATOR: sResult = QString("Allatori Obfuscator"); break;
@@ -3861,6 +3862,13 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                         pPEInfo->mapResultProtectors.insert(recordEnigma.name, scansToScan(&(pPEInfo->basic_info), &recordEnigma));
                     }
                 }
+            }
+
+            // Alienyze
+            if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_ALIENYZE)) {
+                _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_ALIENYZE);
+
+                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // PESpin
