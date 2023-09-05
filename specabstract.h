@@ -1657,7 +1657,7 @@ public:
     static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, quint32 nCount, MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1,
                                                XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
 
-    static QByteArray serializeScanStruct(SCAN_STRUCT scanStruct, bool bIsHeader = false);
+    static QByteArray serializeScanStruct(const SCAN_STRUCT &scanStruct, bool bIsHeader = false);
     static SCAN_STRUCT deserializeScanStruct(QByteArray baData, bool *pbIsHeader = nullptr);
 
     static QString getAndroidVersionFromApi(quint32 nAPI);
