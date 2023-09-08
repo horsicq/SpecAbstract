@@ -173,7 +173,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_CERTIFICATE: sResult = QString("Certificate"); break;
         case RECORD_TYPE_COMPILER: sResult = QString("Compiler"); break;
         case RECORD_TYPE_CONVERTER: sResult = QString("Converter"); break;
-        case RECORD_TYPE_CRYPTOR: sResult = QString("Cryptor"); break;
+        case RECORD_TYPE_CRYPTER: sResult = QString("Crypter"); break;
         case RECORD_TYPE_DATABASE: sResult = QString("Database"); break;
         case RECORD_TYPE_DEBUGDATA: sResult = QString("Debug data"); break;
         case RECORD_TYPE_DONGLEPROTECTION: sResult = QString("Dongle protection"); break;
@@ -193,6 +193,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_OPERATIONSYSTEM: sResult = QString("Operation system"); break;
         case RECORD_TYPE_PACKER: sResult = QString("Packer"); break;
         case RECORD_TYPE_PETOOL: sResult = QString("PE Tool"); break;
+        case RECORD_TYPE_PROTECTION: sResult = QString("Protection"); break;
         case RECORD_TYPE_PROTECTOR: sResult = QString("Protector"); break;
         case RECORD_TYPE_PROTECTORDATA: sResult = QString("Protector data"); break;
         case RECORD_TYPE_SFX: sResult = QString("SFX"); break;
