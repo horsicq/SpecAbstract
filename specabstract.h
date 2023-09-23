@@ -1645,7 +1645,6 @@ public:
                           XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
     static void MSDOS_richScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, quint32 nCount, MSRICH_RECORD *pRecords, qint32 nRecordsSize,
                                XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-
     static void archiveScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, STRING_RECORD *pRecords, qint32 nRecordsSize,
                             XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
     static void archiveExpScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, STRING_RECORD *pRecords, qint32 nRecordsSize,
