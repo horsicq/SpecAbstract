@@ -1658,7 +1658,7 @@ public:
                                                XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
 
     static QByteArray serializeScanStruct(const SCAN_STRUCT &scanStruct, bool bIsHeader = false);
-    static SCAN_STRUCT deserializeScanStruct(QByteArray baData, bool *pbIsHeader = nullptr);
+    static SCAN_STRUCT deserializeScanStruct(const QByteArray &baData, bool *pbIsHeader = nullptr);
 
     static QString getAndroidVersionFromApi(quint32 nAPI);
 

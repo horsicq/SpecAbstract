@@ -16679,7 +16679,7 @@ QByteArray SpecAbstract::serializeScanStruct(const SCAN_STRUCT &scanStruct, bool
     return baResult;
 }
 
-SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(QByteArray baData, bool *pbIsHeader)
+SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(const QByteArray &baData, bool *pbIsHeader)
 {
     SCAN_STRUCT ssResult = {};
 
