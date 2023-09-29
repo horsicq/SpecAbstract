@@ -2946,6 +2946,9 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
         constScan(&(result.mapImportDetects), result.nImportHash64, result.nImportHash32, _PE_importhash_records, sizeof(_PE_importhash_records),
                   result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_IMPORTHASH, pPdStruct);
 
+        constScan(&(result.mapImportDetects), result.nImportHash64, result.nImportHash32, _PE_importhash_records_armadillo, sizeof(_PE_importhash_records_armadillo),
+                  result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_IMPORTHASH, pPdStruct);
+
         // Export
         qint32 nNumberOfImports = result.listImportPositionHashes.count();
 
@@ -11061,7 +11064,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
                     if (_sAndroidVersion == "") _sAndroidVersion = sAndroidVersionName;
 
                     if (_sAndroidVersion == "") {
-                        _sAndroidVersion = getAndroidVersionFromApi(_sVersion.toUInt());
+                        _sAndroidVersion = XBinary::getAndroidVersionFromApi(_sVersion.toUInt());
                     }
 
                     if (_sVersion != "") {
@@ -12789,7 +12792,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
 
             if (note.nSize >= 4) {
                 quint32 nSDKVersion = elf.read_uint32(note.nDataOffset);
-                ssAndroidSDK.sVersion = QString("API %1(Android %2)").arg(QString::number(nSDKVersion), getAndroidVersionFromApi(nSDKVersion));
+                ssAndroidSDK.sVersion = QString("API %1(Android %2)").arg(QString::number(nSDKVersion), XBinary::getAndroidVersionFromApi(nSDKVersion));
             }
 
             if (note.nSize >= 4 + 64 * 2) {
@@ -13218,7 +13221,7 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_
 
         {
             // Virbox Protector
-            QList<XELF_DEF::Elf_Phdr> listNotes = elf._getPrograms(&(pELFInfo->listProgramHeaders), XELF_DEF::PT_NOTE);
+            QList<XELF_DEF::Elf_Phdr> listNotes = elf._getPrograms(&(pELFInfo->listProgramHeaders), XELF_DEF::S_PT_NOTE);
 
             qint32 nNumberOfNotes = listNotes.count();
 
@@ -14717,7 +14720,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
         // https://source.android.com/devices/tech/dalvik/dex-format
         if (sDDEXVersion == "035") {
             recordAndroidSDK.sVersion = "API 14";
-            recordAndroid.sVersion = getAndroidVersionFromApi(14);
+            recordAndroid.sVersion = XBinary::getAndroidVersionFromApi(14);
         }
         //        else if (sDDEXVersion=="036")
         //        {
@@ -14726,13 +14729,13 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
         //        }
         else if (sDDEXVersion == "037") {
             recordAndroidSDK.sVersion = "API 24";
-            recordAndroid.sVersion = getAndroidVersionFromApi(24);
+            recordAndroid.sVersion = XBinary::getAndroidVersionFromApi(24);
         } else if (sDDEXVersion == "038") {
             recordAndroidSDK.sVersion = "API 26";
-            recordAndroid.sVersion = getAndroidVersionFromApi(26);
+            recordAndroid.sVersion = XBinary::getAndroidVersionFromApi(26);
         } else if (sDDEXVersion == "039") {
             recordAndroidSDK.sVersion = "API 28";
-            recordAndroid.sVersion = getAndroidVersionFromApi(28);
+            recordAndroid.sVersion = XBinary::getAndroidVersionFromApi(28);
         } else {
             recordAndroidSDK.sVersion = sDDEXVersion;
         }
@@ -16706,42 +16709,6 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(const QByteArray &
     ds >> *pbIsHeader;
 
     return ssResult;
-}
-
-QString SpecAbstract::getAndroidVersionFromApi(quint32 nAPI)
-{
-    QString sResult = tr("Unknown");
-
-    if (nAPI == 3) sResult = QString("1.5");
-    if (nAPI == 4) sResult = QString("1.6");
-    if (nAPI == 5) sResult = QString("2.0");
-    if (nAPI == 6) sResult = QString("2.0.1");
-    if (nAPI == 7) sResult = QString("2.1");
-    if (nAPI == 8) sResult = QString("2.2.X");
-    if (nAPI == 9) sResult = QString("2.3-2.3.2");
-    if (nAPI == 10) sResult = QString("2.3.3-2.3.7");
-    if (nAPI == 11) sResult = QString("3.0");
-    if (nAPI == 12) sResult = QString("3.1");
-    if (nAPI == 13) sResult = QString("3.2.X");
-    if (nAPI == 14) sResult = QString("4.0.1-4.0.2");
-    if (nAPI == 15) sResult = QString("4.0.3-4.0.4");
-    if (nAPI == 16) sResult = QString("4.1.X");
-    if (nAPI == 17) sResult = QString("4.2.X");
-    if (nAPI == 18) sResult = QString("4.3.X");
-    if (nAPI == 19) sResult = QString("4.4-4.4.4");
-    if (nAPI == 20) sResult = QString("4.4W");
-    if (nAPI == 21) sResult = QString("5.0");
-    if (nAPI == 22) sResult = QString("5.1");
-    if (nAPI == 23) sResult = QString("6.0");
-    if (nAPI == 24) sResult = QString("7.0");
-    if (nAPI == 25) sResult = QString("7.1");
-    if (nAPI == 26) sResult = QString("8.0");
-    if (nAPI == 27) sResult = QString("8.1");
-    if (nAPI == 28) sResult = QString("9.0");
-    if (nAPI == 29) sResult = QString("10.0");
-    if (nAPI == 30) sResult = QString("11.0");
-
-    return sResult;
 }
 
 void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages, XBinary::PDSTRUCT *pPdStruct)

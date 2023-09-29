@@ -561,7 +561,6 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypointExp_records[]=
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_VMPROTECT,                     "",                ""},                    "9CE9$$$$$$$$C70424........68........53C74424..........9CC70424"},
 };
 
-// TODO separate Armadillo
 SpecAbstract::CONST_RECORD _PE_importhash_records[]=
 {
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_KCRYPTOR,                     "0.11",             ""},                    0x0b5c121dc,    0x4dbf4081},
@@ -776,7 +775,9 @@ SpecAbstract::CONST_RECORD _PE_importhash_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_WLGROUPCRYPTER,               "",                 ""},                    0x13bf0f6720,   0xb0f58a0d},
 //    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DCRYPTPRIVATE,                "0.9b",             "TEST"},                0xde741440ed,   0x16bbbe82},
 //    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_DALKRYPT,                     "1.0",              "TEST"},                0xde741440ed,   0x16bbbe82},
-    // Armadillo TODO own array
+};
+SpecAbstract::CONST_RECORD _PE_importhash_records_armadillo[]=
+{
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2973050b33,   0x1a0c885c},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "1.XX-2.XX",        ""},                    0x2f2f1df1d1,   0x8623cf54},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ARMADILLO,                    "2.XX-3.XX",        ""},                    0x3010e1d59e,   0x834a7ecf}, // Check

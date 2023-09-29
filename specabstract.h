@@ -1660,8 +1660,6 @@ public:
     static QByteArray serializeScanStruct(const SCAN_STRUCT &scanStruct, bool bIsHeader = false);
     static SCAN_STRUCT deserializeScanStruct(const QByteArray &baData, bool *pbIsHeader = nullptr);
 
-    static QString getAndroidVersionFromApi(quint32 nAPI);
-
     static void getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages, XBinary::PDSTRUCT *pPdStruct);
     static void fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages);
 
