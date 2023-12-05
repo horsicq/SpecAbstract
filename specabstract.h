@@ -1286,10 +1286,10 @@ public:
 
     struct SCAN_OPTIONS {
         //        bool bEmulate; // TODO Check
-        bool bRecursiveScan;
-        bool bDeepScan;
-        bool bHeuristicScan;
-        bool bVerbose;
+        bool bIsRecursiveScan;
+        bool bIsDeepScan;
+        bool bIsHeuristicScan;
+        bool bIsVerbose;
         bool bAllTypesScan;
         bool bShowDetects;
         bool bResultAsXML;

@@ -2062,9 +2062,9 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = binary.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bVerbose;
+        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
+        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
+        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = binary.getMemoryMap(pPdStruct);
@@ -2211,9 +2211,9 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XBinar
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = com.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bVerbose;
+        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
+        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
+        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = com.getMemoryMap(pPdStruct);
@@ -2284,9 +2284,9 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XB
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = msdos.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bVerbose;
+        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
+        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
+        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = msdos.getMemoryMap(pPdStruct);
@@ -2378,9 +2378,9 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XBinar
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = elf.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bVerbose;
+        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
+        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
+        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = elf.getMemoryMap(pPdStruct);
@@ -2480,9 +2480,9 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XB
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = mach.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bVerbose;
+        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
+        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
+        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = mach.getMemoryMap(pPdStruct);
@@ -2555,9 +2555,9 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XBinary:
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = le.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bVerbose;
+        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
+        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
+        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = le.getMemoryMap(pPdStruct);
@@ -2623,9 +2623,9 @@ SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice, XBinary:
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = lx.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bVerbose;
+        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
+        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
+        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = lx.getMemoryMap(pPdStruct);
@@ -2691,9 +2691,9 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, XBinary:
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = ne.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bVerbose;
+        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
+        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
+        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = ne.getMemoryMap(pPdStruct);
@@ -2758,9 +2758,9 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = pe.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bVerbose;
+        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
+        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
+        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = pe.getMemoryMap(pPdStruct);
@@ -3062,7 +3062,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
         PE_handle_Joiners(pDevice, pOptions, &result);
         PE_handle_PETools(pDevice, pOptions, &result);
 
-        if (pOptions->bHeuristicScan) {
+        if (pOptions->bIsHeuristicScan) {
             PE_handle_UnknownProtection(pDevice, pOptions, &result, pPdStruct);
         }
 
@@ -3124,9 +3124,9 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = dex.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bVerbose;
+        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
+        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
+        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = dex.getMemoryMap(pPdStruct);
@@ -3165,7 +3165,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
         stringScan(&result.mapTypeDetects, &result.listTypeItemStrings, _DEX_type_records, sizeof(_DEX_type_records), result.basic_info.id.fileType, XBinary::FT_DEX,
                    &(result.basic_info), DETECTTYPE_DEXTYPE, pPdStruct);
 
-        if (pOptions->bDeepScan) {
+        if (pOptions->bIsDeepScan) {
             //            QList<XDEX_DEF::STRING_ITEM_ID> getList_STRING_ITEM_ID(&mapItems);
             //            QList<XDEX_DEF::TYPE_ITEM_ID> getList_TYPE_ITEM_ID(&mapItems);
             //            QList<XDEX_DEF::PROTO_ITEM_ID> getList_PROTO_ITEM_ID(&mapItems);
@@ -3248,9 +3248,9 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XBinar
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = xzip.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bVerbose;
+        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
+        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
+        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = xzip.getMemoryMap(pPdStruct);
@@ -3361,9 +3361,9 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = xmachofat.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bVerbose;
+        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
+        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
+        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = xmachofat.getMemoryMap(pPdStruct);
@@ -9649,7 +9649,7 @@ void SpecAbstract::PE_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPT
 
 void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
-    if (pOptions->bRecursiveScan) {
+    if (pOptions->bIsRecursiveScan) {
         XPE pe(pDevice, pOptions->bIsImage);
 
         if (pe.isValid()) {
@@ -11530,8 +11530,8 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
     XZip xzip(pDevice);
 
     if (xzip.isValid()) {
-        if (((pZipInfo->bIsAPK) || (pZipInfo->bIsAPKS) || (pZipInfo->bIsIPA)) && (pOptions->bRecursiveScan)) {
-            if (pOptions->bDeepScan) {
+        if (((pZipInfo->bIsAPK) || (pZipInfo->bIsAPKS) || (pZipInfo->bIsIPA)) && (pOptions->bIsRecursiveScan)) {
+            if (pOptions->bIsDeepScan) {
                 qint32 nNumberOfRecords = pZipInfo->listArchiveRecords.count();
 
                 qint32 _nFreeIndex = XBinary::getFreeIndex(pPdStruct);
@@ -12231,7 +12231,7 @@ void SpecAbstract::MSDOS_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_
 void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,
                                           XBinary::PDSTRUCT *pPdStruct)
 {
-    if (pOptions->bRecursiveScan) {
+    if (pOptions->bIsRecursiveScan) {
         XMSDOS msdos(pDevice, pOptions->bIsImage);
 
         if (msdos.isValid()) {
