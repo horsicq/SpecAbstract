@@ -12747,7 +12747,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
             recordSS.type = SpecAbstract::RECORD_TYPE_LIBRARY;
             recordSS.name = SpecAbstract::RECORD_NAME_QT;
 
-            XELF::SECTION_RECORD record = XELF::getSectionRecord(".qtversion", &(pELFInfo->listSectionRecords));
+            XELF::SECTION_RECORD record = elf._getSectionRecords( &(pELFInfo->listSectionRecords), ".qtversion").at(0);
 
             quint64 nVersion = 0;
 
@@ -12767,7 +12767,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
 
             pELFInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
         } else if (XELF::isSectionNamePresent(".qtplugin", &(pELFInfo->listSectionRecords))) {
-            XELF::SECTION_RECORD record = XELF::getSectionRecord(".qtplugin", &(pELFInfo->listSectionRecords));
+            XELF::SECTION_RECORD record = elf._getSectionRecords(&(pELFInfo->listSectionRecords), ".qtplugin").at(0);
 
             _SCANS_STRUCT recordSS = {};
 
@@ -12819,7 +12819,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
             recordSS.type = SpecAbstract::RECORD_TYPE_LINKER;
             recordSS.name = SpecAbstract::RECORD_NAME_GOLD;
 
-            XELF::SECTION_RECORD record = XELF::getSectionRecord(".note.gnu.gold-version", &(pELFInfo->listSectionRecords));
+            XELF::SECTION_RECORD record = elf._getSectionRecords(&(pELFInfo->listSectionRecords), ".note.gnu.gold-version").at(0);
 
             SpecAbstract::VI_STRUCT vi = get_gold_vi(pDevice, pOptions, record.nOffset, record.nSize, pPdStruct);
 

@@ -1239,7 +1239,7 @@ SpecAbstract::STRING_RECORD _PE_sectionNames_records[]=
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FISHPEPACKER,                 "1.02-1.03",        ""},                    ".PEDATA"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_FISHPESHIELD,                 "",                 ""},                    ".FishPE"},
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_GIXPROTECTOR,                 "",                 ""},                    ".guruX"},
-    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_GO,                           "1.XX",             ""},                    ".symtab"},
+    {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_GO,                           "1.XX",             ""},                    ".symtab"}, // TODO Check
     {{0, XBinary::FT_PE,        SpecAbstract::RECORD_TYPE_INSTALLER,        SpecAbstract::RECORD_NAME_GENTEEINSTALLER,              "",                 ""},                    ".gentee"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HMIMYSPROTECTOR,              "0.1",              ""},                    "hmimys"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PETOOL,           SpecAbstract::RECORD_NAME_HOODLUM,                      "",                 ""},                    ".HOODLUM"},
