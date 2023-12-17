@@ -12747,7 +12747,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
             recordSS.type = SpecAbstract::RECORD_TYPE_LIBRARY;
             recordSS.name = SpecAbstract::RECORD_NAME_QT;
 
-            XELF::SECTION_RECORD record = elf._getSectionRecords( &(pELFInfo->listSectionRecords), ".qtversion").at(0);
+            XELF::SECTION_RECORD record = elf._getSectionRecords(&(pELFInfo->listSectionRecords), ".qtversion").at(0);
 
             quint64 nVersion = 0;
 
