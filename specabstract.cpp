@@ -2067,7 +2067,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = binary.getMemoryMap(pPdStruct);
+        result.basic_info.memoryMap = binary.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -2216,7 +2216,7 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XBinar
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = com.getMemoryMap(pPdStruct);
+        result.basic_info.memoryMap = com.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -2289,7 +2289,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XB
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = msdos.getMemoryMap(pPdStruct);
+        result.basic_info.memoryMap = msdos.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -2383,7 +2383,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XBinar
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = elf.getMemoryMap(pPdStruct);
+        result.basic_info.memoryMap = elf.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -2485,7 +2485,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XB
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = mach.getMemoryMap(pPdStruct);
+        result.basic_info.memoryMap = mach.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -2560,7 +2560,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XBinary:
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = le.getMemoryMap(pPdStruct);
+        result.basic_info.memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -2628,7 +2628,7 @@ SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice, XBinary:
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = lx.getMemoryMap(pPdStruct);
+        result.basic_info.memoryMap = lx.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -2696,7 +2696,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, XBinary:
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = ne.getMemoryMap(pPdStruct);
+        result.basic_info.memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -2763,7 +2763,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = pe.getMemoryMap(pPdStruct);
+        result.basic_info.memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -3129,7 +3129,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = dex.getMemoryMap(pPdStruct);
+        result.basic_info.memoryMap = dex.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -3253,7 +3253,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XBinar
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = xzip.getMemoryMap(pPdStruct);
+        result.basic_info.memoryMap = xzip.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -3366,7 +3366,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
         result.basic_info.bShowDetects = pOptions->bShowDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = xmachofat.getMemoryMap(pPdStruct);
+        result.basic_info.memoryMap = xmachofat.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
@@ -13770,6 +13770,14 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                     recordXcode.sVersion = "14.3-14.3.1";
                     recordCLANG.sVersion = "14.0.3";
                     recordSwift.sVersion = "5.8-5.81";
+                } else if (recordSDK.sVersion == "14.0.0") {
+                    recordXcode.sVersion = "15.0-15.0.1";
+                    recordCLANG.sVersion = "15.0.0";
+                    recordSwift.sVersion = "5.9";
+                } else if (recordSDK.sVersion == "14.2.0") {
+                    recordXcode.sVersion = "15.1-15.2";
+                    recordCLANG.sVersion = "15.0.0";
+                    recordSwift.sVersion = "5.9.2";
                 }
             } else if (recordSDK.name == SpecAbstract::RECORD_NAME_IOSSDK) {
                 if (recordSDK.sVersion == "1.0.0") {
@@ -14026,6 +14034,14 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                     recordXcode.sVersion = "14.3-14.3.1";
                     recordCLANG.sVersion = "14.0.3";
                     recordSwift.sVersion = "5.8-5.81";
+                } else if (recordSDK.sVersion == "17.0.0") {
+                    recordXcode.sVersion = "15.0-15.0.1";
+                    recordCLANG.sVersion = "15.0.0";
+                    recordSwift.sVersion = "5.9";
+                } else if (recordSDK.sVersion == "17.2.0") {
+                    recordXcode.sVersion = "15.1-15.2";
+                    recordCLANG.sVersion = "15.0.0";
+                    recordSwift.sVersion = "5.9.2";
                 }
             } else if (recordSDK.name == SpecAbstract::RECORD_NAME_WATCHOSSDK) {
                 if (recordSDK.sVersion == "2.0.0") {
@@ -14140,6 +14156,14 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                     recordXcode.sVersion = "14.3-14.3.1";
                     recordCLANG.sVersion = "14.0.3";
                     recordSwift.sVersion = "5.8-5.81";
+                } else if (recordSDK.sVersion == "10.0.0") {
+                    recordXcode.sVersion = "15.0-15.0.1";
+                    recordCLANG.sVersion = "15.0.0";
+                    recordSwift.sVersion = "5.9";
+                } else if (recordSDK.sVersion == "10.2.0") {
+                    recordXcode.sVersion = "15.1-15.2";
+                    recordCLANG.sVersion = "15.0.0";
+                    recordSwift.sVersion = "5.9.2";
                 }
             } else if (recordSDK.name == SpecAbstract::RECORD_NAME_TVOS) {
                 if (recordSDK.sVersion == "9.0.0") {
@@ -14254,6 +14278,14 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                     recordXcode.sVersion = "14.3-14.3.1";
                     recordCLANG.sVersion = "14.0.3";
                     recordSwift.sVersion = "5.8-5.81";
+                } else if (recordSDK.sVersion == "17.0.0") {
+                    recordXcode.sVersion = "15.0-15.0.1";
+                    recordCLANG.sVersion = "15.0.0";
+                    recordSwift.sVersion = "5.9";
+                } else if (recordSDK.sVersion == "17.2.0") {
+                    recordXcode.sVersion = "15.1-15.2";
+                    recordCLANG.sVersion = "15.0.0";
+                    recordSwift.sVersion = "5.9.2";
                 }
             }
         }
