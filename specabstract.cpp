@@ -413,7 +413,8 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR: sResult = QString("Dingbaozeng native obfuscator"); break;
         case RECORD_NAME_DIRTYCRYPTOR: sResult = QString("DirTy Cryptor"); break;
         case RECORD_NAME_DJVU: sResult = QString("DjVu"); break;
-        case RECORD_NAME_DMD32D: sResult = QString("DMD32 D"); break;
+        case RECORD_NAME_DMD: sResult = QString("DMD"); break;
+        case RECORD_NAME_DMD32: sResult = QString("DMD32"); break;
         case RECORD_NAME_DNGUARD: sResult = QString("DNGuard"); break;
         case RECORD_NAME_DOS16M: sResult = QString("DOS/16M"); break;
         case RECORD_NAME_DOS4G: sResult = QString("DOS/4G"); break;
@@ -585,6 +586,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_LAZARUS: sResult = QString("Lazarus"); break;
         case RECORD_NAME_LCCLNK: sResult = QString("lcclnk"); break;
         case RECORD_NAME_LCCWIN: sResult = QString("lcc-win"); break;
+        case RECORD_NAME_LDC: sResult = QString("ldc"); break;
         case RECORD_NAME_LGLZ: sResult = QString("LGLZ"); break;
         case RECORD_NAME_LHA: sResult = QString("LHA"); break;
         case RECORD_NAME_LHASSFX: sResult = QString("LHA's SFX"); break;
@@ -7342,9 +7344,9 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
         }
 
         // DMD32 D
-        if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DMD32D)) {
+        if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DMD32)) {
             // TODO correct Version
-            _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_DMD32D, "", "", 0);
+            _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_DMD32, "", "", 0);
             pPEInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
@@ -16821,7 +16823,9 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
             case RECORD_NAME_EMBARCADERODELPHIDOTNET:
             case RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI: ssLanguage.name = RECORD_NAME_OBJECTPASCALDELPHI; break;
             case RECORD_NAME_D:
-            case RECORD_NAME_DMD32D: ssLanguage.name = RECORD_NAME_D; break;
+            case RECORD_NAME_DMD:
+            case RECORD_NAME_DMD32:
+            case RECORD_NAME_LDC: ssLanguage.name = RECORD_NAME_D; break;
             case RECORD_NAME_CSHARP:
             case RECORD_NAME_DOTNET: ssLanguage.name = RECORD_NAME_CSHARP; break;
             case RECORD_NAME_GO: ssLanguage.name = RECORD_NAME_GO; break;
@@ -17000,10 +17004,13 @@ QList<XBinary::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListScanSt
         record.sInfo = pListScanStructs->at(i).sInfo;
 
         record.globalColor = XFormats::typeToColor(record.sType);
+        record.nPrio = XFormats::typeToPrio(record.sType);
         record.sType = XFormats::translateType(record.sType);
 
         listResult.append(record);
     }
+
+    XFormats::sortRecords(&listResult);
 
     return listResult;
 }
