@@ -567,7 +567,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_JIAGU: sResult = QString("jiagu"); break;
         case RECORD_NAME_JPEG: sResult = QString("JPEG"); break;
         case RECORD_NAME_JSCRIPT: sResult = QString("JScript"); break;
-        case RECORD_NAME_JVM: sResult = QString("JVM"); break;
+        case RECORD_NAME_JVM: sResult = XBinary::osNameIdToString(XBinary::OSNAME_JVM); break;
         case RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER: sResult = QString("KaOs PE-DLL eXecutable Undetecter"); break;
         case RECORD_NAME_KBYS: sResult = QString("KByS"); break;
         case RECORD_NAME_KCRYPTOR: sResult = QString("K!Cryptor"); break;
@@ -2072,7 +2072,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         result.basic_info.memoryMap = binary.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
         result.basic_info.id.sType = result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
@@ -2221,7 +2221,7 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XBinar
         result.basic_info.memoryMap = com.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
         result.basic_info.id.sType = result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
@@ -2294,7 +2294,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XB
         result.basic_info.memoryMap = msdos.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
         result.basic_info.id.sType = result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
@@ -2388,7 +2388,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XBinar
         result.basic_info.memoryMap = elf.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
         result.basic_info.id.sType = result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
@@ -2490,7 +2490,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XB
         result.basic_info.memoryMap = mach.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
         result.basic_info.id.sType = result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
@@ -2565,7 +2565,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XBinary:
         result.basic_info.memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
         result.basic_info.id.sType = result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
@@ -2633,7 +2633,7 @@ SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice, XBinary:
         result.basic_info.memoryMap = lx.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
         result.basic_info.id.sType = result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
@@ -2701,7 +2701,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, XBinary:
         result.basic_info.memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
         result.basic_info.id.sType = result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
@@ -2768,7 +2768,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
         result.basic_info.memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
         result.basic_info.id.sType = result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
@@ -3134,7 +3134,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
         result.basic_info.memoryMap = dex.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
         result.basic_info.id.sType = result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
@@ -3258,7 +3258,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XBinar
         result.basic_info.memoryMap = xzip.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
         result.basic_info.id.sType = result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
@@ -3371,7 +3371,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
         result.basic_info.memoryMap = xmachofat.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.bIsBigEndian = result.basic_info.memoryMap.bIsBigEndian;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
         result.basic_info.id.sType = result.basic_info.memoryMap.sType;
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
@@ -10158,27 +10158,8 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice, SpecAbstract::SCAN_
         quint16 nMinor = binary.read_uint16(4, true);
         quint16 nMajor = binary.read_uint16(6, true);
 
-        QString sVersion;
-
         if (nMajor) {
-            switch (nMajor) {
-                case 0x2D: sVersion = "JDK 1.1"; break;
-                case 0x2E: sVersion = "JDK 1.2"; break;
-                case 0x2F: sVersion = "JDK 1.3"; break;
-                case 0x30: sVersion = "JDK 1.4"; break;
-                case 0x31: sVersion = "Java SE 5.0"; break;
-                case 0x32: sVersion = "Java SE 6.0"; break;
-                case 0x33: sVersion = "Java SE 7"; break;
-                case 0x34: sVersion = "Java SE 8"; break;
-                case 0x35: sVersion = "Java SE 9"; break;
-                case 0x36: sVersion = "Java SE 10"; break;
-                case 0x37: sVersion = "Java SE 11"; break;
-                case 0x38: sVersion = "Java SE 12"; break;
-            }
-
-            if ((sVersion != "") && (nMinor)) {
-                sVersion += QString(".%1").arg(nMinor);
-            }
+            QString sVersion = XJAR::_getJDKVersion(nMajor, nMinor);
 
             if (sVersion != "") {
                 _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_JAVACOMPILEDCLASS);
@@ -10900,11 +10881,12 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
     Q_UNUSED(pOptions)
     Q_UNUSED(pOptions)
 
-    XZip xzip(pDevice);
+    XJAR xjar(pDevice);
 
-    if (xzip.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
-        _SCANS_STRUCT ssVM = getScansStruct(0, XBinary::FT_JAR, RECORD_TYPE_VIRTUALMACHINE, RECORD_NAME_JVM, "", "", 0);
-        pZipInfo->mapResultOperationSystems.insert(ssVM.name, scansToScan(&(pZipInfo->basic_info), &ssVM));
+    if (xjar.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
+        _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(xjar.getOsInfo());
+
+        pZipInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
 
         if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_JDK)) {
             _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_JDK);
@@ -16906,7 +16888,11 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(const XBinary
 {
     _SCANS_STRUCT result = {};
 
-    result.type = RECORD_TYPE_OPERATIONSYSTEM;
+    if (osInfo.bIsVM) {
+        result.type = RECORD_TYPE_VIRTUALMACHINE;
+    } else {
+        result.type = RECORD_TYPE_OPERATIONSYSTEM;
+    }
 
     // TODO reactOS
     if (osInfo.osName == XBinary::OSNAME_MSDOS) result.name = RECORD_NAME_MSDOS;
@@ -16961,13 +16947,14 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(const XBinary
     else if (osInfo.osName == XBinary::OSNAME_QNX) result.name = RECORD_NAME_QNX;
     else if (osInfo.osName == XBinary::OSNAME_SYLLABLE) result.name = RECORD_NAME_SYLLABLE;
     else if (osInfo.osName == XBinary::OSNAME_MINIX) result.name = RECORD_NAME_MINIX;
+    else if (osInfo.osName == XBinary::OSNAME_JVM) result.name = RECORD_NAME_JVM;
     // TODO more
 
     result.sVersion = osInfo.sOsVersion;
     result.sInfo = QString("%1, %2, %3").arg(osInfo.sArch, XBinary::modeIdToString(osInfo.mode), osInfo.sType);
 
-    if (osInfo.bIsBigEndian) {
-        result.sInfo.append(QString(", %1").arg(XBinary::endiannessToString(osInfo.bIsBigEndian)));
+    if (osInfo.endian == XBinary::ENDIAN_BIG) {
+        result.sInfo.append(QString(", %1").arg(XBinary::endiannessToString(XBinary::ENDIAN_BIG)));
     }
 
     return result;
