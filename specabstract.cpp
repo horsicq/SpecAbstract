@@ -47,7 +47,7 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
     SubDevice sd(pDevice, nOffset, nSize);
 
     if (sd.open(QIODevice::ReadOnly) && (!(pPdStruct->bIsStop))) {
-        QSet<XBinary::FT> stFileTypes = XFormats::getFileTypes(&sd, true);
+        QSet<XBinary::FT> stFileTypes = XFormats::getFileTypes(&sd, true, pPdStruct);
 
         if ((!(pOptions->bAllTypesScan)) && (bInit)) {
             XBinary::filterFileTypes(&stFileTypes, pOptions->fileType);
@@ -3266,15 +3266,26 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XBinar
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
         result.listArchiveRecords = xzip.getRecords(20000, pPdStruct);
 
-        QSet<XBinary::FT> stFT = XFormats::getFileTypesZIP(pDevice, &(result.listArchiveRecords));
+        if (pOptions->fileType == XBinary::FT_UNKNOWN) {
+            QSet<XBinary::FT> stFT = XFormats::getFileTypesZIP(pDevice, &(result.listArchiveRecords), pPdStruct);
 
-        result.bIsJAR = stFT.contains(XBinary::FT_JAR);
-        result.bIsAPK = stFT.contains(XBinary::FT_APK);
-        result.bIsAPKS = stFT.contains(XBinary::FT_APKS);
-        result.bIsIPA = stFT.contains(XBinary::FT_IPA);
+            result.bIsJAR = stFT.contains(XBinary::FT_JAR);
+            result.bIsAPK = stFT.contains(XBinary::FT_APK);
+            result.bIsAPKS = stFT.contains(XBinary::FT_APKS);
+            result.bIsIPA = stFT.contains(XBinary::FT_IPA);
+        } else if (pOptions->fileType == XBinary::FT_JAR) {
+            result.bIsJAR = true;
+        } else if (pOptions->fileType == XBinary::FT_APK) {
+            result.bIsJAR = true;
+            result.bIsAPK = true;
+        } else if (pOptions->fileType == XBinary::FT_IPA) {
+            result.bIsIPA = true;
+        } else if (pOptions->fileType == XBinary::FT_APKS) {
+            result.bIsAPKS = true;
+        }
 
-        result.bIsKotlin = XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version", &(result.listArchiveRecords)) ||
-                           XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins", &(result.listArchiveRecords));
+        result.bIsKotlin = XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version", &(result.listArchiveRecords), pPdStruct) ||
+                           XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins", &(result.listArchiveRecords),pPdStruct);
 
         if (result.bIsIPA) {
             result.basic_info.id.fileType = XBinary::FT_IPA;
@@ -3292,7 +3303,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XBinar
             archiveExpScan(&(result.mapArchiveDetects), &(result.listArchiveRecords), _APK_fileExp_records, sizeof(_APK_fileExp_records), result.basic_info.id.fileType,
                            XBinary::FT_APK, &(result.basic_info), DETECTTYPE_ARCHIVE, pPdStruct);
 
-            if (XArchive::isArchiveRecordPresent("classes.dex", &(result.listArchiveRecords))) {
+            if (XArchive::isArchiveRecordPresent("classes.dex", &(result.listArchiveRecords), pPdStruct)) {
                 result.dexInfoClasses = Zip_scan_DEX(pDevice, pOptions, &result, pPdStruct, "classes.dex");
             }
         }
@@ -10653,10 +10664,10 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, SpecAbstract::SCAN_O
     Q_UNUSED(pOptions)
 
     if ((pZipInfo->bIsJAR) || (pZipInfo->bIsAPK)) {
-        XZip xzip(pDevice);
+        XJAR xjar(pDevice);
 
-        if (xzip.isValid(pPdStruct)) {
-            QString sDataManifest = xzip.decompress(&(pZipInfo->listArchiveRecords), "META-INF/MANIFEST.MF", pPdStruct).data();
+        if (xjar.isValid(pPdStruct)) {
+            QString sDataManifest = xjar.decompress(&(pZipInfo->listArchiveRecords), "META-INF/MANIFEST.MF", pPdStruct).data();
 
             if (sDataManifest != "") {
                 QString sCreatedBy = XBinary::regExp("Created-By: (.*?)\n", sDataManifest, 1).remove("\r");
@@ -10884,9 +10895,12 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
     XJAR xjar(pDevice);
 
     if (xjar.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(xjar.getOsInfo());
 
-        pZipInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
+        if (!(pZipInfo->bIsAPK)) {
+            _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(xjar.getOsInfo());
+
+            pZipInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
+        }
 
         if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_JDK)) {
             _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_JDK);
@@ -10941,9 +10955,9 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
     Q_UNUSED(pOptions)
 
     if (pZipInfo->bIsAPK) {
-        XZip xzip(pDevice);
+        XAPK xapk(pDevice);
 
-        if (xzip.isValid(pPdStruct)) {
+        if (xapk.isValid(&(pZipInfo->listArchiveRecords), pPdStruct)) {
             // 0x7109871a APK_SIGNATURE_SCHEME_V2_BLOCK_ID
             // TODO Check 0x7109871f
             // https://github.com/18598925736/ApkChannelPackageJavaCore/blob/9342d57a1fc5f9271d569612df6028758f6ee42d/src/channel/data/Constants.java#L38
@@ -10956,7 +10970,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
             // 0x6dff800d SOURCE_STAMP_BLOCK_ID
             // 0x2146444e Google Play
 
-            QList<XZip::APK_SIG_BLOCK_RECORD> listApkSignaturesBlockRecords = xzip.getAPKSignaturesBlockRecordsList();
+            QList<XZip::APK_SIG_BLOCK_RECORD> listApkSignaturesBlockRecords = xapk.getAPKSignaturesBlockRecordsList();
 
             _SCANS_STRUCT ssSignTool = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_APKSIGNATURESCHEME, "", "", 0);
 
@@ -11008,7 +11022,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
                 }
             }
 
-            QByteArray baAndroidManifest = xzip.decompress(&(pZipInfo->listArchiveRecords), "AndroidManifest.xml", pPdStruct);
+            QByteArray baAndroidManifest = xapk.decompress(&(pZipInfo->listArchiveRecords), "AndroidManifest.xml", pPdStruct);
 
             if (baAndroidManifest.size() > 0) {
                 QString sAndroidManifest = XAndroidBinary::getDecoded(&baAndroidManifest);
@@ -11068,7 +11082,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
                     pZipInfo->mapResultOperationSystems.insert(ssAndroid.name, scansToScan(&(pZipInfo->basic_info), &ssAndroid));
                 }
 
-                QString sJetpack = xzip.decompress(&(pZipInfo->listArchiveRecords), "META-INF/androidx.core_core.version").data();
+                QString sJetpack = xapk.decompress(&(pZipInfo->listArchiveRecords), "META-INF/androidx.core_core.version").data();
                 if (sJetpack != "") {
                     QString sJetpackVersion = XBinary::regExp("(.*?)\n", sJetpack, 1).remove("\r");
 
@@ -11386,7 +11400,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
                 if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_VDOG)) {
                     _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_VDOG);
 
-                    QString sVersion = xzip.decompress(&(pZipInfo->listArchiveRecords), "assets/version").data();
+                    QString sVersion = xapk.decompress(&(pZipInfo->listArchiveRecords), "assets/version").data();
 
                     if (sVersion != "") {
                         // V4.1.0_VDOG-1.8.5.3_AOP-7.23
@@ -11658,7 +11672,7 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_
 
         if (pZipInfo->basic_info.bIsVerbose) {
             if (pZipInfo->mapMetainfosDetects.count() == 0) {
-                QString sDataManifest = xzip.decompress("META-INF/MANIFEST.MF").data();
+                QString sDataManifest = xzip.decompress(&(pZipInfo->listArchiveRecords), "META-INF/MANIFEST.MF").data();
 
                 QString sProtectedBy = XBinary::regExp("Protected-By: (.*?)\n", sDataManifest, 1).remove("\r");
                 QString sCreatedBy = XBinary::regExp("Created-By: (.*?)\n", sDataManifest, 1).remove("\r");
@@ -16954,7 +16968,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(const XBinary
     result.sInfo = QString("%1, %2, %3").arg(osInfo.sArch, XBinary::modeIdToString(osInfo.mode), osInfo.sType);
 
     if (osInfo.endian == XBinary::ENDIAN_BIG) {
-        result.sInfo.append(QString(", %1").arg(XBinary::endiannessToString(XBinary::ENDIAN_BIG)));
+        result.sInfo.append(QString(", %1").arg(XBinary::endianToString(XBinary::ENDIAN_BIG)));
     }
 
     return result;
