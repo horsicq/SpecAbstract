@@ -11033,21 +11033,21 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
                 QString sPlatformBuildVersionName = XBinary::regExp("platformBuildVersionName=\"(.*?)\"", sAndroidManifest, 1);
                 QString sTargetSdkVersion = XBinary::regExp("android:targetSdkVersion=\"(.*?)\"", sAndroidManifest, 1);
                 QString sMinSdkVersion = XBinary::regExp("android:minSdkVersion=\"(.*?)\"", sAndroidManifest, 1);
-                QString sAndroid = XBinary::regExp("android:=\"(.*?)\"", sAndroidManifest, 1);
-                QString sAndroidVersionName = XBinary::regExp("android:versionName=\"(.*?)\"", sAndroidManifest, 1);
+                // QString sAndroid = XBinary::regExp("android:=\"(.*?)\"", sAndroidManifest, 1);
+                // QString sAndroidVersionName = XBinary::regExp("android:versionName=\"(.*?)\"", sAndroidManifest, 1);
 
                 // Check
                 if (!XBinary::checkStringNumber(sCompileSdkVersion, 1, 40)) sCompileSdkVersion = "";
                 if (!XBinary::checkStringNumber(sPlatformBuildVersionCode, 1, 40)) sPlatformBuildVersionCode = "";
                 if (!XBinary::checkStringNumber(sTargetSdkVersion, 1, 40)) sTargetSdkVersion = "";
                 if (!XBinary::checkStringNumber(sMinSdkVersion, 1, 40)) sMinSdkVersion = "";
-                if (!XBinary::checkStringNumber(sAndroid, 1, 40)) sAndroid = "";
+                // if (!XBinary::checkStringNumber(sAndroid, 1, 40)) sAndroid = "";
 
                 if (!XBinary::checkStringNumber(sCompileSdkVersionCodename.section(".", 0, 0), 1, 15)) sCompileSdkVersionCodename = "";
                 if (!XBinary::checkStringNumber(sPlatformBuildVersionName.section(".", 0, 0), 1, 15)) sPlatformBuildVersionName = "";
 
                 if ((sCompileSdkVersion != "") || (sCompileSdkVersionCodename != "") || (sPlatformBuildVersionCode != "") || (sPlatformBuildVersionName != "") ||
-                    (sTargetSdkVersion != "") || (sMinSdkVersion != "") || (sAndroid != "")) {
+                    (sTargetSdkVersion != "") || (sMinSdkVersion != "") /*|| (sAndroid != "")*/) {
                     _SCANS_STRUCT ssAndroidSDK = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_ANDROIDSDK, "", "", 0);
                     _SCANS_STRUCT ssAndroid = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_OPERATIONSYSTEM, RECORD_NAME_ANDROID, "", "", 0);
 
@@ -11061,11 +11061,11 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
                     if (_sVersion == "") _sVersion = sPlatformBuildVersionCode;
                     if (_sVersion == "") _sVersion = sTargetSdkVersion;
                     if (_sVersion == "") _sVersion = sMinSdkVersion;
-                    if (_sVersion == "") _sVersion = sAndroid;
+                    // if (_sVersion == "") _sVersion = sAndroid;
 
                     if (_sAndroidVersion == "") _sAndroidVersion = sCompileSdkVersionCodename;
                     if (_sAndroidVersion == "") _sAndroidVersion = sPlatformBuildVersionName;
-                    if (_sAndroidVersion == "") _sAndroidVersion = sAndroidVersionName;
+                    // if (_sAndroidVersion == "") _sAndroidVersion = sAndroidVersionName;
 
                     if (_sAndroidVersion == "") {
                         _sAndroidVersion = XBinary::getAndroidVersionFromApi(_sVersion.toUInt());
@@ -14750,14 +14750,12 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
 
     if (dex.isValid(pPdStruct)) {
         _SCANS_STRUCT recordAndroidSDK = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_TOOL, RECORD_NAME_ANDROIDSDK, "", "", 0);
-        _SCANS_STRUCT recordAndroid = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_OPERATIONSYSTEM, RECORD_NAME_ANDROID, "", "", 0);
 
         QString sDDEXVersion = dex.getVersion();
 
         // https://source.android.com/devices/tech/dalvik/dex-format
         if (sDDEXVersion == "035") {
             recordAndroidSDK.sVersion = "API 14";
-            recordAndroid.sVersion = XBinary::getAndroidVersionFromApi(14);
         }
         //        else if (sDDEXVersion=="036")
         //        {
@@ -14766,22 +14764,19 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
         //        }
         else if (sDDEXVersion == "037") {
             recordAndroidSDK.sVersion = "API 24";
-            recordAndroid.sVersion = XBinary::getAndroidVersionFromApi(24);
         } else if (sDDEXVersion == "038") {
             recordAndroidSDK.sVersion = "API 26";
-            recordAndroid.sVersion = XBinary::getAndroidVersionFromApi(26);
         } else if (sDDEXVersion == "039") {
             recordAndroidSDK.sVersion = "API 28";
-            recordAndroid.sVersion = XBinary::getAndroidVersionFromApi(28);
         } else {
             recordAndroidSDK.sVersion = sDDEXVersion;
         }
 
         pDEXInfo->mapResultTools.insert(recordAndroidSDK.name, scansToScan(&(pDEXInfo->basic_info), &recordAndroidSDK));
 
-        if (recordAndroid.sVersion != "") {
-            pDEXInfo->mapResultOperationSystems.insert(recordAndroid.name, scansToScan(&(pDEXInfo->basic_info), &recordAndroid));
-        }
+        _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(dex.getOsInfo());
+
+        pDEXInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pDEXInfo->basic_info), &ssOperationSystem));
 
         QList<XDEX_DEF::MAP_ITEM> listMaps = dex.getMapItems();
 
