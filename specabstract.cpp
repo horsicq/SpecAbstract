@@ -2234,7 +2234,7 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XBinar
         signatureExpScan(&com, &(result.basic_info.memoryMap), &result.basic_info.mapHeaderDetects, 0, _COM_Exp_records, sizeof(_COM_Exp_records),
                          result.basic_info.id.fileType, XBinary::FT_COM, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
 
-        COM_handle_Protection(pDevice, pOptions, &result);
+        COM_handle_Protection(pDevice, pOptions, &result, pPdStruct);
 
         if (result.mapResultProtectors.size() || result.mapResultPackers.size()) {
             //            _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_MSDOS,"","",0);
@@ -9829,9 +9829,13 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice, SpecAbstract::SCAN_OP
     }
 }
 
-void SpecAbstract::COM_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, COMINFO_STRUCT *pCOMInfo)
+void SpecAbstract::COM_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, COMINFO_STRUCT *pCOMInfo, XBinary::PDSTRUCT *pPdStruct)
 {
-    XCOM com(pDevice, pOptions->bIsImage);
+    Q_UNUSED(pDevice)
+    Q_UNUSED(pOptions)
+    Q_UNUSED(pPdStruct)
+
+    //XCOM com(pDevice, pOptions->bIsImage);
 
     if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PKLITE)) {
         pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
