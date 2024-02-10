@@ -3285,7 +3285,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XBinar
         }
 
         result.bIsKotlin = XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version", &(result.listArchiveRecords), pPdStruct) ||
-                           XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins", &(result.listArchiveRecords),pPdStruct);
+                           XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins", &(result.listArchiveRecords), pPdStruct);
 
         if (result.bIsIPA) {
             result.basic_info.id.fileType = XBinary::FT_IPA;
@@ -3614,7 +3614,8 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
     // Import
 }
 
-void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo,
+                                              XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -8648,7 +8649,8 @@ void SpecAbstract::PE_handle_PolyMorph(QIODevice *pDevice, SpecAbstract::SCAN_OP
     // ExeSax
 }
 
-void SpecAbstract::PE_handle_DongleProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::PE_handle_DongleProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo,
+                                              XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
@@ -8769,7 +8771,8 @@ void SpecAbstract::PE_handle_PrivateEXEProtector(QIODevice *pDevice, SpecAbstrac
     }
 }
 
-void SpecAbstract::PE_handle_VisualBasicCryptors(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::PE_handle_VisualBasicCryptors(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo,
+                                                 XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -9835,7 +9838,7 @@ void SpecAbstract::COM_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_
     Q_UNUSED(pOptions)
     Q_UNUSED(pPdStruct)
 
-    //XCOM com(pDevice, pOptions->bIsImage);
+    // XCOM com(pDevice, pOptions->bIsImage);
 
     if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PKLITE)) {
         pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
@@ -10899,7 +10902,6 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
     XJAR xjar(pDevice);
 
     if (xjar.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
-
         if (!(pZipInfo->bIsAPK)) {
             _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(xjar.getOsInfo());
 
@@ -11790,7 +11792,8 @@ void SpecAbstract::Binary_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN
     // TODO fixes
 }
 
-void SpecAbstract::MSDOS_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::MSDOS_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,
+                                                 XBinary::PDSTRUCT *pPdStruct)
 {
     XMSDOS msdos(pDevice, pOptions->bIsImage);
 
@@ -12256,7 +12259,8 @@ void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN
     }
 }
 
-void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::ELFINFO_STRUCT *pELFInfo,
+                                               XBinary::PDSTRUCT *pPdStruct)
 {
     XELF elf(pDevice, pOptions->bIsImage);
 
@@ -14382,7 +14386,8 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
     }
 }
 
-void SpecAbstract::MACHO_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::MACHO_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MACHOINFO_STRUCT *pMACHInfo,
+                                           XBinary::PDSTRUCT *pPdStruct)
 {
     XMACH mach(pDevice, pOptions->bIsImage);
 
