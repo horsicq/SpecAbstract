@@ -17017,6 +17017,7 @@ QList<XBinary::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListScanSt
 
         record.globalColor = XFormats::typeToColor(record.sType);
         record.nPrio = XFormats::typeToPrio(record.sType);
+        record.bIsProtection = XFormats::isProtection(record.sType);
         record.sType = XFormats::translateType(record.sType);
 
         listResult.append(record);
