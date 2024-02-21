@@ -10903,7 +10903,7 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
 
     if (xjar.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
         if (!(pZipInfo->bIsAPK)) {
-            _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(xjar.getOsInfo());
+            _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(xjar.getOsInfo(&(pZipInfo->listArchiveRecords), pPdStruct));
 
             pZipInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
         }
@@ -10964,6 +10964,11 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
         XAPK xapk(pDevice);
 
         if (xapk.isValid(&(pZipInfo->listArchiveRecords), pPdStruct)) {
+
+            _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(xapk.getOsInfo(&(pZipInfo->listArchiveRecords), pPdStruct));
+
+            pZipInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
+
             // 0x7109871a APK_SIGNATURE_SCHEME_V2_BLOCK_ID
             // TODO Check 0x7109871f
             // https://github.com/18598925736/ApkChannelPackageJavaCore/blob/9342d57a1fc5f9271d569612df6028758f6ee42d/src/channel/data/Constants.java#L38
@@ -11035,27 +11040,19 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
 
                 QString sCompileSdkVersion = XBinary::regExp("android:compileSdkVersion=\"(.*?)\"", sAndroidManifest, 1);
                 QString sCompileSdkVersionCodename = XBinary::regExp("android:compileSdkVersionCodename=\"(.*?)\"", sAndroidManifest, 1);
-                QString sPlatformBuildVersionCode = XBinary::regExp("platformBuildVersionCode=\"(.*?)\"", sAndroidManifest, 1);
-                QString sPlatformBuildVersionName = XBinary::regExp("platformBuildVersionName=\"(.*?)\"", sAndroidManifest, 1);
                 QString sTargetSdkVersion = XBinary::regExp("android:targetSdkVersion=\"(.*?)\"", sAndroidManifest, 1);
                 QString sMinSdkVersion = XBinary::regExp("android:minSdkVersion=\"(.*?)\"", sAndroidManifest, 1);
-                // QString sAndroid = XBinary::regExp("android:=\"(.*?)\"", sAndroidManifest, 1);
-                // QString sAndroidVersionName = XBinary::regExp("android:versionName=\"(.*?)\"", sAndroidManifest, 1);
 
                 // Check
                 if (!XBinary::checkStringNumber(sCompileSdkVersion, 1, 40)) sCompileSdkVersion = "";
-                if (!XBinary::checkStringNumber(sPlatformBuildVersionCode, 1, 40)) sPlatformBuildVersionCode = "";
                 if (!XBinary::checkStringNumber(sTargetSdkVersion, 1, 40)) sTargetSdkVersion = "";
                 if (!XBinary::checkStringNumber(sMinSdkVersion, 1, 40)) sMinSdkVersion = "";
-                // if (!XBinary::checkStringNumber(sAndroid, 1, 40)) sAndroid = "";
 
                 if (!XBinary::checkStringNumber(sCompileSdkVersionCodename.section(".", 0, 0), 1, 15)) sCompileSdkVersionCodename = "";
-                if (!XBinary::checkStringNumber(sPlatformBuildVersionName.section(".", 0, 0), 1, 15)) sPlatformBuildVersionName = "";
 
-                if ((sCompileSdkVersion != "") || (sCompileSdkVersionCodename != "") || (sPlatformBuildVersionCode != "") || (sPlatformBuildVersionName != "") ||
-                    (sTargetSdkVersion != "") || (sMinSdkVersion != "") /*|| (sAndroid != "")*/) {
+                if ((sCompileSdkVersion != "") || (sCompileSdkVersionCodename != "") ||
+                    (sTargetSdkVersion != "") || (sMinSdkVersion != "")) {
                     _SCANS_STRUCT ssAndroidSDK = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_ANDROIDSDK, "", "", 0);
-                    _SCANS_STRUCT ssAndroid = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_OPERATIONSYSTEM, RECORD_NAME_ANDROID, "", "", 0);
 
                     QString _sVersion;
                     QString _sAndroidVersion;
@@ -11063,29 +11060,15 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
                     _sVersion = sCompileSdkVersion;
                     _sAndroidVersion = sCompileSdkVersionCodename;
 
-                    if (_sVersion == "") _sVersion = sCompileSdkVersion;
-                    if (_sVersion == "") _sVersion = sPlatformBuildVersionCode;
-                    if (_sVersion == "") _sVersion = sTargetSdkVersion;
                     if (_sVersion == "") _sVersion = sMinSdkVersion;
-                    // if (_sVersion == "") _sVersion = sAndroid;
+                    if (_sVersion == "") _sVersion = sTargetSdkVersion;
 
-                    if (_sAndroidVersion == "") _sAndroidVersion = sCompileSdkVersionCodename;
-                    if (_sAndroidVersion == "") _sAndroidVersion = sPlatformBuildVersionName;
-                    // if (_sAndroidVersion == "") _sAndroidVersion = sAndroidVersionName;
-
-                    if (_sAndroidVersion == "") {
-                        _sAndroidVersion = XBinary::getAndroidVersionFromApi(_sVersion.toUInt());
-                    }
 
                     if (_sVersion != "") {
                         ssAndroidSDK.sVersion = QString("API %1").arg(_sVersion);
 
                         pZipInfo->mapResultTools.insert(ssAndroidSDK.name, scansToScan(&(pZipInfo->basic_info), &ssAndroidSDK));
                     }
-
-                    ssAndroid.sVersion = QString("%1").arg(_sAndroidVersion);
-
-                    pZipInfo->mapResultOperationSystems.insert(ssAndroid.name, scansToScan(&(pZipInfo->basic_info), &ssAndroid));
                 }
 
                 QString sJetpack = xapk.decompress(&(pZipInfo->listArchiveRecords), "META-INF/androidx.core_core.version").data();
