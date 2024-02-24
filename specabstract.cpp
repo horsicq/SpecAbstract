@@ -10964,7 +10964,6 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
         XAPK xapk(pDevice);
 
         if (xapk.isValid(&(pZipInfo->listArchiveRecords), pPdStruct)) {
-
             _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(xapk.getOsInfo(&(pZipInfo->listArchiveRecords), pPdStruct));
 
             pZipInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
@@ -11050,8 +11049,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
 
                 if (!XBinary::checkStringNumber(sCompileSdkVersionCodename.section(".", 0, 0), 1, 15)) sCompileSdkVersionCodename = "";
 
-                if ((sCompileSdkVersion != "") || (sCompileSdkVersionCodename != "") ||
-                    (sTargetSdkVersion != "") || (sMinSdkVersion != "")) {
+                if ((sCompileSdkVersion != "") || (sCompileSdkVersionCodename != "") || (sTargetSdkVersion != "") || (sMinSdkVersion != "")) {
                     _SCANS_STRUCT ssAndroidSDK = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_ANDROIDSDK, "", "", 0);
 
                     QString _sVersion;
@@ -11062,7 +11060,6 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
 
                     if (_sVersion == "") _sVersion = sMinSdkVersion;
                     if (_sVersion == "") _sVersion = sTargetSdkVersion;
-
 
                     if (_sVersion != "") {
                         ssAndroidSDK.sVersion = QString("API %1").arg(_sVersion);
