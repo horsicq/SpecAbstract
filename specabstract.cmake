@@ -13,4 +13,5 @@ set(SPECABSTRACT_SOURCES
     ${XPDF_SOURCES}
     ${XARCHIVES_SOURCES}
     ${CMAKE_CURRENT_LIST_DIR}/specabstract.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/specabstract.h
 )
