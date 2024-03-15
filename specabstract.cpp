@@ -10617,7 +10617,7 @@ void SpecAbstract::Zip_handle_Microsoftoffice(QIODevice *pDevice, SpecAbstract::
             if ((record.nUncompressedSize) && (record.nUncompressedSize <= 0x4000)) {
                 pZipInfo->basic_info.id.fileType = XBinary::FT_DOCUMENT;
 
-                QString sData = xzip.decompress(&record, false, pPdStruct).data();
+                QString sData = xzip.decompress(&record, pPdStruct).data();
                 QString sApplication = XBinary::regExp("<Application>(.*?)</Application>", sData, 1);
 
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_FORMAT, RECORD_NAME_MICROSOFTOFFICE, "", "", 0);
@@ -10651,7 +10651,7 @@ void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice, SpecAbstract::SCAN_
 
         if (!record.sFileName.isEmpty()) {
             if ((record.nUncompressedSize) && (record.nUncompressedSize <= 0x4000)) {
-                QString sData = xzip.decompress(&record, false, pPdStruct).data();
+                QString sData = xzip.decompress(&record, pPdStruct).data();
 
                 // TODO
                 if (sData.contains(":opendocument:")) {
@@ -11561,7 +11561,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
                     //                        qDebug("%s", pZipInfo->listArchiveRecords.at(i).sFileName.toLatin1().data());
                     //                    }
 
-                    QByteArray baRecordData = xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)), true, pPdStruct);
+                    QByteArray baRecordData = xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)), pPdStruct, 3, 0x10);
 
                     QSet<XBinary::FT> stFileTypes = XFormats::getFileTypes(&baRecordData, true);
 
