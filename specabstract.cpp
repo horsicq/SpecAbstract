@@ -11561,7 +11561,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
                     //                        qDebug("%s", pZipInfo->listArchiveRecords.at(i).sFileName.toLatin1().data());
                     //                    }
 
-                    QByteArray baRecordData = xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)), pPdStruct, 3, 0x10);
+                    QByteArray baRecordData = xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)), pPdStruct, 0, 0x200);
 
                     QSet<XBinary::FT> stFileTypes = XFormats::getFileTypes(&baRecordData, true);
 
