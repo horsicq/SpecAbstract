@@ -100,6 +100,7 @@ void SpecAbstract::scan(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResu
             pScanResult->listHeurs.append(msdos_info.basic_info.listHeurs);
         } else if (stFileTypes.contains(XBinary::FT_ZIP) || stFileTypes.contains(XBinary::FT_JAR) || stFileTypes.contains(XBinary::FT_APK) ||
                    stFileTypes.contains(XBinary::FT_IPA)) {
+            // mb TODO split detects
             SpecAbstract::ZIPINFO_STRUCT zip_info = SpecAbstract::getZIPInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
 
             pScanResult->listRecords.append(zip_info.basic_info.listDetects);
