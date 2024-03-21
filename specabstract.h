@@ -1298,6 +1298,7 @@ public:
         bool bResultAsJSON;
         bool bResultAsCSV;
         bool bResultAsTSV;
+        bool bResultAsPlainText;
         bool bSubdirectories;
         bool bIsImage;
         bool bIsTest;
