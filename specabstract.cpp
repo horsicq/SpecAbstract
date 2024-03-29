@@ -17004,7 +17004,7 @@ QList<XBinary::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListScanSt
         listResult.append(record);
     }
 
-    XFormats::sortRecords(&listResult);
+    //XFormats::sortRecords(&listResult);
 
     return listResult;
 }
