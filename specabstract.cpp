@@ -7172,7 +7172,6 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
 
 void SpecAbstract::PE_handle_Watcom(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
-    // TODO Turbo Linker
     XPE pe(pDevice, pOptions->bIsImage);
 
     if (pe.isValid(pPdStruct)) {
