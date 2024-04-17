@@ -5222,7 +5222,6 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice, SpecAbstract::SCAN_OP
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
 
-    // TODO
     qint32 nNumberOfSections = pPEInfo->listSectionRecords.count();
 
     bool bDetected = false;
