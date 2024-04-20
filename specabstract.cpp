@@ -478,7 +478,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_FENIXOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_FENIXOS); break;
         case RECORD_NAME_FILESHIELD: sResult = QString("FileShield"); break;
         case RECORD_NAME_FISHNET: sResult = QString("FISH .NET"); break;
-        case RECORD_NAME_FISHPEPACKER:  sResult = QString("Fish PE Packer"); break;  // TODO Check name
+        case RECORD_NAME_FISHPEPACKER: sResult = QString("Fish PE Packer"); break;  // TODO Check name
         case RECORD_NAME_FISHPESHIELD: sResult = QString("FishPE Shield"); break;
         case RECORD_NAME_FLASHVIDEO: sResult = QString("Flash Video"); break;
         case RECORD_NAME_FLEXLM: sResult = QString("Flex License Manager"); break;
