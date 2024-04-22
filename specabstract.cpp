@@ -2023,6 +2023,8 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_DelphiVersionFromCompiler(const QStri
             result.sVersion = "10.4 Sydney";
         } else if (_sString == "35.0") {
             result.sVersion = "11.0 Alexandria";
+        } else if (_sString == "36.0") {
+            result.sVersion = "11.0 Alexandria";
         }
     }
 
