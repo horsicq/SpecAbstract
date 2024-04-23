@@ -54,7 +54,6 @@ private:
         SCAN_TYPE_DIRECTORY,
         SCAN_TYPE_FILE,
         SCAN_TYPE_MEMORY
-        // TODO mb More
     };
 
     void _process(QIODevice *pDevice, SpecAbstract::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, XBinary::SCANID parentId,
