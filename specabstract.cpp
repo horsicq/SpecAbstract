@@ -10979,13 +10979,13 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
             // 0x6dff800d SOURCE_STAMP_BLOCK_ID
             // 0x2146444e Google Play
 
-            QList<XZip::APK_SIG_BLOCK_RECORD> listApkSignaturesBlockRecords = xapk.getAPKSignaturesBlockRecordsList();
+            QList<XAPK::APK_SIG_BLOCK_RECORD> listApkSignaturesBlockRecords = xapk.getAPKSignaturesBlockRecordsList();
 
             _SCANS_STRUCT ssSignTool = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_APKSIGNATURESCHEME, "", "", 0);
 
-            if (XZip::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords, 0x7109871a)) {
+            if (XAPK::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords, 0x7109871a)) {
                 ssSignTool.sVersion = "v2";
-            } else if (XZip::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords, 0xf05368c0)) {
+            } else if (XAPK::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords, 0xf05368c0)) {
                 ssSignTool.sVersion = "v3";
             }
 
@@ -10995,12 +10995,12 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
                 pZipInfo->mapResultSigntools.insert(ssSignTool.name, scansToScan(&(pZipInfo->basic_info), &ssSignTool));
             }
 
-            if (XZip::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords, 0x71777777)) {
+            if (XAPK::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords, 0x71777777)) {
                 _SCANS_STRUCT ssWalle = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_WALLE, "", "", 0);
                 pZipInfo->mapResultTools.insert(ssWalle.name, scansToScan(&(pZipInfo->basic_info), &ssWalle));
             }
 
-            if (XZip::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords, 0x2146444e)) {
+            if (XAPK::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords, 0x2146444e)) {
                 _SCANS_STRUCT ssGooglePlay = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_GOOGLEPLAY, "", "", 0);
                 pZipInfo->mapResultTools.insert(ssGooglePlay.name, scansToScan(&(pZipInfo->basic_info), &ssGooglePlay));
             }
