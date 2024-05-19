@@ -5199,7 +5199,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
 
                 // dePack
                 if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_DEPACK)) {
-                    if (pe.compareEntryPoint("EB$$60")) {
+                    if (pe.compareEntryPoint(&(pPEInfo->basic_info.memoryMap), "EB$$60")) {
                         _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_DEPACK);
 
                         pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
@@ -5585,7 +5585,7 @@ void SpecAbstract::PE_handle_Obsidium(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                 }
 
                 if (bKernel32 && bUser32) {
-                    if (pe.compareEntryPoint("EB$$50EB$$E8") || pe.compareEntryPoint("EB$$E8........EB$$EB")) {
+                    if (pe.compareEntryPoint(&(pPEInfo->basic_info.memoryMap), "EB$$50EB$$E8") || pe.compareEntryPoint(&(pPEInfo->basic_info.memoryMap), "EB$$E8........EB$$EB")) {
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_OBSIDIUM, "", "", 0);
 
                         pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
