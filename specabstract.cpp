@@ -4179,7 +4179,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                                 (pPEInfo->listSectionHeaders.at(0).Characteristics == 0xe00000a0)) {
                                 bool bDetect1 = (pPEInfo->nEntryPointSection == 1);
                                 bool bDetect2 =
-                                    (pe.getEntropy(pPEInfo->listSectionRecords.at(2).nOffset, pPEInfo->listSectionRecords.at(2).nSize) > 7.6);  // TODO ProcessData
+                                    (pe.getBinaryStatus(XBinary::BSTATUS_ENTROPY, pPEInfo->listSectionRecords.at(2).nOffset, pPEInfo->listSectionRecords.at(2).nSize, pPdStruct) > 7.6);
 
                                 if (bDetect1 || bDetect2) {
                                     _SCANS_STRUCT recordZProtect = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_ZPROTECT, "1.XX", "", 0);
@@ -9560,11 +9560,11 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract:
                 }
             }
 
-            if (pe.isPacked(pe.getEntropy()))  // TODO ProcessData
+            if (pe.isPacked(pe.getBinaryStatus(XBinary::BSTATUS_ENTROPY, 0, -1, pPdStruct)))
             {
                 bHighEntropy = true;
             } else if (nNumberOfSections > 0) {
-                double dEntropy = pe.getEntropy(pPEInfo->listSectionRecords.at(0).nOffset, pPEInfo->listSectionRecords.at(0).nSize);  // TODO ProcessData
+                double dEntropy = pe.getBinaryStatus(XBinary::BSTATUS_ENTROPY, pPEInfo->listSectionRecords.at(0).nOffset, pPEInfo->listSectionRecords.at(0).nSize, pPdStruct);
 
                 if (pe.isPacked(dEntropy)) {
                     bHighEntropyFirstSection = true;
