@@ -4178,8 +4178,8 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                             if ((pPEInfo->listSectionHeaders.at(0).PointerToRawData == 0) && (pPEInfo->listSectionHeaders.at(0).SizeOfRawData == 0) &&
                                 (pPEInfo->listSectionHeaders.at(0).Characteristics == 0xe00000a0)) {
                                 bool bDetect1 = (pPEInfo->nEntryPointSection == 1);
-                                bool bDetect2 =
-                                    (pe.getBinaryStatus(XBinary::BSTATUS_ENTROPY, pPEInfo->listSectionRecords.at(2).nOffset, pPEInfo->listSectionRecords.at(2).nSize, pPdStruct) > 7.6);
+                                bool bDetect2 = (pe.getBinaryStatus(XBinary::BSTATUS_ENTROPY, pPEInfo->listSectionRecords.at(2).nOffset,
+                                                                    pPEInfo->listSectionRecords.at(2).nSize, pPdStruct) > 7.6);
 
                                 if (bDetect1 || bDetect2) {
                                     _SCANS_STRUCT recordZProtect = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_ZPROTECT, "1.XX", "", 0);
@@ -5585,7 +5585,8 @@ void SpecAbstract::PE_handle_Obsidium(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                 }
 
                 if (bKernel32 && bUser32) {
-                    if (pe.compareEntryPoint(&(pPEInfo->basic_info.memoryMap), "EB$$50EB$$E8") || pe.compareEntryPoint(&(pPEInfo->basic_info.memoryMap), "EB$$E8........EB$$EB")) {
+                    if (pe.compareEntryPoint(&(pPEInfo->basic_info.memoryMap), "EB$$50EB$$E8") ||
+                        pe.compareEntryPoint(&(pPEInfo->basic_info.memoryMap), "EB$$E8........EB$$EB")) {
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_OBSIDIUM, "", "", 0);
 
                         pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
@@ -9560,11 +9561,11 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract:
                 }
             }
 
-            if (pe.isPacked(pe.getBinaryStatus(XBinary::BSTATUS_ENTROPY, 0, -1, pPdStruct)))
-            {
+            if (pe.isPacked(pe.getBinaryStatus(XBinary::BSTATUS_ENTROPY, 0, -1, pPdStruct))) {
                 bHighEntropy = true;
             } else if (nNumberOfSections > 0) {
-                double dEntropy = pe.getBinaryStatus(XBinary::BSTATUS_ENTROPY, pPEInfo->listSectionRecords.at(0).nOffset, pPEInfo->listSectionRecords.at(0).nSize, pPdStruct);
+                double dEntropy =
+                    pe.getBinaryStatus(XBinary::BSTATUS_ENTROPY, pPEInfo->listSectionRecords.at(0).nOffset, pPEInfo->listSectionRecords.at(0).nSize, pPdStruct);
 
                 if (pe.isPacked(dEntropy)) {
                     bHighEntropyFirstSection = true;
@@ -11561,7 +11562,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
                     //                        qDebug("%s", pZipInfo->listArchiveRecords.at(i).sFileName.toLatin1().data());
                     //                    }
 
-                    QByteArray baRecordData = xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)), pPdStruct, 0, 0x200); // TODO
+                    QByteArray baRecordData = xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)), pPdStruct, 0, 0x200);  // TODO
 
                     QSet<XBinary::FT> stFileTypes = XFormats::getFileTypes(&baRecordData, true);
 
