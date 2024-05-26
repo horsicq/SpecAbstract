@@ -8157,7 +8157,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                     qint64 nSectionOffset = pPEInfo->listSectionHeaders.at(pPEInfo->nResourcesSection).PointerToRawData +
                                             pPEInfo->listSectionHeaders.at(pPEInfo->nResourcesSection).Misc.VirtualSize;
 
-                    qint64 nVersionOffset = pe.find_signature(&(pPEInfo->basic_info.memoryMap), nSectionOffset - 0x600, 0x600, "BD04EFFE00000100");  // TODO ProcessData
+                    qint64 nVersionOffset = pe.find_signature(&(pPEInfo->basic_info.memoryMap), nSectionOffset - 0x600, 0x600, "BD04EFFE00000100", nullptr, pPdStruct);
                     if (nVersionOffset != -1) {
                         ss.sVersion = QString("%1.%2.%3.%4")
                                           .arg(pe.read_uint16(nVersionOffset + 16 + 2))
