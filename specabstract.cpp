@@ -5853,7 +5853,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, SpecAbstract::SCA
                     qint64 _nSize = pPEInfo->listSectionRecords.at(1).nSize;
 
                     qint64 nOffset_NetReactor = pe.find_signature(&(pPEInfo->basic_info.memoryMap), _nOffset, _nSize,
-                                                                  "5266686E204D182276B5331112330C6D0A204D18229EA129611C76B505190158");  // TODO ProcessData
+                                                                  "5266686E204D182276B5331112330C6D0A204D18229EA129611C76B505190158", nullptr, pPdStruct);
 
                     if (nOffset_NetReactor != -1) {
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_DOTNETREACTOR, "4.8-4.9", "", 0);
