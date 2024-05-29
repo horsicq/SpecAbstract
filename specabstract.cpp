@@ -16126,7 +16126,7 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
         for (qint32 i = 0; (i < nSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
             if ((pRecords[i].basicInfo.fileType == fileType1) || (pRecords[i].basicInfo.fileType == fileType2)) {
                 if ((!pMmREcords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->bShowDetects)) {
-                    qint64 _nOffset = binary.find_signature(&(pBasicInfo->memoryMap), nOffset, nSize, (char *)pRecords[i].pszSignature);  // TODO ProcessData
+                    qint64 _nOffset = binary.find_signature(&(pBasicInfo->memoryMap), nOffset, nSize, (char *)pRecords[i].pszSignature, nullptr, pPdStruct);
 
                     if (_nOffset != -1) {
                         if (!pMmREcords->contains(pRecords[i].basicInfo.name)) {
