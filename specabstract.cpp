@@ -3143,13 +3143,13 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
         result.header = dex.getHeader();
-        result.mapItems = dex.getMapItems();
+        result.mapItems = dex.getMapItems(pPdStruct);
 
 #ifdef QT_DEBUG
         qDebug("%lli msec", timer.elapsed());
 #endif
 
-        result.bIsStringPoolSorted = dex.isStringPoolSorted(&(result.mapItems));
+        result.bIsStringPoolSorted = dex.isStringPoolSorted(&(result.mapItems), pPdStruct);
         result.bIsOverlayPresent = dex.isOverlayPresent(&(result.basic_info.memoryMap));
 
 #ifdef QT_DEBUG
@@ -14768,7 +14768,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
 
         pDEXInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pDEXInfo->basic_info), &ssOperationSystem));
 
-        QList<XDEX_DEF::MAP_ITEM> listMaps = dex.getMapItems();
+        QList<XDEX_DEF::MAP_ITEM> listMaps = dex.getMapItems(pPdStruct);
 
         //        qint32 nNumberOfMapItems=listMaps.count();
 
@@ -14999,7 +14999,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
         }
 
         if (pDEXInfo->mapResultCompilers.size() == 0) {
-            _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_UNKNOWN, QString("%1").arg(dex.getMapItemsHash()), "", 0);
+            _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_UNKNOWN, QString("%1").arg(dex.getMapItemsHash(pPdStruct)), "", 0);
             pDEXInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
         }
 
@@ -15023,7 +15023,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
                 bool bIsFieldNamesUnicode = dex.isFieldNamesUnicode(&(pDEXInfo->listFieldIDs), &(pDEXInfo->listStrings));
                 bool bIsMethodNamesUnicode = dex.isMethodNamesUnicode(&(pDEXInfo->listMethodIDs), &(pDEXInfo->listStrings));
 
-                sOverlay = QString("Maps %1").arg(dex.getMapItemsHash());
+                sOverlay = QString("Maps %1").arg(dex.getMapItemsHash(pPdStruct));
 
                 if (pDEXInfo->bIsOverlayPresent) {
                     sOverlay = append(sOverlay, "Overlay");
