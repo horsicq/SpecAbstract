@@ -74,7 +74,8 @@ public:
         RECORD_TYPE_SOURCECODE,
         RECORD_TYPE_STUB,
         RECORD_TYPE_TOOL,
-        RECORD_TYPE_VIRTUALMACHINE
+        RECORD_TYPE_VIRTUALMACHINE,
+        RECORD_TYPE_VIRUS,
         // TODO more
     };
 

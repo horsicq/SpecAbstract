@@ -205,6 +205,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_STUB: sResult = QString("Stub"); break;
         case RECORD_TYPE_TOOL: sResult = QString("Tool"); break;
         case RECORD_TYPE_VIRTUALMACHINE: sResult = QString("Virtual machine"); break;
+        case RECORD_TYPE_VIRUS: sResult = tr("Virus"); break;
     }
 
     return sResult;
