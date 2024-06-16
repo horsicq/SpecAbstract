@@ -1640,7 +1640,7 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_HDUS_WJUS,                    "",                 ""},                    "lib/armeabi/libwjus.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_MEDUSAH,                      "",                 ""},                    "lib/armeabi-v7a/libmd.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APPSOLID,                     "",                 ""},                    "assets/high_resolution.png"},
-    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PROGUARD,                     "",                 ""},                    "META-INF/proguard/androidx-annotations.pro"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_OBFUSCATOR,       SpecAbstract::RECORD_NAME_PROGUARD,                     "",                 ""},                    "META-INF/proguard/androidx-annotations.pro"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_UNITY,                        "",                 ""},                    "lib/armeabi-v7a/libunity.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IL2CPP,                       "",                 ""},                    "lib/armeabi-v7a/libil2cpp.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_OLLVMTLL,                     "",                 ""},                    "lib/armeabi-v7a/libmtprotect.so"},
@@ -1698,6 +1698,6 @@ SpecAbstract::STRING_RECORD _DEX_type_records[]=
     {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_YIDUN,                        "",                 ""},                    "Lcom/_;"},
     {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APPSOLID,                     "",                 ""},                    "Lweb/apache/sax/app;"},
     {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_APKENCRYPTOR,                 "",                 ""},                    "Lcn/beingyi/sub/utils/Native;"},
-    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_PROGUARD,                     "",                 ""},                    "Lcom/google/android/gms/common/ProGuardCanary;"},
+    {{0, XBinary::FT_DEX,       SpecAbstract::RECORD_TYPE_OBFUSCATOR,       SpecAbstract::RECORD_NAME_PROGUARD,                     "",                 ""},                    "Lcom/google/android/gms/common/ProGuardCanary;"},
 };
 // CHECK nqshield

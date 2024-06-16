@@ -191,6 +191,7 @@ QString SpecAbstract::recordTypeIdToString(RECORD_TYPE id)
         case RECORD_TYPE_LINKER: sResult = QString("Linker"); break;
         case RECORD_TYPE_NETCOMPRESSOR: sResult = QString(".NET compressor"); break;
         case RECORD_TYPE_NETOBFUSCATOR: sResult = QString(".NET obfuscator"); break;
+        case RECORD_TYPE_OBFUSCATOR: sResult = QString("Obfuscator"); break;
         case RECORD_TYPE_OPERATIONSYSTEM: sResult = QString("Operation system"); break;
         case RECORD_TYPE_PACKER: sResult = QString("Packer"); break;
         case RECORD_TYPE_PETOOL: sResult = QString("PE Tool"); break;
@@ -753,7 +754,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_POSIX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_POSIX); break;
         case RECORD_NAME_POWERBASIC: sResult = QString("PowerBASIC"); break;
         case RECORD_NAME_PRIVATEEXEPROTECTOR: sResult = QString("Private EXE Protector"); break;
-        case RECORD_NAME_PROGUARD: sResult = QString("Proguard"); break;
+        case RECORD_NAME_PROGUARD: sResult = QString("ProGuard"); break;
         case RECORD_NAME_PROPACK: sResult = QString("PRO-PACK"); break;
         case RECORD_NAME_PROTECTEXE: sResult = QString("PROTECT! EXE"); break;
         case RECORD_NAME_PSEUDOAPKSIGNER: sResult = QString("PseudoApkSigner"); break;
