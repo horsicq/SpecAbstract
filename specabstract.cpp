@@ -2304,8 +2304,8 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XB
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
-        result.nOverlayOffset = msdos.getOverlayOffset(&(result.basic_info.memoryMap));
-        result.nOverlaySize = msdos.getOverlaySize(&(result.basic_info.memoryMap));
+        result.nOverlayOffset = msdos.getOverlayOffset(&(result.basic_info.memoryMap), pPdStruct);
+        result.nOverlaySize = msdos.getOverlaySize(&(result.basic_info.memoryMap), pPdStruct);
 
         if (result.nOverlaySize) {
             result.sOverlaySignature = msdos.getSignature(result.nOverlayOffset, 150);
@@ -2783,8 +2783,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
 
         result.dosHeader = pe.getDosHeaderEx();
         result.fileHeader = pe.getFileHeader();
-        result.nOverlayOffset = pe.getOverlayOffset();
-        result.nOverlaySize = pe.getOverlaySize();
+        result.nOverlayOffset = pe.getOverlayOffset(pPdStruct);
+        result.nOverlaySize = pe.getOverlaySize(pPdStruct);
 
         if (result.nOverlaySize) {
             result.sOverlaySignature = pe.getSignature(result.nOverlayOffset, 150);
@@ -3152,7 +3152,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
 #endif
 
         result.bIsStringPoolSorted = dex.isStringPoolSorted(&(result.mapItems), pPdStruct);
-        result.bIsOverlayPresent = dex.isOverlayPresent(&(result.basic_info.memoryMap));
+        result.bIsOverlayPresent = dex.isOverlayPresent(&(result.basic_info.memoryMap), pPdStruct);
 
 #ifdef QT_DEBUG
         qDebug("%lli msec", timer.elapsed());
@@ -15137,7 +15137,7 @@ void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice, SpecAbstract::DEXIN
         // DexProtect
         // 070002000000020083dc63003e000000120113000e0048000500e0000010011239022a001232d563ff0048030503d533ff00e1040608d544ff0048040504d544ff00e0040408b643e1040610d544ff0048040504d544ff00e0040410b643e1040618d544ff0048000504e0000018b6300f000d023901feff1221dd02067f48000502e100000828f50d0328cb0d000000
         if (pDEXInfo->bIsOverlayPresent) {
-            if (dex.getOverlaySize() == 0x60) {
+            if (dex.getOverlaySize(&(pDEXInfo->basic_info.memoryMap), pPdStruct) == 0x60) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXPROTECTOR, "", "", 0);
                 pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
             }
