@@ -1304,6 +1304,7 @@ public:
         bool bSubdirectories;
         bool bIsImage;
         bool bIsTest;
+        bool bHandleInfo;
         XBinary::FT fileType;            // Optional
         XBinary::FILEPART initFilePart;  // Optional
         QVariant varInfo;                // Optional
