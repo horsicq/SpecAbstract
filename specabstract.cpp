@@ -330,6 +330,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BORLANDCCPP: sResult = QString("Borland C/C++"); break;
         case RECORD_NAME_BORLANDCPP: sResult = QString("Borland C++"); break;
         case RECORD_NAME_BORLANDCPPBUILDER: sResult = QString("Borland C++ Builder"); break;
+        case RECORD_NAME_BORLANDDEBUGGINGINFORMATION: sResult = QString("Borland debugging information"); break;
         case RECORD_NAME_BORLANDDELPHI: sResult = QString("Borland Delphi"); break;
         case RECORD_NAME_BORLANDDELPHIDOTNET: sResult = QString("Borland Delphi .NET"); break;
         case RECORD_NAME_BORLANDOBJECTPASCALDELPHI: sResult = QString("Borland Object Pascal(Delphi)"); break;
@@ -10121,6 +10122,17 @@ void SpecAbstract::Binary_handle_DebugData(QIODevice *pDevice, SpecAbstract::SCA
         // TODO more infos
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PDBFILELINK);
         pBinaryInfo->mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_BORLANDDEBUGGINGINFORMATION)) && (pBinaryInfo->basic_info.id.nSize >= 10)) {
+        // TDS
+        // TODO more infos
+        _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_BORLANDDEBUGGINGINFORMATION);
+
+        quint32 nMajor = pBinaryInfo->basic_info.sHeaderSignature.mid(3 * 2, 2).toUInt(nullptr, 16);
+        quint32 nMinor = pBinaryInfo->basic_info.sHeaderSignature.mid(2 * 2, 2).toUInt(nullptr, 16);
+        ss.sVersion = QString("%1.%2").arg(nMajor).arg(nMinor, 2, 10, QChar('0'));
+        ss.sInfo = "TDS";
+
+        pBinaryInfo->mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
 }
 
@@ -11916,6 +11928,17 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_O
                 // Borland C++ 1991 3.0-7.00?
 
                 ssLinker = ss;
+            }
+        }
+
+        if (pMSDOSInfo->nOverlaySize > 10) {
+            if (XBinary::compareSignatureStrings(pMSDOSInfo->sOverlaySignature, "FB52")) {
+                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_MSDOS, RECORD_TYPE_DEBUGDATA, RECORD_NAME_BORLANDDEBUGGINGINFORMATION, "", "", 0);
+                quint32 nMajor = pMSDOSInfo->sOverlaySignature.mid(3 * 2, 2).toUInt(nullptr, 16);
+                quint32 nMinor = pMSDOSInfo->sOverlaySignature.mid(2 * 2, 2).toUInt(nullptr, 16);
+                ss.sVersion = QString("%1.%2").arg(nMajor).arg(nMinor, 2, 10, QChar('0'));
+                ss.sInfo = "TDS";
+                pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
             }
         }
 
