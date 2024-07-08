@@ -194,7 +194,7 @@ public:
         RECORD_NAME_BORLANDCCPP,
         RECORD_NAME_BORLANDCPP,
         RECORD_NAME_BORLANDCPPBUILDER,
-        RECORD_NAME_BORLANDDEBUGGINGINFORMATION,
+        RECORD_NAME_BORLANDDEBUGINFO,
         RECORD_NAME_BORLANDDELPHI,
         RECORD_NAME_BORLANDDELPHIDOTNET,
         RECORD_NAME_BORLANDOBJECTPASCALDELPHI,
@@ -943,26 +943,33 @@ public:
         XBinary::SCANID id;
         QString sHeaderSignature;
         XBinary::_MEMORY_MAP memoryMap;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapHeaderDetects;
         QList<SCAN_STRUCT> listDetects;
+        QList<DETECT_RECORD> listHeurs;
         bool bIsDeepScan;
         bool bIsHeuristicScan;
         bool bIsVerbose;
         bool bShowDetects;
         bool bIsUnknown;
         bool bIsTest;
-        QList<DETECT_RECORD> listHeurs;
-    };
 
-    struct BINARYINFO_STRUCT {
-        BASIC_INFO basic_info;
-
-        bool bIsPlainText;
-        bool bIsUTF8;
-        XBinary::UNICODE_TYPE unicodeType;
-        QString sHeaderText;
-
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapHeaderDetects;
         QMap<RECORD_NAME, _SCANS_STRUCT> mapTextHeaderDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapStringDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapTypeDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapArchiveDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapMetainfosDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapEntryPointDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapCommentSectionDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapOverlayDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapImportDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapExportDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapDotAnsiStringsDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapDotUnicodeStringsDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapCodeSectionDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapEntryPointSectionDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapSectionNamesDetects;
+        //        QMap<RECORD_NAME,_SCANS_STRUCT> mapRichDetects;
+        QMap<RECORD_NAME, _SCANS_STRUCT> mapResourcesDetects;
 
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultTexts;
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultTools;
@@ -979,8 +986,32 @@ public:
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultProtectorData;
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultLibraryData;
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultResources;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultOperationSystems;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLinkers;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultCompilers;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultProtectors;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultSigntools;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultAPKProtectors;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultDosExtenders;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultPackers;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultSFX;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultPETools;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultJoiners;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultInstallers;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultNETObfuscators;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultNETCompressors;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultDongleProtection;
 
         QList<SCAN_STRUCT> listRecursiveDetects;
+    };
+
+    struct BINARYINFO_STRUCT {
+        BASIC_INFO basic_info;
+        bool bIsPlainText;
+        bool bIsUTF8;
+        XBinary::UNICODE_TYPE unicodeType;
+        QString sHeaderText;
+
     };
 
     struct DEXINFO_STRUCT {
@@ -994,17 +1025,6 @@ public:
         QList<XDEX_DEF::METHOD_ITEM_ID> listMethodIDs;
         bool bIsStringPoolSorted;
         bool bIsOverlayPresent;
-
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapStringDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapTypeDetects;
-
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultOperationSystems;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLinkers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultCompilers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultTools;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLibraries;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultProtectors;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLanguages;
     };
 
     struct ZIPINFO_STRUCT {
@@ -1020,29 +1040,12 @@ public:
         bool bIsKotlin;
 
         DEXINFO_STRUCT dexInfoClasses;
-
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapArchiveDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapMetainfosDetects;
-
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultOperationSystems;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultTools;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultSigntools;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLanguages;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultArchives;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultFormats;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultAPKProtectors;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLibraries;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultCompilers;
-
-        QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct MACHOFATINFO_STRUCT {
         BASIC_INFO basic_info;
 
         QList<XArchive::RECORD> listArchiveRecords;
-
-        QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct COMINFO_STRUCT {
@@ -1052,14 +1055,6 @@ public:
         QString sOverlaySignature;
         qint64 nOverlayOffset;
         qint64 nOverlaySize;
-
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapEntryPointDetects;
-
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultOperationSystems;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultPackers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultProtectors;
-
-        QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct MSDOSINFO_STRUCT {
@@ -1069,21 +1064,6 @@ public:
         QString sOverlaySignature;
         qint64 nOverlayOffset;
         qint64 nOverlaySize;
-
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapEntryPointDetects;
-
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultOperationSystems;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultDosExtenders;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLinkers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultCompilers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultProtectors;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultPackers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultSFX;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLanguages;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLibraries;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultTools;
-
-        QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct ELFINFO_STRUCT {
@@ -1104,18 +1084,6 @@ public:
         QByteArray baStringTable;
 
         XBinary::OFFSETSIZE osCommentSection;
-
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapCommentSectionDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapEntryPointDetects;
-
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultOperationSystems;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLinkers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultCompilers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLibraries;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultPackers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultProtectors;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultTools;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLanguages;
     };
 
     struct LEINFO_STRUCT {
@@ -1126,17 +1094,6 @@ public:
         qint64 nOverlaySize;
 
         QList<XMSDOS::MS_RICH_RECORD> listRichSignatures;
-
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapEntryPointDetects;
-
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultOperationSystems;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLinkers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultCompilers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultTools;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLanguages;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLibraries;
-
-        QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct LXINFO_STRUCT {
@@ -1147,17 +1104,6 @@ public:
         qint64 nOverlaySize;
 
         QList<XMSDOS::MS_RICH_RECORD> listRichSignatures;
-
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapEntryPointDetects;
-
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultOperationSystems;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLinkers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultCompilers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultTools;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLanguages;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLibraries;
-
-        QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct NEINFO_STRUCT {
@@ -1166,17 +1112,6 @@ public:
         QString sOverlaySignature;
         qint64 nOverlayOffset;
         qint64 nOverlaySize;
-
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapEntryPointDetects;
-
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultOperationSystems;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLinkers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultCompilers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultTools;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLanguages;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLibraries;
-
-        QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct MACHOINFO_STRUCT {
@@ -1188,17 +1123,6 @@ public:
         QList<XMACH::LIBRARY_RECORD> listLibraryRecords;
         QList<XMACH::SEGMENT_RECORD> listSegmentRecords;
         QList<XMACH::SECTION_RECORD> listSectionRecords;
-
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapEntryPointDetects;
-
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultOperationSystems;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLinkers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultCompilers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLanguages;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLibraries;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultProtectors;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultTools;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultSigntools;
     };
 
     struct PEINFO_STRUCT {
@@ -1230,18 +1154,6 @@ public:
         XPE::RESOURCES_VERSION resVersion;
         XPE::CLI_INFO cliInfo;
 
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapOverlayDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapEntryPointDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapImportDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapExportDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapDotAnsiStringsDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapDotUnicodeStringsDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapCodeSectionDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapEntryPointSectionDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapSectionNamesDetects;
-        //        QMap<RECORD_NAME,_SCANS_STRUCT> mapRichDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapResourcesDetects;
-
         qint32 nEntryPointSection;
         qint32 nResourcesSection;
         qint32 nImportSection;
@@ -1268,25 +1180,6 @@ public:
         XBinary::OFFSETSIZE osConstDataSection;
         XBinary::OFFSETSIZE osImportSection;
         XBinary::OFFSETSIZE osResourcesSection;
-
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultOperationSystems;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLinkers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultCompilers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLibraries;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultTools;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultPETools;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultSigntools;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultProtectors;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultJoiners;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultPackers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultInstallers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultSFX;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultNETObfuscators;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultNETCompressors;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultDongleProtection;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLanguages;
-
-        QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct SCAN_OPTIONS {
@@ -1468,7 +1361,6 @@ public:
     static void PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void PE_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void PE_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void PE_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
 
@@ -1476,7 +1368,7 @@ public:
     static void COM_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, COMINFO_STRUCT *pCOMInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Binary_handle_Certificates(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
-    static void Binary_handle_DebugData(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
+    static void Binary_handle_DebugData(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Binary_handle_Formats(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_Databases(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_Images(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
@@ -1487,7 +1379,6 @@ public:
     static void Binary_handle_Resources(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
 
     static void Binary_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
-    static void Binary_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
 
     static void MSDOS_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
     static void MSDOS_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
@@ -1495,8 +1386,6 @@ public:
     static void MSDOS_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
     static void MSDOS_handle_SFX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
     static void MSDOS_handle_DosExtenders(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
-
-    static void MSDOS_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void MSDOS_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
 
@@ -1508,36 +1397,25 @@ public:
     static void ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void ELF_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void ELF_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct);
     static void MACHO_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct);
     static void MACHO_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct);
 
-    static void MACHO_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct);
-
     static void LE_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void LE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void LE_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct);
-
-    static void LE_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void LX_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct);
     static void LX_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct);
     static void LX_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct);
 
-    static void LX_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct);
-
     static void NE_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void NE_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct);
-
-    static void NE_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void DEX_handle_Tools(QIODevice *pDevice, SCAN_OPTIONS *pOptions, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
     static void DEX_handle_Dexguard(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
     static void DEX_handle_Protection(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
-
-    static void DEX_handleLanguages(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void Zip_handle_Microsoftoffice(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_OpenOffice(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
@@ -1547,7 +1425,6 @@ public:
     static void Zip_handle_IPA(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void Zip_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static DEXINFO_STRUCT Zip_scan_DEX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct,
                                        const QString &sFileName);
@@ -1624,6 +1501,8 @@ public:
     static VI_STRUCT _get_DelphiVersionFromCompiler(const QString &sString);
     static VI_STRUCT _get_SourceryCodeBench_string(const QString &sString);
 
+    static void _handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPdStruct);
+
     static bool PE_isValid_UPX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
     static void PE_x86Emul(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
 
@@ -1675,6 +1554,8 @@ public:
     static QString getMsRichString(quint16 nId, quint16 nBuild, quint32 nCount, XBinary::PDSTRUCT *pPdStruct);
 
     static QList<XBinary::SCANSTRUCT> convert(QList<SCAN_STRUCT> *pListScanStructs);
+
+    static _SCANS_STRUCT format_BorlandDebugInfo(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
 
 private:
     static bool MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, quint32 nCount, XBinary::FT fileType1,

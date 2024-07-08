@@ -330,7 +330,7 @@ QString SpecAbstract::recordNameIdToString(RECORD_NAME id)
         case RECORD_NAME_BORLANDCCPP: sResult = QString("Borland C/C++"); break;
         case RECORD_NAME_BORLANDCPP: sResult = QString("Borland C++"); break;
         case RECORD_NAME_BORLANDCPPBUILDER: sResult = QString("Borland C++ Builder"); break;
-        case RECORD_NAME_BORLANDDEBUGGINGINFORMATION: sResult = QString("Borland debugging information"); break;
+        case RECORD_NAME_BORLANDDEBUGINFO: sResult = QString("Borland Debug Info"); break;
         case RECORD_NAME_BORLANDDELPHI: sResult = QString("Borland Delphi"); break;
         case RECORD_NAME_BORLANDDELPHIDOTNET: sResult = QString("Borland Delphi .NET"); break;
         case RECORD_NAME_BORLANDOBJECTPASCALDELPHI: sResult = QString("Borland Object Pascal(Delphi)"); break;
@@ -2052,6 +2052,56 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SourceryCodeBench_string(const QStrin
     return result;
 }
 
+void SpecAbstract::_handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPdStruct)
+{
+    getLanguage(&(pBasic_info->mapResultLinkers), &(pBasic_info->mapResultLanguages), pPdStruct);
+    getLanguage(&(pBasic_info->mapResultCompilers), &(pBasic_info->mapResultLanguages), pPdStruct);
+    getLanguage(&(pBasic_info->mapResultLibraries), &(pBasic_info->mapResultLanguages), pPdStruct);
+    getLanguage(&(pBasic_info->mapResultTools), &(pBasic_info->mapResultLanguages), pPdStruct);
+    getLanguage(&(pBasic_info->mapResultPackers), &(pBasic_info->mapResultLanguages), pPdStruct);
+
+    fixLanguage(&(pBasic_info->mapResultLanguages));
+
+    pBasic_info->listDetects.append(pBasic_info->mapResultOperationSystems.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultDosExtenders.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultLinkers.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultCompilers.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultLanguages.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultLibraries.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultTools.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultPackers.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultSFX.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultProtectors.values());
+
+    pBasic_info->listDetects.append(pBasic_info->mapResultTexts.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultArchives.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultCertificates.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultDebugData.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultFormats.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultInstallerData.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultSFXData.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultProtectorData.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultLibraryData.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultResources.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultDatabases.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultImages.values());
+
+    if (!pBasic_info->listDetects.count()) {
+        if (pBasic_info->id.fileType != XBinary::FT_COM) {
+            _SCANS_STRUCT ssUnknown = {};
+
+            ssUnknown.type = SpecAbstract::RECORD_TYPE_UNKNOWN;
+            ssUnknown.name = SpecAbstract::RECORD_NAME_UNKNOWN;
+
+            pBasic_info->listDetects.append(scansToScan(pBasic_info, &ssUnknown));
+
+            pBasic_info->bIsUnknown = true;
+        }
+    }
+
+    pBasic_info->listDetects.append(pBasic_info->listRecursiveDetects);
+}
+
 SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, XBinary::SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset,
                                                             XBinary::PDSTRUCT *pPdStruct)
 {
@@ -2154,7 +2204,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         Binary_handle_Images(pDevice, pOptions, &result);
         Binary_handle_Archives(pDevice, pOptions, &result, pPdStruct);
         Binary_handle_Certificates(pDevice, pOptions, &result);
-        Binary_handle_DebugData(pDevice, pOptions, &result);
+        Binary_handle_DebugData(pDevice, pOptions, &result, pPdStruct);
         Binary_handle_InstallerData(pDevice, pOptions, &result);
         Binary_handle_SFXData(pDevice, pOptions, &result);
         Binary_handle_ProtectorData(pDevice, pOptions, &result);
@@ -2165,36 +2215,8 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         }
 
         Binary_handle_FixDetects(pDevice, pOptions, &result);
-        Binary_handleLanguages(pDevice, pOptions, &result);
 
-        result.basic_info.listDetects.append(result.mapResultTexts.values());
-        result.basic_info.listDetects.append(result.mapResultArchives.values());
-        result.basic_info.listDetects.append(result.mapResultCertificates.values());
-        result.basic_info.listDetects.append(result.mapResultDebugData.values());
-        result.basic_info.listDetects.append(result.mapResultFormats.values());
-        result.basic_info.listDetects.append(result.mapResultInstallerData.values());
-        result.basic_info.listDetects.append(result.mapResultSFXData.values());
-        result.basic_info.listDetects.append(result.mapResultProtectorData.values());
-        result.basic_info.listDetects.append(result.mapResultLibraryData.values());
-        result.basic_info.listDetects.append(result.mapResultResources.values());
-        result.basic_info.listDetects.append(result.mapResultDatabases.values());
-        result.basic_info.listDetects.append(result.mapResultImages.values());
-        result.basic_info.listDetects.append(result.mapResultTools.values());
-        result.basic_info.listDetects.append(result.mapResultLibraries.values());
-        result.basic_info.listDetects.append(result.mapResultLanguages.values());
-
-        if (!result.basic_info.listDetects.count()) {
-            _SCANS_STRUCT ssUnknown = {};
-
-            ssUnknown.type = SpecAbstract::RECORD_TYPE_UNKNOWN;
-            ssUnknown.name = SpecAbstract::RECORD_NAME_UNKNOWN;
-
-            result.basic_info.listDetects.append(scansToScan(&(result.basic_info), &ssUnknown));
-
-            result.basic_info.bIsUnknown = true;
-        }
-
-        result.basic_info.listDetects.append(result.listRecursiveDetects);
+        _handleResult(&(result.basic_info), pPdStruct);
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
@@ -2240,33 +2262,17 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XBinar
 
         COM_handle_Protection(pDevice, pOptions, &result, pPdStruct);
 
-        if (result.mapResultProtectors.size() || result.mapResultPackers.size()) {
+        if (result.basic_info.mapResultProtectors.size() || result.basic_info.mapResultPackers.size()) {
             //            _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_MSDOS,"","",0);
 
             //            result.mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pCOMInfo->basic_info),&ssOperationSystem));
 
             _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(com.getOsInfo());
 
-            result.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(result.basic_info), &ssOperationSystem));
+            result.basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(result.basic_info), &ssOperationSystem));
         }
 
-        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
-        result.basic_info.listDetects.append(result.mapResultPackers.values());
-        result.basic_info.listDetects.append(result.mapResultProtectors.values());
-
-        //        if(!result.basic_info.listDetects.count())
-        //        {
-        //            _SCANS_STRUCT ssUnknown={};
-
-        //            ssUnknown.type=SpecAbstract::RECORD_TYPE_UNKNOWN;
-        //            ssUnknown.name=SpecAbstract::RECORD_NAME_UNKNOWN;
-
-        //            result.basic_info.listDetects.append(scansToScan(&(result.basic_info),&ssUnknown));
-
-        //            result.basic_info.bIsUnknown=true;
-        //        }
-
-        result.basic_info.listDetects.append(result.listRecursiveDetects);
+        _handleResult(&(result.basic_info), pPdStruct);
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
@@ -2319,10 +2325,10 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XB
                       result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
         signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _MSDOS_header_records, sizeof(_MSDOS_header_records),
                       result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
-        signatureScan(&result.mapEntryPointDetects, result.sEntryPointSignature, _MSDOS_entrypoint_records, sizeof(_MSDOS_entrypoint_records),
+        signatureScan(&result.basic_info.mapEntryPointDetects, result.sEntryPointSignature, _MSDOS_entrypoint_records, sizeof(_MSDOS_entrypoint_records),
                       result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
 
-        signatureExpScan(&msdos, &(result.basic_info.memoryMap), &result.mapEntryPointDetects, result.nEntryPointOffset, _MSDOS_entrypointExp_records,
+        signatureExpScan(&msdos, &(result.basic_info.memoryMap), &result.basic_info.mapEntryPointDetects, result.nEntryPointOffset, _MSDOS_entrypointExp_records,
                          sizeof(_MSDOS_entrypointExp_records), result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
 
         MSDOS_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
@@ -2333,31 +2339,8 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XB
         MSDOS_handle_DosExtenders(pDevice, pOptions, &result, pPdStruct);
 
         MSDOS_handle_Recursive(pDevice, pOptions, &result, pPdStruct);
-        MSDOS_handleLanguages(pDevice, pOptions, &result, pPdStruct);
 
-        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
-        result.basic_info.listDetects.append(result.mapResultDosExtenders.values());
-        result.basic_info.listDetects.append(result.mapResultLinkers.values());
-        result.basic_info.listDetects.append(result.mapResultCompilers.values());
-        result.basic_info.listDetects.append(result.mapResultLanguages.values());
-        result.basic_info.listDetects.append(result.mapResultLibraries.values());
-        result.basic_info.listDetects.append(result.mapResultTools.values());
-        result.basic_info.listDetects.append(result.mapResultPackers.values());
-        result.basic_info.listDetects.append(result.mapResultSFX.values());
-        result.basic_info.listDetects.append(result.mapResultProtectors.values());
-
-        if (!result.basic_info.listDetects.count()) {
-            _SCANS_STRUCT ssUnknown = {};
-
-            ssUnknown.type = SpecAbstract::RECORD_TYPE_UNKNOWN;
-            ssUnknown.name = SpecAbstract::RECORD_NAME_UNKNOWN;
-
-            result.basic_info.listDetects.append(scansToScan(&(result.basic_info), &ssUnknown));
-
-            result.basic_info.bIsUnknown = true;
-        }
-
-        result.basic_info.listDetects.append(result.listRecursiveDetects);
+        _handleResult(&(result.basic_info), pPdStruct);
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
@@ -2426,7 +2409,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XBinar
             result.listComments = elf.getStringsFromSection(result.nCommentSection).values();
         }
 
-        signatureScan(&result.mapEntryPointDetects, result.sEntryPointSignature, _ELF_entrypoint_records, sizeof(_ELF_entrypoint_records), result.basic_info.id.fileType,
+        signatureScan(&result.basic_info.mapEntryPointDetects, result.sEntryPointSignature, _ELF_entrypoint_records, sizeof(_ELF_entrypoint_records), result.basic_info.id.fileType,
                       XBinary::FT_ELF, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
 
         ELF_handle_CommentSection(pDevice, pOptions, &result, pPdStruct);
@@ -2439,27 +2422,8 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XBinar
         ELF_handle_UnknownProtection(pDevice, pOptions, &result, pPdStruct);
 
         ELF_handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
-        ELF_handleLanguages(pDevice, pOptions, &result, pPdStruct);
 
-        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
-        result.basic_info.listDetects.append(result.mapResultLinkers.values());
-        result.basic_info.listDetects.append(result.mapResultCompilers.values());
-        result.basic_info.listDetects.append(result.mapResultLanguages.values());
-        result.basic_info.listDetects.append(result.mapResultLibraries.values());
-        result.basic_info.listDetects.append(result.mapResultTools.values());
-        result.basic_info.listDetects.append(result.mapResultPackers.values());
-        result.basic_info.listDetects.append(result.mapResultProtectors.values());
-
-        if (!result.basic_info.listDetects.count()) {
-            _SCANS_STRUCT ssUnknown = {};
-
-            ssUnknown.type = SpecAbstract::RECORD_TYPE_UNKNOWN;
-            ssUnknown.name = SpecAbstract::RECORD_NAME_UNKNOWN;
-
-            result.basic_info.listDetects.append(scansToScan(&(result.basic_info), &ssUnknown));
-
-            result.basic_info.bIsUnknown = true;
-        }
+        _handleResult(&(result.basic_info), pPdStruct);
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
@@ -2516,27 +2480,8 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XB
         MACHO_handle_Protection(pDevice, pOptions, &result, pPdStruct);
 
         MACHO_handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
-        MACHO_handleLanguages(pDevice, pOptions, &result, pPdStruct);
 
-        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
-        result.basic_info.listDetects.append(result.mapResultLinkers.values());
-        result.basic_info.listDetects.append(result.mapResultCompilers.values());
-        result.basic_info.listDetects.append(result.mapResultLanguages.values());
-        result.basic_info.listDetects.append(result.mapResultLibraries.values());
-        result.basic_info.listDetects.append(result.mapResultTools.values());
-        result.basic_info.listDetects.append(result.mapResultSigntools.values());
-        result.basic_info.listDetects.append(result.mapResultProtectors.values());
-
-        if (!result.basic_info.listDetects.count()) {
-            _SCANS_STRUCT ssUnknown = {};
-
-            ssUnknown.type = SpecAbstract::RECORD_TYPE_UNKNOWN;
-            ssUnknown.name = SpecAbstract::RECORD_NAME_UNKNOWN;
-
-            result.basic_info.listDetects.append(scansToScan(&(result.basic_info), &ssUnknown));
-
-            result.basic_info.bIsUnknown = true;
-        }
+        _handleResult(&(result.basic_info), pPdStruct);
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
@@ -2587,25 +2532,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XBinary:
         LE_handle_Microsoft(pDevice, pOptions, &result, pPdStruct);
         LE_handle_Borland(pDevice, pOptions, &result, pPdStruct);
 
-        LE_handleLanguages(pDevice, pOptions, &result, pPdStruct);
-
-        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
-        result.basic_info.listDetects.append(result.mapResultLinkers.values());
-        result.basic_info.listDetects.append(result.mapResultCompilers.values());
-        result.basic_info.listDetects.append(result.mapResultLanguages.values());
-        result.basic_info.listDetects.append(result.mapResultLibraries.values());
-        result.basic_info.listDetects.append(result.mapResultTools.values());
-
-        if (!result.basic_info.listDetects.count()) {
-            _SCANS_STRUCT ssUnknown = {};
-
-            ssUnknown.type = SpecAbstract::RECORD_TYPE_UNKNOWN;
-            ssUnknown.name = SpecAbstract::RECORD_NAME_UNKNOWN;
-
-            result.basic_info.listDetects.append(scansToScan(&(result.basic_info), &ssUnknown));
-
-            result.basic_info.bIsUnknown = true;
-        }
+        _handleResult(&(result.basic_info), pPdStruct);
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
@@ -2655,25 +2582,7 @@ SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice, XBinary:
         LX_handle_Microsoft(pDevice, pOptions, &result, pPdStruct);
         LX_handle_Borland(pDevice, pOptions, &result, pPdStruct);
 
-        LX_handleLanguages(pDevice, pOptions, &result, pPdStruct);
-
-        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
-        result.basic_info.listDetects.append(result.mapResultLinkers.values());
-        result.basic_info.listDetects.append(result.mapResultCompilers.values());
-        result.basic_info.listDetects.append(result.mapResultLanguages.values());
-        result.basic_info.listDetects.append(result.mapResultLibraries.values());
-        result.basic_info.listDetects.append(result.mapResultTools.values());
-
-        if (!result.basic_info.listDetects.count()) {
-            _SCANS_STRUCT ssUnknown = {};
-
-            ssUnknown.type = SpecAbstract::RECORD_TYPE_UNKNOWN;
-            ssUnknown.name = SpecAbstract::RECORD_NAME_UNKNOWN;
-
-            result.basic_info.listDetects.append(scansToScan(&(result.basic_info), &ssUnknown));
-
-            result.basic_info.bIsUnknown = true;
-        }
+        _handleResult(&(result.basic_info), pPdStruct);
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
@@ -2720,25 +2629,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, XBinary:
         NE_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
         NE_handle_Borland(pDevice, pOptions, &result, pPdStruct);
 
-        NE_handleLanguages(pDevice, pOptions, &result, pPdStruct);
-
-        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
-        result.basic_info.listDetects.append(result.mapResultLinkers.values());
-        result.basic_info.listDetects.append(result.mapResultCompilers.values());
-        result.basic_info.listDetects.append(result.mapResultLanguages.values());
-        result.basic_info.listDetects.append(result.mapResultLibraries.values());
-        result.basic_info.listDetects.append(result.mapResultTools.values());
-
-        if (!result.basic_info.listDetects.count()) {
-            _SCANS_STRUCT ssUnknown = {};
-
-            ssUnknown.type = SpecAbstract::RECORD_TYPE_UNKNOWN;
-            ssUnknown.name = SpecAbstract::RECORD_NAME_UNKNOWN;
-
-            result.basic_info.listDetects.append(scansToScan(&(result.basic_info), &ssUnknown));
-
-            result.basic_info.bIsUnknown = true;
-        }
+        _handleResult(&(result.basic_info), pPdStruct);
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
@@ -2934,37 +2825,37 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
                       result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
         signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_header_records, sizeof(_PE_header_records),
                       result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
-        signatureScan(&result.mapEntryPointDetects, result.sEntryPointSignature, _PE_entrypoint_records, sizeof(_PE_entrypoint_records), result.basic_info.id.fileType,
+        signatureScan(&result.basic_info.mapEntryPointDetects, result.sEntryPointSignature, _PE_entrypoint_records, sizeof(_PE_entrypoint_records), result.basic_info.id.fileType,
                       XBinary::FT_PE, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
-        signatureExpScan(&pe, &(result.basic_info.memoryMap), &result.mapEntryPointDetects, result.nEntryPointOffset, _PE_entrypointExp_records,
+        signatureExpScan(&pe, &(result.basic_info.memoryMap), &result.basic_info.mapEntryPointDetects, result.nEntryPointOffset, _PE_entrypointExp_records,
                          sizeof(_PE_entrypointExp_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
-        signatureScan(&result.mapOverlayDetects, result.sOverlaySignature, _binary_records, sizeof(_binary_records), result.basic_info.id.fileType, XBinary::FT_BINARY,
+        signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, _binary_records, sizeof(_binary_records), result.basic_info.id.fileType, XBinary::FT_BINARY,
                       &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
-        signatureScan(&result.mapOverlayDetects, result.sOverlaySignature, _archive_records, sizeof(_archive_records), result.basic_info.id.fileType, XBinary::FT_ARCHIVE,
+        signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, _archive_records, sizeof(_archive_records), result.basic_info.id.fileType, XBinary::FT_ARCHIVE,
                       &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
-        signatureScan(&result.mapOverlayDetects, result.sOverlaySignature, _PE_overlay_records, sizeof(_PE_overlay_records), result.basic_info.id.fileType,
+        signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, _PE_overlay_records, sizeof(_PE_overlay_records), result.basic_info.id.fileType,
                       XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
 
-        stringScan(&result.mapSectionNamesDetects, &result.listSectionNames, _PE_sectionNames_records, sizeof(_PE_sectionNames_records), result.basic_info.id.fileType,
+        stringScan(&result.basic_info.mapSectionNamesDetects, &result.listSectionNames, _PE_sectionNames_records, sizeof(_PE_sectionNames_records), result.basic_info.id.fileType,
                    XBinary::FT_PE, &(result.basic_info), DETECTTYPE_SECTIONNAME, pPdStruct);
 
         // Import
-        constScan(&(result.mapImportDetects), result.nImportHash64, result.nImportHash32, _PE_importhash_records, sizeof(_PE_importhash_records),
+        constScan(&(result.basic_info.mapImportDetects), result.nImportHash64, result.nImportHash32, _PE_importhash_records, sizeof(_PE_importhash_records),
                   result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_IMPORTHASH, pPdStruct);
 
-        constScan(&(result.mapImportDetects), result.nImportHash64, result.nImportHash32, _PE_importhash_records_armadillo, sizeof(_PE_importhash_records_armadillo),
+        constScan(&(result.basic_info.mapImportDetects), result.nImportHash64, result.nImportHash32, _PE_importhash_records_armadillo, sizeof(_PE_importhash_records_armadillo),
                   result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_IMPORTHASH, pPdStruct);
 
         // Export
         qint32 nNumberOfImports = result.listImportPositionHashes.count();
 
         for (qint32 i = 0; (i < nNumberOfImports) && (!(pPdStruct->bIsStop)); i++) {
-            constScan(&(result.mapImportDetects), i, result.listImportPositionHashes.at(i), _PE_importpositionhash_records, sizeof(_PE_importpositionhash_records),
+            constScan(&(result.basic_info.mapImportDetects), i, result.listImportPositionHashes.at(i), _PE_importpositionhash_records, sizeof(_PE_importpositionhash_records),
                       result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_IMPORTHASH, pPdStruct);
         }
 
         // TODO Resources scan
-        PE_resourcesScan(&(result.mapResourcesDetects), &(result.listResources), _PE_resources_records, sizeof(_PE_resources_records), result.basic_info.id.fileType,
+        PE_resourcesScan(&(result.basic_info.mapResourcesDetects), &(result.listResources), _PE_resources_records, sizeof(_PE_resources_records), result.basic_info.id.fileType,
                          XBinary::FT_PE, &(result.basic_info), DETECTTYPE_RESOURCES, pPdStruct);
 
         PE_x86Emul(pDevice, pOptions, &result, pPdStruct);
@@ -2990,9 +2881,9 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
         //        resourcesScan(&result.mapResourcesDetects,&result.listResources,_resources_records,sizeof(_resources_records),result.basic_info.id.filetype,SpecAbstract::XBinary::FT_PE);
 
         if (result.bIsNetPresent) {
-            stringScan(&result.mapDotAnsiStringsDetects, &result.cliInfo.metaData.listAnsiStrings, _PE_dot_ansistrings_records, sizeof(_PE_dot_ansistrings_records),
+            stringScan(&result.basic_info.mapDotAnsiStringsDetects, &result.cliInfo.metaData.listAnsiStrings, _PE_dot_ansistrings_records, sizeof(_PE_dot_ansistrings_records),
                        result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_NETANSISTRING, pPdStruct);
-            stringScan(&result.mapDotUnicodeStringsDetects, &result.cliInfo.metaData.listUnicodeStrings, _PE_dot_unicodestrings_records,
+            stringScan(&result.basic_info.mapDotUnicodeStringsDetects, &result.cliInfo.metaData.listUnicodeStrings, _PE_dot_unicodestrings_records,
                        sizeof(_PE_dot_unicodestrings_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_NETUNICODESTRING,
                        pPdStruct);
 
@@ -3006,7 +2897,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
                     qint64 nSectionOffset = result.osCodeSection.nOffset;
                     qint64 nSectionSize = result.osCodeSection.nSize;
 
-                    memoryScan(&result.mapCodeSectionDetects, pDevice, pOptions, nSectionOffset, nSectionSize, _PE_dot_codesection_records,
+                    memoryScan(&result.basic_info.mapCodeSectionDetects, pDevice, pOptions, nSectionOffset, nSectionSize, _PE_dot_codesection_records,
                                sizeof(_PE_dot_codesection_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_CODESECTION,
                                pPdStruct);
                 }
@@ -3018,7 +2909,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
                 qint64 nSectionOffset = result.osCodeSection.nOffset;
                 qint64 nSectionSize = result.osCodeSection.nSize;
 
-                memoryScan(&result.mapCodeSectionDetects, pDevice, pOptions, nSectionOffset, nSectionSize, _PE_codesection_records, sizeof(_PE_codesection_records),
+                memoryScan(&result.basic_info.mapCodeSectionDetects, pDevice, pOptions, nSectionOffset, nSectionSize, _PE_codesection_records, sizeof(_PE_codesection_records),
                            result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_CODESECTION, pPdStruct);
             }
 
@@ -3026,7 +2917,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
                 qint64 nSectionOffset = result.osEntryPointSection.nOffset;
                 qint64 nSectionSize = result.osEntryPointSection.nSize;
 
-                memoryScan(&result.mapEntryPointSectionDetects, pDevice, pOptions, nSectionOffset, nSectionSize, _PE_entrypointsection_records,
+                memoryScan(&result.basic_info.mapEntryPointSectionDetects, pDevice, pOptions, nSectionOffset, nSectionSize, _PE_entrypointsection_records,
                            sizeof(_PE_entrypointsection_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_ENTRYPOINTSECTION,
                            pPdStruct);
             }
@@ -3073,40 +2964,10 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XBinary:
         }
 
         PE_handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
-        PE_handleLanguages(pDevice, pOptions, &result, pPdStruct);
 
         PE_handle_Recursive(pDevice, pOptions, &result, pPdStruct);
 
-        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
-        result.basic_info.listDetects.append(result.mapResultLinkers.values());
-        result.basic_info.listDetects.append(result.mapResultCompilers.values());
-        result.basic_info.listDetects.append(result.mapResultLanguages.values());
-        result.basic_info.listDetects.append(result.mapResultLibraries.values());
-        result.basic_info.listDetects.append(result.mapResultTools.values());
-        result.basic_info.listDetects.append(result.mapResultPETools.values());
-        result.basic_info.listDetects.append(result.mapResultSigntools.values());
-        result.basic_info.listDetects.append(result.mapResultProtectors.values());
-        result.basic_info.listDetects.append(result.mapResultNETObfuscators.values());
-        result.basic_info.listDetects.append(result.mapResultDongleProtection.values());
-        result.basic_info.listDetects.append(result.mapResultPackers.values());
-        result.basic_info.listDetects.append(result.mapResultNETCompressors.values());
-        result.basic_info.listDetects.append(result.mapResultJoiners.values());
-        result.basic_info.listDetects.append(result.mapResultSFX.values());
-        result.basic_info.listDetects.append(result.mapResultInstallers.values());
-
-        // TODO unknown cryptors
-        if (!result.basic_info.listDetects.count()) {
-            _SCANS_STRUCT ssUnknown = {};
-
-            ssUnknown.type = SpecAbstract::RECORD_TYPE_UNKNOWN;
-            ssUnknown.name = SpecAbstract::RECORD_NAME_UNKNOWN;
-
-            result.basic_info.listDetects.append(scansToScan(&(result.basic_info), &ssUnknown));
-
-            result.basic_info.bIsUnknown = true;
-        }
-
-        result.basic_info.listDetects.append(result.listRecursiveDetects);
+        _handleResult(&(result.basic_info), pPdStruct);
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
@@ -3166,9 +3027,9 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
         qDebug("%lli msec", timer.elapsed());
 #endif
 
-        stringScan(&result.mapStringDetects, &result.listStrings, _DEX_string_records, sizeof(_DEX_string_records), result.basic_info.id.fileType, XBinary::FT_DEX,
+        stringScan(&result.basic_info.mapStringDetects, &result.listStrings, _DEX_string_records, sizeof(_DEX_string_records), result.basic_info.id.fileType, XBinary::FT_DEX,
                    &(result.basic_info), DETECTTYPE_DEXSTRING, pPdStruct);
-        stringScan(&result.mapTypeDetects, &result.listTypeItemStrings, _DEX_type_records, sizeof(_DEX_type_records), result.basic_info.id.fileType, XBinary::FT_DEX,
+        stringScan(&result.basic_info.mapTypeDetects, &result.listTypeItemStrings, _DEX_type_records, sizeof(_DEX_type_records), result.basic_info.id.fileType, XBinary::FT_DEX,
                    &(result.basic_info), DETECTTYPE_DEXTYPE, pPdStruct);
 
         if (pOptions->bIsDeepScan) {
@@ -3218,15 +3079,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XBinar
         DEX_handle_Protection(pDevice, &result, pPdStruct);
         DEX_handle_Dexguard(pDevice, &result, pPdStruct);
 
-        DEX_handleLanguages(pDevice, &result, pPdStruct);
-
-        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
-        result.basic_info.listDetects.append(result.mapResultLinkers.values());
-        result.basic_info.listDetects.append(result.mapResultCompilers.values());
-        result.basic_info.listDetects.append(result.mapResultLanguages.values());
-        result.basic_info.listDetects.append(result.mapResultLibraries.values());
-        result.basic_info.listDetects.append(result.mapResultTools.values());
-        result.basic_info.listDetects.append(result.mapResultProtectors.values());
+        _handleResult(&(result.basic_info), pPdStruct);
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
@@ -3302,9 +3155,9 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XBinar
         }
 
         if (result.bIsAPK) {
-            archiveScan(&(result.mapArchiveDetects), &(result.listArchiveRecords), _APK_file_records, sizeof(_APK_file_records), result.basic_info.id.fileType,
+            archiveScan(&(result.basic_info.mapArchiveDetects), &(result.listArchiveRecords), _APK_file_records, sizeof(_APK_file_records), result.basic_info.id.fileType,
                         XBinary::FT_APK, &(result.basic_info), DETECTTYPE_ARCHIVE, pPdStruct);
-            archiveExpScan(&(result.mapArchiveDetects), &(result.listArchiveRecords), _APK_fileExp_records, sizeof(_APK_fileExp_records), result.basic_info.id.fileType,
+            archiveExpScan(&(result.basic_info.mapArchiveDetects), &(result.listArchiveRecords), _APK_fileExp_records, sizeof(_APK_fileExp_records), result.basic_info.id.fileType,
                            XBinary::FT_APK, &(result.basic_info), DETECTTYPE_ARCHIVE, pPdStruct);
 
             if (XArchive::isArchiveRecordPresent("classes.dex", &(result.listArchiveRecords), pPdStruct)) {
@@ -3331,30 +3184,8 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XBinar
         Zip_handle_Recursive(pDevice, pOptions, &result, pPdStruct);
 
         Zip_handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
-        Zip_handleLanguages(pDevice, pOptions, &result, pPdStruct);
 
-        result.basic_info.listDetects.append(result.mapResultOperationSystems.values());
-        result.basic_info.listDetects.append(result.mapResultArchives.values());
-        result.basic_info.listDetects.append(result.mapResultFormats.values());
-        result.basic_info.listDetects.append(result.mapResultCompilers.values());
-        result.basic_info.listDetects.append(result.mapResultTools.values());
-        result.basic_info.listDetects.append(result.mapResultSigntools.values());
-        result.basic_info.listDetects.append(result.mapResultLanguages.values());
-        result.basic_info.listDetects.append(result.mapResultLibraries.values());
-        result.basic_info.listDetects.append(result.mapResultAPKProtectors.values());
-
-        if (!result.basic_info.listDetects.count()) {
-            _SCANS_STRUCT ssUnknown = {};
-
-            ssUnknown.type = SpecAbstract::RECORD_TYPE_UNKNOWN;
-            ssUnknown.name = SpecAbstract::RECORD_NAME_UNKNOWN;
-
-            result.basic_info.listDetects.append(scansToScan(&(result.basic_info), &ssUnknown));
-
-            result.basic_info.bIsUnknown = true;
-        }
-
-        result.basic_info.listDetects.append(result.listRecursiveDetects);
+        _handleResult(&(result.basic_info), pPdStruct);
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
@@ -3427,7 +3258,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
                 }
             }
 
-            result.listRecursiveDetects.append(scanResult.listRecords);
+            result.basic_info.listRecursiveDetects.append(scanResult.listRecords);
         }
 
         XBinary::setPdStructFinished(pPdStruct, _nFreeIndex);
@@ -3439,7 +3270,7 @@ SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevi
 
         result.basic_info.listDetects.append(scansToScan(&(result.basic_info), &ssFormat));
 
-        result.basic_info.listDetects.append(result.listRecursiveDetects);
+        result.basic_info.listDetects.append(result.basic_info.listRecursiveDetects);
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
@@ -3586,32 +3417,32 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
 
     // TODO 32/64
     if (stDetects.contains("kernel32_zprotect")) {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_ZPROTECT, getScansStruct(0, XBinary::FT_PE32, RECORD_TYPE_PROTECTOR, RECORD_NAME_ZPROTECT, "", "", 0));
+        pPEInfo->basic_info.mapImportDetects.insert(RECORD_NAME_ZPROTECT, getScansStruct(0, XBinary::FT_PE32, RECORD_TYPE_PROTECTOR, RECORD_NAME_ZPROTECT, "", "", 0));
     }
 
     if (stDetects.contains("user32_pespina") && stDetects.contains("comctl32_pespina")) {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_PESPIN, getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_PESPIN, "1.0-1.2", "", 0));
+        pPEInfo->basic_info.mapImportDetects.insert(RECORD_NAME_PESPIN, getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_PESPIN, "1.0-1.2", "", 0));
     }
 
     if (stDetects.contains("user32_pespin") && stDetects.contains("comctl32_pespin") && stDetects.contains("kernel32_pespin")) {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_PESPIN, getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_PESPIN, "", "", 0));
+        pPEInfo->basic_info.mapImportDetects.insert(RECORD_NAME_PESPIN, getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_PESPIN, "", "", 0));
     }
 
     if (stDetects.contains("user32_pespin") && stDetects.contains("comctl32_pespin") && stDetects.contains("kernel32_pespinx")) {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_PESPIN, getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_PESPIN, "1.3X", "", 0));
+        pPEInfo->basic_info.mapImportDetects.insert(RECORD_NAME_PESPIN, getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_PESPIN, "1.3X", "", 0));
     }
 
     if (stDetects.contains("kernel32_alloy0")) {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_ALLOY, getScansStruct(0, XBinary::FT_PE32, RECORD_TYPE_PROTECTOR, RECORD_NAME_ALLOY, "4.X", "", 0));
+        pPEInfo->basic_info.mapImportDetects.insert(RECORD_NAME_ALLOY, getScansStruct(0, XBinary::FT_PE32, RECORD_TYPE_PROTECTOR, RECORD_NAME_ALLOY, "4.X", "", 0));
     }
 
     if (stDetects.contains("kernel32_alloy2")) {
-        pPEInfo->mapImportDetects.insert(RECORD_NAME_ALLOY, getScansStruct(2, XBinary::FT_PE32, RECORD_TYPE_PROTECTOR, RECORD_NAME_ALLOY, "4.X", "", 0));
+        pPEInfo->basic_info.mapImportDetects.insert(RECORD_NAME_ALLOY, getScansStruct(2, XBinary::FT_PE32, RECORD_TYPE_PROTECTOR, RECORD_NAME_ALLOY, "4.X", "", 0));
     }
 
     //    if(stDetects.contains("kernel32_pecompact2"))
     //    {
-    //        pPEInfo->mapImportDetects.insert(RECORD_NAME_PECOMPACT,getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PACKER,RECORD_NAME_PECOMPACT,"2.X","",0));
+    //        pPEInfo->basic_info.mapImportDetects.insert(RECORD_NAME_PECOMPACT,getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PACKER,RECORD_NAME_PECOMPACT,"2.X","",0));
     //    }
 
     // TODO
@@ -3626,7 +3457,7 @@ void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::
     if (pe.isValid(pPdStruct)) {
         _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(pe.getOsInfo());
 
-        pPEInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pPEInfo->basic_info), &ssOperationSystem));
+        pPEInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pPEInfo->basic_info), &ssOperationSystem));
     }
 }
 
@@ -3646,12 +3477,12 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                 recordMPRESS.sVersion = pe.read_ansiString(nOffsetMPRESS + 1, 0x1ff - nOffsetMPRESS);
             }
 
-            pPEInfo->mapResultPackers.insert(recordMPRESS.name, scansToScan(&(pPEInfo->basic_info), &recordMPRESS));
+            pPEInfo->basic_info.mapResultPackers.insert(recordMPRESS.name, scansToScan(&(pPEInfo->basic_info), &recordMPRESS));
         }
 
         if (XPE::isImportLibraryPresent("KeRnEl32.dLl", &(pPEInfo->listImports))) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_HYPERTECHCRACKPROOF, "", "", 0);
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Spoon Studio
@@ -3659,91 +3490,91 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_SPOONSTUDIO2011, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
             ss.sVersion.replace(", ", ".");
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         } else if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Spoon Studio")) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_SPOONSTUDIO, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
             ss.sVersion.replace(", ", ".");
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         } else if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2009")) {
             // Xenocode Virtual Application Studio 2009
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2009, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         } else if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2010 ISV Edition")) {
             // Xenocode Virtual Application Studio 2010 (ISV Edition)
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010ISVEDITION, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         } else if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2010")) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         } else if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2012 ISV Edition")) {
             // Xenocode Virtual Application Studio 2012 (ISV Edition)
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2012ISVEDITION, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         } else if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2013 ISV Edition")) {
             // Xenocode Virtual Application Studio 2013 (ISV Edition)
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2013ISVEDITION, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         } else if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Turbo Studio")) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_TURBOSTUDIO, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
-        } else if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_SPOONSTUDIO)) {
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+        } else if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_SPOONSTUDIO)) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_SPOONSTUDIO, "", "", 0);
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
-        } else if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_XENOCODE)) {
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+        } else if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_XENOCODE)) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_XENOCODE, "", "", 0);
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         if (XPE::getResourcesVersionValue("CompanyName", &(pPEInfo->resVersion)).contains("SerGreen")) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PACKER, RECORD_NAME_SERGREENAPPACKER, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
-            pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // MoleBox Ultra
-        if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_MOLEBOXULTRA)) {
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_MOLEBOXULTRA)) {
-                _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_MOLEBOXULTRA);
-                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+        if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_MOLEBOXULTRA)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_MOLEBOXULTRA)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_MOLEBOXULTRA);
+                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
 
         // NativeCryptor by DosX
         if (pPEInfo->listSectionNames.count() >= 3) {
             if (pPEInfo->listSectionRecords.at(0).nSize == 0) {
-                if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_NATIVECRYPTORBYDOSX)) {
+                if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_NATIVECRYPTORBYDOSX)) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_NATIVECRYPTORBYDOSX, "", "", 0);
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
         }
 
-        if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_ACTIVEMARK)) {
-            _SCANS_STRUCT ssOverlay = pPEInfo->mapOverlayDetects.value(RECORD_NAME_ACTIVEMARK);
+        if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_ACTIVEMARK)) {
+            _SCANS_STRUCT ssOverlay = pPEInfo->basic_info.mapOverlayDetects.value(RECORD_NAME_ACTIVEMARK);
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_ACTIVEMARK, ssOverlay.sVersion, ssOverlay.sInfo, 0);
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_SECUROM)) {
+        if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_SECUROM)) {
             // TODO Version
-            _SCANS_STRUCT ssOverlay = pPEInfo->mapOverlayDetects.value(RECORD_NAME_SECUROM);
+            _SCANS_STRUCT ssOverlay = pPEInfo->basic_info.mapOverlayDetects.value(RECORD_NAME_SECUROM);
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_SECUROM, ssOverlay.sVersion, ssOverlay.sInfo, 0);
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_ENIGMAVIRTUALBOX)) {
-            _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_ENIGMAVIRTUALBOX);
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+        if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_ENIGMAVIRTUALBOX)) {
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(RECORD_NAME_ENIGMAVIRTUALBOX);
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_ZLIB)) {
+        if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_ZLIB)) {
             if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
                 VI_STRUCT viStruct = get_PyInstaller_vi(pDevice, pOptions, pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, pPdStruct);
 
@@ -3753,7 +3584,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                     ss.sVersion = viStruct.sVersion;
                     ss.sInfo = viStruct.sInfo;
 
-                    pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
         }
@@ -3763,10 +3594,10 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
 
             // UPX
             // TODO 32-64
-            if (pPEInfo->mapImportDetects.contains(RECORD_NAME_UPX)) {
+            if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_UPX)) {
                 VI_STRUCT viUPX = get_UPX_vi(pDevice, pOptions, pPEInfo->osHeader.nOffset, pPEInfo->osHeader.nSize, XBinary::FT_PE, pPdStruct);
 
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_UPX)) {
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_UPX)) {
                     if ((viUPX.bIsValid)) {
                         _SCANS_STRUCT recordUPX = {};
 
@@ -3775,60 +3606,60 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                         recordUPX.sVersion = viUPX.sVersion;
                         recordUPX.sInfo = viUPX.sInfo;
 
-                        pPEInfo->mapResultPackers.insert(recordUPX.name, scansToScan(&(pPEInfo->basic_info), &recordUPX));
+                        pPEInfo->basic_info.mapResultPackers.insert(recordUPX.name, scansToScan(&(pPEInfo->basic_info), &recordUPX));
                     } else {
-                        _SCANS_STRUCT recordUPX = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_UPX);
+                        _SCANS_STRUCT recordUPX = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_UPX);
 
                         recordUPX.sInfo = append(recordUPX.sInfo, "Modified");
 
-                        pPEInfo->mapResultPackers.insert(recordUPX.name, scansToScan(&(pPEInfo->basic_info), &recordUPX));
+                        pPEInfo->basic_info.mapResultPackers.insert(recordUPX.name, scansToScan(&(pPEInfo->basic_info), &recordUPX));
                     }
                 }
             }
 
             // EXPRESSOR
-            if (pPEInfo->mapImportDetects.contains(RECORD_NAME_EXPRESSOR) ||
-                (pPEInfo->mapImportDetects.contains(RECORD_NAME_EXPRESSOR_KERNEL32) && pPEInfo->mapImportDetects.contains(RECORD_NAME_EXPRESSOR_USER32))) {
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EXPRESSOR)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EXPRESSOR);
+            if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_EXPRESSOR) ||
+                (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_EXPRESSOR_KERNEL32) && pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_EXPRESSOR_USER32))) {
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_EXPRESSOR)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_EXPRESSOR);
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
             // ASProtect
-            if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ASPROTECT)) {
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ASPROTECT)) {
-                    _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ASPROTECT);
+            if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ASPROTECT)) {
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ASPROTECT)) {
+                    _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_ASPROTECT);
 
-                    pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                    pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                 }
             }
 
             // PE-Quake
-            if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PEQUAKE)) {
-                _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PEQUAKE);
+            if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PEQUAKE)) {
+                _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PEQUAKE);
 
-                pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
             }
 
             // MORPHNAH
-            if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_MORPHNAH)) {
-                _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_MORPHNAH);
+            if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_MORPHNAH)) {
+                _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_MORPHNAH);
 
-                pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
             }
 
             // PECompact
-            if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PECOMPACT)) {
-                _SCANS_STRUCT recordPC = pPEInfo->mapImportDetects.value(RECORD_NAME_PECOMPACT);
+            if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PECOMPACT)) {
+                _SCANS_STRUCT recordPC = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_PECOMPACT);
 
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PECOMPACT)) {
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PECOMPACT)) {
                     if (recordPC.nVariant == 1) {
                         recordPC.sVersion = "1.10b4-1.10b5";
                     }
 
-                    pPEInfo->mapResultPackers.insert(recordPC.name, scansToScan(&(pPEInfo->basic_info), &recordPC));
+                    pPEInfo->basic_info.mapResultPackers.insert(recordPC.name, scansToScan(&(pPEInfo->basic_info), &recordPC));
                 } else {
                     VI_STRUCT viPECompact = PE_get_PECompact_vi(pDevice, pOptions, pPEInfo);
 
@@ -3836,24 +3667,24 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                         recordPC.sVersion = viPECompact.sVersion;
                         recordPC.sInfo = viPECompact.sInfo;
 
-                        pPEInfo->mapResultPackers.insert(recordPC.name, scansToScan(&(pPEInfo->basic_info), &recordPC));
+                        pPEInfo->basic_info.mapResultPackers.insert(recordPC.name, scansToScan(&(pPEInfo->basic_info), &recordPC));
                     }
                 }
             }
 
             // NSPack
-            if (pPEInfo->mapImportDetects.contains(RECORD_NAME_NSPACK)) {
+            if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_NSPACK)) {
                 if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_NSPACK)) {
                     _SCANS_STRUCT recordNSPack = pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_NSPACK);
-                    pPEInfo->mapResultPackers.insert(recordNSPack.name, scansToScan(&(pPEInfo->basic_info), &recordNSPack));
-                } else if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_NSPACK)) {
-                    _SCANS_STRUCT recordNSPack = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_NSPACK);
-                    pPEInfo->mapResultPackers.insert(recordNSPack.name, scansToScan(&(pPEInfo->basic_info), &recordNSPack));
+                    pPEInfo->basic_info.mapResultPackers.insert(recordNSPack.name, scansToScan(&(pPEInfo->basic_info), &recordNSPack));
+                } else if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_NSPACK)) {
+                    _SCANS_STRUCT recordNSPack = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_NSPACK);
+                    pPEInfo->basic_info.mapResultPackers.insert(recordNSPack.name, scansToScan(&(pPEInfo->basic_info), &recordNSPack));
                 }
             }
 
             // ENIGMA
-            if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ENIGMA)) {
+            if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ENIGMA)) {
                 if (pe.checkOffsetSize(pPEInfo->osImportSection) && (pPEInfo->basic_info.bIsDeepScan)) {
                     qint64 nSectionOffset = pPEInfo->osImportSection.nOffset;
                     qint64 nSectionSize = pPEInfo->osImportSection.nSize;
@@ -3875,31 +3706,31 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                     }
 
                     if (!bDetect) {
-                        if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ENIGMA)) {
-                            recordEnigma.sVersion = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ENIGMA).sVersion;
+                        if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ENIGMA)) {
+                            recordEnigma.sVersion = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_ENIGMA).sVersion;
                             bDetect = true;
                         }
                     }
 
                     if (bDetect) {
-                        pPEInfo->mapResultProtectors.insert(recordEnigma.name, scansToScan(&(pPEInfo->basic_info), &recordEnigma));
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordEnigma.name, scansToScan(&(pPEInfo->basic_info), &recordEnigma));
                     }
                 }
             }
 
             // Alienyze
-            if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_ALIENYZE)) {
-                _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_ALIENYZE);
+            if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_ALIENYZE)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(RECORD_NAME_ALIENYZE);
 
-                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // PESpin
-            if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PESPIN)) {
-                _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_PESPIN);
+            if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PESPIN)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_PESPIN);
 
                 // Get version
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PESPIN)) {
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PESPIN)) {
                     quint8 nByte = pPEInfo->sEntryPointSignature.mid(54, 2).toUInt(nullptr, 16);
 
                     switch (nByte) {
@@ -3917,15 +3748,15 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                     }
                 }
 
-                pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // nPack
             // TODO Timestamp 'nPck'
             // TODO Check 64
-            if (pPEInfo->mapImportDetects.contains(RECORD_NAME_NPACK)) {
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_NPACK)) {
-                    _SCANS_STRUCT recordNPACK = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_NPACK);
+            if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_NPACK)) {
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_NPACK)) {
+                    _SCANS_STRUCT recordNPACK = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_NPACK);
 
                     if (pe.checkOffsetSize(pPEInfo->osEntryPointSection) && (pPEInfo->basic_info.bIsDeepScan)) {
                         qint64 _nOffset = pPEInfo->osEntryPointSection.nOffset;
@@ -3941,29 +3772,29 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                         }
                     }
 
-                    pPEInfo->mapResultPackers.insert(recordNPACK.name, scansToScan(&(pPEInfo->basic_info), &recordNPACK));
+                    pPEInfo->basic_info.mapResultPackers.insert(recordNPACK.name, scansToScan(&(pPEInfo->basic_info), &recordNPACK));
                 }
             }
 
-            if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ELECKEY)) {
-                _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ELECKEY);
+            if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ELECKEY)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_ELECKEY);
 
-                if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_ELECKEY)) {
+                if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_ELECKEY)) {
                     ss.sInfo = append(ss.sInfo, "Section");
                 }
 
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ELECKEY)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ELECKEY)) {
                     ss.sInfo = append(ss.sInfo, "Import");
                 }
 
-                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // Oreans CodeVirtualizer
-            if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_OREANSCODEVIRTUALIZER)) {
-                _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_OREANSCODEVIRTUALIZER);
+            if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_OREANSCODEVIRTUALIZER)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(RECORD_NAME_OREANSCODEVIRTUALIZER);
 
-                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (pPEInfo->nOverlaySize) {
@@ -3975,207 +3806,207 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
 
                 if (pe.find_signature(pPEInfo->nOverlaySize, nSize, "'asmg-protected'00", nullptr, pPdStruct) != -1) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_ASMGUARD, "2.XX", "", 0);
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
-                } else if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_ASMGUARD)) {
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                } else if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_ASMGUARD)) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_ASMGUARD, "2.XX", "", 0);
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
             if (!pPEInfo->bIs64) {
                 // MaskPE
-                if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_MASKPE)) {
-                    if (pPEInfo->mapEntryPointSectionDetects.contains(RECORD_NAME_MASKPE)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointSectionDetects.value(RECORD_NAME_MASKPE);
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_MASKPE)) {
+                    if (pPEInfo->basic_info.mapEntryPointSectionDetects.contains(RECORD_NAME_MASKPE)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointSectionDetects.value(RECORD_NAME_MASKPE);
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // PE-Armor
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PEARMOR)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PEARMOR)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PEARMOR);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PEARMOR)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PEARMOR)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PEARMOR);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // DalCrypt
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_DALKRYPT))  // TODO more checks!
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_DALKRYPT))  // TODO more checks!
                 {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_DALKRYPT);
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_DALKRYPT);
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // N-Code
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_NCODE)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_NCODE);
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_NCODE)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_NCODE);
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // LameCrypt
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_LAMECRYPT)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_LAMECRYPT);
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_LAMECRYPT)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_LAMECRYPT);
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // SC Obfuscator
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_SCOBFUSCATOR)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_SCOBFUSCATOR);
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_SCOBFUSCATOR)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_SCOBFUSCATOR);
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // PCShrink
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PCSHRINK)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PCSHRINK)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PCSHRINK);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PCSHRINK)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PCSHRINK)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PCSHRINK);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // DragonArmor
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_DRAGONARMOR)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_DRAGONARMOR)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_DRAGONARMOR);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_DRAGONARMOR)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_DRAGONARMOR)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_DRAGONARMOR);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // NoodleCrypt
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_NOODLECRYPT)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_NOODLECRYPT)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_NOODLECRYPT);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_NOODLECRYPT)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_NOODLECRYPT)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_NOODLECRYPT);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // PEnguinCrypt
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PENGUINCRYPT)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PENGUINCRYPT)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PENGUINCRYPT);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PENGUINCRYPT)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PENGUINCRYPT)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PENGUINCRYPT);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // EXECrypt
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_EXECRYPT)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EXECRYPT)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EXECRYPT);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_EXECRYPT)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_EXECRYPT)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_EXECRYPT);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // EXE Password Protector
                 // TODO Manifest name: Microsoft.Windows.ExeProtector
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_EXEPASSWORDPROTECTOR)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EXEPASSWORDPROTECTOR)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EXEPASSWORDPROTECTOR);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_EXEPASSWORDPROTECTOR)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_EXEPASSWORDPROTECTOR)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_EXEPASSWORDPROTECTOR);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_EXESTEALTH)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EXESTEALTH)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EXESTEALTH);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_EXESTEALTH)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_EXESTEALTH)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_EXESTEALTH);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // PE Diminisher
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PEDIMINISHER)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PEDIMINISHER);
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PEDIMINISHER)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PEDIMINISHER);
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // G!X Protector
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_GIXPROTECTOR)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_GIXPROTECTOR);
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_GIXPROTECTOR)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_GIXPROTECTOR);
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // PC Guard
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PCGUARD)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PCGUARD)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PCGUARD);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PCGUARD)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PCGUARD)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PCGUARD);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // Soft Defender
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_SOFTDEFENDER)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_SOFTDEFENDER)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_SOFTDEFENDER);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_SOFTDEFENDER)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_SOFTDEFENDER)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_SOFTDEFENDER);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // PECRYPT32
                 // TODO Check!!!
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PECRYPT32)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PECRYPT32)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PECRYPT32);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PECRYPT32)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PECRYPT32)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PECRYPT32);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // EXECryptor
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EXECRYPTOR)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EXECRYPTOR);
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_EXECRYPTOR)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_EXECRYPTOR);
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // YZPack
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_YZPACK)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_YZPACK)) {
                     if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_YZPACK)) {
                         _SCANS_STRUCT ss = pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_YZPACK);
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // BCPack
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR)) {
-                    if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR))  // TODO !!!
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR)) {
+                    if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR))  // TODO !!!
                     {
-                        _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR);
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR);
 
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // CRYPToCRACks PE Protector
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTOCRACKPEPROTECTOR)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTOCRACKPEPROTECTOR);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_CRYPTOCRACKPEPROTECTOR)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_CRYPTOCRACKPEPROTECTOR);
 
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_CRYPTOCRACKPEPROTECTOR)) {
-                        ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_CRYPTOCRACKPEPROTECTOR);
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_CRYPTOCRACKPEPROTECTOR)) {
+                        ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_CRYPTOCRACKPEPROTECTOR);
                     }
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // ZProtect
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ZPROTECT)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ZPROTECT)) {
                     if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_NOSTUBLINKER)) {
                         if (pPEInfo->listSectionRecords.count() >= 2) {
                             if (pe.compareSignature(&(pPEInfo->basic_info.memoryMap), "'kernel32.dll'00000000'VirtualAlloc'00000000",
                                                     pPEInfo->listSectionRecords.at(1).nOffset)) {
                                 _SCANS_STRUCT recordZProtect = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_ZPROTECT, "1.3-1.4.4", "", 0);
-                                pPEInfo->mapResultProtectors.insert(recordZProtect.name, scansToScan(&(pPEInfo->basic_info), &recordZProtect));
+                                pPEInfo->basic_info.mapResultProtectors.insert(recordZProtect.name, scansToScan(&(pPEInfo->basic_info), &recordZProtect));
                             }
                         }
                     }
-                } else if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ZPROTECT)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ZPROTECT);
+                } else if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ZPROTECT)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_ZPROTECT);
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
-                if (!pPEInfo->mapResultProtectors.contains(RECORD_NAME_ZPROTECT)) {
+                if (!pPEInfo->basic_info.mapResultProtectors.contains(RECORD_NAME_ZPROTECT)) {
                     if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_NOSTUBLINKER)) {
                         if (pPEInfo->listSectionRecords.count() >= 2) {
                             if ((pPEInfo->listSectionHeaders.at(0).PointerToRawData == 0) && (pPEInfo->listSectionHeaders.at(0).SizeOfRawData == 0) &&
@@ -4186,7 +4017,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
 
                                 if (bDetect1 || bDetect2) {
                                     _SCANS_STRUCT recordZProtect = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_ZPROTECT, "1.XX", "", 0);
-                                    pPEInfo->mapResultProtectors.insert(recordZProtect.name, scansToScan(&(pPEInfo->basic_info), &recordZProtect));
+                                    pPEInfo->basic_info.mapResultProtectors.insert(recordZProtect.name, scansToScan(&(pPEInfo->basic_info), &recordZProtect));
                                 }
                             }
                         }
@@ -4194,82 +4025,82 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                 }
 
                 // ExeFog
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_EXEFOG)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_EXEFOG);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_EXEFOG)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_EXEFOG);
 
                     if ((pPEInfo->fileHeader.TimeDateStamp == 0) && (pPEInfo->optional_header.optionalHeader32.MajorLinkerVersion == 0) &&
                         (pPEInfo->optional_header.optionalHeader32.MinorLinkerVersion == 0) && (pPEInfo->optional_header.optionalHeader32.BaseOfData == 0x1000)) {
                         if (pPEInfo->listSectionHeaders.count()) {
                             if (pPEInfo->listSectionHeaders.at(0).Characteristics == 0xe0000020) {
-                                pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                                pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                             }
                         }
                     }
                 }
 
                 // AHPacker
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_AHPACKER)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_AHPACKER)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_AHPACKER);
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_AHPACKER)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_AHPACKER)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_AHPACKER);
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // 12311134
-                if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_12311134))  // TODO Check!
+                if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_12311134))  // TODO Check!
                 {
-                    _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_12311134);
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(RECORD_NAME_12311134);
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // AZProtect
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_AZPROTECT)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_AZPROTECT);
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_AZPROTECT)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_AZPROTECT);
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // AverCryptor
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_AVERCRYPTOR)) {
-                    if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_AVERCRYPTOR)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_AVERCRYPTOR);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_AVERCRYPTOR)) {
+                    if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_AVERCRYPTOR)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_AVERCRYPTOR);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // WinKript
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_WINKRIPT)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_WINKRIPT);
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_WINKRIPT)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_WINKRIPT);
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // AffilliateEXE
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_AFFILLIATEEXE)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_AFFILLIATEEXE);
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_AFFILLIATEEXE)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_AFFILLIATEEXE);
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // Advanced UPX Scrammbler
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_UPX)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ADVANCEDUPXSCRAMMBLER)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ADVANCEDUPXSCRAMMBLER);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_UPX)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ADVANCEDUPXSCRAMMBLER)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_ADVANCEDUPXSCRAMMBLER);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // BeRoEXEPacker
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_BEROEXEPACKER)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_BEROEXEPACKER)) {
                     if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_BEROEXEPACKER)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_BEROEXEPACKER);
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_BEROEXEPACKER);
 
-                        if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_BEROEXEPACKER)) {
-                            ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_BEROEXEPACKER);
+                        if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_BEROEXEPACKER)) {
+                            ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_BEROEXEPACKER);
                         }
 
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     } else if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERIC)) {
-                        if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_BEROEXEPACKER)) {
-                            _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_BEROEXEPACKER);
-                            pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_BEROEXEPACKER)) {
+                            _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_BEROEXEPACKER);
+                            pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                         }
                     }
                 }
@@ -4278,8 +4109,8 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                 if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINUPACK)) {
                     _SCANS_STRUCT ss = pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINUPACK);
 
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_WINUPACK)) {
-                        ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_WINUPACK);
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_WINUPACK)) {
+                        ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_WINUPACK);
                     }
 
                     //                    recordWinupack.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(((pPEInfo->nMinorLinkerVersion)/16)*10+(pPEInfo->nMinorLinkerVersion)%16);
@@ -4317,38 +4148,38 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                         case 0x3A: ss.sVersion = "0.399"; break;
                     }
 
-                    pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // ANDpakk2
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ANDPAKK2) || pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ANDPAKK2)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ANDPAKK2) || pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ANDPAKK2)) {
                     // TODO compare entryPoint and import sections TODO Check
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ANDPAKK2)) {
-                        _SCANS_STRUCT recordANFpakk2 = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ANDPAKK2);
-                        pPEInfo->mapResultPackers.insert(recordANFpakk2.name, scansToScan(&(pPEInfo->basic_info), &recordANFpakk2));
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ANDPAKK2)) {
+                        _SCANS_STRUCT recordANFpakk2 = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_ANDPAKK2);
+                        pPEInfo->basic_info.mapResultPackers.insert(recordANFpakk2.name, scansToScan(&(pPEInfo->basic_info), &recordANFpakk2));
                     }
                 }
 
                 // KByS
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_KBYS)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_KBYS)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_KBYS);
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_KBYS)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_KBYS)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_KBYS);
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // Crunch
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_CRUNCH)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_CRUNCH)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_CRUNCH);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_CRUNCH)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_CRUNCH)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_CRUNCH);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // ASDPack
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ASDPACK)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ASDPACK)) {
                     bool bDetected = false;
-                    _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_ASDPACK);
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_ASDPACK);
 
                     if (pPEInfo->listSectionRecords.count() == 2) {
                         if (pPEInfo->bIsTLSPresent) {
@@ -4356,170 +4187,170 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                         }
                     }
 
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ASDPACK)) {
-                        ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ASDPACK);
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ASDPACK)) {
+                        ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_ASDPACK);
                         bDetected = true;
                     }
 
                     if (bDetected) {
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // VPacker
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_VPACKER)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_VPACKER)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_VPACKER);
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_VPACKER)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_VPACKER)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_VPACKER);
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // RLP
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_RLP)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_RLP)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_RLP);
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_RLP)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_RLP)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_RLP);
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // Crinkler
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_CRINKLER)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_CRINKLER)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_CRINKLER);
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_CRINKLER)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_CRINKLER)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_CRINKLER);
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // EZIP TODO CHECK
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EZIP)) {
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_EZIP)) {
                     if (pPEInfo->nOverlaySize) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EZIP);
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_EZIP);
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // KKrunchy
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_KKRUNCHY)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_KKRUNCHY)) {
                     if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_KKRUNCHY) || pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERIC)) {
-                        if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_KKRUNCHY)) {
-                            _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_KKRUNCHY);
+                        if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_KKRUNCHY)) {
+                            _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_KKRUNCHY);
 
                             if (!pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_KKRUNCHY)) {
                                 ss.sInfo = "Patched";
                             }
 
-                            pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                            pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                         }
                     }
                 }
 
                 // QuickPack NT
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_QUICKPACKNT)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_QUICKPACKNT)) {
                     if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_QUICKPACKNT)) {
                         _SCANS_STRUCT ss = pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_QUICKPACKNT);
 
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // MKFPack
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_MKFPACK)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_MKFPACK)) {
                     qint64 mLfanew = pPEInfo->dosHeader.e_lfanew - 5;
 
                     if (mLfanew > 0) {
                         QString sSignature = pe.read_ansiString(mLfanew, 5);
 
                         if (sSignature == "llydd") {
-                            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_MKFPACK);
-                            pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_MKFPACK);
+                            pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                         }
                     }
                 }
 
                 // 32lite
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_32LITE)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_32LITE)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_32LITE)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_32LITE)) {
                         // TODO compare entryPoint and import sections
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_32LITE);
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_32LITE);
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // EProt
-                if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EPROT)) {
+                if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_EPROT)) {
                     if (pPEInfo->nEntryPointSection > 0) {
                         if (pPEInfo->sEntryPointSectionName == "!eprot") {
                             quint32 nValue = pe.read_uint32(pPEInfo->osEntryPointSection.nOffset + pPEInfo->osEntryPointSection.nSize - 4);
 
                             if (nValue == 0x78787878) {
-                                _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_EPROT);
-                                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                                _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(RECORD_NAME_EPROT);
+                                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                             }
                         }
                     }
                 }
 
                 // RLPack
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_RLPACK)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_RLPACK);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_RLPACK)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_RLPACK);
 
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_RLPACK)) {
-                        ss.sInfo = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_RLPACK).sInfo;
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
-                    } else if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_FAKESIGNATURE)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_RLPACK)) {
+                        ss.sInfo = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_RLPACK).sInfo;
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    } else if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_FAKESIGNATURE)) {
                         if (pPEInfo->listSectionHeaders.count() >= 2) {
                             if (pPEInfo->listSectionHeaders.at(0).SizeOfRawData <= 0x200) {
-                                ss.sInfo = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_FAKESIGNATURE).sInfo;
-                                pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                                ss.sInfo = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_FAKESIGNATURE).sInfo;
+                                pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                             }
                         }
                     }
                 }
 
                 // Packman
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PACKMAN)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PACKMAN)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PACKMAN);
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PACKMAN)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PACKMAN)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PACKMAN);
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // Fish PE Packer
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_FISHPEPACKER)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_FISHPEPACKER)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_FISHPEPACKER);
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_FISHPEPACKER)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_FISHPEPACKER)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_FISHPEPACKER);
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // Inquartos Obfuscator
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_INQUARTOSOBFUSCATOR)) {
-                    if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_INQUARTOSOBFUSCATOR) && pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERIC)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_INQUARTOSOBFUSCATOR);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_INQUARTOSOBFUSCATOR)) {
+                    if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_INQUARTOSOBFUSCATOR) && pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERIC)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_INQUARTOSOBFUSCATOR);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // Hide & Protect
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_HIDEANDPROTECT)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_HIDEANDPROTECT)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_HIDEANDPROTECT);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_HIDEANDPROTECT)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_HIDEANDPROTECT)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_HIDEANDPROTECT);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // mPack
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_MPACK)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_MPACK)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_MPACK);
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_MPACK)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_MPACK)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_MPACK);
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // EncryptPE
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ENCRYPTPE)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ENCRYPTPE)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_ENCRYPTPE);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ENCRYPTPE)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ENCRYPTPE)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_ENCRYPTPE);
 
                         qint64 _nOffset = pPEInfo->osHeader.nOffset;
                         qint64 _nSize = pPEInfo->osHeader.nSize;
@@ -4530,29 +4361,29 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                             ss.sVersion = pe.read_ansiString(nOffset_Version + 11).section(",", 0, 0);
                         }
 
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // Yoda's Protector
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_YODASPROTECTOR)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_YODASPROTECTOR)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_YODASPROTECTOR);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_YODASPROTECTOR)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_YODASPROTECTOR)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_YODASPROTECTOR);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // Xtreme-Protector
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_XTREMEPROTECTOR)) {
-                    if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_XTREMEPROTECTOR)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_XTREMEPROTECTOR);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_XTREMEPROTECTOR)) {
+                    if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_XTREMEPROTECTOR)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_XTREMEPROTECTOR);
 
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // ACProtect 1.X-2.X
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ACPROTECT)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ACPROTECT)) {
                     if (pe.checkOffsetSize(pPEInfo->osImportSection) && (pPEInfo->basic_info.bIsDeepScan)) {
                         qint64 nSectionOffset = pPEInfo->osImportSection.nOffset;
                         qint64 nSectionSize = pPEInfo->osImportSection.nSize;
@@ -4573,26 +4404,26 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                             //                                recordACProtect.sVersion="1.X";
                             //                            }
 
-                            pPEInfo->mapResultProtectors.insert(recordACProtect.name, scansToScan(&(pPEInfo->basic_info), &recordACProtect));
+                            pPEInfo->basic_info.mapResultProtectors.insert(recordACProtect.name, scansToScan(&(pPEInfo->basic_info), &recordACProtect));
                         }
                     }
                 }
 
                 // ACProtect
                 // 2.0.X
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ACPROTECT))  // TODO CHECK
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ACPROTECT))  // TODO CHECK
                 {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ACPROTECT);
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_ACPROTECT);
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // FSG
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_FSG)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_FSG)) {
                     if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_FSG)) {
                         _SCANS_STRUCT ss = pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_FSG);
 
                         if (ss.nVariant == 0) {
-                            pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                            pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                         } else if (ss.nVariant == 1) {
                             if (pe.read_ansiString(0x154) == "KERNEL32.dll") {
                                 ss.sVersion = "1.33";
@@ -4600,80 +4431,80 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                                 ss.sVersion = "2.00";
                             }
 
-                            pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                            pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                         }
                     }
                 }
 
                 // MEW
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_MEW10)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_MEW10)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_MEW10);
-                        pPEInfo->mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_MEW10)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_MEW10)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_MEW10);
+                        pPEInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_MEW11SE)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_MEW11SE)) {
                     if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MEW11SE)) {
                         _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MEW11SE);
-                        pPEInfo->mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                        pPEInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // Alex Protector
                 // 2.0.X
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ALEXPROTECTOR)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ALEXPROTECTOR)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ALEXPROTECTOR)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ALEXPROTECTOR)) {
                         // TODO compare entryPoint and import sections
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ALEXPROTECTOR);
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_ALEXPROTECTOR);
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // PEBundle
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PEBUNDLE)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PEBUNDLE)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PEBUNDLE);
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PEBUNDLE)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PEBUNDLE)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PEBUNDLE);
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // PE-SHiELD
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PESHIELD)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PESHIELD)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PESHIELD);
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PESHIELD)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PESHIELD)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PESHIELD);
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // PUNiSHER
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PUNISHER)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PUNISHER)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PUNISHER);
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PUNISHER)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PUNISHER)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PUNISHER);
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // Shrinker
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_SHRINKER)) {
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_SHRINKER)) {
                     if (pe.isImportFunctionPresentI("KERNEL32.DLL", "8", &(pPEInfo->listImports))) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_SHRINKER);
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_SHRINKER);
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // Secure Shade
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_SECURESHADE)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_SECURESHADE)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_SECURESHADE);
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_SECURESHADE)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_SECURESHADE)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_SECURESHADE);
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // PolyCrypt PE
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_POLYCRYPTPE)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_POLYCRYPTPE)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_POLYCRYPTPE);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_POLYCRYPTPE)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_POLYCRYPTPE)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_POLYCRYPTPE);
 
                         if (pPEInfo->nImportSection == pPEInfo->nEntryPointSection) {
                             if (pe.checkOffsetSize(pPEInfo->osEntryPointSection) && (pPEInfo->basic_info.bIsDeepScan)) {
@@ -4688,40 +4519,40 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                             }
                         }
 
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_HMIMYSPROTECTOR)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_HMIMYSPROTECTOR)) {
                     if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_HMIMYSPROTECTOR)) {
                         // TODO compare entryPoint and import sections
                         _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_HMIMYSPROTECTOR);
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PEPACKSPROTECT)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PEPACKSPROTECT)) {
                     if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PEPACKSPROTECT)) {
                         // TODO compare entryPoint and import sections
                         _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PEPACKSPROTECT);
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
-                    } else if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_PEPACKSPROTECT)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_PEPACKSPROTECT);
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                    } else if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_PEPACKSPROTECT)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapSectionNamesDetects.value(RECORD_NAME_PEPACKSPROTECT);
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_HMIMYSPACKER)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_HMIMYSPACKER)) {
                     if (XPE::isSectionNamePresent(".hmimys", &(pPEInfo->listSectionRecords)))  // TODO Check
                     {
                         _SCANS_STRUCT recordSS = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PACKER, RECORD_NAME_HMIMYSPACKER, "", "", 0);
-                        pPEInfo->mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                        pPEInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ORIEN)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ORIEN)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ORIEN);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ORIEN)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ORIEN)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_ORIEN);
 
                         QString sVersion = pPEInfo->sEntryPointSignature.mid(16, 2);
 
@@ -4731,81 +4562,81 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                             recordSS.sVersion = "2.12";
                         }
 
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // Alloy 4.X
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ALLOY)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ALLOY)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ALLOY)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ALLOY)) {
                         // TODO compare entryPoint and import sections
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ALLOY);
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_ALLOY);
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // PeX
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PEX)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PEX)) {
                     // TODO compare entryPoint and import sections
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PEX)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PEX);
-                        pPEInfo->mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PEX)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PEX);
+                        pPEInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // PEVProt
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_REVPROT)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_REVPROT)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_REVPROT);
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_REVPROT)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_REVPROT)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_REVPROT);
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // Software Compress
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_SOFTWARECOMPRESS)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_SOFTWARECOMPRESS)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_SOFTWARECOMPRESS);
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_SOFTWARECOMPRESS)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_SOFTWARECOMPRESS)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_SOFTWARECOMPRESS);
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // SDProtector Pro
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_SDPROTECTORPRO)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_SDPROTECTORPRO)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_SDPROTECTORPRO);
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_SDPROTECTORPRO)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_SDPROTECTORPRO)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_SDPROTECTORPRO);
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // Simple Pack
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_SIMPLEPACK)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_SIMPLEPACK)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapImportDetects.value(RECORD_NAME_SIMPLEPACK);
-                        pPEInfo->mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_SIMPLEPACK)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_SIMPLEPACK)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_SIMPLEPACK);
+                        pPEInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // NakedPacker
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_NAKEDPACKER)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_NAKEDPACKER) &&
-                        (!pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER))) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_NAKEDPACKER);
-                        pPEInfo->mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_NAKEDPACKER)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_NAKEDPACKER) &&
+                        (!pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER))) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_NAKEDPACKER);
+                        pPEInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // KaOs PE-DLL eXecutable Undetecter
                 // the same as NakedPacker
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER) &&
-                        pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER);
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER) &&
+                        pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_KAOSPEDLLEXECUTABLEUNDETECTER);
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // ASPack
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ASPACK)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ASPACK)) {
                     // TODO compare entryPoint and import sections
                     QString _sSignature = pPEInfo->sEntryPointSignature;
                     qint64 _nOffset = 0;
@@ -4851,9 +4682,9 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                         }
 
                         if (_nOffset) {
-                            signatureScan(&(pPEInfo->mapEntryPointDetects), _sSignature, _PE_entrypoint_records, sizeof(_PE_entrypoint_records),
+                            signatureScan(&(pPEInfo->basic_info.mapEntryPointDetects), _sSignature, _PE_entrypoint_records, sizeof(_PE_entrypoint_records),
                                           pPEInfo->basic_info.id.fileType, XBinary::FT_PE, &(pPEInfo->basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
-                            signatureExpScan(&pe, &(pPEInfo->basic_info.memoryMap), &(pPEInfo->mapEntryPointDetects), pPEInfo->nEntryPointOffset + _nOffset,
+                            signatureExpScan(&pe, &(pPEInfo->basic_info.memoryMap), &(pPEInfo->basic_info.mapEntryPointDetects), pPEInfo->nEntryPointOffset + _nOffset,
                                              _PE_entrypointExp_records, sizeof(_PE_entrypointExp_records), pPEInfo->basic_info.id.fileType, XBinary::FT_PE,
                                              &(pPEInfo->basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
                         }
@@ -4866,21 +4697,21 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                             break;
                         }
 
-                        if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ASPACK)) {
+                        if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ASPACK)) {
                             break;
                         }
                     }
 
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ASPACK)) {
-                        _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ASPACK);
-                        pPEInfo->mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ASPACK)) {
+                        _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_ASPACK);
+                        pPEInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
 
                 // No Import
                 // WWPACK32
                 // TODO false
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_WWPACK32)) {
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_WWPACK32)) {
                     _SCANS_STRUCT ss = {};
 
                     ss.type = RECORD_TYPE_PACKER;
@@ -4888,38 +4719,38 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                     ss.sVersion = XBinary::hexToString(pPEInfo->sEntryPointSignature.mid(102, 8));
                     // recordAndpakk.sInfo;
 
-                    pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // EXE Pack
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_EPEXEPACK)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EPEXEPACK)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EPEXEPACK);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_EPEXEPACK)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_EPEXEPACK)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_EPEXEPACK);
 
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
-                    } else if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EPEXEPACK)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_EPEXEPACK);
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    } else if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_EPEXEPACK)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(RECORD_NAME_EPEXEPACK);
 
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
-                if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EPROT)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_EPROT);
+                if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_EPROT)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(RECORD_NAME_EPROT);
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // RCryptor
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_RCRYPTOR)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_RCRYPTOR);
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_RCRYPTOR)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_RCRYPTOR);
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // PE-PACK
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PEPACK)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PEPACK)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PEPACK);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PEPACK)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PEPACK)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PEPACK);
 
                         if (pe.checkOffsetSize(pPEInfo->osImportSection) && (pPEInfo->basic_info.bIsDeepScan)) {
                             qint64 _nOffset = pPEInfo->osImportSection.nOffset;
@@ -4933,20 +4764,20 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                             }
                         }
 
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // PKLITE32
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PKLITE32)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PKLITE32);
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PKLITE32)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PKLITE32);
 
-                    pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // MoleBox
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_MOLEBOX)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_MOLEBOX);
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_MOLEBOX)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_MOLEBOX);
 
                     QString sComment = XPE::getResourcesVersionValue("Comments", &(pPEInfo->resVersion));
 
@@ -4954,63 +4785,63 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                         ss.sVersion = sComment.section("MoleBox ", 1, -1);
                     }
 
-                    pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // XComp
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_XCOMP)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_XCOMP)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_XCOMP);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_XCOMP)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_XCOMP)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_XCOMP);
 
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // XPack
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_XPACK)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_XPACK)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_XPACK);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_XPACK)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_XPACK)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_XPACK);
 
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // Krypton
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_KRYPTON)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_KRYPTON)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_KRYPTON);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_KRYPTON)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_KRYPTON)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_KRYPTON);
 
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // SVK Protector
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_SVKPROTECTOR)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_SVKPROTECTOR)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_SVKPROTECTOR);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_SVKPROTECTOR)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_SVKPROTECTOR)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_SVKPROTECTOR);
 
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // TPP Pack
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_TPPPACK)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_TPPPACK)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_TPPPACK);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_TPPPACK)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_TPPPACK)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_TPPPACK);
 
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // VCasm-Protector
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_VCASMPROTECTOR)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_VCASMPROTECTOR)) {
                     _SCANS_STRUCT ss = {};
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_VCASMPROTECTOR)) {
-                        ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_VCASMPROTECTOR);
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_VCASMPROTECTOR)) {
+                        ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_VCASMPROTECTOR);
                     }
 
                     if (pe.checkOffsetSize(pPEInfo->osEntryPointSection) && (pPEInfo->basic_info.bIsDeepScan)) {
-                        ss = pPEInfo->mapImportDetects.value(RECORD_NAME_VCASMPROTECTOR);
+                        ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_VCASMPROTECTOR);
 
                         qint64 _nOffset = pPEInfo->osEntryPointSection.nOffset;
                         qint64 _nSize = pPEInfo->osEntryPointSection.nSize;
@@ -5033,143 +4864,143 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                     }
 
                     if (ss.name != RECORD_NAME_UNKNOWN) {
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // JDPack
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_JDPACK)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_JDPACK)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_JDPACK);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_JDPACK)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_JDPACK)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_JDPACK);
 
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // Yoda's crypter
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_YODASCRYPTER)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_YODASCRYPTER)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_YODASCRYPTER);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_YODASCRYPTER)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_YODASCRYPTER)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_YODASCRYPTER);
 
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // QrYPt0r
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_QRYPT0R)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_QRYPT0R)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_QRYPT0R);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_QRYPT0R)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_QRYPT0R)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_QRYPT0R);
 
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // DBPE
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_DBPE)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_DBPE)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_DBPE);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_DBPE)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_DBPE)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_DBPE);
 
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // FISH PE Shield
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_FISHPESHIELD)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_FISHPESHIELD)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_FISHPESHIELD);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_FISHPESHIELD)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_FISHPESHIELD)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_FISHPESHIELD);
 
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // bambam
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_BAMBAM)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_BAMBAM)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_BAMBAM);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_BAMBAM)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_BAMBAM)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_BAMBAM);
 
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // DotFix NeceProtect
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_DOTFIXNICEPROTECT)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_DOTFIXNICEPROTECT)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_DOTFIXNICEPROTECT);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_DOTFIXNICEPROTECT)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_DOTFIXNICEPROTECT)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_DOTFIXNICEPROTECT);
 
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // The Best Cryptor [by FsK]
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_THEBESTCRYPTORBYFSK)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_THEBESTCRYPTORBYFSK);
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_THEBESTCRYPTORBYFSK)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_THEBESTCRYPTORBYFSK);
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // DYAMAR
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_DYAMAR)) {
-                    if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_DYAMAR)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_DYAMAR);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_DYAMAR)) {
+                    if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_DYAMAR)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_DYAMAR);
 
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // CExe
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_CEXE)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_CEXE);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_CEXE)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_CEXE);
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // K!Cryptor
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_KCRYPTOR)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_KCRYPTOR)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_KCRYPTOR);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_KCRYPTOR)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_KCRYPTOR)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_KCRYPTOR);
 
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // Crypter
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_CRYPTER)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_CRYPTER);
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_CRYPTER)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_CRYPTER);
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // Thinstall
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_THINSTALL))  // TODO Imports EP
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_THINSTALL))  // TODO Imports EP
                 {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_THINSTALL);
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_THINSTALL);
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 } else if (XPE::getResourcesVersionValue("ThinAppVersion", &(pPEInfo->resVersion)) != "") {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_THINSTALL, "", "", 0);
                     ss.sVersion = XPE::getResourcesVersionValue("ThinAppVersion", &(pPEInfo->resVersion)).trimmed();
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 } else if (XPE::getResourcesVersionValue("ThinstallVersion", &(pPEInfo->resVersion)) != "") {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_THINSTALL, "", "", 0);
                     ss.sVersion = XPE::getResourcesVersionValue("ThinstallVersion", &(pPEInfo->resVersion)).trimmed();
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
 
                 // ABC Cryptor
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_ABCCRYPTOR)) {
-                    _SCANS_STRUCT recordEP = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_ABCCRYPTOR);
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ABCCRYPTOR)) {
+                    _SCANS_STRUCT recordEP = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_ABCCRYPTOR);
 
                     if ((pPEInfo->nEntryPointAddress - pPEInfo->listSectionHeaders.at(pPEInfo->nEntryPointSection).VirtualAddress) == 1) {
-                        pPEInfo->mapResultPackers.insert(recordEP.name, scansToScan(&(pPEInfo->basic_info), &recordEP));
+                        pPEInfo->basic_info.mapResultPackers.insert(recordEP.name, scansToScan(&(pPEInfo->basic_info), &recordEP));
                     }
                 }
 
                 // exe 32 pack
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_EXE32PACK)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EXE32PACK)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EXE32PACK);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_EXE32PACK)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_EXE32PACK)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_EXE32PACK);
 
                         qint64 _nOffset = pPEInfo->osHeader.nOffset;
                         qint64 _nSize = qMin(pPEInfo->basic_info.id.nSize, (qint64)0x2000);
@@ -5181,19 +5012,19 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                             ss.sVersion = ss.sVersion.section(" ", 0, 0);
                         }
 
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
 
                 // SC PACK
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_SCPACK)) {
-                    if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_SCPACK)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_SCPACK)) {
+                    if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_SCPACK)) {
                         if (pPEInfo->listSectionRecords.count() >= 3) {
                             if (pPEInfo->nEntryPointSection == 1) {
                                 if (pPEInfo->listSectionHeaders.at(1).VirtualAddress == pPEInfo->nEntryPointAddress) {
-                                    _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_SCPACK);
+                                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_SCPACK);
 
-                                    pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                                    pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                                 }
                             }
                         }
@@ -5201,20 +5032,20 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_O
                 }
 
                 // dePack
-                if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_DEPACK)) {
+                if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_DEPACK)) {
                     if (pe.compareEntryPoint(&(pPEInfo->basic_info.memoryMap), "EB$$60")) {
-                        _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_DEPACK);
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(RECORD_NAME_DEPACK);
 
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
             } else {
                 // Only 64
                 // lARP64
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_LARP64)) {
-                    if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_LARP64)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_LARP64);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_LARP64)) {
+                    if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_LARP64)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_LARP64);
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
             }
@@ -5295,14 +5126,14 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice, SpecAbstract::SCAN_OP
         }
 
         // TODO more checks
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_VMPROTECT)) {
-            _SCANS_STRUCT ssVersion = pPEInfo->mapImportDetects.value(RECORD_NAME_VMPROTECT);
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_VMPROTECT)) {
+            _SCANS_STRUCT ssVersion = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_VMPROTECT);
 
             ssVMProtect.sVersion = ssVersion.sVersion;
             ssVMProtect.sInfo = ssVersion.sInfo;
         }
 
-        pPEInfo->mapResultProtectors.insert(ssVMProtect.name, scansToScan(&(pPEInfo->basic_info), &ssVMProtect));
+        pPEInfo->basic_info.mapResultProtectors.insert(ssVMProtect.name, scansToScan(&(pPEInfo->basic_info), &ssVMProtect));
     }
 
     //    return;
@@ -5318,12 +5149,12 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice, SpecAbstract::SCAN_OP
     //            // Import
     //            if(!bSuccess)
     //            {
-    //                bSuccess=pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_VMPROTECT);
+    //                bSuccess=pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_VMPROTECT);
     //            }
 
     //            if(!bSuccess)
     //            {
-    //                bSuccess=pPEInfo->mapImportDetects.contains(RECORD_NAME_VMPROTECT);
+    //                bSuccess=pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_VMPROTECT);
     //            }
 
     //            if(!bSuccess)
@@ -5363,11 +5194,11 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice, SpecAbstract::SCAN_OP
     //                    pe.compareEntryPoint("68........E9")||
     //                    pe.compareEntryPoint("9C60")||
     //                    pe.compareEntryPoint("EB$$E9$$$$$$$$68........E8")||
-    //                    pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_VMPROTECT))
+    //                    pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_VMPROTECT))
     //                {
     //                    // TODO more checks
     //                    _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PROTECTOR,RECORD_NAME_VMPROTECT,"","",0);
-    //                    pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+    //                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
     //                }
     //            }
     //        }
@@ -5398,7 +5229,7 @@ void SpecAbstract::PE_handle_VProtect(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                                 ss.sVersion = pe.read_ansiString(nOffset_Version).section(" v", 1, 1);
                             }
 
-                            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                         }
                     }
                 }
@@ -5421,7 +5252,7 @@ void SpecAbstract::PE_handle_TTProtect(QIODevice *pDevice, SpecAbstract::SCAN_OP
                         {
                             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_TTPROTECT, "", "", 0);
 
-                            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                         }
                     }
                 }
@@ -5437,7 +5268,7 @@ void SpecAbstract::PE_handle_SafeengineShielden(QIODevice *pDevice, SpecAbstract
 
     if (pe.isValid(pPdStruct)) {
         if (!pPEInfo->cliInfo.bValid) {
-            if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_SAFEENGINESHIELDEN)) {
+            if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_SAFEENGINESHIELDEN)) {
                 if (pPEInfo->nEntryPointSection > 0) {
                     if (pPEInfo->sEntryPointSectionName == ".sedata")  // TODO !!!
                     {
@@ -5452,7 +5283,7 @@ void SpecAbstract::PE_handle_SafeengineShielden(QIODevice *pDevice, SpecAbstract
                             ss.sVersion = pe.read_ansiString(nOffset_Version).section(" v", 1, 1);
                         }
 
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
             }
@@ -5487,10 +5318,10 @@ void SpecAbstract::PE_handle_tElock(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
                 }
 
                 if (bKernel32 && bUser32) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_TELOCK)) {
-                        _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_TELOCK);
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_TELOCK)) {
+                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_TELOCK);
 
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
             }
@@ -5525,8 +5356,8 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_ARMADILLO, "", "", 0);
 
-                if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ARMADILLO)) {
-                    ss = pPEInfo->mapImportDetects.value(RECORD_NAME_ARMADILLO);
+                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ARMADILLO)) {
+                    ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_ARMADILLO);
 
                     bDetect = true;
                 }
@@ -5536,7 +5367,7 @@ void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 }
 
                 if (bDetect) {
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
         }
@@ -5592,7 +5423,7 @@ void SpecAbstract::PE_handle_Obsidium(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                         pe.compareEntryPoint(&(pPEInfo->basic_info.memoryMap), "EB$$E8........EB$$EB")) {
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_OBSIDIUM, "", "", 0);
 
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
             }
@@ -5609,10 +5440,10 @@ void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
             if (pPEInfo->listImports.count() == 1) {
                 if (pPEInfo->listImports.at(0).sName == "kernel32.dll") {
                     if (pPEInfo->listImports.at(0).listPositions.count() == 1) {
-                        if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_THEMIDAWINLICENSE)) {
-                            _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_THEMIDAWINLICENSE);
+                        if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_THEMIDAWINLICENSE)) {
+                            _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_THEMIDAWINLICENSE);
 
-                            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                         }
                     }
                 }
@@ -5649,11 +5480,11 @@ void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
                     // TODO Version
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_THEMIDAWINLICENSE, "1.XX-2.XX", "", 0);
 
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
-            if (!pPEInfo->mapResultProtectors.contains(RECORD_NAME_THEMIDAWINLICENSE)) {
+            if (!pPEInfo->basic_info.mapResultProtectors.contains(RECORD_NAME_THEMIDAWINLICENSE)) {
                 // New version
                 qint32 nNumbersOfImport = pPEInfo->listImports.count();
 
@@ -5682,7 +5513,7 @@ void SpecAbstract::PE_handle_Themida(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
                             }
 
                             if (bSuccess) {
-                                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                             }
                         }
                     }
@@ -5723,7 +5554,7 @@ void SpecAbstract::PE_handle_StarForce(QIODevice *pDevice, SpecAbstract::SCAN_OP
             }
 
             _SCANS_STRUCT recordSS = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_STARFORCE, sVersion, sInfo, 0);
-            pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+            pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
         }
     }
 }
@@ -5812,15 +5643,15 @@ void SpecAbstract::PE_handle_Petite(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
 
                 // TODO Import hash
                 if (bUser32 && bKernel32) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PETITE)) {
-                        _SCANS_STRUCT recordPETITE = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PETITE);
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PETITE)) {
+                        _SCANS_STRUCT recordPETITE = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PETITE);
                         recordPETITE.sVersion = sVersion;
-                        pPEInfo->mapResultPackers.insert(recordPETITE.name, scansToScan(&(pPEInfo->basic_info), &recordPETITE));
+                        pPEInfo->basic_info.mapResultPackers.insert(recordPETITE.name, scansToScan(&(pPEInfo->basic_info), &recordPETITE));
                     }
-                } else if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_PETITE)) {
-                    if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PETITE)) {
-                        _SCANS_STRUCT recordPETITE = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PETITE);
-                        pPEInfo->mapResultPackers.insert(recordPETITE.name, scansToScan(&(pPEInfo->basic_info), &recordPETITE));
+                } else if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_PETITE)) {
+                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PETITE)) {
+                        _SCANS_STRUCT recordPETITE = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PETITE);
+                        pPEInfo->basic_info.mapResultPackers.insert(recordPETITE.name, scansToScan(&(pPEInfo->basic_info), &recordPETITE));
                     }
                 }
             }
@@ -5845,7 +5676,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, SpecAbstract::SCA
 
                 if (viEnigma.bIsValid) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_ENIGMA, viEnigma.sVersion, ".NET", 0);
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
@@ -5860,66 +5691,66 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, SpecAbstract::SCA
 
                     if (nOffset_NetReactor != -1) {
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_DOTNETREACTOR, "4.8-4.9", "", 0);
-                        pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
             }
 
             // TODO
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_YANO)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_YANO);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_YANO)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_YANO);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_DOTFUSCATOR)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_DOTFUSCATOR);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_DOTFUSCATOR)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_DOTFUSCATOR);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_AGILENET)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_AGILENET);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_AGILENET)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_AGILENET);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_SKATER)) {
-                _SCANS_STRUCT ss = pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_SKATER);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_SKATER)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapCodeSectionDetects.value(RECORD_NAME_SKATER);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_BABELNET)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_BABELNET);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_BABELNET)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_BABELNET);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_GOLIATHNET)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_GOLIATHNET);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_GOLIATHNET)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_GOLIATHNET);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_SPICESNET)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_SPICESNET);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_SPICESNET)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_SPICESNET);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_OBFUSCATORNET2009)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_OBFUSCATORNET2009);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_OBFUSCATORNET2009)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_OBFUSCATORNET2009);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_DEEPSEA)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_DEEPSEA);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_DEEPSEA)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_DEEPSEA);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             {
                 bool bDetect = false;
                 _SCANS_STRUCT ss = {};
 
-                if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_DEEPSEA)) {
-                    ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_DEEPSEA);
+                if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_DEEPSEA)) {
+                    ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_DEEPSEA);
                     bDetect = true;
-                } else if (pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_DEEPSEA)) {
-                    ss = pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_DEEPSEA);
+                } else if (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_DEEPSEA)) {
+                    ss = pPEInfo->basic_info.mapCodeSectionDetects.value(RECORD_NAME_DEEPSEA);
                     bDetect = true;
                 }
 
@@ -5934,14 +5765,14 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, SpecAbstract::SCA
                         ss.sInfo = vi.sInfo;
                     }
 
-                    pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
             // cliSecure
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_CLISECURE)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_CLISECURE);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_CLISECURE)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_CLISECURE);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             } else {
                 if (pPEInfo->listSectionHeaders.count() >= 2) {
                     qint64 _nOffset = pPEInfo->listSectionRecords.at(1).nOffset;
@@ -5953,55 +5784,55 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, SpecAbstract::SCA
 
                         if (nOffset_CliSecure != -1) {
                             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_NETOBFUSCATOR, RECORD_NAME_CLISECURE, "4.X", "", 0);
-                            pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                            pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                         }
                     }
                 }
             }
 
-            if ((pPEInfo->mapOverlayDetects.contains(RECORD_NAME_FISHNET)) || (pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_FISHNET))) {
+            if ((pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_FISHNET)) || (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_FISHNET))) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_NETOBFUSCATOR, RECORD_NAME_FISHNET, "1.X", "", 0);  // TODO
-                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));                              // TODO obfuscator?
+                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));                              // TODO obfuscator?
             }
 
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_NSPACK)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_NSPACK);
-                pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_NSPACK)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_NSPACK);
+                pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_DNGUARD)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_DNGUARD);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_DNGUARD)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_DNGUARD);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // .NETZ
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_DOTNETZ)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_DOTNETZ);
-                pPEInfo->mapResultNETCompressors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
-            } else if (pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_DOTNETZ)) {
-                _SCANS_STRUCT ss = pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_DOTNETZ);
-                pPEInfo->mapResultNETCompressors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_DOTNETZ)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_DOTNETZ);
+                pPEInfo->basic_info.mapResultNETCompressors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            } else if (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_DOTNETZ)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapCodeSectionDetects.value(RECORD_NAME_DOTNETZ);
+                pPEInfo->basic_info.mapResultNETCompressors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_MAXTOCODE)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_MAXTOCODE);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_MAXTOCODE)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_MAXTOCODE);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_PHOENIXPROTECTOR)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_PHOENIXPROTECTOR);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_PHOENIXPROTECTOR)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_PHOENIXPROTECTOR);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             {
                 bool bDetect = false;
                 _SCANS_STRUCT ss = {};
 
-                if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_SMARTASSEMBLY)) {
-                    ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_SMARTASSEMBLY);
+                if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_SMARTASSEMBLY)) {
+                    ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_SMARTASSEMBLY);
                     bDetect = true;
-                } else if (pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_SMARTASSEMBLY)) {
-                    ss = pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_SMARTASSEMBLY);
+                } else if (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_SMARTASSEMBLY)) {
+                    ss = pPEInfo->basic_info.mapCodeSectionDetects.value(RECORD_NAME_SMARTASSEMBLY);
                     bDetect = true;
                 }
 
@@ -6016,12 +5847,12 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, SpecAbstract::SCA
                         ss.sInfo = vi.sInfo;
                     }
 
-                    pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_CONFUSER)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_CONFUSER);
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_CONFUSER)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_CONFUSER);
 
                 if (pe.checkOffsetSize(pPEInfo->osCodeSection) && (pPEInfo->basic_info.bIsDeepScan)) {
                     qint64 _nOffset = pPEInfo->osCodeSection.nOffset;
@@ -6043,75 +5874,75 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, SpecAbstract::SCA
                     }
                 }
 
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // Xenocode Postbuild
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_XENOCODEPOSTBUILD)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_XENOCODEPOSTBUILD);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_XENOCODEPOSTBUILD)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_XENOCODEPOSTBUILD);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
             // CodeVeil
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_CODEVEIL)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_CODEVEIL);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
-            } else if (pPEInfo->mapDotUnicodeStringsDetects.contains(RECORD_NAME_CODEVEIL)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotUnicodeStringsDetects.value(RECORD_NAME_CODEVEIL);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_CODEVEIL)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_CODEVEIL);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            } else if (pPEInfo->basic_info.mapDotUnicodeStringsDetects.contains(RECORD_NAME_CODEVEIL)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotUnicodeStringsDetects.value(RECORD_NAME_CODEVEIL);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
             // CodeWall
-            if (pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_CODEWALL)) {
-                _SCANS_STRUCT ss = pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_CODEWALL);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_CODEWALL)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapCodeSectionDetects.value(RECORD_NAME_CODEWALL);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
             // Crypto Obfuscator for .NET
-            if (pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_CRYPTOOBFUSCATORFORNET)) {
-                _SCANS_STRUCT ss = pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_CRYPTOOBFUSCATORFORNET);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_CRYPTOOBFUSCATORFORNET)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapCodeSectionDetects.value(RECORD_NAME_CRYPTOOBFUSCATORFORNET);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
             // Eazfuscator
-            if (pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_EAZFUSCATOR)) {
-                _SCANS_STRUCT ss = pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_EAZFUSCATOR);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
-            } else if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_EAZFUSCATOR)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_EAZFUSCATOR);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_EAZFUSCATOR)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapCodeSectionDetects.value(RECORD_NAME_EAZFUSCATOR);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            } else if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_EAZFUSCATOR)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_EAZFUSCATOR);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
             // Obfuscar
-            if (pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_OBFUSCAR)) {
-                _SCANS_STRUCT ss = pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_OBFUSCAR);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_OBFUSCAR)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapCodeSectionDetects.value(RECORD_NAME_OBFUSCAR);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
             // .NET Spider
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_DOTNETSPIDER)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_DOTNETSPIDER);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
-            } else if (pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_DOTNETSPIDER)) {
-                _SCANS_STRUCT ss = pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_DOTNETSPIDER);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_DOTNETSPIDER)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_DOTNETSPIDER);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            } else if (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_DOTNETSPIDER)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapCodeSectionDetects.value(RECORD_NAME_DOTNETSPIDER);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
             // Phoenix Protector
-            if (pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_PHOENIXPROTECTOR)) {
-                _SCANS_STRUCT ss = pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_PHOENIXPROTECTOR);
-                pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_PHOENIXPROTECTOR)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapCodeSectionDetects.value(RECORD_NAME_PHOENIXPROTECTOR);
+                pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
             // Sixxpack
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_SIXXPACK)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_SIXXPACK);
-                pPEInfo->mapResultNETCompressors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
-            } else if (pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_SIXXPACK)) {
-                _SCANS_STRUCT ss = pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_SIXXPACK);
-                pPEInfo->mapResultNETCompressors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_SIXXPACK)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_SIXXPACK);
+                pPEInfo->basic_info.mapResultNETCompressors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            } else if (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_SIXXPACK)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapCodeSectionDetects.value(RECORD_NAME_SIXXPACK);
+                pPEInfo->basic_info.mapResultNETCompressors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
             // ReNET-Pack
-            if (pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_RENETPACK)) {
-                _SCANS_STRUCT ss = pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_RENETPACK);
-                pPEInfo->mapResultNETCompressors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_RENETPACK)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapCodeSectionDetects.value(RECORD_NAME_RENETPACK);
+                pPEInfo->basic_info.mapResultNETCompressors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
             // .netshrink
-            if (pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_DOTNETSHRINK)) {
-                _SCANS_STRUCT ss = pPEInfo->mapCodeSectionDetects.value(RECORD_NAME_DOTNETSHRINK);
-                pPEInfo->mapResultNETCompressors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            if (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_DOTNETSHRINK)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapCodeSectionDetects.value(RECORD_NAME_DOTNETSHRINK);
+                pPEInfo->basic_info.mapResultNETCompressors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
 
@@ -6119,27 +5950,27 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, SpecAbstract::SCA
         if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Xenocode Postbuild 2009 for .NET")) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_NETOBFUSCATOR, RECORD_NAME_XENOCODEPOSTBUILD2009FORDOTNET, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
-            pPEInfo->mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Xenocode Postbuild 2010 for .NET
         if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Xenocode Postbuild 2010 for .NET")) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_XENOCODEPOSTBUILD2010FORDOTNET, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (!pPEInfo->mapResultProtectors.contains(RECORD_NAME_DOTNETREACTOR)) {
-            if (pPEInfo->mapImportDetects.contains(RECORD_NAME_DOTNETREACTOR) && XPE::isResourcePresent(XPE_DEF::S_RT_RCDATA, "__", &(pPEInfo->listResources))) {
-                _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_DOTNETREACTOR);
-                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+        if (!pPEInfo->basic_info.mapResultProtectors.contains(RECORD_NAME_DOTNETREACTOR)) {
+            if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_DOTNETREACTOR) && XPE::isResourcePresent(XPE_DEF::S_RT_RCDATA, "__", &(pPEInfo->listResources))) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_DOTNETREACTOR);
+                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
-        if (!pPEInfo->mapResultProtectors.contains(RECORD_NAME_CODEVEIL)) {
-            if (pPEInfo->mapImportDetects.contains(RECORD_NAME_CODEVEIL)) {
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_CODEVEIL)) {
-                    _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_CODEVEIL);
-                    pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+        if (!pPEInfo->basic_info.mapResultProtectors.contains(RECORD_NAME_CODEVEIL)) {
+            if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_CODEVEIL)) {
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_CODEVEIL)) {
+                    _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_CODEVEIL);
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
         }
@@ -6421,12 +6252,12 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 ssNET.sInfo = "Hidden";
             }
 
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_VBNET)) {
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_VBNET)) {
                 ssCompilerVB.type = RECORD_TYPE_COMPILER;
                 ssCompilerVB.name = RECORD_NAME_VBNET;
             }
 
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_JSCRIPT)) {
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_JSCRIPT)) {
                 ssCompilerVB.type = RECORD_TYPE_COMPILER;
                 ssCompilerVB.name = RECORD_NAME_JSCRIPT;
             }
@@ -6446,8 +6277,8 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
         if (ssCompilerCPP.name != RECORD_NAME_VISUALCCPP) {
             // TODO Check mb MS Linker only
 
-            if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_VISUALCCPP)) {
-                _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_VISUALCCPP);
+            if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_VISUALCCPP)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_VISUALCCPP);
 
                 ssCompilerCPP.type = ss.type;
                 ssCompilerCPP.name = ss.name;
@@ -6750,35 +6581,35 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
         }
 
         if (ssLinker.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultLinkers.insert(ssLinker.name, scansToScan(&(pPEInfo->basic_info), &ssLinker));
+            pPEInfo->basic_info.mapResultLinkers.insert(ssLinker.name, scansToScan(&(pPEInfo->basic_info), &ssLinker));
         }
 
         if (ssCompilerCPP.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultCompilers.insert(ssCompilerCPP.name, scansToScan(&(pPEInfo->basic_info), &ssCompilerCPP));
+            pPEInfo->basic_info.mapResultCompilers.insert(ssCompilerCPP.name, scansToScan(&(pPEInfo->basic_info), &ssCompilerCPP));
         }
 
         if (ssCompilerMASM.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultCompilers.insert(ssCompilerMASM.name, scansToScan(&(pPEInfo->basic_info), &ssCompilerMASM));
+            pPEInfo->basic_info.mapResultCompilers.insert(ssCompilerMASM.name, scansToScan(&(pPEInfo->basic_info), &ssCompilerMASM));
         }
 
         if (ssCompilerVB.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultCompilers.insert(ssCompilerVB.name, scansToScan(&(pPEInfo->basic_info), &ssCompilerVB));
+            pPEInfo->basic_info.mapResultCompilers.insert(ssCompilerVB.name, scansToScan(&(pPEInfo->basic_info), &ssCompilerVB));
         }
 
         if (ssCompilerDot.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultCompilers.insert(ssCompilerDot.name, scansToScan(&(pPEInfo->basic_info), &ssCompilerDot));
+            pPEInfo->basic_info.mapResultCompilers.insert(ssCompilerDot.name, scansToScan(&(pPEInfo->basic_info), &ssCompilerDot));
         }
 
         if (ssTool.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultTools.insert(ssTool.name, scansToScan(&(pPEInfo->basic_info), &ssTool));
+            pPEInfo->basic_info.mapResultTools.insert(ssTool.name, scansToScan(&(pPEInfo->basic_info), &ssTool));
         }
 
         if (ssMFC.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultLibraries.insert(ssMFC.name, scansToScan(&(pPEInfo->basic_info), &ssMFC));
+            pPEInfo->basic_info.mapResultLibraries.insert(ssMFC.name, scansToScan(&(pPEInfo->basic_info), &ssMFC));
         }
 
         if (ssNET.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultLibraries.insert(ssNET.name, scansToScan(&(pPEInfo->basic_info), &ssNET));
+            pPEInfo->basic_info.mapResultLibraries.insert(ssNET.name, scansToScan(&(pPEInfo->basic_info), &ssNET));
         }
     }
 }
@@ -6876,7 +6707,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
             bool bPackageinfo = XPE::isResourcePresent(XPE_DEF::S_RT_RCDATA, "PACKAGEINFO", &(pPEInfo->listResources));
             bool bDvcal = XPE::isResourcePresent(XPE_DEF::S_RT_RCDATA, "DVCLAL", &(pPEInfo->listResources));
 
-            if (bPackageinfo || bDvcal || pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_BORLANDCPP) || (nOffset_TObject != -1) || (nOffset_BorlandCPP != -1) ||
+            if (bPackageinfo || bDvcal || pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_BORLANDCPP) || (nOffset_TObject != -1) || (nOffset_BorlandCPP != -1) ||
                 (nOffset_CodegearCPP != -1) || (nOffset_EmbarcaderoCPP_old != -1) || (nOffset_EmbarcaderoCPP_new != -1) || bCppExport) {
                 bool bCpp = false;
                 bool bVCL = bPackageinfo;
@@ -6895,7 +6726,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
 
                 COMPANY company = COMPANY_BORLAND;
 
-                if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_BORLANDCPP) || (nOffset_BorlandCPP != -1) || (nOffset_CodegearCPP != -1) ||
+                if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_BORLANDCPP) || (nOffset_BorlandCPP != -1) || (nOffset_CodegearCPP != -1) ||
                     (nOffset_EmbarcaderoCPP_old != -1) || (nOffset_EmbarcaderoCPP_new != -1) || bCppExport) {
                     bCpp = true;
 
@@ -7149,26 +6980,26 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
             }
         } else {
             // .NET TODO: Check!!!!
-            if (pPEInfo->mapDotAnsiStringsDetects.contains(RECORD_NAME_EMBARCADERODELPHIDOTNET)) {
-                _SCANS_STRUCT ss = pPEInfo->mapDotAnsiStringsDetects.value(RECORD_NAME_EMBARCADERODELPHIDOTNET);
+            if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_EMBARCADERODELPHIDOTNET)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_EMBARCADERODELPHIDOTNET);
                 recordTool = ss;
             }
         }
 
         if (recordLinker.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultLinkers.insert(recordLinker.name, scansToScan(&(pPEInfo->basic_info), &recordLinker));
+            pPEInfo->basic_info.mapResultLinkers.insert(recordLinker.name, scansToScan(&(pPEInfo->basic_info), &recordLinker));
         }
 
         if (recordCompiler.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pPEInfo->basic_info), &recordCompiler));
+            pPEInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pPEInfo->basic_info), &recordCompiler));
         }
 
         if (recordVCL.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultLibraries.insert(recordVCL.name, scansToScan(&(pPEInfo->basic_info), &recordVCL));
+            pPEInfo->basic_info.mapResultLibraries.insert(recordVCL.name, scansToScan(&(pPEInfo->basic_info), &recordVCL));
         }
 
         if (recordTool.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultTools.insert(recordTool.name, scansToScan(&(pPEInfo->basic_info), &recordTool));
+            pPEInfo->basic_info.mapResultTools.insert(recordTool.name, scansToScan(&(pPEInfo->basic_info), &recordTool));
         }
     }
 }
@@ -7188,9 +7019,9 @@ void SpecAbstract::PE_handle_Watcom(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
         }
 
         // Watcom CPP
-        if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_WATCOMCCPP)) {
+        if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_WATCOMCCPP)) {
             // TODO Version???
-            ssCompiler = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_WATCOMCCPP);
+            ssCompiler = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_WATCOMCCPP);
         }
 
         if ((ssLinker.type != RECORD_TYPE_UNKNOWN) && (ssCompiler.type == RECORD_TYPE_UNKNOWN)) {
@@ -7202,11 +7033,11 @@ void SpecAbstract::PE_handle_Watcom(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
         }
 
         if (ssLinker.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultLinkers.insert(ssLinker.name, scansToScan(&(pPEInfo->basic_info), &ssLinker));
+            pPEInfo->basic_info.mapResultLinkers.insert(ssLinker.name, scansToScan(&(pPEInfo->basic_info), &ssLinker));
         }
 
         if (ssCompiler.type != RECORD_TYPE_UNKNOWN) {
-            pPEInfo->mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pPEInfo->basic_info), &ssCompiler));
+            pPEInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pPEInfo->basic_info), &ssCompiler));
         }
     }
 }
@@ -7216,17 +7047,17 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
     XPE pe(pDevice, pOptions->bIsImage);
 
     if (pe.isValid(pPdStruct)) {
-        if ((pPEInfo->bIsTLSPresent) && (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_RUST))) {
+        if ((pPEInfo->bIsTLSPresent) && (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_RUST))) {
             if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
                 VI_STRUCT viStruct = get_Rust_vi(pDevice, pOptions, pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, pPdStruct);
 
                 if (viStruct.bIsValid) {
-                    _SCANS_STRUCT ssCompiler = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_RUST);
+                    _SCANS_STRUCT ssCompiler = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_RUST);
 
                     ssCompiler.sVersion = viStruct.sVersion;
                     ssCompiler.sInfo = viStruct.sInfo;
 
-                    pPEInfo->mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pPEInfo->basic_info), &ssCompiler));
+                    pPEInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pPEInfo->basic_info), &ssCompiler));
                 }
             }
         }
@@ -7234,12 +7065,12 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
         if (pe.isResourcePresent(XPE_DEF::S_RT_RCDATA, "SCRIPT", &(pPEInfo->listResources))) {
             _SCANS_STRUCT ssLibrary = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LIBRARY, RECORD_NAME_AUTOIT, "3.XX", "", 0);
             // TODO Version
-            pPEInfo->mapResultLibraries.insert(ssLibrary.name, scansToScan(&(pPEInfo->basic_info), &ssLibrary));
+            pPEInfo->basic_info.mapResultLibraries.insert(ssLibrary.name, scansToScan(&(pPEInfo->basic_info), &ssLibrary));
         } else if (pe.getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)) == "Compiled AutoIt Script") {
             _SCANS_STRUCT ssLibrary = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LIBRARY, RECORD_NAME_AUTOIT, "2.XX", "", 0);
 
             ssLibrary.sVersion = pe.getFileVersionMS(&(pPEInfo->resVersion));
-            pPEInfo->mapResultLibraries.insert(ssLibrary.name, scansToScan(&(pPEInfo->basic_info), &ssLibrary));
+            pPEInfo->basic_info.mapResultLibraries.insert(ssLibrary.name, scansToScan(&(pPEInfo->basic_info), &ssLibrary));
         }
 
         if (XPE::isImportLibraryPresentI("msvcrt.dll", &(pPEInfo->listImports)) && (pPEInfo->nMajorLinkerVersion == 6) && (pPEInfo->nMinorLinkerVersion == 0)) {
@@ -7261,11 +7092,11 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
 
             if (bDetected) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_TINYC, "", "", 0);
-                pPEInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
 
-        if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_CHROMIUMCRASHPAD)) {
+        if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_CHROMIUMCRASHPAD)) {
             XPE::SECTION_RECORD sr = XPE::getSectionRecordByName("CPADinfo", &(pPEInfo->listSectionRecords));
 
             if (sr.nSize) {
@@ -7276,22 +7107,22 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
 
                     _SCANS_STRUCT ssLibrary = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LIBRARY, RECORD_NAME_CHROMIUMCRASHPAD, "", "", 0);
                     ssLibrary.sVersion = QString("%1.0").arg(nVersion);
-                    pPEInfo->mapResultLibraries.insert(ssLibrary.name, scansToScan(&(pPEInfo->basic_info), &ssLibrary));
+                    pPEInfo->basic_info.mapResultLibraries.insert(ssLibrary.name, scansToScan(&(pPEInfo->basic_info), &ssLibrary));
                 }
             }
         }
 
-        if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_EXCELSIORJET)) {
+        if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_EXCELSIORJET)) {
             // TODO Version
             _SCANS_STRUCT ssLibrary = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LIBRARY, RECORD_NAME_JAVA, "", "Native", 0);
-            pPEInfo->mapResultLibraries.insert(ssLibrary.name, scansToScan(&(pPEInfo->basic_info), &ssLibrary));
+            pPEInfo->basic_info.mapResultLibraries.insert(ssLibrary.name, scansToScan(&(pPEInfo->basic_info), &ssLibrary));
 
             // TODO Version
             _SCANS_STRUCT ssCompiler = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_EXCELSIORJET, "", "", 0);  // mb Tool
-            pPEInfo->mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pPEInfo->basic_info), &ssCompiler));
+            pPEInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pPEInfo->basic_info), &ssCompiler));
         }
 
-        if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_GO) || pPEInfo->mapCodeSectionDetects.contains(RECORD_NAME_GO)) {
+        if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_GO) || pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_GO)) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_GO, "1.X", "", 0);
 
             if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
@@ -7303,14 +7134,14 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
                 }
             }
 
-            pPEInfo->mapResultTools.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Visual Objects
         if (pe.compareSignature(&(pPEInfo->basic_info.memoryMap), "'This Visual Objects application cannot be run in DOS mode'", 0x312)) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_VISUALOBJECTS, "2.XX", "", 0);
             ss.sVersion = QString("%1.%2").arg(QString::number(pPEInfo->nMajorLinkerVersion), QString::number(pPEInfo->nMinorLinkerVersion));
-            pPEInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // FASM
@@ -7318,7 +7149,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
             // TODO correct Version
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_FASM, "", "", 0);
             ss.sVersion = QString("%1.%2").arg(QString::number(pPEInfo->nMajorLinkerVersion), QString::number(pPEInfo->nMinorLinkerVersion));
-            pPEInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Zig
@@ -7333,7 +7164,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
                     ss.sVersion = viStruct.sVersion;
                     ss.sInfo = viStruct.sInfo;
 
-                    pPEInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
         }
@@ -7343,37 +7174,37 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
 
             if (viNim.bIsValid) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_NIM, "", "", 0);
-                pPEInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
 
         // Valve
         if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_VALVE)) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_STUB, RECORD_NAME_VALVE, "", "", 0);
-            pPEInfo->mapResultTools.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // UniLink
         if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_UNILINK)) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LINKER, RECORD_NAME_UNILINK, "", "", 0);
-            pPEInfo->mapResultLinkers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultLinkers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // DMD32 D
         if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DMD32)) {
             // TODO correct Version
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_DMD32, "", "", 0);
-            pPEInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // GoLink, GoAsm
         if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GOLINK)) {
             _SCANS_STRUCT ssLinker = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LINKER, RECORD_NAME_GOLINK, "", "", 0);
             ssLinker.sVersion = QString("%1.%2").arg(QString::number(pPEInfo->nMajorLinkerVersion), QString::number(pPEInfo->nMinorLinkerVersion));
-            pPEInfo->mapResultLinkers.insert(ssLinker.name, scansToScan(&(pPEInfo->basic_info), &ssLinker));
+            pPEInfo->basic_info.mapResultLinkers.insert(ssLinker.name, scansToScan(&(pPEInfo->basic_info), &ssLinker));
 
             _SCANS_STRUCT ssCompiler = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_GOASM, "", "", 0);
-            pPEInfo->mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pPEInfo->basic_info), &ssCompiler));
+            pPEInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pPEInfo->basic_info), &ssCompiler));
         }
 
         if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LAYHEYFORTRAN90)) {
@@ -7381,7 +7212,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
 
             if (sLFString == "This program must be run under Windows 95, NT, or Win32s\r\nPress any key to exit.$") {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_LAYHEYFORTRAN90, "", "", 0);
-                pPEInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
 
@@ -7404,7 +7235,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
                 }
 
                 // TODO Version
-                pPEInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             qint64 nOffset_FlexNet = -1;
@@ -7429,7 +7260,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
                 }
 
                 // TODO Version
-                pPEInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
 
@@ -7438,26 +7269,26 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
             // TODO Find Strings QObject
             if (XPE::isImportLibraryPresentI("QtCore4.dll", &(pPEInfo->listImports))) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LIBRARY, RECORD_NAME_QT, "4.X", "", 0);
-                pPEInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             } else if (XPE::isImportLibraryPresentI("QtCored4.dll", &(pPEInfo->listImports))) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LIBRARY, RECORD_NAME_QT, "4.X", "Debug", 0);
-                pPEInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             } else if (XPE::isImportLibraryPresentI("Qt5Core.dll", &(pPEInfo->listImports))) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LIBRARY, RECORD_NAME_QT, "5.X", "", 0);
-                pPEInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             } else if (XPE::isImportLibraryPresentI("Qt5Cored.dll", &(pPEInfo->listImports))) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LIBRARY, RECORD_NAME_QT, "5.X", "Debug", 0);
-                pPEInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             } else if (XPE::isImportLibraryPresentI("Qt6Core.dll", &(pPEInfo->listImports))) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LIBRARY, RECORD_NAME_QT, "6.X", "", 0);
-                pPEInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             } else if (XPE::isImportLibraryPresentI("Qt6Cored.dll", &(pPEInfo->listImports))) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LIBRARY, RECORD_NAME_QT, "6.X", "Debug", 0);
-                pPEInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
-            } else if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_QT)) {
+                pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            } else if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_QT)) {
                 // TODO Version!
-                _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_QT);
-                pPEInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(RECORD_NAME_QT);
+                pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
@@ -7472,7 +7303,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
                     QString sFPCVersion = pe.read_ansiString(nOffset_FPC);
                     ss.sVersion = sFPCVersion.section(" ", 1, -1).section(" - ", 0, 0);
 
-                    pPEInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
 
                     // Lazarus
                     qint64 nOffset_Lazarus = pe.find_ansiString(_nOffset, _nSize, "Lazarus LCL: ", pPdStruct);
@@ -7498,7 +7329,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
 
                         ssLazarus.sVersion = sLazarusVersion;
 
-                        pPEInfo->mapResultTools.insert(ssLazarus.name, scansToScan(&(pPEInfo->basic_info), &ssLazarus));
+                        pPEInfo->basic_info.mapResultTools.insert(ssLazarus.name, scansToScan(&(pPEInfo->basic_info), &ssLazarus));
                     }
                 } else {
                     //                    qint64 nOffset_TObject=pe.find_array(_nOffset,_nSize,"\x07\x54\x4f\x62\x6a\x65\x63\x74",8); // TObject
@@ -7509,7 +7340,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
                     //                        SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_COMPILER,RECORD_NAME_FPC,"","",0);
 
                     //                        // TODO Version
-                    //                        pPEInfo->mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+                    //                        pPEInfo->basic_info.mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
                     //                    }
                     qint64 nOffset_RunTimeError = pe.find_array(_nOffset, _nSize, "\x0e\x52\x75\x6e\x74\x69\x6d\x65\x20\x65\x72\x72\x6f\x72\x20", 15,
                                                                 pPdStruct);  // Runtime Error TODO: use findAnsiString
@@ -7518,7 +7349,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_FPC, "", "", 0);
 
                         // TODO Version
-                        pPEInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
             }
@@ -7538,7 +7369,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
                             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LIBRARY, RECORD_NAME_PYTHON, "", "", 0);
 
                             ss.sVersion = QString::number(dVersion / 10, 'f', 1);
-                            pPEInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                            pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                         }
                     }
 
@@ -7553,7 +7384,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
                             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LIBRARY, RECORD_NAME_PYTHON, "", "", 0);
 
                             ss.sVersion = QString::number(dVersion);
-                            pPEInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                            pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                         }
                     }
 
@@ -7574,7 +7405,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
                             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_LIBRARY, RECORD_NAME_PERL, "", "", 0);
 
                             ss.sVersion = QString::number(dVersion / 100, 'f', 2);
-                            pPEInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                            pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                         }
                     }
 
@@ -7596,7 +7427,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
 
                     // TODO Version???
                     ss.sVersion = QString("%1.%2").arg(QString::number(pPEInfo->nMajorLinkerVersion), QString::number(pPEInfo->nMinorLinkerVersion));
-                    pPEInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
@@ -7612,31 +7443,31 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTION
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_POWERBASIC, "", "", 0);
 
                     // TODO Version???
-                    pPEInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
             // PureBasic
-            if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_PUREBASIC)) {
-                _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_PUREBASIC);
+            if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PUREBASIC)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PUREBASIC);
 
                 // TODO Version???
-                pPEInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // lcc-win
-            if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_LCCWIN)) {
-                _SCANS_STRUCT ss = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_LCCWIN);
+            if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_LCCWIN)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_LCCWIN);
 
                 // TODO Version???
-                pPEInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
 
                 if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER)) {
                     _SCANS_STRUCT ssLinker = {};
                     ssLinker.name = RECORD_NAME_LCCLNK;
                     ssLinker.type = RECORD_TYPE_LINKER;
                     ssLinker.sVersion = QString("%1.%2").arg(QString::number(pPEInfo->nMajorLinkerVersion), QString::number(pPEInfo->nMinorLinkerVersion));
-                    pPEInfo->mapResultLinkers.insert(ssLinker.name, scansToScan(&(pPEInfo->basic_info), &ssLinker));
+                    pPEInfo->basic_info.mapResultLinkers.insert(ssLinker.name, scansToScan(&(pPEInfo->basic_info), &ssLinker));
                 }
             }
         }
@@ -7648,22 +7479,22 @@ void SpecAbstract::PE_handle_PETools(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
     XPE pe(pDevice, pOptions->bIsImage);
 
     if (pe.isValid(pPdStruct)) {
-        if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_VMUNPACKER)) {
-            _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_VMUNPACKER);
+        if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_VMUNPACKER)) {
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(RECORD_NAME_VMUNPACKER);
 
-            pPEInfo->mapResultPETools.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultPETools.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_XVOLKOLAK)) {
-            _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_XVOLKOLAK);
+        if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_XVOLKOLAK)) {
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(RECORD_NAME_XVOLKOLAK);
 
-            pPEInfo->mapResultPETools.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultPETools.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_HOODLUM)) {
-            _SCANS_STRUCT ss = pPEInfo->mapSectionNamesDetects.value(RECORD_NAME_HOODLUM);
+        if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_HOODLUM)) {
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(RECORD_NAME_HOODLUM);
 
-            pPEInfo->mapResultPETools.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultPETools.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
     }
 }
@@ -7750,7 +7581,7 @@ void SpecAbstract::PE_handle_wxWidgets(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 ss.sVersion = sVersion;
                 ss.sInfo = append(ss.sInfo, sInfo);
 
-                pPEInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
     }
@@ -7810,8 +7641,8 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
             }
 
             if ((sDllLib.contains("gcc")) || (sDllLib.contains("libgcj")) || (sDllLib.contains("cyggcj")) || (sDllLib == "_set_invalid_parameter_handler") ||
-                XPE::isImportLibraryPresentI("libgcc_s_dw2-1.dll", &(pPEInfo->listImports)) || pPEInfo->mapOverlayDetects.contains(RECORD_NAME_MINGW) ||
-                pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_GCC)) {
+                XPE::isImportLibraryPresentI("libgcc_s_dw2-1.dll", &(pPEInfo->listImports)) || pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_MINGW) ||
+                pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_GCC)) {
                 bDetectGCC = true;
             }
 
@@ -7857,8 +7688,8 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
                         }
                     }
 
-                    if ((ssTool.type == RECORD_TYPE_UNKNOWN) && (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_GCC))) {
-                        if (pPEInfo->mapEntryPointDetects.value(RECORD_NAME_GCC).sInfo.contains("MinGW")) {
+                    if ((ssTool.type == RECORD_TYPE_UNKNOWN) && (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_GCC))) {
+                        if (pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_GCC).sInfo.contains("MinGW")) {
                             ssTool.type = RECORD_TYPE_TOOL;
                             ssTool.name = RECORD_NAME_MINGW;
                         }
@@ -7984,13 +7815,13 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
             // TODO Check overlay debug
 
             if (ssLinker.type != RECORD_TYPE_UNKNOWN) {
-                pPEInfo->mapResultLinkers.insert(ssLinker.name, scansToScan(&(pPEInfo->basic_info), &ssLinker));
+                pPEInfo->basic_info.mapResultLinkers.insert(ssLinker.name, scansToScan(&(pPEInfo->basic_info), &ssLinker));
             }
             if (ssCompiler.type != RECORD_TYPE_UNKNOWN) {
-                pPEInfo->mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pPEInfo->basic_info), &ssCompiler));
+                pPEInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pPEInfo->basic_info), &ssCompiler));
             }
             if (ssTool.type != RECORD_TYPE_UNKNOWN) {
-                pPEInfo->mapResultTools.insert(ssTool.name, scansToScan(&(pPEInfo->basic_info), &ssTool));
+                pPEInfo->basic_info.mapResultTools.insert(ssTool.name, scansToScan(&(pPEInfo->basic_info), &ssTool));
             }
         }
     }
@@ -8010,7 +7841,7 @@ void SpecAbstract::PE_handle_Signtools(QIODevice *pDevice, SpecAbstract::SCAN_OP
             if (listCerts.count()) {
                 if ((listCerts.at(0).record.wRevision == 0x200) && (listCerts.at(0).record.wCertificateType == 2)) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_SIGNTOOL, RECORD_NAME_WINAUTH, "2.0", "PKCS #7", 0);
-                    pPEInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
         }
@@ -8024,7 +7855,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
     if (pe.isValid(pPdStruct)) {
         if (!pPEInfo->cliInfo.bValid) {
             // Inno Setup
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_INNOSETUP) || pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_INNOSETUP)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_INNOSETUP) || pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_INNOSETUP)) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_INNOSETUP, "", "", 0);
 
                 if ((pe.read_uint32(0x30) == 0x6E556E49))  // Uninstall
@@ -8049,7 +7880,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                             }
                         }
                     }
-                } else if (pPEInfo->mapOverlayDetects.value(RECORD_NAME_INNOSETUP).sInfo == "Uninstall") {
+                } else if (pPEInfo->basic_info.mapOverlayDetects.value(RECORD_NAME_INNOSETUP).sInfo == "Uninstall") {
                     ss.sInfo = "Uninstall";
                     qint64 _nOffset = pPEInfo->nOverlayOffset;
                     qint64 _nSize = pPEInfo->nOverlaySize;
@@ -8131,24 +7962,24 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                     }
                 }
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_CAB)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_CAB)) {
                 // Wix Tools
                 if (XPE::isSectionNamePresent(".wixburn", &(pPEInfo->listSectionRecords)))  // TODO
                 {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_WIXTOOLSET, "", "", 0);
                     ss.sVersion = "3.X";  // TODO check "E:\delivery\Dev\wix37\build\ship\x86\burn.pdb"
-                    pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_NOSINSTALLER)) {
-                if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_NOSINSTALLER)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_NOSINSTALLER)) {
+                if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_NOSINSTALLER)) {
                     // TODO Version from resources!
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_NOSINSTALLER, "", "", 0);
-                    pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
@@ -8170,58 +8001,58 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                     }
                 }
 
-                pPEInfo->mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // Install Anywhere
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_INSTALLANYWHERE)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_INSTALLANYWHERE)) {
                 if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)) == "InstallAnywhere") {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_INSTALLANYWHERE, "", "", 0);
                     ss.sVersion = XPE::getResourcesVersionValue("ProductVersion", &(pPEInfo->resVersion));
-                    pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_GHOSTINSTALLER)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_GHOSTINSTALLER)) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_GHOSTINSTALLER, "", "", 0);
                 ss.sVersion = "1.0";
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_QTINSTALLER)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_QTINSTALLER)) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_QTINSTALLER, "", "", 0);
                 // ss.sVersion="";
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_INSTALL4J)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_INSTALL4J)) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_INSTALL4J, "", "", 0);
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_SMARTINSTALLMAKER)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_SMARTINSTALLMAKER)) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_SMARTINSTALLMAKER, "", "", 0);
                 ss.sVersion = XBinary::hexToString(pPEInfo->sOverlaySignature.mid(46, 14));  // TODO make 1 function
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_TARMAINSTALLER)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_TARMAINSTALLER)) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_TARMAINSTALLER, "", "", 0);
                 // TODO version
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_CLICKTEAM)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_CLICKTEAM)) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_CLICKTEAM, "", "", 0);
                 // TODO version
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // NSIS
-            if ((pPEInfo->mapOverlayDetects.contains(RECORD_NAME_NSIS)) || (pPEInfo->sResourceManifest.contains("Nullsoft.NSIS"))) {
+            if ((pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_NSIS)) || (pPEInfo->sResourceManifest.contains("Nullsoft.NSIS"))) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_NSIS, "", "", 0);
 
-                QString _sInfo = pPEInfo->mapOverlayDetects.value(RECORD_NAME_NSIS).sInfo;
+                QString _sInfo = pPEInfo->basic_info.mapOverlayDetects.value(RECORD_NAME_NSIS).sInfo;
 
                 if (_sInfo != "") {
                     ss.sInfo = _sInfo;
@@ -8242,7 +8073,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                 }
 
                 // TODO options
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // InstallShield
@@ -8250,7 +8081,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_INSTALLSHIELD, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
                 ss.sVersion.replace(", ", ".");
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             } else if (pPEInfo->sResourceManifest.contains("InstallShield")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_INSTALLSHIELD, "", "", 0);
 
@@ -8271,11 +8102,11 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                     ss.sVersion = XPE::getResourcesVersionValue("ISInternalVersion", &(pPEInfo->resVersion));
                 }
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
-            } else if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_INSTALLSHIELD)) {
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            } else if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_INSTALLSHIELD)) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_INSTALLSHIELD, "", "PackageForTheWeb", 0);
                 // TODO version
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             } else if (XPE::getResourcesVersionValue("CompanyName", &(pPEInfo->resVersion)).contains("InstallShield")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_INSTALLSHIELD, "", "", 0);
 
@@ -8285,7 +8116,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                     ss.sInfo = "PackageForTheWeb";
                 }
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (pPEInfo->sResourceManifest.contains("AdvancedInstallerSetup")) {
@@ -8303,31 +8134,31 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                     }
                 }
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (pPEInfo->sResourceManifest.contains("Illustrate.Spoon.Installer")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_SPOONINSTALLER, "", "", 0);
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (pPEInfo->sResourceManifest.contains("DeployMaster Installer")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_DEPLOYMASTER, "", "", 0);
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if ((pPEInfo->sResourceManifest.contains("Gentee.Installer.Install")) || (pPEInfo->sResourceManifest.contains("name=\"gentee\""))) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_GENTEEINSTALLER, "", "", 0);
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             } else {
-                if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_GENTEEINSTALLER)) {
+                if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_GENTEEINSTALLER)) {
                     if (XPE::isResourcePresent(XPE_DEF::S_RT_RCDATA, "SETUP_TEMP", &(pPEInfo->listResources))) {
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_GENTEEINSTALLER, "", "", 0);
 
-                        pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
             }
@@ -8335,7 +8166,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
             if (pPEInfo->sResourceManifest.contains("BitRock Installer")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_BITROCKINSTALLER, "", "", 0);
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("GP-Install") &&
@@ -8343,76 +8174,76 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_GPINSTALL, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
                 ss.sVersion.replace(", ", ".");
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("Total Commander Installer")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_TOTALCOMMANDERINSTALLER, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("Comments", &(pPEInfo->resVersion)).contains("Actual Installer")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_ACTUALINSTALLER, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("Comments", &(pPEInfo->resVersion)).contains("Avast Antivirus")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_AVASTANTIVIRUS, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("Opera Installer")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_OPERA, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("Yandex Installer")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_YANDEX, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("Google Update")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_GOOGLE, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("Visual Studio Installer")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_MICROSOFTVISUALSTUDIO, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("InternalName", &(pPEInfo->resVersion)).contains("Dropbox Update Setup")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_DROPBOX, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("VeraCrypt")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_VERACRYPT, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("Microsoft .NET Framework")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_MICROSOFTDOTNETFRAMEWORK, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("LegalTrademarks", &(pPEInfo->resVersion)).contains("Setup Factory")) {
@@ -8424,7 +8255,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                     ss.sVersion = ss.sVersion.replace(",", ".");
                 }
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("Microsoft Office")) {
@@ -8437,7 +8268,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                         ss.sVersion = ss.sVersion.replace(",", ".");
                     }
 
-                    pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
@@ -8450,7 +8281,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                     ss.sVersion = "1.0.0-1.9.1";
                 }
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("Java") &&
@@ -8458,18 +8289,18 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_JAVA, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_VMWARE) ||
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_VMWARE) ||
                 XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("VMware installation")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_VMWARE, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // Windows Installer
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_MICROSOFTCOMPOUND)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_MICROSOFTCOMPOUND)) {
                 VI_STRUCT vi = get_WindowsInstaller_vi(pDevice, pOptions, pPEInfo->nOverlayOffset, pPEInfo->nOverlaySize, pPdStruct);
 
                 if (vi.sVersion != "") {
@@ -8478,7 +8309,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                     ss.sVersion = vi.sVersion;
                     ss.sInfo = vi.sInfo;
 
-                    pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
@@ -8488,10 +8319,10 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_ALCHEMYMINDWORKS, "", "", 0);
                 // TODO versions
 
-                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (!pPEInfo->mapResultInstallers.contains(RECORD_NAME_WINDOWSINSTALLER)) {
+            if (!pPEInfo->basic_info.mapResultInstallers.contains(RECORD_NAME_WINDOWSINSTALLER)) {
                 qint32 nNumberOfResources = pPEInfo->listResources.count();
 
                 for (qint32 i = 0; (i < nNumberOfResources) && (!(pPdStruct->bIsStop)); i++) {
@@ -8512,7 +8343,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                                 ss.sVersion = vi.sVersion;
                                 ss.sInfo = vi.sInfo;
 
-                                pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
 
                                 break;
                             }
@@ -8529,7 +8360,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_WISE, "", "", 0);
 
                         // Check version
-                        pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 } else if (pPEInfo->exportHeader.listPositions.count() == 6) {
                     if ((pPEInfo->exportHeader.listPositions.at(0).sFunctionName == "_LanguageDlg@16") ||
@@ -8540,7 +8371,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, SpecAbstract::SCAN_O
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_WISE, "", "", 0);
 
                         // Check version
-                        pPEInfo->mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
             }
@@ -8554,24 +8385,24 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
 
     if (pe.isValid(pPdStruct)) {
         if (!pPEInfo->cliInfo.bValid) {
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_RAR)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_RAR)) {
                 if (XPE::isResourcePresent(XPE_DEF::S_RT_DIALOG, "STARTDLG", &(pPEInfo->listResources)) &&
                     XPE::isResourcePresent(XPE_DEF::S_RT_DIALOG, "LICENSEDLG", &(pPEInfo->listResources))) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_SFX, RECORD_NAME_WINRAR, "", "", 0);
                     // TODO Version
-                    pPEInfo->mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
-            if ((pPEInfo->mapOverlayDetects.contains(RECORD_NAME_WINRAR)) || (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_ZIP))) {
+            if ((pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_WINRAR)) || (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_ZIP))) {
                 if (pPEInfo->sResourceManifest.contains("WinRAR")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_SFX, RECORD_NAME_WINRAR, "", "", 0);
                     // TODO Version
-                    pPEInfo->mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_ZIP)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_ZIP)) {
                 if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
                     qint64 _nOffset = pPEInfo->osDataSection.nOffset;
                     qint64 _nSize = pPEInfo->osDataSection.nSize;
@@ -8580,7 +8411,7 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
                     if (nOffset_Version != -1) {
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_SFX, RECORD_NAME_ZIP, "", "", 0);
                         // TODO Version
-                        pPEInfo->mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
             }
@@ -8589,21 +8420,21 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
             if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("7-Zip")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_SFX, RECORD_NAME_7Z, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("ProductVersion", &(pPEInfo->resVersion));
-                pPEInfo->mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if ((!pPEInfo->mapResultSFX.contains(RECORD_NAME_7Z)) && (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_7Z))) {
+            if ((!pPEInfo->basic_info.mapResultSFX.contains(RECORD_NAME_7Z)) && (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_7Z))) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_SFX, RECORD_NAME_7Z, "", "", 0);
                 ss.sInfo = "Modified";
-                pPEInfo->mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // SQUEEZ SFX
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_SQUEEZSFX)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_SQUEEZSFX)) {
                 if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("Squeez")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_SQUEEZSFX, "", "", 0);
                     ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
-                    pPEInfo->mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                    pPEInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
@@ -8613,7 +8444,7 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
                 XPE::getResourcesVersionValue("InternalName", &(pPEInfo->resVersion)).contains("UNACE")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_SFX, RECORD_NAME_WINACE, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("ProductVersion", &(pPEInfo->resVersion));
-                pPEInfo->mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // WinZip
@@ -8623,21 +8454,21 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS 
 
                 QString _sManifest = pPEInfo->sResourceManifest.section("assemblyIdentity", 1, 1);
                 ss.sVersion = XBinary::regExp("version=\"(.*?)\"", _sManifest, 1);
-                pPEInfo->mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // Cab
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("Self-Extracting Cabinet")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_SFX, RECORD_NAME_CAB, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion));
-                pPEInfo->mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // GkSetup SFX
             if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("GkSetup Self extractor")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_SFX, RECORD_NAME_GKSETUPSFX, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("ProductVersion", &(pPEInfo->resVersion));
-                pPEInfo->mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
     }
@@ -8662,7 +8493,7 @@ void SpecAbstract::PE_handle_DongleProtection(QIODevice *pDevice, SpecAbstract::
     if (pPEInfo->listImports.count() == 1) {
         if (XBinary::isRegExpPresent("^NOVEX", pPEInfo->listImports.at(0).sName.toUpper())) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_DONGLEPROTECTION, RECORD_NAME_GUARDIANSTEALTH, "", "", 0);
-            pPEInfo->mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
     }
 }
@@ -8678,7 +8509,7 @@ void SpecAbstract::PE_handle_DongleProtection(QIODevice *pDevice, SpecAbstract::
 //            if((pPEInfo->nImportHash64==0xaf2e74867b)&&(pPEInfo->nImportHash32==0x51a4c42b))
 //            {
 //                _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PACKER,RECORD_NAME_ANSLYMPACKER,"","",0);
-//                pPEInfo->mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+//                pPEInfo->basic_info.mapResultPackers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
 //            }
 //        }
 //    }
@@ -8699,7 +8530,7 @@ void SpecAbstract::PE_handle_NeoLite(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
 
                     if (nOffset_Version != -1) {
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PACKER, RECORD_NAME_NEOLITE, "1.0", "", 0);
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
             }
@@ -8756,19 +8587,19 @@ void SpecAbstract::PE_handle_PrivateEXEProtector(QIODevice *pDevice, SpecAbstrac
             if (bKernel32ExitProcess && bCharacteristics && bPEPLinker) {
                 _SCANS_STRUCT ss = pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PRIVATEEXEPROTECTOR);
 
-                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (bKernel32 && bCharacteristics && bTurboLinker) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_PRIVATEEXEPROTECTOR, "2.25", "", 0);
 
-                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (bKernel32 && bUser32 && bCharacteristics && bTurboLinker) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_PRIVATEEXEPROTECTOR, "2.30-2.70", "", 0);
 
-                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
     }
@@ -8781,314 +8612,314 @@ void SpecAbstract::PE_handle_VisualBasicCryptors(QIODevice *pDevice, SpecAbstrac
 
     if (pe.isValid(pPdStruct)) {
         // 1337 Exe Crypter
-        if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_1337EXECRYPTER)) {
+        if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_1337EXECRYPTER)) {
             if (XPE::isImportLibraryPresentI("MSVBVM60.DLL", &(pPEInfo->listImports))) {
-                _SCANS_STRUCT ssOverlay = pPEInfo->mapOverlayDetects.value(RECORD_NAME_1337EXECRYPTER);
+                _SCANS_STRUCT ssOverlay = pPEInfo->basic_info.mapOverlayDetects.value(RECORD_NAME_1337EXECRYPTER);
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_1337EXECRYPTER, ssOverlay.sVersion, ssOverlay.sInfo, 0);
-                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
 
         // AGAINNATIVITYCRYPTER
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_AGAINNATIVITYCRYPTER)) {
-            if (pPEInfo->mapOverlayDetects.contains(RECORD_NAME_AGAINNATIVITYCRYPTER)) {
-                _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_AGAINNATIVITYCRYPTER);
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_AGAINNATIVITYCRYPTER)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_AGAINNATIVITYCRYPTER)) {
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_AGAINNATIVITYCRYPTER);
 
-                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
 
         // AR Crypt
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ARCRYPT)) {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_ARCRYPT);
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ARCRYPT)) {
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_ARCRYPT);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // WingsCrypt
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_WINGSCRYPT))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_WINGSCRYPT))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_WINGSCRYPT);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_WINGSCRYPT);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Crypt R.Roads
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTRROADS))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_CRYPTRROADS))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTRROADS);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_CRYPTRROADS);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Whitell Crypt
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_WHITELLCRYPT))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_WHITELLCRYPT))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_WHITELLCRYPT);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_WHITELLCRYPT);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // ZeldaCrypt
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ZELDACRYPT))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ZELDACRYPT))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_ZELDACRYPT);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_ZELDACRYPT);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Biohazard Crypter
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_BIOHAZARDCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_BIOHAZARDCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_BIOHAZARDCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_BIOHAZARDCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Cryptable seducation
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTABLESEDUCATION))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_CRYPTABLESEDUCATION))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTABLESEDUCATION);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_CRYPTABLESEDUCATION);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Cryptic
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTIC))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_CRYPTIC))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTIC);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_CRYPTIC);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // CRyptOZ
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_CRYPTOZ))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_CRYPTOZ))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_CRYPTOZ);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_CRYPTOZ);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Dirty Cryptor
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_DIRTYCRYPTOR))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_DIRTYCRYPTOR))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_DIRTYCRYPTOR);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_DIRTYCRYPTOR);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Fakus Cryptor
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_FAKUSCRYPTOR))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_FAKUSCRYPTOR))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_FAKUSCRYPTOR);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_FAKUSCRYPTOR);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Fast file Crypt
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_FASTFILECRYPT))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_FASTFILECRYPT))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_FASTFILECRYPT);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_FASTFILECRYPT);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // FileShield
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_FILESHIELD))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_FILESHIELD))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_FILESHIELD);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_FILESHIELD);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // GhaZza CryPter
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_GHAZZACRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_GHAZZACRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_GHAZZACRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_GHAZZACRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_H4CKY0UORGCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_H4CKY0UORGCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_H4CKY0UORGCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_H4CKY0UORGCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_HACCREWCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_HACCREWCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_HACCREWCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_HACCREWCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_HALVCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_HALVCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_HALVCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_HALVCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_KGBCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_KGBCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_KGBCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_KGBCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_KIAMSCRYPTOR))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_KIAMSCRYPTOR))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_KIAMSCRYPTOR);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_KIAMSCRYPTOR);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_KRATOSCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_KRATOSCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_KRATOSCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_KRATOSCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_KUR0KX2TO))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_KUR0KX2TO))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_KUR0KX2TO);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_KUR0KX2TO);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_LIGHTNINGCRYPTERPRIVATE))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_LIGHTNINGCRYPTERPRIVATE))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_LIGHTNINGCRYPTERPRIVATE);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_LIGHTNINGCRYPTERPRIVATE);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_LIGHTNINGCRYPTERSCANTIME))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_LIGHTNINGCRYPTERSCANTIME))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_LIGHTNINGCRYPTERSCANTIME);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_LIGHTNINGCRYPTERSCANTIME);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_LUCYPHER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_LUCYPHER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_LUCYPHER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_LUCYPHER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_MONEYCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_MONEYCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_MONEYCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_MONEYCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_MORTALTEAMCRYPTER2))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_MORTALTEAMCRYPTER2))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_MORTALTEAMCRYPTER2);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_MORTALTEAMCRYPTER2);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_NOXCRYPT))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_NOXCRYPT))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_NOXCRYPT);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_NOXCRYPT);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PUSSYCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PUSSYCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_PUSSYCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_PUSSYCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_RDGTEJONCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_RDGTEJONCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_RDGTEJONCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_RDGTEJONCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_RDGTEJONCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_RDGTEJONCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_RDGTEJONCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_RDGTEJONCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_SMOKESCREENCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_SMOKESCREENCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_SMOKESCREENCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_SMOKESCREENCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_SNOOPCRYPT))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_SNOOPCRYPT))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_SNOOPCRYPT);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_SNOOPCRYPT);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_STASFODIDOCRYPTOR))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_STASFODIDOCRYPTOR))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_STASFODIDOCRYPTOR);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_STASFODIDOCRYPTOR);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_TSTCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_TSTCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_TSTCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_TSTCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_TURKISHCYBERSIGNATURE))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_TURKISHCYBERSIGNATURE))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_TURKISHCYBERSIGNATURE);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_TURKISHCYBERSIGNATURE);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_TURKOJANCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_TURKOJANCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_TURKOJANCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_TURKOJANCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_UNDOCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_UNDOCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_UNDOCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_UNDOCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_WLCRYPT))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_WLCRYPT))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_WLCRYPT);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_WLCRYPT);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_WOUTHRSEXECRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_WOUTHRSEXECRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_WOUTHRSEXECRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_WOUTHRSEXECRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ROGUEPACK))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ROGUEPACK))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_ROGUEPACK);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_ROGUEPACK);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
     }
 }
@@ -9099,277 +8930,277 @@ void SpecAbstract::PE_handle_DelphiCryptors(QIODevice *pDevice, SpecAbstract::SC
 
     if (pe.isValid(pPdStruct)) {
         // Ass Crypter
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ASSCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ASSCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_ASSCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_ASSCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Aase
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_AASE))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_AASE))  // TODO more checks!
         {
-            //                    if(pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_AASE))
+            //                    if(pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_AASE))
             //                    {
-            //                        _SCANS_STRUCT ss=pPEInfo->mapEntryPointDetects.value(RECORD_NAME_AASE);
-            //                        pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+            //                        _SCANS_STRUCT ss=pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_AASE);
+            //                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
             //                    }
 
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_AASE);
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_AASE);
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Anskya Polymorphic Packer
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ANSKYAPOLYMORPHICPACKER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ANSKYAPOLYMORPHICPACKER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_ANSKYAPOLYMORPHICPACKER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_ANSKYAPOLYMORPHICPACKER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // AnslymPacker
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ANSLYMPACKER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ANSLYMPACKER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_ANSLYMPACKER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_ANSLYMPACKER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Cigicigi Crypter
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_CIGICIGICRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_CIGICIGICRYPTER))  // TODO more checks!
         {
             if (XPE::isResourcePresent(XPE_DEF::S_RT_RCDATA, "AYARLAR", &(pPEInfo->listResources))) {
-                _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_CIGICIGICRYPTER);
+                _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_CIGICIGICRYPTER);
 
-                pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
 
         // fEaRz Crypter
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_FEARZCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_FEARZCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_FEARZCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_FEARZCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // fEaRz Packer
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_FEARZPACKER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_FEARZPACKER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_FEARZPACKER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_FEARZPACKER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // GKripto
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_GKRIPTO))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_GKRIPTO))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_GKRIPTO);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_GKRIPTO);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_HOUNDHACKCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_HOUNDHACKCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_HOUNDHACKCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_HOUNDHACKCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_ICRYPT))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ICRYPT))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_ICRYPT);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_ICRYPT);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_INFCRYPTOR))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_INFCRYPTOR))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_INFCRYPTOR);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_INFCRYPTOR);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_MALPACKER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_MALPACKER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_MALPACKER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_MALPACKER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_MINKE))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_MINKE))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_MINKE);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_MINKE);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_MORTALTEAMCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_MORTALTEAMCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_MORTALTEAMCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_MORTALTEAMCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_MORUKCREWCRYPTERPRIVATE))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_MORUKCREWCRYPTERPRIVATE))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_MORUKCREWCRYPTERPRIVATE);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_MORUKCREWCRYPTERPRIVATE);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_MRUNDECTETABLE))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_MRUNDECTETABLE))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_MRUNDECTETABLE);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_MRUNDECTETABLE);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_NIDHOGG))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_NIDHOGG))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_NIDHOGG);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_NIDHOGG);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_NME))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_NME))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_NME);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_NME);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_OPENSOURCECODECRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_OPENSOURCECODECRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_OPENSOURCECODECRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_OPENSOURCECODECRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_OSCCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_OSCCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_OSCCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_OSCCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_P0KESCRAMBLER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_P0KESCRAMBLER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_P0KESCRAMBLER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_P0KESCRAMBLER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PANDORA))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PANDORA))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_PANDORA);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_PANDORA);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PFECX))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PFECX))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_PFECX);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_PFECX);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PICRYPTOR))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PICRYPTOR))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_PICRYPTOR);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_PICRYPTOR);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_POKECRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_POKECRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_POKECRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_POKECRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_PUBCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_PUBCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_PUBCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_PUBCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_SIMCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_SIMCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_SIMCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_SIMCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_SEXECRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_SEXECRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_SEXECRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_SEXECRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_SIMPLECRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_SIMPLECRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_SIMPLECRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_SIMPLECRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_TGRCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_TGRCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_TGRCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_TGRCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_THEZONECRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_THEZONECRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_THEZONECRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_THEZONECRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_UNDERGROUNDCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_UNDERGROUNDCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_UNDERGROUNDCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_UNDERGROUNDCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_UNKOWNCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_UNKOWNCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_UNKOWNCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_UNKOWNCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_WINDOFCRYPT))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_WINDOFCRYPT))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_WINDOFCRYPT);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_WINDOFCRYPT);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_WLGROUPCRYPTER))  // TODO more checks!
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_WLGROUPCRYPTER))  // TODO more checks!
         {
-            _SCANS_STRUCT ss = pPEInfo->mapImportDetects.value(RECORD_NAME_WLGROUPCRYPTER);
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_WLGROUPCRYPTER);
 
-            pPEInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        //        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_DCRYPTPRIVATE)) // TODO more checks!
+        //        if(pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_DCRYPTPRIVATE)) // TODO more checks!
         //        {
-        //            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_DCRYPTPRIVATE);
+        //            _SCANS_STRUCT ss=pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_DCRYPTPRIVATE);
 
-        //            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        //            pPEInfo->basic_info.mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         //        }
 
-        //        if(pPEInfo->mapImportDetects.contains(RECORD_NAME_DALKRYPT)) // TODO more checks!
+        //        if(pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_DALKRYPT)) // TODO more checks!
         //        {
-        //            _SCANS_STRUCT ss=pPEInfo->mapImportDetects.value(RECORD_NAME_DALKRYPT);
+        //            _SCANS_STRUCT ss=pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_DALKRYPT);
 
-        //            pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        //            pPEInfo->basic_info.mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         //        }
     }
 }
@@ -9380,38 +9211,38 @@ void SpecAbstract::PE_handle_Joiners(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
 
     if (pe.isValid(pPdStruct)) {
         // Blade Joiner
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_BLADEJOINER)) {
-            if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_BLADEJOINER)) {
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_BLADEJOINER)) {
+            if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_BLADEJOINER)) {
                 if (pPEInfo->nOverlaySize) {
-                    _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_BLADEJOINER);
-                    pPEInfo->mapResultJoiners.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                    _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_BLADEJOINER);
+                    pPEInfo->basic_info.mapResultJoiners.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                 }
             }
         }
 
         // ExeJoiner
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_EXEJOINER)) {
-            if (pPEInfo->mapEntryPointDetects.contains(RECORD_NAME_EXEJOINER)) {
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_EXEJOINER)) {
+            if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_EXEJOINER)) {
                 if (pPEInfo->nOverlaySize) {
-                    _SCANS_STRUCT recordSS = pPEInfo->mapEntryPointDetects.value(RECORD_NAME_EXEJOINER);
-                    pPEInfo->mapResultJoiners.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                    _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_EXEJOINER);
+                    pPEInfo->basic_info.mapResultJoiners.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                 }
             }
         }
 
         // Celesty File Binder
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_CELESTYFILEBINDER)) {
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_CELESTYFILEBINDER)) {
             if (pe.isResourcePresent("RBIND", -1, &(pPEInfo->listResources))) {
-                _SCANS_STRUCT recordSS = pPEInfo->mapImportDetects.value(RECORD_NAME_CELESTYFILEBINDER);
-                pPEInfo->mapResultJoiners.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_CELESTYFILEBINDER);
+                pPEInfo->basic_info.mapResultJoiners.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
             }
         }
 
         // N-Joiner
-        if (pPEInfo->mapImportDetects.contains(RECORD_NAME_NJOINER)) {
+        if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_NJOINER)) {
             if (pe.isResourcePresent("NJ", -1, &(pPEInfo->listResources)) || pe.isResourcePresent("NJOY", -1, &(pPEInfo->listResources))) {
-                _SCANS_STRUCT recordSS = pPEInfo->mapImportDetects.value(RECORD_NAME_NJOINER);
-                pPEInfo->mapResultJoiners.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_NJOINER);
+                pPEInfo->basic_info.mapResultJoiners.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
             }
         }
     }
@@ -9421,8 +9252,8 @@ bool SpecAbstract::PE_isProtectionPresent(SpecAbstract::PEINFO_STRUCT *pPEInfo, 
 {
     Q_UNUSED(pPdStruct)
 
-    return (pPEInfo->mapResultPackers.count() || pPEInfo->mapResultProtectors.count() || pPEInfo->mapResultSFX.count() || pPEInfo->mapResultInstallers.count() ||
-            pPEInfo->mapResultNETObfuscators.count() || pPEInfo->mapResultDongleProtection.count());
+    return (pPEInfo->basic_info.mapResultPackers.count() || pPEInfo->basic_info.mapResultProtectors.count() || pPEInfo->basic_info.mapResultSFX.count() || pPEInfo->basic_info.mapResultInstallers.count() ||
+            pPEInfo->basic_info.mapResultNETObfuscators.count() || pPEInfo->basic_info.mapResultDongleProtection.count());
 }
 
 void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo,
@@ -9445,7 +9276,7 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract:
         //                ss.sVersion=QString("%1").arg(pPEInfo->listImportPositionHashes.at(i),0,16);
         //                ss.bIsHeuristic=true;
 
-        //                pPEInfo->mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
+        //                pPEInfo->basic_info.mapResultProtectors.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
         //            }
         //        }
 
@@ -9454,21 +9285,21 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract:
         if (!PE_isProtectionPresent(pPEInfo, pPdStruct)) {
             if (pPEInfo->listSectionRecords.count()) {
                 if (pPEInfo->listSectionRecords.at(0).nSize == 0) {
-                    if (pPEInfo->mapImportDetects.contains(RECORD_NAME_UPX) && (pPEInfo->mapImportDetects.value(RECORD_NAME_UPX).nVariant == 0)) {
+                    if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_UPX) && (pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_UPX).nVariant == 0)) {
                         _SCANS_STRUCT ss = {};
 
                         ss.type = RECORD_TYPE_PACKER;
                         ss.name = RECORD_NAME_UNK_UPXLIKE;
                         ss.bIsHeuristic = true;
 
-                        pPEInfo->mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                        pPEInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
             }
         }
 
         if (!PE_isProtectionPresent(pPEInfo, pPdStruct)) {
-            QMapIterator<RECORD_NAME, _SCANS_STRUCT> i(pPEInfo->mapEntryPointDetects);
+            QMapIterator<RECORD_NAME, _SCANS_STRUCT> i(pPEInfo->basic_info.mapEntryPointDetects);
 
             while (i.hasNext() && (!(pPdStruct->bIsStop))) {
                 i.next();
@@ -9479,15 +9310,15 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract:
                     recordSS.bIsHeuristic = true;
 
                     if (recordSS.type == RECORD_TYPE_PACKER) {
-                        pPEInfo->mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                        pPEInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     } else if (recordSS.type == RECORD_TYPE_PROTECTOR) {
-                        pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                        pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
             }
         }
 
-        if ((!pPEInfo->mapResultPackers.contains(RECORD_NAME_UPX)) && (!pPEInfo->mapResultPackers.contains(RECORD_NAME_UNK_UPXLIKE))) {
+        if ((!pPEInfo->basic_info.mapResultPackers.contains(RECORD_NAME_UPX)) && (!pPEInfo->basic_info.mapResultPackers.contains(RECORD_NAME_UNK_UPXLIKE))) {
             VI_STRUCT viUPX = get_UPX_vi(pDevice, pOptions, pPEInfo->osHeader.nOffset, pPEInfo->osHeader.nSize, XBinary::FT_PE, pPdStruct);
 
             if ((viUPX.bIsValid)) {
@@ -9499,11 +9330,11 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract:
                 recordSS.sInfo = viUPX.sInfo;
                 recordSS.bIsHeuristic = true;
 
-                pPEInfo->mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                pPEInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
             }
         }
 
-        if (!pPEInfo->mapResultPackers.contains(RECORD_NAME_ASPACK)) {
+        if (!pPEInfo->basic_info.mapResultPackers.contains(RECORD_NAME_ASPACK)) {
             if (XPE::isSectionNamePresent(".aspack", &(pPEInfo->listSectionRecords)) && XPE::isSectionNamePresent(".adata", &(pPEInfo->listSectionRecords))) {
                 _SCANS_STRUCT recordSS = {};
 
@@ -9512,11 +9343,11 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract:
                 recordSS.sVersion = "2.12-2.XX";
                 recordSS.bIsHeuristic = true;
 
-                pPEInfo->mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                pPEInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
             }
         }
 
-        if (!pPEInfo->mapResultPackers.contains(RECORD_NAME_PECOMPACT)) {
+        if (!pPEInfo->basic_info.mapResultPackers.contains(RECORD_NAME_PECOMPACT)) {
             VI_STRUCT viPECompact = PE_get_PECompact_vi(pDevice, pOptions, pPEInfo);
 
             if (viPECompact.bIsValid) {
@@ -9528,19 +9359,19 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract:
                 recordSS.sInfo = viPECompact.sInfo;
                 recordSS.bIsHeuristic = true;
 
-                pPEInfo->mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                pPEInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
             }
         }
 
-        if (!pPEInfo->mapResultPackers.contains(RECORD_NAME_KKRUNCHY)) {
-            if (pPEInfo->mapSectionNamesDetects.contains(RECORD_NAME_KKRUNCHY) && (pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_KKRUNCHY).nVariant == 0)) {
+        if (!pPEInfo->basic_info.mapResultPackers.contains(RECORD_NAME_KKRUNCHY)) {
+            if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_KKRUNCHY) && (pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_KKRUNCHY).nVariant == 0)) {
                 _SCANS_STRUCT recordSS = {};
 
                 recordSS.type = RECORD_TYPE_PACKER;
                 recordSS.name = RECORD_NAME_KKRUNCHY;
                 recordSS.bIsHeuristic = true;
 
-                pPEInfo->mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                pPEInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
             }
         }
 
@@ -9596,7 +9427,7 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract:
                     recordSS.sInfo = append(recordSS.sInfo, "High entropy first section");  // mb TODO translate
                 }
 
-                pPEInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
             }
         }
 
@@ -9615,7 +9446,7 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract:
                     recordSS.name = (RECORD_NAME)(RECORD_NAME_UNKNOWN9 + nIndex);
                     recordSS.sVersion = QString("LIBRARY_") + pPEInfo->listImportRecords.at(i).sLibrary;
 
-                    pPEInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
+                    pPEInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
 
                     nIndex++;
                 }
@@ -9630,46 +9461,32 @@ void SpecAbstract::PE_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_O
     Q_UNUSED(pOptions)
     Q_UNUSED(pPdStruct)
 
-    if (pPEInfo->mapResultPackers.contains(RECORD_NAME_RLPACK) || pPEInfo->mapResultPackers.contains(RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR)) {
-        pPEInfo->mapResultLinkers.remove(RECORD_NAME_MICROSOFTLINKER);
-        pPEInfo->mapResultCompilers.remove(RECORD_NAME_MASM);
-        pPEInfo->mapResultTools.remove(RECORD_NAME_MASM32);
+    if (pPEInfo->basic_info.mapResultPackers.contains(RECORD_NAME_RLPACK) || pPEInfo->basic_info.mapResultPackers.contains(RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR)) {
+        pPEInfo->basic_info.mapResultLinkers.remove(RECORD_NAME_MICROSOFTLINKER);
+        pPEInfo->basic_info.mapResultCompilers.remove(RECORD_NAME_MASM);
+        pPEInfo->basic_info.mapResultTools.remove(RECORD_NAME_MASM32);
     }
 
-    if (pPEInfo->mapResultPackers.contains(RECORD_NAME_AHPACKER) || pPEInfo->mapResultPackers.contains(RECORD_NAME_EPEXEPACK)) {
-        pPEInfo->mapResultPackers.remove(RECORD_NAME_AHPACKER);
+    if (pPEInfo->basic_info.mapResultPackers.contains(RECORD_NAME_AHPACKER) || pPEInfo->basic_info.mapResultPackers.contains(RECORD_NAME_EPEXEPACK)) {
+        pPEInfo->basic_info.mapResultPackers.remove(RECORD_NAME_AHPACKER);
     }
 
     // Check SafeEngine
-    if (pPEInfo->mapResultCompilers.contains(RECORD_NAME_VISUALCCPP) && pPEInfo->mapResultCompilers.contains(RECORD_NAME_BORLANDOBJECTPASCALDELPHI)) {
-        pPEInfo->mapResultCompilers.remove(RECORD_NAME_BORLANDOBJECTPASCALDELPHI);
+    if (pPEInfo->basic_info.mapResultCompilers.contains(RECORD_NAME_VISUALCCPP) && pPEInfo->basic_info.mapResultCompilers.contains(RECORD_NAME_BORLANDOBJECTPASCALDELPHI)) {
+        pPEInfo->basic_info.mapResultCompilers.remove(RECORD_NAME_BORLANDOBJECTPASCALDELPHI);
     }
 
-    if (pPEInfo->mapResultLinkers.contains(RECORD_NAME_MICROSOFTLINKER) && pPEInfo->mapResultLinkers.contains(RECORD_NAME_TURBOLINKER)) {
-        pPEInfo->mapResultLinkers.remove(RECORD_NAME_TURBOLINKER);
+    if (pPEInfo->basic_info.mapResultLinkers.contains(RECORD_NAME_MICROSOFTLINKER) && pPEInfo->basic_info.mapResultLinkers.contains(RECORD_NAME_TURBOLINKER)) {
+        pPEInfo->basic_info.mapResultLinkers.remove(RECORD_NAME_TURBOLINKER);
     }
 
-    if (pPEInfo->mapResultTools.contains(RECORD_NAME_MICROSOFTVISUALSTUDIO) && pPEInfo->mapResultTools.contains(RECORD_NAME_BORLANDDELPHI)) {
-        pPEInfo->mapResultTools.remove(RECORD_NAME_BORLANDDELPHI);
+    if (pPEInfo->basic_info.mapResultTools.contains(RECORD_NAME_MICROSOFTVISUALSTUDIO) && pPEInfo->basic_info.mapResultTools.contains(RECORD_NAME_BORLANDDELPHI)) {
+        pPEInfo->basic_info.mapResultTools.remove(RECORD_NAME_BORLANDDELPHI);
     }
 
-    if (pPEInfo->mapResultPackers.contains(RECORD_NAME_SIMPLEPACK) && pPEInfo->mapResultCompilers.contains(RECORD_NAME_FASM)) {
-        pPEInfo->mapResultCompilers.remove(RECORD_NAME_FASM);
+    if (pPEInfo->basic_info.mapResultPackers.contains(RECORD_NAME_SIMPLEPACK) && pPEInfo->basic_info.mapResultCompilers.contains(RECORD_NAME_FASM)) {
+        pPEInfo->basic_info.mapResultCompilers.remove(RECORD_NAME_FASM);
     }
-}
-
-void SpecAbstract::PE_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pDevice)
-    Q_UNUSED(pOptions)
-
-    getLanguage(&(pPEInfo->mapResultLinkers), &(pPEInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pPEInfo->mapResultCompilers), &(pPEInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pPEInfo->mapResultLibraries), &(pPEInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pPEInfo->mapResultTools), &(pPEInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pPEInfo->mapResultPackers), &(pPEInfo->mapResultLanguages), pPdStruct);
-
-    fixLanguage(&(pPEInfo->mapResultLanguages));
 }
 
 void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
@@ -9699,7 +9516,7 @@ void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
                             scan(pDevice, &scanResult, nResourceOffset, nResourceSize, _parentId, pOptions, false, pPdStruct);
 
-                            pPEInfo->listRecursiveDetects.append(scanResult.listRecords);
+                            pPEInfo->basic_info.listRecursiveDetects.append(scanResult.listRecords);
                         }
                     }
                 }
@@ -9712,7 +9529,7 @@ void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 _parentId.filePart = XBinary::FILEPART_OVERLAY;
                 scan(pDevice, &scanResult, pPEInfo->nOverlayOffset, pPEInfo->nOverlaySize, _parentId, pOptions, false, pPdStruct);
 
-                pPEInfo->listRecursiveDetects.append(scanResult.listRecords);
+                pPEInfo->basic_info.listRecursiveDetects.append(scanResult.listRecords);
             }
         }
     }
@@ -9738,46 +9555,46 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice, SpecAbstract::SCAN_OP
                 record.sInfo = _TEXT_Exp_records[i].basicInfo.pszInfo;
                 record.nOffset = 0;
 
-                pBinaryInfo->mapTextHeaderDetects.insert(record.name, record);
+                pBinaryInfo->basic_info.mapTextHeaderDetects.insert(record.name, record);
             }
         }
 
-        if (pBinaryInfo->mapTextHeaderDetects.contains(RECORD_NAME_CCPP)) {
-            _SCANS_STRUCT ss = pBinaryInfo->mapTextHeaderDetects.value(RECORD_NAME_CCPP);
-            pBinaryInfo->mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_CCPP)) {
+            _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_CCPP);
+            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
 
-        if (pBinaryInfo->mapTextHeaderDetects.contains(RECORD_NAME_PYTHON)) {
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_PYTHON)) {
             if ((pBinaryInfo->sHeaderText.contains("class")) && (pBinaryInfo->sHeaderText.contains("self"))) {
-                _SCANS_STRUCT ss = pBinaryInfo->mapTextHeaderDetects.value(RECORD_NAME_PYTHON);
-                pBinaryInfo->mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+                _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_PYTHON);
+                pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
             }
         }
 
-        if (pBinaryInfo->mapTextHeaderDetects.contains(RECORD_NAME_HTML)) {
-            _SCANS_STRUCT ss = pBinaryInfo->mapTextHeaderDetects.value(RECORD_NAME_HTML);
-            pBinaryInfo->mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_HTML)) {
+            _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_HTML);
+            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
 
-        if (pBinaryInfo->mapTextHeaderDetects.contains(RECORD_NAME_XML)) {
-            _SCANS_STRUCT ss = pBinaryInfo->mapTextHeaderDetects.value(RECORD_NAME_XML);
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_XML)) {
+            _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_XML);
             ss.sVersion = XBinary::regExp("version=['\"](.*?)['\"]", pBinaryInfo->sHeaderText, 1);
 
-            pBinaryInfo->mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
 
-        if (pBinaryInfo->mapTextHeaderDetects.contains(RECORD_NAME_PHP)) {
-            _SCANS_STRUCT ss = pBinaryInfo->mapTextHeaderDetects.value(RECORD_NAME_PHP);
-            pBinaryInfo->mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_PHP)) {
+            _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_PHP);
+            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
 
-        //        if(pBinaryInfo->mapTextHeaderDetects.contains(RECORD_NAME_PERL))
+        //        if(pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_PERL))
         //        {
-        //            _SCANS_STRUCT ss=pBinaryInfo->mapTextHeaderDetects.value(RECORD_NAME_PERL);
-        //            pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        //            _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_PERL);
+        //            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
         //        }
 
-        if (pBinaryInfo->mapTextHeaderDetects.contains(RECORD_NAME_SHELL)) {
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_SHELL)) {
             QString sInterpreter;
 
             if (sInterpreter == "") sInterpreter = XBinary::regExp("#!\\/usr\\/local\\/bin\\/(\\w+)", pBinaryInfo->sHeaderText, 1);  // #!/usr/local/bin/ruby
@@ -9788,23 +9605,23 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice, SpecAbstract::SCAN_OP
 
             if (sInterpreter == "perl") {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_PERL, "", "", 0);
-                pBinaryInfo->mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+                pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
             } else if (sInterpreter == "sh") {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_SHELL, "", "", 0);
-                pBinaryInfo->mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+                pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
             } else if (sInterpreter == "ruby") {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_RUBY, "", "", 0);
-                pBinaryInfo->mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+                pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
             } else if (sInterpreter == "python") {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_PYTHON, "", "", 0);
-                pBinaryInfo->mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+                pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
             } else {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_SHELL, sInterpreter, "", 0);
-                pBinaryInfo->mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+                pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
             }
         }
 
-        //        if(pBinaryInfo->mapResultTexts.count()==0)
+        //        if(pBinaryInfo->basic_info.mapResultTexts.count()==0)
         //        {
         //            _SCANS_STRUCT ss=getScansStruct(0,XBinary::FT_TEXT,RECORD_TYPE_FORMAT,RECORD_NAME_PLAIN,"","",0);
 
@@ -9830,7 +9647,7 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice, SpecAbstract::SCAN_OP
         //                ss.name=RECORD_NAME_PLAIN;
         //            }
 
-        //            pBinaryInfo->mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        //            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
         //        }
     }
 }
@@ -9846,49 +9663,49 @@ void SpecAbstract::COM_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_
     if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PKLITE)) {
         pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
         _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PKLITE);
-        pCOMInfo->mapResultPackers.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
+        pCOMInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
     }
 
     if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_UPX)) {
         pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
         _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_UPX);
-        pCOMInfo->mapResultPackers.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
+        pCOMInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
     }
 
     if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_HACKSTOP)) {
         pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
         _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_HACKSTOP);
-        pCOMInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
+        pCOMInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
     }
 
     if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_CRYPTDISMEMBER)) {
         pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
         _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CRYPTDISMEMBER);
-        pCOMInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
+        pCOMInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
     }
 
     if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SPIRIT)) {
         pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
         _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SPIRIT);
-        pCOMInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
+        pCOMInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
     }
 
     if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ICE)) {
         pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
         _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ICE);
-        pCOMInfo->mapResultPackers.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
+        pCOMInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
     }
 
     if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DIET)) {
         pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
         _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_DIET);
-        pCOMInfo->mapResultPackers.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
+        pCOMInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
     }
 
     if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_CRYPTCOM)) {
         pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
         _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CRYPTCOM);
-        pCOMInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
+        pCOMInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
     }
 }
 
@@ -9905,7 +9722,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
         //        if(ss.type==RECORD_TYPE_ARCHIVE)
         //        {
         //            ss.sVersion=QString("%1.%2").arg(XBinary::hexToUint8(pBinaryInfo->basic_info.sHeaderSignature.mid(6*2,2))).arg(XBinary::hexToUint8(pBinaryInfo->basic_info.sHeaderSignature.mid(7*2,2)));
-        //            pBinaryInfo->mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        //            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
         //        }
 
         XSevenZip xsevenzip(pDevice);
@@ -9921,7 +9738,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
 
             // TODO options
             // TODO files
-            pBinaryInfo->mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
     }
     // ZIP
@@ -9942,7 +9759,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
             }
 
             // TODO files
-            pBinaryInfo->mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
     }
     // GZIP
@@ -9953,7 +9770,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
         // TODO options
         // TODO type gzip
         // TODO files
-        pBinaryInfo->mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
     // xar
     else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_XAR)) && (pBinaryInfo->basic_info.id.nSize >= 9)) {
@@ -9962,7 +9779,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
 
         // TODO options
         // TODO files
-        pBinaryInfo->mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
     // LZFSE
     else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LZFSE)) && (pBinaryInfo->basic_info.id.nSize >= 9)) {
@@ -9971,7 +9788,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
 
         // TODO options
         // TODO files
-        pBinaryInfo->mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
     // CAB
     else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_CAB)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
@@ -9986,7 +9803,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
 
             // TODO options
             // TODO files
-            pBinaryInfo->mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
     }
     // MAch-O FAT
@@ -10002,7 +9819,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
 
             // TODO options
             // TODO files
-            pBinaryInfo->mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
     }
     // RAR
@@ -10017,7 +9834,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
 
             // TODO options
             // TODO files
-            pBinaryInfo->mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
     }
     // zlib
@@ -10027,7 +9844,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
 
         // TODO options
         // TODO files
-        pBinaryInfo->mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
     // XZ
     else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_XZ)) && (pBinaryInfo->basic_info.id.nSize >= 32)) {
@@ -10036,7 +9853,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
 
         // TODO options
         // TODO files
-        pBinaryInfo->mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
     // ARJ
     else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ARJ)) && (pBinaryInfo->basic_info.id.nSize >= 4)) {
@@ -10045,7 +9862,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
 
         // TODO options
         // TODO files
-        pBinaryInfo->mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
     // LHA
     else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LHA)) && (pBinaryInfo->basic_info.id.nSize >= 4)) {
@@ -10069,7 +9886,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
             pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
             // TODO options
             // TODO files
-            pBinaryInfo->mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
     }
     // BZIP2
@@ -10079,7 +9896,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
 
         // TODO options
         // TODO files
-        pBinaryInfo->mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
     // TAR
     else if ((pBinaryInfo->basic_info.id.nSize >= 500) && (binary.getSignature(0x100, 6) == "007573746172"))  // "00'ustar'"
@@ -10090,7 +9907,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, SpecAbstract::SCAN
 
         // TODO options
         // TODO files
-        pBinaryInfo->mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
 }
 
@@ -10104,35 +9921,28 @@ void SpecAbstract::Binary_handle_Certificates(QIODevice *pDevice, SpecAbstract::
 
         if (nLength >= pBinaryInfo->basic_info.id.nSize) {
             _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINAUTH);
-            pBinaryInfo->mapResultCertificates.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+            pBinaryInfo->basic_info.mapResultCertificates.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
     }
 }
 
-void SpecAbstract::Binary_handle_DebugData(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
+void SpecAbstract::Binary_handle_DebugData(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
     if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MINGW)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // MinGW debug data
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MINGW);
-        pBinaryInfo->mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PDBFILELINK)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // PDB File Link
         // TODO more infos
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PDBFILELINK);
-        pBinaryInfo->mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
-    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_BORLANDDEBUGGINGINFORMATION)) && (pBinaryInfo->basic_info.id.nSize >= 10)) {
-        // TDS
-        // TODO more infos
-        _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_BORLANDDEBUGGINGINFORMATION);
+        pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_BORLANDDEBUGINFO)) && (pBinaryInfo->basic_info.id.nSize >= 10)) {
+        _SCANS_STRUCT ss = format_BorlandDebugInfo(pDevice, pOptions, 0, pDevice->size(), pPdStruct);
 
-        quint32 nMajor = pBinaryInfo->basic_info.sHeaderSignature.mid(3 * 2, 2).toUInt(nullptr, 16);
-        quint32 nMinor = pBinaryInfo->basic_info.sHeaderSignature.mid(2 * 2, 2).toUInt(nullptr, 16);
-        ss.sVersion = QString("%1.%2").arg(nMajor).arg(nMinor, 2, 10, QChar('0'));
-        ss.sInfo = "TDS";
-
-        pBinaryInfo->mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
 }
 
@@ -10142,13 +9952,13 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice, SpecAbstract::SCAN_
 
     if (pBinaryInfo->basic_info.id.nSize == 0) {
         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_FORMAT, RECORD_NAME_EMPTYFILE, "", "", 0);
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PDF)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // TODO move to own type
         // PDF
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PDF);
         ss.sVersion = XBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(5 * 2, 6));
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTCOMPOUND)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // Microsoft Compound
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MICROSOFTCOMPOUND);
@@ -10169,23 +9979,23 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice, SpecAbstract::SCAN_
             ss.sInfo = "";
         }
 
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // Microsoft Compiled HTML Help
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP);
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_AUTOIT)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // AutoIt Compiled Script
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_AUTOIT);
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RTF)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // RTF
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RTF);
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LUACOMPILED)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // Lua
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LUACOMPILED);
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_JAVACOMPILEDCLASS)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // java
         quint16 nMinor = binary.read_uint16(4, true);
@@ -10197,7 +10007,7 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice, SpecAbstract::SCAN_
             if (sVersion != "") {
                 _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_JAVACOMPILEDCLASS);
                 ss.sVersion = sVersion;
-                pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+                pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
             }
         }
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_COFF)) && (pBinaryInfo->basic_info.id.nSize >= 76)) {
@@ -10226,91 +10036,91 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice, SpecAbstract::SCAN_
         }
 
         if (bDetected) {
-            pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+            pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DEX)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // dex
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_DEX);
         ss.sVersion = XBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(8, 6));
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SWF)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // SWF
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SWF);
         ss.sVersion = QString("%1").arg(binary.read_uint8(3));
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTWINHELP)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // Microsoft WinHelp
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MICROSOFTWINHELP);
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MP3)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // MP3
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MP3);
         // TODO Version
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MP4)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // MP4
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MP4);
         // TODO Version
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINDOWSMEDIA)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // Windows Media
         // TODO WMV/WMA
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINDOWSMEDIA);
         // TODO Version
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_FLASHVIDEO)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // Flash Video
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_FLASHVIDEO);
         // TODO Version
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WAV)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // VAW
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WAV);
         // TODO Version
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_AU)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // AU
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_AU);
         // TODO Version
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DEB)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // DEB
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_DEB);
         // TODO Version
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_AVI)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_AVI);
         // TODO Version
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WEBP)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WEBP);
         // TODO Version
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_TTF)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // TTF
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_TTF);
         // TODO Version
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ANDROIDARSC)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ANDROIDARSC);
         // TODO Version
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ANDROIDXML)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ANDROIDXML);
         // TODO Version
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_AR)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // AR
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_AR);
         // TODO Version
-        pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
 
     if (pBinaryInfo->basic_info.id.nSize >= 0x8010) {
         if (binary.compareSignature("01'CD001'01", 0x8000)) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_FORMAT, RECORD_NAME_ISO9660, "", "", 0);
             // TODO Version
-            pBinaryInfo->mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+            pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
     }
 }
@@ -10322,12 +10132,12 @@ void SpecAbstract::Binary_handle_Databases(QIODevice *pDevice, SpecAbstract::SCA
     if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PDB)) && (pBinaryInfo->basic_info.id.nSize >= 32)) {
         // PDB
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PDB);
-        pBinaryInfo->mapResultDatabases.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultDatabases.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTLINKERDATABASE)) && (pBinaryInfo->basic_info.id.nSize >= 32)) {
         // Microsoft Linker Database
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MICROSOFTLINKERDATABASE);
         //        ss.sVersion=QString("%1.%2").arg(QBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(32*2,4))).arg(QBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(34*2,4)));
-        pBinaryInfo->mapResultDatabases.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultDatabases.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTACCESS)) && (pBinaryInfo->basic_info.id.nSize >= 128)) {
         // Microsoft Access Database
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MICROSOFTACCESS);
@@ -10341,7 +10151,7 @@ void SpecAbstract::Binary_handle_Databases(QIODevice *pDevice, SpecAbstract::SCA
             case 0x0103: ss.sVersion = "2010"; break;
         }
 
-        pBinaryInfo->mapResultDatabases.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultDatabases.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
 }
 
@@ -10356,30 +10166,30 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, SpecAbstract::SCAN_O
         quint32 nMajor = pBinaryInfo->basic_info.sHeaderSignature.mid(11 * 2, 2).toUInt(nullptr, 16);
         quint32 nMinor = pBinaryInfo->basic_info.sHeaderSignature.mid(12 * 2, 2).toUInt(nullptr, 16);
         ss.sVersion = QString("%1.%2").arg(nMajor).arg(nMinor, 2, 10, QChar('0'));
-        pBinaryInfo->mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GIF)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // GIF
         pBinaryInfo->basic_info.id.fileType = XBinary::FT_IMAGE;
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_GIF);
         // TODO Version
-        pBinaryInfo->mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_TIFF)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // TIFF
         pBinaryInfo->basic_info.id.fileType = XBinary::FT_IMAGE;
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_TIFF);
         // More information
-        pBinaryInfo->mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINDOWSICON)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
         // Windows Icon
         // TODO more information
         pBinaryInfo->basic_info.id.fileType = XBinary::FT_IMAGE;
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINDOWSICON);
-        pBinaryInfo->mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINDOWSCURSOR)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
         // Windows Cursor
         // TODO more information
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINDOWSCURSOR);
-        pBinaryInfo->mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINDOWSBITMAP)) && (pBinaryInfo->basic_info.id.nSize >= 40)) {
         // Windows Bitmap
         // TODO more information
@@ -10397,7 +10207,7 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, SpecAbstract::SCAN_O
             if (sVersion != "") {
                 _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINDOWSBITMAP);
                 ss.sVersion = sVersion;
-                pBinaryInfo->mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+                pBinaryInfo->basic_info.mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
             }
         }
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PNG)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
@@ -10408,13 +10218,13 @@ void SpecAbstract::Binary_handle_Images(QIODevice *pDevice, SpecAbstract::SCAN_O
 
         ss.sInfo = QString("%1x%2").arg(binary.read_uint32(16, true)).arg(binary.read_uint32(20, true));
 
-        pBinaryInfo->mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DJVU)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // DJVU
         // TODO options
         pBinaryInfo->basic_info.id.fileType = XBinary::FT_IMAGE;
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_DJVU);
-        pBinaryInfo->mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultImages.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
 }
 
@@ -10425,65 +10235,65 @@ void SpecAbstract::Binary_handle_InstallerData(QIODevice *pDevice, SpecAbstract:
     // Inno Setup
     if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_INNOSETUP)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_INNOSETUP);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_INSTALLANYWHERE)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_INSTALLANYWHERE);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GHOSTINSTALLER)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_GHOSTINSTALLER);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_NSIS)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_NSIS);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SIXXPACK)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SIXXPACK);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_THINSTALL)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_THINSTALL);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SMARTINSTALLMAKER)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SMARTINSTALLMAKER);
         ss.sVersion = XBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(46, 14));
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_TARMAINSTALLER)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_TARMAINSTALLER);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_CLICKTEAM)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CLICKTEAM);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_QTINSTALLER)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_QTINSTALLER);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ADVANCEDINSTALLER)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ADVANCEDINSTALLER);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_OPERA)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_OPERA);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GPINSTALL)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_GPINSTALL);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_AVASTANTIVIRUS)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_AVASTANTIVIRUS);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_INSTALLSHIELD)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_INSTALLSHIELD);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SETUPFACTORY)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SETUPFACTORY);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ACTUALINSTALLER)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ACTUALINSTALLER);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_INSTALL4J)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_INSTALL4J);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_VMWARE)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_VMWARE);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_NOSINSTALLER)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_NOSINSTALLER);
-        pBinaryInfo->mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
 }
 
@@ -10493,15 +10303,15 @@ void SpecAbstract::Binary_handle_SFXData(QIODevice *pDevice, SpecAbstract::SCAN_
 
     if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WINRAR)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WINRAR);
-        pBinaryInfo->mapResultSFXData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultSFXData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SQUEEZSFX)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SQUEEZSFX);
-        pBinaryInfo->mapResultSFXData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultSFXData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_7Z)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_7Z);
 
         if (ss.type == RECORD_TYPE_SFXDATA) {
-            pBinaryInfo->mapResultSFXData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+            pBinaryInfo->basic_info.mapResultSFXData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
     }
 }
@@ -10513,58 +10323,58 @@ void SpecAbstract::Binary_handle_ProtectorData(QIODevice *pDevice, SpecAbstract:
     if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_FISHNET)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // Inno Setup
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_FISHNET);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_XENOCODE)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         // Xenocode
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_XENOCODE);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MOLEBOXULTRA)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_MOLEBOXULTRA);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_1337EXECRYPTER)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_1337EXECRYPTER);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ACTIVEMARK)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ACTIVEMARK);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_AGAINNATIVITYCRYPTER)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_AGAINNATIVITYCRYPTER);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ARCRYPT)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ARCRYPT);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_NOXCRYPT)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_NOXCRYPT);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_FASTFILECRYPT)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_FASTFILECRYPT);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LIGHTNINGCRYPTERSCANTIME)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LIGHTNINGCRYPTERSCANTIME);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ZELDACRYPT)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ZELDACRYPT);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WOUTHRSEXECRYPTER)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WOUTHRSEXECRYPTER);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WLCRYPT)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WLCRYPT);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DOTNETSHRINK)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_DOTNETSHRINK);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SPOONSTUDIO)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SPOONSTUDIO);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SECUROM)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SECUROM);
         ss.sVersion = binary.read_ansiString(8);
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SERGREENAPPACKER)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SERGREENAPPACKER);
         // TODO Version
-        pBinaryInfo->mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
 }
 
@@ -10577,7 +10387,7 @@ void SpecAbstract::Binary_handle_LibraryData(QIODevice *pDevice, SpecAbstract::S
 
         if (sString.contains("python")) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_LIBRARY, RECORD_NAME_PYTHON, "", "", 0);
-            pBinaryInfo->mapResultLibraryData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+            pBinaryInfo->basic_info.mapResultLibraryData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
     }
 }
@@ -10589,33 +10399,33 @@ void SpecAbstract::Binary_handle_Resources(QIODevice *pDevice, SCAN_OPTIONS *pOp
     if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RESOURCE_VERSIONINFO)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RESOURCE_VERSIONINFO);
         // TODO
-        pBinaryInfo->mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_BITMAPINFOHEADER)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_BITMAPINFOHEADER);
 
         ss.sInfo = QString("%1x%2").arg(binary.read_uint32(4)).arg(binary.read_uint32(8));
         // TODO
-        pBinaryInfo->mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RESOURCE_STRINGTABLE)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RESOURCE_STRINGTABLE);
 
-        pBinaryInfo->mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RESOURCE_DIALOG)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RESOURCE_DIALOG);
 
-        pBinaryInfo->mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RESOURCE_ICON)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RESOURCE_ICON);
 
-        pBinaryInfo->mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RESOURCE_CURSOR)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RESOURCE_CURSOR);
 
-        pBinaryInfo->mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RESOURCE_MENU)) {
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RESOURCE_MENU);
 
-        pBinaryInfo->mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        pBinaryInfo->basic_info.mapResultResources.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
 }
 
@@ -10649,7 +10459,7 @@ void SpecAbstract::Zip_handle_Microsoftoffice(QIODevice *pDevice, SpecAbstract::
                 }
 
                 ss.sVersion = XBinary::regExp("<AppVersion>(.*?)</AppVersion>", sData, 1);
-                pZipInfo->mapResultFormats.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                pZipInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
             }
         }
     }
@@ -10674,7 +10484,7 @@ void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice, SpecAbstract::SCAN_
 
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_FORMAT, RECORD_NAME_OPENDOCUMENT, "", "", 0);
 
-                    pZipInfo->mapResultFormats.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultFormats.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
             }
         }
@@ -10701,43 +10511,43 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, SpecAbstract::SCAN_O
                 if (sCreatedBy.contains("Android Gradle")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_ANDROIDGRADLE, "", "", 0);
                     ss.sVersion = XBinary::regExp("Android Gradle (.*?)$", sCreatedBy, 1);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("MOTODEV Studio for Android") || sCreatedBy.contains("MOTODEV Studio for ANDROID")) {
                     // TODO Check "MOTODEV Studio for ANDROID" version
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_MOTODEVSTUDIOFORANDROID, "", "", 0);
                     ss.sVersion = XBinary::regExp("MOTODEV Studio for Android v(.*?).release", sCreatedBy, 1);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("Android Maven") || sCreatedBy.contains("Apache Maven Bundle Plugin")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_ANDROIDMAVENPLUGIN, "", "", 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(Radialix")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_RADIALIX, "", "", 0);
                     ss.sVersion = sCreatedBy.section(" (Radialix", 0, 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("AntiLVL")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_APKTOOL, RECORD_NAME_ANTILVL, "", "", 0);
                     ss.sVersion = sCreatedBy.section(" ", 0, 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("ApkEditor")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_APKTOOL, RECORD_NAME_APKEDITOR, "", "", 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("d2j-apk-sign")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_D2JAPKSIGN, "", "", 0);
                     ss.sVersion = XBinary::regExp("d2j-apk-sign (.*?)$", sCreatedBy, 1);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("singlejar")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_JAR, RECORD_TYPE_TOOL, RECORD_NAME_SINGLEJAR, "", "", 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("PseudoApkSigner")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_PSEUDOAPKSIGNER, "", "", 0);
                     ss.sVersion = XBinary::regExp("PseudoApkSigner (.*?)$", sCreatedBy, 1);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("ApkSigner")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_APKSIGNER, "", "", 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("www.HiAPK.com")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_HIAPKCOM, "", "", 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sBuiltBy.contains("com.haibison.apksigner") || sCreatedBy.contains("com.haibison.apksigner")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_APK_SIGNER, "", "", 0);
 
@@ -10747,64 +10557,64 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, SpecAbstract::SCAN_O
                         ss.sVersion = XBinary::regExp("com.haibison.apksigner (.*?)$", sCreatedBy, 1);
                     }
 
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sBuiltBy.contains("BundleTool") || sCreatedBy.contains("BundleTool")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_BUNDLETOOL, "", "", 0);
 
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(COMEX SignApk)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_COMEXSIGNAPK, "", "", 0);
                     ss.sVersion = sCreatedBy.section(" (COMEX SignApk)", 0, 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(NetEase ApkSigner)"))  // TODO Check " " !!!
                 {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_NETEASEAPKSIGNER, "", "", 0);
                     ss.sVersion = sCreatedBy.section(" (NetEase ApkSigner)", 0, 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(signatory)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_SIGNATORY, "", "", 0);
                     ss.sVersion = sCreatedBy.section(" (signatory)", 0, 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(signupdate)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_SIGNUPDATE, "", "", 0);
                     ss.sVersion = sCreatedBy.section(" (signupdate)", 0, 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(Android SignApk)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_ANDROIDSIGNAPK, "", "", 0);
                     ss.sVersion = sCreatedBy.section(" (Android SignApk)", 0, 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(KT Android SignApk)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_ANDROIDSIGNAPK, "", "", 0);
                     ss.sVersion = sCreatedBy.section(" (KT Android SignApk)", 0, 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(abc SignApk)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_ANDROIDSIGNAPK, "", "", 0);
                     ss.sVersion = sCreatedBy.section(" (abc SignApk)", 0, 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(dotools sign apk)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_DOTOOLSSIGNAPK, "", "", 0);
                     ss.sVersion = sCreatedBy.section(" (dotools sign apk)", 0, 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(Android apksigner)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_ANDROIDAPKSIGNER, "", "", 0);
                     ss.sVersion = sCreatedBy.section(" (Android apksigner)", 0, 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(ApkModifier SignApk)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_APKMODIFIERSIGNAPK, "", "", 0);
                     ss.sVersion = sCreatedBy.section(" (ApkModifier SignApk)", 0, 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(Baidu Signature platform)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_BAIDUSIGNATUREPLATFORM, "", "", 0);
                     ss.sVersion = sCreatedBy.section(" (Baidu Signature platform)", 0, 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("tiny-sign")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_TINYSIGN, "", "", 0);
                     ss.sVersion = sCreatedBy.section("tiny-sign-", 1, 1);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("DexGuard, version")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXGUARD, "", "", 0);
                     ss.sVersion = XBinary::regExp("DexGuard, version (.*?)$", sCreatedBy, 1);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("ApkProtector")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_PROTECTOR, RECORD_NAME_APKPROTECTOR, "", "", 0);
 
@@ -10812,7 +10622,7 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, SpecAbstract::SCAN_O
                         ss.sVersion = sCreatedBy.section(" ", 1, 1).remove(")").remove("(");
                     }
 
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(Sun Microsystems Inc.)") || sCreatedBy.contains("(BEA Systems, Inc.)") ||
                            sCreatedBy.contains("(The FreeBSD Foundation)") || sCreatedBy.contains("(d2j-null)") || sCreatedBy.contains("(d2j-2.1-SNAPSHOT)") ||
                            sCreatedBy.contains("(Oracle Corporation)") || sCreatedBy.contains("(Apple Inc.)") || sCreatedBy.contains("(Google Inc.)") ||
@@ -10829,50 +10639,50 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, SpecAbstract::SCAN_O
                         ss.name = RECORD_NAME_OPENJDK;
                     }
 
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy == "1.6.0_21") {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_JDK, "", "", 0);
                     ss.sVersion = sCreatedBy;
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 }
 
                 if (sCreatedBy.contains("(JetBrains s.r.o)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_JAR, RECORD_TYPE_TOOL, RECORD_NAME_JETBRAINS, "", "", 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(d2j-null)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_APKTOOL, RECORD_NAME_DEX2JAR, "", "", 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(d2j-2.1-SNAPSHOT)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_APKTOOL, RECORD_NAME_DEX2JAR, "2.1", "", 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(Jeroen Frijters)")) {
                     // Check OpenJDK
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_JAR, RECORD_TYPE_TOOL, RECORD_NAME_IKVMDOTNET, "", "", 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("(BEA Systems, Inc.)")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_JAR, RECORD_TYPE_TOOL, RECORD_NAME_BEAWEBLOGIC, "", "", 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 } else if (sCreatedBy.contains("dx ")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_COMPILER, RECORD_NAME_DX, "", "", 0);
                     ss.sVersion = sCreatedBy.section("dx ", 1, 1);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 }
 
                 if (sAntVersion.contains("Apache Ant")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_JAR, RECORD_TYPE_TOOL, RECORD_NAME_APACHEANT, "", "", 0);
                     ss.sVersion = XBinary::regExp("Apache Ant (.*?)$", sAntVersion, 1);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 }
 
                 if (sBuiltBy.contains("Generated-by-ADT")) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_ECLIPSE, "", "ADT", 0);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 }
 
                 if (sBuiltJdk != "") {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_JAR, RECORD_TYPE_TOOL, RECORD_NAME_JDK, "", "", 0);
                     ss.sVersion = sBuiltJdk;
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 }
 
                 if (sProtectedBy.contains("DexProtector")) {
@@ -10884,7 +10694,7 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, SpecAbstract::SCAN_O
                         ss.sVersion = sProtectedBy.section(" ", 0, 0);
                     }
 
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 }
 
                 if (XBinary::regExp("^\\d+(\\.\\d+)*$", sCreatedBy, 0) != "")  // 0.0.0
@@ -10892,7 +10702,7 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, SpecAbstract::SCAN_O
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_GENERIC, RECORD_NAME_GENERIC, "", "", 0);
 
                     ss.sVersion = XBinary::regExp("(.*?)$", sCreatedBy, 1);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 }
 
                 if (sCreatedBy.contains("(d8)") || sCreatedBy.contains("(dx)"))  // Dexguard
@@ -10900,7 +10710,7 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, SpecAbstract::SCAN_O
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_GENERIC, RECORD_NAME_GENERIC, "", "", 0);
 
                     ss.sVersion = XBinary::regExp("(.*?)$", sCreatedBy, 1);
-                    pZipInfo->mapMetainfosDetects.insert(ss.name, ss);
+                    pZipInfo->basic_info.mapMetainfosDetects.insert(ss.name, ss);
                 }
 
                 // TODO heur if String contains add to heur
@@ -10920,52 +10730,52 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
         if (!(pZipInfo->bIsAPK)) {
             _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(xjar.getOsInfo(&(pZipInfo->listArchiveRecords), pPdStruct));
 
-            pZipInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
+            pZipInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
         }
 
-        if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_JDK)) {
-            _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_JDK);
-            pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+        if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_JDK)) {
+            _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_JDK);
+            pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
         }
 
-        if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APPLEJDK)) {
-            _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APPLEJDK);
-            pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+        if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_APPLEJDK)) {
+            _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_APPLEJDK);
+            pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
         }
 
-        if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_IBMJDK)) {
-            _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_IBMJDK);
-            pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+        if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_IBMJDK)) {
+            _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_IBMJDK);
+            pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
         }
 
-        if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_OPENJDK)) {
-            _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_OPENJDK);
-            pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+        if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_OPENJDK)) {
+            _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_OPENJDK);
+            pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
         }
 
-        if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_JETBRAINS)) {
-            _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_JETBRAINS);
-            pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+        if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_JETBRAINS)) {
+            _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_JETBRAINS);
+            pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
         }
 
-        if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_IKVMDOTNET)) {
-            _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_IKVMDOTNET);
-            pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+        if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_IKVMDOTNET)) {
+            _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_IKVMDOTNET);
+            pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
         }
 
-        if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_BEAWEBLOGIC)) {
-            _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_BEAWEBLOGIC);
-            pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+        if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_BEAWEBLOGIC)) {
+            _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_BEAWEBLOGIC);
+            pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
         }
 
-        if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APACHEANT)) {
-            _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APACHEANT);
-            pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+        if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_APACHEANT)) {
+            _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_APACHEANT);
+            pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
         }
 
-        if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_SINGLEJAR)) {
-            _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_SINGLEJAR);
-            pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+        if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_SINGLEJAR)) {
+            _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_SINGLEJAR);
+            pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
         }
     }
 }
@@ -10981,7 +10791,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
         if (xapk.isValid(&(pZipInfo->listArchiveRecords), pPdStruct)) {
             _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(xapk.getOsInfo(&(pZipInfo->listArchiveRecords), pPdStruct));
 
-            pZipInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
+            pZipInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
 
             // 0x7109871a APK_SIGNATURE_SCHEME_V2_BLOCK_ID
             // TODO Check 0x7109871f
@@ -11008,25 +10818,25 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
             // TODO V4
 
             if (ssSignTool.sVersion != "") {
-                pZipInfo->mapResultSigntools.insert(ssSignTool.name, scansToScan(&(pZipInfo->basic_info), &ssSignTool));
+                pZipInfo->basic_info.mapResultSigntools.insert(ssSignTool.name, scansToScan(&(pZipInfo->basic_info), &ssSignTool));
             }
 
             if (XAPK::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords, 0x71777777)) {
                 _SCANS_STRUCT ssWalle = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_WALLE, "", "", 0);
-                pZipInfo->mapResultTools.insert(ssWalle.name, scansToScan(&(pZipInfo->basic_info), &ssWalle));
+                pZipInfo->basic_info.mapResultTools.insert(ssWalle.name, scansToScan(&(pZipInfo->basic_info), &ssWalle));
             }
 
             if (XAPK::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords, 0x2146444e)) {
                 _SCANS_STRUCT ssGooglePlay = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_TOOL, RECORD_NAME_GOOGLEPLAY, "", "", 0);
-                pZipInfo->mapResultTools.insert(ssGooglePlay.name, scansToScan(&(pZipInfo->basic_info), &ssGooglePlay));
+                pZipInfo->basic_info.mapResultTools.insert(ssGooglePlay.name, scansToScan(&(pZipInfo->basic_info), &ssGooglePlay));
             }
 
             if (pZipInfo->bIsKotlin) {
                 _SCANS_STRUCT ssKotlin = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_LANGUAGE, RECORD_NAME_KOTLIN, "", "", 0);
-                pZipInfo->mapResultLanguages.insert(ssKotlin.name, scansToScan(&(pZipInfo->basic_info), &ssKotlin));
+                pZipInfo->basic_info.mapResultLanguages.insert(ssKotlin.name, scansToScan(&(pZipInfo->basic_info), &ssKotlin));
             } else {
                 _SCANS_STRUCT ssJava = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_LANGUAGE, RECORD_NAME_JAVA, "", "", 0);
-                pZipInfo->mapResultLanguages.insert(ssJava.name, scansToScan(&(pZipInfo->basic_info), &ssJava));
+                pZipInfo->basic_info.mapResultLanguages.insert(ssJava.name, scansToScan(&(pZipInfo->basic_info), &ssJava));
             }
 
             if (pZipInfo->basic_info.bIsVerbose) {
@@ -11041,7 +10851,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
                             ss.name = (RECORD_NAME)((int)RECORD_NAME_UNKNOWN0 + i);
                             ss.sVersion = XBinary::valueToHex(listApkSignaturesBlockRecords.at(i).nID);
                             // ss.sInfo=XBinary::valueToHex(listApkSignaturesBlockRecords.at(i).nDataSize);
-                            pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                            pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                         }
                     }
                 }
@@ -11079,7 +10889,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
                     if (_sVersion != "") {
                         ssAndroidSDK.sVersion = QString("API %1").arg(_sVersion);
 
-                        pZipInfo->mapResultTools.insert(ssAndroidSDK.name, scansToScan(&(pZipInfo->basic_info), &ssAndroidSDK));
+                        pZipInfo->basic_info.mapResultTools.insert(ssAndroidSDK.name, scansToScan(&(pZipInfo->basic_info), &ssAndroidSDK));
                     }
                 }
 
@@ -11089,161 +10899,161 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
 
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_LIBRARY, RECORD_NAME_ANDROIDJETPACK, "", "", 0);
                     ss.sVersion = sJetpackVersion;
-                    pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDGRADLE)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDGRADLE);
-                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_ANDROIDGRADLE)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_ANDROIDGRADLE);
+                    pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDMAVENPLUGIN)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDMAVENPLUGIN);
-                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_ANDROIDMAVENPLUGIN)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_ANDROIDMAVENPLUGIN);
+                    pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_RADIALIX)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_RADIALIX);
-                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_RADIALIX)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_RADIALIX);
+                    pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_MOTODEVSTUDIOFORANDROID)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_MOTODEVSTUDIOFORANDROID);
-                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_MOTODEVSTUDIOFORANDROID)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_MOTODEVSTUDIOFORANDROID);
+                    pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANTILVL)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANTILVL);
-                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_ANTILVL)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_ANTILVL);
+                    pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKEDITOR)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKEDITOR);
-                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_APKEDITOR)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_APKEDITOR);
+                    pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_BUNDLETOOL)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_BUNDLETOOL);
-                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_BUNDLETOOL)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_BUNDLETOOL);
+                    pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEX2JAR)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DEX2JAR);
-                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_DEX2JAR)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_DEX2JAR);
+                    pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_D2JAPKSIGN)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_D2JAPKSIGN);
-                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_D2JAPKSIGN)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_D2JAPKSIGN);
+                    pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_PSEUDOAPKSIGNER)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_PSEUDOAPKSIGNER);
-                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_PSEUDOAPKSIGNER)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_PSEUDOAPKSIGNER);
+                    pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKSIGNER)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKSIGNER);
-                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_APKSIGNER)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_APKSIGNER);
+                    pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APK_SIGNER)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APK_SIGNER);
-                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_APK_SIGNER)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_APK_SIGNER);
+                    pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_NETEASEAPKSIGNER)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_NETEASEAPKSIGNER);
-                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_NETEASEAPKSIGNER)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_NETEASEAPKSIGNER);
+                    pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDSIGNAPK)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDSIGNAPK);
-                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_ANDROIDSIGNAPK)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_ANDROIDSIGNAPK);
+                    pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DOTOOLSSIGNAPK)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DOTOOLSSIGNAPK);
-                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_DOTOOLSSIGNAPK)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_DOTOOLSSIGNAPK);
+                    pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_SIGNATORY)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_SIGNATORY);
-                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_SIGNATORY)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_SIGNATORY);
+                    pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_SIGNUPDATE)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_SIGNUPDATE);
-                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_SIGNUPDATE)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_SIGNUPDATE);
+                    pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ANDROIDAPKSIGNER)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ANDROIDAPKSIGNER);
-                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_ANDROIDAPKSIGNER)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_ANDROIDAPKSIGNER);
+                    pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKMODIFIERSIGNAPK)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKMODIFIERSIGNAPK);
-                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_APKMODIFIERSIGNAPK)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_APKMODIFIERSIGNAPK);
+                    pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_BAIDUSIGNATUREPLATFORM)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_BAIDUSIGNATUREPLATFORM);
-                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_BAIDUSIGNATUREPLATFORM)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_BAIDUSIGNATUREPLATFORM);
+                    pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_TINYSIGN)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_TINYSIGN);
-                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_TINYSIGN)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_TINYSIGN);
+                    pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_COMEXSIGNAPK)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_COMEXSIGNAPK);
-                    pZipInfo->mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_COMEXSIGNAPK)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_COMEXSIGNAPK);
+                    pZipInfo->basic_info.mapResultSigntools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_ECLIPSE)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_ECLIPSE);
-                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_ECLIPSE)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_ECLIPSE);
+                    pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_HIAPKCOM)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_HIAPKCOM);
-                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_HIAPKCOM)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_HIAPKCOM);
+                    pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DX)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DX);
-                    pZipInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_DX)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_DX);
+                    pZipInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SECSHELL)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_SECSHELL);
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_SECSHELL)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_SECSHELL);
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_JIAGU)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_JIAGU);
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_JIAGU)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_JIAGU);
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_IJIAMI)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_IJIAMI);
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_IJIAMI)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_IJIAMI);
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTPROTECTION)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_TENCENTPROTECTION);
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_TENCENTPROTECTION)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_TENCENTPROTECTION);
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTLEGU) || pZipInfo->mapArchiveDetects.contains(RECORD_NAME_MOBILETENCENTPROTECT)) {
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_TENCENTLEGU) || pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_MOBILETENCENTPROTECT)) {
                     _SCANS_STRUCT ss = {};
 
-                    if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_TENCENTLEGU)) {
-                        ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_TENCENTLEGU);
-                    } else if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_MOBILETENCENTPROTECT)) {
-                        ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_MOBILETENCENTPROTECT);
+                    if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_TENCENTLEGU)) {
+                        ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_TENCENTLEGU);
+                    } else if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_MOBILETENCENTPROTECT)) {
+                        ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_MOBILETENCENTPROTECT);
                     }
 
                     qint32 nNumberOfRecords = pZipInfo->listArchiveRecords.count();
@@ -11268,138 +11078,138 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
                         }
                     }
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // AppGuard
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APPGUARD)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APPGUARD);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_APPGUARD)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_APPGUARD);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // Kiro
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_KIRO)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_KIRO);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_KIRO)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_KIRO);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // DxShield
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_DXSHIELD)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_DXSHIELD);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_DXSHIELD)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_DXSHIELD);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // qdbh
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_QDBH)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_QDBH);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_QDBH)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_QDBH);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // Bangcle Protection
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_BANGCLEPROTECTION)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_BANGCLEPROTECTION);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_BANGCLEPROTECTION)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_BANGCLEPROTECTION);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // Qihoo 360 Protection
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_QIHOO360PROTECTION)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_QIHOO360PROTECTION);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_QIHOO360PROTECTION)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_QIHOO360PROTECTION);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // Alibaba Protection
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_ALIBABAPROTECTION)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_ALIBABAPROTECTION);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_ALIBABAPROTECTION)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_ALIBABAPROTECTION);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // Baidu Protection
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_BAIDUPROTECTION)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_BAIDUPROTECTION);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_BAIDUPROTECTION)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_BAIDUPROTECTION);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // NQ Shield
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_NQSHIELD)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_NQSHIELD);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_NQSHIELD)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_NQSHIELD);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // Nagapt Protection
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_NAGAPTPROTECTION)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_NAGAPTPROTECTION);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_NAGAPTPROTECTION)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_NAGAPTPROTECTION);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // SecNeo
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SECNEO)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_SECNEO);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_SECNEO)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_SECNEO);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // LIAPP
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_LIAPP)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_LIAPP);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_LIAPP)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_LIAPP);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // yidun
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_YIDUN)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_YIDUN);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_YIDUN)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_YIDUN);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // PangXie
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_PANGXIE)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_PANGXIE);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_PANGXIE)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_PANGXIE);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // Hdus-Wjus
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_HDUS_WJUS)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_HDUS_WJUS);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_HDUS_WJUS)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_HDUS_WJUS);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // Medusah
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_MEDUSAH)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_MEDUSAH);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_MEDUSAH)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_MEDUSAH);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // AppSolid
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APPSOLID)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APPSOLID);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_APPSOLID)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_APPSOLID);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // Proguard
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_PROGUARD)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_PROGUARD);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_PROGUARD)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_PROGUARD);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // VDog
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_VDOG)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_VDOG);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_VDOG)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_VDOG);
 
                     QString sVersion = xapk.decompress(&(pZipInfo->listArchiveRecords), "assets/version").data();
 
@@ -11408,100 +11218,100 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
                         ss.sVersion = sVersion.section("VDOG-", 1, 1).section("_", 0, 0);
                     }
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // APKProtect
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECT)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APKPROTECT);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_APKPROTECT)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_APKPROTECT);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // ollvm-tll
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_OLLVMTLL)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_OLLVMTLL);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_OLLVMTLL)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_OLLVMTLL);
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // DexGuard
-                if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXGUARD) || pZipInfo->dexInfoClasses.mapResultProtectors.contains(RECORD_NAME_DEXGUARD)) {
+                if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_DEXGUARD) || pZipInfo->dexInfoClasses.basic_info.mapResultProtectors.contains(RECORD_NAME_DEXGUARD)) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXGUARD, "", "", 0);
 
-                    if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXGUARD)) {
-                        ss.sVersion = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DEXGUARD).sVersion;
-                    } else if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_GENERIC)) {
-                        ss.sVersion = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_GENERIC).sVersion;
+                    if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_DEXGUARD)) {
+                        ss.sVersion = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_DEXGUARD).sVersion;
+                    } else if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_GENERIC)) {
+                        ss.sVersion = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_GENERIC).sVersion;
                     }
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_DEXPROTECTOR) || pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXPROTECTOR)) {
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_DEXPROTECTOR) || pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_DEXPROTECTOR)) {
                     _SCANS_STRUCT ss = {};
 
-                    if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_DEXPROTECTOR)) {
-                        ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_DEXPROTECTOR);
+                    if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_DEXPROTECTOR)) {
+                        ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_DEXPROTECTOR);
                     } else {
-                        ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_DEXPROTECTOR);
+                        ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_DEXPROTECTOR);
                     }
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKPROTECTOR) || pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKPROTECTOR)) {
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_APKPROTECTOR) || pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_APKPROTECTOR)) {
                     _SCANS_STRUCT ss = {};
 
-                    if (pZipInfo->mapMetainfosDetects.contains(RECORD_NAME_APKPROTECTOR)) {
-                        ss = pZipInfo->mapMetainfosDetects.value(RECORD_NAME_APKPROTECTOR);
+                    if (pZipInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_APKPROTECTOR)) {
+                        ss = pZipInfo->basic_info.mapMetainfosDetects.value(RECORD_NAME_APKPROTECTOR);
                     } else {
-                        ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APKPROTECTOR);
+                        ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_APKPROTECTOR);
                     }
 
-                    pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // SandHook
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_SANDHOOK)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_SANDHOOK);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_SANDHOOK)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_SANDHOOK);
 
-                    pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // Unicom SDK
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_UNICOMSDK)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_UNICOMSDK);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_UNICOMSDK)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_UNICOMSDK);
 
-                    pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // Unity
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_UNITY)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_UNITY);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_UNITY)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_UNITY);
 
-                    pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // IL2CPP
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_IL2CPP)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_IL2CPP);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_IL2CPP)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_IL2CPP);
 
-                    pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // Basic4Android
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_BASIC4ANDROID)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_BASIC4ANDROID);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_BASIC4ANDROID)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_BASIC4ANDROID);
 
-                    pZipInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
 
                 // ApkToolPlus
-                if (pZipInfo->mapArchiveDetects.contains(RECORD_NAME_APKTOOLPLUS)) {
-                    _SCANS_STRUCT ss = pZipInfo->mapArchiveDetects.value(RECORD_NAME_APKTOOLPLUS);
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_APKTOOLPLUS)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_APKTOOLPLUS);
 
-                    pZipInfo->mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                    pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
             }
         }
@@ -11562,7 +11372,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
                             pZipInfo->listArchiveRecords.at(i).sFileName.contains("libshield.so") ||
                             pZipInfo->listArchiveRecords.at(i).sFileName.contains("libvosWrapperEx.so")) {
                             ss.sVersion = pZipInfo->listArchiveRecords.at(i).sFileName;
-                            pZipInfo->mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                            pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                         }
                     }
 
@@ -11631,7 +11441,7 @@ void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_O
                         //                            filterResult(&scanResult.listRecords,QSet<RECORD_TYPE>()<<RECORD_TYPE_PACKER<<RECORD_TYPE_PROTECTOR);
                         //                        }
 
-                        pZipInfo->listRecursiveDetects.append(scanResult.listRecords);
+                        pZipInfo->basic_info.listRecursiveDetects.append(scanResult.listRecords);
                     }
                 }
 
@@ -11661,18 +11471,18 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_
             }
 
             // TODO files
-            pZipInfo->mapResultArchives.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+            pZipInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
         } else if (pZipInfo->basic_info.id.fileType == XBinary::FT_APKS) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ARCHIVE, RECORD_TYPE_FORMAT, RECORD_NAME_ZIP, "", "", 0);
 
             ss.sVersion = xzip.getVersion();
             ss.sInfo = QString("%1 records").arg(xzip.getNumberOfRecords(pPdStruct));
 
-            pZipInfo->mapResultArchives.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+            pZipInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
         }
 
         if (pZipInfo->basic_info.bIsVerbose) {
-            if (pZipInfo->mapMetainfosDetects.count() == 0) {
+            if (pZipInfo->basic_info.mapMetainfosDetects.count() == 0) {
                 QString sDataManifest = xzip.decompress(&(pZipInfo->listArchiveRecords), "META-INF/MANIFEST.MF").data();
 
                 QString sProtectedBy = XBinary::regExp("Protected-By: (.*?)\n", sDataManifest, 1).remove("\r");
@@ -11686,7 +11496,7 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_
                     recordSS.name = (RECORD_NAME)(RECORD_NAME_UNKNOWN0);
                     recordSS.sVersion = "Protected: " + sProtectedBy;
 
-                    pZipInfo->mapResultAPKProtectors.insert(recordSS.name, scansToScan(&(pZipInfo->basic_info), &recordSS));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(recordSS.name, scansToScan(&(pZipInfo->basic_info), &recordSS));
                 }
 
                 if ((sCreatedBy != "") && (sCreatedBy != "1.0 (Android)")) {
@@ -11696,7 +11506,7 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_
                     recordSS.name = (RECORD_NAME)(RECORD_NAME_UNKNOWN1);
                     recordSS.sVersion = "Created: " + sCreatedBy;
 
-                    pZipInfo->mapResultAPKProtectors.insert(recordSS.name, scansToScan(&(pZipInfo->basic_info), &recordSS));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(recordSS.name, scansToScan(&(pZipInfo->basic_info), &recordSS));
                 }
 
                 if (sBuiltBy != "") {
@@ -11706,7 +11516,7 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_
                     recordSS.name = (RECORD_NAME)(RECORD_NAME_UNKNOWN2);
                     recordSS.sVersion = "Built: " + sBuiltBy;
 
-                    pZipInfo->mapResultAPKProtectors.insert(recordSS.name, scansToScan(&(pZipInfo->basic_info), &recordSS));
+                    pZipInfo->basic_info.mapResultAPKProtectors.insert(recordSS.name, scansToScan(&(pZipInfo->basic_info), &recordSS));
                 }
 
                 if ((sProtectedBy != "") && (sCreatedBy != "") && (sBuiltBy != "")) {
@@ -11717,24 +11527,12 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_
                         recordSS.name = (RECORD_NAME)(RECORD_NAME_UNKNOWN0);
                         recordSS.sVersion = "CHECK";
 
-                        pZipInfo->mapResultAPKProtectors.insert(recordSS.name, scansToScan(&(pZipInfo->basic_info), &recordSS));
+                        pZipInfo->basic_info.mapResultAPKProtectors.insert(recordSS.name, scansToScan(&(pZipInfo->basic_info), &recordSS));
                     }
                 }
             }
         }
     }
-}
-
-void SpecAbstract::Zip_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pDevice)
-    Q_UNUSED(pOptions)
-
-    getLanguage(&(pZipInfo->mapResultLibraries), &(pZipInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pZipInfo->mapResultTools), &(pZipInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pZipInfo->mapResultCompilers), &(pZipInfo->mapResultLanguages), pPdStruct);
-
-    fixLanguage(&(pZipInfo->mapResultLanguages));
 }
 
 SpecAbstract::DEXINFO_STRUCT SpecAbstract::Zip_scan_DEX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::ZIPINFO_STRUCT *pZipInfo,
@@ -11766,25 +11564,12 @@ void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SC
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
 
-    if (pBinaryInfo->mapResultFormats.contains(RECORD_NAME_PDF)) {
-        pBinaryInfo->mapResultTexts.clear();
+    if (pBinaryInfo->basic_info.mapResultFormats.contains(RECORD_NAME_PDF)) {
+        pBinaryInfo->basic_info.mapResultTexts.clear();
 
-        pBinaryInfo->mapResultFormats[RECORD_NAME_PDF].id.fileType = XBinary::FT_BINARY;
+        pBinaryInfo->basic_info.mapResultFormats[RECORD_NAME_PDF].id.fileType = XBinary::FT_BINARY;
         pBinaryInfo->basic_info.id.fileType = XBinary::FT_BINARY;
     }
-}
-
-void SpecAbstract::Binary_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo)
-{
-    Q_UNUSED(pDevice)
-    Q_UNUSED(pOptions)
-    Q_UNUSED(pBinaryInfo)
-
-    // TODO
-
-    //    getLanguage(&(pBinaryInfo->mapResultCOMPackers),&(pBinaryInfo->mapResultLanguages));
-    //    getLanguage(&(pBinaryInfo->mapResultCOMProtectors),&(pBinaryInfo->mapResultLanguages));
-    // TODO fixes
 }
 
 void SpecAbstract::MSDOS_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,
@@ -11795,7 +11580,7 @@ void SpecAbstract::MSDOS_handle_OperationSystems(QIODevice *pDevice, SpecAbstrac
     if (msdos.isValid(pPdStruct)) {
         _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(msdos.getOsInfo());
 
-        pMSDOSInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pMSDOSInfo->basic_info), &ssOperationSystem));
+        pMSDOSInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pMSDOSInfo->basic_info), &ssOperationSystem));
     }
 }
 
@@ -11805,21 +11590,21 @@ void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
 
     if (msdos.isValid(pPdStruct)) {
         // IBM PC Pascal
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_IBMPCPASCAL)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_IBMPCPASCAL);
-            pMSDOSInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_IBMPCPASCAL)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_IBMPCPASCAL);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
         // WATCOM C
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_WATCOMCCPP)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_WATCOMCCPP);
-            pMSDOSInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_WATCOMCCPP)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_WATCOMCCPP);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
         // BAT2EXEC
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_BAT2EXEC)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_BAT2EXEC);
-            pMSDOSInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_BAT2EXEC)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_BAT2EXEC);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
     }
 }
@@ -11870,7 +11655,7 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_O
                     ssCompiler.sVersion = "1988";
                 }
 
-                pMSDOSInfo->mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pMSDOSInfo->basic_info), &ssCompiler));
+                pMSDOSInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pMSDOSInfo->basic_info), &ssCompiler));
             }
 
             if (nOffsetTurboC == -1) {
@@ -11886,7 +11671,7 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_O
                     ssCompiler.sVersion = "1990";
                 }
 
-                pMSDOSInfo->mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pMSDOSInfo->basic_info), &ssCompiler));
+                pMSDOSInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pMSDOSInfo->basic_info), &ssCompiler));
             }
 
             if ((nOffsetTurboC == -1) && (nOffsetTurboCPP == -1)) {
@@ -11908,13 +11693,13 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_O
                     ssCompiler.sVersion = "1995";
                 }
 
-                pMSDOSInfo->mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pMSDOSInfo->basic_info), &ssCompiler));
+                pMSDOSInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pMSDOSInfo->basic_info), &ssCompiler));
             }
         }
 
         if (ssCompiler.type == RECORD_TYPE_UNKNOWN) {
-            if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_TURBOCPP)) {
-                ssCompiler = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_TURBOCPP);
+            if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_TURBOCPP)) {
+                ssCompiler = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_TURBOCPP);
             }
         }
 
@@ -11933,21 +11718,17 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_O
 
         if (pMSDOSInfo->nOverlaySize > 10) {
             if (XBinary::compareSignatureStrings(pMSDOSInfo->sOverlaySignature, "FB52")) {
-                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_MSDOS, RECORD_TYPE_DEBUGDATA, RECORD_NAME_BORLANDDEBUGGINGINFORMATION, "", "", 0);
-                quint32 nMajor = pMSDOSInfo->sOverlaySignature.mid(3 * 2, 2).toUInt(nullptr, 16);
-                quint32 nMinor = pMSDOSInfo->sOverlaySignature.mid(2 * 2, 2).toUInt(nullptr, 16);
-                ss.sVersion = QString("%1.%2").arg(nMajor).arg(nMinor, 2, 10, QChar('0'));
-                ss.sInfo = "TDS";
-                pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+                _SCANS_STRUCT ss = format_BorlandDebugInfo(pDevice, pOptions, pMSDOSInfo->nOverlayOffset, pMSDOSInfo->nOverlaySize, pPdStruct);
+                pMSDOSInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
             }
         }
 
         if (ssLinker.type != RECORD_TYPE_UNKNOWN) {
-            pMSDOSInfo->mapResultLinkers.insert(ssLinker.name, scansToScan(&(pMSDOSInfo->basic_info), &ssLinker));
+            pMSDOSInfo->basic_info.mapResultLinkers.insert(ssLinker.name, scansToScan(&(pMSDOSInfo->basic_info), &ssLinker));
         }
 
         if (ssCompiler.type != RECORD_TYPE_UNKNOWN) {
-            pMSDOSInfo->mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pMSDOSInfo->basic_info), &ssCompiler));
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pMSDOSInfo->basic_info), &ssCompiler));
         }
     }
 }
@@ -11960,156 +11741,156 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, SpecAbstract::SCA
     if (msdos.isValid(pPdStruct)) {
         if (pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_CRYEXE)) {
             _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CRYEXE);
-            pMSDOSInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
         if (pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LSCRYPRT)) {
             _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LSCRYPRT);
-            pMSDOSInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PACKWIN) || pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_PACKWIN)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_PACKWIN);
+        if (pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PACKWIN) || pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PACKWIN)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PACKWIN);
 
             if (pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PACKWIN)) {
                 pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PACKWIN);
             }
 
-            pMSDOSInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
         if (pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PKLITE)) {
             // TODO more options
             _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PKLITE);
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
         if (pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_WWPACK)) {
             _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_WWPACK);
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LZEXE) || pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_LZEXE)) {
+        if (pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LZEXE) || pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_LZEXE)) {
             bool bHeader = pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LZEXE);
-            bool bEP = pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_LZEXE);
+            bool bEP = pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_LZEXE);
 
             _SCANS_STRUCT ss = {};
 
             if (bHeader && bEP) {
                 ss = pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LZEXE);
             } else if (bEP) {
-                ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_LZEXE);
+                ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_LZEXE);
                 ss.sInfo = append(ss.sInfo, "modified header");
             } else if (bHeader) {
                 ss = pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LZEXE);
                 ss.sInfo = append(ss.sInfo, "modified entrypoint");
             }
 
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RJCRUSH) || pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_RJCRUSH)) {
+        if (pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RJCRUSH) || pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_RJCRUSH)) {
             bool bHeader = pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_RJCRUSH);
-            bool bEP = pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_RJCRUSH);
+            bool bEP = pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_RJCRUSH);
 
             _SCANS_STRUCT ss = {};
 
             if (bHeader && bEP) {
                 ss = pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RJCRUSH);
             } else if (bEP) {
-                ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_RJCRUSH);
+                ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_RJCRUSH);
                 ss.sInfo = append(ss.sInfo, "modified header");
             } else if (bHeader) {
                 ss = pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_RJCRUSH);
                 ss.sInfo = append(ss.sInfo, "modified entrypoint");
             }
 
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_AINEXE)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_AINEXE);
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_AINEXE)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_AINEXE);
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_PGMPAK)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_PGMPAK);
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PGMPAK)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PGMPAK);
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_JAM)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_JAM);
-            pMSDOSInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_JAM)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_JAM);
+            pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_LOCKTITE)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_LOCKTITE);
-            pMSDOSInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_LOCKTITE)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_LOCKTITE);
+            pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_PCOM)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_PCOM);
-            pMSDOSInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PCOM)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PCOM);
+            pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_AVPACK)) {
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_AVPACK)) {
             // TODO Check
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_AVPACK);
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_AVPACK);
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_LGLZ)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_LGLZ);
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_LGLZ)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_LGLZ);
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_PROPACK)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_PROPACK);
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PROPACK)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PROPACK);
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_RELPACK)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_RELPACK);
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_RELPACK)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_RELPACK);
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_SCRNCH)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_SCRNCH);
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_SCRNCH)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_SCRNCH);
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_TINYPROG)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_TINYPROG);
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_TINYPROG)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_TINYPROG);
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_UCEXE)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_UCEXE);
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_UCEXE)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_UCEXE);
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_APACK)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_APACK);
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_APACK)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_APACK);
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_CCBYVORONTSOV)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_CCBYVORONTSOV);
-            pMSDOSInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_CCBYVORONTSOV)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_CCBYVORONTSOV);
+            pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_CRYPTCOM)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_CRYPTCOM);
-            pMSDOSInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_CRYPTCOM)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_CRYPTCOM);
+            pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_CRYPTORBYDISMEMBER)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_CRYPTORBYDISMEMBER);
-            pMSDOSInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_CRYPTORBYDISMEMBER)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_CRYPTORBYDISMEMBER);
+            pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_UPX)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_UPX);
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_UPX)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_UPX);
 
             VI_STRUCT viUPX = get_UPX_vi(pDevice, pOptions, 0, pMSDOSInfo->basic_info.id.nSize, XBinary::FT_MSDOS, pPdStruct);
 
@@ -12121,7 +11902,7 @@ void SpecAbstract::MSDOS_handle_Protection(QIODevice *pDevice, SpecAbstract::SCA
                 ss.sInfo = viUPX.sInfo;
             }
 
-            pMSDOSInfo->mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
     }
 }
@@ -12133,13 +11914,13 @@ void SpecAbstract::MSDOS_handle_SFX(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
     if (msdos.isValid(pPdStruct)) {
         if (pMSDOSInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_LHASSFX)) {
             _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_LHASSFX);
-            pMSDOSInfo->mapResultSFX.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
-        } else if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_ICE)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_ICE);
-            pMSDOSInfo->mapResultSFX.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
-        } else if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_PKZIPMINISFX)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_PKZIPMINISFX);
-            pMSDOSInfo->mapResultSFX.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            pMSDOSInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        } else if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_ICE)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_ICE);
+            pMSDOSInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        } else if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PKZIPMINISFX)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PKZIPMINISFX);
+            pMSDOSInfo->basic_info.mapResultSFX.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
     }
 }
@@ -12150,8 +11931,8 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, SpecAbstract::S
     XMSDOS msdos(pDevice, pOptions->bIsImage);
 
     if (msdos.isValid(pPdStruct)) {
-        if (pMSDOSInfo->mapEntryPointDetects.contains(RECORD_NAME_CAUSEWAY)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->mapEntryPointDetects.value(RECORD_NAME_CAUSEWAY);
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_CAUSEWAY)) {
+            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_CAUSEWAY);
 
             if (pMSDOSInfo->basic_info.bIsDeepScan) {
                 qint64 nVersionOffset = msdos.find_ansiString(0, pMSDOSInfo->basic_info.id.nSize, "CauseWay DOS Extender v", pPdStruct);
@@ -12166,7 +11947,7 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, SpecAbstract::S
                 }
             }
 
-            pMSDOSInfo->mapResultDosExtenders.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            pMSDOSInfo->basic_info.mapResultDosExtenders.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
         // CWSDPMI
@@ -12181,7 +11962,7 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, SpecAbstract::S
 
                     ss.sVersion = sCWSDPMI.section(" ", 1, 1);
 
-                    pMSDOSInfo->mapResultDosExtenders.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+                    pMSDOSInfo->basic_info.mapResultDosExtenders.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
                 }
             }
         }
@@ -12193,7 +11974,7 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, SpecAbstract::S
 
             ss.sVersion = sPMODEW.section(" ", 1, 1).remove("v");
 
-            pMSDOSInfo->mapResultDosExtenders.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            pMSDOSInfo->basic_info.mapResultDosExtenders.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
         QString sWDOSX = msdos.read_ansiString(0x34);
@@ -12203,7 +11984,7 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, SpecAbstract::S
 
             ss.sVersion = sWDOSX.section(" ", 1, 1);
 
-            pMSDOSInfo->mapResultDosExtenders.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            pMSDOSInfo->basic_info.mapResultDosExtenders.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
 
         // DOS/16M
@@ -12214,7 +11995,7 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, SpecAbstract::S
             if (nVersionOffset != -1) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_MSDOS, RECORD_TYPE_DOSEXTENDER, RECORD_NAME_DOS16M, "", "", 0);
                 // TODO Version
-                pMSDOSInfo->mapResultDosExtenders.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+                pMSDOSInfo->basic_info.mapResultDosExtenders.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
             }
         }
 
@@ -12226,23 +12007,10 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, SpecAbstract::S
             if (nVersionOffset != -1) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_MSDOS, RECORD_TYPE_DOSEXTENDER, RECORD_NAME_DOS4G, "", "", 0);
                 // TODO Version
-                pMSDOSInfo->mapResultDosExtenders.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+                pMSDOSInfo->basic_info.mapResultDosExtenders.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
             }
         }
     }
-}
-
-void SpecAbstract::MSDOS_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pDevice)
-    Q_UNUSED(pOptions)
-
-    getLanguage(&(pMSDOSInfo->mapResultLinkers), &(pMSDOSInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pMSDOSInfo->mapResultCompilers), &(pMSDOSInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pMSDOSInfo->mapResultLibraries), &(pMSDOSInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pMSDOSInfo->mapResultTools), &(pMSDOSInfo->mapResultLanguages), pPdStruct);
-
-    fixLanguage(&(pMSDOSInfo->mapResultLanguages));
 }
 
 void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,
@@ -12259,7 +12027,7 @@ void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, SpecAbstract::SCAN
                 _parentId.filePart = XBinary::FILEPART_OVERLAY;
                 scan(pDevice, &scanResult, pMSDOSInfo->nOverlayOffset, pMSDOSInfo->nOverlaySize, _parentId, pOptions, false, pPdStruct);
 
-                pMSDOSInfo->listRecursiveDetects.append(scanResult.listRecords);
+                pMSDOSInfo->basic_info.listRecursiveDetects.append(scanResult.listRecords);
             }
         }
     }
@@ -12273,7 +12041,7 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, SpecAbstract:
     if (elf.isValid(pPdStruct)) {
         _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(elf.getOsInfo());
 
-        pELFInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pELFInfo->basic_info), &ssOperationSystem));
+        pELFInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pELFInfo->basic_info), &ssOperationSystem));
     }
 }
 
@@ -12298,7 +12066,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_BYTEGUARD, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12308,7 +12076,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_GCC, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12318,7 +12086,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_APPLELLVM, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12328,7 +12096,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_ANDROIDCLANG, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12338,7 +12106,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_ALIPAYCLANG, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12348,7 +12116,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_ALPINECLANG, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12358,7 +12126,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_ALIBABACLANG, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12368,7 +12136,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_PLEXCLANG, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12378,7 +12146,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_UBUNTUCLANG, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12388,7 +12156,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_DEBIANCLANG, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12398,7 +12166,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_APPORTABLECLANG, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12408,7 +12176,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_ARMASSEMBLER, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12418,7 +12186,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_LINKER, RECORD_NAME_ARMLINKER, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12428,7 +12196,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_ARMC, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12438,7 +12206,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_ARMCCPP, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12448,7 +12216,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_ARMNEONCCPP, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12458,7 +12226,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_ARMTHUMBCCPP, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12468,7 +12236,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_ARMTHUMBMACROASSEMBLER, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12478,7 +12246,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_THUMBC, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12488,7 +12256,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_CLANG, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12498,7 +12266,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_DYNASM, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12508,7 +12276,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12518,7 +12286,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_LINKER, RECORD_NAME_LLD, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12528,7 +12296,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_LINKER, RECORD_NAME_MOLD, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12538,7 +12306,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_LINKER, RECORD_NAME_ORACLESOLARISLINKEDITORS, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12548,7 +12316,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_TOOL, RECORD_NAME_SUNWORKSHOP, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12558,7 +12326,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_TOOL, RECORD_NAME_SUNWORKSHOPCOMPILERS, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12568,7 +12336,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_SNAPDRAGONLLVMARM, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12578,7 +12346,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_NASM, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12588,7 +12356,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_TENCENTLEGU, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12598,7 +12366,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_ALIPAYOBFUSCATOR, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12608,7 +12376,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_WANGZEHUALLVM, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12618,7 +12386,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_OBFUSCATORLLVM, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12628,7 +12396,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_NAGAINLLVM, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12638,7 +12406,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_IJIAMILLVM, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12648,7 +12416,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_SAFEENGINELLVM, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12658,7 +12426,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_TENCENTPROTECTION, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12668,7 +12436,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_TOOL, RECORD_NAME_APPIMAGE, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12678,7 +12446,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_HIKARIOBFUSCATOR, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12688,7 +12456,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_SNAPPROTECT, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12698,7 +12466,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_BYTEDANCESECCOMPILER, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12708,7 +12476,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12718,7 +12486,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
             if (vi.bIsValid) {
                 ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_OLLVMTLL, vi.sVersion, vi.sInfo, 0);
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12732,7 +12500,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
                     ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_TOOL, RECORD_NAME_SOURCERYCODEBENCH, vi.sVersion, "", 0);
                 }
 
-                pELFInfo->mapCommentSectionDetects.insert(ss.name, ss);
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
             }
         }
 
@@ -12746,7 +12514,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, SpecAbstract::S
                     recordSS.name = (RECORD_NAME)(RECORD_NAME_UNKNOWN9 + (RECORD_NAME)(i + 1));
                     recordSS.sVersion = "COMMENT:" + sComment;
 
-                    pELFInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+                    pELFInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
                 }
             }
         }
@@ -12783,7 +12551,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
                 recordSS.sVersion = XBinary::get_uint32_full_version(nVersion);
             }
 
-            pELFInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+            pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
         } else if (XELF::isSectionNamePresent(".qtplugin", &(pELFInfo->listSectionRecords))) {
             XELF::SECTION_RECORD record = elf._getSectionRecords(&(pELFInfo->listSectionRecords), ".qtplugin").at(0);
 
@@ -12795,15 +12563,15 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
             QString sVersionString = elf.read_ansiString(record.nOffset);
             recordSS.sVersion = XBinary::regExp("version=(.*?)\\\n", sVersionString, 1);
 
-            pELFInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+            pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
         } else if (XBinary::isStringInListPresent(&(pELFInfo->listLibraries), "libQt5Core.so.5", pPdStruct)) {
             _SCANS_STRUCT recordSS = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_LIBRARY, RECORD_NAME_QT, "5.X", "", 0);
 
-            pELFInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+            pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
         } else if (XBinary::isStringInListPresent(&(pELFInfo->listLibraries), "libQt6Core_x86.so", pPdStruct)) {
             _SCANS_STRUCT recordSS = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_LIBRARY, RECORD_NAME_QT, "6.X", "", 0);
 
-            pELFInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+            pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
         }
 
         if (XELF::isNotePresent(&(pELFInfo->listNotes), "Android")) {
@@ -12824,14 +12592,14 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
                 ssAndroidNDK.sVersion = QString("%1(%2)").arg(sNdkVersion).arg(sNdkBuild);
             }
 
-            pELFInfo->mapResultTools.insert(ssAndroidSDK.name, scansToScan(&(pELFInfo->basic_info), &ssAndroidSDK));
-            pELFInfo->mapResultTools.insert(ssAndroidNDK.name, scansToScan(&(pELFInfo->basic_info), &ssAndroidNDK));
+            pELFInfo->basic_info.mapResultTools.insert(ssAndroidSDK.name, scansToScan(&(pELFInfo->basic_info), &ssAndroidSDK));
+            pELFInfo->basic_info.mapResultTools.insert(ssAndroidNDK.name, scansToScan(&(pELFInfo->basic_info), &ssAndroidNDK));
         }
 
         if (XELF::isNotePresent(&(pELFInfo->listNotes), "Go")) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_GO, "", "", 0);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // gold
@@ -12849,203 +12617,203 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
                 recordSS.sVersion = vi.sVersion;
             }
 
-            pELFInfo->mapResultLinkers.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+            pELFInfo->basic_info.mapResultLinkers.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
         }
 
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SOURCERYCODEBENCH)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SOURCERYCODEBENCH);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_SOURCERYCODEBENCH)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_SOURCERYCODEBENCH);
 
-            pELFInfo->mapResultTools.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
-        } else if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SOURCERYCODEBENCHLITE)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SOURCERYCODEBENCHLITE);
+            pELFInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        } else if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_SOURCERYCODEBENCHLITE)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_SOURCERYCODEBENCHLITE);
 
-            pELFInfo->mapResultTools.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_APPLELLVM)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_APPLELLVM);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_APPLELLVM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_APPLELLVM);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Android clang
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ANDROIDCLANG)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ANDROIDCLANG);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_ANDROIDCLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_ANDROIDCLANG);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Alipay clang
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ALIPAYCLANG)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ALIPAYCLANG);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_ALIPAYCLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_ALIPAYCLANG);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Alpine clang
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ALPINECLANG)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ALPINECLANG);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_ALPINECLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_ALPINECLANG);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Alibaba clang
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ALIBABACLANG)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ALIBABACLANG);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_ALIBABACLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_ALIBABACLANG);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Plex clang
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_PLEXCLANG)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_PLEXCLANG);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_PLEXCLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_PLEXCLANG);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Ubuntu clang
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_UBUNTUCLANG)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_UBUNTUCLANG);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_UBUNTUCLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_UBUNTUCLANG);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Debian clang
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_DEBIANCLANG)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_DEBIANCLANG);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_DEBIANCLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_DEBIANCLANG);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Apportable clang
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_APPORTABLECLANG)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_APPORTABLECLANG);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_APPORTABLECLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_APPORTABLECLANG);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // ARM Assembler
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ARMASSEMBLER)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ARMASSEMBLER);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_ARMASSEMBLER)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_ARMASSEMBLER);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // ARM C
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ARMC)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ARMC);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_ARMC)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_ARMC);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // ARM C/C++
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ARMCCPP)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ARMCCPP);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_ARMCCPP)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_ARMCCPP);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // ARM NEON C/C++
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ARMNEONCCPP)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ARMNEONCCPP);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_ARMNEONCCPP)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_ARMNEONCCPP);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // ARM/Thumb C/C++
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ARMTHUMBCCPP)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ARMTHUMBCCPP);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_ARMTHUMBCCPP)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_ARMTHUMBCCPP);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Thumb C
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_THUMBC)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_THUMBC);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_THUMBC)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_THUMBC);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // ARM/Thumb Macro Assembler
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ARMTHUMBMACROASSEMBLER)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ARMTHUMBMACROASSEMBLER);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_ARMTHUMBMACROASSEMBLER)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_ARMTHUMBMACROASSEMBLER);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // ARM Linker
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ARMLINKER)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ARMLINKER);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_ARMLINKER)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_ARMLINKER);
 
-            pELFInfo->mapResultLinkers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultLinkers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // clang
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_CLANG)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_CLANG);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_CLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_CLANG);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // DynASM
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_DYNASM)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_DYNASM);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_DYNASM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_DYNASM);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Delphi
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI)) {
-            _SCANS_STRUCT ssCompiler = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI)) {
+            _SCANS_STRUCT ssCompiler = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI);
 
-            pELFInfo->mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pELFInfo->basic_info), &ssCompiler));
+            pELFInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pELFInfo->basic_info), &ssCompiler));
 
             _SCANS_STRUCT ssTool =
                 getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_TOOL, RECORD_NAME_EMBARCADERODELPHI, _get_DelphiVersionFromCompiler(ssCompiler.sVersion).sVersion, "", 0);
 
-            pELFInfo->mapResultTools.insert(ssTool.name, scansToScan(&(pELFInfo->basic_info), &ssTool));
+            pELFInfo->basic_info.mapResultTools.insert(ssTool.name, scansToScan(&(pELFInfo->basic_info), &ssTool));
         }
 
         // LLD
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_LLD)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_LLD);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_LLD)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_LLD);
 
-            pELFInfo->mapResultLinkers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultLinkers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Oracle Solaris Link Editors
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ORACLESOLARISLINKEDITORS)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ORACLESOLARISLINKEDITORS);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_ORACLESOLARISLINKEDITORS)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_ORACLESOLARISLINKEDITORS);
 
-            pELFInfo->mapResultLinkers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultLinkers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Sun WorkShop
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SUNWORKSHOP)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SUNWORKSHOP);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_SUNWORKSHOP)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_SUNWORKSHOP);
 
-            pELFInfo->mapResultTools.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Sun WorkShop Compilers
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SUNWORKSHOPCOMPILERS)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SUNWORKSHOPCOMPILERS);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_SUNWORKSHOPCOMPILERS)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_SUNWORKSHOPCOMPILERS);
 
-            pELFInfo->mapResultTools.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Snapdragon LLVM ARM
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SNAPDRAGONLLVMARM)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SNAPDRAGONLLVMARM);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_SNAPDRAGONLLVMARM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_SNAPDRAGONLLVMARM);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // NASM
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_NASM)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_NASM);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_NASM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_NASM);
 
-            pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         if (XELF::isSectionNamePresent(".rodata", &(pELFInfo->listSectionRecords))) {
@@ -13062,7 +12830,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
                 ss.sVersion = viStruct.sVersion;
                 ss.sInfo = viStruct.sInfo;
 
-                pELFInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+                pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
             }
         }
     }
@@ -13081,12 +12849,12 @@ void SpecAbstract::ELF_handle_GCC(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS
             recordCompiler.name = SpecAbstract::RECORD_NAME_GCC;
         }
 
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_GCC)) {
-            recordCompiler = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_GCC);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_GCC)) {
+            recordCompiler = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_GCC);
         }
 
         if (recordCompiler.type != SpecAbstract::RECORD_TYPE_UNKNOWN) {
-            pELFInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pELFInfo->basic_info), &recordCompiler));
+            pELFInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pELFInfo->basic_info), &recordCompiler));
         }
     }
 }
@@ -13114,25 +12882,25 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_
             if (viUPXEnd.sInfo != "") recordSS.sInfo = viUPXEnd.sInfo;
             if (viUPX.sInfo != "") recordSS.sInfo = viUPX.sInfo;
 
-            pELFInfo->mapResultPackers.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+            pELFInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
         }
 
         if (viUPXEnd.nValue == 0x21434553)  // SEC!
         {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_SECNEO, "Old", "UPX", 0);
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         } else if (viUPXEnd.nValue == 0x00010203) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_SECNEO, "", "UPX", 0);
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         } else if (viUPXEnd.nValue == 0x214d4a41)  // "AJM!"
         {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_IJIAMI, "", "UPX", 0);
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Burneye
-        if (pELFInfo->mapEntryPointDetects.contains(RECORD_NAME_BURNEYE)) {
-            _SCANS_STRUCT ss = pELFInfo->mapEntryPointDetects.value(RECORD_NAME_BURNEYE);
+        if (pELFInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_BURNEYE)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_BURNEYE);
 
             qint64 _nOffset = 0x1000;
             qint64 _nSize = 0x200;
@@ -13143,102 +12911,102 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_
                 ss.sInfo = "Modified";
             }
 
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Obfuscator-LLVM
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_OBFUSCATORLLVM)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_OBFUSCATORLLVM);
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_OBFUSCATORLLVM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_OBFUSCATORLLVM);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // wangzehua LLVM
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_WANGZEHUALLVM)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_WANGZEHUALLVM);
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_WANGZEHUALLVM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_WANGZEHUALLVM);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Byteguard
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_BYTEGUARD)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_BYTEGUARD);
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_BYTEGUARD)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_BYTEGUARD);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Alipay Obfuscator
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_ALIPAYOBFUSCATOR)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_ALIPAYOBFUSCATOR);
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_ALIPAYOBFUSCATOR)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_ALIPAYOBFUSCATOR);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Tencent Legu
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_TENCENTLEGU)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_TENCENTLEGU);
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_TENCENTLEGU)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_TENCENTLEGU);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Safeengine LLVM
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SAFEENGINELLVM)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SAFEENGINELLVM);
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_SAFEENGINELLVM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_SAFEENGINELLVM);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Tencent-Obfuscation
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_TENCENTPROTECTION)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_TENCENTPROTECTION);
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_TENCENTPROTECTION)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_TENCENTPROTECTION);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // AppImage
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_APPIMAGE))  // Check overlay
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_APPIMAGE))  // Check overlay
         {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_APPIMAGE);
-            pELFInfo->mapResultTools.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_APPIMAGE);
+            pELFInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // HikariObfuscator
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_HIKARIOBFUSCATOR)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_HIKARIOBFUSCATOR);
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_HIKARIOBFUSCATOR)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_HIKARIOBFUSCATOR);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // SnapProtect
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_SNAPPROTECT)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_SNAPPROTECT);
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_SNAPPROTECT)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_SNAPPROTECT);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // ByteDance-SecCompiler
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_BYTEDANCESECCOMPILER)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_BYTEDANCESECCOMPILER);
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_BYTEDANCESECCOMPILER)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_BYTEDANCESECCOMPILER);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Dingbaozeng native obfuscator
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR);
 
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // Nagain LLVM
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_NAGAINLLVM)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_NAGAINLLVM);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_NAGAINLLVM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_NAGAINLLVM);
 
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // iJiami LLVM
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_IJIAMILLVM)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_IJIAMILLVM);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_IJIAMILLVM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_IJIAMILLVM);
 
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         // LLVM 6.0 + Ollvm + Armariris
-        if (pELFInfo->mapCommentSectionDetects.contains(RECORD_NAME_OLLVMTLL)) {
-            _SCANS_STRUCT ss = pELFInfo->mapCommentSectionDetects.value(RECORD_NAME_OLLVMTLL);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_OLLVMTLL)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_OLLVMTLL);
 
-            pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         {
@@ -13263,7 +13031,7 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, SpecAbstract::SCAN_
                 if (sString == "Virbox Protector") {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_VIRBOXPROTECTOR, "", "", 0);
 
-                    pELFInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+                    pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
                 }
 
                 break;
@@ -13295,7 +13063,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract
                     recordSS.name = (RECORD_NAME)(RECORD_NAME_UNKNOWN9 + nIndex);
                     recordSS.sVersion = QString("LIBRARY_") + pELFInfo->listLibraries.at(i);
 
-                    pELFInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+                    pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
 
                     nIndex++;
                 }
@@ -13311,7 +13079,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract
                     recordSS.name = (RECORD_NAME)(RECORD_NAME_UNKNOWN9 + nIndex);
                     recordSS.sVersion = QString("Interpreter_") + asInterpeter.sString;
 
-                    pELFInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+                    pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
 
                     nIndex++;
                 }
@@ -13330,7 +13098,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract
                         recordSS.name = (RECORD_NAME)(RECORD_NAME_UNKNOWN9 + nIndex);
                         recordSS.sVersion = QString("COMMENT_") + pELFInfo->listComments.at(i);
 
-                        pELFInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+                        pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
 
                         stRecords.insert(pELFInfo->listComments.at(i));
 
@@ -13352,7 +13120,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract
                         recordSS.name = (RECORD_NAME)(RECORD_NAME_UNKNOWN9 + nIndex);
                         recordSS.sVersion = QString("NOTE_") + pELFInfo->listNotes.at(i).sName;
 
-                        pELFInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+                        pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
 
                         stRecords.insert(pELFInfo->listNotes.at(i).sName);
 
@@ -13374,7 +13142,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract
                         recordSS.name = (RECORD_NAME)(RECORD_NAME_UNKNOWN9 + nIndex);
                         recordSS.sVersion = QString("NOTE_TYPE_%1").arg(pELFInfo->listNotes.at(i).nType);
 
-                        pELFInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+                        pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
 
                         stRecords.insert(pELFInfo->listNotes.at(i).nType);
 
@@ -13396,7 +13164,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, SpecAbstract
                         recordSS.name = (RECORD_NAME)(RECORD_NAME_UNKNOWN9 + nIndex);
                         recordSS.sVersion = QString("SECTION_") + pELFInfo->listSectionRecords.at(i).sName;
 
-                        pELFInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+                        pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
 
                         stRecords.insert(pELFInfo->listSectionRecords.at(i).sName);
 
@@ -13414,24 +13182,11 @@ void SpecAbstract::ELF_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCAN_
     Q_UNUSED(pOptions)
     Q_UNUSED(pPdStruct)
 
-    if (pELFInfo->mapResultCompilers.contains(RECORD_NAME_GCC) || pELFInfo->mapResultCompilers.contains(RECORD_NAME_APPORTABLECLANG)) {
-        if (pELFInfo->mapResultCompilers.value(RECORD_NAME_GCC).sVersion == "") {
-            pELFInfo->mapResultCompilers.remove(RECORD_NAME_GCC);
+    if (pELFInfo->basic_info.mapResultCompilers.contains(RECORD_NAME_GCC) || pELFInfo->basic_info.mapResultCompilers.contains(RECORD_NAME_APPORTABLECLANG)) {
+        if (pELFInfo->basic_info.mapResultCompilers.value(RECORD_NAME_GCC).sVersion == "") {
+            pELFInfo->basic_info.mapResultCompilers.remove(RECORD_NAME_GCC);
         }
     }
-}
-
-void SpecAbstract::ELF_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pDevice)
-    Q_UNUSED(pOptions)
-
-    getLanguage(&(pELFInfo->mapResultLinkers), &(pELFInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pELFInfo->mapResultCompilers), &(pELFInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pELFInfo->mapResultLibraries), &(pELFInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pELFInfo->mapResultTools), &(pELFInfo->mapResultLanguages), pPdStruct);
-
-    fixLanguage(&(pELFInfo->mapResultLanguages));
 }
 
 void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct)
@@ -13466,12 +13221,12 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
 
         _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(osInfo);
 
-        pMACHInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pMACHInfo->basic_info), &ssOperationSystem));
+        pMACHInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pMACHInfo->basic_info), &ssOperationSystem));
 
         if (mach.isCommandPresent(XMACH_DEF::S_LC_CODE_SIGNATURE, &(pMACHInfo->listCommandRecords))) {
             _SCANS_STRUCT recordSS = getScansStruct(0, XBinary::FT_MACHO, RECORD_TYPE_SIGNTOOL, RECORD_NAME_CODESIGN, "", "", 0);
             // TODO more info
-            pMACHInfo->mapResultSigntools.insert(recordSS.name, scansToScan(&(pMACHInfo->basic_info), &recordSS));
+            pMACHInfo->basic_info.mapResultSigntools.insert(recordSS.name, scansToScan(&(pMACHInfo->basic_info), &recordSS));
         }
 
         // Foundation
@@ -13572,7 +13327,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
 
             recordFoundation.sVersion = sVersion;
 
-            pMACHInfo->mapResultLibraries.insert(recordFoundation.name, scansToScan(&(pMACHInfo->basic_info), &recordFoundation));
+            pMACHInfo->basic_info.mapResultLibraries.insert(recordFoundation.name, scansToScan(&(pMACHInfo->basic_info), &recordFoundation));
         }
 
         // GCC
@@ -14323,7 +14078,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
             recordSS.name = SpecAbstract::RECORD_NAME_QT;
             recordSS.sVersion = XBinary::get_uint32_full_version(lr.current_version);
 
-            pMACHInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pMACHInfo->basic_info), &recordSS));
+            pMACHInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pMACHInfo->basic_info), &recordSS));
         }
         // Carbon
         if (XMACH::isLibraryRecordNamePresent("Carbon", &(pMACHInfo->listLibraryRecords))) {
@@ -14334,7 +14089,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
             recordSS.type = SpecAbstract::RECORD_TYPE_LIBRARY;
             recordSS.name = SpecAbstract::RECORD_NAME_CARBON;
 
-            pMACHInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pMACHInfo->basic_info), &recordSS));
+            pMACHInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pMACHInfo->basic_info), &recordSS));
         }
         // Cocoa
         if (XMACH::isLibraryRecordNamePresent("Cocoa", &(pMACHInfo->listLibraryRecords))) {
@@ -14345,7 +14100,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
             recordSS.type = SpecAbstract::RECORD_TYPE_LIBRARY;
             recordSS.name = SpecAbstract::RECORD_NAME_COCOA;
 
-            pMACHInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pMACHInfo->basic_info), &recordSS));
+            pMACHInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pMACHInfo->basic_info), &recordSS));
         }
 
         if (XMACH::isSectionNamePresent("__cstring", &(pMACHInfo->listSectionRecords))) {
@@ -14362,7 +14117,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
                 ss.sVersion = viStruct.sVersion;
                 ss.sInfo = viStruct.sInfo;
 
-                pMACHInfo->mapResultCompilers.insert(ss.name, scansToScan(&(pMACHInfo->basic_info), &ss));
+                pMACHInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pMACHInfo->basic_info), &ss));
             }
         }
 
@@ -14371,27 +14126,27 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPT
         }
 
         if (recordGCC.name != SpecAbstract::RECORD_NAME_UNKNOWN) {
-            pMACHInfo->mapResultCompilers.insert(recordGCC.name, scansToScan(&(pMACHInfo->basic_info), &recordGCC));
+            pMACHInfo->basic_info.mapResultCompilers.insert(recordGCC.name, scansToScan(&(pMACHInfo->basic_info), &recordGCC));
         }
 
         if (recordCLANG.name != SpecAbstract::RECORD_NAME_UNKNOWN) {
-            pMACHInfo->mapResultCompilers.insert(recordCLANG.name, scansToScan(&(pMACHInfo->basic_info), &recordCLANG));
+            pMACHInfo->basic_info.mapResultCompilers.insert(recordCLANG.name, scansToScan(&(pMACHInfo->basic_info), &recordCLANG));
         }
 
         if (recordSwift.name != SpecAbstract::RECORD_NAME_UNKNOWN) {
-            pMACHInfo->mapResultCompilers.insert(recordSwift.name, scansToScan(&(pMACHInfo->basic_info), &recordSwift));
+            pMACHInfo->basic_info.mapResultCompilers.insert(recordSwift.name, scansToScan(&(pMACHInfo->basic_info), &recordSwift));
         }
 
         if (recordZig.name != SpecAbstract::RECORD_NAME_UNKNOWN) {
-            pMACHInfo->mapResultCompilers.insert(recordZig.name, scansToScan(&(pMACHInfo->basic_info), &recordZig));
+            pMACHInfo->basic_info.mapResultCompilers.insert(recordZig.name, scansToScan(&(pMACHInfo->basic_info), &recordZig));
         }
 
         if (recordSDK.name != SpecAbstract::RECORD_NAME_UNKNOWN) {
-            pMACHInfo->mapResultTools.insert(recordSDK.name, scansToScan(&(pMACHInfo->basic_info), &recordSDK));
+            pMACHInfo->basic_info.mapResultTools.insert(recordSDK.name, scansToScan(&(pMACHInfo->basic_info), &recordSDK));
         }
 
         if (recordXcode.name != SpecAbstract::RECORD_NAME_UNKNOWN) {
-            pMACHInfo->mapResultTools.insert(recordXcode.name, scansToScan(&(pMACHInfo->basic_info), &recordXcode));
+            pMACHInfo->basic_info.mapResultTools.insert(recordXcode.name, scansToScan(&(pMACHInfo->basic_info), &recordXcode));
         }
     }
 }
@@ -14411,7 +14166,7 @@ void SpecAbstract::MACHO_handle_Protection(QIODevice *pDevice, SpecAbstract::SCA
             recordSS.type = SpecAbstract::RECORD_TYPE_PROTECTOR;
             recordSS.name = SpecAbstract::RECORD_NAME_VMPROTECT;
 
-            pMACHInfo->mapResultProtectors.insert(recordSS.name, scansToScan(&(pMACHInfo->basic_info), &recordSS));
+            pMACHInfo->basic_info.mapResultProtectors.insert(recordSS.name, scansToScan(&(pMACHInfo->basic_info), &recordSS));
         }
     }
 }
@@ -14422,8 +14177,8 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCA
     XMACH mach(pDevice, pOptions->bIsImage);
 
     if (mach.isValid(pPdStruct)) {
-        if (pMACHInfo->mapResultLanguages.contains(RECORD_NAME_OBJECTIVEC) || pMACHInfo->mapResultLanguages.contains(RECORD_NAME_CCPP)) {
-            pMACHInfo->mapResultLanguages.remove(RECORD_NAME_CCPP);
+        if (pMACHInfo->basic_info.mapResultLanguages.contains(RECORD_NAME_OBJECTIVEC) || pMACHInfo->basic_info.mapResultLanguages.contains(RECORD_NAME_CCPP)) {
+            pMACHInfo->basic_info.mapResultLanguages.remove(RECORD_NAME_CCPP);
         }
 
         if (pMACHInfo->basic_info.bIsTest && pMACHInfo->basic_info.bIsVerbose) {
@@ -14443,7 +14198,7 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCA
             //                    recordSS.name=(RECORD_NAME)(RECORD_NAME_UNKNOWN9+i+1);
             //                    recordSS.sVersion=mapCommands.value(list.at(i).nType);
 
-            //                    pMACHInfo->mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
+            //                    pMACHInfo->basic_info.mapResultLibraries.insert(recordSS.name,scansToScan(&(pMACHInfo->basic_info),&recordSS));
 
             //                    stRecords.insert(list.at(i).nType);
             //                }
@@ -14464,26 +14219,13 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, SpecAbstract::SCA
                     recordSS.sVersion = list.at(i).sName;
                     recordSS.sInfo = XBinary::get_uint32_full_version(list.at(i).current_version);
 
-                    pMACHInfo->mapResultLibraries.insert(recordSS.name, scansToScan(&(pMACHInfo->basic_info), &recordSS));
+                    pMACHInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pMACHInfo->basic_info), &recordSS));
 
                     stRecords.insert(list.at(i).sName);
                 }
             }
         }
     }
-}
-
-void SpecAbstract::MACHO_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pDevice)
-    Q_UNUSED(pOptions)
-
-    getLanguage(&(pMACHInfo->mapResultLinkers), &(pMACHInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pMACHInfo->mapResultCompilers), &(pMACHInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pMACHInfo->mapResultLibraries), &(pMACHInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pMACHInfo->mapResultTools), &(pMACHInfo->mapResultLanguages), pPdStruct);
-
-    fixLanguage(&(pMACHInfo->mapResultLanguages));
 }
 
 void SpecAbstract::LE_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct)
@@ -14493,7 +14235,7 @@ void SpecAbstract::LE_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::
     if (le.isValid(pPdStruct)) {
         _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(le.getOsInfo());
 
-        pLEInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pLEInfo->basic_info), &ssOperationSystem));
+        pLEInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pLEInfo->basic_info), &ssOperationSystem));
     }
 }
 
@@ -14552,11 +14294,11 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
         }
 
         if (recordLinker.type != RECORD_TYPE_UNKNOWN) {
-            pLEInfo->mapResultLinkers.insert(recordLinker.name, scansToScan(&(pLEInfo->basic_info), &recordLinker));
+            pLEInfo->basic_info.mapResultLinkers.insert(recordLinker.name, scansToScan(&(pLEInfo->basic_info), &recordLinker));
         }
 
         if (recordCompiler.type != RECORD_TYPE_UNKNOWN) {
-            pLEInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pLEInfo->basic_info), &recordCompiler));
+            pLEInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pLEInfo->basic_info), &recordCompiler));
         }
     }
 }
@@ -14581,22 +14323,9 @@ void SpecAbstract::LE_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
         }
 
         if (recordLinker.type != RECORD_TYPE_UNKNOWN) {
-            pLEInfo->mapResultLinkers.insert(recordLinker.name, scansToScan(&(pLEInfo->basic_info), &recordLinker));
+            pLEInfo->basic_info.mapResultLinkers.insert(recordLinker.name, scansToScan(&(pLEInfo->basic_info), &recordLinker));
         }
     }
-}
-
-void SpecAbstract::LE_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pDevice)
-    Q_UNUSED(pOptions)
-
-    getLanguage(&(pLEInfo->mapResultLinkers), &(pLEInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pLEInfo->mapResultCompilers), &(pLEInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pLEInfo->mapResultLibraries), &(pLEInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pLEInfo->mapResultTools), &(pLEInfo->mapResultLanguages), pPdStruct);
-
-    fixLanguage(&(pLEInfo->mapResultLanguages));
 }
 
 void SpecAbstract::LX_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct)
@@ -14606,7 +14335,7 @@ void SpecAbstract::LX_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::
     if (lx.isValid(pPdStruct)) {
         _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(lx.getOsInfo());
 
-        pLXInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pLXInfo->basic_info), &ssOperationSystem));
+        pLXInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pLXInfo->basic_info), &ssOperationSystem));
     }
 }
 
@@ -14665,11 +14394,11 @@ void SpecAbstract::LX_handle_Microsoft(QIODevice *pDevice, SpecAbstract::SCAN_OP
         }
 
         if (recordLinker.type != RECORD_TYPE_UNKNOWN) {
-            pLXInfo->mapResultLinkers.insert(recordLinker.name, scansToScan(&(pLXInfo->basic_info), &recordLinker));
+            pLXInfo->basic_info.mapResultLinkers.insert(recordLinker.name, scansToScan(&(pLXInfo->basic_info), &recordLinker));
         }
 
         if (recordCompiler.type != RECORD_TYPE_UNKNOWN) {
-            pLXInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pLXInfo->basic_info), &recordCompiler));
+            pLXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pLXInfo->basic_info), &recordCompiler));
         }
     }
 }
@@ -14694,22 +14423,9 @@ void SpecAbstract::LX_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
         }
 
         if (recordLinker.type != RECORD_TYPE_UNKNOWN) {
-            pLXInfo->mapResultLinkers.insert(recordLinker.name, scansToScan(&(pLXInfo->basic_info), &recordLinker));
+            pLXInfo->basic_info.mapResultLinkers.insert(recordLinker.name, scansToScan(&(pLXInfo->basic_info), &recordLinker));
         }
     }
-}
-
-void SpecAbstract::LX_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pDevice)
-    Q_UNUSED(pOptions)
-
-    getLanguage(&(pLXInfo->mapResultLinkers), &(pLXInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pLXInfo->mapResultCompilers), &(pLXInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pLXInfo->mapResultLibraries), &(pLXInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pLXInfo->mapResultTools), &(pLXInfo->mapResultLanguages), pPdStruct);
-
-    fixLanguage(&(pLXInfo->mapResultLanguages));
 }
 
 void SpecAbstract::NE_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct)
@@ -14719,7 +14435,7 @@ void SpecAbstract::NE_handle_OperationSystems(QIODevice *pDevice, SpecAbstract::
     if (ne.isValid(pPdStruct)) {
         _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(ne.getOsInfo());
 
-        pNEInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pNEInfo->basic_info), &ssOperationSystem));
+        pNEInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pNEInfo->basic_info), &ssOperationSystem));
     }
 }
 
@@ -14743,22 +14459,9 @@ void SpecAbstract::NE_handle_Borland(QIODevice *pDevice, SpecAbstract::SCAN_OPTI
         }
 
         if (recordLinker.type != RECORD_TYPE_UNKNOWN) {
-            pNEInfo->mapResultLinkers.insert(recordLinker.name, scansToScan(&(pNEInfo->basic_info), &recordLinker));
+            pNEInfo->basic_info.mapResultLinkers.insert(recordLinker.name, scansToScan(&(pNEInfo->basic_info), &recordLinker));
         }
     }
-}
-
-void SpecAbstract::NE_handleLanguages(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pDevice)
-    Q_UNUSED(pOptions)
-
-    getLanguage(&(pNEInfo->mapResultLinkers), &(pNEInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pNEInfo->mapResultCompilers), &(pNEInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pNEInfo->mapResultLibraries), &(pNEInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pNEInfo->mapResultTools), &(pNEInfo->mapResultLanguages), pPdStruct);
-
-    fixLanguage(&(pNEInfo->mapResultLanguages));
 }
 
 void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIONS *pOptions, SpecAbstract::DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct)
@@ -14791,11 +14494,11 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
             recordAndroidSDK.sVersion = sDDEXVersion;
         }
 
-        pDEXInfo->mapResultTools.insert(recordAndroidSDK.name, scansToScan(&(pDEXInfo->basic_info), &recordAndroidSDK));
+        pDEXInfo->basic_info.mapResultTools.insert(recordAndroidSDK.name, scansToScan(&(pDEXInfo->basic_info), &recordAndroidSDK));
 
         _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(dex.getOsInfo());
 
-        pDEXInfo->mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pDEXInfo->basic_info), &ssOperationSystem));
+        pDEXInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pDEXInfo->basic_info), &ssOperationSystem));
 
         QList<XDEX_DEF::MAP_ITEM> listMaps = dex.getMapItems(pPdStruct);
 
@@ -14984,37 +14687,37 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
             _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_R8, "", "", 0);
             recordCompiler.sVersion = viR8.sVersion;
             recordCompiler.sInfo = viR8.sInfo;
-            pDEXInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
+            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
         } else if (!(pDEXInfo->bIsStringPoolSorted)) {
             _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_DEXLIB, "", "", 0);
-            pDEXInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
+            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
         } else if (bDX_map) {
             _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_DX, "", "", 0);
-            pDEXInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
+            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
         } else if (bDexLib2_map) {
             _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_DEXLIB2, "", "", 0);
-            pDEXInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
+            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
         } else if (bR8_map) {
             _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_R8, "", "", 0);
-            pDEXInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
+            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
         } else if (bDexLib2heur_map) {
             _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_DEXLIB2, "", "", 0);
-            pDEXInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
+            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
         } else if (bFastProxy_map) {
             _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_FASTPROXY, "", "", 0);
-            pDEXInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
+            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
         }
 
         if (bDexMerge_map) {
             _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_DEXMERGE, "", "", 0);
-            pDEXInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
+            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
         }
 
         if (viR8.bIsValid && (!bR8_map)) {
             _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_R8, "", "", 0);
             recordCompiler.sVersion = viR8.sVersion;
             recordCompiler.sInfo = append(recordCompiler.sInfo, "CHECK !!!");
-            pDEXInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
+            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
         }
 
         if (pDEXInfo->basic_info.bIsDeepScan) {
@@ -15023,24 +14726,24 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
             if (nJackIndex != -1) {
                 _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_JACK, "", "", 0);
                 recordCompiler.sVersion = pDEXInfo->listStrings.at(nJackIndex).section("-", 1, -1);
-                pDEXInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
+                pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
             }
         }
 
-        if (pDEXInfo->mapResultCompilers.size() == 0) {
+        if (pDEXInfo->basic_info.mapResultCompilers.size() == 0) {
             _SCANS_STRUCT recordCompiler =
                 getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_UNKNOWN, QString("%1").arg(dex.getMapItemsHash(pPdStruct)), "", 0);
-            pDEXInfo->mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
+            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_APKTOOLPLUS)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_APKTOOLPLUS);
-            pDEXInfo->mapResultTools.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_APKTOOLPLUS)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_APKTOOLPLUS);
+            pDEXInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_UNICOMSDK)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_UNICOMSDK);
-            pDEXInfo->mapResultLibraries.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_UNICOMSDK)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_UNICOMSDK);
+            pDEXInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
         if (pDEXInfo->basic_info.bIsDeepScan) {
@@ -15108,7 +14811,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, SpecAbstract::SCAN_OPTIO
                         pDEXInfo->listStrings.at(i).contains("whitecryption") || pDEXInfo->listStrings.at(i).contains("ModGuard") ||
                         pDEXInfo->listStrings.at(i).contains("InjectedActivity")) {
                         ss.sVersion = pDEXInfo->listStrings.at(i);
-                        pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+                        pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
                         ss.sInfo = append(ss.sInfo, sOverlay);
 
                         break;
@@ -15128,10 +14831,10 @@ void SpecAbstract::DEX_handle_Dexguard(QIODevice *pDevice, SpecAbstract::DEXINFO
         if (pDEXInfo->basic_info.bIsDeepScan) {
             if (XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings), "dexguard\\/", pPdStruct)) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXGUARD, "", "", 0);
-                pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+                pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
             }
 
-            if (!pDEXInfo->mapTypeDetects.contains(RECORD_NAME_DEXGUARD)) {
+            if (!pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_DEXGUARD)) {
                 qint32 nNumberOfTypes = pDEXInfo->listTypeItemStrings.count();
 
                 for (qint32 i = 0; (i < nNumberOfTypes) && (!(pPdStruct->bIsStop)); i++) {
@@ -15141,7 +14844,7 @@ void SpecAbstract::DEX_handle_Dexguard(QIODevice *pDevice, SpecAbstract::DEXINFO
                     if (sType.size() <= 7) {
                         if (XBinary::isRegExpPresent("^Lo/", sType)) {
                             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXGUARD, "", "", 0);
-                            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+                            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
 
                             break;
                         }
@@ -15162,184 +14865,169 @@ void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice, SpecAbstract::DEXIN
         if (pDEXInfo->bIsOverlayPresent) {
             if (dex.getOverlaySize(&(pDEXInfo->basic_info.memoryMap), pPdStruct) == 0x60) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXPROTECTOR, "", "", 0);
-                pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+                pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
             }
         } else {
             if (pDEXInfo->basic_info.bIsDeepScan) {
                 if (XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings), "\\/dexprotector\\/", pPdStruct)) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXPROTECTOR, "", "", 0);
-                    pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+                    pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
                 }
             }
         }
 
-        if (pDEXInfo->mapStringDetects.contains(RECORD_NAME_EASYPROTECTOR)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapStringDetects.value(RECORD_NAME_EASYPROTECTOR);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_EASYPROTECTOR)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_EASYPROTECTOR);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapStringDetects.contains(RECORD_NAME_QDBH)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapStringDetects.value(RECORD_NAME_QDBH);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_QDBH)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_QDBH);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapStringDetects.contains(RECORD_NAME_JIAGU)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapStringDetects.value(RECORD_NAME_JIAGU);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_JIAGU)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_JIAGU);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapStringDetects.contains(RECORD_NAME_BANGCLEPROTECTION)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapStringDetects.value(RECORD_NAME_BANGCLEPROTECTION);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_BANGCLEPROTECTION)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_BANGCLEPROTECTION);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapStringDetects.contains(RECORD_NAME_ALLATORIOBFUSCATOR)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapStringDetects.value(RECORD_NAME_ALLATORIOBFUSCATOR);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_ALLATORIOBFUSCATOR)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_ALLATORIOBFUSCATOR);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapStringDetects.contains(RECORD_NAME_PANGXIE)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapStringDetects.value(RECORD_NAME_PANGXIE);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_PANGXIE)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_PANGXIE);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapStringDetects.contains(RECORD_NAME_NAGAPTPROTECTION)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapStringDetects.value(RECORD_NAME_NAGAPTPROTECTION);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_NAGAPTPROTECTION)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_NAGAPTPROTECTION);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapStringDetects.contains(RECORD_NAME_MODGUARD)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapStringDetects.value(RECORD_NAME_MODGUARD);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_MODGUARD)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_MODGUARD);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapStringDetects.contains(RECORD_NAME_KIWIVERSIONOBFUSCATOR)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapStringDetects.value(RECORD_NAME_KIWIVERSIONOBFUSCATOR);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_KIWIVERSIONOBFUSCATOR)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_KIWIVERSIONOBFUSCATOR);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapStringDetects.contains(RECORD_NAME_APKPROTECT)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapStringDetects.value(RECORD_NAME_APKPROTECT);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_APKPROTECT)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_APKPROTECT);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         } else {
             if (pDEXInfo->basic_info.bIsDeepScan) {
                 if (XBinary::isStringInListPresentExp(&(pDEXInfo->listStrings), "http://www.apkprotect.net/", pPdStruct)) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_APKPROTECT, "", "", 0);
-                    pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+                    pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
                 }
             }
         }
 
         if (pDEXInfo->basic_info.bIsHeuristicScan) {
-            if (pDEXInfo->mapStringDetects.contains(RECORD_NAME_AESOBFUSCATOR)) {
-                _SCANS_STRUCT ss = pDEXInfo->mapStringDetects.value(RECORD_NAME_AESOBFUSCATOR);
-                pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+            if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_AESOBFUSCATOR)) {
+                _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_AESOBFUSCATOR);
+                pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
             } else {
                 if (pDEXInfo->basic_info.bIsDeepScan) {
                     if (XBinary::isStringInListPresentExp(&(pDEXInfo->listStrings), "licensing/AESObfuscator;", pPdStruct)) {
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_AESOBFUSCATOR, "", "", 0);
-                        pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+                        pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
                     }
                 }
             }
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_BTWORKSCODEGUARD)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_BTWORKSCODEGUARD);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_BTWORKSCODEGUARD)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_BTWORKSCODEGUARD);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_QIHOO360PROTECTION))  // Check overlay
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_QIHOO360PROTECTION))  // Check overlay
         {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_QIHOO360PROTECTION);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_QIHOO360PROTECTION);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_ALIBABAPROTECTION))  // Check overlay
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_ALIBABAPROTECTION))  // Check overlay
         {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_ALIBABAPROTECTION);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_ALIBABAPROTECTION);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_BAIDUPROTECTION))  // Check overlay
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_BAIDUPROTECTION))  // Check overlay
         {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_BAIDUPROTECTION);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_BAIDUPROTECTION);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_TENCENTPROTECTION))  // Check overlay
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_TENCENTPROTECTION))  // Check overlay
         {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_TENCENTPROTECTION);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_TENCENTPROTECTION);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_SECNEO)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_SECNEO);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_SECNEO)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_SECNEO);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_LIAPP)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_LIAPP);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_LIAPP)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_LIAPP);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_VDOG)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_VDOG);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_VDOG)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_VDOG);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_APPSOLID)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_APPSOLID);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_APPSOLID)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_APPSOLID);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_MEDUSAH)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_MEDUSAH);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_MEDUSAH)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_MEDUSAH);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_NQSHIELD)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_NQSHIELD);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_NQSHIELD)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_NQSHIELD);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_YIDUN)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_YIDUN);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_YIDUN)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_YIDUN);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_APKENCRYPTOR)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_APKENCRYPTOR);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_APKENCRYPTOR)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_APKENCRYPTOR);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->mapTypeDetects.contains(RECORD_NAME_PROGUARD)) {
-            _SCANS_STRUCT ss = pDEXInfo->mapTypeDetects.value(RECORD_NAME_PROGUARD);
-            pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_PROGUARD)) {
+            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_PROGUARD);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         } else {
             if (pDEXInfo->basic_info.bIsDeepScan) {
                 if (XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings), "\\/proguard\\/", pPdStruct)) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_PROGUARD, "", "", 0);
-                    pDEXInfo->mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+                    pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
                 }
             }
         }
     }
-}
-
-void SpecAbstract::DEX_handleLanguages(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pDevice)
-
-    _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_LANGUAGE, RECORD_NAME_DALVIK, "", "", 0);
-    pDEXInfo->mapResultLanguages.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
-
-    getLanguage(&(pDEXInfo->mapResultLinkers), &(pDEXInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pDEXInfo->mapResultCompilers), &(pDEXInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pDEXInfo->mapResultLibraries), &(pDEXInfo->mapResultLanguages), pPdStruct);
-    getLanguage(&(pDEXInfo->mapResultTools), &(pDEXInfo->mapResultLanguages), pPdStruct);
-
-    fixLanguage(&(pDEXInfo->mapResultLanguages));
 }
 
 // void SpecAbstract::fixDetects(SpecAbstract::PEINFO_STRUCT *pPEInfo)
@@ -15354,9 +15042,9 @@ void SpecAbstract::DEX_handleLanguages(QIODevice *pDevice, DEXINFO_STRUCT *pDEXI
 //        pPEInfo->_mapImportDetects.remove(RECORD_NAME_VISUALCPP);
 //    }
 
-//    if(pPEInfo->mapSpecialDetects.contains(RECORD_NAME_ENIGMA))
+//    if(pPEInfo->basic_info.mapSpecialDetects.contains(RECORD_NAME_ENIGMA))
 //    {
-//        pPEInfo->mapEntryPointDetects.remove(RECORD_NAME_BORLANDCPP);
+//        pPEInfo->basic_info.mapEntryPointDetects.remove(RECORD_NAME_BORLANDCPP);
 //    }
 //}
 
@@ -17037,6 +16725,41 @@ QList<XBinary::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListScanSt
     // XFormats::sortRecords(&listResult);
 
     return listResult;
+}
+
+SpecAbstract::_SCANS_STRUCT SpecAbstract::format_BorlandDebugInfo(QIODevice *pDevice, SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
+{
+    Q_UNUSED(pOptions)
+
+    _SCANS_STRUCT result = {};
+
+    SubDevice sd(pDevice, nOffset, nSize);
+
+    if (sd.open(QIODevice::ReadOnly)) {
+        XBinary binary(&sd);
+
+        quint16 nSignature = binary.read_uint16(0);
+
+        if (nSignature == 0x52FB) {
+            quint8 nMajor = binary.read_uint8(3);
+            quint8 nMinor = binary.read_uint8(2);
+            quint16 nNumberOfSymbols = binary.read_uint16(0xE);
+            double dVersion = nMajor + (double)nMinor / 100.0;
+
+            result.type = RECORD_TYPE_DEBUGDATA;
+            result.name = RECORD_NAME_BORLANDDEBUGINFO;
+            result.sVersion = QString::number(dVersion, 'f', 2);
+            result.sInfo = "TDS";
+
+            if (nNumberOfSymbols) {
+                result.sInfo = append(result.sInfo, QString("%1 symbols").arg(nNumberOfSymbols));
+            }
+        }
+
+        sd.close();
+    }
+
+    return result;
 }
 
 bool SpecAbstract::MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, SpecAbstract::MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, quint32 nCount,
