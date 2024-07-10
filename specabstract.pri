@@ -1,17 +1,12 @@
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
 
-!contains(XCONFIG, use_dex) {
-    XCONFIG += use_dex
-}
+HEADERS += \
+    $$PWD/specabstract.h
 
-!contains(XCONFIG, use_pdf) {
-    XCONFIG += use_pdf
-}
-
-!contains(XCONFIG, use_archive) {
-    XCONFIG += use_archive
-}
+SOURCES += \
+    $$PWD/signatures.cpp \
+    $$PWD/specabstract.cpp
 
 contains(XCONFIG, use_capstone_x86) {
     !contains(XCONFIG, xcapstone_x86) {
@@ -27,37 +22,9 @@ contains(XCONFIG, use_capstone_x86) {
     }
 }
 
-HEADERS += \
-    $$PWD/specabstract.h
-
-SOURCES += \
-    $$PWD/signatures.cpp \
-    $$PWD/specabstract.cpp
-
-!contains(XCONFIG, xformats) {
-    XCONFIG += xformats
-    include($$PWD/../Formats/xformats.pri)
-}
-
-!contains(XCONFIG, scanitem) {
-    XCONFIG += scanitem
-    include($$PWD/../Formats/scanitem.pri)
-}
-
-contains(XCONFIG, use_dex) {
-    DEFINES += USE_DEX
-    !contains(XCONFIG, xdex) {
-        XCONFIG += xdex
-        include($$PWD/../XDEX/xdex.pri)
-    }
-}
-
-contains(XCONFIG, use_pdf) {
-    DEFINES += USE_PDF
-    !contains(XCONFIG, xpdf) {
-        XCONFIG += xpdf
-        include($$PWD/../XPDF/xpdf.pri)
-    }
+!contains(XCONFIG, xscanengine) {
+    XCONFIG += scanengine
+    include($$PWD/../XScanEngine/xscanengine.pri)
 }
 
 DISTFILES += \
