@@ -23,7 +23,7 @@ contains(XCONFIG, use_capstone_x86) {
 }
 
 !contains(XCONFIG, xscanengine) {
-    XCONFIG += scanengine
+    XCONFIG += xscanengine
     include($$PWD/../XScanEngine/xscanengine.pri)
 }
 
