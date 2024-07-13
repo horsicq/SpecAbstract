@@ -174,8 +174,7 @@ XScanEngine::SCAN_RESULT StaticScan::processMemory(char *pData, qint32 nDataSize
     return result;
 }
 
-XScanEngine::SCAN_RESULT StaticScan::processSubdevice(QIODevice *pDevice, qint64 nOffset, qint64 nSize, XScanEngine::SCAN_OPTIONS *pOptions,
-                                                       XBinary::PDSTRUCT *pPdStruct)
+XScanEngine::SCAN_RESULT StaticScan::processSubdevice(QIODevice *pDevice, qint64 nOffset, qint64 nSize, XScanEngine::SCAN_OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct)
 {
     XScanEngine::SCAN_RESULT result = {};
 

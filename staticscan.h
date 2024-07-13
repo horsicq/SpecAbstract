@@ -43,7 +43,7 @@ public:
     static XScanEngine::SCAN_RESULT processFile(const QString &sFileName, XScanEngine::SCAN_OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct = nullptr);
     static XScanEngine::SCAN_RESULT processMemory(char *pData, qint32 nDataSize, XScanEngine::SCAN_OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct = nullptr);
     static XScanEngine::SCAN_RESULT processSubdevice(QIODevice *pDevice, qint64 nOffset, qint64 nSize, XScanEngine::SCAN_OPTIONS *pOptions,
-                                                      XBinary::PDSTRUCT *pPdStruct = nullptr);
+                                                     XBinary::PDSTRUCT *pPdStruct = nullptr);
 
     static QString getEngineVersion();
 

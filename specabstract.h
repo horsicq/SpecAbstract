@@ -1012,7 +1012,6 @@ public:
         bool bIsUTF8;
         XBinary::UNICODE_TYPE unicodeType;
         QString sHeaderText;
-
     };
 
     struct DEXINFO_STRUCT {
@@ -1542,8 +1541,8 @@ private:
 protected:
     void _errorMessage(const QString &sErrorMessage);
     void _infoMessage(const QString &sInfoMessage);
-    virtual void _processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCAN_RESULT *pScanResult, QIODevice *pDevice, const XScanEngine::SCANID &parentId, XBinary::FT fileType,
-                                XScanEngine::SCAN_OPTIONS *pOptions, bool bAddUnknown, XBinary::PDSTRUCT *pPdStruct);
+    virtual void _processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCAN_RESULT *pScanResult, QIODevice *pDevice, const XScanEngine::SCANID &parentId,
+                                XBinary::FT fileType, XScanEngine::SCAN_OPTIONS *pOptions, bool bAddUnknown, XBinary::PDSTRUCT *pPdStruct);
 
 signals:
     void errorMessage(const QString &sErrorMessage);
