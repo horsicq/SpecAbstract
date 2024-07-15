@@ -1002,8 +1002,6 @@ public:
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultNETObfuscators;
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultNETCompressors;
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultDongleProtection;
-
-        QList<SCAN_STRUCT> listRecursiveDetects;
     };
 
     struct BINARYINFO_STRUCT {
@@ -1258,9 +1256,6 @@ public:
 
     explicit SpecAbstract(QObject *pParent = nullptr);
 
-    static void scan(QIODevice *pDevice, XScanEngine::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, XScanEngine::SCANID parentId,
-                     XScanEngine::SCAN_OPTIONS *pOptions, bool bInit, XBinary::PDSTRUCT *pPdStruct = nullptr);
-
     static QString append(const QString &sResult, const QString &sString);
 
     static QString recordTypeIdToString(qint32 nId);
@@ -1275,7 +1270,7 @@ public:
 
     static SCAN_STRUCT createHeaderScanStruct(const SCAN_STRUCT *pScanStruct);
 
-    static BINARYINFO_STRUCT getBinaryInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+    static BINARYINFO_STRUCT getBinaryInfo(QIODevice *pDevice, XBinary::FT fileType, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                            XBinary::PDSTRUCT *pPdStruct);
     static COMINFO_STRUCT getCOMInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static MSDOSINFO_STRUCT getMSDOSInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
@@ -1289,8 +1284,6 @@ public:
     static PEINFO_STRUCT getPEInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static DEXINFO_STRUCT getDEXInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static ZIPINFO_STRUCT getZIPInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
-    static MACHOFATINFO_STRUCT getMACHOFATInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                               XBinary::PDSTRUCT *pPdStruct);
 
     static _SCANS_STRUCT getScansStruct(quint32 nVariant, XBinary::FT fileType, RECORD_TYPE type, RECORD_NAME name, const QString &sVersion, const QString &sInfo,
                                         qint64 nOffset);
@@ -1397,7 +1390,6 @@ public:
     static void Zip_handle_JAR(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_APK(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_IPA(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void Zip_handle_Recursive(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static DEXINFO_STRUCT Zip_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct,

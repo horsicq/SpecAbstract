@@ -26,137 +26,6 @@ SpecAbstract::SpecAbstract(QObject *pParent) : XScanEngine(pParent)
 {
 }
 
-void SpecAbstract::scan(QIODevice *pDevice, XScanEngine::SCAN_RESULT *pScanResult, qint64 nOffset, qint64 nSize, XScanEngine::SCANID parentId,
-                        XScanEngine::SCAN_OPTIONS *pOptions, bool bInit, XBinary::PDSTRUCT *pPdStruct)
-{
-    XBinary::PDSTRUCT pdStructEmpty = XBinary::createPdStruct();
-
-    if (!pPdStruct) {
-        pPdStruct = &pdStructEmpty;
-    }
-
-    QElapsedTimer *pScanTimer = nullptr;
-
-    if (bInit) {
-        pScanTimer = new QElapsedTimer;
-        pScanTimer->start();
-        pScanResult->sFileName = XBinary::getDeviceFileName(pDevice);
-    }
-
-    SubDevice sd(pDevice, nOffset, nSize);
-
-    if (sd.open(QIODevice::ReadOnly) && (!(pPdStruct->bIsStop))) {
-        QSet<XBinary::FT> stFileTypes = XFormats::getFileTypes(&sd, true, pPdStruct);
-
-        if ((!(pOptions->bAllTypesScan)) && (bInit)) {
-            XBinary::filterFileTypes(&stFileTypes, pOptions->fileType);
-        }
-
-        if (pOptions->bAllTypesScan) {
-            if (stFileTypes.contains(XBinary::FT_PE32) || stFileTypes.contains(XBinary::FT_PE64) || stFileTypes.contains(XBinary::FT_LE) ||
-                stFileTypes.contains(XBinary::FT_LX) || stFileTypes.contains(XBinary::FT_NE)) {
-                SpecAbstract::MSDOSINFO_STRUCT msdos_info = SpecAbstract::getMSDOSInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
-
-                pScanResult->listRecords.append(convert(&(msdos_info.basic_info.listDetects)));
-                pScanResult->listDebugRecords.append(convertHeur(&(msdos_info.basic_info.listHeurs)));
-            }
-        }
-
-        if (stFileTypes.contains(XBinary::FT_PE32) || stFileTypes.contains(XBinary::FT_PE64)) {
-            SpecAbstract::PEINFO_STRUCT pe_info = SpecAbstract::getPEInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
-
-            pScanResult->listRecords.append(convert(&(pe_info.basic_info.listDetects)));
-            pScanResult->listDebugRecords.append(convertHeur(&(pe_info.basic_info.listHeurs)));
-        } else if (stFileTypes.contains(XBinary::FT_ELF32) || stFileTypes.contains(XBinary::FT_ELF64)) {
-            SpecAbstract::ELFINFO_STRUCT elf_info = SpecAbstract::getELFInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
-
-            pScanResult->listRecords.append(convert(&(elf_info.basic_info.listDetects)));
-            pScanResult->listDebugRecords.append(convertHeur(&(elf_info.basic_info.listHeurs)));
-        } else if (stFileTypes.contains(XBinary::FT_MACHO32) || stFileTypes.contains(XBinary::FT_MACHO64)) {
-            SpecAbstract::MACHOINFO_STRUCT mach_info = SpecAbstract::getMACHOInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
-
-            pScanResult->listRecords.append(convert(&(mach_info.basic_info.listDetects)));
-            pScanResult->listDebugRecords.append(convertHeur(&(mach_info.basic_info.listHeurs)));
-        } else if (stFileTypes.contains(XBinary::FT_LE)) {
-            SpecAbstract::LEINFO_STRUCT le_info = SpecAbstract::getLEInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
-
-            pScanResult->listRecords.append(convert(&(le_info.basic_info.listDetects)));
-            pScanResult->listDebugRecords.append(convertHeur(&(le_info.basic_info.listHeurs)));
-        } else if (stFileTypes.contains(XBinary::FT_LX)) {
-            SpecAbstract::LXINFO_STRUCT lx_info = SpecAbstract::getLXInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
-
-            pScanResult->listRecords.append(convert(&(lx_info.basic_info.listDetects)));
-            pScanResult->listDebugRecords.append(convertHeur(&(lx_info.basic_info.listHeurs)));
-        } else if (stFileTypes.contains(XBinary::FT_NE)) {
-            SpecAbstract::NEINFO_STRUCT ne_info = SpecAbstract::getNEInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
-
-            pScanResult->listRecords.append(convert(&(ne_info.basic_info.listDetects)));
-            pScanResult->listDebugRecords.append(convertHeur(&(ne_info.basic_info.listHeurs)));
-        } else if (stFileTypes.contains(XBinary::FT_MSDOS)) {
-            SpecAbstract::MSDOSINFO_STRUCT msdos_info = SpecAbstract::getMSDOSInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
-
-            pScanResult->listRecords.append(convert(&(msdos_info.basic_info.listDetects)));
-            pScanResult->listDebugRecords.append(convertHeur(&(msdos_info.basic_info.listHeurs)));
-        } else if (stFileTypes.contains(XBinary::FT_ZIP) || stFileTypes.contains(XBinary::FT_JAR) || stFileTypes.contains(XBinary::FT_APK) ||
-                   stFileTypes.contains(XBinary::FT_IPA)) {
-            // mb TODO split detects
-            SpecAbstract::ZIPINFO_STRUCT zip_info = SpecAbstract::getZIPInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
-
-            pScanResult->listRecords.append(convert(&(zip_info.basic_info.listDetects)));
-            pScanResult->listDebugRecords.append(convertHeur(&(zip_info.basic_info.listHeurs)));
-        } else if (stFileTypes.contains(XBinary::FT_MACHOFAT)) {
-            SpecAbstract::MACHOFATINFO_STRUCT machofat_info = SpecAbstract::getMACHOFATInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
-
-            pScanResult->listRecords.append(convert(&(machofat_info.basic_info.listDetects)));
-            pScanResult->listDebugRecords.append(convertHeur(&(machofat_info.basic_info.listHeurs)));
-        } else if (stFileTypes.contains(XBinary::FT_DEX)) {
-            SpecAbstract::DEXINFO_STRUCT dex_info = SpecAbstract::getDEXInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
-
-            pScanResult->listRecords.append(convert(&(dex_info.basic_info.listDetects)));
-            pScanResult->listDebugRecords.append(convertHeur(&(dex_info.basic_info.listHeurs)));
-        } else if (stFileTypes.contains(XBinary::FT_COM) && (stFileTypes.size() == 1)) {
-            SpecAbstract::COMINFO_STRUCT com_info = SpecAbstract::getCOMInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
-
-            pScanResult->listRecords.append(convert(&(com_info.basic_info.listDetects)));
-            pScanResult->listDebugRecords.append(convertHeur(&(com_info.basic_info.listHeurs)));
-        } else {
-            SpecAbstract::BINARYINFO_STRUCT binary_info = SpecAbstract::getBinaryInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
-
-            pScanResult->listRecords.append(convert(&(binary_info.basic_info.listDetects)));
-            pScanResult->listDebugRecords.append(convertHeur(&(binary_info.basic_info.listHeurs)));
-
-            SpecAbstract::COMINFO_STRUCT com_info = SpecAbstract::getCOMInfo(&sd, parentId, pOptions, nOffset, pPdStruct);
-
-            pScanResult->listRecords.append(convert(&(com_info.basic_info.listDetects)));
-            pScanResult->listDebugRecords.append(convertHeur(&(com_info.basic_info.listHeurs)));
-        }
-
-        sd.close();
-    }
-
-    //    if(pOptions->bIsTest)
-    //    {
-    //        QList<SpecAbstract::SCAN_STRUCT> _listDetects;
-
-    //        qint32 nNumberOfRecords=pScanResult->listRecords.count();
-
-    //        for(qint32 i=0;i<nNumberOfRecords;i++)
-    //        {
-    //            if(pScanResult->listRecords.at(i).sInfo=="TEST")
-    //            {
-    //                _listDetects.append(pScanResult->listRecords.at(i));
-    //            }
-    //        }
-
-    //        pScanResult->listRecords=_listDetects;
-    //    }
-
-    if (pScanTimer) {
-        pScanResult->nScanTime = pScanTimer->elapsed();
-        delete pScanTimer;
-    }
-}
-
 QString SpecAbstract::append(const QString &sResult, const QString &sString)
 {
     return XBinary::appendText(sResult, sString, ",");
@@ -1999,24 +1868,9 @@ void SpecAbstract::_handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPd
     pBasic_info->listDetects.append(pBasic_info->mapResultResources.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultDatabases.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultImages.values());
-
-    if (!pBasic_info->listDetects.count()) {
-        if (pBasic_info->id.fileType != XBinary::FT_COM) {
-            _SCANS_STRUCT ssUnknown = {};
-
-            ssUnknown.type = SpecAbstract::RECORD_TYPE_UNKNOWN;
-            ssUnknown.name = SpecAbstract::RECORD_NAME_UNKNOWN;
-
-            pBasic_info->listDetects.append(scansToScan(pBasic_info, &ssUnknown));
-
-            pBasic_info->bIsUnknown = true;
-        }
-    }
-
-    pBasic_info->listDetects.append(pBasic_info->listRecursiveDetects);
 }
 
-SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, XBinary::FT fileType,  XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                                             XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
@@ -2028,7 +1882,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
 
     if (binary.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
         result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = XBinary::FT_BINARY;
+        result.basic_info.id.fileType = fileType;
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = binary.getSignature(0, 150);
@@ -3104,8 +2958,6 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XScanE
             Zip_handle_IPA(pDevice, pOptions, &result, pPdStruct);
         }
 
-        Zip_handle_Recursive(pDevice, pOptions, &result, pPdStruct);
-
         Zip_handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
 
         _handleResult(&(result.basic_info), pPdStruct);
@@ -3116,90 +2968,6 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XScanE
     return result;
 }
 
-SpecAbstract::MACHOFATINFO_STRUCT SpecAbstract::getMACHOFATInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                                                XBinary::PDSTRUCT *pPdStruct)
-{
-    QElapsedTimer timer;
-    timer.start();
-
-    MACHOFATINFO_STRUCT result = {};
-
-    XMACHOFat xmachofat(pDevice);
-
-    if (xmachofat.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
-        result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = XBinary::FT_ARCHIVE;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = xmachofat.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowDetects;
-        result.basic_info.bIsTest = pOptions->bIsTest;
-        result.basic_info.memoryMap = xmachofat.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
-
-        //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
-
-        result.listArchiveRecords = xmachofat.getRecords(-1, pPdStruct);
-
-        qint32 nNumberOfRecords = result.listArchiveRecords.count();
-
-        qint32 _nFreeIndex = XBinary::getFreeIndex(pPdStruct);
-        XBinary::setPdStructInit(pPdStruct, _nFreeIndex, nNumberOfRecords);
-
-        for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
-            XScanEngine::SCAN_RESULT scanResult = {};
-
-            XScanEngine::SCANID _parentId = result.basic_info.id;
-            _parentId.filePart = XBinary::FILEPART_ARCHIVERECORD;
-            _parentId.sInfo = result.listArchiveRecords.at(i).sFileName;
-            _parentId.bVirtual = true;  // TODO Check
-
-            XBinary::setPdStructCurrent(pPdStruct, _nFreeIndex, i);
-            XBinary::setPdStructStatus(pPdStruct, _nFreeIndex, result.listArchiveRecords.at(i).sFileName);
-
-            QTemporaryFile fileTemp;
-
-            if (fileTemp.open()) {
-                QString sTempFileName = fileTemp.fileName();
-
-                if (xmachofat.decompressToFile(&(result.listArchiveRecords.at(i)), sTempFileName)) {
-                    QFile file;
-                    file.setFileName(sTempFileName);
-
-                    if (file.open(QIODevice::ReadOnly)) {
-                        scan(&file, &scanResult, 0, file.size(), _parentId, pOptions, false, pPdStruct);
-                        file.close();
-                    }
-                }
-            }
-
-            // result.basic_info.listRecursiveDetects.append(scanResult.listRecords);
-        }
-
-        XBinary::setPdStructFinished(pPdStruct, _nFreeIndex);
-
-        _SCANS_STRUCT ssFormat = getScansStruct(0, XBinary::FT_ARCHIVE, RECORD_TYPE_FORMAT, RECORD_NAME_MACHOFAT, "", "", 0);
-
-        ssFormat.sVersion = xmachofat.getVersion();
-        ssFormat.sInfo = QString("%1 records").arg(xmachofat.getNumberOfRecords(pPdStruct));
-
-        result.basic_info.listDetects.append(scansToScan(&(result.basic_info), &ssFormat));
-
-        result.basic_info.listDetects.append(result.basic_info.listRecursiveDetects);
-    }
-
-    result.basic_info.nElapsedTime = timer.elapsed();
-
-    return result;
-}
 
 SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStruct(quint32 nVariant, XBinary::FT fileType, SpecAbstract::RECORD_TYPE type, SpecAbstract::RECORD_NAME name,
                                                          const QString &sVersion, const QString &sInfo, qint64 nOffset)
@@ -11269,119 +11037,6 @@ void SpecAbstract::Zip_handle_IPA(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
     }
 }
 
-void SpecAbstract::Zip_handle_Recursive(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pOptions)
-
-    XZip xzip(pDevice);
-
-    if (xzip.isValid(pPdStruct)) {
-        if (((pZipInfo->bIsAPK) || (pZipInfo->bIsAPKS) || (pZipInfo->bIsIPA)) && (pOptions->bIsRecursiveScan)) {
-            if (pOptions->bIsDeepScan) {
-                qint32 nNumberOfRecords = pZipInfo->listArchiveRecords.count();
-
-                qint32 _nFreeIndex = XBinary::getFreeIndex(pPdStruct);
-                XBinary::setPdStructInit(pPdStruct, _nFreeIndex, nNumberOfRecords);
-
-                for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
-                    if (pZipInfo->basic_info.bIsTest && pZipInfo->basic_info.bIsVerbose) {
-                        _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_PROTECTOR, RECORD_NAME_UNKNOWN, "", "", 0);
-
-                        if (pZipInfo->listArchiveRecords.at(i).sFileName.contains("libdiresu.so") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("assets/agconfig") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libkonyjsvm.so") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libapproov.so") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("apkPackerConfiguration") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libAppSuit.so") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libUnpacker.so") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libcovault.so") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libcovault-appsec.so") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libsecenh.so") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("guardit4j.fin") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libmedl.so") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libCodeGuard.so") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libshield.so") ||
-                            pZipInfo->listArchiveRecords.at(i).sFileName.contains("libvosWrapperEx.so")) {
-                            ss.sVersion = pZipInfo->listArchiveRecords.at(i).sFileName;
-                            pZipInfo->basic_info.mapResultAPKProtectors.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
-                        }
-                    }
-
-                    XBinary::setPdStructCurrent(pPdStruct, _nFreeIndex, i);
-                    XBinary::setPdStructStatus(pPdStruct, _nFreeIndex, pZipInfo->listArchiveRecords.at(i).sFileName);
-#ifdef QT_DEBUG
-                    qDebug("%s", pZipInfo->listArchiveRecords.at(i).sFileName.toLatin1().data());
-#endif
-                    //                    if(pZipInfo->listArchiveRecords.at(i).sFileName == "res/raw/pinapp")
-                    //                    {
-                    //                        qDebug("%s", pZipInfo->listArchiveRecords.at(i).sFileName.toLatin1().data());
-                    //                    }
-
-                    QByteArray baRecordData = xzip.decompress(&(pZipInfo->listArchiveRecords.at(i)), pPdStruct, 0, 0x200);  // TODO
-
-                    QSet<XBinary::FT> stFileTypes = XFormats::getFileTypes(&baRecordData, true);
-
-                    if (stFileTypes.contains(XBinary::FT_DEX) || stFileTypes.contains(XBinary::FT_ELF32) || stFileTypes.contains(XBinary::FT_ELF64) ||
-                        stFileTypes.contains(XBinary::FT_PE32) || stFileTypes.contains(XBinary::FT_PE64) || stFileTypes.contains(XBinary::FT_MACHOFAT) ||
-                        stFileTypes.contains(XBinary::FT_MACHO32) || stFileTypes.contains(XBinary::FT_MACHO64) || stFileTypes.contains(XBinary::FT_ZIP)) {
-                        XScanEngine::SCAN_RESULT scanResult = {};
-
-                        XScanEngine::SCANID _parentId = pZipInfo->basic_info.id;
-                        _parentId.filePart = XBinary::FILEPART_ARCHIVERECORD;
-                        _parentId.sInfo = pZipInfo->listArchiveRecords.at(i).sFileName;
-                        _parentId.bVirtual = true;  // TODO Check
-
-                        qint64 _nUncompressedSize = pZipInfo->listArchiveRecords.at(i).nUncompressedSize;
-                        qint64 _nRecordDataSize = baRecordData.size();
-
-                        if (_nUncompressedSize > _nRecordDataSize) {
-                            QTemporaryFile fileTemp;
-
-                            if (fileTemp.open()) {
-                                QString sTempFileName = fileTemp.fileName();
-
-                                if (xzip.decompressToFile(&(pZipInfo->listArchiveRecords.at(i)), sTempFileName, pPdStruct)) {
-                                    QFile file;
-                                    file.setFileName(sTempFileName);
-
-                                    if (file.open(QIODevice::ReadOnly)) {
-                                        scan(&file, &scanResult, 0, file.size(), _parentId, pOptions, false, pPdStruct);
-                                        file.close();
-                                    }
-                                }
-                            }
-                        } else {
-                            QBuffer buffer(&baRecordData);
-
-                            if (buffer.open(QIODevice::ReadOnly)) {
-                                scan(&buffer, &scanResult, 0, buffer.size(), _parentId, pOptions, false, pPdStruct);
-
-                                buffer.close();
-                            }
-                        }
-
-                        if (stFileTypes.contains(XBinary::FT_DEX)) {
-                            // TODO get language(Java/Kotlin) from DEX
-                            // bIsKotlin
-                            // bIsJava
-                        }
-
-                        //                        if( stFileTypes.contains(XBinary::FT_ELF32)||
-                        //                            stFileTypes.contains(XBinary::FT_ELF64))
-                        //                        {
-                        //                            filterResult(&scanResult.listRecords,QSet<RECORD_TYPE>()<<RECORD_TYPE_PACKER<<RECORD_TYPE_PROTECTOR);
-                        //                        }
-
-                        // pZipInfo->basic_info.listRecursiveDetects.append(scanResult.listRecords);
-                    }
-                }
-
-                XBinary::setPdStructFinished(pPdStruct, _nFreeIndex);
-            }
-        }
-    }
-}
-
 void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
@@ -16880,9 +16535,6 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
         // mb TODO split detects
         SpecAbstract::ZIPINFO_STRUCT zip_info = SpecAbstract::getZIPInfo(pDevice, parentId, pOptions, 0, pPdStruct);
         basic_info = zip_info.basic_info;
-    } else if ((fileType == XBinary::FT_MACHOFAT)) {
-        SpecAbstract::MACHOFATINFO_STRUCT machofat_info = SpecAbstract::getMACHOFATInfo(pDevice, parentId, pOptions, 0, pPdStruct);
-        basic_info = machofat_info.basic_info;
     } else if ((fileType == XBinary::FT_DEX)) {
         SpecAbstract::DEXINFO_STRUCT dex_info = SpecAbstract::getDEXInfo(pDevice, parentId, pOptions, 0, pPdStruct);
         basic_info = dex_info.basic_info;
@@ -16890,8 +16542,21 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
         SpecAbstract::COMINFO_STRUCT com_info = SpecAbstract::getCOMInfo(pDevice, parentId, pOptions, 0, pPdStruct);
         basic_info = com_info.basic_info;
     } else {
-        SpecAbstract::BINARYINFO_STRUCT binary_info = SpecAbstract::getBinaryInfo(pDevice, parentId, pOptions, 0, pPdStruct);
+        SpecAbstract::BINARYINFO_STRUCT binary_info = SpecAbstract::getBinaryInfo(pDevice, fileType, parentId, pOptions, 0, pPdStruct);
         basic_info = binary_info.basic_info;
+    }
+
+    if (bAddUnknown) {
+        if (!basic_info.listDetects.count()) {
+            _SCANS_STRUCT ssUnknown = {};
+
+            ssUnknown.type = SpecAbstract::RECORD_TYPE_UNKNOWN;
+            ssUnknown.name = SpecAbstract::RECORD_NAME_UNKNOWN;
+
+            basic_info.listDetects.append(scansToScan(&basic_info, &ssUnknown));
+
+            basic_info.bIsUnknown = true;
+        }
     }
 
     pScanResult->listRecords.append(convert(&(basic_info.listDetects)));
