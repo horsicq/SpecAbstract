@@ -9724,6 +9724,42 @@ void SpecAbstract::Binary_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN
             }
         }
     }
+
+    if (binary.getSize() > 16) {
+        if (binary.read_uint32(binary.getSize() - 16) == 0x534954) {
+            // typedef struct {
+            //     unsigned_32 signature;
+            //     unsigned_32 vendor;
+            //     unsigned_32 type;
+            //     unsigned_32 size;
+            // } TISTrailer;
+
+            qint64 nHeaderOffset = binary.getSize() - 16;
+
+            quint32 nVendor = binary.read_uint32(nHeaderOffset + 4);
+            quint32 nType = binary.read_uint32(nHeaderOffset + 8);
+            quint32 nDebugSize = binary.read_uint32(nHeaderOffset + 12);
+
+            if ((nVendor == 0) && (nType == 0)) {
+                qint64 nDebugOffset = nHeaderOffset - nDebugSize;
+
+                if (nDebugOffset >= 0) {
+                    quint16 nVersion = binary.read_uint16(nDebugOffset + 4);
+
+                    _SCANS_STRUCT ssDebugInfo = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_DEBUGDATA, RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
+                    ssDebugInfo.sVersion = QString::number(nVersion) + ".0";
+                    ssDebugInfo.sInfo = QString("0x%1 bytes").arg(XBinary::valueToHexEx(nDebugSize));
+
+                    pBinaryInfo->basic_info.mapResultDebugData.insert(ssDebugInfo.name, scansToScan(&(pBinaryInfo->basic_info), &ssDebugInfo));
+
+
+                    _SCANS_STRUCT ssLinker = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_LINKER, RECORD_NAME_WATCOMLINKER, "", "", 0);
+
+                    pBinaryInfo->basic_info.mapResultLinkers.insert(ssLinker.name, scansToScan(&(pBinaryInfo->basic_info), &ssLinker));
+                }
+            }
+        }
+    }
 }
 
 void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo)
@@ -12541,14 +12577,13 @@ void SpecAbstract::ELF_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OP
         }
         
         if (pELFInfo->nDebugOffset > 0) {
-            quint32 nDebugDataSize = elf.read_uint32(pELFInfo->nDebugOffset);
+            // quint32 nDebugDataSize = elf.read_uint32(pELFInfo->nDebugOffset);
             quint16 nVersion = elf.read_uint16(pELFInfo->nDebugOffset + 4);
 
             if ((nVersion >= 0) && (nVersion <= 7)) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_DEBUGDATA, RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
 
-                ss.sVersion = QString::number(nVersion);
-                ss.sInfo = append(ss.sInfo, QString("0x%1 bytes").arg(XBinary::valueToHexEx(nDebugDataSize)));
+                ss.sVersion = QString::number(nVersion) + ".0";
 
                 pELFInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
             }
