@@ -230,6 +230,7 @@ public:
         RECORD_NAME_CODEGEAROBJECTPASCALDELPHI,
         RECORD_NAME_CODESIGN,
         RECORD_NAME_CODEVEIL,
+        RECORD_NAME_CODEVIEWDEBUGINFO,
         RECORD_NAME_CODEWALL,
         RECORD_NAME_COFF,
         RECORD_NAME_COMEXSIGNAPK,
@@ -298,6 +299,7 @@ public:
         RECORD_NAME_DRAGONARMOR,
         RECORD_NAME_DROPBOX,
         RECORD_NAME_DVCLAL,
+        RECORD_NAME_DWARFDEBUGINFO,
         RECORD_NAME_DX,
         RECORD_NAME_DXSHIELD,
         RECORD_NAME_DYAMAR,
@@ -793,6 +795,7 @@ public:
         RECORD_NAME_WATCHOSSDK,
         RECORD_NAME_WATCOMC,
         RECORD_NAME_WATCOMCCPP,
+        RECORD_NAME_WATCOMDEBUGINFO,
         RECORD_NAME_WATCOMLINKER,
         RECORD_NAME_WAV,
         RECORD_NAME_WDOSX,
@@ -1078,6 +1081,8 @@ public:
         QList<XELF::NOTE> listNotes;
         qint32 nSymTabSection;
         qint64 nSymTabOffset;
+        qint32 nDebugSection;
+        qint64 nDebugOffset;
 
         qint32 nCommentSection;
         qint32 nStringTableSection;
@@ -1521,8 +1526,6 @@ public:
 
     static QList<XScanEngine::SCANSTRUCT> convert(QList<SCAN_STRUCT> *pListScanStructs);
     static QList<XScanEngine::DEBUG_RECORD> convertHeur(QList<DETECT_RECORD> *pListDetectRecords);
-
-    static _SCANS_STRUCT format_BorlandDebugInfo(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
 
 private:
     static bool MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, quint32 nCount, XBinary::FT fileType1,

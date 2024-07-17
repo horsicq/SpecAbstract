@@ -234,6 +234,7 @@ QString SpecAbstract::recordNameIdToString(qint32 nId)
         case RECORD_NAME_CODEGEAROBJECTPASCALDELPHI: sResult = QString("Codegear Object Pascal(Delphi)"); break;
         case RECORD_NAME_CODESIGN: sResult = QString("codesign"); break;
         case RECORD_NAME_CODEVEIL: sResult = QString("CodeVeil"); break;
+        case RECORD_NAME_CODEVIEWDEBUGINFO: sResult = QString("CodeView Debug Info"); break;
         case RECORD_NAME_CODEWALL: sResult = QString("CodeWall"); break;
         case RECORD_NAME_COFF: sResult = QString("COFF"); break;
         case RECORD_NAME_COMEXSIGNAPK: sResult = QString("COMEX SignApk"); break;
@@ -302,6 +303,7 @@ QString SpecAbstract::recordNameIdToString(qint32 nId)
         case RECORD_NAME_DRAGONARMOR: sResult = QString("DragonArmor"); break;
         case RECORD_NAME_DROPBOX: sResult = QString("Dropbox"); break;
         case RECORD_NAME_DVCLAL: sResult = QString("DVCLAL"); break;
+        case RECORD_NAME_DWARFDEBUGINFO: sResult = QString("DWARF Debug Info"); break;
         case RECORD_NAME_DX: sResult = QString("dx"); break;
         case RECORD_NAME_DXSHIELD: sResult = QString("DxShield"); break;
         case RECORD_NAME_DYAMAR: sResult = QString("DYAMAR"); break;
@@ -797,6 +799,7 @@ QString SpecAbstract::recordNameIdToString(qint32 nId)
         case RECORD_NAME_WATCHOSSDK: sResult = QString("watchOS SDK"); break;
         case RECORD_NAME_WATCOMC: sResult = QString("Watcom C"); break;
         case RECORD_NAME_WATCOMCCPP: sResult = QString("Watcom C/C++"); break;
+        case RECORD_NAME_WATCOMDEBUGINFO: sResult = QString("Watcom Debug Info"); break;
         case RECORD_NAME_WATCOMLINKER: sResult = QString("Watcom linker"); break;
         case RECORD_NAME_WAV: sResult = QString("WAV"); break;
         case RECORD_NAME_WDOSX: sResult = QString("WDOSX"); break;
@@ -2173,6 +2176,12 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XScanE
 
         if (result.nSymTabSection != -1) {
             result.nSymTabOffset = result.listSectionRecords.at(result.nSymTabSection).nOffset;
+        }
+        
+        result.nDebugSection = elf.getSectionIndexByName(".debug_info", &result.listSectionRecords);
+
+        if (result.nDebugSection != -1) {
+            result.nDebugOffset = result.listSectionRecords.at(result.nDebugSection).nOffset;
         }
 
         result.nCommentSection = XELF::getSectionNumber(".comment", &result.listSectionRecords);
@@ -9623,6 +9632,8 @@ void SpecAbstract::Binary_handle_Certificates(QIODevice *pDevice, XScanEngine::S
 void SpecAbstract::Binary_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo,
                                            XBinary::PDSTRUCT *pPdStruct)
 {
+    Q_UNUSED(pPdStruct)
+
     XBinary binary(pDevice, pOptions->bIsImage);
 
     if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MINGW)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
@@ -9634,10 +9645,84 @@ void SpecAbstract::Binary_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN
         // TODO more infos
         _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PDBFILELINK);
         pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
-    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_BORLANDDEBUGINFO)) && (pBinaryInfo->basic_info.id.nSize >= 10)) {
-        _SCANS_STRUCT ss = format_BorlandDebugInfo(pDevice, pOptions, 0, pDevice->size(), pPdStruct);
+    }
 
-        pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+    if (binary.getSize() > 10) {
+        quint16 nSignature = binary.read_uint16(0);
+
+        if (nSignature == 0x52FB) {
+            _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_DEBUGDATA, RECORD_NAME_BORLANDDEBUGINFO, "", "", 0);
+
+            quint8 nMajor = binary.read_uint8(3);
+            quint8 nMinor = binary.read_uint8(2);
+            quint16 nNumberOfSymbols = binary.read_uint16(0xE);
+            double dVersion = nMajor + (double)nMinor / 100.0;
+
+            ss.type = RECORD_TYPE_DEBUGDATA;
+            ss.name = RECORD_NAME_BORLANDDEBUGINFO;
+            ss.sVersion = QString::number(dVersion, 'f', 2);
+            ss.sInfo = "TDS";
+
+            if (nNumberOfSymbols) {
+                ss.sInfo = append(ss.sInfo, QString("%1 symbols").arg(nNumberOfSymbols));
+            }
+
+            pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+    }
+    if (binary.getSize() > 16) {
+        // unsigned_16     signature;      /* == 0x8386                    */
+        // unsigned_8      exe_major_ver;  /* == 2 or 3                    */
+        // unsigned_8      exe_minor_ver;  /* == 0                         */
+        // unsigned_8      obj_major_ver;  /* == 1                         */
+        // unsigned_8      obj_minor_ver;  /* == 1                         */
+        // unsigned_16     lang_size;
+        // unsigned_16     segment_size;
+        // unsigned_32     debug_size;
+        // TODO more
+        if (binary.read_uint16(binary.getSize() - 14) == 0x8386) {
+            qint64 nHeaderOffset = binary.getSize() - 14;
+            quint8 exe_major_ver = binary.read_uint16(nHeaderOffset + 2);
+            quint8 exe_minor_ver = binary.read_uint16(nHeaderOffset + 3);
+            // quint8 obj_major_ver = binary.read_uint16(nHeaderOffset + 4);
+            // quint8 obj_minor_ver = binary.read_uint16(nHeaderOffset + 5);
+            // quint16 nLangSize = binary.read_uint16(nHeaderOffset + 6);
+            // quint16 nSegmentSize = binary.read_uint16(nHeaderOffset + 8);
+            quint32 nDebugSize = binary.read_uint32(nHeaderOffset + 10);
+
+            qint64 nDebugOffset = binary.getSize() - nDebugSize;
+
+            if (nDebugOffset >= 0) {
+                // TODO Language
+                // https://github.com/open-watcom/open-watcom-v2/blob/e7d0bef544987dd0429f547a2119e0c9d9472770/bld/exedump/c/wdwarf.c#L132
+                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_DEBUGDATA, RECORD_NAME_WATCOMDEBUGINFO, "", "", 0);
+                ss.sVersion = QString("%1.%2").arg(QString::number(exe_major_ver), QString::number(exe_minor_ver));
+                ss.sInfo = QString("0x%1 bytes").arg(XBinary::valueToHexEx(nDebugSize));
+
+                pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+            }
+        }
+    }
+
+    if (binary.getSize() > 16) {
+        if (binary.read_uint16(binary.getSize() - 8) == 0x424E) {
+            QString sSignature = binary.read_ansiString(binary.getSize() - 8, 4);
+
+            if ((sSignature == "NB05") || (sSignature == "NB07") || (sSignature == "NB08") || (sSignature == "NB09") || (sSignature == "NB10") || (sSignature == "NB11")) {
+                qint64 nHeaderOffset = binary.getSize() - 8;
+                quint32 nDebugSize = binary.read_uint32(nHeaderOffset + 4);
+
+                qint64 nDebugOffset = binary.getSize() - nDebugSize;
+
+                if (nDebugOffset >= 0) {
+                    _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_DEBUGDATA, RECORD_NAME_CODEVIEWDEBUGINFO, "", "", 0);
+                    ss.sVersion = "4.0";
+                    ss.sInfo = QString("0x%1 bytes").arg(XBinary::valueToHexEx(nDebugSize));
+
+                    pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+                }
+            }
+        }
     }
 }
 
@@ -11301,13 +11386,6 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OP
             }
         }
 
-        if (pMSDOSInfo->nOverlaySize > 10) {
-            if (XBinary::compareSignatureStrings(pMSDOSInfo->sOverlaySignature, "FB52")) {
-                _SCANS_STRUCT ss = format_BorlandDebugInfo(pDevice, pOptions, pMSDOSInfo->nOverlayOffset, pMSDOSInfo->nOverlaySize, pPdStruct);
-                pMSDOSInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
-            }
-        }
-
         if (ssLinker.type != RECORD_TYPE_UNKNOWN) {
             pMSDOSInfo->basic_info.mapResultLinkers.insert(ssLinker.name, scansToScan(&(pMSDOSInfo->basic_info), &ssLinker));
         }
@@ -12457,6 +12535,20 @@ void SpecAbstract::ELF_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OP
 
                 ss.sInfo = pELFInfo->listSectionRecords.at(pELFInfo->nSymTabSection).sName;
                 ss.sInfo = append(ss.sInfo, QString("%1 symbols").arg(nNumberOfSymbols));
+
+                pELFInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+            }
+        }
+        
+        if (pELFInfo->nDebugOffset > 0) {
+            quint32 nDebugDataSize = elf.read_uint32(pELFInfo->nDebugOffset);
+            quint16 nVersion = elf.read_uint16(pELFInfo->nDebugOffset + 4);
+
+            if ((nVersion >= 0) && (nVersion <= 7)) {
+                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_DEBUGDATA, RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
+
+                ss.sVersion = QString::number(nVersion);
+                ss.sInfo = append(ss.sInfo, QString("0x%1 bytes").arg(XBinary::valueToHexEx(nDebugDataSize)));
 
                 pELFInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
             }
@@ -16352,42 +16444,6 @@ QList<XScanEngine::DEBUG_RECORD> SpecAbstract::convertHeur(QList<DETECT_RECORD> 
     }
 
     return listResult;
-}
-
-SpecAbstract::_SCANS_STRUCT SpecAbstract::format_BorlandDebugInfo(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
-                                                                  XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pOptions)
-
-    _SCANS_STRUCT result = {};
-
-    SubDevice sd(pDevice, nOffset, nSize);
-
-    if (sd.open(QIODevice::ReadOnly)) {
-        XBinary binary(&sd);
-
-        quint16 nSignature = binary.read_uint16(0);
-
-        if (nSignature == 0x52FB) {
-            quint8 nMajor = binary.read_uint8(3);
-            quint8 nMinor = binary.read_uint8(2);
-            quint16 nNumberOfSymbols = binary.read_uint16(0xE);
-            double dVersion = nMajor + (double)nMinor / 100.0;
-
-            result.type = RECORD_TYPE_DEBUGDATA;
-            result.name = RECORD_NAME_BORLANDDEBUGINFO;
-            result.sVersion = QString::number(dVersion, 'f', 2);
-            result.sInfo = "TDS";
-
-            if (nNumberOfSymbols) {
-                result.sInfo = append(result.sInfo, QString("%1 symbols").arg(nNumberOfSymbols));
-            }
-        }
-
-        sd.close();
-    }
-
-    return result;
 }
 
 bool SpecAbstract::MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, SpecAbstract::MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, quint32 nCount,
