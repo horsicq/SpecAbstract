@@ -568,6 +568,7 @@ public:
         RECORD_NAME_OPENSOURCECODECRYPTER,
         RECORD_NAME_OPENVMS,
         RECORD_NAME_OPENVOS,
+        RECORD_NAME_OPENWATCOMCCPP,
         RECORD_NAME_OPERA,
         RECORD_NAME_ORACLESOLARISLINKEDITORS,
         RECORD_NAME_OREANSCODEVIRTUALIZER,
@@ -1093,6 +1094,7 @@ public:
 
     struct LEINFO_STRUCT {
         BASIC_INFO basic_info;
+        qint64 nEntryPointOffset;
         QString sEntryPointSignature;
         QString sOverlaySignature;
         qint64 nOverlayOffset;
@@ -1103,6 +1105,7 @@ public:
 
     struct LXINFO_STRUCT {
         BASIC_INFO basic_info;
+        qint64 nEntryPointOffset;
         QString sEntryPointSignature;
         QString sOverlaySignature;
         qint64 nOverlayOffset;
@@ -1113,6 +1116,7 @@ public:
 
     struct NEINFO_STRUCT {
         BASIC_INFO basic_info;
+        qint64 nEntryPointOffset;
         QString sEntryPointSignature;
         QString sOverlaySignature;
         qint64 nOverlayOffset;
@@ -1256,7 +1260,7 @@ public:
         bool bIsValid;
         QString sVersion;
         QString sInfo;
-        quint64 nValue;
+        QVariant vValue;
     };
 
     explicit SpecAbstract(QObject *pParent = nullptr);
@@ -1377,13 +1381,16 @@ public:
     static void LE_handle_OperationSystems(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void LE_handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void LE_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct);
+    static void LE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void LX_handle_OperationSystems(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct);
     static void LX_handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct);
     static void LX_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct);
+    static void LX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void NE_handle_OperationSystems(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void NE_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct);
+    static void NE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
     static void DEX_handle_Dexguard(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
@@ -1414,6 +1421,7 @@ public:
     static VI_STRUCT get_GCC_vi2(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT get_Nim_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT get_Zig_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_Watcom_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT get_PyInstaller_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT _get_GCC_string(const QString &sString);
     static VI_STRUCT get_WindowsInstaller_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);

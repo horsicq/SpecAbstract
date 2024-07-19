@@ -572,6 +572,7 @@ QString SpecAbstract::recordNameIdToString(qint32 nId)
         case RECORD_NAME_OPENSOURCECODECRYPTER: sResult = QString("Open Source Code Crypter"); break;
         case RECORD_NAME_OPENVMS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_OPENVMS); break;
         case RECORD_NAME_OPENVOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_OPENVOS); break;
+        case RECORD_NAME_OPENWATCOMCCPP: sResult = QString("Open Watcom C/C++"); break;
         case RECORD_NAME_OPERA: sResult = QString("Opera"); break;
         case RECORD_NAME_ORACLESOLARISLINKEDITORS: sResult = QString("Oracle Solaris Link Editors"); break;
         case RECORD_NAME_OREANSCODEVIRTUALIZER: sResult = QString("Oreans CodeVirtualizer"); break;
@@ -2305,7 +2306,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XScanEng
         result.basic_info.id.nOffset = nOffset;
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
-
+        result.nEntryPointOffset = le.getEntryPointOffset(&(result.basic_info.memoryMap));
         result.sEntryPointSignature = le.getSignature(le.getEntryPointOffset(&(result.basic_info.memoryMap)), 150);
 
         result.listRichSignatures = le.getRichSignatureRecords();
@@ -2316,6 +2317,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XScanEng
         LE_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
         LE_handle_Microsoft(pDevice, pOptions, &result, pPdStruct);
         LE_handle_Borland(pDevice, pOptions, &result, pPdStruct);
+        LE_handle_Tools(pDevice, pOptions, &result, pPdStruct);
 
         _handleResult(&(result.basic_info), pPdStruct);
     }
@@ -2356,7 +2358,7 @@ SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice, XScanEng
         result.basic_info.id.nOffset = nOffset;
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
-
+        result.nEntryPointOffset = lx.getEntryPointOffset(&(result.basic_info.memoryMap));
         result.sEntryPointSignature = lx.getSignature(lx.getEntryPointOffset(&(result.basic_info.memoryMap)), 150);
 
         result.listRichSignatures = lx.getRichSignatureRecords();
@@ -2367,6 +2369,7 @@ SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice, XScanEng
         LX_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
         LX_handle_Microsoft(pDevice, pOptions, &result, pPdStruct);
         LX_handle_Borland(pDevice, pOptions, &result, pPdStruct);
+        LX_handle_Tools(pDevice, pOptions, &result, pPdStruct);
 
         _handleResult(&(result.basic_info), pPdStruct);
     }
@@ -2407,6 +2410,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, XScanEng
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
+        result.nEntryPointOffset = ne.getEntryPointOffset(&(result.basic_info.memoryMap));
         result.sEntryPointSignature = ne.getSignature(ne.getEntryPointOffset(&(result.basic_info.memoryMap)), 150);
 
         signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _MSDOS_linker_header_records, sizeof(_MSDOS_linker_header_records),
@@ -2414,6 +2418,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, XScanEng
 
         NE_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
         NE_handle_Borland(pDevice, pOptions, &result, pPdStruct);
+        NE_handle_Tools(pDevice, pOptions, &result, pPdStruct);
 
         _handleResult(&(result.basic_info), pPdStruct);
     }
@@ -6723,6 +6728,16 @@ void SpecAbstract::PE_handle_Watcom(QIODevice *pDevice, XScanEngine::SCAN_OPTION
         if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_WATCOMCCPP)) {
             // TODO Version???
             ssCompiler = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_WATCOMCCPP);
+        }
+
+        SpecAbstract::VI_STRUCT vi = get_Watcom_vi(pDevice, pOptions, pPEInfo->nEntryPointOffset, 0x100, pPdStruct);
+
+        if (vi.bIsValid) {
+            ssCompiler.fileType = XBinary::FT_PE;
+            ssCompiler.type = RECORD_TYPE_COMPILER;
+            ssCompiler.name = (RECORD_NAME)vi.vValue.toUInt();
+            ssCompiler.sVersion = vi.sVersion;
+            ssCompiler.sInfo = vi.sInfo;
         }
 
         if ((ssLinker.type != RECORD_TYPE_UNKNOWN) && (ssCompiler.type == RECORD_TYPE_UNKNOWN)) {
@@ -11303,9 +11318,14 @@ void SpecAbstract::MSDOS_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
         }
 
         // WATCOM C
-        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_WATCOMCCPP)) {
-            _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_WATCOMCCPP);
-            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        SpecAbstract::VI_STRUCT vi = get_Watcom_vi(pDevice, pOptions, pMSDOSInfo->nEntryPointOffset, 0x300, pPdStruct);
+
+        if (vi.bIsValid) {
+            _SCANS_STRUCT ssCompiler = getScansStruct(0, XBinary::FT_MSDOS, RECORD_TYPE_COMPILER, (RECORD_NAME)vi.vValue.toUInt(), vi.sVersion, vi.sInfo, 0);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pMSDOSInfo->basic_info), &ssCompiler));
+
+            _SCANS_STRUCT ssLinker = getScansStruct(0, XBinary::FT_MSDOS, RECORD_TYPE_LINKER, RECORD_NAME_WATCOMLINKER, "", "", 0);
+            pMSDOSInfo->basic_info.mapResultLinkers.insert(ssLinker.name, scansToScan(&(pMSDOSInfo->basic_info), &ssLinker));
         }
 
         // BAT2EXEC
@@ -12617,14 +12637,14 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_O
             pELFInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
         }
 
-        if (viUPXEnd.nValue == 0x21434553)  // SEC!
+        if (viUPXEnd.vValue.toUInt() == 0x21434553)  // SEC!
         {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_SECNEO, "Old", "UPX", 0);
             pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
-        } else if (viUPXEnd.nValue == 0x00010203) {
+        } else if (viUPXEnd.vValue.toUInt() == 0x00010203) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_SECNEO, "", "UPX", 0);
             pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
-        } else if (viUPXEnd.nValue == 0x214d4a41)  // "AJM!"
+        } else if (viUPXEnd.vValue.toUInt() == 0x214d4a41)  // "AJM!"
         {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_PROTECTOR, RECORD_NAME_IJIAMI, "", "UPX", 0);
             pELFInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
@@ -14060,6 +14080,24 @@ void SpecAbstract::LE_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
     }
 }
 
+void SpecAbstract::LE_handle_Tools(QIODevice *pDevice, SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XLE xle(pDevice, pOptions->bIsImage);
+
+    if (xle.isValid(pPdStruct)) {
+        // WATCOM C
+        SpecAbstract::VI_STRUCT vi = get_Watcom_vi(pDevice, pOptions, pLEInfo->nEntryPointOffset, 0x100, pPdStruct);
+
+        if (vi.bIsValid) {
+            _SCANS_STRUCT ssCompiler = getScansStruct(0, XBinary::FT_LX, RECORD_TYPE_COMPILER, (RECORD_NAME)vi.vValue.toUInt(), vi.sVersion, vi.sInfo, 0);
+            pLEInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pLEInfo->basic_info), &ssCompiler));
+
+            _SCANS_STRUCT ssLinker = getScansStruct(0, XBinary::FT_LX, RECORD_TYPE_LINKER, RECORD_NAME_WATCOMLINKER, "", "", 0);
+            pLEInfo->basic_info.mapResultLinkers.insert(ssLinker.name, scansToScan(&(pLEInfo->basic_info), &ssLinker));
+        }
+    }
+}
+
 void SpecAbstract::LX_handle_OperationSystems(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XLE lx(pDevice, pOptions->bIsImage);
@@ -14160,6 +14198,24 @@ void SpecAbstract::LX_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
     }
 }
 
+void SpecAbstract::LX_handle_Tools(QIODevice *pDevice, SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XLE xle(pDevice, pOptions->bIsImage);
+
+    if (xle.isValid(pPdStruct)) {
+        // WATCOM C
+        SpecAbstract::VI_STRUCT vi = get_Watcom_vi(pDevice, pOptions, pLXInfo->nEntryPointOffset, 0x100, pPdStruct);
+
+        if (vi.bIsValid) {
+            _SCANS_STRUCT ssCompiler = getScansStruct(0, XBinary::FT_LX, RECORD_TYPE_COMPILER, (RECORD_NAME)vi.vValue.toUInt(), vi.sVersion, vi.sInfo, 0);
+            pLXInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pLXInfo->basic_info), &ssCompiler));
+
+            _SCANS_STRUCT ssLinker = getScansStruct(0, XBinary::FT_LX, RECORD_TYPE_LINKER, RECORD_NAME_WATCOMLINKER, "", "", 0);
+            pLXInfo->basic_info.mapResultLinkers.insert(ssLinker.name, scansToScan(&(pLXInfo->basic_info), &ssLinker));
+        }
+    }
+}
+
 void SpecAbstract::NE_handle_OperationSystems(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XNE ne(pDevice, pOptions->bIsImage);
@@ -14192,6 +14248,24 @@ void SpecAbstract::NE_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
 
         if (recordLinker.type != RECORD_TYPE_UNKNOWN) {
             pNEInfo->basic_info.mapResultLinkers.insert(recordLinker.name, scansToScan(&(pNEInfo->basic_info), &recordLinker));
+        }
+    }
+}
+
+void SpecAbstract::NE_handle_Tools(QIODevice *pDevice, SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XNE xne(pDevice, pOptions->bIsImage);
+
+    if (xne.isValid(pPdStruct)) {
+        // WATCOM C
+        SpecAbstract::VI_STRUCT vi = get_Watcom_vi(pDevice, pOptions, pNEInfo->nEntryPointOffset, 0x100, pPdStruct);
+
+        if (vi.bIsValid) {
+            _SCANS_STRUCT ssCompiler = getScansStruct(0, XBinary::FT_MSDOS, RECORD_TYPE_COMPILER, (RECORD_NAME)vi.vValue.toUInt(), vi.sVersion, vi.sInfo, 0);
+            pNEInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, scansToScan(&(pNEInfo->basic_info), &ssCompiler));
+
+            _SCANS_STRUCT ssLinker = getScansStruct(0, XBinary::FT_MSDOS, RECORD_TYPE_LINKER, RECORD_NAME_WATCOMLINKER, "", "", 0);
+            pNEInfo->basic_info.mapResultLinkers.insert(ssLinker.name, scansToScan(&(pNEInfo->basic_info), &ssLinker));
         }
     }
 }
@@ -15120,11 +15194,11 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_UPX_vi(QIODevice *pDevice, XScanEngin
                     }
                 }
 
-                result.nValue = binary.read_uint32(nOffset);
+                result.vValue = binary.read_uint32(nOffset);
 
-                if (result.nValue != 0x21585055)  // UPX!
+                if (result.vValue.toUInt() != 0x21585055)  // UPX!
                 {
-                    result.sInfo = append(result.sInfo, QString("Modified(%1)").arg(XBinary::valueToHex((quint32)result.nValue)));
+                    result.sInfo = append(result.sInfo, QString("Modified(%1)").arg(XBinary::valueToHex((quint32)result.vValue.toUInt())));
                 }
             }
         }
@@ -15194,6 +15268,39 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Zig_vi(QIODevice *pDevice, XScanEngine
         (binary.find_ansiString(nOffset, nSize, "ZIG_DEBUG_COLOR", pPdStruct) != -1)) {
         result.bIsValid = true;
         // TODO Version
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::get_Watcom_vi(QIODevice *pDevice, SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if (binary.find_ansiString(nOffset, nSize, "Open Watcom", pPdStruct) != -1) {
+        result.bIsValid = true;
+        result.vValue = RECORD_NAME_OPENWATCOMCCPP;
+
+        qint64 nVersionOffset = binary.find_ansiString(nOffset, nSize, " 2002-", pPdStruct);
+
+        if (nVersionOffset != -1) {
+            result.sVersion = binary.read_ansiString(nVersionOffset + 6, 4);
+        } else {
+            result.sVersion = "2002";
+        }
+    } else if (binary.find_ansiString(nOffset, nSize, "WATCOM", pPdStruct) != -1) {
+        result.bIsValid = true;
+        result.vValue = RECORD_NAME_WATCOMCCPP;
+
+        qint64 nVersionOffset = binary.find_ansiString(nOffset, nSize, ". 1988-", pPdStruct);
+
+        if (nVersionOffset != -1) {
+            result.sVersion = binary.read_ansiString(nVersionOffset + 7, 4);
+        } else {
+            result.sVersion = "1988";
+        }
     }
 
     return result;
@@ -16212,6 +16319,7 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
             case RECORD_NAME_MSYS:
             case RECORD_NAME_MSYS2:
             case RECORD_NAME_VISUALCCPP:
+            case RECORD_NAME_OPENWATCOMCCPP:
             case RECORD_NAME_WATCOMCCPP: ssLanguage.name = RECORD_NAME_CCPP; break;
             case RECORD_NAME_CLANG:
             case RECORD_NAME_GCC:
