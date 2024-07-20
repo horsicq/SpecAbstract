@@ -1874,8 +1874,8 @@ void SpecAbstract::_handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPd
     pBasic_info->listDetects.append(pBasic_info->mapResultImages.values());
 }
 
-SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, XBinary::FT fileType,  XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                                            XBinary::PDSTRUCT *pPdStruct)
+SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, XBinary::FT fileType, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions,
+                                                            qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
     timer.start();
@@ -2178,7 +2178,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XScanE
         if (result.nSymTabSection != -1) {
             result.nSymTabOffset = result.listSectionRecords.at(result.nSymTabSection).nOffset;
         }
-        
+
         result.nDebugSection = elf.getSectionIndexByName(".debug_info", &result.listSectionRecords);
 
         if (result.nDebugSection != -1) {
@@ -2981,7 +2981,6 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XScanE
 
     return result;
 }
-
 
 SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStruct(quint32 nVariant, XBinary::FT fileType, SpecAbstract::RECORD_TYPE type, SpecAbstract::RECORD_NAME name,
                                                          const QString &sVersion, const QString &sInfo, qint64 nOffset)
@@ -9723,7 +9722,8 @@ void SpecAbstract::Binary_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN
         if (binary.read_uint16(binary.getSize() - 8) == 0x424E) {
             QString sSignature = binary.read_ansiString(binary.getSize() - 8, 4);
 
-            if ((sSignature == "NB05") || (sSignature == "NB07") || (sSignature == "NB08") || (sSignature == "NB09") || (sSignature == "NB10") || (sSignature == "NB11")) {
+            if ((sSignature == "NB05") || (sSignature == "NB07") || (sSignature == "NB08") || (sSignature == "NB09") || (sSignature == "NB10") ||
+                (sSignature == "NB11")) {
                 qint64 nHeaderOffset = binary.getSize() - 8;
                 quint32 nDebugSize = binary.read_uint32(nHeaderOffset + 4);
 
@@ -9766,7 +9766,6 @@ void SpecAbstract::Binary_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN
                     ssDebugInfo.sInfo = QString("0x%1 bytes").arg(XBinary::valueToHexEx(nDebugSize));
 
                     pBinaryInfo->basic_info.mapResultDebugData.insert(ssDebugInfo.name, scansToScan(&(pBinaryInfo->basic_info), &ssDebugInfo));
-
 
                     _SCANS_STRUCT ssLinker = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_LINKER, RECORD_NAME_WATCOMLINKER, "", "", 0);
 
@@ -12595,7 +12594,7 @@ void SpecAbstract::ELF_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OP
                 pELFInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
             }
         }
-        
+
         if (pELFInfo->nDebugOffset > 0) {
             // quint32 nDebugDataSize = elf.read_uint32(pELFInfo->nDebugOffset);
             quint16 nVersion = elf.read_uint16(pELFInfo->nDebugOffset + 4);
