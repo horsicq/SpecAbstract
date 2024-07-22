@@ -229,7 +229,7 @@ void StaticScan::_process(QIODevice *pDevice, XScanEngine::SCAN_RESULT *pScanRes
         pPdStruct = &pdStructEmpty;
     }
 
-    SpecAbstract::scan(pDevice, pScanResult, nOffset, nSize, parentId, pOptions, true, pPdStruct);
+    *pScanResult = SpecAbstract::scanSubdevice(pDevice, nOffset, nSize, parentId, pOptions, true, pPdStruct);
 }
 
 XScanEngine::SCAN_RESULT StaticScan::scanFile(const QString &sFileName, XBinary::PDSTRUCT *pPdStruct)
