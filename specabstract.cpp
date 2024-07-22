@@ -713,6 +713,7 @@ QString SpecAbstract::recordNameIdToString(qint32 nId)
         case RECORD_NAME_SPOONSTUDIO: sResult = QString("Spoon Studio"); break;
         case RECORD_NAME_SQUIRRELINSTALLER: sResult = QString("Squirrel Installer"); break;
         case RECORD_NAME_SQUEEZSFX: sResult = QString("Squeez Self Extractor"); break;
+        case RECORD_NAME_STABSDEBUGINFO: sResult = QString("STABS Debug Info"); break;
         case RECORD_NAME_STARFORCE: sResult = QString("StarForce"); break;
         case RECORD_NAME_STARTOSLINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_STARTOSLINUX); break;
         case RECORD_NAME_STASFODIDOCRYPTOR: sResult = QString("StasFodidoCryptor"); break;
@@ -2182,7 +2183,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XScanE
         result.nDebugSection = elf.getSectionIndexByName(".debug_info", &result.listSectionRecords);
 
         if (result.nDebugSection != -1) {
-            result.nDebugOffset = result.listSectionRecords.at(result.nDebugSection).nOffset;
+            result.nDWARFDebugOffset = result.listSectionRecords.at(result.nDebugSection).nOffset;
         }
 
         result.nCommentSection = XELF::getSectionNumber(".comment", &result.listSectionRecords);
@@ -2482,6 +2483,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         result.listSectionHeaders = pe.getSectionHeaders();
         result.listSectionRecords = pe.getSectionRecords(&result.listSectionHeaders);
         result.listSectionNames = XPE::getSectionNames(&(result.listSectionRecords));
+        result.listDebug = pe.getDebugList(&(result.basic_info.memoryMap));
 
         result.listImports = pe.getImports(&(result.basic_info.memoryMap));
         result.listImportRecords = pe.getImportRecords(&(result.basic_info.memoryMap));
@@ -2749,6 +2751,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
 
         PE_handle_Joiners(pDevice, pOptions, &result, pPdStruct);
         PE_handle_PETools(pDevice, pOptions, &result, pPdStruct);
+
+        PE_handle_DebugData(pDevice, pOptions, &result, pPdStruct);
 
         if (pOptions->bIsHeuristicScan) {
             PE_handle_UnknownProtection(pDevice, pOptions, &result, pPdStruct);
@@ -6790,23 +6794,43 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
 
         if (XPE::isImportLibraryPresentI("msvcrt.dll", &(pPEInfo->listImports)) && (pPEInfo->nMajorLinkerVersion == 6) && (pPEInfo->nMinorLinkerVersion == 0)) {
             bool bDetected = false;
+            bool bDebug = false;
 
             if (pPEInfo->bIs64) {
-                if (pPEInfo->listSectionNames.count() == 3) {
+                if ((pPEInfo->fileHeader.NumberOfSections == 3) || (pPEInfo->fileHeader.NumberOfSections == 5)){
                     if ((pPEInfo->listSectionNames.at(0) == ".text") && (pPEInfo->listSectionNames.at(1) == ".data") && (pPEInfo->listSectionNames.at(2) == ".pdata")) {
-                        bDetected = true;
+                        if (pPEInfo->fileHeader.NumberOfSections == 3) {
+                            bDetected = true;
+                        } else if (pPEInfo->fileHeader.NumberOfSections == 5) {
+                            if ((pPEInfo->listSectionNames.at(3) == ".stab") && (pPEInfo->listSectionNames.at(4) == ".stabstr")) {
+                                bDebug = true;
+                                bDetected = true;
+                            }
+                        }
                     }
                 }
             } else {
-                if (pPEInfo->listSectionNames.count() == 2) {
+                if ((pPEInfo->fileHeader.NumberOfSections == 2) || (pPEInfo->fileHeader.NumberOfSections == 4)) {
                     if ((pPEInfo->listSectionNames.at(0) == ".text") && (pPEInfo->listSectionNames.at(1) == ".data")) {
-                        bDetected = true;
+                        if (pPEInfo->fileHeader.NumberOfSections == 2) {
+                            bDetected = true;
+                        } else if (pPEInfo->fileHeader.NumberOfSections == 4) {
+                            if ((pPEInfo->listSectionNames.at(2) == ".stab") && (pPEInfo->listSectionNames.at(3) == ".stabstr")) {
+                                bDebug = true;
+                                bDetected = true;
+                            }
+                        }
                     }
                 }
             }
 
             if (bDetected) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_TINYC, "", "", 0);
+
+                if (bDebug) {
+                    ss.sInfo = "debug";
+                }
+
                 pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
@@ -8959,6 +8983,44 @@ void SpecAbstract::PE_handle_Joiners(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
                 pPEInfo->basic_info.mapResultJoiners.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
             }
         }
+    }
+}
+
+void SpecAbstract::PE_handle_DebugData(QIODevice *pDevice, SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XPE pe(pDevice, pOptions->bIsImage);
+
+    if (pe.isValid(pPdStruct)) {
+        // if (pELFInfo->nSymTabOffset > 0) {
+        //     qint32 nNumberOfSymbols = XELF::getNumberOfSymbols(pELFInfo->nSymTabOffset);
+
+        //     if (nNumberOfSymbols) {
+        //         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_DEBUGDATA, RECORD_NAME_SYMBOLTABLE, "", "", 0);
+
+        //         ss.sInfo = pELFInfo->listSectionRecords.at(pELFInfo->nSymTabSection).sName;
+        //         ss.sInfo = append(ss.sInfo, QString("%1 symbols").arg(nNumberOfSymbols));
+
+        //         pELFInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        //     }
+        // }
+
+        if (XBinary::isStringInListPresent(&(pPEInfo->listSectionNames), ".stab", pPdStruct) && XBinary::isStringInListPresent(&(pPEInfo->listSectionNames), ".stabstr", pPdStruct)) {
+            _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_DEBUGDATA, RECORD_NAME_STABSDEBUGINFO, "", "", 0);
+            pPEInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+        }
+
+        // if (pELFInfo->nDWARFDebugOffset > 0) {
+        //     // quint32 nDebugDataSize = elf.read_uint32(pELFInfo->nDWARFDebugOffset);
+        //     quint16 nVersion = elf.read_uint16(pELFInfo->nDWARFDebugOffset + 4);
+
+        //     if ((nVersion >= 0) && (nVersion <= 7)) {
+        //         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_DEBUGDATA, RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
+
+        //         ss.sVersion = QString::number(nVersion) + ".0";
+
+        //         pELFInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        //     }
+        // }
     }
 }
 
@@ -12595,9 +12657,14 @@ void SpecAbstract::ELF_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OP
             }
         }
 
-        if (pELFInfo->nDebugOffset > 0) {
-            // quint32 nDebugDataSize = elf.read_uint32(pELFInfo->nDebugOffset);
-            quint16 nVersion = elf.read_uint16(pELFInfo->nDebugOffset + 4);
+        if (elf.isSectionNamePresent(".stab", &(pELFInfo->listSectionRecords)) && elf.isSectionNamePresent(".stabstr", &(pELFInfo->listSectionRecords))) {
+            _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_DEBUGDATA, RECORD_NAME_STABSDEBUGINFO, "", "", 0);
+            pELFInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        if (pELFInfo->nDWARFDebugOffset > 0) {
+            // quint32 nDebugDataSize = elf.read_uint32(pELFInfo->nDWARFDebugOffset);
+            quint16 nVersion = elf.read_uint16(pELFInfo->nDWARFDebugOffset + 4);
 
             if ((nVersion >= 0) && (nVersion <= 7)) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_DEBUGDATA, RECORD_NAME_DWARFDEBUGINFO, "", "", 0);

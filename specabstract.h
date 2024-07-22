@@ -709,6 +709,7 @@ public:
         RECORD_NAME_SPOONSTUDIO2011,
         RECORD_NAME_SQUEEZSFX,
         RECORD_NAME_SQUIRRELINSTALLER,
+        RECORD_NAME_STABSDEBUGINFO,
         RECORD_NAME_STARFORCE,
         RECORD_NAME_STARTOSLINUX,
         RECORD_NAME_STASFODIDOCRYPTOR,
@@ -1083,7 +1084,7 @@ public:
         qint32 nSymTabSection;
         qint64 nSymTabOffset;
         qint32 nDebugSection;
-        qint64 nDebugOffset;
+        qint64 nDWARFDebugOffset;
 
         qint32 nCommentSection;
         qint32 nStringTableSection;
@@ -1150,6 +1151,7 @@ public:
         QList<XPE_DEF::IMAGE_SECTION_HEADER> listSectionHeaders;
         QList<XPE::SECTION_RECORD> listSectionRecords;
         QList<QString> listSectionNames;
+        QList<XPE_DEF::S_IMAGE_DEBUG_DIRECTORY> listDebug;
         QList<XPE::IMPORT_HEADER> listImports;
         QList<XPE::IMPORT_RECORD> listImportRecords;
         quint64 nImportHash64;
@@ -1331,6 +1333,8 @@ public:
     static void PE_handle_DelphiCryptors(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void PE_handle_Joiners(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
+
+    static void PE_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static bool PE_isProtectionPresent(PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
     static void PE_handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);

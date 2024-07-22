@@ -491,6 +491,8 @@ SpecAbstract::SIGNATURE_RECORD _PE_entrypoint_records[]=
     {{0, XBinary::FT_PE64,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_RUST,                         "",                 "x86_64-pc-windows-msvc"},  "4883EC28E8........4883C428E9........CCCCCCCC"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ELECKEY,                      "2.00.X",           ""},                    "515257535556E8000000005BB8........2BD8"},
     {{0, XBinary::FT_PE64,      SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_ELECKEY,                      "2.00.X",           ""},                    "41504151515257535556E8000000005B48B8................482BD8488BEB"},
+    {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_TINYC,                        "",                 ""},                    "5589e581ec........908d45..50e8........83c4..b8........8945..b8........50e8........83c4"},
+    {{0, XBinary::FT_PE64,      SpecAbstract::RECORD_TYPE_COMPILER,         SpecAbstract::RECORD_NAME_TINYC,                        "",                 ""},                    "554889e54881ec........b8........8945..b8........4989c24c89d1e8"},
 
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FAKESIGNATURE,                "",                 "ASPacker 2.12"},       "60E803000000E9EB045D4555C3E801"},
     {{0, XBinary::FT_PE32,      SpecAbstract::RECORD_TYPE_PACKER,           SpecAbstract::RECORD_NAME_FAKESIGNATURE,                "",                 "BJFNT 1.3"},           "EB033A4D3A1EEB02CD209CEB02CD20EB02CD2060"},
