@@ -2184,6 +2184,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XScanE
 
         if (result.nDebugSection != -1) {
             result.nDWARFDebugOffset = result.listSectionRecords.at(result.nDebugSection).nOffset;
+            result.nDWARFDebugSize = result.listSectionRecords.at(result.nDebugSection).nSize;
         }
 
         result.nCommentSection = XELF::getSectionNumber(".comment", &result.listSectionRecords);
@@ -9009,18 +9010,35 @@ void SpecAbstract::PE_handle_DebugData(QIODevice *pDevice, SCAN_OPTIONS *pOption
             pPEInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
-        // if (pELFInfo->nDWARFDebugOffset > 0) {
-        //     // quint32 nDebugDataSize = elf.read_uint32(pELFInfo->nDWARFDebugOffset);
-        //     quint16 nVersion = elf.read_uint16(pELFInfo->nDWARFDebugOffset + 4);
+        if (XBinary::isStringInListPresent(&(pPEInfo->listSectionNames), ".debug_info", pPdStruct)) {
+            XPE::SECTION_RECORD sr = pe.getSectionRecordByName(".debug_info", &(pPEInfo->listSectionRecords));
 
-        //     if ((nVersion >= 0) && (nVersion <= 7)) {
-        //         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_DEBUGDATA, RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
+            if (sr.nOffset && sr.nSize) {
+                VI_STRUCT viStruct = get_DWRAF_vi(pDevice, pOptions, sr.nOffset, sr.nSize, pPdStruct);
 
-        //         ss.sVersion = QString::number(nVersion) + ".0";
+                if (viStruct.bIsValid) {
+                    _SCANS_STRUCT ssDebugInfo = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_DEBUGDATA, RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
+                    ssDebugInfo.sVersion = viStruct.sVersion;
 
-        //         pELFInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
-        //     }
-        // }
+                    pPEInfo->basic_info.mapResultDebugData.insert(ssDebugInfo.name, scansToScan(&(pPEInfo->basic_info), &ssDebugInfo));
+                }
+            }
+        }
+
+        qint32 nNumberOfDebug = pPEInfo->listDebug.count();
+
+        for (qint32 i = 0; i < nNumberOfDebug; i++) {
+            if (pPEInfo->listDebug.at(i).Type == 2) {
+                quint32 nSignature = pe.read_uint32(pPEInfo->listDebug.at(i).PointerToRawData);
+
+                if (nSignature == 0x53445352) {
+                    _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_DEBUGDATA, RECORD_NAME_CODEVIEWDEBUGINFO, "", "", 0);
+                    ss.sInfo = "RSDS";
+                    ss.sInfo = append(ss.sInfo, "external PDB");
+                    pPEInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+                }
+            }
+        }
     }
 }
 
@@ -9821,17 +9839,16 @@ void SpecAbstract::Binary_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN
                 qint64 nDebugOffset = nHeaderOffset - nDebugSize;
 
                 if (nDebugOffset >= 0) {
-                    quint16 nVersion = binary.read_uint16(nDebugOffset + 4);
+                    VI_STRUCT viStruct = get_DWRAF_vi(pDevice, pOptions, nDebugOffset, binary.getSize() - nDebugOffset, pPdStruct);
 
-                    _SCANS_STRUCT ssDebugInfo = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_DEBUGDATA, RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
-                    ssDebugInfo.sVersion = QString::number(nVersion) + ".0";
-                    ssDebugInfo.sInfo = QString("0x%1 bytes").arg(XBinary::valueToHexEx(nDebugSize));
+                    if (viStruct.bIsValid) {
+                        _SCANS_STRUCT ssDebugInfo = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_DEBUGDATA, RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
+                        ssDebugInfo.sVersion = viStruct.sVersion;
+                        ssDebugInfo.sInfo = QString("0x%1 bytes").arg(XBinary::valueToHexEx(nDebugSize));
+                        ssDebugInfo.sInfo = append(ssDebugInfo.sInfo, "Watcom");
 
-                    pBinaryInfo->basic_info.mapResultDebugData.insert(ssDebugInfo.name, scansToScan(&(pBinaryInfo->basic_info), &ssDebugInfo));
-
-                    _SCANS_STRUCT ssLinker = getScansStruct(0, XBinary::FT_BINARY, RECORD_TYPE_LINKER, RECORD_NAME_WATCOMLINKER, "", "", 0);
-
-                    pBinaryInfo->basic_info.mapResultLinkers.insert(ssLinker.name, scansToScan(&(pBinaryInfo->basic_info), &ssLinker));
+                        pBinaryInfo->basic_info.mapResultDebugData.insert(ssDebugInfo.name, scansToScan(&(pBinaryInfo->basic_info), &ssDebugInfo));
+                    }
                 }
             }
         }
@@ -12663,15 +12680,13 @@ void SpecAbstract::ELF_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OP
         }
 
         if (pELFInfo->nDWARFDebugOffset > 0) {
-            // quint32 nDebugDataSize = elf.read_uint32(pELFInfo->nDWARFDebugOffset);
-            quint16 nVersion = elf.read_uint16(pELFInfo->nDWARFDebugOffset + 4);
+            VI_STRUCT viStruct = get_DWRAF_vi(pDevice, pOptions, pELFInfo->nDWARFDebugOffset, pELFInfo->nDWARFDebugSize, pPdStruct);
 
-            if ((nVersion >= 0) && (nVersion <= 7)) {
-                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_DEBUGDATA, RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
+            if (viStruct.bIsValid) {
+                _SCANS_STRUCT ssDebugInfo = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_DEBUGDATA, RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
+                ssDebugInfo.sVersion = viStruct.sVersion;
 
-                ss.sVersion = QString::number(nVersion) + ".0";
-
-                pELFInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+                pELFInfo->basic_info.mapResultDebugData.insert(ssDebugInfo.name, scansToScan(&(pELFInfo->basic_info), &ssDebugInfo));
             }
         }
     }
@@ -15384,6 +15399,26 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_PyInstaller_vi(QIODevice *pDevice, XSc
     if (nOffset_Version != -1) {
         result.bIsValid = true;
         // TODO Version
+    }
+
+    return result;
+}
+
+SpecAbstract::VI_STRUCT SpecAbstract::get_DWRAF_vi(QIODevice *pDevice, SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
+{
+    Q_UNUSED(pPdStruct)
+
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if (nSize > 8) {
+        quint16 nVersion = binary.read_uint16(nOffset + 4);
+
+        if ((nVersion >= 0) && (nVersion <= 7)) {
+            result.sVersion = QString::number(nVersion) + ".0";
+            result.bIsValid = true;
+        }
     }
 
     return result;
