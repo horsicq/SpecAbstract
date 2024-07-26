@@ -884,6 +884,7 @@ QString SpecAbstract::heurTypeIdToString(qint32 nId)
         case DETECTTYPE_UNKNOWN: sResult = tr("Unknown"); break;
         case DETECTTYPE_HEADER: sResult = tr("Header"); break;
         case DETECTTYPE_OVERLAY: sResult = tr("Overlay"); break;
+        case DETECTTYPE_DEBUGDATA: sResult = tr("Debug data"); break;
         case DETECTTYPE_ENTRYPOINT: sResult = tr("Entry point"); break;
         case DETECTTYPE_SECTIONNAME: sResult = tr("Section name"); break;
         case DETECTTYPE_IMPORTHASH: sResult = tr("Import hash"); break;
@@ -1918,7 +1919,12 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
 
         if (result.basic_info.parentId.filePart == XBinary::FILEPART_OVERLAY) {
             signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_overlay_records, sizeof(_PE_overlay_records),
-                          result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
+                          result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
+        }
+
+        if (result.basic_info.parentId.filePart == XBinary::FILEPART_DEBUGDATA) {
+            signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _debugdata_records, sizeof(_debugdata_records),
+                          result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_DEBUGDATA, pPdStruct);
         }
 
         if (result.basic_info.parentId.filePart == XBinary::FILEPART_RESOURCE) {
@@ -2484,7 +2490,6 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         result.listSectionHeaders = pe.getSectionHeaders();
         result.listSectionRecords = pe.getSectionRecords(&result.listSectionHeaders);
         result.listSectionNames = XPE::getSectionNames(&(result.listSectionRecords));
-        result.listDebug = pe.getDebugList(&(result.basic_info.memoryMap));
 
         result.listImports = pe.getImports(&(result.basic_info.memoryMap));
         result.listImportRecords = pe.getImportRecords(&(result.basic_info.memoryMap));
@@ -9024,21 +9029,6 @@ void SpecAbstract::PE_handle_DebugData(QIODevice *pDevice, SCAN_OPTIONS *pOption
                 }
             }
         }
-
-        qint32 nNumberOfDebug = pPEInfo->listDebug.count();
-
-        for (qint32 i = 0; i < nNumberOfDebug; i++) {
-            if (pPEInfo->listDebug.at(i).Type == 2) {
-                quint32 nSignature = pe.read_uint32(pPEInfo->listDebug.at(i).PointerToRawData);
-
-                if (nSignature == 0x53445352) {
-                    _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_DEBUGDATA, RECORD_NAME_CODEVIEWDEBUGINFO, "", "", 0);
-                    ss.sInfo = "RSDS";
-                    ss.sInfo = append(ss.sInfo, "external PDB");
-                    pPEInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
-                }
-            }
-        }
     }
 }
 
@@ -9741,7 +9731,7 @@ void SpecAbstract::Binary_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN
         pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
 
-    if (binary.getSize() > 10) {
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_BORLANDDEBUGINFO)) && (pBinaryInfo->basic_info.id.nSize >= 16)) {
         quint16 nSignature = binary.read_uint16(0);
 
         if (nSignature == 0x52FB) {
@@ -9761,6 +9751,9 @@ void SpecAbstract::Binary_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN
                 ss.sInfo = append(ss.sInfo, QString("%1 symbols").arg(nNumberOfSymbols));
             }
 
+            pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
+        } else {
+            _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_BORLANDDEBUGINFO);
             pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
     }

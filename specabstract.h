@@ -894,6 +894,7 @@ public:
         DETECTTYPE_NETANSISTRING,
         DETECTTYPE_NETUNICODESTRING,
         DETECTTYPE_OVERLAY,
+        DETECTTYPE_DEBUGDATA,
         DETECTTYPE_RESOURCES,
         DETECTTYPE_RICH,
         DETECTTYPE_SECTIONNAME
@@ -1152,7 +1153,6 @@ public:
         QList<XPE_DEF::IMAGE_SECTION_HEADER> listSectionHeaders;
         QList<XPE::SECTION_RECORD> listSectionRecords;
         QList<QString> listSectionNames;
-        QList<XPE_DEF::S_IMAGE_DEBUG_DIRECTORY> listDebug;
         QList<XPE::IMPORT_HEADER> listImports;
         QList<XPE::IMPORT_RECORD> listImportRecords;
         quint64 nImportHash64;

@@ -75,7 +75,14 @@ SpecAbstract::SIGNATURE_RECORD _binary_records[]=
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_WINDOWSMEDIA,                 "",                 ""},                    "3026B2758E66CF11A6D900AA0062CE6C"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_FLASHVIDEO,                   "",                 ""},                    "'FLV'01"},
     {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_SOURCECODE,       SpecAbstract::RECORD_NAME_SHELL,                        "",                 ""},                    "'#!'"}, // "'#!c:\python\python.exe'"},
-    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_BORLANDDEBUGINFO,  "",                 "TDS"},                 "FB52"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_BORLANDDEBUGINFO,             "",                 "TDS"},                 "FB52"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_BORLANDDEBUGINFO,             "",                 "Delphi TDS"},          "'FB09'"},
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_BORLANDDEBUGINFO,             "",                 "C++ TDS"},             "'FB0A'"}
+};
+
+SpecAbstract::SIGNATURE_RECORD _debugdata_records[]=
+{
+    {{0, XBinary::FT_BINARY,    SpecAbstract::RECORD_TYPE_DEBUGDATA,        SpecAbstract::RECORD_NAME_PDBFILELINK,                  "7.0",              ""},                    "'RSDS'"},
 };
 
 SpecAbstract::SIGNATURE_RECORD _archive_records[]=
