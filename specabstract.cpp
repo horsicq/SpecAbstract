@@ -6803,7 +6803,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
             bool bDebug = false;
 
             if (pPEInfo->bIs64) {
-                if ((pPEInfo->fileHeader.NumberOfSections == 3) || (pPEInfo->fileHeader.NumberOfSections == 5)){
+                if ((pPEInfo->fileHeader.NumberOfSections == 3) || (pPEInfo->fileHeader.NumberOfSections == 5)) {
                     if ((pPEInfo->listSectionNames.at(0) == ".text") && (pPEInfo->listSectionNames.at(1) == ".data") && (pPEInfo->listSectionNames.at(2) == ".pdata")) {
                         if (pPEInfo->fileHeader.NumberOfSections == 3) {
                             bDetected = true;
@@ -9010,7 +9010,8 @@ void SpecAbstract::PE_handle_DebugData(QIODevice *pDevice, SCAN_OPTIONS *pOption
         //     }
         // }
 
-        if (XBinary::isStringInListPresent(&(pPEInfo->listSectionNames), ".stab", pPdStruct) && XBinary::isStringInListPresent(&(pPEInfo->listSectionNames), ".stabstr", pPdStruct)) {
+        if (XBinary::isStringInListPresent(&(pPEInfo->listSectionNames), ".stab", pPdStruct) &&
+            XBinary::isStringInListPresent(&(pPEInfo->listSectionNames), ".stabstr", pPdStruct)) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_DEBUGDATA, RECORD_NAME_STABSDEBUGINFO, "", "", 0);
             pPEInfo->basic_info.mapResultDebugData.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
         }
