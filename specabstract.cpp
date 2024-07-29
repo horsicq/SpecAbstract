@@ -950,41 +950,6 @@ QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, b
     return sResult;
 }
 
-QString SpecAbstract::createShortResultString(const XScanEngine::SCAN_RESULT scanResult)
-{
-    QString sResult;
-
-    qint64 nNumberOfRecords = scanResult.listRecords.count();
-
-    for (qint32 i = 0; i < nNumberOfRecords; i++) {
-        XScanEngine::SCANSTRUCT scanStruct = scanResult.listRecords.at(i);
-
-        if (scanStruct.id.fileType != XBinary::FT_BINARY) {
-            // sResult = createFullResultString2(&scanStruct);
-            sResult = QString("%1: %2").arg(XBinary::fileTypeIdToString(scanStruct.id.fileType), XScanEngine::createResultString2(&scanStruct));
-            break;
-        } else if (scanStruct.nName != RECORD_NAME_UNKNOWN) {
-            sResult = XScanEngine::createResultString2(&scanStruct);
-            break;
-        }
-    }
-
-    return sResult;
-}
-
-SpecAbstract::SCAN_STRUCT SpecAbstract::createHeaderScanStruct(const SpecAbstract::SCAN_STRUCT *pScanStruct)
-{
-    SCAN_STRUCT result = *pScanStruct;
-
-    result.id.sUuid = XBinary::generateUUID();
-    result.type = RECORD_TYPE_GENERIC;
-    result.name = RECORD_NAME_GENERIC;
-    result.sVersion = "";
-    result.sInfo = "";
-
-    return result;
-}
-
 SpecAbstract::VI_STRUCT SpecAbstract::get_Enigma_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
 {
     VI_STRUCT result = {};
@@ -1895,7 +1860,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
         result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowDetects;
+        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = binary.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
@@ -2022,7 +1987,7 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XScanE
         result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
         result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowDetects;
+        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = com.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
@@ -2079,7 +2044,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XS
         result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
         result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowDetects;
+        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = msdos.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
@@ -2150,7 +2115,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XScanE
         result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
         result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowDetects;
+        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = elf.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
@@ -2247,7 +2212,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XS
         result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
         result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowDetects;
+        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = mach.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
@@ -2303,7 +2268,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XScanEng
         result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
         result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowDetects;
+        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
@@ -2355,7 +2320,7 @@ SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice, XScanEng
         result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
         result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowDetects;
+        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = lx.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
@@ -2406,7 +2371,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, XScanEng
         result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
         result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowDetects;
+        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
@@ -2457,7 +2422,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
         result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowDetects;
+        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
@@ -2795,7 +2760,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XScanE
         result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
         result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowDetects;
+        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = dex.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
@@ -2911,7 +2876,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XScanE
         result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
         result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
         result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowDetects;
+        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
         result.basic_info.bIsTest = pOptions->bIsTest;
         result.basic_info.memoryMap = xzip.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
@@ -15735,6 +15700,7 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::scansToScan(SpecAbstract::BASIC_INFO *pB
     result.id = pBasicInfo->id;
     result.parentId = pBasicInfo->parentId;
     result.bIsHeuristic = pScansStruct->bIsHeuristic;
+    result.bIsUnknown = pScansStruct->bIsUnknown;
     result.type = pScansStruct->type;
     result.name = pScansStruct->name;
     result.sVersion = pScansStruct->sVersion;
@@ -16642,6 +16608,7 @@ QList<XScanEngine::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListSc
         XScanEngine::SCANSTRUCT record = {};
 
         record.bIsHeuristic = pListScanStructs->at(i).bIsHeuristic;
+        record.bIsUnknown = pListScanStructs->at(i).bIsUnknown;
         record.id = pListScanStructs->at(i).id;
         record.parentId = pListScanStructs->at(i).parentId;
         record.nType = pListScanStructs->at(i).type;
@@ -16846,10 +16813,9 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
 
             ssUnknown.type = SpecAbstract::RECORD_TYPE_UNKNOWN;
             ssUnknown.name = SpecAbstract::RECORD_NAME_UNKNOWN;
+            ssUnknown.bIsUnknown = true;
 
             basic_info.listDetects.append(scansToScan(&basic_info, &ssUnknown));
-
-            basic_info.bIsUnknown = true;
         }
     }
 
@@ -16961,20 +16927,4 @@ SpecAbstract::VCL_PACKAGEINFO SpecAbstract::PE_getVCLPackageInfo(QIODevice *pDev
     }
 
     return result;
-}
-
-void SpecAbstract::_errorMessage(const QString &sErrorMessage)
-{
-#ifdef QT_DEBUG
-    qDebug("Error: %s", sErrorMessage.toLatin1().data());
-#endif
-    emit errorMessage(sErrorMessage);
-}
-
-void SpecAbstract::_infoMessage(const QString &sInfoMessage)
-{
-#ifdef QT_DEBUG
-    qDebug("Info: %s", sInfoMessage.toLatin1().data());
-#endif
-    emit infoMessage(sInfoMessage);
 }

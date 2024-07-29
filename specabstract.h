@@ -873,6 +873,7 @@ public:
     // TODO flags(static scan/emul/heur) ? Check
     struct SCAN_STRUCT {
         bool bIsHeuristic;
+        bool bIsUnknown;
         XScanEngine::SCANID id;
         XScanEngine::SCANID parentId;
         RECORD_TYPE type;
@@ -929,6 +930,7 @@ public:
         QString sVersion;
         QString sInfo;
         bool bIsHeuristic;
+        bool bIsUnknown;
         QVariant varExtra;
     };
 
@@ -956,7 +958,6 @@ public:
         bool bIsHeuristicScan;
         bool bIsVerbose;
         bool bShowDetects;
-        bool bIsUnknown;
         bool bIsTest;
 
         QMap<RECORD_NAME, _SCANS_STRUCT> mapHeaderDetects;
@@ -1278,10 +1279,6 @@ public:
 
     static QString _SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, bool bShowType = true);
 
-    static QString createShortResultString(const XScanEngine::SCAN_RESULT scanResult);
-
-    static SCAN_STRUCT createHeaderScanStruct(const SCAN_STRUCT *pScanStruct);
-
     static BINARYINFO_STRUCT getBinaryInfo(QIODevice *pDevice, XBinary::FT fileType, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                            XBinary::PDSTRUCT *pPdStruct);
     static COMINFO_STRUCT getCOMInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
@@ -1548,14 +1545,8 @@ private:
     static void _fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorLinkerVersion, qint32 nMinorLinkerVersion, XBinary::PDSTRUCT *pPdStruct);
 
 protected:
-    void _errorMessage(const QString &sErrorMessage);
-    void _infoMessage(const QString &sInfoMessage);
     virtual void _processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCAN_RESULT *pScanResult, QIODevice *pDevice, const XScanEngine::SCANID &parentId,
                                 XBinary::FT fileType, XScanEngine::SCAN_OPTIONS *pOptions, bool bAddUnknown, XBinary::PDSTRUCT *pPdStruct);
-
-signals:
-    void errorMessage(const QString &sErrorMessage);
-    void infoMessage(const QString &sInfoMessage);
 };
 
 #endif  // SPECABSTRACT_H
