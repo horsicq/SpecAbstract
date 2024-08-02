@@ -2731,8 +2731,6 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
 
         PE_handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
 
-        PE_handle_Recursive(pDevice, pOptions, &result, pPdStruct);
-
         _handleResult(&(result.basic_info), pPdStruct);
     }
 
@@ -9240,52 +9238,6 @@ void SpecAbstract::PE_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OP
     if (pPEInfo->basic_info.mapResultPackers.contains(RECORD_NAME_SIMPLEPACK) && pPEInfo->basic_info.mapResultCompilers.contains(RECORD_NAME_FASM)) {
         pPEInfo->basic_info.mapResultCompilers.remove(RECORD_NAME_FASM);
     }
-}
-
-void SpecAbstract::PE_handle_Recursive(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    // if (pOptions->bIsRecursiveScan) {
-    //     XPE pe(pDevice, pOptions->bIsImage);
-
-    //     if (pe.isValid(pPdStruct)) {
-    //         if (pPEInfo->listResources.count()) {
-    //             qint32 nNumberOfResources = pPEInfo->listResources.count();
-
-    //             for (qint32 i = 0; (i < nNumberOfResources) && (!(pPdStruct->bIsStop)); i++) {
-    //                 qint64 nResourceOffset = pPEInfo->listResources.at(i).nOffset;
-    //                 qint64 nResourceSize = pPEInfo->listResources.at(i).nSize;
-
-    //                 if ((nResourceOffset > 0) && (nResourceSize > 0)) {
-    //                     QSet<XBinary::FT> stFT = XFormats::getFileTypes(pDevice, nResourceOffset, nResourceSize);
-
-    //                     if (stFT.contains(XBinary::FT_MSDOS) || stFT.contains(XBinary::FT_NE) || stFT.contains(XBinary::FT_LE) || stFT.contains(XBinary::FT_LX) ||
-    //                         stFT.contains(XBinary::FT_PE) || stFT.contains(XBinary::FT_ELF) || stFT.contains(XBinary::FT_MACHO) || stFT.contains(XBinary::FT_DEX) ||
-    //                         stFT.contains(XBinary::FT_ARCHIVE)) {
-    //                         XScanEngine::SCAN_RESULT scanResult = {};
-
-    //                         XScanEngine::SCANID _parentId = pPEInfo->basic_info.id;
-    //                         _parentId.filePart = XBinary::FILEPART_RESOURCE;
-    //                         _parentId.sInfo = XBinary::valueToHexEx(nResourceOffset);
-
-    //                         scan(pDevice, &scanResult, nResourceOffset, nResourceSize, _parentId, pOptions, false, pPdStruct);
-
-    //                         pPEInfo->basic_info.listRecursiveDetects.append(scanResult.listRecords);
-    //                     }
-    //                 }
-    //             }
-    //         }
-
-    //         if (pPEInfo->nOverlaySize) {
-    //             XScanEngine::SCAN_RESULT scanResult = {};
-
-    //             XScanEngine::SCANID _parentId = pPEInfo->basic_info.id;
-    //             _parentId.filePart = XBinary::FILEPART_OVERLAY;
-    //             scan(pDevice, &scanResult, pPEInfo->nOverlayOffset, pPEInfo->nOverlaySize, _parentId, pOptions, false, pPdStruct);
-
-    //             pPEInfo->basic_info.listRecursiveDetects.append(scanResult.listRecords);
-    //         }
-    //     }
-    // }
 }
 
 void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo,
