@@ -2083,8 +2083,6 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XS
         MSDOS_handle_SFX(pDevice, pOptions, &result, pPdStruct);
         MSDOS_handle_DosExtenders(pDevice, pOptions, &result, pPdStruct);
 
-        MSDOS_handle_Recursive(pDevice, pOptions, &result, pPdStruct);
-
         _handleResult(&(result.basic_info), pPdStruct);
     }
 
@@ -11719,26 +11717,6 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, XScanEngine::SC
             }
         }
     }
-}
-
-void SpecAbstract::MSDOS_handle_Recursive(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,
-                                          XBinary::PDSTRUCT *pPdStruct)
-{
-    // if (pOptions->bIsRecursiveScan) {
-    //     XMSDOS msdos(pDevice, pOptions->bIsImage);
-
-    //     if (msdos.isValid(pPdStruct)) {
-    //         if (pMSDOSInfo->nOverlaySize) {
-    //             XScanEngine::SCAN_RESULT scanResult = {};
-
-    //             XScanEngine::SCANID _parentId = pMSDOSInfo->basic_info.id;
-    //             _parentId.filePart = XBinary::FILEPART_OVERLAY;
-    //             scan(pDevice, &scanResult, pMSDOSInfo->nOverlayOffset, pMSDOSInfo->nOverlaySize, _parentId, pOptions, false, pPdStruct);
-
-    //             pMSDOSInfo->basic_info.listRecursiveDetects.append(scanResult.listRecords);
-    //         }
-    //     }
-    // }
 }
 
 void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::ELFINFO_STRUCT *pELFInfo,
