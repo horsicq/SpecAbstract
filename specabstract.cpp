@@ -9436,7 +9436,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_
             _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_7Z);
 
             ss.sVersion = xsevenzip.getVersion();
-            qint32 nNumberOfRecords = xsevenzip.getNumberOfRecords(pPdStruct);
+            // qint32 nNumberOfRecords = xsevenzip.getNumberOfRecords(pPdStruct);
             //            ss.sInfo=QString("%1 records").arg(xsevenzip.getNumberOfRecords());
 
             // TODO options
@@ -15302,7 +15302,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_DWRAF_vi(QIODevice *pDevice, SCAN_OPTI
     XBinary binary(pDevice, pOptions->bIsImage);
 
     if (nSize > 8) {
-        quint16 nVersion = binary.read_uint16(nOffset + 4);
+        qint16 nVersion = binary.read_int16(nOffset + 4);
 
         if ((nVersion >= 0) && (nVersion <= 7)) {
             result.sVersion = QString::number(nVersion) + ".0";
