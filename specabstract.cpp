@@ -2515,13 +2515,14 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         result.nMajorImageVersion = result.bIs64 ? result.optional_header.optionalHeader64.MajorImageVersion : result.optional_header.optionalHeader32.MajorImageVersion;
 
         result.nEntryPointSection = pe.getEntryPointSection(&(result.basic_info.memoryMap));
-        result.nResourcesSection = pe.getResourcesSection(&(result.basic_info.memoryMap));
-        result.nImportSection = pe.getImportSection(&(result.basic_info.memoryMap));
+        result.nResourcesSection = pe.getImageDirectoryEntrySection(&(result.basic_info.memoryMap), XPE_DEF::S_IMAGE_DIRECTORY_ENTRY_RESOURCE);
+        result.nImportSection = pe.getImageDirectoryEntrySection(&(result.basic_info.memoryMap), XPE_DEF::S_IMAGE_DIRECTORY_ENTRY_IMPORT);
         result.nCodeSection = pe.getNormalCodeSection(&(result.basic_info.memoryMap));
         result.nDataSection = pe.getNormalDataSection(&(result.basic_info.memoryMap));
         result.nConstDataSection = pe.getConstDataSection(&(result.basic_info.memoryMap));
-        result.nRelocsSection = pe.getRelocsSection(&(result.basic_info.memoryMap));
-        result.nTLSSection = pe.getTLSSection(&(result.basic_info.memoryMap));
+        result.nRelocsSection = pe.getImageDirectoryEntrySection(&(result.basic_info.memoryMap), XPE_DEF::S_IMAGE_DIRECTORY_ENTRY_BASERELOC);
+        result.nTLSSection = pe.getImageDirectoryEntrySection(&(result.basic_info.memoryMap), XPE_DEF::S_IMAGE_DIRECTORY_ENTRY_TLS);
+        result.nIATSection = pe.getImageDirectoryEntrySection(&(result.basic_info.memoryMap), XPE_DEF::S_IMAGE_DIRECTORY_ENTRY_IAT);
 
         result.bIsNetPresent = ((result.cliInfo.bValid) || (pe.isNETPresent() && (result.basic_info.bIsDeepScan)));
         result.bIsTLSPresent = (result.nTLSSection != -1);
@@ -4785,6 +4786,19 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice, XScanEngine::SCAN_OPT
         }
 
         break;
+    }
+
+    if (!bDetected) {
+        if (pOptions->bIsHeuristicScan) {
+            if (pPEInfo->nEntryPointSection >= 4) {
+                if ((pPEInfo->nImportSection == pPEInfo->nEntryPointSection) && (pPEInfo->nEntryPointSection - 1 == pPEInfo->nIATSection)) {
+                    if ((pPEInfo->listSectionHeaders.at(pPEInfo->nEntryPointSection - 1).Characteristics == 0xc0000040) &&
+                    (pPEInfo->listSectionHeaders.at(pPEInfo->nEntryPointSection - 2).Characteristics == 0x60000020)) {
+                        bDetected = true;
+                    }
+                }
+            }
+        }
     }
 
     if (bDetected) {

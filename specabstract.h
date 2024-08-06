@@ -1175,6 +1175,7 @@ public:
         qint32 nConstDataSection;
         qint32 nRelocsSection;
         qint32 nTLSSection;
+        qint32 nIATSection;
         QString sEntryPointSectionName;
         XADDR nEntryPointAddress;
         XADDR nImageBaseAddress;
