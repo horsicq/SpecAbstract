@@ -14242,8 +14242,6 @@ void SpecAbstract::NE_handle_Tools(QIODevice *pDevice, SCAN_OPTIONS *pOptions, N
 
 void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct)
 {
-    Q_UNUSED(pPdStruct)
-
     XDEX dex(pDevice);
 
     if (dex.isValid(pPdStruct)) {
@@ -14529,7 +14527,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
             QString sOverlay;
 
             if (pDEXInfo->basic_info.bIsVerbose) {
-                bool bIsFieldNamesUnicode = dex.isFieldNamesUnicode(&(pDEXInfo->listFieldIDs), &(pDEXInfo->listStrings));
+                bool bIsFieldNamesUnicode = dex.isFieldNamesUnicode(&(pDEXInfo->listFieldIDs), &(pDEXInfo->listStrings), pPdStruct);
                 bool bIsMethodNamesUnicode = dex.isMethodNamesUnicode(&(pDEXInfo->listMethodIDs), &(pDEXInfo->listStrings));
 
                 sOverlay = QString("Maps %1").arg(dex.getMapItemsHash(pPdStruct));
