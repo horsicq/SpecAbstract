@@ -4793,7 +4793,7 @@ void SpecAbstract::PE_handle_VMProtect(QIODevice *pDevice, XScanEngine::SCAN_OPT
             if (pPEInfo->nEntryPointSection >= 4) {
                 if ((pPEInfo->nImportSection == pPEInfo->nEntryPointSection) && (pPEInfo->nEntryPointSection - 1 == pPEInfo->nIATSection)) {
                     if ((pPEInfo->listSectionHeaders.at(pPEInfo->nEntryPointSection - 1).Characteristics == 0xc0000040) &&
-                    (pPEInfo->listSectionHeaders.at(pPEInfo->nEntryPointSection - 2).Characteristics == 0x60000020)) {
+                        (pPEInfo->listSectionHeaders.at(pPEInfo->nEntryPointSection - 2).Characteristics == 0x60000020)) {
                         bDetected = true;
                     }
                 }
