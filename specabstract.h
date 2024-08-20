@@ -954,11 +954,7 @@ public:
         XBinary::_MEMORY_MAP memoryMap;
         QList<SCAN_STRUCT> listDetects;
         QList<DETECT_RECORD> listHeurs;
-        bool bIsDeepScan;
-        bool bIsHeuristicScan;
-        bool bIsVerbose;
-        bool bShowDetects;
-        bool bIsTest;
+        SCAN_OPTIONS scanOptions;
 
         QMap<RECORD_NAME, _SCANS_STRUCT> mapHeaderDetects;
         QMap<RECORD_NAME, _SCANS_STRUCT> mapTextHeaderDetects;

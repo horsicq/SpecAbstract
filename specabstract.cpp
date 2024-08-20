@@ -1857,11 +1857,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = binary.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
-        result.basic_info.bIsTest = pOptions->bIsTest;
+        result.basic_info.scanOptions = *pOptions;
         result.basic_info.memoryMap = binary.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
@@ -1984,11 +1980,7 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XScanE
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = com.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
-        result.basic_info.bIsTest = pOptions->bIsTest;
+        result.basic_info.scanOptions = *pOptions;
         result.basic_info.memoryMap = com.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
@@ -2041,11 +2033,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XS
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = msdos.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
-        result.basic_info.bIsTest = pOptions->bIsTest;
+        result.basic_info.scanOptions = *pOptions;
         result.basic_info.memoryMap = msdos.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
@@ -2110,11 +2098,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XScanE
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = elf.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
-        result.basic_info.bIsTest = pOptions->bIsTest;
+        result.basic_info.scanOptions = *pOptions;
         result.basic_info.memoryMap = elf.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
@@ -2207,11 +2191,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XS
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = mach.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
-        result.basic_info.bIsTest = pOptions->bIsTest;
+        result.basic_info.scanOptions = *pOptions;
         result.basic_info.memoryMap = mach.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
@@ -2263,11 +2243,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XScanEng
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = le.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
-        result.basic_info.bIsTest = pOptions->bIsTest;
+        result.basic_info.scanOptions = *pOptions;
         result.basic_info.memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
@@ -2315,11 +2291,7 @@ SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice, XScanEng
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = lx.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
-        result.basic_info.bIsTest = pOptions->bIsTest;
+        result.basic_info.scanOptions = *pOptions;
         result.basic_info.memoryMap = lx.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
@@ -2366,11 +2338,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, XScanEng
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = ne.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
-        result.basic_info.bIsTest = pOptions->bIsTest;
+        result.basic_info.scanOptions = *pOptions;
         result.basic_info.memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
@@ -2417,11 +2385,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = pe.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
-        result.basic_info.bIsTest = pOptions->bIsTest;
+        result.basic_info.scanOptions = *pOptions;
         result.basic_info.memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
@@ -2524,7 +2488,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         result.nTLSSection = pe.getImageDirectoryEntrySection(&(result.basic_info.memoryMap), XPE_DEF::S_IMAGE_DIRECTORY_ENTRY_TLS);
         result.nIATSection = pe.getImageDirectoryEntrySection(&(result.basic_info.memoryMap), XPE_DEF::S_IMAGE_DIRECTORY_ENTRY_IAT);
 
-        result.bIsNetPresent = ((result.cliInfo.bValid) || (pe.isNETPresent() && (result.basic_info.bIsDeepScan)));
+        result.bIsNetPresent = ((result.cliInfo.bValid) || (pe.isNETPresent() && (result.basic_info.scanOptions.bIsDeepScan)));
         result.bIsTLSPresent = (result.nTLSSection != -1);
 
         if (result.nEntryPointSection != -1) {
@@ -2655,7 +2619,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
             //                signatureScan(&result.mapDotUnicodestringsDetects,QBinary::stringToHex(result.cliInfo.listUnicodeStrings.at(i)),_dot_unicodestrings_records,sizeof(_dot_unicodestrings_records),result.basic_info.id.filetype,SpecAbstract::XBinary::FT_PE);
             //            }
 
-            if (result.basic_info.bIsDeepScan) {
+            if (result.basic_info.scanOptions.bIsDeepScan) {
                 if (pe.checkOffsetSize(result.osCodeSection)) {
                     qint64 nSectionOffset = result.osCodeSection.nOffset;
                     qint64 nSectionSize = result.osCodeSection.nSize;
@@ -2667,7 +2631,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
             }
         }
 
-        if (result.basic_info.bIsDeepScan) {
+        if (result.basic_info.scanOptions.bIsDeepScan) {
             if (pe.checkOffsetSize(result.osCodeSection)) {
                 qint64 nSectionOffset = result.osCodeSection.nOffset;
                 qint64 nSectionSize = result.osCodeSection.nSize;
@@ -2754,11 +2718,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XScanE
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = dex.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
-        result.basic_info.bIsTest = pOptions->bIsTest;
+        result.basic_info.scanOptions = *pOptions;
         result.basic_info.memoryMap = dex.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
@@ -2870,11 +2830,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XScanE
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = xzip.getSignature(0, 150);
-        result.basic_info.bIsDeepScan = pOptions->bIsDeepScan;
-        result.basic_info.bIsHeuristicScan = pOptions->bIsHeuristicScan;
-        result.basic_info.bIsVerbose = pOptions->bIsVerbose;
-        result.basic_info.bShowDetects = pOptions->bShowInternalDetects;
-        result.basic_info.bIsTest = pOptions->bIsTest;
+        result.basic_info.scanOptions = *pOptions;
         result.basic_info.memoryMap = xzip.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
@@ -3250,7 +3206,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OP
         }
 
         if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_ZLIB)) {
-            if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+            if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                 VI_STRUCT viStruct = get_PyInstaller_vi(pDevice, pOptions, pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, pPdStruct);
 
                 if (viStruct.bIsValid) {
@@ -3360,7 +3316,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OP
 
             // ENIGMA
             if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ENIGMA)) {
-                if (pe.checkOffsetSize(pPEInfo->osImportSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                if (pe.checkOffsetSize(pPEInfo->osImportSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                     qint64 nSectionOffset = pPEInfo->osImportSection.nOffset;
                     qint64 nSectionSize = pPEInfo->osImportSection.nSize;
 
@@ -3433,7 +3389,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OP
                 if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_NPACK)) {
                     _SCANS_STRUCT recordNPACK = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_NPACK);
 
-                    if (pe.checkOffsetSize(pPEInfo->osEntryPointSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                    if (pe.checkOffsetSize(pPEInfo->osEntryPointSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                         qint64 _nOffset = pPEInfo->osEntryPointSection.nOffset;
                         qint64 _nSize = pPEInfo->osEntryPointSection.nSize;
 
@@ -3475,7 +3431,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OP
             if (pPEInfo->nOverlaySize) {
                 qint64 nSize = pPEInfo->nOverlaySize;
 
-                if (!pPEInfo->basic_info.bIsDeepScan) {
+                if (!pPEInfo->basic_info.scanOptions.bIsDeepScan) {
                     nSize = qMin(pPEInfo->nOverlaySize, (qint64)0x100);
                 }
 
@@ -4060,7 +4016,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OP
 
                 // ACProtect 1.X-2.X
                 if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ACPROTECT)) {
-                    if (pe.checkOffsetSize(pPEInfo->osImportSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                    if (pe.checkOffsetSize(pPEInfo->osImportSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                         qint64 nSectionOffset = pPEInfo->osImportSection.nOffset;
                         qint64 nSectionSize = pPEInfo->osImportSection.nSize;
 
@@ -4183,7 +4139,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OP
                         _SCANS_STRUCT recordSS = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_POLYCRYPTPE);
 
                         if (pPEInfo->nImportSection == pPEInfo->nEntryPointSection) {
-                            if (pe.checkOffsetSize(pPEInfo->osEntryPointSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                            if (pe.checkOffsetSize(pPEInfo->osEntryPointSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                                 qint64 _nOffset = pPEInfo->osEntryPointSection.nOffset;
                                 qint64 _nSize = pPEInfo->osEntryPointSection.nSize;
 
@@ -4428,7 +4384,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OP
                     if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_PEPACK)) {
                         _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_PEPACK);
 
-                        if (pe.checkOffsetSize(pPEInfo->osImportSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                        if (pe.checkOffsetSize(pPEInfo->osImportSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                             qint64 _nOffset = pPEInfo->osImportSection.nOffset;
                             qint64 _nSize = pPEInfo->osImportSection.nSize;
 
@@ -4516,7 +4472,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OP
                         ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_VCASMPROTECTOR);
                     }
 
-                    if (pe.checkOffsetSize(pPEInfo->osEntryPointSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                    if (pe.checkOffsetSize(pPEInfo->osEntryPointSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                         ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_VCASMPROTECTOR);
 
                         qint64 _nOffset = pPEInfo->osEntryPointSection.nOffset;
@@ -4903,7 +4859,7 @@ void SpecAbstract::PE_handle_VProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTI
             if (pPEInfo->nEntryPointSection > 0) {
                 if (pPEInfo->sEntryPointSectionName == "VProtect")  // TODO !!!
                 {
-                    if (pe.checkOffsetSize(pPEInfo->osEntryPointSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                    if (pe.checkOffsetSize(pPEInfo->osEntryPointSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                         qint64 nSectionOffset = pPEInfo->osEntryPointSection.nOffset;
                         qint64 nSectionSize = pPEInfo->osEntryPointSection.nSize;
 
@@ -5356,7 +5312,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, XScanEngine::SCAN
         if (pPEInfo->bIsNetPresent) {
             // .NET
             // Enigma
-            if (pe.checkOffsetSize(pPEInfo->osCodeSection) && (pPEInfo->basic_info.bIsDeepScan))  // TODO
+            if (pe.checkOffsetSize(pPEInfo->osCodeSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan))  // TODO
             {
                 qint64 nSectionOffset = pPEInfo->osCodeSection.nOffset;
                 qint64 nSectionSize = pPEInfo->osCodeSection.nSize;
@@ -5371,7 +5327,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, XScanEngine::SCAN
 
             // .Net reactor
             if (pPEInfo->listSectionRecords.count() >= 2) {
-                if (pPEInfo->basic_info.bIsDeepScan) {
+                if (pPEInfo->basic_info.scanOptions.bIsDeepScan) {
                     qint64 _nOffset = pPEInfo->listSectionRecords.at(1).nOffset;
                     qint64 _nSize = pPEInfo->listSectionRecords.at(1).nSize;
 
@@ -5543,7 +5499,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, XScanEngine::SCAN
             if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_CONFUSER)) {
                 _SCANS_STRUCT ss = pPEInfo->basic_info.mapDotAnsiStringsDetects.value(RECORD_NAME_CONFUSER);
 
-                if (pe.checkOffsetSize(pPEInfo->osCodeSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                if (pe.checkOffsetSize(pPEInfo->osCodeSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                     qint64 _nOffset = pPEInfo->osCodeSection.nOffset;
                     qint64 _nSize = pPEInfo->osCodeSection.nSize;
 
@@ -5722,7 +5678,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPT
 
         // MFC
         // Static
-        if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+        if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
             qint64 _nOffset = pPEInfo->osDataSection.nOffset;
             qint64 _nSize = pPEInfo->osDataSection.nSize;
 
@@ -5908,7 +5864,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPT
             }
 
             if (bVBnew) {
-                if (pe.checkOffsetSize(pPEInfo->osCodeSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                if (pe.checkOffsetSize(pPEInfo->osCodeSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                     qint64 _nOffset = pPEInfo->osCodeSection.nOffset;
                     qint64 _nSize = pPEInfo->osCodeSection.nSize;
 
@@ -6349,7 +6305,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
             bool bCppExport = (XBinary::isStringInListPresent(&(pPEInfo->listExportFunctionNames), "__CPPdebugHook")) ||
                               (XBinary::isStringInListPresent(&(pPEInfo->listExportFunctionNames), "___CPPdebugHook"));
 
-            if (pe.checkOffsetSize(pPEInfo->osCodeSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+            if (pe.checkOffsetSize(pPEInfo->osCodeSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                 qint64 _nOffset = pPEInfo->osCodeSection.nOffset;
                 qint64 _nSize = pPEInfo->osCodeSection.nSize;
 
@@ -6371,7 +6327,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
                 //            nOffset_WideString=pe.find_array(_nOffset,_nSize,"\x0a\x57\x69\x64\x65\x53\x74\x72\x69\x6e\x67",11); // WideString
             }
 
-            if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+            if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                 qint64 _nOffset = pPEInfo->osDataSection.nOffset;
                 qint64 _nSize = pPEInfo->osDataSection.nSize;
 
@@ -6602,7 +6558,7 @@ void SpecAbstract::PE_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
                 // TODO Console !!!
 
                 if (bNewVersion) {
-                    if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                    if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                         qint64 _nOffset = pPEInfo->osConstDataSection.nOffset;
                         qint64 _nSize = pPEInfo->osConstDataSection.nSize;
 
@@ -6748,7 +6704,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
 
     if (pe.isValid(pPdStruct)) {
         if ((pPEInfo->bIsTLSPresent) && (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_RUST))) {
-            if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+            if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                 VI_STRUCT viStruct = get_Rust_vi(pDevice, pOptions, pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, pPdStruct);
 
                 if (viStruct.bIsValid) {
@@ -6845,7 +6801,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
         if (pPEInfo->basic_info.mapSectionNamesDetects.contains(RECORD_NAME_GO) || pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_GO)) {
             _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_COMPILER, RECORD_NAME_GO, "1.X", "", 0);
 
-            if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+            if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                 VI_STRUCT viStruct = get_Go_vi(pDevice, pOptions, pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, pPdStruct);
 
                 if (viStruct.bIsValid) {
@@ -6875,7 +6831,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
         // Zig
         if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER) &&
             (pPEInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_GENERICLINKER).nVariant == 1)) {
-            if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+            if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                 VI_STRUCT viStruct = get_Zig_vi(pDevice, pOptions, pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, pPdStruct);
 
                 if (viStruct.bIsValid) {
@@ -6889,7 +6845,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
             }
         }
 
-        if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+        if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
             VI_STRUCT viNim = get_Nim_vi(pDevice, pOptions, pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, pPdStruct);
 
             if (viNim.bIsValid) {
@@ -6937,7 +6893,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
         }
 
         // Flex
-        if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+        if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
             qint64 _nOffset = pPEInfo->osDataSection.nOffset;
             qint64 _nSize = pPEInfo->osDataSection.nSize;
             // TODO FPC Version in Major and Minor linker
@@ -7011,7 +6967,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
                 pPEInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+            if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                 qint64 _nOffset = pPEInfo->osDataSection.nOffset;
                 qint64 _nSize = pPEInfo->osDataSection.nSize;
                 // TODO FPC Version in Major and Minor linker
@@ -7029,7 +6985,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
                     qint64 nOffset_Lazarus = pe.find_ansiString(_nOffset, _nSize, "Lazarus LCL: ", pPdStruct);
 
                     if (nOffset_Lazarus == -1) {
-                        if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                        if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                             _nOffset = pPEInfo->osConstDataSection.nOffset;
                             _nSize = pPEInfo->osConstDataSection.nSize;
 
@@ -7134,7 +7090,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
             }
 
             // Virtual Pascal
-            if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+            if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                 qint64 _nOffset = pPEInfo->osDataSection.nOffset;
                 qint64 _nSize = pPEInfo->osDataSection.nSize;
                 // TODO VP Version in Major and Minor linker
@@ -7152,7 +7108,7 @@ void SpecAbstract::PE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
             }
 
             // PowerBASIC
-            if (pe.checkOffsetSize(pPEInfo->osCodeSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+            if (pe.checkOffsetSize(pPEInfo->osCodeSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                 qint64 _nOffset = pPEInfo->osCodeSection.nOffset;
                 qint64 _nSize = pPEInfo->osCodeSection.nSize;
                 // TODO VP Version in Major and Minor linker
@@ -7262,7 +7218,7 @@ void SpecAbstract::PE_handle_wxWidgets(QIODevice *pDevice, XScanEngine::SCAN_OPT
             }
 
             if (bDynamic || bStatic) {
-                if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                     qint64 _nOffset = pPEInfo->osConstDataSection.nOffset;
                     qint64 _nSize = pPEInfo->osConstDataSection.nSize;
                     // TODO VP Version in Major and Minor linker
@@ -7349,7 +7305,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
 
             QString sDllLib;
 
-            if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+            if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                 sDllLib = pe.read_ansiString(pPEInfo->osConstDataSection.nOffset);
             }
 
@@ -7369,7 +7325,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
             if (bDetectGCC || bHeurGCC) {
                 // Mingw
                 // Msys
-                if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                     VI_STRUCT viStruct = get_GCC_vi1(pDevice, pOptions, pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, pPdStruct);
 
                     ssCompiler.sVersion = viStruct.sVersion;
@@ -7389,7 +7345,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
                     if (ssCompiler.sVersion == "") {
                         QString _sGCCVersion;
 
-                        if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                        if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                             _sGCCVersion = get_GCC_vi2(pDevice, pOptions, pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, pPdStruct).sVersion;
 
                             if (_sGCCVersion != "") {
@@ -7398,7 +7354,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
                         }
 
                         if (_sGCCVersion == "") {
-                            if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                            if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                                 _sGCCVersion = get_GCC_vi2(pDevice, pOptions, pPEInfo->osDataSection.nOffset, pPEInfo->osDataSection.nSize, pPdStruct).sVersion;
 
                                 if (_sGCCVersion != "") {
@@ -7421,7 +7377,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
                 }
 
                 if (!bDetectGCC) {
-                    if (pPEInfo->basic_info.bIsDeepScan) {
+                    if (pPEInfo->basic_info.scanOptions.bIsDeepScan) {
                         qint64 nGCC_MinGW =
                             pe.find_ansiString(pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, "Mingw-w64 runtime failure:", pPdStruct);
 
@@ -7582,7 +7538,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OP
                 {
                     ss.sInfo = "Uninstall";
 
-                    if (pe.checkOffsetSize(pPEInfo->osCodeSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                    if (pe.checkOffsetSize(pPEInfo->osCodeSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                         qint64 _nOffset = pPEInfo->osCodeSection.nOffset;
                         qint64 _nSize = pPEInfo->osCodeSection.nSize;
 
@@ -7707,7 +7663,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OP
             if (pPEInfo->sResourceManifest.contains("sfxcab.exe")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_SFX, RECORD_NAME_CAB, "", "", 0);
 
-                if (pe.checkOffsetSize(pPEInfo->osResourcesSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                if (pe.checkOffsetSize(pPEInfo->osResourcesSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                     qint64 nSectionOffset = pPEInfo->listSectionHeaders.at(pPEInfo->nResourcesSection).PointerToRawData +
                                             pPEInfo->listSectionHeaders.at(pPEInfo->nResourcesSection).Misc.VirtualSize;
 
@@ -7805,7 +7761,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OP
             } else if (pPEInfo->sResourceManifest.contains("InstallShield")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_INSTALLSHIELD, "", "", 0);
 
-                if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                     qint64 _nOffset = pPEInfo->osDataSection.nOffset;
                     qint64 _nSize = pPEInfo->osDataSection.nSize;
 
@@ -7842,7 +7798,7 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OP
             if (pPEInfo->sResourceManifest.contains("AdvancedInstallerSetup")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_ADVANCEDINSTALLER, "", "", 0);
 
-                if ((pPEInfo->nOverlayOffset) && (pPEInfo->nOverlaySize) && (pPEInfo->basic_info.bIsDeepScan)) {
+                if ((pPEInfo->nOverlayOffset) && (pPEInfo->nOverlaySize) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                     qint64 _nOffset = pPEInfo->nOverlayOffset;
                     qint64 _nSize = pPEInfo->nOverlaySize;
 
@@ -8123,7 +8079,7 @@ void SpecAbstract::PE_handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
             }
 
             if (pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_ZIP)) {
-                if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                     qint64 _nOffset = pPEInfo->osDataSection.nOffset;
                     qint64 _nSize = pPEInfo->osDataSection.nSize;
 
@@ -8241,7 +8197,7 @@ void SpecAbstract::PE_handle_NeoLite(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
     if (pe.isValid(pPdStruct)) {
         if (!pPEInfo->cliInfo.bValid) {
             if (pPEInfo->nEntryPointSection != 0) {
-                if (pe.checkOffsetSize(pPEInfo->osEntryPointSection) && (pPEInfo->basic_info.bIsDeepScan)) {
+                if (pe.checkOffsetSize(pPEInfo->osEntryPointSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                     qint64 _nOffset = pPEInfo->osEntryPointSection.nOffset;
                     qint64 _nSize = pPEInfo->osEntryPointSection.nSize;
 
@@ -9193,7 +9149,7 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, XScanEngine::
             }
         }
 
-        if (pPEInfo->basic_info.bIsTest && pPEInfo->basic_info.bIsVerbose) {
+        if (pPEInfo->basic_info.scanOptions.bIsTest && pPEInfo->basic_info.scanOptions.bIsVerbose) {
             // TODO names of note sections
 
             qint32 nIndex = 1;
@@ -10671,7 +10627,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
                 pZipInfo->basic_info.mapResultLanguages.insert(ssJava.name, scansToScan(&(pZipInfo->basic_info), &ssJava));
             }
 
-            if (pZipInfo->basic_info.bIsVerbose) {
+            if (pZipInfo->basic_info.scanOptions.bIsVerbose) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_SIGNTOOL, RECORD_NAME_UNKNOWN, "", "", 0);
 
                 qint32 nNumberOfRecords = listApkSignaturesBlockRecords.count();
@@ -11204,7 +11160,7 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_O
             pZipInfo->basic_info.mapResultArchives.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
         }
 
-        if (pZipInfo->basic_info.bIsVerbose) {
+        if (pZipInfo->basic_info.scanOptions.bIsVerbose) {
             if (pZipInfo->basic_info.mapMetainfosDetects.count() == 0) {
                 QString sDataManifest = xzip.decompress(&(pZipInfo->listArchiveRecords), "META-INF/MANIFEST.MF").data();
 
@@ -11357,7 +11313,7 @@ void SpecAbstract::MSDOS_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OP
             ssLinker = ss;
         }
 
-        if (pMSDOSInfo->basic_info.bIsDeepScan) {
+        if (pMSDOSInfo->basic_info.scanOptions.bIsDeepScan) {
             qint64 _nOffset = 0;
             qint64 _nSize = pMSDOSInfo->basic_info.id.nSize;
 
@@ -11654,7 +11610,7 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, XScanEngine::SC
         if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_CAUSEWAY)) {
             _SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_CAUSEWAY);
 
-            if (pMSDOSInfo->basic_info.bIsDeepScan) {
+            if (pMSDOSInfo->basic_info.scanOptions.bIsDeepScan) {
                 qint64 nVersionOffset = msdos.find_ansiString(0, pMSDOSInfo->basic_info.id.nSize, "CauseWay DOS Extender v", pPdStruct);
 
                 if (nVersionOffset != -1) {
@@ -11671,7 +11627,7 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, XScanEngine::SC
         }
 
         // CWSDPMI
-        if (pMSDOSInfo->basic_info.bIsDeepScan) {
+        if (pMSDOSInfo->basic_info.scanOptions.bIsDeepScan) {
             qint64 nVersionOffset = msdos.find_ansiString(0, 0x100, "CWSDPMI", pPdStruct);
 
             if (nVersionOffset != -1) {
@@ -11708,7 +11664,7 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, XScanEngine::SC
         }
 
         // DOS/16M
-        if (pMSDOSInfo->basic_info.bIsDeepScan) {
+        if (pMSDOSInfo->basic_info.scanOptions.bIsDeepScan) {
             qint64 nVersionOffset =
                 msdos.find_ansiString(0, qMin(pMSDOSInfo->basic_info.id.nSize, (qint64)0x1000), "DOS/16M Copyright (C) Tenberry Software Inc", pPdStruct);
 
@@ -11720,7 +11676,7 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, XScanEngine::SC
         }
 
         // DOS/4G
-        if (pMSDOSInfo->basic_info.bIsDeepScan) {
+        if (pMSDOSInfo->basic_info.scanOptions.bIsDeepScan) {
             // TODO vi
             qint64 nVersionOffset = msdos.find_ansiString(0, qMin(pMSDOSInfo->basic_info.id.nSize, (qint64)0x1000), "DOS/4G", pPdStruct);
 
@@ -12204,7 +12160,7 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, XScanEngine::SC
             }
         }
 
-        if (pELFInfo->basic_info.bIsTest && pELFInfo->basic_info.bIsVerbose) {
+        if (pELFInfo->basic_info.scanOptions.bIsTest && pELFInfo->basic_info.scanOptions.bIsVerbose) {
             if (ss.name == RECORD_NAME_UNKNOWN) {
                 if ((!vi.bIsValid) && (!XBinary::isRegExpPresent(".o$", sComment)) && (!XBinary::isRegExpPresent(".c$", sComment)) &&
                     (!XBinary::isRegExpPresent(".S22$", sComment)) && (!XBinary::isRegExpPresent(".s$", sComment)) && (!XBinary::isRegExpPresent(".S$", sComment))) {
@@ -12784,7 +12740,7 @@ void SpecAbstract::ELF_handle_UnknownProtection(QIODevice *pDevice, XScanEngine:
     XELF elf(pDevice, pOptions->bIsImage);
 
     if (elf.isValid(pPdStruct)) {
-        if (pELFInfo->basic_info.bIsTest && pELFInfo->basic_info.bIsVerbose) {
+        if (pELFInfo->basic_info.scanOptions.bIsTest && pELFInfo->basic_info.scanOptions.bIsVerbose) {
             // TODO names of note sections
 
             qint32 nIndex = 1;
@@ -13917,7 +13873,7 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN
             pMACHInfo->basic_info.mapResultLanguages.remove(RECORD_NAME_CCPP);
         }
 
-        if (pMACHInfo->basic_info.bIsTest && pMACHInfo->basic_info.bIsVerbose) {
+        if (pMACHInfo->basic_info.scanOptions.bIsTest && pMACHInfo->basic_info.scanOptions.bIsVerbose) {
             //            QMap<quint64,QString> mapCommands=XMACH::getLoadCommandTypesS();
 
             //            QList<XMACH::COMMAND_RECORD> list=mach.getCommandRecords();
@@ -14508,7 +14464,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
             pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
         }
 
-        if (pDEXInfo->basic_info.bIsDeepScan) {
+        if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
             qint32 nJackIndex = dex.getStringNumberFromListExp(&(pDEXInfo->listStrings), "^emitter: jack");
 
             if (nJackIndex != -1) {
@@ -14534,13 +14490,13 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
             pDEXInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         }
 
-        if (pDEXInfo->basic_info.bIsDeepScan) {
+        if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
             bool bInvalidHeaderSize = (pDEXInfo->header.header_size != 0x70);
             bool bLink = (pDEXInfo->header.link_off || pDEXInfo->header.link_size);
 
             QString sOverlay;
 
-            if (pDEXInfo->basic_info.bIsVerbose) {
+            if (pDEXInfo->basic_info.scanOptions.bIsVerbose) {
                 bool bIsFieldNamesUnicode = dex.isFieldNamesUnicode(&(pDEXInfo->listFieldIDs), &(pDEXInfo->listStrings), pPdStruct);
                 bool bIsMethodNamesUnicode = dex.isMethodNamesUnicode(&(pDEXInfo->listMethodIDs), &(pDEXInfo->listStrings), pPdStruct);
 
@@ -14588,7 +14544,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
             qint32 nNumberOfRecords = pDEXInfo->listStrings.count();
 
             for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
-                if (pDEXInfo->basic_info.bIsTest && pDEXInfo->basic_info.bIsVerbose) {
+                if (pDEXInfo->basic_info.scanOptions.bIsTest && pDEXInfo->basic_info.scanOptions.bIsVerbose) {
                     // TODO find!
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_PROTECTOR, RECORD_NAME_UNKNOWN, "", "", 0);
 
@@ -14616,7 +14572,7 @@ void SpecAbstract::DEX_handle_Dexguard(QIODevice *pDevice, SpecAbstract::DEXINFO
     XDEX dex(pDevice);
 
     if (dex.isValid(pPdStruct)) {
-        if (pDEXInfo->basic_info.bIsDeepScan) {
+        if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
             if (XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings), "dexguard\\/", pPdStruct)) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXGUARD, "", "", 0);
                 pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
@@ -14656,7 +14612,7 @@ void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice, SpecAbstract::DEXIN
                 pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
             }
         } else {
-            if (pDEXInfo->basic_info.bIsDeepScan) {
+            if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
                 if (XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings), "\\/dexprotector\\/", pPdStruct)) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXPROTECTOR, "", "", 0);
                     pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
@@ -14713,7 +14669,7 @@ void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice, SpecAbstract::DEXIN
             _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_APKPROTECT);
             pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         } else {
-            if (pDEXInfo->basic_info.bIsDeepScan) {
+            if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
                 if (XBinary::isStringInListPresentExp(&(pDEXInfo->listStrings), "http://www.apkprotect.net/", pPdStruct)) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_APKPROTECT, "", "", 0);
                     pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
@@ -14721,12 +14677,12 @@ void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice, SpecAbstract::DEXIN
             }
         }
 
-        if (pDEXInfo->basic_info.bIsHeuristicScan) {
+        if (pDEXInfo->basic_info.scanOptions.bIsHeuristicScan) {
             if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_AESOBFUSCATOR)) {
                 _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_AESOBFUSCATOR);
                 pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
             } else {
-                if (pDEXInfo->basic_info.bIsDeepScan) {
+                if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
                     if (XBinary::isStringInListPresentExp(&(pDEXInfo->listStrings), "licensing/AESObfuscator;", pPdStruct)) {
                         _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_AESOBFUSCATOR, "", "", 0);
                         pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
@@ -14808,7 +14764,7 @@ void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice, SpecAbstract::DEXIN
             _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_PROGUARD);
             pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
         } else {
-            if (pDEXInfo->basic_info.bIsDeepScan) {
+            if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
                 if (XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings), "\\/proguard\\/", pPdStruct)) {
                     _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_PROGUARD, "", "", 0);
                     pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
@@ -15685,7 +15641,7 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
 
         for (qint32 i = 0; (i < nSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
             if ((pRecords[i].basicInfo.fileType == fileType1) || (pRecords[i].basicInfo.fileType == fileType2)) {
-                if ((!pMmREcords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->bShowDetects)) {
+                if ((!pMmREcords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
                     qint64 _nOffset = binary.find_signature(&(pBasicInfo->memoryMap), nOffset, nSize, (char *)pRecords[i].pszSignature, nullptr, pPdStruct);
 
                     if (_nOffset != -1) {
@@ -15702,7 +15658,7 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
                             pMmREcords->insert(record.name, record);
                         }
 
-                        if (pBasicInfo->bShowDetects) {
+                        if (pBasicInfo->scanOptions.bShowInternalDetects) {
                             DETECT_RECORD heurRecord = {};
 
                             heurRecord.nVariant = pRecords[i].basicInfo.nVariant;
@@ -15732,7 +15688,7 @@ void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, 
 
     for (qint32 i = 0; (i < nSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
         if ((pRecords[i].basicInfo.fileType == fileType1) || (pRecords[i].basicInfo.fileType == fileType2)) {
-            if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->bShowDetects)) {
+            if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
                 if (XBinary::compareSignatureStrings(sSignature, pRecords[i].pszSignature)) {
                     if (!pMapRecords->contains(pRecords[i].basicInfo.name)) {
                         _SCANS_STRUCT record = {};
@@ -15752,7 +15708,7 @@ void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, 
 #endif
                     }
 
-                    if (pBasicInfo->bShowDetects) {
+                    if (pBasicInfo->scanOptions.bShowInternalDetects) {
                         DETECT_RECORD heurRecord = {};
 
                         heurRecord.nVariant = pRecords[i].basicInfo.nVariant;
@@ -15782,7 +15738,7 @@ void SpecAbstract::PE_resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract
 
     for (qint32 i = 0; (i < nSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
         if ((pRecords[i].basicInfo.fileType == fileType1) || (pRecords[i].basicInfo.fileType == fileType2)) {
-            if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->bShowDetects)) {
+            if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
                 bool bSuccess = false;
 
                 QString sValue;
@@ -15827,7 +15783,7 @@ void SpecAbstract::PE_resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract
 #endif
                     }
 
-                    if (pBasicInfo->bShowDetects) {
+                    if (pBasicInfo->scanOptions.bShowInternalDetects) {
                         DETECT_RECORD heurRecord = {};
 
                         heurRecord.nVariant = pRecords[i].basicInfo.nVariant;
@@ -15891,7 +15847,7 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
         for (qint32 i = 0; (i < nNumberOfStrings) && (!(pPdStruct->bIsStop)); i++) {
             for (qint32 j = 0; j < nNumberOfSignatures; j++) {
                 if ((pRecords[j].basicInfo.fileType == fileType1) || (pRecords[j].basicInfo.fileType == fileType2)) {
-                    if ((!pMapRecords->contains(pRecords[j].basicInfo.name)) || (pBasicInfo->bShowDetects)) {
+                    if ((!pMapRecords->contains(pRecords[j].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
                         quint32 nCRC1 = listStringCRC[i];
                         quint32 nCRC2 = listSignatureCRC[j];
 
@@ -15914,7 +15870,7 @@ void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCA
 #endif
                             }
 
-                            if (pBasicInfo->bShowDetects) {
+                            if (pBasicInfo->scanOptions.bShowInternalDetects) {
                                 DETECT_RECORD heurRecord = {};
 
                                 heurRecord.nVariant = pRecords[j].basicInfo.nVariant;
@@ -15950,7 +15906,7 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
 
     for (qint32 i = 0; (i < nSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
         if ((pRecords[i].basicInfo.fileType == fileType1) || (pRecords[i].basicInfo.fileType == fileType2)) {
-            if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->bShowDetects) || (pRecords[i].nConst1 == 0xFFFFFFFF)) {
+            if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects) || (pRecords[i].nConst1 == 0xFFFFFFFF)) {
                 bool bSuccess = false;
 
                 bSuccess =
@@ -15975,7 +15931,7 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
 #endif
                     }
 
-                    if (pBasicInfo->bShowDetects) {
+                    if (pBasicInfo->scanOptions.bShowInternalDetects) {
                         DETECT_RECORD heurRecord = {};
 
                         heurRecord.nVariant = pRecords[i].basicInfo.nVariant;
@@ -16004,7 +15960,7 @@ void SpecAbstract::MSDOS_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
     qint32 nSignaturesCount = nRecordsSize / (int)sizeof(MSRICH_RECORD);
 
     for (qint32 i = 0; (i < nSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
-        if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->bShowDetects)) {
+        if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
             _SCANS_STRUCT record = {};
 
             if (MSDOS_compareRichRecord(&record, &(pRecords[i]), nID, nBuild, nCount, fileType1, fileType2)) {
@@ -16012,7 +15968,7 @@ void SpecAbstract::MSDOS_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
                     pMapRecords->insert(record.name, record);
                 }
 
-                if (pBasicInfo->bShowDetects) {
+                if (pBasicInfo->scanOptions.bShowInternalDetects) {
                     DETECT_RECORD heurRecord = {};
 
                     heurRecord.nVariant = pRecords[i].basicInfo.nVariant;
@@ -16058,7 +16014,7 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
     for (qint32 i = 0; (i < nNumberOfArchives) && (!(pPdStruct->bIsStop)); i++) {
         for (qint32 j = 0; (j < nNumberOfSignatures) && (!(pPdStruct->bIsStop)); j++) {
             if ((pRecords[j].basicInfo.fileType == fileType1) || (pRecords[j].basicInfo.fileType == fileType2)) {
-                if ((!pMapRecords->contains(pRecords[j].basicInfo.name)) || (pBasicInfo->bShowDetects)) {
+                if ((!pMapRecords->contains(pRecords[j].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
                     quint32 nCRC1 = listStringCRC[i];
                     quint32 nCRC2 = listSignatureCRC[j];
 
@@ -16081,7 +16037,7 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
 #endif
                         }
 
-                        if (pBasicInfo->bShowDetects) {
+                        if (pBasicInfo->scanOptions.bShowInternalDetects) {
                             DETECT_RECORD heurRecord = {};
 
                             heurRecord.nVariant = pRecords[j].basicInfo.nVariant;
@@ -16114,7 +16070,7 @@ void SpecAbstract::archiveExpScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
     for (qint32 i = 0; (i < nNumberOfArchives) && (!(pPdStruct->bIsStop)); i++) {
         for (qint32 j = 0; (j < nNumberOfSignatures) && (!(pPdStruct->bIsStop)); j++) {
             if ((pRecords[j].basicInfo.fileType == fileType1) || (pRecords[j].basicInfo.fileType == fileType2)) {
-                if ((!pMapRecords->contains(pRecords[j].basicInfo.name)) || (pBasicInfo->bShowDetects)) {
+                if ((!pMapRecords->contains(pRecords[j].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
                     if (XBinary::isRegExpPresent(pRecords[j].pszString, pListArchiveRecords->at(i).sFileName)) {
                         if (!pMapRecords->contains(pRecords[j].basicInfo.name)) {
                             _SCANS_STRUCT record = {};
@@ -16134,7 +16090,7 @@ void SpecAbstract::archiveExpScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
 #endif
                         }
 
-                        if (pBasicInfo->bShowDetects) {
+                        if (pBasicInfo->scanOptions.bShowInternalDetects) {
                             DETECT_RECORD heurRecord = {};
 
                             heurRecord.nVariant = pRecords[j].basicInfo.nVariant;
@@ -16165,7 +16121,7 @@ void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMe
 
     for (qint32 i = 0; (i < nSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
         if ((pRecords[i].basicInfo.fileType == fileType1) || (pRecords[i].basicInfo.fileType == fileType2)) {
-            if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->bShowDetects)) {
+            if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
                 if (pXBinary->compareSignature(pMemoryMap, pRecords[i].pszSignature, nOffset)) {
                     if (!pMapRecords->contains(pRecords[i].basicInfo.name)) {
                         _SCANS_STRUCT record = {};
@@ -16185,7 +16141,7 @@ void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMe
 #endif
                     }
 
-                    if (pBasicInfo->bShowDetects) {
+                    if (pBasicInfo->scanOptions.bShowInternalDetects) {
                         DETECT_RECORD heurRecord = {};
 
                         heurRecord.nVariant = pRecords[i].basicInfo.nVariant;
@@ -16221,7 +16177,7 @@ QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, qui
         if (MSDOS_compareRichRecord(&record, &(pRecords[i]), nID, nBuild, nCount, fileType1, fileType2)) {
             listResult.append(record);
 
-            if (pBasicInfo->bShowDetects) {
+            if (pBasicInfo->scanOptions.bShowInternalDetects) {
                 DETECT_RECORD heurRecord = {};
 
                 heurRecord.nVariant = pRecords[i].basicInfo.nVariant;
