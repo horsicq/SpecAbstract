@@ -16665,43 +16665,43 @@ void SpecAbstract::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures,
 }
 
 void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCAN_RESULT *pScanResult, QIODevice *pDevice, const XScanEngine::SCANID &parentId,
-                                  XBinary::FT fileType, XScanEngine::SCAN_OPTIONS *pOptions, bool bAddUnknown, XBinary::PDSTRUCT *pPdStruct)
+                                  XBinary::FT fileType, XScanEngine::SCAN_OPTIONS *pScanOptions, bool bAddUnknown, XBinary::PDSTRUCT *pPdStruct)
 {
     BASIC_INFO basic_info = {};
 
     if ((fileType == XBinary::FT_PE32) || (fileType == XBinary::FT_PE64)) {
-        SpecAbstract::PEINFO_STRUCT pe_info = SpecAbstract::getPEInfo(pDevice, parentId, pOptions, 0, pPdStruct);
+        SpecAbstract::PEINFO_STRUCT pe_info = SpecAbstract::getPEInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = pe_info.basic_info;
     } else if ((fileType == XBinary::FT_ELF32) || (fileType == XBinary::FT_ELF64)) {
-        SpecAbstract::ELFINFO_STRUCT elf_info = SpecAbstract::getELFInfo(pDevice, parentId, pOptions, 0, pPdStruct);
+        SpecAbstract::ELFINFO_STRUCT elf_info = SpecAbstract::getELFInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = elf_info.basic_info;
     } else if ((fileType == XBinary::FT_MACHO32) || (fileType == XBinary::FT_MACHO64)) {
-        SpecAbstract::MACHOINFO_STRUCT mach_info = SpecAbstract::getMACHOInfo(pDevice, parentId, pOptions, 0, pPdStruct);
+        SpecAbstract::MACHOINFO_STRUCT mach_info = SpecAbstract::getMACHOInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = mach_info.basic_info;
     } else if ((fileType == XBinary::FT_LE)) {
-        SpecAbstract::LEINFO_STRUCT le_info = SpecAbstract::getLEInfo(pDevice, parentId, pOptions, 0, pPdStruct);
+        SpecAbstract::LEINFO_STRUCT le_info = SpecAbstract::getLEInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = le_info.basic_info;
     } else if ((fileType == XBinary::FT_LX)) {
-        SpecAbstract::LXINFO_STRUCT lx_info = SpecAbstract::getLXInfo(pDevice, parentId, pOptions, 0, pPdStruct);
+        SpecAbstract::LXINFO_STRUCT lx_info = SpecAbstract::getLXInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = lx_info.basic_info;
     } else if ((fileType == XBinary::FT_NE)) {
-        SpecAbstract::NEINFO_STRUCT ne_info = SpecAbstract::getNEInfo(pDevice, parentId, pOptions, 0, pPdStruct);
+        SpecAbstract::NEINFO_STRUCT ne_info = SpecAbstract::getNEInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = ne_info.basic_info;
     } else if ((fileType == XBinary::FT_MSDOS)) {
-        SpecAbstract::MSDOSINFO_STRUCT msdos_info = SpecAbstract::getMSDOSInfo(pDevice, parentId, pOptions, 0, pPdStruct);
+        SpecAbstract::MSDOSINFO_STRUCT msdos_info = SpecAbstract::getMSDOSInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = msdos_info.basic_info;
     } else if ((fileType == XBinary::FT_ZIP) || (fileType == XBinary::FT_JAR) || (fileType == XBinary::FT_APK) || (fileType == XBinary::FT_IPA)) {
         // mb TODO split detects
-        SpecAbstract::ZIPINFO_STRUCT zip_info = SpecAbstract::getZIPInfo(pDevice, parentId, pOptions, 0, pPdStruct);
+        SpecAbstract::ZIPINFO_STRUCT zip_info = SpecAbstract::getZIPInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = zip_info.basic_info;
     } else if ((fileType == XBinary::FT_DEX)) {
-        SpecAbstract::DEXINFO_STRUCT dex_info = SpecAbstract::getDEXInfo(pDevice, parentId, pOptions, 0, pPdStruct);
+        SpecAbstract::DEXINFO_STRUCT dex_info = SpecAbstract::getDEXInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = dex_info.basic_info;
     } else if ((fileType == XBinary::FT_COM)) {
-        SpecAbstract::COMINFO_STRUCT com_info = SpecAbstract::getCOMInfo(pDevice, parentId, pOptions, 0, pPdStruct);
+        SpecAbstract::COMINFO_STRUCT com_info = SpecAbstract::getCOMInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = com_info.basic_info;
     } else {
-        SpecAbstract::BINARYINFO_STRUCT binary_info = SpecAbstract::getBinaryInfo(pDevice, fileType, parentId, pOptions, 0, pPdStruct);
+        SpecAbstract::BINARYINFO_STRUCT binary_info = SpecAbstract::getBinaryInfo(pDevice, fileType, parentId, pScanOptions, 0, pPdStruct);
         basic_info = binary_info.basic_info;
     }
 
@@ -16717,7 +16717,13 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
         }
     }
 
-    pScanResult->listRecords.append(convert(&(basic_info.listDetects)));
+    QList<XScanEngine::SCANSTRUCT> listScanStructs = convert(&(basic_info.listDetects));
+
+    if (pScanOptions->bIsSort) {
+        sortRecords(&listScanStructs);
+    }
+
+    pScanResult->listRecords.append(listScanStructs);
     pScanResult->listDebugRecords.append(convertHeur(&(basic_info.listHeurs)));
 
     if (pScanID) {
