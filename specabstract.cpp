@@ -10286,7 +10286,7 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, XScanEngine::SCAN_OP
     if ((pZipInfo->bIsJAR) || (pZipInfo->bIsAPK)) {
         XJAR xjar(pDevice);
 
-        if (xjar.isValid(pPdStruct)) {
+        if (xjar.isValid(&(pZipInfo->listArchiveRecords), pPdStruct)) {
             QString sDataManifest = xjar.decompress(&(pZipInfo->listArchiveRecords), "META-INF/MANIFEST.MF", pPdStruct).data();
 
             if (sDataManifest != "") {
