@@ -9406,7 +9406,9 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_
             _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_7Z);
 
             ss.sVersion = xsevenzip.getVersion();
-            // qint32 nNumberOfRecords = xsevenzip.getNumberOfRecords(pPdStruct);
+#ifdef QT_DEBUG
+            qint32 nNumberOfRecords = xsevenzip.getNumberOfRecords(pPdStruct);
+#endif
             //            ss.sInfo=QString("%1 records").arg(xsevenzip.getNumberOfRecords());
 
             // TODO options
