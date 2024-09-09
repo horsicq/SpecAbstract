@@ -2464,7 +2464,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         result.listExportFunctionNames = pe.getExportFunctionsList(&(result.exportHeader));
         result.listResources = pe.getResources(&(result.basic_info.memoryMap));
         result.listRichSignatures = pe.getRichSignatureRecords();
-        result.cliInfo = pe.getCliInfo(true, &(result.basic_info.memoryMap));
+        result.cliInfo = pe.getCliInfo(true, &(result.basic_info.memoryMap), pPdStruct);
         result.sResourceManifest = pe.getResourceManifest(&result.listResources);
         result.resVersion = pe.getResourcesVersion(&result.listResources);
 
