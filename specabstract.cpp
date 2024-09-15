@@ -2416,7 +2416,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
 
         result.listSectionHeaders = pe.getSectionHeaders(pPdStruct);
         result.listSectionRecords = pe.getSectionRecords(&result.listSectionHeaders, pPdStruct);
-        result.listSectionNames = XPE::getSectionNames(&(result.listSectionRecords));
+        result.listSectionNames = XPE::getSectionNames(&(result.listSectionRecords), pPdStruct);
 
         result.listImports = pe.getImports(&(result.basic_info.memoryMap));
         result.listImportRecords = pe.getImportRecords(&(result.basic_info.memoryMap));
