@@ -2428,7 +2428,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         //                qDebug("%d %s",j,result.listImports.at(i).listPositions.at(j).sFunction.toLatin1().data());
         //            }
         //        }
-        result.nImportHash64 = pe.getImportHash64(&(result.listImportRecords));
+        result.nImportHash64 = pe.getImportHash64(&(result.listImportRecords), pPdStruct);
         result.nImportHash32 = pe.getImportHash32(&(result.listImportRecords));
         result.listImportPositionHashes = pe.getImportPositionHashes(&(result.listImports));
 
@@ -2466,7 +2466,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         result.listRichSignatures = pe.getRichSignatureRecords();
         result.cliInfo = pe.getCliInfo(true, &(result.basic_info.memoryMap), pPdStruct);
         result.sResourceManifest = pe.getResourceManifest(&result.listResources);
-        result.resVersion = pe.getResourcesVersion(&result.listResources);
+        result.resVersion = pe.getResourcesVersion(&result.listResources, pPdStruct);
 
         result.nEntryPointAddress =
             result.bIs64 ? result.optional_header.optionalHeader64.AddressOfEntryPoint : result.optional_header.optionalHeader32.AddressOfEntryPoint;
