@@ -2429,7 +2429,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         //            }
         //        }
         result.nImportHash64 = pe.getImportHash64(&(result.listImportRecords), pPdStruct);
-        result.nImportHash32 = pe.getImportHash32(&(result.listImportRecords));
+        result.nImportHash32 = pe.getImportHash32(&(result.listImportRecords), pPdStruct);
         result.listImportPositionHashes = pe.getImportPositionHashes(&(result.listImports));
 
 #ifdef QT_DEBUG
