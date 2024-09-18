@@ -9408,6 +9408,7 @@ void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_
             ss.sVersion = xsevenzip.getVersion();
 #ifdef QT_DEBUG
             qint32 nNumberOfRecords = xsevenzip.getNumberOfRecords(pPdStruct);
+            Q_UNUSED(nNumberOfRecords)
 #endif
             //            ss.sInfo=QString("%1 records").arg(xsevenzip.getNumberOfRecords());
 
