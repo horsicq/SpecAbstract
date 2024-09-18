@@ -4175,7 +4175,7 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OP
                 }
 
                 if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_HMIMYSPACKER)) {
-                    if (XPE::isSectionNamePresent(".hmimys", &(pPEInfo->listSectionRecords)))  // TODO Check
+                    if (XPE::isSectionNamePresent(".hmimys", &(pPEInfo->listSectionRecords)))  // TODO Check, pdStruct
                     {
                         _SCANS_STRUCT recordSS = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PACKER, RECORD_NAME_HMIMYSPACKER, "", "", 0);
                         pPEInfo->basic_info.mapResultPackers.insert(recordSS.name, scansToScan(&(pPEInfo->basic_info), &recordSS));
