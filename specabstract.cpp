@@ -2206,7 +2206,7 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XS
 
         result.listCommandRecords = mach.getCommandRecords();
 
-        result.listLibraryRecords = mach.getLibraryRecords(&result.listCommandRecords);
+        result.listLibraryRecords = mach.getLibraryRecords(&result.listCommandRecords, XMACH_DEF::S_LC_LOAD_DYLIB);
         result.listSegmentRecords = mach.getSegmentRecords(&result.listCommandRecords);
         result.listSectionRecords = mach.getSectionRecords(&result.listCommandRecords);
 
@@ -13899,24 +13899,23 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN
             //                }
             //            }
 
-            QList<XMACH::LIBRARY_RECORD> list = mach.getLibraryRecords();
 
             QSet<QString> stRecords;
 
-            qint32 nNumberOfRecords = list.count();
+            qint32 nNumberOfRecords = pMACHInfo->listLibraryRecords.count();
 
             for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
-                if (!stRecords.contains(list.at(i).sName)) {
+                if (!stRecords.contains(pMACHInfo->listLibraryRecords.at(i).sName)) {
                     _SCANS_STRUCT recordSS = {};
 
                     recordSS.type = RECORD_TYPE_LIBRARY;
                     recordSS.name = (RECORD_NAME)(RECORD_NAME_UNKNOWN9 + i + 1);
-                    recordSS.sVersion = list.at(i).sName;
-                    recordSS.sInfo = XBinary::get_uint32_full_version(list.at(i).current_version);
+                    recordSS.sVersion = pMACHInfo->listLibraryRecords.at(i).sName;
+                    recordSS.sInfo = XBinary::get_uint32_full_version(pMACHInfo->listLibraryRecords.at(i).current_version);
 
                     pMACHInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pMACHInfo->basic_info), &recordSS));
 
-                    stRecords.insert(list.at(i).sName);
+                    stRecords.insert(pMACHInfo->listLibraryRecords.at(i).sName);
                 }
             }
         }
