@@ -59,6 +59,7 @@ public:
         RECORD_TYPE_LANGUAGE,
         RECORD_TYPE_LIBRARY,
         RECORD_TYPE_LINKER,
+        RECORD_TYPE_LOADER,
         RECORD_TYPE_NETCOMPRESSOR,
         RECORD_TYPE_NETOBFUSCATOR,
         RECORD_TYPE_OBFUSCATOR,
@@ -1088,6 +1089,7 @@ public:
         qint32 nCommentSection;
         qint32 nStringTableSection;
         QByteArray baStringTable;
+        QString sRunPath;
 
         XBinary::OFFSETSIZE osCommentSection;
     };

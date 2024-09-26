@@ -57,6 +57,7 @@ QString SpecAbstract::recordTypeIdToString(qint32 nId)
         case RECORD_TYPE_LANGUAGE: sResult = QString("Language"); break;
         case RECORD_TYPE_LIBRARY: sResult = QString("Library"); break;
         case RECORD_TYPE_LINKER: sResult = QString("Linker"); break;
+        case RECORD_TYPE_LOADER: sResult = QString("Loader"); break;
         case RECORD_TYPE_NETCOMPRESSOR: sResult = QString(".NET compressor"); break;
         case RECORD_TYPE_NETOBFUSCATOR: sResult = QString(".NET obfuscator"); break;
         case RECORD_TYPE_OBFUSCATOR: sResult = QString("Obfuscator"); break;
@@ -2126,6 +2127,8 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XScanE
         if (result.listNotes.count() == 0) {
             result.listNotes = elf.getNotes(&result.listSectionHeaders);
         }
+
+        result.sRunPath = elf.getRunPath(&(result.basic_info.memoryMap), &result.listTags).sString;
 
         result.nSymTabSection = elf.getSectionIndexByName(".symtab", &result.listSectionRecords);
 
@@ -12277,6 +12280,16 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
             }
 
             pELFInfo->basic_info.mapResultLinkers.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+        }
+
+        // dotnet
+        if (pELFInfo->sRunPath == "$ORIGIN/netcoredeps"){
+            _SCANS_STRUCT recordSS = {};
+
+            recordSS.type = SpecAbstract::RECORD_TYPE_LOADER;
+            recordSS.name = SpecAbstract::RECORD_NAME_DOTNET;
+
+            pELFInfo->basic_info.mapResultTools.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
         }
 
         if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_SOURCERYCODEBENCH)) {
