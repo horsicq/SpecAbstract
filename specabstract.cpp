@@ -12283,7 +12283,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
         }
 
         // dotnet
-        if (pELFInfo->sRunPath == "$ORIGIN/netcoredeps"){
+        if (pELFInfo->sRunPath == "$ORIGIN/netcoredeps") {
             _SCANS_STRUCT recordSS = {};
 
             recordSS.type = SpecAbstract::RECORD_TYPE_LOADER;
@@ -13911,7 +13911,6 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN
             //                    stRecords.insert(list.at(i).nType);
             //                }
             //            }
-
 
             QSet<QString> stRecords;
 
