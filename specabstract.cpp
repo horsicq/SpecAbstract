@@ -117,6 +117,7 @@ QString SpecAbstract::recordNameIdToString(qint32 nId)
         case RECORD_NAME_ALLOY: sResult = QString("Alloy"); break;
         case RECORD_NAME_ALPINECLANG: sResult = QString("Alpine clang"); break;
         case RECORD_NAME_ALPINELINUX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_ALPINELINUX); break;
+        case RECORD_NAME_AMIGA: sResult = XBinary::osNameIdToString(XBinary::OSNAME_AMIGA); break;
         case RECORD_NAME_ANDPAKK2: sResult = QString("ANDpakk2"); break;
         case RECORD_NAME_ANDROID: sResult = XBinary::osNameIdToString(XBinary::OSNAME_ANDROID); break;
         case RECORD_NAME_ANDROIDAPKSIGNER: sResult = QString("Android apksigner"); break;
@@ -2909,6 +2910,44 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XScanE
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
+
+    return result;
+}
+
+SpecAbstract::AMIGAHUNKINFO_STRUCT SpecAbstract::getAmigaHunkInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    AMIGAHUNKINFO_STRUCT result = {};
+
+    XAmigaHunk amigaHunk(pDevice);
+
+    if (amigaHunk.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
+        result.basic_info.parentId = parentId;
+        result.basic_info.id.fileType = XBinary::FT_AMIGAHUNK;
+        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
+        result.basic_info.id.sUuid = XBinary::generateUUID();
+        result.basic_info.sHeaderSignature = amigaHunk.getSignature(0, 150);
+        result.basic_info.scanOptions = *pOptions;
+        result.basic_info.memoryMap = amigaHunk.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
+        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
+        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
+        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
+        result.basic_info.id.nSize = pDevice->size();
+        result.basic_info.id.nOffset = nOffset;
+
+        AmigaHunk_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
+
+        _handleResult(&(result.basic_info), pPdStruct);
+    }
+
+    result.basic_info.nElapsedTime = timer.elapsed();
+
+#ifdef QT_DEBUG
+    qDebug("%lld msec", result.basic_info.nElapsedTime);
+#endif
 
     return result;
 }
@@ -11220,6 +11259,17 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_O
     }
 }
 
+void SpecAbstract::AmigaHunk_handle_OperationSystems(QIODevice *pDevice, SCAN_OPTIONS *pOptions, AMIGAHUNKINFO_STRUCT *pAmigaHunkInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XAmigaHunk amigaHunk(pDevice, pOptions->bIsImage);
+
+    if (amigaHunk.isValid(pPdStruct)) {
+        _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(amigaHunk.getOsInfo());
+
+        pAmigaHunkInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pAmigaHunkInfo->basic_info), &ssOperationSystem));
+    }
+}
+
 SpecAbstract::DEXINFO_STRUCT SpecAbstract::Zip_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::ZIPINFO_STRUCT *pZipInfo,
                                                         XBinary::PDSTRUCT *pPdStruct, const QString &sFileName)
 {
@@ -16478,6 +16528,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(const XBinary
     else if (osInfo.osName == XBinary::OSNAME_SYLLABLE) result.name = RECORD_NAME_SYLLABLE;
     else if (osInfo.osName == XBinary::OSNAME_MINIX) result.name = RECORD_NAME_MINIX;
     else if (osInfo.osName == XBinary::OSNAME_JVM) result.name = RECORD_NAME_JVM;
+    else if (osInfo.osName == XBinary::OSNAME_AMIGA) result.name = RECORD_NAME_AMIGA;
     // TODO more
 
     result.sVersion = osInfo.sOsVersion;
@@ -16711,6 +16762,9 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
     } else if ((fileType == XBinary::FT_DEX)) {
         SpecAbstract::DEXINFO_STRUCT dex_info = SpecAbstract::getDEXInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = dex_info.basic_info;
+    } else if ((fileType == XBinary::FT_AMIGAHUNK)) {
+        SpecAbstract::AMIGAHUNKINFO_STRUCT amigaHunk_info = SpecAbstract::getAmigaHunkInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        basic_info = amigaHunk_info.basic_info;
     } else if ((fileType == XBinary::FT_COM)) {
         SpecAbstract::COMINFO_STRUCT com_info = SpecAbstract::getCOMInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = com_info.basic_info;

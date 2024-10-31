@@ -113,6 +113,7 @@ public:
         RECORD_NAME_ALLOY,
         RECORD_NAME_ALPINECLANG,
         RECORD_NAME_ALPINELINUX,
+        RECORD_NAME_AMIGA,
         RECORD_NAME_ANDPAKK2,
         RECORD_NAME_ANDROID,
         RECORD_NAME_ANDROIDAPKSIGNER,
@@ -1044,6 +1045,10 @@ public:
         DEXINFO_STRUCT dexInfoClasses;
     };
 
+    struct AMIGAHUNKINFO_STRUCT {
+        BASIC_INFO basic_info;
+    };
+
     struct MACHOFATINFO_STRUCT {
         BASIC_INFO basic_info;
 
@@ -1292,6 +1297,7 @@ public:
     static PEINFO_STRUCT getPEInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static DEXINFO_STRUCT getDEXInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static ZIPINFO_STRUCT getZIPInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
+    static AMIGAHUNKINFO_STRUCT getAmigaHunkInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
 
     static _SCANS_STRUCT getScansStruct(quint32 nVariant, XBinary::FT fileType, RECORD_TYPE type, RECORD_NAME name, const QString &sVersion, const QString &sInfo,
                                         qint64 nOffset);
@@ -1400,6 +1406,8 @@ public:
     static void Zip_handle_APK(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_IPA(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Zip_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
+
+    static void AmigaHunk_handle_OperationSystems(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, AMIGAHUNKINFO_STRUCT *pAmigaHunkInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static DEXINFO_STRUCT Zip_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct,
                                        const QString &sFileName);
