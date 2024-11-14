@@ -1279,8 +1279,6 @@ public:
     static QString recordNameIdToString(qint32 nId);
     static QString heurTypeIdToString(qint32 nId);
 
-    //    static SpecAbstract::UNPACK_OPTIONS getPossibleUnpackOptions(QIODevice *pDevice,XScanEngine::SCAN_OPTIONS *pOptions); // TODO Check
-
     static QString _SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, bool bShowType = true);
 
     static BINARYINFO_STRUCT getBinaryInfo(QIODevice *pDevice, XBinary::FT fileType, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
