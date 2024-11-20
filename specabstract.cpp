@@ -12285,6 +12285,10 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
             _SCANS_STRUCT recordSS = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_LIBRARY, RECORD_NAME_QT, "6.X", "", 0);
 
             pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
+        } else if (XBinary::isStringInListPresent(&(pELFInfo->listLibraries), "libQt6Core.so.6", pPdStruct)) {
+            _SCANS_STRUCT recordSS = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_LIBRARY, RECORD_NAME_QT, "6.X", "", 0);
+
+            pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, scansToScan(&(pELFInfo->basic_info), &recordSS));
         }
 
         if (XELF::isNotePresent(&(pELFInfo->listNotes), "Android")) {
