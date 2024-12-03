@@ -1828,6 +1828,7 @@ void SpecAbstract::_handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPd
     pBasic_info->listDetects.append(pBasic_info->mapResultPackers.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultSFX.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultProtectors.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultSigntools.values());
 
     pBasic_info->listDetects.append(pBasic_info->mapResultTexts.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultArchives.values());
