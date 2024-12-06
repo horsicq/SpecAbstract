@@ -421,6 +421,7 @@ QString SpecAbstract::recordNameIdToString(qint32 nId)
         case RECORD_NAME_INQUARTOSOBFUSCATOR: sResult = QString("Inquartos Obfuscator"); break;
         case RECORD_NAME_INSTALL4J: sResult = QString("install4j"); break;
         case RECORD_NAME_INSTALLANYWHERE: sResult = QString("InstallAnywhere"); break;
+        case RECORD_NAME_INSTALLAWARE: sResult = QString("InstallAware"); break;
         case RECORD_NAME_INSTALLSHIELD: sResult = QString("InstallShield"); break;
         case RECORD_NAME_IOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_IOS); break;
         case RECORD_NAME_IOSSDK: sResult = QString("iOS SDK"); break;
@@ -478,6 +479,9 @@ QString SpecAbstract::recordNameIdToString(qint32 nId)
         case RECORD_NAME_MACHOFAT: sResult = QString("Mach-O FAT"); break;
         case RECORD_NAME_MAC_OS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_MAC_OS); break;
         case RECORD_NAME_MAC_OS_X: sResult = XBinary::osNameIdToString(XBinary::OSNAME_MAC_OS_X); break;
+        case RECORD_NAME_MACCATALYST: sResult = XBinary::osNameIdToString(XBinary::OSNAME_MACCATALYST); break;
+        case RECORD_NAME_MACDRIVERKIT: sResult = XBinary::osNameIdToString(XBinary::OSNAME_MACDRIVERKIT); break;
+        case RECORD_NAME_MACFIRMWARE: sResult = XBinary::osNameIdToString(XBinary::OSNAME_MACFIRMWARE); break;
         case RECORD_NAME_MACOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_MACOS); break;
         case RECORD_NAME_MACOSSDK: sResult = QString("macOS SDK"); break;
         case RECORD_NAME_MACROBJECT: sResult = QString("Macrobject"); break;
@@ -681,6 +685,7 @@ QString SpecAbstract::recordNameIdToString(qint32 nId)
         case RECORD_NAME_SECSHELL: sResult = QString("SecShell"); break;
         case RECORD_NAME_SECURESHADE: sResult = QString("Secure Shade"); break;
         case RECORD_NAME_SECUROM: sResult = QString("SecuROM"); break;
+        case RECORD_NAME_SEPOS: sResult = XBinary::osNameIdToString(XBinary::OSNAME_SEPOS); break;
         case RECORD_NAME_SERGREENAPPACKER: sResult = QString("SerGreen Appacker"); break;
         case RECORD_NAME_SETUPFACTORY: sResult = QString("Setup Factory"); break;
         case RECORD_NAME_SEXECRYPTER: sResult = QString("Sexe Crypter"); break;
@@ -1828,7 +1833,12 @@ void SpecAbstract::_handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPd
     pBasic_info->listDetects.append(pBasic_info->mapResultPackers.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultSFX.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultProtectors.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultAPKProtectors.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultDongleProtection.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultSigntools.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultInstallers.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultJoiners.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultPETools.values());
 
     pBasic_info->listDetects.append(pBasic_info->mapResultTexts.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultArchives.values());
@@ -7974,6 +7984,13 @@ void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OP
                     ss.sVersion = ss.sVersion.remove(" ");
                     ss.sVersion = ss.sVersion.replace(",", ".");
                 }
+
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
+            }
+
+            if (XPE::getResourcesVersionValue("Comments", &(pPEInfo->resVersion)).contains("This installation was built with InstallAware")) {
+                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_INSTALLER, RECORD_NAME_INSTALLAWARE, "", "", 0);
+                ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, scansToScan(&(pPEInfo->basic_info), &ss));
             }

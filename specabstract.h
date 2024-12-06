@@ -417,6 +417,7 @@ public:
         RECORD_NAME_INQUARTOSOBFUSCATOR,
         RECORD_NAME_INSTALL4J,
         RECORD_NAME_INSTALLANYWHERE,
+        RECORD_NAME_INSTALLAWARE,
         RECORD_NAME_INSTALLSHIELD,
         RECORD_NAME_IOS,
         RECORD_NAME_IOSSDK,
@@ -474,6 +475,9 @@ public:
         RECORD_NAME_MACHOFAT,
         RECORD_NAME_MAC_OS,
         RECORD_NAME_MAC_OS_X,
+        RECORD_NAME_MACCATALYST,
+        RECORD_NAME_MACDRIVERKIT,
+        RECORD_NAME_MACFIRMWARE,
         RECORD_NAME_MACOS,
         RECORD_NAME_MACOSSDK,
         RECORD_NAME_MACROBJECT,
@@ -677,6 +681,7 @@ public:
         RECORD_NAME_SECSHELL,
         RECORD_NAME_SECURESHADE,
         RECORD_NAME_SECUROM,
+        RECORD_NAME_SEPOS,
         RECORD_NAME_SERGREENAPPACKER,
         RECORD_NAME_SETUPFACTORY,
         RECORD_NAME_SEXECRYPTER,
@@ -1001,12 +1006,12 @@ public:
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultDosExtenders;
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultPackers;
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultSFX;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultPETools;
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultJoiners;
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultInstallers;
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultNETObfuscators;
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultNETCompressors;
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultDongleProtection;
+        QMap<RECORD_NAME, SCAN_STRUCT> mapResultPETools;
     };
 
     struct BINARYINFO_STRUCT {
