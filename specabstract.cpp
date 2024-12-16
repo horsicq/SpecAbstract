@@ -2734,7 +2734,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XScanE
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = dex.getSignature(0, 150);
         result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = dex.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
+        result.basic_info.memoryMap = dex.getMemoryMap(XBinary::MAPMODE_REGIONS, pPdStruct);
         result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
         result.basic_info.id.mode = result.basic_info.memoryMap.mode;
         result.basic_info.id.endian = result.basic_info.memoryMap.endian;
@@ -14331,8 +14331,6 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
 
         pDEXInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pDEXInfo->basic_info), &ssOperationSystem));
 
-        QList<XDEX_DEF::MAP_ITEM> listMaps = dex.getMapItems(pPdStruct);
-
         //        qint32 nNumberOfMapItems=listMaps.count();
 
         // dx
@@ -14468,7 +14466,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
         listDexMerge.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
         listDexMerge.append(XDEX_DEF::TYPE_MAP_LIST);
         listDexMerge.append(XDEX_DEF::TYPE_TYPE_LIST);
-        listDexMerge.append(XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST);
+        listDexMerge.append(XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST);  // Check
         listDexMerge.append(XDEX_DEF::TYPE_ANNOTATION_SET_ITEM);
         listDexMerge.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
         listDexMerge.append(XDEX_DEF::TYPE_CODE_ITEM);
@@ -14506,13 +14504,13 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
         // Example: X~~D8{"compilation-mode":"release","has-checksums":false,"min-api":14,"version":"2.0.88"}
 
         VI_STRUCT viR8 = get_R8_marker_vi(pDevice, pOptions, 0, pDEXInfo->basic_info.id.nSize, pPdStruct);
-        bool bR8_map = XDEX::compareMapItems(&listMaps, &listR8);
-        bool bDX_map = XDEX::compareMapItems(&listMaps, &listDx);
+        bool bR8_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listR8);
+        bool bDX_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDx);
         //        bool bDexLib_map=XDEX::compareMapItems(&listMaps,&listDexLib);
-        bool bDexLib2_map = XDEX::compareMapItems(&listMaps, &listDexLib2);
-        bool bDexLib2heur_map = XDEX::compareMapItems(&listMaps, &listDexLib2heur);
-        bool bDexMerge_map = XDEX::compareMapItems(&listMaps, &listDexMerge);
-        bool bFastProxy_map = XDEX::compareMapItems(&listMaps, &listFastProxy);
+        bool bDexLib2_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexLib2);
+        bool bDexLib2heur_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexLib2heur);
+        bool bDexMerge_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexMerge);
+        bool bFastProxy_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listFastProxy);
 
         if (viR8.bIsValid) {
             _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_R8, "", "", 0);
@@ -14563,7 +14561,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
 
         if (pDEXInfo->basic_info.mapResultCompilers.size() == 0) {
             _SCANS_STRUCT recordCompiler =
-                getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_UNKNOWN, QString("%1").arg(dex.getMapItemsHash(pPdStruct)), "", 0);
+                getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_UNKNOWN, QString("%1").arg(dex.getMapItemsHash(&(pDEXInfo->mapItems), pPdStruct)), "", 0);
             pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
         }
 
@@ -14587,7 +14585,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
                 bool bIsFieldNamesUnicode = dex.isFieldNamesUnicode(&(pDEXInfo->listFieldIDs), &(pDEXInfo->listStrings), pPdStruct);
                 bool bIsMethodNamesUnicode = dex.isMethodNamesUnicode(&(pDEXInfo->listMethodIDs), &(pDEXInfo->listStrings), pPdStruct);
 
-                sOverlay = QString("Maps %1").arg(dex.getMapItemsHash(pPdStruct));
+                sOverlay = QString("Maps %1").arg(dex.getMapItemsHash(&(pDEXInfo->mapItems), pPdStruct));
 
                 if (pDEXInfo->bIsOverlayPresent) {
                     sOverlay = append(sOverlay, "Overlay");
