@@ -14560,8 +14560,8 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
         }
 
         if (pDEXInfo->basic_info.mapResultCompilers.size() == 0) {
-            _SCANS_STRUCT recordCompiler =
-                getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_UNKNOWN, QString("%1").arg(dex.getMapItemsHash(&(pDEXInfo->mapItems), pPdStruct)), "", 0);
+            _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_UNKNOWN,
+                                                          QString("%1").arg(dex.getMapItemsHash(&(pDEXInfo->mapItems), pPdStruct)), "", 0);
             pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
         }
 
