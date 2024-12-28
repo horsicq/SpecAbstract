@@ -8,7 +8,6 @@ endif()
 # TODO Check includes
 set(SPECABSTRACT_SOURCES
     ${SPECABSTRACT_SOURCES}
-    ${XSCANENGINE_SOURCES}
     ${CMAKE_CURRENT_LIST_DIR}/specabstract.cpp
     ${CMAKE_CURRENT_LIST_DIR}/specabstract.h
 )
