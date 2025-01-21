@@ -14663,23 +14663,23 @@ void SpecAbstract::DEX_handle_Dexguard(QIODevice *pDevice, SpecAbstract::DEXINFO
                 pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
             }
 
-            if (!pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_DEXGUARD)) {
-                qint32 nNumberOfTypes = pDEXInfo->listTypeItemStrings.count();
+            // if (!pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_DEXGUARD)) {
+            //     qint32 nNumberOfTypes = pDEXInfo->listTypeItemStrings.count();
 
-                for (qint32 i = 0; (i < nNumberOfTypes) && (!(pPdStruct->bIsStop)); i++) {
-                    QString sType = pDEXInfo->listTypeItemStrings.at(i);
+            //     for (qint32 i = 0; (i < nNumberOfTypes) && (!(pPdStruct->bIsStop)); i++) {
+            //         QString sType = pDEXInfo->listTypeItemStrings.at(i);
 
-                    // TODO Check!
-                    if (sType.size() <= 7) {
-                        if (XBinary::isRegExpPresent("^Lo/", sType)) {
-                            _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXGUARD, "", "", 0);
-                            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
+            //         // TODO Check!
+            //         if (sType.size() <= 7) {
+            //             if (XBinary::isRegExpPresent("^Lo/", sType)) {
+            //                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXGUARD, "", "", 0);
+            //                 pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pDEXInfo->basic_info), &ss));
 
-                            break;
-                        }
-                    }
-                }
-            }
+            //                 break;
+            //             }
+            //         }
+            //     }
+            // }
         }
     }
 }
