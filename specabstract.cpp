@@ -842,6 +842,7 @@ QString SpecAbstract::recordNameIdToString(qint32 nId)
         case RECORD_NAME_XAR: sResult = QString("xar"); break;
         case RECORD_NAME_XBOX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_XBOX); break;
         case RECORD_NAME_XCODE: sResult = QString("Xcode"); break;
+        case RECORD_NAME_XCODELINKER: sResult = QString("Xcode ld"); break;
         case RECORD_NAME_XCOMP: sResult = QString("XComp"); break;
         case RECORD_NAME_XENOCODE: sResult = QString("Xenocode"); break;
         case RECORD_NAME_XENOCODEPOSTBUILD2009FORDOTNET: sResult = QString("Xenocode Postbuild 2009 for .NET"); break;
@@ -12975,6 +12976,8 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
     XMACH mach(pDevice, pOptions->bIsImage);
 
     if (mach.isValid(pPdStruct)) {
+        QList<XMACH_DEF::build_tool_version> listBTV;
+
         _SCANS_STRUCT recordSDK = {};
         recordSDK.type = SpecAbstract::RECORD_TYPE_TOOL;
         recordSDK.name = SpecAbstract::RECORD_NAME_UNKNOWN;
@@ -12997,6 +13000,10 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
         _SCANS_STRUCT recordZig = {};
         recordZig.type = SpecAbstract::RECORD_TYPE_COMPILER;
         recordZig.name = SpecAbstract::RECORD_NAME_UNKNOWN;
+
+        _SCANS_STRUCT recordLD = {};
+        recordLD.type = SpecAbstract::RECORD_TYPE_LINKER;
+        recordLD.name = SpecAbstract::RECORD_NAME_UNKNOWN;
 
         XBinary::OSINFO osInfo = mach.getOsInfo();
 
@@ -13158,13 +13165,28 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
 
             if (build_version.platform == XMACH_DEF::S_PLATFORM_MACOS) recordSDK.name = RECORD_NAME_MACOSSDK;
             else if (build_version.platform == XMACH_DEF::S_PLATFORM_BRIDGEOS) recordSDK.name = RECORD_NAME_BRIDGEOS;
-            else if (build_version.platform == XMACH_DEF::S_PLATFORM_IOS) recordSDK.name = RECORD_NAME_IOSSDK;
-            else if (build_version.platform == XMACH_DEF::S_PLATFORM_TVOS) recordSDK.name = RECORD_NAME_TVOSSDK;
-            else if (build_version.platform == XMACH_DEF::S_PLATFORM_WATCHOS) recordSDK.name = RECORD_NAME_WATCHOSSDK;
+            else if ((build_version.platform == XMACH_DEF::S_PLATFORM_IOS) || (build_version.platform == XMACH_DEF::S_PLATFORM_IOSSIMULATOR)) recordSDK.name = RECORD_NAME_IOSSDK;
+            else if ((build_version.platform == XMACH_DEF::S_PLATFORM_TVOS) || (build_version.platform == XMACH_DEF::S_PLATFORM_TVOSSIMULATOR)) recordSDK.name = RECORD_NAME_TVOSSDK;
+            else if ((build_version.platform == XMACH_DEF::S_PLATFORM_WATCHOS) || (build_version.platform == XMACH_DEF::S_PLATFORM_WATCHOSSIMULATOR)) recordSDK.name = RECORD_NAME_WATCHOSSDK;
 
             if (build_version.sdk) {
                 recordSDK.sVersion = XBinary::get_uint32_full_version(build_version.sdk);
             }
+
+            if ((build_version.cmdsize - sizeof(XMACH_DEF::build_version_command)) && (build_version.ntools > 0)) {
+                nBuildVersionOffset += sizeof(XMACH_DEF::build_version_command);
+
+                quint32 nNumberOfTools = qMin(build_version.ntools, (build_version.cmdsize - sizeof(XMACH_DEF::build_version_command) / sizeof(XMACH_DEF::build_tool_version)));
+
+                for (quint32 i = 0; i < nNumberOfTools; i++) {
+                    XMACH_DEF::build_tool_version btv = mach._read_build_tool_version(nBuildVersionOffset);
+
+                    listBTV.append(btv);
+
+                    nBuildVersionOffset += sizeof(XMACH_DEF::build_tool_version);
+                }
+            }
+
         } else if (nVersionMinOffset != -1) {
             XMACH_DEF::version_min_command version_min = mach._read_version_min_command(nVersionMinOffset);
 
@@ -13900,6 +13922,26 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
 
                 pMACHInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pMACHInfo->basic_info), &ss));
             }
+        }
+
+        qint32 nNumberOfBT = listBTV.count();
+
+        for (qint32 i = 0; i < nNumberOfBT; i++) {
+            QString _sVersion = XBinary::get_uint32_full_version(listBTV.at(i).version);
+            if (listBTV.at(i).tool == XMACH_DEF::S_TOOL_SWIFT) {
+                recordSwift.name = SpecAbstract::RECORD_NAME_SWIFT;
+                recordSwift.sVersion = _sVersion;
+            } else if (listBTV.at(i).tool == XMACH_DEF::S_TOOL_CLANG) {
+                recordCLANG.name = SpecAbstract::RECORD_NAME_CLANG;
+                recordCLANG.sVersion = _sVersion;
+            } else if (listBTV.at(i).tool == XMACH_DEF::S_TOOL_LD) {
+                recordLD.name = SpecAbstract::RECORD_NAME_XCODELINKER;
+                recordLD.sVersion = _sVersion;
+            }
+        }
+
+        if (recordLD.name != SpecAbstract::RECORD_NAME_UNKNOWN) {
+            pMACHInfo->basic_info.mapResultLinkers.insert(recordLD.name, scansToScan(&(pMACHInfo->basic_info), &recordLD));
         }
 
         if ((recordGCC.name == SpecAbstract::RECORD_NAME_UNKNOWN) && (recordCLANG.name == SpecAbstract::RECORD_NAME_UNKNOWN)) {
