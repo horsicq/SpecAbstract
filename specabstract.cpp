@@ -16550,7 +16550,12 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(const XBinary
     else if (osInfo.osName == XBinary::OSNAME_MINIX) result.name = RECORD_NAME_MINIX;
     else if (osInfo.osName == XBinary::OSNAME_JVM) result.name = RECORD_NAME_JVM;
     else if (osInfo.osName == XBinary::OSNAME_AMIGA) result.name = RECORD_NAME_AMIGA;
-    // TODO more
+    else if (osInfo.osName == XBinary::OSNAME_MACCATALYST) result.name = RECORD_NAME_MACCATALYST;
+    else if (osInfo.osName == XBinary::OSNAME_MACDRIVERKIT) result.name = RECORD_NAME_MACDRIVERKIT;
+    else if (osInfo.osName == XBinary::OSNAME_MACFIRMWARE) result.name = RECORD_NAME_MACFIRMWARE;
+    else if (osInfo.osName == XBinary::OSNAME_SEPOS) result.name = RECORD_NAME_SEPOS;
+    else
+        result.name = RECORD_NAME_UNKNOWN;
 
     result.sVersion = osInfo.sOsVersion;
     result.sInfo = QString("%1, %2, %3").arg(osInfo.sArch, XBinary::modeIdToString(osInfo.mode), osInfo.sType);
