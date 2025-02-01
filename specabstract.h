@@ -1491,6 +1491,7 @@ public:
     static VI_STRUCT _get_OllvmTll_string(const QString &sString);
     static VI_STRUCT _get_DelphiVersionFromCompiler(const QString &sString);
     static VI_STRUCT _get_SourceryCodeBench_string(const QString &sString);
+    static VI_STRUCT _get_Rust_string(const QString &sString);
 
     static void _handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPdStruct);
 

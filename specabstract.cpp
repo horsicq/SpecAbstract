@@ -1814,6 +1814,19 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_SourceryCodeBench_string(const QStrin
     return result;
 }
 
+SpecAbstract::VI_STRUCT SpecAbstract::_get_Rust_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+
+    if (XBinary::isRegExpPresent("^rustc ", sString)) {
+        result.bIsValid = true;
+
+        result.sVersion = sString.section("rustc version ", 1, 1).section(" ", 0, 0);
+    }
+
+    return result;
+}
+
 void SpecAbstract::_handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPdStruct)
 {
     getLanguage(&(pBasic_info->mapResultLinkers), &(pBasic_info->mapResultLanguages), pPdStruct);
@@ -12236,6 +12249,16 @@ void SpecAbstract::ELF_handle_CommentSection(QIODevice *pDevice, XScanEngine::SC
             }
         }
 
+        {
+            vi = _get_Rust_string(sComment);
+
+            if (vi.bIsValid) {
+                ss = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_COMPILER, RECORD_NAME_RUST, vi.sVersion, "", 0);
+
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
+
         if (pELFInfo->basic_info.scanOptions.bIsTest && pELFInfo->basic_info.scanOptions.bIsVerbose) {
             if (ss.name == RECORD_NAME_UNKNOWN) {
                 if ((!vi.bIsValid) && (!XBinary::isRegExpPresent(".o$", sComment)) && (!XBinary::isRegExpPresent(".c$", sComment)) &&
@@ -12374,6 +12397,12 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
             _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_SOURCERYCODEBENCHLITE);
 
             pELFInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_RUST)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(RECORD_NAME_RUST);
+
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, scansToScan(&(pELFInfo->basic_info), &ss));
         }
 
         if (pELFInfo->basic_info.mapCommentSectionDetects.contains(RECORD_NAME_APPLELLVM)) {
@@ -13165,9 +13194,12 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
 
             if (build_version.platform == XMACH_DEF::S_PLATFORM_MACOS) recordSDK.name = RECORD_NAME_MACOSSDK;
             else if (build_version.platform == XMACH_DEF::S_PLATFORM_BRIDGEOS) recordSDK.name = RECORD_NAME_BRIDGEOS;
-            else if ((build_version.platform == XMACH_DEF::S_PLATFORM_IOS) || (build_version.platform == XMACH_DEF::S_PLATFORM_IOSSIMULATOR)) recordSDK.name = RECORD_NAME_IOSSDK;
-            else if ((build_version.platform == XMACH_DEF::S_PLATFORM_TVOS) || (build_version.platform == XMACH_DEF::S_PLATFORM_TVOSSIMULATOR)) recordSDK.name = RECORD_NAME_TVOSSDK;
-            else if ((build_version.platform == XMACH_DEF::S_PLATFORM_WATCHOS) || (build_version.platform == XMACH_DEF::S_PLATFORM_WATCHOSSIMULATOR)) recordSDK.name = RECORD_NAME_WATCHOSSDK;
+            else if ((build_version.platform == XMACH_DEF::S_PLATFORM_IOS) || (build_version.platform == XMACH_DEF::S_PLATFORM_IOSSIMULATOR))
+                recordSDK.name = RECORD_NAME_IOSSDK;
+            else if ((build_version.platform == XMACH_DEF::S_PLATFORM_TVOS) || (build_version.platform == XMACH_DEF::S_PLATFORM_TVOSSIMULATOR))
+                recordSDK.name = RECORD_NAME_TVOSSDK;
+            else if ((build_version.platform == XMACH_DEF::S_PLATFORM_WATCHOS) || (build_version.platform == XMACH_DEF::S_PLATFORM_WATCHOSSIMULATOR))
+                recordSDK.name = RECORD_NAME_WATCHOSSDK;
 
             if (build_version.sdk) {
                 recordSDK.sVersion = XBinary::get_uint32_full_version(build_version.sdk);
@@ -13176,7 +13208,8 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
             if ((build_version.cmdsize - sizeof(XMACH_DEF::build_version_command)) && (build_version.ntools > 0)) {
                 nBuildVersionOffset += sizeof(XMACH_DEF::build_version_command);
 
-                quint32 nNumberOfTools = qMin(build_version.ntools, (build_version.cmdsize - sizeof(XMACH_DEF::build_version_command) / sizeof(XMACH_DEF::build_tool_version)));
+                quint32 nNumberOfTools =
+                    qMin(build_version.ntools, (build_version.cmdsize - sizeof(XMACH_DEF::build_version_command) / sizeof(XMACH_DEF::build_tool_version)));
 
                 for (quint32 i = 0; i < nNumberOfTools; i++) {
                     XMACH_DEF::build_tool_version btv = mach._read_build_tool_version(nBuildVersionOffset);
@@ -16596,8 +16629,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(const XBinary
     else if (osInfo.osName == XBinary::OSNAME_MACDRIVERKIT) result.name = RECORD_NAME_MACDRIVERKIT;
     else if (osInfo.osName == XBinary::OSNAME_MACFIRMWARE) result.name = RECORD_NAME_MACFIRMWARE;
     else if (osInfo.osName == XBinary::OSNAME_SEPOS) result.name = RECORD_NAME_SEPOS;
-    else
-        result.name = RECORD_NAME_UNKNOWN;
+    else result.name = RECORD_NAME_UNKNOWN;
 
     result.sVersion = osInfo.sOsVersion;
     result.sInfo = QString("%1, %2, %3").arg(osInfo.sArch, XBinary::modeIdToString(osInfo.mode), osInfo.sType);
