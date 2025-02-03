@@ -13209,7 +13209,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
                 nBuildVersionOffset += sizeof(XMACH_DEF::build_version_command);
 
                 quint32 nNumberOfTools =
-                    qMin(build_version.ntools, (build_version.cmdsize - sizeof(XMACH_DEF::build_version_command) / sizeof(XMACH_DEF::build_tool_version)));
+                    qMin(build_version.ntools, (quint32)((build_version.cmdsize - sizeof(XMACH_DEF::build_version_command) / sizeof(XMACH_DEF::build_tool_version))));
 
                 for (quint32 i = 0; i < nNumberOfTools; i++) {
                     XMACH_DEF::build_tool_version btv = mach._read_build_tool_version(nBuildVersionOffset);
