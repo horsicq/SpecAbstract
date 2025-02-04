@@ -645,6 +645,7 @@ QString SpecAbstract::recordNameIdToString(qint32 nId)
         case RECORD_NAME_PYTHON: sResult = QString("Python"); break;
         case RECORD_NAME_QDBH: sResult = QString("qdbh"); break;
         case RECORD_NAME_QIHOO360PROTECTION: sResult = QString("Qihoo 360 Protection"); break;
+        case RECORD_NAME_QML: sResult = QString("QML"); break;
         case RECORD_NAME_QNX: sResult = XBinary::osNameIdToString(XBinary::OSNAME_QNX); break;
         case RECORD_NAME_QRYPT0R: sResult = QString("QrYPt0r"); break;
         case RECORD_NAME_QT: sResult = QString("Qt"); break;
@@ -11183,6 +11184,13 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
 
                     pZipInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
                 }
+
+                // QML
+                if (pZipInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_QML)) {
+                    _SCANS_STRUCT ss = pZipInfo->basic_info.mapArchiveDetects.value(RECORD_NAME_QML);
+
+                    pZipInfo->basic_info.mapResultLibraries.insert(ss.name, scansToScan(&(pZipInfo->basic_info), &ss));
+                }
             }
         }
     }
@@ -16523,6 +16531,7 @@ void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap
             case RECORD_NAME_SWIFT: ssLanguage.name = RECORD_NAME_SWIFT; break;
             case RECORD_NAME_PERL: ssLanguage.name = RECORD_NAME_PERL; break;
             case RECORD_NAME_ZIG: ssLanguage.name = RECORD_NAME_ZIG; break;
+            case RECORD_NAME_QML: ssLanguage.name = RECORD_NAME_QML; break;
             default: ssLanguage.name = RECORD_NAME_UNKNOWN;
         }
 

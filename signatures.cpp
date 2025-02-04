@@ -1657,6 +1657,7 @@ SpecAbstract::STRING_RECORD _APK_file_records[]=
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_IL2CPP,                       "",                 ""},                    "lib/armeabi-v7a/libil2cpp.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_OLLVMTLL,                     "",                 ""},                    "lib/armeabi-v7a/libmtprotect.so"},
     {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_PROTECTOR,        SpecAbstract::RECORD_NAME_OLLVMTLL,                     "",                 ""},                    "lib/x86/libmtprotect.so"},
+    {{0, XBinary::FT_APK,       SpecAbstract::RECORD_TYPE_LIBRARY,          SpecAbstract::RECORD_NAME_QML,                          "6.X",              ""},                    "lib/arm64-v8a/libQt6Qml_arm64-v8a.so"},
 };
 
 SpecAbstract::STRING_RECORD _APK_fileExp_records[]=
