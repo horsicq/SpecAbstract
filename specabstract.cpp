@@ -9869,7 +9869,7 @@ void SpecAbstract::Binary_handle_Formats(QIODevice *pDevice, XScanEngine::SCAN_O
         quint16 nMajor = binary.read_uint16(6, true);
 
         if (nMajor) {
-            QString sVersion = XJAR::_getJDKVersion(nMajor, nMinor);
+            QString sVersion = XJavaClass::_getJDKVersion(nMajor, nMinor);
 
             if (sVersion != "") {
                 _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_JAVACOMPILEDCLASS);
