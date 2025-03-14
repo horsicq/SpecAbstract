@@ -90,7 +90,7 @@ SpecAbstract::SIGNATURE_RECORD _archive_records[]=
     {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_7Z,                           "",                 ""},                    "'7z'BCAF271C"},
     {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_ARJ,                          "",                 ""},                    "60EA"},
     {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_BZIP2,                        "",                 ""},                    "'BZh'"},
-    {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_CAB,                          "",                 ""},                    "'MSCF'"},
+    {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_CAB,                          "",                 ""},                    "'MSCF'00000000"},
     {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_GZIP,                         "",                 ""},                    "1F8B08"},
     {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_LHA,                          "",                 ""},                    "....'-lh'..2D"},
     {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_LHA,                          "",                 ""},                    "....'-lz'..2D"},
