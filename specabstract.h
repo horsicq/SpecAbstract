@@ -1176,6 +1176,8 @@ public:
         QString sResourceManifest;
         XPE::RESOURCES_VERSION resVersion;
         XPE::CLI_INFO cliInfo;
+        QList<QString> listAnsiStrings;
+        QList<QString> listUnicodeStrings;
 
         qint32 nEntryPointSection;
         qint32 nResourcesSection;

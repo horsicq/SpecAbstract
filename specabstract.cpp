@@ -2495,6 +2495,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         result.listResources = pe.getResources(&(result.basic_info.memoryMap), 10000, pPdStruct);
         result.listRichSignatures = pe.getRichSignatureRecords();
         result.cliInfo = pe.getCliInfo(true, &(result.basic_info.memoryMap), pPdStruct);
+        result.listAnsiStrings = pe.getAnsiStrings(&(result.cliInfo), pPdStruct);
+        result.listUnicodeStrings = pe.getUnicodeStrings(&(result.cliInfo), pPdStruct);
         result.sResourceManifest = pe.getResourceManifest(&result.listResources);
         result.resVersion = pe.getResourcesVersion(&result.listResources, pPdStruct);
 
@@ -2638,9 +2640,9 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         //        resourcesScan(&result.mapResourcesDetects,&result.listResources,_resources_records,sizeof(_resources_records),result.basic_info.id.filetype,SpecAbstract::XBinary::FT_PE);
 
         if (result.bIsNetPresent) {
-            stringScan(&result.basic_info.mapDotAnsiStringsDetects, &result.cliInfo.metaData.listAnsiStrings, _PE_dot_ansistrings_records,
+            stringScan(&result.basic_info.mapDotAnsiStringsDetects, &result.listAnsiStrings, _PE_dot_ansistrings_records,
                        sizeof(_PE_dot_ansistrings_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_NETANSISTRING, pPdStruct);
-            stringScan(&result.basic_info.mapDotUnicodeStringsDetects, &result.cliInfo.metaData.listUnicodeStrings, _PE_dot_unicodestrings_records,
+            stringScan(&result.basic_info.mapDotUnicodeStringsDetects, &result.listUnicodeStrings, _PE_dot_unicodestrings_records,
                        sizeof(_PE_dot_unicodestrings_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_NETUNICODESTRING,
                        pPdStruct);
 
