@@ -2032,7 +2032,7 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XScanE
 
             //            result.mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pCOMInfo->basic_info),&ssOperationSystem));
 
-            _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(com.getOsInfo());
+            _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(com.getFileFormatInfo(pPdStruct));
 
             result.basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(result.basic_info), &ssOperationSystem));
         }
@@ -3157,7 +3157,7 @@ void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, XScanEngine::S
     XPE pe(pDevice, pOptions->bIsImage);
 
     if (pe.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(pe.getOsInfo());
+        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(pe.getFileFormatInfo(pPdStruct));
 
         pPEInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pPEInfo->basic_info), &ssOperationSystem));
     }
@@ -10597,7 +10597,7 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
 
     if (xjar.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
         if (!(pZipInfo->bIsAPK)) {
-            _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(xjar.getOsInfo(&(pZipInfo->listArchiveRecords), pPdStruct));
+            _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(xjar.getFileFormatInfo(pPdStruct));
 
             pZipInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
         }
@@ -10658,7 +10658,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
         XAPK xapk(pDevice);
 
         if (xapk.isValid(&(pZipInfo->listArchiveRecords), pPdStruct)) {
-            _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(xapk.getOsInfo(&(pZipInfo->listArchiveRecords), pPdStruct));
+            _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(xapk.getFileFormatInfo(pPdStruct));
 
             pZipInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
 
@@ -11307,7 +11307,7 @@ void SpecAbstract::AmigaHunk_handle_OperationSystems(QIODevice *pDevice, SCAN_OP
     XAmigaHunk amigaHunk(pDevice, pOptions->bIsImage);
 
     if (amigaHunk.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(amigaHunk.getOsInfo());
+        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(amigaHunk.getFileFormatInfo(pPdStruct));
 
         pAmigaHunkInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pAmigaHunkInfo->basic_info), &ssOperationSystem));
     }
@@ -11356,7 +11356,7 @@ void SpecAbstract::MSDOS_handle_OperationSystems(QIODevice *pDevice, XScanEngine
     XMSDOS msdos(pDevice, pOptions->bIsImage);
 
     if (msdos.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(msdos.getOsInfo());
+        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(msdos.getFileFormatInfo(pPdStruct));
 
         pMSDOSInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pMSDOSInfo->basic_info), &ssOperationSystem));
     }
@@ -11794,7 +11794,7 @@ void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, XScanEngine::
     XELF elf(pDevice, pOptions->bIsImage);
 
     if (elf.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(elf.getOsInfo());
+        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(elf.getFileFormatInfo(pPdStruct));
 
         pELFInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pELFInfo->basic_info), &ssOperationSystem));
     }
@@ -13044,9 +13044,9 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
         recordLD.type = SpecAbstract::RECORD_TYPE_LINKER;
         recordLD.name = SpecAbstract::RECORD_NAME_UNKNOWN;
 
-        XBinary::OSINFO osInfo = mach.getOsInfo();
+        XBinary::FILEFORMATINFO fileFormatInfo = mach.getFileFormatInfo(pPdStruct);
 
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(osInfo);
+        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(fileFormatInfo);
 
         pMACHInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pMACHInfo->basic_info), &ssOperationSystem));
 
@@ -13065,7 +13065,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
 
             quint32 nVersion = XMACH::getLibraryCurrentVersion("Foundation", &(pMACHInfo->listLibraryRecords));
 
-            if ((osInfo.osName == XBinary::OSNAME_MAC_OS_X) || (osInfo.osName == XBinary::OSNAME_OS_X) || (osInfo.osName == XBinary::OSNAME_MACOS)) {
+            if ((fileFormatInfo.osName == XBinary::OSNAME_MAC_OS_X) || (fileFormatInfo.osName == XBinary::OSNAME_OS_X) || (fileFormatInfo.osName == XBinary::OSNAME_MACOS)) {
                 recordSDK.name = RECORD_NAME_MACOSSDK;
 
                 // https://developer.apple.com/documentation/foundation/object_runtime/foundation_framework_version_numbers
@@ -13124,7 +13124,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
                 else if (nVersion < S_FULL_VERSION(1299, 0, 0)) recordSDK.sVersion = "10.11.4";
                 else if (nVersion < S_FULL_VERSION(1400, 10, 0))  // TODO Check
                     recordSDK.sVersion = "10.11 Max";
-            } else if ((osInfo.osName == XBinary::OSNAME_IPHONEOS) || (osInfo.osName == XBinary::OSNAME_IOS) || (osInfo.osName == XBinary::OSNAME_IPADOS)) {
+            } else if ((fileFormatInfo.osName == XBinary::OSNAME_IPHONEOS) || (fileFormatInfo.osName == XBinary::OSNAME_IOS) || (fileFormatInfo.osName == XBinary::OSNAME_IPADOS)) {
                 recordSDK.name = RECORD_NAME_IOSSDK;
 
                 if (nVersion < S_FULL_VERSION(678, 24, 0)) recordSDK.sVersion = "1.0.0";
@@ -14097,7 +14097,7 @@ void SpecAbstract::LE_handle_OperationSystems(QIODevice *pDevice, XScanEngine::S
     XLE le(pDevice, pOptions->bIsImage);
 
     if (le.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(le.getOsInfo());
+        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(le.getFileFormatInfo(pPdStruct));
 
         pLEInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pLEInfo->basic_info), &ssOperationSystem));
     }
@@ -14215,7 +14215,7 @@ void SpecAbstract::LX_handle_OperationSystems(QIODevice *pDevice, XScanEngine::S
     XLE lx(pDevice, pOptions->bIsImage);
 
     if (lx.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(lx.getOsInfo());
+        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(lx.getFileFormatInfo(pPdStruct));
 
         pLXInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pLXInfo->basic_info), &ssOperationSystem));
     }
@@ -14333,7 +14333,7 @@ void SpecAbstract::NE_handle_OperationSystems(QIODevice *pDevice, XScanEngine::S
     XNE ne(pDevice, pOptions->bIsImage);
 
     if (ne.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(ne.getOsInfo());
+        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(ne.getFileFormatInfo(pPdStruct));
 
         pNEInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pNEInfo->basic_info), &ssOperationSystem));
     }
@@ -14412,7 +14412,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
 
         pDEXInfo->basic_info.mapResultTools.insert(recordAndroidSDK.name, scansToScan(&(pDEXInfo->basic_info), &recordAndroidSDK));
 
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromOsInfo(dex.getOsInfo());
+        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(dex.getFileFormatInfo(pPdStruct));
 
         pDEXInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pDEXInfo->basic_info), &ssOperationSystem));
 
@@ -16571,81 +16571,81 @@ void SpecAbstract::fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages)
     //    }
 }
 
-SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromOsInfo(const XBinary::OSINFO &osInfo)
+SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromFileFormatInfo(const XBinary::FILEFORMATINFO &fileFormatInfo)
 {
     _SCANS_STRUCT result = {};
 
-    if (osInfo.bIsVM) {
+    if (fileFormatInfo.bIsVM) {
         result.type = RECORD_TYPE_VIRTUALMACHINE;
     } else {
         result.type = RECORD_TYPE_OPERATIONSYSTEM;
     }
 
     // TODO reactOS
-    if (osInfo.osName == XBinary::OSNAME_MSDOS) result.name = RECORD_NAME_MSDOS;
-    else if (osInfo.osName == XBinary::OSNAME_POSIX) result.name = RECORD_NAME_POSIX;
-    else if (osInfo.osName == XBinary::OSNAME_UNIX) result.name = RECORD_NAME_UNIX;
-    else if (osInfo.osName == XBinary::OSNAME_LINUX) result.name = RECORD_NAME_LINUX;
-    else if (osInfo.osName == XBinary::OSNAME_WINDOWS) result.name = RECORD_NAME_WINDOWS;
-    else if (osInfo.osName == XBinary::OSNAME_WINDOWSCE) result.name = RECORD_NAME_WINDOWSCE;
-    else if (osInfo.osName == XBinary::OSNAME_XBOX) result.name = RECORD_NAME_XBOX;
-    else if (osInfo.osName == XBinary::OSNAME_OS2) result.name = RECORD_NAME_OS2;
-    else if (osInfo.osName == XBinary::OSNAME_MAC_OS) result.name = RECORD_NAME_MAC_OS;
-    else if (osInfo.osName == XBinary::OSNAME_MAC_OS_X) result.name = RECORD_NAME_MAC_OS_X;
-    else if (osInfo.osName == XBinary::OSNAME_OS_X) result.name = RECORD_NAME_OS_X;
-    else if (osInfo.osName == XBinary::OSNAME_MACOS) result.name = RECORD_NAME_MACOS;
-    else if (osInfo.osName == XBinary::OSNAME_IPHONEOS) result.name = RECORD_NAME_IPHONEOS;
-    else if (osInfo.osName == XBinary::OSNAME_IPADOS) result.name = RECORD_NAME_IPADOS;
-    else if (osInfo.osName == XBinary::OSNAME_IOS) result.name = RECORD_NAME_IOS;
-    else if (osInfo.osName == XBinary::OSNAME_WATCHOS) result.name = RECORD_NAME_WATCHOS;
-    else if (osInfo.osName == XBinary::OSNAME_TVOS) result.name = RECORD_NAME_TVOS;
-    else if (osInfo.osName == XBinary::OSNAME_BRIDGEOS) result.name = RECORD_NAME_BRIDGEOS;
-    else if (osInfo.osName == XBinary::OSNAME_ANDROID) result.name = RECORD_NAME_ANDROID;
-    else if (osInfo.osName == XBinary::OSNAME_FREEBSD) result.name = RECORD_NAME_FREEBSD;
-    else if (osInfo.osName == XBinary::OSNAME_OPENBSD) result.name = RECORD_NAME_OPENBSD;
-    else if (osInfo.osName == XBinary::OSNAME_NETBSD) result.name = RECORD_NAME_NETBSD;
-    else if (osInfo.osName == XBinary::OSNAME_HPUX) result.name = RECORD_NAME_HPUX;
-    else if (osInfo.osName == XBinary::OSNAME_SOLARIS) result.name = RECORD_NAME_SOLARIS;
-    else if (osInfo.osName == XBinary::OSNAME_AIX) result.name = RECORD_NAME_AIX;
-    else if (osInfo.osName == XBinary::OSNAME_IRIX) result.name = RECORD_NAME_IRIX;
-    else if (osInfo.osName == XBinary::OSNAME_TRU64) result.name = RECORD_NAME_TRU64;
-    else if (osInfo.osName == XBinary::OSNAME_MODESTO) result.name = RECORD_NAME_MODESTO;
-    else if (osInfo.osName == XBinary::OSNAME_OPENVMS) result.name = RECORD_NAME_OPENVMS;
-    else if (osInfo.osName == XBinary::OSNAME_FENIXOS) result.name = RECORD_NAME_FENIXOS;
-    else if (osInfo.osName == XBinary::OSNAME_BORLANDOSSERVICES) result.name = RECORD_NAME_BORLANDOSSERVICES;
-    else if (osInfo.osName == XBinary::OSNAME_NSK) result.name = RECORD_NAME_NSK;
-    else if (osInfo.osName == XBinary::OSNAME_AROS) result.name = RECORD_NAME_AROS;
-    else if (osInfo.osName == XBinary::OSNAME_UBUNTULINUX) result.name = RECORD_NAME_UBUNTULINUX;
-    else if (osInfo.osName == XBinary::OSNAME_DEBIANLINUX) result.name = RECORD_NAME_DEBIANLINUX;
-    else if (osInfo.osName == XBinary::OSNAME_STARTOSLINUX) result.name = RECORD_NAME_STARTOSLINUX;
-    else if (osInfo.osName == XBinary::OSNAME_GENTOOLINUX) result.name = RECORD_NAME_GENTOOLINUX;
-    else if (osInfo.osName == XBinary::OSNAME_ALPINELINUX) result.name = RECORD_NAME_ALPINELINUX;
-    else if (osInfo.osName == XBinary::OSNAME_WINDRIVERLINUX) result.name = RECORD_NAME_WINDRIVERLINUX;
-    else if (osInfo.osName == XBinary::OSNAME_SUSELINUX) result.name = RECORD_NAME_SUSELINUX;
-    else if (osInfo.osName == XBinary::OSNAME_MANDRAKELINUX) result.name = RECORD_NAME_MANDRAKELINUX;
-    else if (osInfo.osName == XBinary::OSNAME_ASPLINUX) result.name = RECORD_NAME_ASPLINUX;
-    else if (osInfo.osName == XBinary::OSNAME_REDHATLINUX) result.name = RECORD_NAME_REDHATLINUX;
-    else if (osInfo.osName == XBinary::OSNAME_HANCOMLINUX) result.name = RECORD_NAME_HANCOMLINUX;
-    else if (osInfo.osName == XBinary::OSNAME_TURBOLINUX) result.name = RECORD_NAME_TURBOLINUX;
-    else if (osInfo.osName == XBinary::OSNAME_VINELINUX) result.name = RECORD_NAME_VINELINUX;
-    else if (osInfo.osName == XBinary::OSNAME_SUNOS) result.name = RECORD_NAME_SUNOS;
-    else if (osInfo.osName == XBinary::OSNAME_OPENVOS) result.name = RECORD_NAME_OPENVOS;
-    else if (osInfo.osName == XBinary::OSNAME_MCLINUX) result.name = RECORD_NAME_MCLINUX;
-    else if (osInfo.osName == XBinary::OSNAME_QNX) result.name = RECORD_NAME_QNX;
-    else if (osInfo.osName == XBinary::OSNAME_SYLLABLE) result.name = RECORD_NAME_SYLLABLE;
-    else if (osInfo.osName == XBinary::OSNAME_MINIX) result.name = RECORD_NAME_MINIX;
-    else if (osInfo.osName == XBinary::OSNAME_JVM) result.name = RECORD_NAME_JVM;
-    else if (osInfo.osName == XBinary::OSNAME_AMIGA) result.name = RECORD_NAME_AMIGA;
-    else if (osInfo.osName == XBinary::OSNAME_MACCATALYST) result.name = RECORD_NAME_MACCATALYST;
-    else if (osInfo.osName == XBinary::OSNAME_MACDRIVERKIT) result.name = RECORD_NAME_MACDRIVERKIT;
-    else if (osInfo.osName == XBinary::OSNAME_MACFIRMWARE) result.name = RECORD_NAME_MACFIRMWARE;
-    else if (osInfo.osName == XBinary::OSNAME_SEPOS) result.name = RECORD_NAME_SEPOS;
+    if (fileFormatInfo.osName == XBinary::OSNAME_MSDOS) result.name = RECORD_NAME_MSDOS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_POSIX) result.name = RECORD_NAME_POSIX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_UNIX) result.name = RECORD_NAME_UNIX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_LINUX) result.name = RECORD_NAME_LINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_WINDOWS) result.name = RECORD_NAME_WINDOWS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_WINDOWSCE) result.name = RECORD_NAME_WINDOWSCE;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_XBOX) result.name = RECORD_NAME_XBOX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_OS2) result.name = RECORD_NAME_OS2;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_MAC_OS) result.name = RECORD_NAME_MAC_OS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_MAC_OS_X) result.name = RECORD_NAME_MAC_OS_X;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_OS_X) result.name = RECORD_NAME_OS_X;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_MACOS) result.name = RECORD_NAME_MACOS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_IPHONEOS) result.name = RECORD_NAME_IPHONEOS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_IPADOS) result.name = RECORD_NAME_IPADOS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_IOS) result.name = RECORD_NAME_IOS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_WATCHOS) result.name = RECORD_NAME_WATCHOS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_TVOS) result.name = RECORD_NAME_TVOS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_BRIDGEOS) result.name = RECORD_NAME_BRIDGEOS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_ANDROID) result.name = RECORD_NAME_ANDROID;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_FREEBSD) result.name = RECORD_NAME_FREEBSD;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_OPENBSD) result.name = RECORD_NAME_OPENBSD;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_NETBSD) result.name = RECORD_NAME_NETBSD;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_HPUX) result.name = RECORD_NAME_HPUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_SOLARIS) result.name = RECORD_NAME_SOLARIS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_AIX) result.name = RECORD_NAME_AIX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_IRIX) result.name = RECORD_NAME_IRIX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_TRU64) result.name = RECORD_NAME_TRU64;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_MODESTO) result.name = RECORD_NAME_MODESTO;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_OPENVMS) result.name = RECORD_NAME_OPENVMS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_FENIXOS) result.name = RECORD_NAME_FENIXOS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_BORLANDOSSERVICES) result.name = RECORD_NAME_BORLANDOSSERVICES;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_NSK) result.name = RECORD_NAME_NSK;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_AROS) result.name = RECORD_NAME_AROS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_UBUNTULINUX) result.name = RECORD_NAME_UBUNTULINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_DEBIANLINUX) result.name = RECORD_NAME_DEBIANLINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_STARTOSLINUX) result.name = RECORD_NAME_STARTOSLINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_GENTOOLINUX) result.name = RECORD_NAME_GENTOOLINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_ALPINELINUX) result.name = RECORD_NAME_ALPINELINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_WINDRIVERLINUX) result.name = RECORD_NAME_WINDRIVERLINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_SUSELINUX) result.name = RECORD_NAME_SUSELINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_MANDRAKELINUX) result.name = RECORD_NAME_MANDRAKELINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_ASPLINUX) result.name = RECORD_NAME_ASPLINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_REDHATLINUX) result.name = RECORD_NAME_REDHATLINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_HANCOMLINUX) result.name = RECORD_NAME_HANCOMLINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_TURBOLINUX) result.name = RECORD_NAME_TURBOLINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_VINELINUX) result.name = RECORD_NAME_VINELINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_SUNOS) result.name = RECORD_NAME_SUNOS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_OPENVOS) result.name = RECORD_NAME_OPENVOS;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_MCLINUX) result.name = RECORD_NAME_MCLINUX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_QNX) result.name = RECORD_NAME_QNX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_SYLLABLE) result.name = RECORD_NAME_SYLLABLE;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_MINIX) result.name = RECORD_NAME_MINIX;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_JVM) result.name = RECORD_NAME_JVM;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_AMIGA) result.name = RECORD_NAME_AMIGA;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_MACCATALYST) result.name = RECORD_NAME_MACCATALYST;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_MACDRIVERKIT) result.name = RECORD_NAME_MACDRIVERKIT;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_MACFIRMWARE) result.name = RECORD_NAME_MACFIRMWARE;
+    else if (fileFormatInfo.osName == XBinary::OSNAME_SEPOS) result.name = RECORD_NAME_SEPOS;
     else result.name = RECORD_NAME_UNKNOWN;
 
-    result.sVersion = osInfo.sOsVersion;
-    result.sInfo = QString("%1, %2, %3").arg(osInfo.sArch, XBinary::modeIdToString(osInfo.mode), osInfo.sType);
+    result.sVersion = fileFormatInfo.sOsVersion;
+    result.sInfo = QString("%1, %2, %3").arg(fileFormatInfo.sArch, XBinary::modeIdToString(fileFormatInfo.mode), fileFormatInfo.sType);
 
-    if (osInfo.endian == XBinary::ENDIAN_BIG) {
+    if (fileFormatInfo.endian == XBinary::ENDIAN_BIG) {
         result.sInfo.append(QString(", %1").arg(XBinary::endianToString(XBinary::ENDIAN_BIG)));
     }
 
