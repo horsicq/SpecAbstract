@@ -2640,11 +2640,10 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         //        resourcesScan(&result.mapResourcesDetects,&result.listResources,_resources_records,sizeof(_resources_records),result.basic_info.id.filetype,SpecAbstract::XBinary::FT_PE);
 
         if (result.bIsNetPresent) {
-            stringScan(&result.basic_info.mapDotAnsiStringsDetects, &result.listAnsiStrings, _PE_dot_ansistrings_records,
-                       sizeof(_PE_dot_ansistrings_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_NETANSISTRING, pPdStruct);
-            stringScan(&result.basic_info.mapDotUnicodeStringsDetects, &result.listUnicodeStrings, _PE_dot_unicodestrings_records,
-                       sizeof(_PE_dot_unicodestrings_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_NETUNICODESTRING,
-                       pPdStruct);
+            stringScan(&result.basic_info.mapDotAnsiStringsDetects, &result.listAnsiStrings, _PE_dot_ansistrings_records, sizeof(_PE_dot_ansistrings_records),
+                       result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_NETANSISTRING, pPdStruct);
+            stringScan(&result.basic_info.mapDotUnicodeStringsDetects, &result.listUnicodeStrings, _PE_dot_unicodestrings_records, sizeof(_PE_dot_unicodestrings_records),
+                       result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_NETUNICODESTRING, pPdStruct);
 
             //            for(qint32 i=0;i<result.cliInfo.listUnicodeStrings.count();i++)
             //            {
@@ -13065,7 +13064,8 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
 
             quint32 nVersion = XMACH::getLibraryCurrentVersion("Foundation", &(pMACHInfo->listLibraryRecords));
 
-            if ((fileFormatInfo.osName == XBinary::OSNAME_MAC_OS_X) || (fileFormatInfo.osName == XBinary::OSNAME_OS_X) || (fileFormatInfo.osName == XBinary::OSNAME_MACOS)) {
+            if ((fileFormatInfo.osName == XBinary::OSNAME_MAC_OS_X) || (fileFormatInfo.osName == XBinary::OSNAME_OS_X) ||
+                (fileFormatInfo.osName == XBinary::OSNAME_MACOS)) {
                 recordSDK.name = RECORD_NAME_MACOSSDK;
 
                 // https://developer.apple.com/documentation/foundation/object_runtime/foundation_framework_version_numbers
@@ -13124,7 +13124,8 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
                 else if (nVersion < S_FULL_VERSION(1299, 0, 0)) recordSDK.sVersion = "10.11.4";
                 else if (nVersion < S_FULL_VERSION(1400, 10, 0))  // TODO Check
                     recordSDK.sVersion = "10.11 Max";
-            } else if ((fileFormatInfo.osName == XBinary::OSNAME_IPHONEOS) || (fileFormatInfo.osName == XBinary::OSNAME_IOS) || (fileFormatInfo.osName == XBinary::OSNAME_IPADOS)) {
+            } else if ((fileFormatInfo.osName == XBinary::OSNAME_IPHONEOS) || (fileFormatInfo.osName == XBinary::OSNAME_IOS) ||
+                       (fileFormatInfo.osName == XBinary::OSNAME_IPADOS)) {
                 recordSDK.name = RECORD_NAME_IOSSDK;
 
                 if (nVersion < S_FULL_VERSION(678, 24, 0)) recordSDK.sVersion = "1.0.0";
