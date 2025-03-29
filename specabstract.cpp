@@ -966,27 +966,27 @@ SpecAbstract::PDFINFO_STRUCT SpecAbstract::getPDFInfo(QIODevice *pDevice, SCANID
 
     PDFINFO_STRUCT result = {};
 
-    // XPDF pdf(pDevice);
+    XPDF pdf(pDevice);
 
-    // if (pdf.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
-    //     result.basic_info.parentId = parentId;
-    //     result.basic_info.id.fileType = XBinary::FT_PDF;
-    //     result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-    //     result.basic_info.id.sUuid = XBinary::generateUUID();
-    //     result.basic_info.sHeaderSignature = pdf.getSignature(0, 150);
-    //     result.basic_info.scanOptions = *pOptions;
-    //     result.basic_info.memoryMap = pdf.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-    //     result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-    //     result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-    //     result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-    //     result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-    //     result.basic_info.id.nSize = pDevice->size();
-    //     result.basic_info.id.nOffset = nOffset;
+    if (pdf.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
+        result.basic_info.parentId = parentId;
+        result.basic_info.id.fileType = XBinary::FT_PDF;
+        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
+        result.basic_info.id.sUuid = XBinary::generateUUID();
+        result.basic_info.sHeaderSignature = pdf.getSignature(0, 150);
+        result.basic_info.scanOptions = *pOptions;
+        result.basic_info.memoryMap = pdf.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
+        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
+        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
+        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
+        result.basic_info.id.nSize = pDevice->size();
+        result.basic_info.id.nOffset = nOffset;
 
-    //     // PDF_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
+        // PDF_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
 
-    //     _handleResult(&(result.basic_info), pPdStruct);
-    // }
+        _handleResult(&(result.basic_info), pPdStruct);
+    }
 
     result.basic_info.nElapsedTime = timer.elapsed();
 
@@ -2130,7 +2130,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XS
         signatureExpScan(&msdos, &(result.basic_info.memoryMap), &result.basic_info.mapEntryPointDetects, result.nEntryPointOffset, _MSDOS_entrypointExp_records,
                          sizeof(_MSDOS_entrypointExp_records), result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
 
-        MSDOS_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
+        MSDOS_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
         MSDOS_handle_Borland(pDevice, pOptions, &result, pPdStruct);
         MSDOS_handle_Tools(pDevice, pOptions, &result, pPdStruct);
         MSDOS_handle_Protection(pDevice, pOptions, &result, pPdStruct);
@@ -2222,7 +2222,7 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XScanE
 
         ELF_handle_CommentSection(pDevice, pOptions, &result, pPdStruct);
 
-        ELF_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
+        ELF_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
         ELF_handle_GCC(pDevice, pOptions, &result, pPdStruct);
         ELF_handle_DebugData(pDevice, pOptions, &result, pPdStruct);
         ELF_handle_Tools(pDevice, pOptions, &result, pPdStruct);
@@ -2329,7 +2329,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XScanEng
         signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _MSDOS_linker_header_records, sizeof(_MSDOS_linker_header_records),
                       result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
 
-        LE_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
+        LE_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
         LE_handle_Microsoft(pDevice, pOptions, &result, pPdStruct);
         LE_handle_Borland(pDevice, pOptions, &result, pPdStruct);
         LE_handle_Tools(pDevice, pOptions, &result, pPdStruct);
@@ -2377,7 +2377,7 @@ SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice, XScanEng
         signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _MSDOS_linker_header_records, sizeof(_MSDOS_linker_header_records),
                       result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
 
-        LX_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
+        LX_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
         LX_handle_Microsoft(pDevice, pOptions, &result, pPdStruct);
         LX_handle_Borland(pDevice, pOptions, &result, pPdStruct);
         LX_handle_Tools(pDevice, pOptions, &result, pPdStruct);
@@ -2423,7 +2423,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, XScanEng
         signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _MSDOS_linker_header_records, sizeof(_MSDOS_linker_header_records),
                       result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
 
-        NE_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
+        NE_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
         NE_handle_Borland(pDevice, pOptions, &result, pPdStruct);
         NE_handle_Tools(pDevice, pOptions, &result, pPdStruct);
 
@@ -3004,7 +3004,7 @@ SpecAbstract::AMIGAHUNKINFO_STRUCT SpecAbstract::getAmigaHunkInfo(QIODevice *pDe
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
 
-        AmigaHunk_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
+        AmigaHunk_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
 
         _handleResult(&(result.basic_info), pPdStruct);
     }
@@ -11339,7 +11339,7 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_O
     }
 }
 
-void SpecAbstract::AmigaHunk_handle_OperationSystems(QIODevice *pDevice, SCAN_OPTIONS *pOptions, AMIGAHUNKINFO_STRUCT *pAmigaHunkInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::AmigaHunk_handle_OperationSystem(QIODevice *pDevice, SCAN_OPTIONS *pOptions, AMIGAHUNKINFO_STRUCT *pAmigaHunkInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XAmigaHunk amigaHunk(pDevice, pOptions->bIsImage);
 
@@ -11387,7 +11387,7 @@ void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCA
     }
 }
 
-void SpecAbstract::MSDOS_handle_OperationSystems(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,
+void SpecAbstract::MSDOS_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,
                                                  XBinary::PDSTRUCT *pPdStruct)
 {
     XMSDOS msdos(pDevice, pOptions->bIsImage);
@@ -11825,7 +11825,7 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, XScanEngine::SC
     }
 }
 
-void SpecAbstract::ELF_handle_OperationSystems(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::ELFINFO_STRUCT *pELFInfo,
+void SpecAbstract::ELF_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::ELFINFO_STRUCT *pELFInfo,
                                                XBinary::PDSTRUCT *pPdStruct)
 {
     XELF elf(pDevice, pOptions->bIsImage);
@@ -14131,7 +14131,7 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN
     }
 }
 
-void SpecAbstract::LE_handle_OperationSystems(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::LE_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XLE le(pDevice, pOptions->bIsImage);
 
@@ -14249,7 +14249,7 @@ void SpecAbstract::LE_handle_Tools(QIODevice *pDevice, SCAN_OPTIONS *pOptions, L
     }
 }
 
-void SpecAbstract::LX_handle_OperationSystems(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::LX_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XLE lx(pDevice, pOptions->bIsImage);
 
@@ -14367,7 +14367,7 @@ void SpecAbstract::LX_handle_Tools(QIODevice *pDevice, SCAN_OPTIONS *pOptions, L
     }
 }
 
-void SpecAbstract::NE_handle_OperationSystems(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::NE_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XNE ne(pDevice, pOptions->bIsImage);
 
