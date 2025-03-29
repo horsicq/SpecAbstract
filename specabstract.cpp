@@ -959,6 +959,44 @@ QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, b
     return sResult;
 }
 
+SpecAbstract::PDFINFO_STRUCT SpecAbstract::getPDFInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    PDFINFO_STRUCT result = {};
+
+    // XPDF pdf(pDevice);
+
+    // if (pdf.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
+    //     result.basic_info.parentId = parentId;
+    //     result.basic_info.id.fileType = XBinary::FT_PDF;
+    //     result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
+    //     result.basic_info.id.sUuid = XBinary::generateUUID();
+    //     result.basic_info.sHeaderSignature = pdf.getSignature(0, 150);
+    //     result.basic_info.scanOptions = *pOptions;
+    //     result.basic_info.memoryMap = pdf.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
+    //     result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
+    //     result.basic_info.id.mode = result.basic_info.memoryMap.mode;
+    //     result.basic_info.id.endian = result.basic_info.memoryMap.endian;
+    //     result.basic_info.id.sType = result.basic_info.memoryMap.sType;
+    //     result.basic_info.id.nSize = pDevice->size();
+    //     result.basic_info.id.nOffset = nOffset;
+
+    //     // PDF_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
+
+    //     _handleResult(&(result.basic_info), pPdStruct);
+    // }
+
+    result.basic_info.nElapsedTime = timer.elapsed();
+
+#ifdef QT_DEBUG
+    qDebug("%lld msec", result.basic_info.nElapsedTime);
+#endif
+
+    return result;
+}
+
 SpecAbstract::VI_STRUCT SpecAbstract::get_Enigma_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
 {
     VI_STRUCT result = {};
@@ -2683,7 +2721,7 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
 
         PE_handle_import(pDevice, pOptions, &result, pPdStruct);
 
-        PE_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
+        PE_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
         PE_handle_Protection(pDevice, pOptions, &result, pPdStruct);
         PE_handle_SafeengineShielden(pDevice, pOptions, &result, pPdStruct);
         PE_handle_VProtect(pDevice, pOptions, &result, pPdStruct);
@@ -2949,7 +2987,7 @@ SpecAbstract::AMIGAHUNKINFO_STRUCT SpecAbstract::getAmigaHunkInfo(QIODevice *pDe
 
     AMIGAHUNKINFO_STRUCT result = {};
 
-    XAmigaHunk amigaHunk(pDevice);
+    XPDF amigaHunk(pDevice);
 
     if (amigaHunk.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
         result.basic_info.parentId = parentId;
@@ -3151,7 +3189,7 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, XScanEngine::SCAN_OPTION
     // Import
 }
 
-void SpecAbstract::PE_handle_OperationSystems(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::PE_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -16877,6 +16915,9 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
     } else if (fileType == XBinary::FT_AMIGAHUNK) {
         SpecAbstract::AMIGAHUNKINFO_STRUCT amigaHunk_info = SpecAbstract::getAmigaHunkInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = amigaHunk_info.basic_info;
+    } else if (fileType == XBinary::FT_PDF) {
+        SpecAbstract::PDFINFO_STRUCT pdf_info = SpecAbstract::getPDFInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        basic_info = pdf_info.basic_info;
     } else if (fileType == XBinary::FT_COM) {
         SpecAbstract::COMINFO_STRUCT com_info = SpecAbstract::getCOMInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = com_info.basic_info;
