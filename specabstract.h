@@ -1421,7 +1421,7 @@ public:
     static void Zip_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void AmigaHunk_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, AMIGAHUNKINFO_STRUCT *pAmigaHunkInfo,
-                                                  XBinary::PDSTRUCT *pPdStruct);
+                                                 XBinary::PDSTRUCT *pPdStruct);
 
     static DEXINFO_STRUCT Zip_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct,
                                        const QString &sFileName);

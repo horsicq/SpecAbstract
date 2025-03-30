@@ -11388,7 +11388,7 @@ void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCA
 }
 
 void SpecAbstract::MSDOS_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::MSDOSINFO_STRUCT *pMSDOSInfo,
-                                                 XBinary::PDSTRUCT *pPdStruct)
+                                                XBinary::PDSTRUCT *pPdStruct)
 {
     XMSDOS msdos(pDevice, pOptions->bIsImage);
 
@@ -11826,7 +11826,7 @@ void SpecAbstract::MSDOS_handle_DosExtenders(QIODevice *pDevice, XScanEngine::SC
 }
 
 void SpecAbstract::ELF_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::ELFINFO_STRUCT *pELFInfo,
-                                               XBinary::PDSTRUCT *pPdStruct)
+                                              XBinary::PDSTRUCT *pPdStruct)
 {
     XELF elf(pDevice, pOptions->bIsImage);
 
