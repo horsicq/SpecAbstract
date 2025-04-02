@@ -10344,8 +10344,8 @@ void SpecAbstract::Zip_handle_Microsoftoffice(QIODevice *pDevice, XScanEngine::S
     if (xzip.isValid(pPdStruct)) {
         XArchive::RECORD record = XArchive::getArchiveRecord("docProps/app.xml", &(pZipInfo->listArchiveRecords));
 
-        if (!record.sFileName.isEmpty()) {
-            if ((record.nUncompressedSize) && (record.nUncompressedSize <= 0x4000)) {
+        if (!record.spInfo.sRecordName.isEmpty()) {
+            if ((record.spInfo.nUncompressedSize) && (record.spInfo.nUncompressedSize <= 0x4000)) {
                 pZipInfo->basic_info.id.fileType = XBinary::FT_DOCUMENT;
 
                 QString sData = xzip.decompress(&record, pPdStruct).data();
@@ -10380,8 +10380,8 @@ void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice, XScanEngine::SCAN_O
     if (xzip.isValid(pPdStruct)) {
         XArchive::RECORD record = XArchive::getArchiveRecord("meta.xml", &(pZipInfo->listArchiveRecords));
 
-        if (!record.sFileName.isEmpty()) {
-            if ((record.nUncompressedSize) && (record.nUncompressedSize <= 0x4000)) {
+        if (!record.spInfo.sRecordName.isEmpty()) {
+            if ((record.spInfo.nUncompressedSize) && (record.spInfo.nUncompressedSize <= 0x4000)) {
                 QString sData = xzip.decompress(&record, pPdStruct).data();
 
                 // TODO
@@ -10966,20 +10966,20 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
                     qint32 nNumberOfRecords = pZipInfo->listArchiveRecords.count();
 
                     for (qint32 i = 0; (i < nNumberOfRecords) && (!(pPdStruct->bIsStop)); i++) {
-                        if (pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/arm64-v8a/libshella-")) {
-                            ss.sVersion = XBinary::regExp("lib/arm64-v8a/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).sFileName, 1);
+                        if (pZipInfo->listArchiveRecords.at(i).spInfo.sRecordName.contains("lib/arm64-v8a/libshella-")) {
+                            ss.sVersion = XBinary::regExp("lib/arm64-v8a/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).spInfo.sRecordName, 1);
 
                             break;
-                        } else if (pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/armeabi-v7a/libshella-")) {
-                            ss.sVersion = XBinary::regExp("lib/armeabi-v7a/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).sFileName, 1);
+                        } else if (pZipInfo->listArchiveRecords.at(i).spInfo.sRecordName.contains("lib/armeabi-v7a/libshella-")) {
+                            ss.sVersion = XBinary::regExp("lib/armeabi-v7a/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).spInfo.sRecordName, 1);
 
                             break;
-                        } else if (pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/armeabi/libshella-")) {
-                            ss.sVersion = XBinary::regExp("lib/armeabi/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).sFileName, 1);
+                        } else if (pZipInfo->listArchiveRecords.at(i).spInfo.sRecordName.contains("lib/armeabi/libshella-")) {
+                            ss.sVersion = XBinary::regExp("lib/armeabi/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).spInfo.sRecordName, 1);
 
                             break;
-                        } else if (pZipInfo->listArchiveRecords.at(i).sFileName.contains("lib/x86/libshella-")) {
-                            ss.sVersion = XBinary::regExp("lib/x86/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).sFileName, 1);
+                        } else if (pZipInfo->listArchiveRecords.at(i).spInfo.sRecordName.contains("lib/x86/libshella-")) {
+                            ss.sVersion = XBinary::regExp("lib/x86/libshella-(.*?).so", pZipInfo->listArchiveRecords.at(i).spInfo.sRecordName, 1);
 
                             break;
                         }
@@ -16210,7 +16210,7 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
 
     for (qint32 i = 0; (i < nNumberOfArchives) && (!(pPdStruct->bIsStop)); i++) {
         //        qDebug("%s",pListArchiveRecords->at(i).sFileName.toLatin1().data());
-        quint32 nCRC = XBinary::getStringCustomCRC32(pListArchiveRecords->at(i).sFileName);
+        quint32 nCRC = XBinary::getStringCustomCRC32(pListArchiveRecords->at(i).spInfo.sRecordName);
         listStringCRC.append(nCRC);
     }
 
@@ -16280,7 +16280,7 @@ void SpecAbstract::archiveExpScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
         for (qint32 j = 0; (j < nNumberOfSignatures) && (!(pPdStruct->bIsStop)); j++) {
             if ((pRecords[j].basicInfo.fileType == fileType1) || (pRecords[j].basicInfo.fileType == fileType2)) {
                 if ((!pMapRecords->contains(pRecords[j].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
-                    if (XBinary::isRegExpPresent(pRecords[j].pszString, pListArchiveRecords->at(i).sFileName)) {
+                    if (XBinary::isRegExpPresent(pRecords[j].pszString, pListArchiveRecords->at(i).spInfo.sRecordName)) {
                         if (!pMapRecords->contains(pRecords[j].basicInfo.name)) {
                             _SCANS_STRUCT record = {};
                             record.nVariant = pRecords[j].basicInfo.nVariant;
