@@ -983,7 +983,7 @@ SpecAbstract::PDFINFO_STRUCT SpecAbstract::getPDFInfo(QIODevice *pDevice, SCANID
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
 
-        // PDF_handle_OperationSystems(pDevice, pOptions, &result, pPdStruct);
+        PDF_handle_Formats(pDevice, pOptions, &result, pPdStruct);
 
         _handleResult(&(result.basic_info), pPdStruct);
     }
@@ -2070,7 +2070,7 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XScanE
 
             //            result.mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pCOMInfo->basic_info),&ssOperationSystem));
 
-            _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(com.getFileFormatInfo(pPdStruct));
+            _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(com.getFileFormatInfo(pPdStruct));
 
             result.basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(result.basic_info), &ssOperationSystem));
         }
@@ -3194,7 +3194,7 @@ void SpecAbstract::PE_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SC
     XPE pe(pDevice, pOptions->bIsImage);
 
     if (pe.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(pe.getFileFormatInfo(pPdStruct));
+        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(pe.getFileFormatInfo(pPdStruct));
 
         pPEInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pPEInfo->basic_info), &ssOperationSystem));
     }
@@ -10634,7 +10634,7 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
 
     if (xjar.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
         if (!(pZipInfo->bIsAPK)) {
-            _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(xjar.getFileFormatInfo(pPdStruct));
+            _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(xjar.getFileFormatInfo(pPdStruct));
 
             pZipInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
         }
@@ -10695,7 +10695,7 @@ void SpecAbstract::Zip_handle_APK(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
         XAPK xapk(pDevice);
 
         if (xapk.isValid(&(pZipInfo->listArchiveRecords), pPdStruct)) {
-            _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(xapk.getFileFormatInfo(pPdStruct));
+            _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(xapk.getFileFormatInfo(pPdStruct));
 
             pZipInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
 
@@ -11341,12 +11341,23 @@ void SpecAbstract::Zip_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_O
 
 void SpecAbstract::AmigaHunk_handle_OperationSystem(QIODevice *pDevice, SCAN_OPTIONS *pOptions, AMIGAHUNKINFO_STRUCT *pAmigaHunkInfo, XBinary::PDSTRUCT *pPdStruct)
 {
-    XAmigaHunk amigaHunk(pDevice, pOptions->bIsImage);
+    XAmigaHunk amigaHunk(pDevice);
 
     if (amigaHunk.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(amigaHunk.getFileFormatInfo(pPdStruct));
+        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(amigaHunk.getFileFormatInfo(pPdStruct));
 
         pAmigaHunkInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pAmigaHunkInfo->basic_info), &ssOperationSystem));
+    }
+}
+
+void SpecAbstract::PDF_handle_Formats(QIODevice *pDevice, SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XPDF pdf(pDevice);
+
+    if (pdf.isValid(pPdStruct)) {
+        _SCANS_STRUCT ssFormat = getFormatScansStruct(pdf.getFileFormatInfo(pPdStruct));
+
+        pPDFInfo->basic_info.mapResultFormats.insert(ssFormat.name, scansToScan(&(pPDFInfo->basic_info), &ssFormat));
     }
 }
 
@@ -11393,7 +11404,7 @@ void SpecAbstract::MSDOS_handle_OperationSystem(QIODevice *pDevice, XScanEngine:
     XMSDOS msdos(pDevice, pOptions->bIsImage);
 
     if (msdos.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(msdos.getFileFormatInfo(pPdStruct));
+        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(msdos.getFileFormatInfo(pPdStruct));
 
         pMSDOSInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pMSDOSInfo->basic_info), &ssOperationSystem));
     }
@@ -11831,7 +11842,7 @@ void SpecAbstract::ELF_handle_OperationSystem(QIODevice *pDevice, XScanEngine::S
     XELF elf(pDevice, pOptions->bIsImage);
 
     if (elf.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(elf.getFileFormatInfo(pPdStruct));
+        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(elf.getFileFormatInfo(pPdStruct));
 
         pELFInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pELFInfo->basic_info), &ssOperationSystem));
     }
@@ -13083,7 +13094,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
 
         XBinary::FILEFORMATINFO fileFormatInfo = mach.getFileFormatInfo(pPdStruct);
 
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(fileFormatInfo);
+        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(fileFormatInfo);
 
         pMACHInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pMACHInfo->basic_info), &ssOperationSystem));
 
@@ -14136,7 +14147,7 @@ void SpecAbstract::LE_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SC
     XLE le(pDevice, pOptions->bIsImage);
 
     if (le.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(le.getFileFormatInfo(pPdStruct));
+        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(le.getFileFormatInfo(pPdStruct));
 
         pLEInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pLEInfo->basic_info), &ssOperationSystem));
     }
@@ -14254,7 +14265,7 @@ void SpecAbstract::LX_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SC
     XLE lx(pDevice, pOptions->bIsImage);
 
     if (lx.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(lx.getFileFormatInfo(pPdStruct));
+        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(lx.getFileFormatInfo(pPdStruct));
 
         pLXInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pLXInfo->basic_info), &ssOperationSystem));
     }
@@ -14372,7 +14383,7 @@ void SpecAbstract::NE_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SC
     XNE ne(pDevice, pOptions->bIsImage);
 
     if (ne.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(ne.getFileFormatInfo(pPdStruct));
+        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(ne.getFileFormatInfo(pPdStruct));
 
         pNEInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pNEInfo->basic_info), &ssOperationSystem));
     }
@@ -14451,7 +14462,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
 
         pDEXInfo->basic_info.mapResultTools.insert(recordAndroidSDK.name, scansToScan(&(pDEXInfo->basic_info), &recordAndroidSDK));
 
-        _SCANS_STRUCT ssOperationSystem = getScansStructFromFileFormatInfo(dex.getFileFormatInfo(pPdStruct));
+        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(dex.getFileFormatInfo(pPdStruct));
 
         pDEXInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pDEXInfo->basic_info), &ssOperationSystem));
 
@@ -16610,7 +16621,20 @@ void SpecAbstract::fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages)
     //    }
 }
 
-SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStructFromFileFormatInfo(const XBinary::FILEFORMATINFO &fileFormatInfo)
+SpecAbstract::_SCANS_STRUCT SpecAbstract::getFormatScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo)
+{
+    _SCANS_STRUCT result = {};
+    result.type = RECORD_TYPE_FORMAT;
+
+    if (fileFormatInfo.fileType == XBinary::FT_PDF) result.name = RECORD_NAME_PDF;
+
+    result.sVersion = fileFormatInfo.sVersion;
+    result.sInfo = XBinary::getFileFormatString(&fileFormatInfo);
+
+    return result;
+}
+
+SpecAbstract::_SCANS_STRUCT SpecAbstract::getOperationSystemScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo)
 {
     _SCANS_STRUCT result = {};
 

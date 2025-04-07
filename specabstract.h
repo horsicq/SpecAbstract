@@ -1423,6 +1423,9 @@ public:
     static void AmigaHunk_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, AMIGAHUNKINFO_STRUCT *pAmigaHunkInfo,
                                                  XBinary::PDSTRUCT *pPdStruct);
 
+    static void PDF_handle_Formats(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo,
+                                   XBinary::PDSTRUCT *pPdStruct);
+
     static DEXINFO_STRUCT Zip_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct,
                                        const QString &sFileName);
 
@@ -1550,7 +1553,8 @@ public:
     static void getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages, XBinary::PDSTRUCT *pPdStruct);
     static void fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages);
 
-    static _SCANS_STRUCT getScansStructFromFileFormatInfo(const XBinary::FILEFORMATINFO &fileFormatInfo);
+    static _SCANS_STRUCT getOperationSystemScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo);
+    static _SCANS_STRUCT getFormatScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo);
     static QString getMsRichString(quint16 nId, quint16 nBuild, quint32 nCount, XBinary::PDSTRUCT *pPdStruct);
 
     static QList<XScanEngine::SCANSTRUCT> convert(QList<SCAN_STRUCT> *pListScanStructs);
