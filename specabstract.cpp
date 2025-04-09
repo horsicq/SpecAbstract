@@ -2528,10 +2528,10 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
             }
         }
 #endif
-        result.exportHeader = pe.getExport(&(result.basic_info.memoryMap));
+        result.exportHeader = pe.getExport(&(result.basic_info.memoryMap), false, pPdStruct);
         result.listExportFunctionNames = pe.getExportFunctionsList(&(result.exportHeader), pPdStruct);
         result.listResources = pe.getResources(&(result.basic_info.memoryMap), 10000, pPdStruct);
-        result.listRichSignatures = pe.getRichSignatureRecords();
+        result.listRichSignatures = pe.getRichSignatureRecords(pPdStruct);
         result.cliInfo = pe.getCliInfo(true, &(result.basic_info.memoryMap), pPdStruct);
         result.listAnsiStrings = pe.getAnsiStrings(&(result.cliInfo), pPdStruct);
         result.listUnicodeStrings = pe.getUnicodeStrings(&(result.cliInfo), pPdStruct);
