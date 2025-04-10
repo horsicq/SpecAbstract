@@ -16629,7 +16629,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getFormatScansStruct(const XBinary::FI
     if (fileFormatInfo.fileType == XBinary::FT_PDF) result.name = RECORD_NAME_PDF;
 
     result.sVersion = fileFormatInfo.sVersion;
-    result.sInfo = XBinary::getFileFormatString(&fileFormatInfo);
+    result.sInfo = XBinary::getFileFormatInfoString(&fileFormatInfo);
 
     return result;
 }
