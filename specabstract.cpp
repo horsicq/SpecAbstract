@@ -939,7 +939,7 @@ QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, b
     QString sResult;
 
     if (pScanStruct->bIsHeuristic) {
-        sResult += "(Heuristic)";
+        sResult += "(Heur)";
     }
 
     if (bShowType) {
