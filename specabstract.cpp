@@ -983,7 +983,10 @@ SpecAbstract::PDFINFO_STRUCT SpecAbstract::getPDFInfo(QIODevice *pDevice, SCANID
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
 
+        result.listObjects = pdf.getObjects(pPdStruct);
+
         PDF_handle_Formats(pDevice, pOptions, &result, pPdStruct);
+        PDF_handle_Tags(pDevice, pOptions, &result, pPdStruct);
 
         _handleResult(&(result.basic_info), pPdStruct);
     }
@@ -1877,6 +1880,7 @@ void SpecAbstract::_handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPd
     fixLanguage(&(pBasic_info->mapResultLanguages));
 
     pBasic_info->listDetects.append(pBasic_info->mapResultOperationSystems.values());
+    pBasic_info->listDetects.append(pBasic_info->mapResultFormats.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultDosExtenders.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultLinkers.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultCompilers.values());
@@ -1897,7 +1901,6 @@ void SpecAbstract::_handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPd
     pBasic_info->listDetects.append(pBasic_info->mapResultArchives.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultCertificates.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultDebugData.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultFormats.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultInstallerData.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultSFXData.values());
     pBasic_info->listDetects.append(pBasic_info->mapResultProtectorData.values());
@@ -11352,12 +11355,52 @@ void SpecAbstract::AmigaHunk_handle_OperationSystem(QIODevice *pDevice, SCAN_OPT
 
 void SpecAbstract::PDF_handle_Formats(QIODevice *pDevice, SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
+    Q_UNUSED(pOptions)
+
     XPDF pdf(pDevice);
 
     if (pdf.isValid(pPdStruct)) {
         _SCANS_STRUCT ssFormat = getFormatScansStruct(pdf.getFileFormatInfo(pPdStruct));
 
         pPDFInfo->basic_info.mapResultFormats.insert(ssFormat.name, scansToScan(&(pPDFInfo->basic_info), &ssFormat));
+    }
+}
+
+void SpecAbstract::PDF_handle_Tags(QIODevice *pDevice, SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    Q_UNUSED(pOptions)
+
+    XPDF pdf(pDevice);
+
+    if (pdf.isValid(pPdStruct)) {
+        {
+            QList<QVariant> listVariants = pdf.getValuesByKey(&(pPDFInfo->listObjects), "/Producer");
+
+            qint32 nNumberOfRecords = listVariants.count();
+
+            for (qint32 i = 0; (i < nNumberOfRecords) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
+                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PDF, RECORD_TYPE_TOOL, (RECORD_NAME)((qint32)RECORD_NAME_UNKNOWN0 + i), listVariants.at(i).toString(), "", 0);
+
+                pPDFInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pPDFInfo->basic_info), &ss));
+            }
+        }
+
+        {
+            QList<QVariant> listVariants = pdf.getValuesByKey(&(pPDFInfo->listObjects), "/Creator");
+
+            qint32 nNumberOfRecords = listVariants.count();
+
+            for (qint32 i = 0; (i < nNumberOfRecords) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
+                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PDF, RECORD_TYPE_TOOL, (RECORD_NAME)((qint32)RECORD_NAME_UNKNOWN0 + i), listVariants.at(i).toString(), "", 0);
+
+                pPDFInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pPDFInfo->basic_info), &ss));
+            }
+        }
+
+
+        // {
+        //     QList<QVariant> listVariants = pdf.getValuesByKey(&(pPDFInfo->listObjects), "/Author");
+        // }
     }
 }
 

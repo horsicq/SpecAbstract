@@ -1058,6 +1058,8 @@ public:
 
     struct PDFINFO_STRUCT {
         BASIC_INFO basic_info;
+
+        QList<XPDF::OBJECT> listObjects;
     };
 
     struct MACHOFATINFO_STRUCT {
@@ -1424,6 +1426,7 @@ public:
                                                  XBinary::PDSTRUCT *pPdStruct);
 
     static void PDF_handle_Formats(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct);
+    static void PDF_handle_Tags(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static DEXINFO_STRUCT Zip_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct,
                                        const QString &sFileName);
