@@ -983,7 +983,7 @@ SpecAbstract::PDFINFO_STRUCT SpecAbstract::getPDFInfo(QIODevice *pDevice, SCANID
         result.basic_info.id.nSize = pDevice->size();
         result.basic_info.id.nOffset = nOffset;
 
-        result.listObjects = pdf.getObjects(pPdStruct);
+        result.listObjects = pdf.getObjects(20, pPdStruct);
 
         PDF_handle_Formats(pDevice, pOptions, &result, pPdStruct);
         PDF_handle_Tags(pDevice, pOptions, &result, pPdStruct);
