@@ -11379,7 +11379,8 @@ void SpecAbstract::PDF_handle_Tags(QIODevice *pDevice, SCAN_OPTIONS *pOptions, P
             qint32 nNumberOfRecords = listVariants.count();
 
             for (qint32 i = 0; (i < nNumberOfRecords) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
-                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PDF, RECORD_TYPE_TOOL, (RECORD_NAME)((qint32)RECORD_NAME_UNKNOWN0 + i), listVariants.at(i).toString(), "", 0);
+                _SCANS_STRUCT ss =
+                    getScansStruct(0, XBinary::FT_PDF, RECORD_TYPE_TOOL, (RECORD_NAME)((qint32)RECORD_NAME_UNKNOWN0 + i), listVariants.at(i).toString(), "", 0);
 
                 pPDFInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pPDFInfo->basic_info), &ss));
             }
@@ -11391,12 +11392,12 @@ void SpecAbstract::PDF_handle_Tags(QIODevice *pDevice, SCAN_OPTIONS *pOptions, P
             qint32 nNumberOfRecords = listVariants.count();
 
             for (qint32 i = 0; (i < nNumberOfRecords) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
-                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PDF, RECORD_TYPE_TOOL, (RECORD_NAME)((qint32)RECORD_NAME_UNKNOWN0 + i), listVariants.at(i).toString(), "", 0);
+                _SCANS_STRUCT ss =
+                    getScansStruct(0, XBinary::FT_PDF, RECORD_TYPE_TOOL, (RECORD_NAME)((qint32)RECORD_NAME_UNKNOWN0 + i), listVariants.at(i).toString(), "", 0);
 
                 pPDFInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pPDFInfo->basic_info), &ss));
             }
         }
-
 
         // {
         //     QList<QVariant> listVariants = pdf.getValuesByKey(&(pPDFInfo->listObjects), "/Author");
