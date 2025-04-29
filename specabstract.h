@@ -36,7 +36,7 @@
 class SpecAbstract : public XScanEngine {
     Q_OBJECT
 
-public:
+public:    
     enum RECORD_TYPE {
         RECORD_TYPE_UNKNOWN = 0,
         RECORD_TYPE_APKOBFUSCATOR,

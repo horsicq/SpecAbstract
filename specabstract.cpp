@@ -2972,7 +2972,7 @@ SpecAbstract::APKINFO_STRUCT SpecAbstract::getAPKInfo(QIODevice *pDevice, SCANID
 
     if (xzip.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
         result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = XBinary::FT_ZIP;
+        result.basic_info.id.fileType = XBinary::FT_APK;
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
         result.basic_info.id.sUuid = XBinary::generateUUID();
         result.basic_info.sHeaderSignature = xzip.getSignature(0, 150);
