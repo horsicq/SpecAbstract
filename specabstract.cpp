@@ -31,55 +31,6 @@ QString SpecAbstract::append(const QString &sResult, const QString &sString)
     return XBinary::appendText(sResult, sString, ",");
 }
 
-QString SpecAbstract::recordTypeIdToString(qint32 nId)
-{
-    QString sResult = tr("Unknown");
-
-    switch (nId) {
-        case RECORD_TYPE_UNKNOWN: sResult = tr("Unknown"); break;
-        case RECORD_TYPE_APKOBFUSCATOR: sResult = QString("APK obfuscator"); break;
-        case RECORD_TYPE_APKTOOL: sResult = QString("APK Tool"); break;
-        case RECORD_TYPE_CERTIFICATE: sResult = QString("Certificate"); break;
-        case RECORD_TYPE_COMPILER: sResult = QString("Compiler"); break;
-        case RECORD_TYPE_CONVERTER: sResult = QString("Converter"); break;
-        case RECORD_TYPE_CRYPTER: sResult = QString("Crypter"); break;
-        case RECORD_TYPE_DATABASE: sResult = QString("Database"); break;
-        case RECORD_TYPE_DEBUGDATA: sResult = QString("Debug data"); break;
-        case RECORD_TYPE_DONGLEPROTECTION: sResult = QString("Dongle protection"); break;
-        case RECORD_TYPE_DOSEXTENDER: sResult = QString("DOS extender"); break;
-        case RECORD_TYPE_FORMAT: sResult = QString("Format"); break;
-        case RECORD_TYPE_GENERIC: sResult = QString("Generic"); break;
-        case RECORD_TYPE_IMAGE: sResult = QString("Image"); break;
-        case RECORD_TYPE_INSTALLER: sResult = QString("Installer"); break;
-        case RECORD_TYPE_INSTALLERDATA: sResult = QString("Installer data"); break;
-        case RECORD_TYPE_JAROBFUSCATOR: sResult = QString("JAR obfuscator"); break;
-        case RECORD_TYPE_JOINER: sResult = QString("Joiner"); break;
-        case RECORD_TYPE_LANGUAGE: sResult = QString("Language"); break;
-        case RECORD_TYPE_LIBRARY: sResult = QString("Library"); break;
-        case RECORD_TYPE_LINKER: sResult = QString("Linker"); break;
-        case RECORD_TYPE_LOADER: sResult = QString("Loader"); break;
-        case RECORD_TYPE_NETCOMPRESSOR: sResult = QString(".NET compressor"); break;
-        case RECORD_TYPE_NETOBFUSCATOR: sResult = QString(".NET obfuscator"); break;
-        case RECORD_TYPE_OBFUSCATOR: sResult = QString("Obfuscator"); break;
-        case RECORD_TYPE_OPERATIONSYSTEM: sResult = QString("Operation system"); break;
-        case RECORD_TYPE_PACKER: sResult = QString("Packer"); break;
-        case RECORD_TYPE_PETOOL: sResult = QString("PE Tool"); break;
-        case RECORD_TYPE_PROTECTION: sResult = QString("Protection"); break;
-        case RECORD_TYPE_PROTECTOR: sResult = QString("Protector"); break;
-        case RECORD_TYPE_PROTECTORDATA: sResult = QString("Protector data"); break;
-        case RECORD_TYPE_SFX: sResult = QString("SFX"); break;
-        case RECORD_TYPE_SFXDATA: sResult = QString("SFX data"); break;
-        case RECORD_TYPE_SIGNTOOL: sResult = QString("Sign tool"); break;
-        case RECORD_TYPE_SOURCECODE: sResult = QString("Source code"); break;
-        case RECORD_TYPE_STUB: sResult = QString("Stub"); break;
-        case RECORD_TYPE_TOOL: sResult = QString("Tool"); break;
-        case RECORD_TYPE_VIRTUALMACHINE: sResult = QString("Virtual machine"); break;
-        case RECORD_TYPE_VIRUS: sResult = QString("Virus"); break;
-    }
-
-    return sResult;
-}
-
 QString SpecAbstract::recordNameIdToString(qint32 nId)
 {
     QString sResult = tr("Unknown");

@@ -37,49 +37,6 @@ class SpecAbstract : public XScanEngine {
     Q_OBJECT
 
 public:    
-    enum RECORD_TYPE {
-        RECORD_TYPE_UNKNOWN = 0,
-        RECORD_TYPE_APKOBFUSCATOR,
-        RECORD_TYPE_APKTOOL,
-        RECORD_TYPE_CERTIFICATE,
-        RECORD_TYPE_COMPILER,
-        RECORD_TYPE_CONVERTER,
-        RECORD_TYPE_CRYPTER,
-        RECORD_TYPE_DATABASE,
-        RECORD_TYPE_DEBUGDATA,
-        RECORD_TYPE_DONGLEPROTECTION,
-        RECORD_TYPE_DOSEXTENDER,
-        RECORD_TYPE_FORMAT,
-        RECORD_TYPE_GENERIC,
-        RECORD_TYPE_IMAGE,
-        RECORD_TYPE_INSTALLER,
-        RECORD_TYPE_INSTALLERDATA,
-        RECORD_TYPE_JAROBFUSCATOR,
-        RECORD_TYPE_JOINER,
-        RECORD_TYPE_LANGUAGE,
-        RECORD_TYPE_LIBRARY,
-        RECORD_TYPE_LINKER,
-        RECORD_TYPE_LOADER,
-        RECORD_TYPE_NETCOMPRESSOR,
-        RECORD_TYPE_NETOBFUSCATOR,
-        RECORD_TYPE_OBFUSCATOR,
-        RECORD_TYPE_OPERATIONSYSTEM,
-        RECORD_TYPE_PACKER,
-        RECORD_TYPE_PETOOL,
-        RECORD_TYPE_PROTECTION,
-        RECORD_TYPE_PROTECTOR,
-        RECORD_TYPE_PROTECTORDATA,
-        RECORD_TYPE_SFX,
-        RECORD_TYPE_SFXDATA,
-        RECORD_TYPE_SIGNTOOL,
-        RECORD_TYPE_SOURCECODE,
-        RECORD_TYPE_STUB,
-        RECORD_TYPE_TOOL,
-        RECORD_TYPE_VIRTUALMACHINE,
-        RECORD_TYPE_VIRUS,
-        // TODO more
-    };
-
     enum RECORD_NAME {
         RECORD_NAME_UNKNOWN = 0,
         RECORD_NAME_12311134,
@@ -1298,7 +1255,6 @@ public:
 
     static QString append(const QString &sResult, const QString &sString);
 
-    static QString recordTypeIdToString(qint32 nId);
     static QString recordNameIdToString(qint32 nId);
     static QString heurTypeIdToString(qint32 nId);
 
