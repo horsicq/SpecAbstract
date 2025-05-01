@@ -919,7 +919,7 @@ SpecAbstract::PDFINFO_STRUCT SpecAbstract::getPDFInfo(QIODevice *pDevice, SCANID
 
     XPDF pdf(pDevice);
 
-    if (pdf.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
+    if (pdf.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
         result.basic_info.parentId = parentId;
         result.basic_info.id.fileType = XBinary::FT_PDF;
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
