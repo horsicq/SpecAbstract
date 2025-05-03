@@ -2942,7 +2942,6 @@ SpecAbstract::APKINFO_STRUCT SpecAbstract::getAPKInfo(QIODevice *pDevice, SCANID
         result.bIsKotlin = XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version", &(result.listArchiveRecords), pPdStruct) ||
                            XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins", &(result.listArchiveRecords), pPdStruct);
 
-
         archiveScan(&(result.basic_info.mapArchiveDetects), &(result.listArchiveRecords), _APK_file_records, sizeof(_APK_file_records), result.basic_info.id.fileType,
                     XBinary::FT_APK, &(result.basic_info), DETECTTYPE_ARCHIVE, pPdStruct);
         archiveExpScan(&(result.basic_info.mapArchiveDetects), &(result.listArchiveRecords), _APK_fileExp_records, sizeof(_APK_fileExp_records),
@@ -10383,7 +10382,8 @@ void SpecAbstract::Zip_handle_OpenOffice(QIODevice *pDevice, XScanEngine::SCAN_O
     }
 }
 
-void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BASIC_INFO *pBasicInfo, QList<XArchive::RECORD> *pListArchiveRecords, XBinary::PDSTRUCT *pPdStruct)
+void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BASIC_INFO *pBasicInfo, QList<XArchive::RECORD> *pListArchiveRecords,
+                                        XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
 
@@ -10514,11 +10514,11 @@ void SpecAbstract::Zip_handle_Metainfos(QIODevice *pDevice, XScanEngine::SCAN_OP
                 }
 
                 pBasicInfo->mapMetainfosDetects.insert(ss.name, ss);
-            } else if (sCreatedBy.contains("(Sun Microsystems Inc.)") || sCreatedBy.contains("(BEA Systems, Inc.)") ||
-                       sCreatedBy.contains("(The FreeBSD Foundation)") || sCreatedBy.contains("(d2j-null)") || sCreatedBy.contains("(d2j-2.1-SNAPSHOT)") ||
-                       sCreatedBy.contains("(Oracle Corporation)") || sCreatedBy.contains("(Apple Inc.)") || sCreatedBy.contains("(Google Inc.)") ||
-                       sCreatedBy.contains("(Jeroen Frijters)") || sCreatedBy.contains("(IBM Corporation)") || sCreatedBy.contains("(JetBrains s.r.o)") ||
-                       sCreatedBy.contains("(Alibaba)") || sCreatedBy.contains("(AdoptOpenJdk)")) {
+            } else if (sCreatedBy.contains("(Sun Microsystems Inc.)") || sCreatedBy.contains("(BEA Systems, Inc.)") || sCreatedBy.contains("(The FreeBSD Foundation)") ||
+                       sCreatedBy.contains("(d2j-null)") || sCreatedBy.contains("(d2j-2.1-SNAPSHOT)") || sCreatedBy.contains("(Oracle Corporation)") ||
+                       sCreatedBy.contains("(Apple Inc.)") || sCreatedBy.contains("(Google Inc.)") || sCreatedBy.contains("(Jeroen Frijters)") ||
+                       sCreatedBy.contains("(IBM Corporation)") || sCreatedBy.contains("(JetBrains s.r.o)") || sCreatedBy.contains("(Alibaba)") ||
+                       sCreatedBy.contains("(AdoptOpenJdk)")) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_JAR, RECORD_TYPE_TOOL, RECORD_NAME_JDK, "", "", 0);
                 ss.sVersion = sCreatedBy.section(" ", 0, 0);
 
@@ -10935,7 +10935,7 @@ void SpecAbstract::APK_handle(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
             }
 
             if (pApkInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_TENCENTLEGU) ||
-                    pApkInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_MOBILETENCENTPROTECT)) {
+                pApkInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_MOBILETENCENTPROTECT)) {
                 _SCANS_STRUCT ss = {};
 
                 if (pApkInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_TENCENTLEGU)) {
@@ -11125,7 +11125,7 @@ void SpecAbstract::APK_handle(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
 
             // DexGuard
             if (pApkInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_DEXGUARD) ||
-                    pApkInfo->dexInfoClasses.basic_info.mapResultProtectors.contains(RECORD_NAME_DEXGUARD)) {
+                pApkInfo->dexInfoClasses.basic_info.mapResultProtectors.contains(RECORD_NAME_DEXGUARD)) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXGUARD, "", "", 0);
 
                 if (pApkInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_DEXGUARD)) {
@@ -11138,7 +11138,7 @@ void SpecAbstract::APK_handle(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
             }
 
             if (pApkInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_DEXPROTECTOR) ||
-                    pApkInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_DEXPROTECTOR)) {
+                pApkInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_DEXPROTECTOR)) {
                 _SCANS_STRUCT ss = {};
 
                 if (pApkInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_DEXPROTECTOR)) {
@@ -11151,7 +11151,7 @@ void SpecAbstract::APK_handle(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
             }
 
             if (pApkInfo->basic_info.mapArchiveDetects.contains(RECORD_NAME_APKPROTECTOR) ||
-                    pApkInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_APKPROTECTOR)) {
+                pApkInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_APKPROTECTOR)) {
                 _SCANS_STRUCT ss = {};
 
                 if (pApkInfo->basic_info.mapMetainfosDetects.contains(RECORD_NAME_APKPROTECTOR)) {
