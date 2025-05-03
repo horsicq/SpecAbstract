@@ -1102,7 +1102,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_Go_vi(QIODevice *pDevice, XScanEngine:
 
     qint64 nMaxVersion = 0;
 
-    while ((_nSize > 0) && (!(pPdStruct->bIsStop))) {
+    while ((_nSize > 0) && XBinary::isPdStructNotCanceled(pPdStruct)) {
         _nOffset = binary.find_ansiString(_nOffset, _nSize, "go1.", pPdStruct);
 
         if (_nOffset == -1) {
