@@ -2306,7 +2306,7 @@ SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice, XScanEng
 
     XLE lx(pDevice, pOptions->bIsImage);
 
-    if (lx.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
+    if (lx.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
         result.basic_info.parentId = parentId;
 
         result.basic_info.id.fileType = XBinary::FT_LX;
@@ -2921,7 +2921,7 @@ SpecAbstract::APKINFO_STRUCT SpecAbstract::getAPKInfo(QIODevice *pDevice, SCANID
 
     XZip xzip(pDevice);
 
-    if (xzip.isValid(pPdStruct) && (!(pPdStruct->bIsStop))) {
+    if (xzip.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
         result.basic_info.parentId = parentId;
         result.basic_info.id.fileType = XBinary::FT_APK;
         result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
@@ -7491,7 +7491,7 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
 
             qint32 nNumberOfImports = pPEInfo->listImports.count();
 
-            for (qint32 i = 0; (i < nNumberOfImports) && (!(pPdStruct->bIsStop)); i++) {
+            for (qint32 i = 0; (i < nNumberOfImports) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
                 if (XBinary::isRegExpPresent("^CYGWIN", pPEInfo->listImports.at(i).sName.toUpper())) {
                     QString sVersion = XBinary::regExp("(\\d+)", pPEInfo->listImports.at(i).sName.toUpper(), 0);
 
@@ -14214,7 +14214,7 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPT
 
         qint32 nRichDescriptionsCount = listRichDescriptions.count();
 
-        for (qint32 i = nRichDescriptionsCount - 1; (i >= 0) && (!(pPdStruct->bIsStop)); i--) {
+        for (qint32 i = nRichDescriptionsCount - 1; (i >= 0) && XBinary::isPdStructNotCanceled(pPdStruct); i--) {
             if (listRichDescriptions.at(i).type == SpecAbstract::RECORD_TYPE_LINKER) {
                 recordLinker.name = listRichDescriptions.at(i).name;
                 recordLinker.sVersion = listRichDescriptions.at(i).sVersion;
@@ -16154,7 +16154,7 @@ void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCAN
 {
     qint32 nSignaturesCount = nRecordsSize / (int)sizeof(CONST_RECORD);
 
-    for (qint32 i = 0; (i < nSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
+    for (qint32 i = 0; (i < nSignaturesCount) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
         if ((pRecords[i].basicInfo.fileType == fileType1) || (pRecords[i].basicInfo.fileType == fileType2)) {
             if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects) || (pRecords[i].nConst1 == 0xFFFFFFFF)) {
                 bool bSuccess = false;
@@ -16754,7 +16754,7 @@ QString SpecAbstract::getMsRichString(quint16 nId, quint16 nBuild, quint32 nCoun
 
     qint32 nSignaturesCount = nRecordsSize / (int)sizeof(MSRICH_RECORD);
 
-    for (qint32 i = 0; (i < nSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
+    for (qint32 i = 0; (i < nSignaturesCount) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
         _SCANS_STRUCT record = {};
 
         if (MSDOS_compareRichRecord(&record, &(pRecords[i]), nId, nBuild, nCount, XBinary::FT_PE, XBinary::FT_MSDOS)) {
@@ -17032,7 +17032,7 @@ QList<SpecAbstract::VCL_STRUCT> SpecAbstract::PE_getVCLstruct(QIODevice *pDevice
         qint64 nClassOffset2 = pe.addressToOffset(nDword);
 
         if (nClassOffset2 != -1) {
-            for (qint32 i = 0; (i < 20) && (!(pPdStruct->bIsStop)); i++) {
+            for (qint32 i = 0; (i < 20) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
                 quint32 nValue = pe.read_uint32(nClassOffset2 - nAddressSize * (i + 1));
 
                 if (nValue <= 0xFFFF) {
