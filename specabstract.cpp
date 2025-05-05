@@ -14206,7 +14206,7 @@ void SpecAbstract::LE_handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPT
 
         QList<_SCANS_STRUCT> listRichDescriptions;
 
-        for (qint32 i = 0; (i < nRichSignaturesCount) && (!(pPdStruct->bIsStop)); i++) {
+        for (qint32 i = 0; (i < nRichSignaturesCount) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
             listRichDescriptions.append(MSDOS_richScan(pLEInfo->listRichSignatures.at(i).nId, pLEInfo->listRichSignatures.at(i).nVersion,
                                                        pLEInfo->listRichSignatures.at(i).nCount, _MS_rich_records, sizeof(_MS_rich_records),
                                                        pLEInfo->basic_info.id.fileType, XBinary::FT_MSDOS, &(pLEInfo->basic_info), DETECTTYPE_RICH, pPdStruct));
