@@ -1763,7 +1763,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_DelphiVersionFromCompiler(const QStri
     if (_sString != "") {
         result.bIsValid = true;
 
-        result.sVersion = "XE7+";
+        result.sVersion = "12.x Athens++";
 
         if (_sString == "28.0") {
             result.sVersion = "XE7";
@@ -1782,7 +1782,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_DelphiVersionFromCompiler(const QStri
         } else if (_sString == "35.0") {
             result.sVersion = "11.0 Alexandria";
         } else if (_sString == "36.0") {
-            result.sVersion = "11.0 Alexandria";
+            result.sVersion = "12.0 Athens";
         }
     }
 
