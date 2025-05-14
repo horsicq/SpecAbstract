@@ -57,29 +57,6 @@ QString SpecAbstract::heurTypeIdToString(qint32 nId)
     return sResult;
 }
 
-// SpecAbstract::UNPACK_OPTIONS SpecAbstract::getPossibleUnpackOptions(QIODevice *pDevice,XScanEngine::SCAN_OPTIONS *pOptions)
-//{
-//     // TODO mb Remove !!!
-//     UNPACK_OPTIONS result={};
-
-//    QSet<XBinary::FT> stFileTypes=XBinary::getFileTypes(pDevice);
-
-//    if(stFileTypes.contains(XBinary::FT_PE32)||stFileTypes.contains(XBinary::FT_PE64))
-//    {
-//        XPE pe(pDevice,pOptions->bIsImage);
-
-//        if(pe.isValid(pPdStruct))
-//        {
-//            if(pe.isValid(pPdStruct))
-//            {
-//                result.bCopyOverlay=pe.isOverlayPresent();
-//            }
-//        }
-//    }
-
-//    return result;
-//}
-
 QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, bool bShowType)
 {
     QString sResult;
