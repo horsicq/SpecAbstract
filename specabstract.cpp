@@ -82,6 +82,44 @@ QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, b
     return sResult;
 }
 
+SpecAbstract::JPEGINFO_STRUCT SpecAbstract::getJpegInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    JPEGINFO_STRUCT result = {};
+
+    XJpeg jpeg(pDevice);
+
+    if (jpeg.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
+        result.basic_info.parentId = parentId;
+        result.basic_info.id.fileType = XBinary::FT_JPEG;
+        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
+        result.basic_info.id.sUuid = XBinary::generateUUID();
+        result.basic_info.sHeaderSignature = jpeg.getSignature(0, 150);
+        result.basic_info.scanOptions = *pOptions;
+        result.basic_info.memoryMap = jpeg.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
+        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
+        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
+        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
+        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
+        result.basic_info.id.nSize = pDevice->size();
+        result.basic_info.id.nOffset = nOffset;
+
+        Jpeg_handle_Formats(pDevice, pOptions, &result, pPdStruct);
+
+        _handleResult(&(result.basic_info), pPdStruct);
+    }
+
+    result.basic_info.nElapsedTime = timer.elapsed();
+
+#ifdef QT_DEBUG
+    qDebug("%lld msec", result.basic_info.nElapsedTime);
+#endif
+
+    return result;
+}
+
 SpecAbstract::PDFINFO_STRUCT SpecAbstract::getPDFInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
@@ -10563,6 +10601,19 @@ void SpecAbstract::PDF_handle_Tags(QIODevice *pDevice, SCAN_OPTIONS *pOptions, P
     }
 }
 
+void SpecAbstract::Jpeg_handle_Formats(QIODevice *pDevice, SCAN_OPTIONS *pOptions, JPEGINFO_STRUCT *pJpegInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    Q_UNUSED(pOptions)
+
+    XJpeg jpeg(pDevice);
+
+    if (jpeg.isValid(pPdStruct)) {
+        _SCANS_STRUCT ssFormat = getFormatScansStruct(jpeg.getFileFormatInfo(pPdStruct));
+
+        pJpegInfo->basic_info.mapResultFormats.insert(ssFormat.name, scansToScan(&(pJpegInfo->basic_info), &ssFormat));
+    }
+}
+
 SpecAbstract::DEXINFO_STRUCT SpecAbstract::APK_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::APKINFO_STRUCT *pApkInfo,
                                                         XBinary::PDSTRUCT *pPdStruct, const QString &sFileName)
 {
@@ -15829,6 +15880,7 @@ SpecAbstract::_SCANS_STRUCT SpecAbstract::getFormatScansStruct(const XBinary::FI
     result.type = RECORD_TYPE_FORMAT;
 
     if (fileFormatInfo.fileType == XBinary::FT_PDF) result.name = RECORD_NAME_PDF;
+    else if (fileFormatInfo.fileType == XBinary::FT_JPEG) result.name = RECORD_NAME_JPEG;
 
     result.sVersion = fileFormatInfo.sVersion;
     result.sInfo = XBinary::getFileFormatInfoString(&fileFormatInfo);
@@ -16147,6 +16199,9 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
     } else if (fileType == XBinary::FT_PDF) {
         SpecAbstract::PDFINFO_STRUCT pdf_info = SpecAbstract::getPDFInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = pdf_info.basic_info;
+    } else if (fileType == XBinary::FT_JPEG) {
+        SpecAbstract::JPEGINFO_STRUCT jpeg_info = SpecAbstract::getJpegInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        basic_info = jpeg_info.basic_info;
     } else if (fileType == XBinary::FT_COM) {
         SpecAbstract::COMINFO_STRUCT com_info = SpecAbstract::getCOMInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = com_info.basic_info;
