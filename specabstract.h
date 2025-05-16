@@ -140,7 +140,6 @@ public:
         QMap<RECORD_NAME, _SCANS_STRUCT> mapCodeSectionDetects;
         QMap<RECORD_NAME, _SCANS_STRUCT> mapEntryPointSectionDetects;
         QMap<RECORD_NAME, _SCANS_STRUCT> mapSectionNamesDetects;
-        //        QMap<RECORD_NAME,_SCANS_STRUCT> mapRichDetects;
         QMap<RECORD_NAME, _SCANS_STRUCT> mapResourcesDetects;
 
         QMap<RECORD_NAME, SCAN_STRUCT> mapResultTexts;
@@ -384,11 +383,6 @@ public:
         XBinary::OFFSETSIZE osImportSection;
         XBinary::OFFSETSIZE osResourcesSection;
     };
-    // TODO Check
-    //    struct UNPACK_OPTIONS {
-    //        // PE/PE+
-    //        bool bCopyOverlay;  // In
-    //    };
 
     struct _BASICINFO {
         quint32 nVariant;
