@@ -37,7 +37,6 @@ class SpecAbstract : public XScanEngine {
     Q_OBJECT
 
 public:
-
     // TODO flags(static scan/emul/heur) ? Check
     struct SCAN_STRUCT {
         bool bIsHeuristic;
@@ -477,7 +476,8 @@ public:
     static AMIGAHUNKINFO_STRUCT getAmigaHunkInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                                  XBinary::PDSTRUCT *pPdStruct);
     static PDFINFO_STRUCT getPDFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
-    static JPEGINFO_STRUCT getJpegInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
+    static JPEGINFO_STRUCT getJpegInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                       XBinary::PDSTRUCT *pPdStruct);
 
     static _SCANS_STRUCT getScansStruct(quint32 nVariant, XBinary::FT fileType, RECORD_TYPE type, RECORD_NAME name, const QString &sVersion, const QString &sInfo,
                                         qint64 nOffset);
