@@ -228,7 +228,7 @@ public:
     struct PDFINFO_STRUCT {
         BASIC_INFO basic_info;
 
-        QList<XPDF::OBJECT_EX> listObjects;
+        QList<XPDF::XPART> listObjects;
     };
 
     struct MACHOFATINFO_STRUCT {
