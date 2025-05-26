@@ -276,11 +276,12 @@ SpecAbstract::VI_STRUCT SpecAbstract::get_R8_marker_vi(QIODevice *pDevice, XScan
 
     // https://r8.googlesource.com/r8/+/refs/heads/master/src/main/java/com/android/tools/r8/dex/Marker.java
     // X~~D8{"compilation-mode":"release","has-checksums":false,"min-api":14,"version":"2.0.88"}
+    // h~~D8{"backend":"dex","compilation-mode":"release","has-checksums":false,"min-api":28,"version":"8.6.17"}
     qint64 _nOffset = binary.find_ansiString(nOffset, nSize, "\"compilation-mode\":\"", pPdStruct);
 
     if (_nOffset > 20)  // TODO rewrite
     {
-        _nOffset = binary.find_ansiString(_nOffset - 5, 20, "~~", pPdStruct);
+        _nOffset = binary.find_ansiString(_nOffset - 21, 20, "~~", pPdStruct);
 
         if (_nOffset != -1) {
             result.bIsValid = true;
