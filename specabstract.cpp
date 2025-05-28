@@ -1228,6 +1228,7 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XScanE
         signatureExpScan(&com, &(result.basic_info.memoryMap), &result.basic_info.mapHeaderDetects, 0, _COM_Exp_records, sizeof(_COM_Exp_records),
                          result.basic_info.id.fileType, XBinary::FT_COM, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
 
+        COM_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
         COM_handle_Protection(pDevice, pOptions, &result, pPdStruct);
 
         if (result.basic_info.mapResultProtectors.size() || result.basic_info.mapResultPackers.size()) {
@@ -8633,6 +8634,17 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPT
 
         //            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
         //        }
+    }
+}
+
+void SpecAbstract::COM_handle_OperationSystem(QIODevice *pDevice, SCAN_OPTIONS *pOptions, COMINFO_STRUCT *pCOMInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XCOM xcom(pDevice, pOptions->bIsImage);
+
+    if (xcom.isValid(pPdStruct)) {
+        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(xcom.getFileFormatInfo(pPdStruct));
+
+        pCOMInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pCOMInfo->basic_info), &ssOperationSystem));
     }
 }
 
