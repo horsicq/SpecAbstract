@@ -1228,7 +1228,10 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XScanE
         signatureExpScan(&com, &(result.basic_info.memoryMap), &result.basic_info.mapHeaderDetects, 0, _COM_Exp_records, sizeof(_COM_Exp_records),
                          result.basic_info.id.fileType, XBinary::FT_COM, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
 
-        COM_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
+        if (pOptions->bIsVerbose) {
+            COM_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
+        }
+
         COM_handle_Protection(pDevice, pOptions, &result, pPdStruct);
 
         if (result.basic_info.mapResultProtectors.size() || result.basic_info.mapResultPackers.size()) {
