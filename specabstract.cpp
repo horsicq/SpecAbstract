@@ -11672,7 +11672,7 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
 
             if (note.nSize >= 4) {
                 quint32 nSDKVersion = elf.read_uint32(note.nDataOffset);
-                ssAndroidSDK.sVersion = QString("API %1(Android %2)").arg(QString::number(nSDKVersion), XBinary::getAndroidVersionFromApi(nSDKVersion));
+                ssAndroidSDK.sVersion = QString("API %1(Android %2)").arg(QString::number(nSDKVersion), XBinary::getAndroidVersionFromApi(nSDKVersion)); // TODO
             }
 
             if (note.nSize >= 4 + 64 * 2) {
