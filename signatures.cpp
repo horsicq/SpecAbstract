@@ -103,7 +103,7 @@ SpecAbstract::SIGNATURE_RECORD _archive_records[]=
     {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_ZLIB,                         "",                 "level 2-5"},           "785E"},
     {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_ZLIB,                         "",                 "level 6(default)"},    "789C"},
     {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_ZLIB,                         "",                 "level 7-9(best)"},     "78DA"},
-    {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_XZ,                           "",                 ""},                    "FD'7zXZ'0000"},
+    {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_XZ,                           "",                 ""},                    "FD'7zXZ'00"},
     {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_MACHOFAT,                     "",                 ""},                    "CAFEBABE"},
     {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_MACHOFAT,                     "",                 ""},                    "BEBAFECA"},
     {{0, XBinary::FT_ARCHIVE,   SpecAbstract::RECORD_TYPE_FORMAT,           SpecAbstract::RECORD_NAME_ZIP,                          "",                 ""},                    "'PK'0304"},
