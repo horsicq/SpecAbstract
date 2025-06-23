@@ -82,6 +82,54 @@ QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, b
     return sResult;
 }
 
+SpecAbstract::BASIC_INFO SpecAbstract::_initBasicInfo(XBinary *pBinary, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
+{
+    BASIC_INFO result = {};
+
+    result.parentId = parentId;
+    result.memoryMap = pBinary->getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
+    result.sHeaderSignature = pBinary->getSignature(0, 150);
+    result.id.nSize = pBinary->getSize();
+
+    result.id.fileType = result.memoryMap.fileType;
+    result.id.filePart = XBinary::FILEPART_HEADER;
+    result.id.sUuid = XBinary::generateUUID();
+    result.scanOptions = *pOptions;
+    result.id.sArch = result.memoryMap.sArch;
+    result.id.mode = result.memoryMap.mode;
+    result.id.endian = result.memoryMap.endian;
+    result.id.sType = result.memoryMap.sType;
+    result.id.nOffset = nOffset;
+
+    return result;
+}
+
+SpecAbstract::JARINFO_STRUCT SpecAbstract::getJARInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    JARINFO_STRUCT result = {};
+
+    XJAR jar(pDevice);
+
+    if (jar.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
+        result.basic_info = _initBasicInfo(&jar, parentId, pOptions, nOffset, pPdStruct);
+
+        // TODO
+
+        _handleResult(&(result.basic_info), pPdStruct);
+    }
+
+    result.basic_info.nElapsedTime = timer.elapsed();
+
+#ifdef QT_DEBUG
+    qDebug("%lld msec", result.basic_info.nElapsedTime);
+#endif
+
+    return result;
+}
+
 SpecAbstract::JPEGINFO_STRUCT SpecAbstract::getJpegInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
@@ -92,19 +140,7 @@ SpecAbstract::JPEGINFO_STRUCT SpecAbstract::getJpegInfo(QIODevice *pDevice, SCAN
     XJpeg jpeg(pDevice);
 
     if (jpeg.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = XBinary::FT_JPEG;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = jpeg.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = jpeg.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
+        result.basic_info = _initBasicInfo(&jpeg, parentId, pOptions, nOffset, pPdStruct);
 
         Jpeg_handle_Formats(pDevice, pOptions, &result, pPdStruct);
 
@@ -130,19 +166,7 @@ SpecAbstract::PDFINFO_STRUCT SpecAbstract::getPDFInfo(QIODevice *pDevice, SCANID
     XPDF pdf(pDevice);
 
     if (pdf.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = XBinary::FT_PDF;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = pdf.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = pdf.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
+        result.basic_info = _initBasicInfo(&pdf, parentId, pOptions, nOffset, pPdStruct);
 
         result.listObjects = pdf.getParts(20, pPdStruct);
 
@@ -1081,21 +1105,10 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     BINARYINFO_STRUCT result = {};
 
     XBinary binary(pDevice, pOptions->bIsImage);
+    binary.setFileType(fileType);
 
     if (binary.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = fileType;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = binary.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = binary.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
+        result.basic_info = _initBasicInfo(&binary, parentId, pOptions, nOffset, pPdStruct);
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
@@ -1206,19 +1219,7 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XScanE
     XCOM com(pDevice, pOptions->bIsImage);
 
     if (com.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = XBinary::FT_COM;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = com.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = com.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
+        result.basic_info = _initBasicInfo(&com, parentId, pOptions, nOffset, pPdStruct);
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
@@ -1263,19 +1264,7 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XS
     XMSDOS msdos(pDevice, pOptions->bIsImage);
 
     if (msdos.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = XBinary::FT_MSDOS;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = msdos.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = msdos.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
+        result.basic_info = _initBasicInfo(&msdos, parentId, pOptions, nOffset, pPdStruct);
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
@@ -1325,22 +1314,10 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XScanE
     XELF elf(pDevice, pOptions->bIsImage);
 
     if (elf.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
+        result.basic_info = _initBasicInfo(&elf, parentId, pOptions, nOffset, pPdStruct);
+
         result.bIs64 = elf.is64();
         result.bIsBigEndian = elf.isBigEndian();
-
-        result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = result.bIs64 ? XBinary::FT_ELF64 : XBinary::FT_ELF32;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = elf.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = elf.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
@@ -1420,22 +1397,10 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XS
     XMACH mach(pDevice, pOptions->bIsImage);
 
     if (mach.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
+        result.basic_info = _initBasicInfo(&mach, parentId, pOptions, nOffset, pPdStruct);
+
         result.bIs64 = mach.is64();
         result.bIsBigEndian = mach.isBigEndian();
-
-        result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = result.bIs64 ? XBinary::FT_MACHO64 : XBinary::FT_MACHO32;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = mach.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = mach.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
@@ -1474,20 +1439,7 @@ SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XScanEng
     XLE le(pDevice, pOptions->bIsImage);
 
     if (le.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info.parentId = parentId;
-
-        result.basic_info.id.fileType = XBinary::FT_LE;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = le.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = le.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
+        result.basic_info = _initBasicInfo(&le, parentId, pOptions, nOffset, pPdStruct);
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
         result.nEntryPointOffset = le.getEntryPointOffset(&(result.basic_info.memoryMap));
@@ -1522,20 +1474,7 @@ SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice, XScanEng
     XLE lx(pDevice, pOptions->bIsImage);
 
     if (lx.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info.parentId = parentId;
-
-        result.basic_info.id.fileType = XBinary::FT_LX;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = lx.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = lx.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
+        result.basic_info = _initBasicInfo(&lx, parentId, pOptions, nOffset, pPdStruct);
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
         result.nEntryPointOffset = lx.getEntryPointOffset(&(result.basic_info.memoryMap));
@@ -1570,19 +1509,7 @@ SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, XScanEng
     XNE ne(pDevice, pOptions->bIsImage);
 
     if (ne.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = XBinary::FT_NE;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = ne.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = ne.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
+        result.basic_info = _initBasicInfo(&ne, parentId, pOptions, nOffset, pPdStruct);
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
@@ -1615,21 +1542,9 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
     XPE pe(pDevice, pOptions->bIsImage);
 
     if (pe.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.bIs64 = pe.is64();
+        result.basic_info = _initBasicInfo(&pe, parentId, pOptions, nOffset, pPdStruct);
 
-        result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = result.bIs64 ? XBinary::FT_PE64 : XBinary::FT_PE32;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = pe.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = pe.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
+        result.bIs64 = pe.is64();
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
@@ -1951,19 +1866,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XScanE
     XDEX dex(pDevice);
 
     if (dex.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = XBinary::FT_DEX;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = dex.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = dex.getMemoryMap(XBinary::MAPMODE_REGIONS, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
+        result.basic_info = _initBasicInfo(&dex, parentId, pOptions, nOffset, pPdStruct);
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
@@ -2063,19 +1966,7 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XScanE
     XZip xzip(pDevice);
 
     if (xzip.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = XBinary::FT_ZIP;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = xzip.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = xzip.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
+        result.basic_info = _initBasicInfo(&xzip, parentId, pOptions, nOffset, pPdStruct);
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
         result.listArchiveRecords = xzip.getRecords(20000, pPdStruct);
@@ -2137,19 +2028,7 @@ SpecAbstract::APKINFO_STRUCT SpecAbstract::getAPKInfo(QIODevice *pDevice, SCANID
     XZip xzip(pDevice);
 
     if (xzip.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = XBinary::FT_APK;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = xzip.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = xzip.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
+        result.basic_info = _initBasicInfo(&xzip, parentId, pOptions, nOffset, pPdStruct);
 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
         result.listArchiveRecords = xzip.getRecords(20000, pPdStruct);
@@ -2190,19 +2069,7 @@ SpecAbstract::AMIGAHUNKINFO_STRUCT SpecAbstract::getAmigaHunkInfo(QIODevice *pDe
     XPDF amigaHunk(pDevice);
 
     if (amigaHunk.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info.parentId = parentId;
-        result.basic_info.id.fileType = XBinary::FT_AMIGAHUNK;
-        result.basic_info.id.filePart = XBinary::FILEPART_HEADER;
-        result.basic_info.id.sUuid = XBinary::generateUUID();
-        result.basic_info.sHeaderSignature = amigaHunk.getSignature(0, 150);
-        result.basic_info.scanOptions = *pOptions;
-        result.basic_info.memoryMap = amigaHunk.getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-        result.basic_info.id.sArch = result.basic_info.memoryMap.sArch;
-        result.basic_info.id.mode = result.basic_info.memoryMap.mode;
-        result.basic_info.id.endian = result.basic_info.memoryMap.endian;
-        result.basic_info.id.sType = result.basic_info.memoryMap.sType;
-        result.basic_info.id.nSize = pDevice->size();
-        result.basic_info.id.nOffset = nOffset;
+        result.basic_info = _initBasicInfo(&amigaHunk, parentId, pOptions, nOffset, pPdStruct);
 
         AmigaHunk_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
 
