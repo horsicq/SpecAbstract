@@ -82,6 +82,32 @@ QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, b
     return sResult;
 }
 
+SpecAbstract::RARINFO_STRUCT SpecAbstract::getRARInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    RARINFO_STRUCT result = {};
+
+    XRar rar(pDevice);
+
+    if (rar.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
+        result.basic_info = _initBasicInfo(&rar, parentId, pOptions, nOffset, pPdStruct);
+
+        // TODO
+
+        _handleResult(&(result.basic_info), pPdStruct);
+    }
+
+    result.basic_info.nElapsedTime = timer.elapsed();
+
+#ifdef QT_DEBUG
+    qDebug("%lld msec", result.basic_info.nElapsedTime);
+#endif
+
+    return result;
+}
+
 SpecAbstract::BASIC_INFO SpecAbstract::_initBasicInfo(XBinary *pBinary, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
 {
     BASIC_INFO result = {};
@@ -16070,13 +16096,19 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
     } else if (fileType == XBinary::FT_MSDOS) {
         SpecAbstract::MSDOSINFO_STRUCT msdos_info = SpecAbstract::getMSDOSInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = msdos_info.basic_info;
+    } else if (fileType == XBinary::FT_JAR) {
+        SpecAbstract::JARINFO_STRUCT jar_info = SpecAbstract::getJARInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        basic_info = jar_info.basic_info;
     } else if (fileType == XBinary::FT_APK) {
         SpecAbstract::APKINFO_STRUCT apk_info = SpecAbstract::getAPKInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = apk_info.basic_info;
-    } else if ((fileType == XBinary::FT_ZIP) || (fileType == XBinary::FT_JAR) || (fileType == XBinary::FT_IPA)) {
+    } else if ((fileType == XBinary::FT_ZIP) || (fileType == XBinary::FT_IPA)) {
         // mb TODO split detects
         SpecAbstract::ZIPINFO_STRUCT zip_info = SpecAbstract::getZIPInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = zip_info.basic_info;
+    } else if (fileType == XBinary::FT_RAR) {
+        SpecAbstract::RARINFO_STRUCT rar_info = SpecAbstract::getRARInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        basic_info = rar_info.basic_info;
     } else if (fileType == XBinary::FT_DEX) {
         SpecAbstract::DEXINFO_STRUCT dex_info = SpecAbstract::getDEXInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = dex_info.basic_info;
