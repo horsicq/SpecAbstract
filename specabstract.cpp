@@ -28,7 +28,7 @@ SpecAbstract::SpecAbstract(QObject *pParent) : XScanEngine(pParent)
 
 QString SpecAbstract::append(const QString &sResult, const QString &sString)
 {
-    return XBinary::appendText(sResult, sString, ",");
+    return XBinary::appendText(sResult, sString, ", ");
 }
 
 QString SpecAbstract::heurTypeIdToString(qint32 nId)
