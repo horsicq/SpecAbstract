@@ -467,7 +467,7 @@ public:
 
     explicit SpecAbstract(QObject *pParent = nullptr);
 
-    static QString append(const QString &sResult, const QString &sString); // Move
+    static QString append(const QString &sResult, const QString &sString);  // Move
 
     static QString heurTypeIdToString(qint32 nId);
 
