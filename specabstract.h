@@ -240,6 +240,10 @@ public:
         BASIC_INFO basic_info;
     };
 
+    struct JAVACLASSINFO_STRUCT {
+        BASIC_INFO basic_info;
+    };
+
     struct PDFINFO_STRUCT {
         BASIC_INFO basic_info;
 
@@ -496,6 +500,8 @@ public:
                                                  XBinary::PDSTRUCT *pPdStruct);
     static PDFINFO_STRUCT getPDFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static JPEGINFO_STRUCT getJpegInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                       XBinary::PDSTRUCT *pPdStruct);
+    static JAVACLASSINFO_STRUCT getJavaClassInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                        XBinary::PDSTRUCT *pPdStruct);
 
     static _SCANS_STRUCT getScansStruct(quint32 nVariant, XBinary::FT fileType, RECORD_TYPE type, RECORD_NAME name, const QString &sVersion, const QString &sInfo,

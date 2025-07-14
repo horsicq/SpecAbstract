@@ -82,6 +82,32 @@ QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, b
     return sResult;
 }
 
+SpecAbstract::JAVACLASSINFO_STRUCT SpecAbstract::getJavaClassInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    JAVACLASSINFO_STRUCT result = {};
+
+    XJavaClass javaClass(pDevice);
+
+    if (javaClass.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
+        result.basic_info = _initBasicInfo(&javaClass, parentId, pOptions, nOffset, pPdStruct);
+
+        // TODO
+
+        _handleResult(&(result.basic_info), pPdStruct);
+    }
+
+    result.basic_info.nElapsedTime = timer.elapsed();
+
+#ifdef QT_DEBUG
+    qDebug("%lld msec", result.basic_info.nElapsedTime);
+#endif
+
+    return result;
+}
+
 SpecAbstract::RARINFO_STRUCT SpecAbstract::getRARInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
@@ -16109,6 +16135,9 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
     } else if (fileType == XBinary::FT_RAR) {
         SpecAbstract::RARINFO_STRUCT rar_info = SpecAbstract::getRARInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = rar_info.basic_info;
+    } else if (fileType == XBinary::FT_JAVACLASS) {
+        SpecAbstract::JAVACLASSINFO_STRUCT javaclass_info = SpecAbstract::getJavaClassInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        basic_info = javaclass_info.basic_info;
     } else if (fileType == XBinary::FT_DEX) {
         SpecAbstract::DEXINFO_STRUCT dex_info = SpecAbstract::getDEXInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = dex_info.basic_info;
