@@ -32,6 +32,7 @@
 #endif
 
 #include "xscanengine.h"
+#include "nfd_binary.h"
 
 class SpecAbstract : public XScanEngine {
     Q_OBJECT
@@ -41,8 +42,8 @@ public:
     struct SCAN_STRUCT {
         bool bIsHeuristic;
         bool bIsUnknown;
-        XScanEngine::SCANID id;
-        XScanEngine::SCANID parentId;
+        SCANID id;
+        SCANID parentId;
         RECORD_TYPE type;
         RECORD_NAME name;
         QString sVersion;
@@ -107,10 +108,6 @@ public:
         RECORD_NAME name;
         QString sVersion;
         QString sInfo;
-    };
-
-    struct BASIC_PE_INFO {
-        quint32 nEntryPoint;
     };
 
     struct BASIC_INFO {
@@ -715,9 +712,6 @@ public:
                                                 XBinary::PDSTRUCT *pPdStruct);
 
     static SCAN_STRUCT scansToScan(BASIC_INFO *pBasicInfo, _SCANS_STRUCT *pScansStruct);
-
-    static QByteArray _BasicPEInfoToArray(BASIC_PE_INFO *pInfo);
-    static BASIC_PE_INFO _ArrayToBasicPEInfo(const QByteArray *pbaArray);
 
     static void memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
                            SpecAbstract::SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,

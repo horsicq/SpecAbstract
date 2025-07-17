@@ -15021,27 +15021,6 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::scansToScan(SpecAbstract::BASIC_INFO *pB
     return result;
 }
 
-QByteArray SpecAbstract::_BasicPEInfoToArray(SpecAbstract::BASIC_PE_INFO *pInfo)
-{
-    QByteArray baResult;
-    QDataStream ds(&baResult, QIODevice::ReadWrite);
-
-    ds << pInfo->nEntryPoint;
-
-    return baResult;
-}
-
-SpecAbstract::BASIC_PE_INFO SpecAbstract::_ArrayToBasicPEInfo(const QByteArray *pbaArray)
-{
-    BASIC_PE_INFO result = {};
-
-    QDataStream ds((QByteArray *)pbaArray, QIODevice::ReadOnly);
-
-    ds >> result.nEntryPoint;
-
-    return result;
-}
-
 void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
                               SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
                               DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
@@ -15948,7 +15927,7 @@ QList<XScanEngine::SCANSTRUCT> SpecAbstract::convert(QList<SCAN_STRUCT> *pListSc
         record.sVersion = pListScanStructs->at(i).sVersion;
         record.sInfo = pListScanStructs->at(i).sInfo;
 
-        record.globalColor = typeToColor(record.sType);
+        record.globalColorRecord = typeToGlobalColorRecord(record.sType);
         record.nPrio = typeToPrio(record.sType);
         record.bIsProtection = isProtection(record.sType);
         record.sType = translateType(record.sType);

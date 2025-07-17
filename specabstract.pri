@@ -1,12 +1,16 @@
 INCLUDEPATH += $$PWD
 DEPENDPATH += $$PWD
+INCLUDEPATH += $$PWD/modules
+DEPENDPATH += $$PWD/modules
 
 HEADERS += \
-    $$PWD/specabstract.h
+    $$PWD/specabstract.h \
+    $$PWD/modules/nfd_binary.h
 
 SOURCES += \
     $$PWD/signatures.cpp \
-    $$PWD/specabstract.cpp
+    $$PWD/specabstract.cpp \
+    $$PWD/modules/nfd_binary.cpp
 
 contains(XCONFIG, use_capstone_x86) {
     !contains(XCONFIG, xcapstone_x86) {
