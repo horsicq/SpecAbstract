@@ -82,7 +82,8 @@ QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, b
     return sResult;
 }
 
-SpecAbstract::JAVACLASSINFO_STRUCT SpecAbstract::getJavaClassInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
+SpecAbstract::JAVACLASSINFO_STRUCT SpecAbstract::getJavaClassInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                                                  XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
     timer.start();
