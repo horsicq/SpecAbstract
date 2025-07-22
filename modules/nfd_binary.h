@@ -21,14 +21,14 @@
 #ifndef NFD_BINARY_H
 #define NFD_BINARY_H
 
-#include <QObject>
+#include "binary_script.h"
 
-class NFD_Binary : public QObject
+class NFD_Binary : public Binary_Script
 {
     Q_OBJECT
 
 public:
-    explicit NFD_Binary(QObject *parent = nullptr);
+    explicit NFD_Binary(XBinary *pBinary, XBinary::FILEPART filePart, Binary_Script::OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct);
 
 signals:
 };

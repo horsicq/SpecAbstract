@@ -20,8 +20,8 @@
  */
 #include "nfd_binary.h"
 
-NFD_Binary::NFD_Binary(QObject *parent)
-    : QObject(parent)
+NFD_Binary::NFD_Binary(XBinary *pBinary, XBinary::FILEPART filePart, OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct)
+    : Binary_Script(pBinary, filePart, pOptions, pPdStruct)
 {
 
 }
