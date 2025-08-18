@@ -13832,13 +13832,13 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
         // Example: X~~D8{"compilation-mode":"release","has-checksums":false,"min-api":14,"version":"2.0.88"}
 
         VI_STRUCT viR8 = get_R8_marker_vi(pDevice, pOptions, 0, pDEXInfo->basic_info.id.nSize, pPdStruct);
-        bool bR8_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listR8);
-        bool bDX_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDx);
+        bool bR8_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listR8, pPdStruct);
+        bool bDX_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDx, pPdStruct);
         //        bool bDexLib_map=XDEX::compareMapItems(&listMaps,&listDexLib);
-        bool bDexLib2_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexLib2);
-        bool bDexLib2heur_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexLib2heur);
-        bool bDexMerge_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexMerge);
-        bool bFastProxy_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listFastProxy);
+        bool bDexLib2_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexLib2, pPdStruct);
+        bool bDexLib2heur_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexLib2heur, pPdStruct);
+        bool bDexMerge_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexMerge, pPdStruct);
+        bool bFastProxy_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listFastProxy, pPdStruct);
 
         if (viR8.bIsValid) {
             _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_R8, "", "", 0);
