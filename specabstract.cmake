@@ -13,4 +13,56 @@ set(SPECABSTRACT_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/specabstract.h
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_binary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_binary.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_msdos.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_msdos.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_pe.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_pe.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_elf.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_elf.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_mach.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_mach.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_zip.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_zip.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_jar.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_jar.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_archive.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_archive.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_rar.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_rar.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_npm.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_npm.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_machofat.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_machofat.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_dex.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_dex.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_cfbf.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_cfbf.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_com.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_com.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_image.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_image.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_jpeg.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_jpeg.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_png.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_png.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_ne.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_ne.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_le.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_le.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_lx.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_lx.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_amiga.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_amiga.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_dos16m.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_dos16m.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_dos4g.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_dos4g.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_apk.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_apk.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_ipa.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_ipa.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_pdf.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_pdf.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_javaclass.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_javaclass.h
 )
