@@ -22,12 +22,75 @@
 #define NFD_BINARY_H
 
 #include "binary_script.h"
+#include "xscanengine.h"
+#include <QtCore/QString>
+#include <QtCore/QVariant>
+
+// Common detection type used across NFD and SpecAbstract
+// Kept as unscoped enum so legacy DETECTTYPE_* constants remain available
+enum DETECTTYPE {
+    DETECTTYPE_UNKNOWN = 0,
+    DETECTTYPE_ARCHIVE,
+    DETECTTYPE_CODESECTION,
+    DETECTTYPE_DEXSTRING,
+    DETECTTYPE_DEXTYPE,
+    DETECTTYPE_ENTRYPOINT,
+    DETECTTYPE_ENTRYPOINTSECTION,
+    DETECTTYPE_HEADER,
+    DETECTTYPE_IMPORTHASH,
+    DETECTTYPE_NETANSISTRING,
+    DETECTTYPE_NETUNICODESTRING,
+    DETECTTYPE_OVERLAY,
+    DETECTTYPE_DEBUGDATA,
+    DETECTTYPE_RESOURCES,
+    DETECTTYPE_RICH,
+    DETECTTYPE_SECTIONNAME
+};
 
 class NFD_Binary : public Binary_Script
 {
     Q_OBJECT
 
 public:
+    // Common detection/scan types used across NFD and SpecAbstract
+    struct SCAN_STRUCT {
+        bool bIsHeuristic;
+        bool bIsUnknown;
+        XScanEngine::SCANID id;
+        XScanEngine::SCANID parentId;
+        XScanEngine::RECORD_TYPE type;
+        XScanEngine::RECORD_NAME name;
+        QString sVersion;
+        QString sInfo;
+    };
+
+    struct DETECT_RECORD {
+        qint64 nOffset;  // memory scan
+        XBinary::FILEPART filepart;
+        DETECTTYPE detectType;
+        QString sValue;  // mb TODO variant
+        quint32 nVariant;
+        XBinary::FT fileType;
+        XScanEngine::RECORD_TYPE type;
+        XScanEngine::RECORD_NAME name;
+        QString sVersion;
+        QString sInfo;
+    };
+
+    // Unified scan record structure moved from SpecAbstract
+    struct SCANS_STRUCT {
+        qint64 nOffset;
+        quint32 nVariant;
+        XBinary::FT fileType;
+        XScanEngine::RECORD_TYPE type;
+        XScanEngine::RECORD_NAME name;
+        QString sVersion;
+        QString sInfo;
+        bool bIsHeuristic;
+        bool bIsUnknown;
+        QVariant varExtra;
+    };
+
     explicit NFD_Binary(XBinary *pBinary, XBinary::FILEPART filePart, Binary_Script::OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct);
 
 signals:

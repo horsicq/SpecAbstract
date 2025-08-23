@@ -2119,7 +2119,7 @@ SpecAbstract::AMIGAHUNKINFO_STRUCT SpecAbstract::getAmigaHunkInfo(QIODevice *pDe
 
     AMIGAHUNKINFO_STRUCT result = {};
 
-    XPDF amigaHunk(pDevice);
+    XAmigaHunk amigaHunk(pDevice);
 
     if (amigaHunk.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
         result.basic_info = _initBasicInfo(&amigaHunk, parentId, pOptions, nOffset, pPdStruct);
@@ -10479,8 +10479,16 @@ void SpecAbstract::AmigaHunk_handle_OperationSystem(QIODevice *pDevice, SCAN_OPT
     XAmigaHunk amigaHunk(pDevice);
 
     if (amigaHunk.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(amigaHunk.getFileFormatInfo(pPdStruct));
+        // Delegate to NFD_Amiga to determine OS record
+        Binary_Script::OPTIONS opts = {};
+        opts.bIsDeepScan = pOptions->bIsDeepScan;
+        opts.bIsHeuristicScan = pOptions->bIsHeuristicScan;
+        opts.bIsAggressiveScan = pOptions->bIsAggressiveScan;
+        opts.bIsVerbose = pOptions->bIsVerbose;
+        opts.bIsProfiling = false;
 
+        NFD_Amiga nfd(&amigaHunk, pAmigaHunkInfo->basic_info.id.filePart, &opts, pPdStruct);
+        _SCANS_STRUCT ssOperationSystem = nfd.detectOperationSystem(pPdStruct);
         pAmigaHunkInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pAmigaHunkInfo->basic_info), &ssOperationSystem));
     }
 }
@@ -15383,7 +15391,7 @@ void SpecAbstract::MSDOS_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::
 
 void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords,
                                SpecAbstract::STRING_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
-                               SpecAbstract::BASIC_INFO *pBasicInfo, SpecAbstract::DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
+                               SpecAbstract::BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
     QList<quint32> listStringCRC;
     QList<quint32> listSignatureCRC;
@@ -15454,7 +15462,7 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
 
 void SpecAbstract::archiveExpScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords,
                                   SpecAbstract::STRING_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
-                                  SpecAbstract::BASIC_INFO *pBasicInfo, SpecAbstract::DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
+                                  SpecAbstract::BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
     qint32 nNumberOfArchives = pListArchiveRecords->count();
     qint32 nNumberOfSignatures = nRecordsSize / sizeof(STRING_RECORD);

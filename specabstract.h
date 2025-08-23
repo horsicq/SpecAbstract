@@ -32,75 +32,21 @@
 #endif
 
 #include "xscanengine.h"
-#include "nfd_binary.h"
+#include "modules/nfd_binary.h"
+#include "modules/nfd_amiga.h"
 
 class SpecAbstract : public XScanEngine {
     Q_OBJECT
 
 public:
     // TODO flags(static scan/emul/heur) ? Check
-    struct SCAN_STRUCT {
-        bool bIsHeuristic;
-        bool bIsUnknown;
-        SCANID id;
-        SCANID parentId;
-        RECORD_TYPE type;
-        RECORD_NAME name;
-        QString sVersion;
-        QString sInfo;
-    };
+    using SCAN_STRUCT = NFD_Binary::SCAN_STRUCT;
 
-    enum DETECTTYPE {
-        DETECTTYPE_UNKNOWN = 0,
-        DETECTTYPE_ARCHIVE,
-        DETECTTYPE_CODESECTION,
-        DETECTTYPE_DEXSTRING,
-        DETECTTYPE_DEXTYPE,
-        DETECTTYPE_ENTRYPOINT,
-        DETECTTYPE_ENTRYPOINTSECTION,
-        DETECTTYPE_HEADER,
-        DETECTTYPE_IMPORTHASH,
-        DETECTTYPE_NETANSISTRING,
-        DETECTTYPE_NETUNICODESTRING,
-        DETECTTYPE_OVERLAY,
-        DETECTTYPE_DEBUGDATA,
-        DETECTTYPE_RESOURCES,
-        DETECTTYPE_RICH,
-        DETECTTYPE_SECTIONNAME
-    };
+    // DETECTTYPE is declared as a global unscoped enum in nfd_binary.h
 
-    struct DETECT_RECORD {
-        qint64 nOffset;  // memory scan
-        XBinary::FILEPART filepart;
-        DETECTTYPE detectType;
-        QString sValue;  // mb TODO variant
-        quint32 nVariant;
-        XBinary::FT fileType;
-        RECORD_TYPE type;
-        RECORD_NAME name;
-        QString sVersion;
-        QString sInfo;
-    };
+    using DETECT_RECORD = NFD_Binary::DETECT_RECORD;
 
-    struct SCAN_RESULT {
-        qint64 nScanTime;
-        QString sFileName;
-        QList<SCAN_STRUCT> listRecords;
-        QList<DETECT_RECORD> listHeurs;
-    };
-
-    struct _SCANS_STRUCT {
-        qint64 nOffset;
-        quint32 nVariant;
-        XBinary::FT fileType;
-        RECORD_TYPE type;
-        RECORD_NAME name;
-        QString sVersion;
-        QString sInfo;
-        bool bIsHeuristic;
-        bool bIsUnknown;
-        QVariant varExtra;
-    };
+    using _SCANS_STRUCT = NFD_Binary::SCANS_STRUCT;
 
     struct SCAN_RECORD {
         XBinary::FT fileType;
