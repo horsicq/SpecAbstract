@@ -59,27 +59,7 @@ QString SpecAbstract::heurTypeIdToString(qint32 nId)
 
 QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, bool bShowType)
 {
-    QString sResult;
-
-    if (pScanStruct->bIsHeuristic) {
-        sResult += "(Heur)";
-    }
-
-    if (bShowType) {
-        sResult += QString("%1: ").arg(translateType(SpecAbstract::recordTypeIdToString(pScanStruct->type)));
-    }
-
-    sResult += QString("%1").arg(SpecAbstract::recordNameIdToString(pScanStruct->name));
-
-    if (pScanStruct->sVersion != "") {
-        sResult += QString("(%1)").arg(pScanStruct->sVersion);
-    }
-
-    if (pScanStruct->sInfo != "") {
-        sResult += QString("[%1]").arg(pScanStruct->sInfo);
-    }
-
-    return sResult;
+    return NFD_Binary::_SCANS_STRUCT_toString(pScanStruct, bShowType);
 }
 
 SpecAbstract::JAVACLASSINFO_STRUCT SpecAbstract::getJavaClassInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset,
@@ -2114,28 +2094,8 @@ SpecAbstract::APKINFO_STRUCT SpecAbstract::getAPKInfo(QIODevice *pDevice, SCANID
 SpecAbstract::AMIGAHUNKINFO_STRUCT SpecAbstract::getAmigaHunkInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset,
                                                                   XBinary::PDSTRUCT *pPdStruct)
 {
-    QElapsedTimer timer;
-    timer.start();
-
-    AMIGAHUNKINFO_STRUCT result = {};
-
-    XAmigaHunk amigaHunk(pDevice);
-
-    if (amigaHunk.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info = _initBasicInfo(&amigaHunk, parentId, pOptions, nOffset, pPdStruct);
-
-        AmigaHunk_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
-
-        _handleResult(&(result.basic_info), pPdStruct);
-    }
-
-    result.basic_info.nElapsedTime = timer.elapsed();
-
-#ifdef QT_DEBUG
-    qDebug("%lld msec", result.basic_info.nElapsedTime);
-#endif
-
-    return result;
+    // Delegate to NFD_Amiga to build the info
+    return NFD_Amiga::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
 }
 
 SpecAbstract::_SCANS_STRUCT SpecAbstract::getScansStruct(quint32 nVariant, XBinary::FT fileType, SpecAbstract::RECORD_TYPE type, SpecAbstract::RECORD_NAME name,
@@ -10476,21 +10436,11 @@ void SpecAbstract::APK_handle_FixDetects(QIODevice *pDevice, SCAN_OPTIONS *pOpti
 
 void SpecAbstract::AmigaHunk_handle_OperationSystem(QIODevice *pDevice, SCAN_OPTIONS *pOptions, AMIGAHUNKINFO_STRUCT *pAmigaHunkInfo, XBinary::PDSTRUCT *pPdStruct)
 {
-    XAmigaHunk amigaHunk(pDevice);
-
-    if (amigaHunk.isValid(pPdStruct)) {
-        // Delegate to NFD_Amiga to determine OS record
-        Binary_Script::OPTIONS opts = {};
-        opts.bIsDeepScan = pOptions->bIsDeepScan;
-        opts.bIsHeuristicScan = pOptions->bIsHeuristicScan;
-        opts.bIsAggressiveScan = pOptions->bIsAggressiveScan;
-        opts.bIsVerbose = pOptions->bIsVerbose;
-        opts.bIsProfiling = false;
-
-        NFD_Amiga nfd(&amigaHunk, pAmigaHunkInfo->basic_info.id.filePart, &opts, pPdStruct);
-        _SCANS_STRUCT ssOperationSystem = nfd.detectOperationSystem(pPdStruct);
-        pAmigaHunkInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pAmigaHunkInfo->basic_info), &ssOperationSystem));
-    }
+    Q_UNUSED(pDevice)
+    Q_UNUSED(pOptions)
+    Q_UNUSED(pAmigaHunkInfo)
+    Q_UNUSED(pPdStruct)
+    // Kept for API compatibility; functionality moved to NFD_Amiga::getInfo()
 }
 
 void SpecAbstract::PDF_handle_Formats(QIODevice *pDevice, SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct)
@@ -15014,20 +14964,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::PE_get_PECompact_vi(QIODevice *pDevice, XS
 
 SpecAbstract::SCAN_STRUCT SpecAbstract::scansToScan(SpecAbstract::BASIC_INFO *pBasicInfo, SpecAbstract::_SCANS_STRUCT *pScansStruct)
 {
-    SCAN_STRUCT result = {};
-
-    result.id = pBasicInfo->id;
-    result.parentId = pBasicInfo->parentId;
-    result.bIsHeuristic = pScansStruct->bIsHeuristic;
-    result.bIsUnknown = pScansStruct->bIsUnknown;
-    result.type = pScansStruct->type;
-    result.name = pScansStruct->name;
-    result.sVersion = pScansStruct->sVersion;
-    result.sInfo = pScansStruct->sInfo;
-
-    //    result.sArch=pBasicInfo->memoryMap.sArch;
-
-    return result;
+    return NFD_Binary::scansToScan(pBasicInfo, pScansStruct);
 }
 
 void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,

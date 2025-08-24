@@ -25,6 +25,8 @@
 #include "xscanengine.h"
 #include <QtCore/QString>
 #include <QtCore/QVariant>
+#include <QtCore/QMap>
+#include <QtCore/QList>
 
 // Common detection type used across NFD and SpecAbstract
 // Kept as unscoped enum so legacy DETECTTYPE_* constants remain available
@@ -90,6 +92,85 @@ public:
         bool bIsUnknown;
         QVariant varExtra;
     };
+
+    // Core scanning context moved from SpecAbstract
+    struct BASIC_INFO {
+        qint64 nElapsedTime;
+        XScanEngine::SCANID parentId;
+        XScanEngine::SCANID id;
+        QString sHeaderSignature;
+        XBinary::_MEMORY_MAP memoryMap;
+        QList<SCAN_STRUCT> listDetects;
+        QList<DETECT_RECORD> listHeurs;
+        XScanEngine::SCAN_OPTIONS scanOptions;
+
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapHeaderDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapTextHeaderDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapStringDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapTypeDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapArchiveDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapMetainfosDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapEntryPointDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapCommentSectionDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapOverlayDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapImportDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapExportDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapDotAnsiStringsDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapDotUnicodeStringsDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapCodeSectionDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapEntryPointSectionDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapSectionNamesDetects;
+        QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> mapResourcesDetects;
+
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultTexts;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultTools;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultLanguages;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultLibraries;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultArchives;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultCertificates;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultDebugData;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultInstallerData;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultSFXData;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultFormats;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultDatabases;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultImages;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultProtectorData;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultLibraryData;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultResources;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultOperationSystems;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultLinkers;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultCompilers;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultProtectors;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultSigntools;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultAPKProtectors;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultDosExtenders;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultPackers;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultSFX;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultJoiners;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultInstallers;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultNETObfuscators;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultNETCompressors;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultDongleProtection;
+        QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> mapResultPETools;
+    };
+
+    // Generic binary info container moved from SpecAbstract
+    struct BINARYINFO_STRUCT {
+        BASIC_INFO basic_info;
+        bool bIsPlainText;
+        bool bIsUTF8;
+        XBinary::UNICODE_TYPE unicodeType;
+        QString sHeaderText;
+    };
+
+    // Utility: stringify a scan struct (moved from SpecAbstract)
+    static QString _SCANS_STRUCT_toString(const SCANS_STRUCT *pScanStruct, bool bShowType = true);
+
+    // Utility: convert SCANS_STRUCT + BASIC_INFO into a concrete SCAN_STRUCT (moved from SpecAbstract)
+    static SCAN_STRUCT scansToScan(BASIC_INFO *pBasicInfo, SCANS_STRUCT *pScansStruct);
+
+    // Utility: derive Operation System scans struct from FILEFORMATINFO
+    static SCANS_STRUCT detectOperationSystem(const XBinary::FILEFORMATINFO &ffi);
 
     explicit NFD_Binary(XBinary *pBinary, XBinary::FILEPART filePart, Binary_Script::OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct);
 

@@ -19,9 +19,84 @@
  * SOFTWARE.
  */
 #include "nfd_binary.h"
+#include "xscanengine.h"
 
 NFD_Binary::NFD_Binary(XBinary *pBinary, XBinary::FILEPART filePart, OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct)
     : Binary_Script(pBinary, filePart, pOptions, pPdStruct)
 {
 
+}
+
+QString NFD_Binary::_SCANS_STRUCT_toString(const SCANS_STRUCT *pScanStruct, bool bShowType)
+{
+    QString sResult;
+
+    if (pScanStruct->bIsHeuristic) {
+        sResult += "(Heur)";
+    }
+
+    if (bShowType) {
+        sResult += QString("%1: ").arg(XScanEngine::translateType(XScanEngine::recordTypeIdToString(pScanStruct->type)));
+    }
+
+    sResult += QString("%1").arg(XScanEngine::recordNameIdToString(pScanStruct->name));
+
+    if (pScanStruct->sVersion != "") {
+        sResult += QString("(%1)").arg(pScanStruct->sVersion);
+    }
+
+    if (pScanStruct->sInfo != "") {
+        sResult += QString("[%1]").arg(pScanStruct->sInfo);
+    }
+
+    return sResult;
+}
+
+NFD_Binary::SCAN_STRUCT NFD_Binary::scansToScan(NFD_Binary::BASIC_INFO *pBasicInfo, NFD_Binary::SCANS_STRUCT *pScansStruct)
+{
+    SCAN_STRUCT result = {};
+
+    result.id = pBasicInfo->id;
+    result.parentId = pBasicInfo->parentId;
+    result.bIsHeuristic = pScansStruct->bIsHeuristic;
+    result.bIsUnknown = pScansStruct->bIsUnknown;
+    result.type = pScansStruct->type;
+    result.name = pScansStruct->name;
+    result.sVersion = pScansStruct->sVersion;
+    result.sInfo = pScansStruct->sInfo;
+
+    return result;
+}
+
+NFD_Binary::SCANS_STRUCT NFD_Binary::detectOperationSystem(const XBinary::FILEFORMATINFO &ffi)
+{
+    SCANS_STRUCT result = {};
+
+    // Type: OS vs VM
+    result.type = ffi.bIsVM ? XScanEngine::RECORD_TYPE_VIRTUALMACHINE : XScanEngine::RECORD_TYPE_OPERATIONSYSTEM;
+
+    // File type context
+    result.fileType = ffi.fileType;
+
+    // Map known OS names (extendable)
+    if (ffi.osName == XBinary::OSNAME_AMIGA) {
+        result.name = XScanEngine::RECORD_NAME_AMIGA;
+    } else if (ffi.osName == XBinary::OSNAME_AROS) {
+        result.name = XScanEngine::RECORD_NAME_AROS;
+    } else {
+        result.name = XScanEngine::RECORD_NAME_UNKNOWN;
+        result.bIsUnknown = true;
+    }
+
+    // Version and info
+    result.sVersion = ffi.sOsVersion;
+    result.sInfo = QString("%1, %2, %3").arg(ffi.sArch, XBinary::modeIdToString(ffi.mode), ffi.sType);
+    if (ffi.endian == XBinary::ENDIAN_BIG) {
+        result.sInfo.append(QString(", %1").arg(XBinary::endianToString(XBinary::ENDIAN_BIG)));
+    }
+
+    // Flags
+    result.bIsHeuristic = false;
+
+    return result;
 }

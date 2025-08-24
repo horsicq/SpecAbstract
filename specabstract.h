@@ -41,88 +41,12 @@ class SpecAbstract : public XScanEngine {
 public:
     // TODO flags(static scan/emul/heur) ? Check
     using SCAN_STRUCT = NFD_Binary::SCAN_STRUCT;
-
     // DETECTTYPE is declared as a global unscoped enum in nfd_binary.h
-
     using DETECT_RECORD = NFD_Binary::DETECT_RECORD;
-
     using _SCANS_STRUCT = NFD_Binary::SCANS_STRUCT;
-
-    struct SCAN_RECORD {
-        XBinary::FT fileType;
-        RECORD_TYPE type;
-        RECORD_NAME name;
-        QString sVersion;
-        QString sInfo;
-    };
-
-    struct BASIC_INFO {
-        qint64 nElapsedTime;
-        XScanEngine::SCANID parentId;
-        XScanEngine::SCANID id;
-        QString sHeaderSignature;
-        XBinary::_MEMORY_MAP memoryMap;
-        QList<SCAN_STRUCT> listDetects;
-        QList<DETECT_RECORD> listHeurs;
-        SCAN_OPTIONS scanOptions;
-
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapHeaderDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapTextHeaderDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapStringDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapTypeDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapArchiveDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapMetainfosDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapEntryPointDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapCommentSectionDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapOverlayDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapImportDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapExportDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapDotAnsiStringsDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapDotUnicodeStringsDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapCodeSectionDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapEntryPointSectionDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapSectionNamesDetects;
-        QMap<RECORD_NAME, _SCANS_STRUCT> mapResourcesDetects;
-
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultTexts;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultTools;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLanguages;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLibraries;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultArchives;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultCertificates;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultDebugData;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultInstallerData;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultSFXData;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultFormats;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultDatabases;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultImages;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultProtectorData;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLibraryData;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultResources;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultOperationSystems;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultLinkers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultCompilers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultProtectors;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultSigntools;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultAPKProtectors;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultDosExtenders;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultPackers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultSFX;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultJoiners;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultInstallers;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultNETObfuscators;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultNETCompressors;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultDongleProtection;
-        QMap<RECORD_NAME, SCAN_STRUCT> mapResultPETools;
-    };
-
-    struct BINARYINFO_STRUCT {
-        BASIC_INFO basic_info;
-        bool bIsPlainText;
-        bool bIsUTF8;
-        XBinary::UNICODE_TYPE unicodeType;
-        QString sHeaderText;
-    };
+    using BASIC_INFO = NFD_Binary::BASIC_INFO;
+    using BINARYINFO_STRUCT = NFD_Binary::BINARYINFO_STRUCT;
+    using AMIGAHUNKINFO_STRUCT = NFD_Amiga::AMIGAHUNKINFO_STRUCT;
 
     struct DEXINFO_STRUCT {
         BASIC_INFO basic_info;
@@ -175,9 +99,7 @@ public:
         DEXINFO_STRUCT dexInfoClasses;
     };
 
-    struct AMIGAHUNKINFO_STRUCT {
-        BASIC_INFO basic_info;
-    };
+    
 
     struct JPEGINFO_STRUCT {
         BASIC_INFO basic_info;
