@@ -169,8 +169,25 @@ public:
     // Utility: convert SCANS_STRUCT + BASIC_INFO into a concrete SCAN_STRUCT (moved from SpecAbstract)
     static SCAN_STRUCT scansToScan(BASIC_INFO *pBasicInfo, SCANS_STRUCT *pScansStruct);
 
-    // Utility: derive Operation System scans struct from FILEFORMATINFO
-    static SCANS_STRUCT detectOperationSystem(const XBinary::FILEFORMATINFO &ffi);
+    // Derive Operation System directly from a binary instance
+    static SCANS_STRUCT detectOperationSystem(XBinary *pBinary, XBinary::PDSTRUCT *pPdStruct);
+
+    // Language aggregation helpers (moved from SpecAbstract)
+    static void getLanguage(QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> *pMapLanguages,
+                            XBinary::PDSTRUCT *pPdStruct);
+    static void fixLanguage(QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> *pMapLanguages);
+
+    // Converters from FILEFORMATINFO to scan records (moved from SpecAbstract)
+    static SCANS_STRUCT getFormatScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo);
+    static SCANS_STRUCT getOperationSystemScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo);
+
+    // Moved from NFD_BinaryUtils: basic scan context init and final result synthesis
+    static BASIC_INFO _initBasicInfo(XBinary *pBinary, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                     XBinary::PDSTRUCT *pPdStruct);
+    static void _handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPdStruct);
+
+    // Utility: convert global scan options to Binary_Script options
+    static Binary_Script::OPTIONS toOptions(const XScanEngine::SCAN_OPTIONS *pScanOptions);
 
     explicit NFD_Binary(XBinary *pBinary, XBinary::FILEPART filePart, Binary_Script::OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct);
 

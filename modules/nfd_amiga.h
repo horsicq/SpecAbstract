@@ -16,10 +16,6 @@ public:
         NFD_Binary::BASIC_INFO basic_info;
     };
 
-    // Returns an Operation System scans struct for this Amiga binary
-    NFD_Binary::SCANS_STRUCT detectOperationSystem(XBinary::PDSTRUCT *pPdStruct);
-
-    // Full info builder moved from SpecAbstract
     static AMIGAHUNKINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                         XBinary::PDSTRUCT *pPdStruct);
 };

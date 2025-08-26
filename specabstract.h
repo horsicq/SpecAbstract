@@ -34,6 +34,8 @@
 #include "xscanengine.h"
 #include "modules/nfd_binary.h"
 #include "modules/nfd_amiga.h"
+#include "modules/nfd_jpeg.h"
+#include "modules/nfd_cfbf.h"
 
 class SpecAbstract : public XScanEngine {
     Q_OBJECT
@@ -47,6 +49,7 @@ public:
     using BASIC_INFO = NFD_Binary::BASIC_INFO;
     using BINARYINFO_STRUCT = NFD_Binary::BINARYINFO_STRUCT;
     using AMIGAHUNKINFO_STRUCT = NFD_Amiga::AMIGAHUNKINFO_STRUCT;
+    using CFBFINFO_STRUCT = NFD_CFBF::CFBFINFO_STRUCT;
 
     struct DEXINFO_STRUCT {
         BASIC_INFO basic_info;
@@ -99,11 +102,7 @@ public:
         DEXINFO_STRUCT dexInfoClasses;
     };
 
-    
-
-    struct JPEGINFO_STRUCT {
-        BASIC_INFO basic_info;
-    };
+    using JPEGINFO_STRUCT = NFD_JPEG::JPEGINFO_STRUCT;
 
     struct JAVACLASSINFO_STRUCT {
         BASIC_INFO basic_info;
@@ -366,6 +365,8 @@ public:
     static PDFINFO_STRUCT getPDFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static JPEGINFO_STRUCT getJpegInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                        XBinary::PDSTRUCT *pPdStruct);
+    static CFBFINFO_STRUCT getCFBFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                       XBinary::PDSTRUCT *pPdStruct);
     static JAVACLASSINFO_STRUCT getJavaClassInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                                  XBinary::PDSTRUCT *pPdStruct);
 
@@ -487,7 +488,6 @@ public:
     static void PDF_handle_Formats(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct);
     static void PDF_handle_Tags(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct);
 
-    static void Jpeg_handle_Formats(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, JPEGINFO_STRUCT *pJpegInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static DEXINFO_STRUCT APK_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, APKINFO_STRUCT *pApkInfo, XBinary::PDSTRUCT *pPdStruct,
                                        const QString &sFileName);
@@ -610,11 +610,8 @@ public:
     static QByteArray serializeScanStruct(const SCAN_STRUCT &scanStruct, bool bIsHeader = false);
     static SCAN_STRUCT deserializeScanStruct(const QByteArray &baData, bool *pbIsHeader = nullptr);
 
-    static void getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages, XBinary::PDSTRUCT *pPdStruct);
-    static void fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages);
 
-    static _SCANS_STRUCT getOperationSystemScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo);
-    static _SCANS_STRUCT getFormatScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo);
+    // Moved to NFD_Binary: getLanguage, fixLanguage, getOperationSystemScansStruct, getFormatScansStruct
     static QString getMsRichString(quint16 nId, quint16 nBuild, quint32 nCount, XBinary::PDSTRUCT *pPdStruct);
 
     static QList<XScanEngine::SCANSTRUCT> convert(QList<SCAN_STRUCT> *pListScanStructs);

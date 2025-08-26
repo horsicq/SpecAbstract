@@ -117,24 +117,7 @@ SpecAbstract::RARINFO_STRUCT SpecAbstract::getRARInfo(QIODevice *pDevice, SCANID
 
 SpecAbstract::BASIC_INFO SpecAbstract::_initBasicInfo(XBinary *pBinary, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
 {
-    BASIC_INFO result = {};
-
-    result.parentId = parentId;
-    result.memoryMap = pBinary->getMemoryMap(XBinary::MAPMODE_UNKNOWN, pPdStruct);
-    result.sHeaderSignature = pBinary->getSignature(0, 150);
-    result.id.nSize = pBinary->getSize();
-
-    result.id.fileType = result.memoryMap.fileType;
-    result.id.filePart = XBinary::FILEPART_HEADER;
-    result.id.sUuid = XBinary::generateUUID();
-    result.scanOptions = *pOptions;
-    result.id.sArch = result.memoryMap.sArch;
-    result.id.mode = result.memoryMap.mode;
-    result.id.endian = result.memoryMap.endian;
-    result.id.sType = result.memoryMap.sType;
-    result.id.nOffset = nOffset;
-
-    return result;
+    return NFD_Binary::_initBasicInfo(pBinary, parentId, pOptions, nOffset, pPdStruct);
 }
 
 SpecAbstract::JARINFO_STRUCT SpecAbstract::getJARInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
@@ -165,28 +148,12 @@ SpecAbstract::JARINFO_STRUCT SpecAbstract::getJARInfo(QIODevice *pDevice, SCANID
 
 SpecAbstract::JPEGINFO_STRUCT SpecAbstract::getJpegInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
 {
-    QElapsedTimer timer;
-    timer.start();
+    return NFD_JPEG::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
+}
 
-    JPEGINFO_STRUCT result = {};
-
-    XJpeg jpeg(pDevice);
-
-    if (jpeg.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info = _initBasicInfo(&jpeg, parentId, pOptions, nOffset, pPdStruct);
-
-        Jpeg_handle_Formats(pDevice, pOptions, &result, pPdStruct);
-
-        _handleResult(&(result.basic_info), pPdStruct);
-    }
-
-    result.basic_info.nElapsedTime = timer.elapsed();
-
-#ifdef QT_DEBUG
-    qDebug("%lld msec", result.basic_info.nElapsedTime);
-#endif
-
-    return result;
+SpecAbstract::CFBFINFO_STRUCT SpecAbstract::getCFBFInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
+{
+    return NFD_CFBF::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
 }
 
 SpecAbstract::PDFINFO_STRUCT SpecAbstract::getPDFInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
@@ -1090,43 +1057,7 @@ SpecAbstract::VI_STRUCT SpecAbstract::_get_Rust_string(const QString &sString)
 
 void SpecAbstract::_handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPdStruct)
 {
-    getLanguage(&(pBasic_info->mapResultLinkers), &(pBasic_info->mapResultLanguages), pPdStruct);
-    getLanguage(&(pBasic_info->mapResultCompilers), &(pBasic_info->mapResultLanguages), pPdStruct);
-    getLanguage(&(pBasic_info->mapResultLibraries), &(pBasic_info->mapResultLanguages), pPdStruct);
-    getLanguage(&(pBasic_info->mapResultTools), &(pBasic_info->mapResultLanguages), pPdStruct);
-    getLanguage(&(pBasic_info->mapResultPackers), &(pBasic_info->mapResultLanguages), pPdStruct);
-
-    fixLanguage(&(pBasic_info->mapResultLanguages));
-
-    pBasic_info->listDetects.append(pBasic_info->mapResultOperationSystems.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultFormats.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultDosExtenders.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultLinkers.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultCompilers.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultLanguages.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultLibraries.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultTools.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultPackers.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultSFX.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultProtectors.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultAPKProtectors.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultDongleProtection.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultSigntools.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultInstallers.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultJoiners.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultPETools.values());
-
-    pBasic_info->listDetects.append(pBasic_info->mapResultTexts.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultArchives.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultCertificates.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultDebugData.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultInstallerData.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultSFXData.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultProtectorData.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultLibraryData.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultResources.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultDatabases.values());
-    pBasic_info->listDetects.append(pBasic_info->mapResultImages.values());
+    NFD_Binary::_handleResult(pBasic_info, pPdStruct);
 }
 
 SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, XBinary::FT fileType, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions,
@@ -1273,7 +1204,7 @@ SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XScanE
 
             //            result.mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pCOMInfo->basic_info),&ssOperationSystem));
 
-            _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(com.getFileFormatInfo(pPdStruct));
+        _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(com.getFileFormatInfo(pPdStruct));
 
             result.basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(result.basic_info), &ssOperationSystem));
         }
@@ -2274,7 +2205,7 @@ void SpecAbstract::PE_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SC
     XPE pe(pDevice, pOptions->bIsImage);
 
     if (pe.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(pe.getFileFormatInfo(pPdStruct));
+    _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(pe.getFileFormatInfo(pPdStruct));
 
         pPEInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pPEInfo->basic_info), &ssOperationSystem));
     }
@@ -8525,7 +8456,7 @@ void SpecAbstract::COM_handle_OperationSystem(QIODevice *pDevice, SCAN_OPTIONS *
     XCOM xcom(pDevice, pOptions->bIsImage);
 
     if (xcom.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(xcom.getFileFormatInfo(pPdStruct));
+    _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(xcom.getFileFormatInfo(pPdStruct));
 
         pCOMInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pCOMInfo->basic_info), &ssOperationSystem));
     }
@@ -9723,7 +9654,7 @@ void SpecAbstract::Zip_handle_JAR(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
     XJAR xjar(pDevice);
 
     if (xjar.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(xjar.getFileFormatInfo(pPdStruct));
+    _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(xjar.getFileFormatInfo(pPdStruct));
 
         pZipInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pZipInfo->basic_info), &ssOperationSystem));
 
@@ -9782,7 +9713,7 @@ void SpecAbstract::APK_handle(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
     XAPK xapk(pDevice);
 
     if (xapk.isValid(&(pApkInfo->listArchiveRecords), pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(xapk.getFileFormatInfo(pPdStruct));
+    _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(xapk.getFileFormatInfo(pPdStruct));
 
         pApkInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pApkInfo->basic_info), &ssOperationSystem));
 
@@ -10450,7 +10381,7 @@ void SpecAbstract::PDF_handle_Formats(QIODevice *pDevice, SCAN_OPTIONS *pOptions
     XPDF pdf(pDevice);
 
     if (pdf.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssFormat = getFormatScansStruct(pdf.getFileFormatInfo(pPdStruct));
+    _SCANS_STRUCT ssFormat = NFD_Binary::getFormatScansStruct(pdf.getFileFormatInfo(pPdStruct));
 
         pPDFInfo->basic_info.mapResultFormats.insert(ssFormat.name, scansToScan(&(pPDFInfo->basic_info), &ssFormat));
     }
@@ -10499,18 +10430,7 @@ void SpecAbstract::PDF_handle_Tags(QIODevice *pDevice, SCAN_OPTIONS *pOptions, P
     }
 }
 
-void SpecAbstract::Jpeg_handle_Formats(QIODevice *pDevice, SCAN_OPTIONS *pOptions, JPEGINFO_STRUCT *pJpegInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pOptions)
-
-    XJpeg jpeg(pDevice);
-
-    if (jpeg.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssFormat = getFormatScansStruct(jpeg.getFileFormatInfo(pPdStruct));
-
-        pJpegInfo->basic_info.mapResultFormats.insert(ssFormat.name, scansToScan(&(pJpegInfo->basic_info), &ssFormat));
-    }
-}
+// JPEG handling moved to NFD_JPEG
 
 SpecAbstract::DEXINFO_STRUCT SpecAbstract::APK_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::APKINFO_STRUCT *pApkInfo,
                                                         XBinary::PDSTRUCT *pPdStruct, const QString &sFileName)
@@ -10555,7 +10475,7 @@ void SpecAbstract::MSDOS_handle_OperationSystem(QIODevice *pDevice, XScanEngine:
     XMSDOS msdos(pDevice, pOptions->bIsImage);
 
     if (msdos.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(msdos.getFileFormatInfo(pPdStruct));
+    _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(msdos.getFileFormatInfo(pPdStruct));
 
         pMSDOSInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pMSDOSInfo->basic_info), &ssOperationSystem));
     }
@@ -10993,7 +10913,7 @@ void SpecAbstract::ELF_handle_OperationSystem(QIODevice *pDevice, XScanEngine::S
     XELF elf(pDevice, pOptions->bIsImage);
 
     if (elf.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(elf.getFileFormatInfo(pPdStruct));
+    _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(elf.getFileFormatInfo(pPdStruct));
 
         pELFInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pELFInfo->basic_info), &ssOperationSystem));
     }
@@ -12245,7 +12165,7 @@ void SpecAbstract::MACHO_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTI
 
         XBinary::FILEFORMATINFO fileFormatInfo = mach.getFileFormatInfo(pPdStruct);
 
-        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(fileFormatInfo);
+    _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(fileFormatInfo);
 
         pMACHInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pMACHInfo->basic_info), &ssOperationSystem));
 
@@ -13298,7 +13218,7 @@ void SpecAbstract::LE_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SC
     XLE le(pDevice, pOptions->bIsImage);
 
     if (le.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(le.getFileFormatInfo(pPdStruct));
+    _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(le.getFileFormatInfo(pPdStruct));
 
         pLEInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pLEInfo->basic_info), &ssOperationSystem));
     }
@@ -13416,7 +13336,7 @@ void SpecAbstract::LX_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SC
     XLE lx(pDevice, pOptions->bIsImage);
 
     if (lx.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(lx.getFileFormatInfo(pPdStruct));
+    _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(lx.getFileFormatInfo(pPdStruct));
 
         pLXInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pLXInfo->basic_info), &ssOperationSystem));
     }
@@ -13534,7 +13454,7 @@ void SpecAbstract::NE_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SC
     XNE ne(pDevice, pOptions->bIsImage);
 
     if (ne.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(ne.getFileFormatInfo(pPdStruct));
+    _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(ne.getFileFormatInfo(pPdStruct));
 
         pNEInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pNEInfo->basic_info), &ssOperationSystem));
     }
@@ -13613,7 +13533,7 @@ void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
 
         pDEXInfo->basic_info.mapResultTools.insert(recordAndroidSDK.name, scansToScan(&(pDEXInfo->basic_info), &recordAndroidSDK));
 
-        _SCANS_STRUCT ssOperationSystem = getOperationSystemScansStruct(dex.getFileFormatInfo(pPdStruct));
+    _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(dex.getFileFormatInfo(pPdStruct));
 
         pDEXInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pDEXInfo->basic_info), &ssOperationSystem));
 
@@ -15586,253 +15506,6 @@ SpecAbstract::SCAN_STRUCT SpecAbstract::deserializeScanStruct(const QByteArray &
     return ssResult;
 }
 
-void SpecAbstract::getLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapDetects, QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages, XBinary::PDSTRUCT *pPdStruct)
-{
-    QMapIterator<RECORD_NAME, SCAN_STRUCT> i(*pMapDetects);
-    while (i.hasNext() && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        i.next();
-
-        SCAN_STRUCT ssDetect = i.value();
-        _SCANS_STRUCT ssLanguage = getScansStruct(0, ssDetect.id.fileType, RECORD_TYPE_LANGUAGE, RECORD_NAME_UNKNOWN, "", "", 0);
-
-        // TODO Libraries like MFC
-        switch (ssDetect.name) {
-            case RECORD_NAME_C:
-            case RECORD_NAME_ARMC:
-            case RECORD_NAME_LCCLNK:
-            case RECORD_NAME_LCCWIN:
-            case RECORD_NAME_MICROSOFTC:
-            case RECORD_NAME_THUMBC:
-            case RECORD_NAME_TINYC:
-            case RECORD_NAME_TURBOC:
-            case RECORD_NAME_WATCOMC: ssLanguage.name = RECORD_NAME_C; break;
-            case RECORD_NAME_CCPP:
-            case RECORD_NAME_ARMCCPP:
-            case RECORD_NAME_ARMNEONCCPP:
-            case RECORD_NAME_ARMTHUMBCCPP:
-            case RECORD_NAME_BORLANDCCPP:
-            case RECORD_NAME_MINGW:
-            case RECORD_NAME_MSYS:
-            case RECORD_NAME_MSYS2:
-            case RECORD_NAME_VISUALCCPP:
-            case RECORD_NAME_OPENWATCOMCCPP:
-            case RECORD_NAME_WATCOMCCPP: ssLanguage.name = RECORD_NAME_CCPP; break;
-            case RECORD_NAME_CLANG:
-            case RECORD_NAME_GCC:
-            case RECORD_NAME_ALIPAYCLANG:
-            case RECORD_NAME_ANDROIDCLANG:
-            case RECORD_NAME_APPORTABLECLANG:
-            case RECORD_NAME_PLEXCLANG:
-            case RECORD_NAME_UBUNTUCLANG:
-            case RECORD_NAME_DEBIANCLANG:
-                if (ssDetect.sInfo.contains("Objective-C")) {
-                    ssLanguage.name = RECORD_NAME_OBJECTIVEC;
-                } else {
-                    ssLanguage.name = RECORD_NAME_CCPP;
-                }
-                break;
-            case RECORD_NAME_CPP:
-            case RECORD_NAME_BORLANDCPP:
-            case RECORD_NAME_BORLANDCPPBUILDER:
-            case RECORD_NAME_CODEGEARCPP:
-            case RECORD_NAME_CODEGEARCPPBUILDER:
-            case RECORD_NAME_EMBARCADEROCPP:
-            case RECORD_NAME_EMBARCADEROCPPBUILDER:
-            case RECORD_NAME_MICROSOFTCPP:
-            case RECORD_NAME_TURBOCPP: ssLanguage.name = RECORD_NAME_CPP; break;
-            case RECORD_NAME_ASSEMBLER:
-            case RECORD_NAME_ARMTHUMBMACROASSEMBLER:
-            case RECORD_NAME_GNUASSEMBLER:
-                ssLanguage.name = RECORD_NAME_ASSEMBLER;  // TODO Check architecture if X86 -> RECORD_NAME_X86ASSEMBLER
-                break;
-            case RECORD_NAME_FASM:
-            case RECORD_NAME_GOASM:
-            case RECORD_NAME_MASM:
-            case RECORD_NAME_MASM32:
-            case RECORD_NAME_NASM: ssLanguage.name = RECORD_NAME_X86ASSEMBLER; break;
-            case RECORD_NAME_AUTOIT: ssLanguage.name = RECORD_NAME_AUTOIT; break;
-            case RECORD_NAME_OBJECTPASCAL:
-            case RECORD_NAME_LAZARUS:
-            case RECORD_NAME_FPC:
-            case RECORD_NAME_VIRTUALPASCAL:
-            case RECORD_NAME_IBMPCPASCAL: ssLanguage.name = RECORD_NAME_OBJECTPASCAL; break;
-            case RECORD_NAME_BORLANDDELPHI:
-            case RECORD_NAME_BORLANDDELPHIDOTNET:
-            case RECORD_NAME_BORLANDOBJECTPASCALDELPHI:
-            case RECORD_NAME_CODEGEARDELPHI:
-            case RECORD_NAME_CODEGEAROBJECTPASCALDELPHI:
-            case RECORD_NAME_EMBARCADERODELPHI:
-            case RECORD_NAME_EMBARCADERODELPHIDOTNET:
-            case RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI: ssLanguage.name = RECORD_NAME_OBJECTPASCALDELPHI; break;
-            case RECORD_NAME_D:
-            case RECORD_NAME_DMD:
-            case RECORD_NAME_DMD32:
-            case RECORD_NAME_LDC: ssLanguage.name = RECORD_NAME_D; break;
-            case RECORD_NAME_CSHARP:
-            case RECORD_NAME_DOTNET: ssLanguage.name = RECORD_NAME_CSHARP; break;
-            case RECORD_NAME_GO: ssLanguage.name = RECORD_NAME_GO; break;
-            case RECORD_NAME_JAVA:
-            case RECORD_NAME_JVM:
-            case RECORD_NAME_JDK:
-            case RECORD_NAME_OPENJDK:
-            case RECORD_NAME_IBMJDK:
-            case RECORD_NAME_APPLEJDK:
-                // case RECORD_NAME_DX:
-                ssLanguage.name = RECORD_NAME_JAVA;
-                break;
-            case RECORD_NAME_JSCRIPT: ssLanguage.name = RECORD_NAME_ECMASCRIPT; break;
-            case RECORD_NAME_KOTLIN: ssLanguage.name = RECORD_NAME_KOTLIN; break;
-            case RECORD_NAME_FORTRAN:
-            case RECORD_NAME_LAYHEYFORTRAN90: ssLanguage.name = RECORD_NAME_FORTRAN; break;
-            case RECORD_NAME_NIM: ssLanguage.name = RECORD_NAME_NIM; break;
-            case RECORD_NAME_OBJECTIVEC: ssLanguage.name = RECORD_NAME_OBJECTIVEC; break;
-            case RECORD_NAME_BASIC:
-            case RECORD_NAME_BASIC4ANDROID:
-            case RECORD_NAME_POWERBASIC:
-            case RECORD_NAME_PUREBASIC:
-            case RECORD_NAME_TURBOBASIC:
-            case RECORD_NAME_VBNET:
-            case RECORD_NAME_VISUALBASIC: ssLanguage.name = RECORD_NAME_BASIC; break;
-            case RECORD_NAME_RUST: ssLanguage.name = RECORD_NAME_RUST; break;
-            case RECORD_NAME_RUBY: ssLanguage.name = RECORD_NAME_RUBY; break;
-            case RECORD_NAME_PYTHON:
-            case RECORD_NAME_PYINSTALLER: ssLanguage.name = RECORD_NAME_PYTHON; break;
-            case RECORD_NAME_SWIFT: ssLanguage.name = RECORD_NAME_SWIFT; break;
-            case RECORD_NAME_PERL: ssLanguage.name = RECORD_NAME_PERL; break;
-            case RECORD_NAME_ZIG: ssLanguage.name = RECORD_NAME_ZIG; break;
-            case RECORD_NAME_QML: ssLanguage.name = RECORD_NAME_QML; break;
-            default: ssLanguage.name = RECORD_NAME_UNKNOWN;
-        }
-
-        if (ssLanguage.name != RECORD_NAME_UNKNOWN) {
-            SCAN_STRUCT ss = ssDetect;
-            ss.type = ssLanguage.type;
-            ss.name = ssLanguage.name;
-            ss.sInfo = "";
-            ss.sVersion = "";
-
-            pMapLanguages->insert((RECORD_NAME)ss.name, ss);
-        }
-    }
-}
-
-void SpecAbstract::fixLanguage(QMap<RECORD_NAME, SCAN_STRUCT> *pMapLanguages)
-{
-    if (pMapLanguages->contains(RECORD_NAME_C) && pMapLanguages->contains(RECORD_NAME_CPP)) {
-        SCAN_STRUCT ss = pMapLanguages->value(RECORD_NAME_C);
-        ss.name = RECORD_NAME_CCPP;
-        pMapLanguages->insert((RECORD_NAME)ss.name, ss);
-    }
-
-    if (pMapLanguages->contains(RECORD_NAME_C) && pMapLanguages->contains(RECORD_NAME_CCPP)) {
-        pMapLanguages->remove(RECORD_NAME_C);
-    }
-
-    if (pMapLanguages->contains(RECORD_NAME_CPP) && pMapLanguages->contains(RECORD_NAME_CCPP)) {
-        pMapLanguages->remove(RECORD_NAME_CPP);
-    }
-
-    //    if(pMapLanguages->contains(RECORD_NAME_OBJECTIVEC)&&pMapLanguages->contains(RECORD_NAME_CCPP))
-    //    {
-    //        pMapLanguages->remove(RECORD_NAME_CCPP);
-    //    }
-}
-
-SpecAbstract::_SCANS_STRUCT SpecAbstract::getFormatScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo)
-{
-    _SCANS_STRUCT result = {};
-    result.type = RECORD_TYPE_FORMAT;
-
-    if (fileFormatInfo.fileType == XBinary::FT_PDF) result.name = RECORD_NAME_PDF;
-    else if (fileFormatInfo.fileType == XBinary::FT_JPEG) result.name = RECORD_NAME_JPEG;
-
-    result.sVersion = fileFormatInfo.sVersion;
-    result.sInfo = XBinary::getFileFormatInfoString(&fileFormatInfo);
-
-    return result;
-}
-
-SpecAbstract::_SCANS_STRUCT SpecAbstract::getOperationSystemScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo)
-{
-    _SCANS_STRUCT result = {};
-
-    if (fileFormatInfo.bIsVM) {
-        result.type = RECORD_TYPE_VIRTUALMACHINE;
-    } else {
-        result.type = RECORD_TYPE_OPERATIONSYSTEM;
-    }
-
-    // TODO reactOS
-    if (fileFormatInfo.osName == XBinary::OSNAME_MSDOS) result.name = RECORD_NAME_MSDOS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_POSIX) result.name = RECORD_NAME_POSIX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_UNIX) result.name = RECORD_NAME_UNIX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_LINUX) result.name = RECORD_NAME_LINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_WINDOWS) result.name = RECORD_NAME_WINDOWS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_WINDOWSCE) result.name = RECORD_NAME_WINDOWSCE;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_XBOX) result.name = RECORD_NAME_XBOX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_OS2) result.name = RECORD_NAME_OS2;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_MAC_OS) result.name = RECORD_NAME_MAC_OS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_MAC_OS_X) result.name = RECORD_NAME_MAC_OS_X;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_OS_X) result.name = RECORD_NAME_OS_X;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_MACOS) result.name = RECORD_NAME_MACOS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_IPHONEOS) result.name = RECORD_NAME_IPHONEOS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_IPADOS) result.name = RECORD_NAME_IPADOS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_IOS) result.name = RECORD_NAME_IOS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_WATCHOS) result.name = RECORD_NAME_WATCHOS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_TVOS) result.name = RECORD_NAME_TVOS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_BRIDGEOS) result.name = RECORD_NAME_BRIDGEOS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_ANDROID) result.name = RECORD_NAME_ANDROID;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_FREEBSD) result.name = RECORD_NAME_FREEBSD;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_OPENBSD) result.name = RECORD_NAME_OPENBSD;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_NETBSD) result.name = RECORD_NAME_NETBSD;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_HPUX) result.name = RECORD_NAME_HPUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_SOLARIS) result.name = RECORD_NAME_SOLARIS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_AIX) result.name = RECORD_NAME_AIX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_IRIX) result.name = RECORD_NAME_IRIX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_TRU64) result.name = RECORD_NAME_TRU64;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_MODESTO) result.name = RECORD_NAME_MODESTO;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_OPENVMS) result.name = RECORD_NAME_OPENVMS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_FENIXOS) result.name = RECORD_NAME_FENIXOS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_BORLANDOSSERVICES) result.name = RECORD_NAME_BORLANDOSSERVICES;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_NSK) result.name = RECORD_NAME_NSK;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_AROS) result.name = RECORD_NAME_AROS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_UBUNTULINUX) result.name = RECORD_NAME_UBUNTULINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_DEBIANLINUX) result.name = RECORD_NAME_DEBIANLINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_STARTOSLINUX) result.name = RECORD_NAME_STARTOSLINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_GENTOOLINUX) result.name = RECORD_NAME_GENTOOLINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_ALPINELINUX) result.name = RECORD_NAME_ALPINELINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_WINDRIVERLINUX) result.name = RECORD_NAME_WINDRIVERLINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_SUSELINUX) result.name = RECORD_NAME_SUSELINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_MANDRAKELINUX) result.name = RECORD_NAME_MANDRAKELINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_ASPLINUX) result.name = RECORD_NAME_ASPLINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_REDHATLINUX) result.name = RECORD_NAME_REDHATLINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_HANCOMLINUX) result.name = RECORD_NAME_HANCOMLINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_TURBOLINUX) result.name = RECORD_NAME_TURBOLINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_VINELINUX) result.name = RECORD_NAME_VINELINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_SUNOS) result.name = RECORD_NAME_SUNOS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_OPENVOS) result.name = RECORD_NAME_OPENVOS;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_MCLINUX) result.name = RECORD_NAME_MCLINUX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_QNX) result.name = RECORD_NAME_QNX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_SYLLABLE) result.name = RECORD_NAME_SYLLABLE;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_MINIX) result.name = RECORD_NAME_MINIX;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_JVM) result.name = RECORD_NAME_JVM;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_AMIGA) result.name = RECORD_NAME_AMIGA;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_MACCATALYST) result.name = RECORD_NAME_MACCATALYST;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_MACDRIVERKIT) result.name = RECORD_NAME_MACDRIVERKIT;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_MACFIRMWARE) result.name = RECORD_NAME_MACFIRMWARE;
-    else if (fileFormatInfo.osName == XBinary::OSNAME_SEPOS) result.name = RECORD_NAME_SEPOS;
-    else result.name = RECORD_NAME_UNKNOWN;
-
-    result.sVersion = fileFormatInfo.sOsVersion;
-    result.sInfo = QString("%1, %2, %3").arg(fileFormatInfo.sArch, XBinary::modeIdToString(fileFormatInfo.mode), fileFormatInfo.sType);
-
-    if (fileFormatInfo.endian == XBinary::ENDIAN_BIG) {
-        result.sInfo.append(QString(", %1").arg(XBinary::endianToString(XBinary::ENDIAN_BIG)));
-    }
-
-    return result;
-}
-
 QString SpecAbstract::getMsRichString(quint16 nId, quint16 nBuild, quint32 nCount, XBinary::PDSTRUCT *pPdStruct)
 {
     QString sResult;
@@ -16075,6 +15748,9 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
     } else if (fileType == XBinary::FT_JPEG) {
         SpecAbstract::JPEGINFO_STRUCT jpeg_info = SpecAbstract::getJpegInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = jpeg_info.basic_info;
+    } else if (fileType == XBinary::FT_CFBF) {
+        SpecAbstract::CFBFINFO_STRUCT cfbf_info = SpecAbstract::getCFBFInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        basic_info = cfbf_info.basic_info;
     } else if (fileType == XBinary::FT_COM) {
         SpecAbstract::COMINFO_STRUCT com_info = SpecAbstract::getCOMInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = com_info.basic_info;
