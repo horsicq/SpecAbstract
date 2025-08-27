@@ -158,31 +158,7 @@ SpecAbstract::CFBFINFO_STRUCT SpecAbstract::getCFBFInfo(QIODevice *pDevice, SCAN
 
 SpecAbstract::PDFINFO_STRUCT SpecAbstract::getPDFInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
 {
-    QElapsedTimer timer;
-    timer.start();
-
-    PDFINFO_STRUCT result = {};
-
-    XPDF pdf(pDevice);
-
-    if (pdf.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info = _initBasicInfo(&pdf, parentId, pOptions, nOffset, pPdStruct);
-
-        result.listObjects = pdf.getParts(20, pPdStruct);
-
-        PDF_handle_Formats(pDevice, pOptions, &result, pPdStruct);
-        PDF_handle_Tags(pDevice, pOptions, &result, pPdStruct);
-
-        _handleResult(&(result.basic_info), pPdStruct);
-    }
-
-    result.basic_info.nElapsedTime = timer.elapsed();
-
-#ifdef QT_DEBUG
-    qDebug("%lld msec", result.basic_info.nElapsedTime);
-#endif
-
-    return result;
+    return NFD_PDF::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
 }
 
 SpecAbstract::VI_STRUCT SpecAbstract::get_Enigma_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
@@ -10376,58 +10352,20 @@ void SpecAbstract::AmigaHunk_handle_OperationSystem(QIODevice *pDevice, SCAN_OPT
 
 void SpecAbstract::PDF_handle_Formats(QIODevice *pDevice, SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
+    Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
-
-    XPDF pdf(pDevice);
-
-    if (pdf.isValid(pPdStruct)) {
-    _SCANS_STRUCT ssFormat = NFD_Binary::getFormatScansStruct(pdf.getFileFormatInfo(pPdStruct));
-
-        pPDFInfo->basic_info.mapResultFormats.insert(ssFormat.name, scansToScan(&(pPDFInfo->basic_info), &ssFormat));
-    }
+    Q_UNUSED(pPDFInfo)
+    Q_UNUSED(pPdStruct)
+    // Deprecated: handled in NFD_PDF::getInfo
 }
 
 void SpecAbstract::PDF_handle_Tags(QIODevice *pDevice, SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
+    Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
-
-    XPDF pdf(pDevice);
-
-    if (pdf.isValid(pPdStruct)) {
-        {
-            QList<XBinary::XVARIANT> listVariants = pdf.getValuesByKey(&(pPDFInfo->listObjects), "/Producer");
-
-            qint32 nNumberOfRecords = listVariants.count();
-
-            for (qint32 i = 0; (i < nNumberOfRecords) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
-                if (listVariants.at(i).varType == XBinary::VT_STRING) {
-                    _SCANS_STRUCT ss =
-                        getScansStruct(0, XBinary::FT_PDF, RECORD_TYPE_TOOL, (RECORD_NAME)((qint32)RECORD_NAME_UNKNOWN0 + i), listVariants.at(i).var.toString(), "", 0);
-
-                    pPDFInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pPDFInfo->basic_info), &ss));
-                }
-            }
-        }
-
-        {
-            QList<XBinary::XVARIANT> listVariants = pdf.getValuesByKey(&(pPDFInfo->listObjects), "/Creator");
-
-            qint32 nNumberOfRecords = listVariants.count();
-
-            for (qint32 i = 0; (i < nNumberOfRecords) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
-                if (listVariants.at(i).varType == XBinary::VT_STRING) {
-                    _SCANS_STRUCT ss =
-                        getScansStruct(0, XBinary::FT_PDF, RECORD_TYPE_TOOL, (RECORD_NAME)((qint32)RECORD_NAME_UNKNOWN0 + i), listVariants.at(i).var.toString(), "", 0);
-
-                    pPDFInfo->basic_info.mapResultTools.insert(ss.name, scansToScan(&(pPDFInfo->basic_info), &ss));
-                }
-            }
-        }
-
-        // {
-        //     QList<QVariant> listVariants = pdf.getValuesByKey(&(pPDFInfo->listObjects), "/Author");
-        // }
-    }
+    Q_UNUSED(pPDFInfo)
+    Q_UNUSED(pPdStruct)
+    // Deprecated: handled in NFD_PDF::getInfo if needed
 }
 
 // JPEG handling moved to NFD_JPEG

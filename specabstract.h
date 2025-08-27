@@ -36,6 +36,7 @@
 #include "modules/nfd_amiga.h"
 #include "modules/nfd_jpeg.h"
 #include "modules/nfd_cfbf.h"
+#include "modules/nfd_pdf.h"
 
 class SpecAbstract : public XScanEngine {
     Q_OBJECT
@@ -108,11 +109,7 @@ public:
         BASIC_INFO basic_info;
     };
 
-    struct PDFINFO_STRUCT {
-        BASIC_INFO basic_info;
-
-        QList<XPDF::XPART> listObjects;
-    };
+    using PDFINFO_STRUCT = NFD_PDF::PDFINFO_STRUCT;
 
     struct MACHOFATINFO_STRUCT {
         BASIC_INFO basic_info;
