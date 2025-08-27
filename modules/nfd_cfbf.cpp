@@ -1,7 +1,8 @@
 #include "nfd_cfbf.h"
 
-NFD_CFBF::NFD_CFBF(XCFBF *pCFBF, XBinary::FILEPART filePart, OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct)
-    : CFBF_Script(pCFBF, filePart, pOptions, pPdStruct) {}
+NFD_CFBF::NFD_CFBF(XCFBF *pCFBF, XBinary::FILEPART filePart, OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct) : CFBF_Script(pCFBF, filePart, pOptions, pPdStruct)
+{
+}
 
 NFD_CFBF::CFBFINFO_STRUCT NFD_CFBF::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                             XBinary::PDSTRUCT *pPdStruct)

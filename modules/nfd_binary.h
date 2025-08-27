@@ -49,8 +49,7 @@ enum DETECTTYPE {
     DETECTTYPE_SECTIONNAME
 };
 
-class NFD_Binary : public Binary_Script
-{
+class NFD_Binary : public Binary_Script {
     Q_OBJECT
 
 public:
@@ -182,8 +181,7 @@ public:
     static SCANS_STRUCT getOperationSystemScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo);
 
     // Moved from NFD_BinaryUtils: basic scan context init and final result synthesis
-    static BASIC_INFO _initBasicInfo(XBinary *pBinary, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                     XBinary::PDSTRUCT *pPdStruct);
+    static BASIC_INFO _initBasicInfo(XBinary *pBinary, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static void _handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPdStruct);
 
     // Utility: convert global scan options to Binary_Script options
@@ -194,4 +192,4 @@ public:
 signals:
 };
 
-#endif // NFD_BINARY_H
+#endif  // NFD_BINARY_H

@@ -15,8 +15,7 @@ public:
         NFD_Binary::BASIC_INFO basic_info;
     };
 
-    static JPEGINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                   XBinary::PDSTRUCT *pPdStruct);
+    static JPEGINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
 };
 
 #endif  // NFD_JPEG_H

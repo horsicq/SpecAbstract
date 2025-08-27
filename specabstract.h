@@ -485,7 +485,6 @@ public:
     static void PDF_handle_Formats(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct);
     static void PDF_handle_Tags(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct);
 
-
     static DEXINFO_STRUCT APK_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, APKINFO_STRUCT *pApkInfo, XBinary::PDSTRUCT *pPdStruct,
                                        const QString &sFileName);
 
@@ -606,7 +605,6 @@ public:
 
     static QByteArray serializeScanStruct(const SCAN_STRUCT &scanStruct, bool bIsHeader = false);
     static SCAN_STRUCT deserializeScanStruct(const QByteArray &baData, bool *pbIsHeader = nullptr);
-
 
     // Moved to NFD_Binary: getLanguage, fixLanguage, getOperationSystemScansStruct, getFormatScansStruct
     static QString getMsRichString(quint16 nId, quint16 nBuild, quint32 nCount, XBinary::PDSTRUCT *pPdStruct);

@@ -1,10 +1,11 @@
 #include "nfd_pdf.h"
 
-NFD_PDF::NFD_PDF(XPDF *pPDF, XBinary::FILEPART filePart, OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct)
-    : PDF_Script(pPDF, filePart, pOptions, pPdStruct) {}
+NFD_PDF::NFD_PDF(XPDF *pPDF, XBinary::FILEPART filePart, OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct) : PDF_Script(pPDF, filePart, pOptions, pPdStruct)
+{
+}
 
 NFD_PDF::PDFINFO_STRUCT NFD_PDF::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                          XBinary::PDSTRUCT *pPdStruct)
+                                         XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
     timer.start();

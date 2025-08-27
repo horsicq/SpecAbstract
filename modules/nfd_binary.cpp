@@ -25,7 +25,6 @@
 NFD_Binary::NFD_Binary(XBinary *pBinary, XBinary::FILEPART filePart, OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct)
     : Binary_Script(pBinary, filePart, pOptions, pPdStruct)
 {
-
 }
 
 QString NFD_Binary::_SCANS_STRUCT_toString(const SCANS_STRUCT *pScanStruct, bool bShowType)
@@ -192,108 +191,106 @@ void NFD_Binary::getLanguage(QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> *pMapDe
         ssLanguage.name = XScanEngine::RECORD_NAME_UNKNOWN;
 
         switch (ssDetect.name) {
-        case XScanEngine::RECORD_NAME_C:
-        case XScanEngine::RECORD_NAME_ARMC:
-        case XScanEngine::RECORD_NAME_LCCLNK:
-        case XScanEngine::RECORD_NAME_LCCWIN:
-        case XScanEngine::RECORD_NAME_MICROSOFTC:
-        case XScanEngine::RECORD_NAME_THUMBC:
-        case XScanEngine::RECORD_NAME_TINYC:
-        case XScanEngine::RECORD_NAME_TURBOC:
-        case XScanEngine::RECORD_NAME_WATCOMC: ssLanguage.name = XScanEngine::RECORD_NAME_C; break;
-        case XScanEngine::RECORD_NAME_CCPP:
-        case XScanEngine::RECORD_NAME_ARMCCPP:
-        case XScanEngine::RECORD_NAME_ARMNEONCCPP:
-        case XScanEngine::RECORD_NAME_ARMTHUMBCCPP:
-        case XScanEngine::RECORD_NAME_BORLANDCCPP:
-        case XScanEngine::RECORD_NAME_MINGW:
-        case XScanEngine::RECORD_NAME_MSYS:
-        case XScanEngine::RECORD_NAME_MSYS2:
-        case XScanEngine::RECORD_NAME_VISUALCCPP:
-        case XScanEngine::RECORD_NAME_OPENWATCOMCCPP:
-        case XScanEngine::RECORD_NAME_WATCOMCCPP: ssLanguage.name = XScanEngine::RECORD_NAME_CCPP; break;
-        case XScanEngine::RECORD_NAME_CLANG:
-        case XScanEngine::RECORD_NAME_GCC:
-        case XScanEngine::RECORD_NAME_ALIPAYCLANG:
-        case XScanEngine::RECORD_NAME_ANDROIDCLANG:
-        case XScanEngine::RECORD_NAME_APPORTABLECLANG:
-        case XScanEngine::RECORD_NAME_PLEXCLANG:
-        case XScanEngine::RECORD_NAME_UBUNTUCLANG:
-        case XScanEngine::RECORD_NAME_DEBIANCLANG:
-            if (ssDetect.sInfo.contains("Objective-C")) {
-                ssLanguage.name = XScanEngine::RECORD_NAME_OBJECTIVEC;
-            } else {
-                ssLanguage.name = XScanEngine::RECORD_NAME_CCPP;
-            }
-            break;
-        case XScanEngine::RECORD_NAME_CPP:
-        case XScanEngine::RECORD_NAME_BORLANDCPP:
-        case XScanEngine::RECORD_NAME_BORLANDCPPBUILDER:
-        case XScanEngine::RECORD_NAME_CODEGEARCPP:
-        case XScanEngine::RECORD_NAME_CODEGEARCPPBUILDER:
-        case XScanEngine::RECORD_NAME_EMBARCADEROCPP:
-        case XScanEngine::RECORD_NAME_EMBARCADEROCPPBUILDER:
-        case XScanEngine::RECORD_NAME_MICROSOFTCPP:
-        case XScanEngine::RECORD_NAME_TURBOCPP: ssLanguage.name = XScanEngine::RECORD_NAME_CPP; break;
-        case XScanEngine::RECORD_NAME_ASSEMBLER:
-        case XScanEngine::RECORD_NAME_ARMTHUMBMACROASSEMBLER:
-        case XScanEngine::RECORD_NAME_GNUASSEMBLER:
-            ssLanguage.name = XScanEngine::RECORD_NAME_ASSEMBLER;
-            break;
-        case XScanEngine::RECORD_NAME_FASM:
-        case XScanEngine::RECORD_NAME_GOASM:
-        case XScanEngine::RECORD_NAME_MASM:
-        case XScanEngine::RECORD_NAME_MASM32:
-        case XScanEngine::RECORD_NAME_NASM: ssLanguage.name = XScanEngine::RECORD_NAME_X86ASSEMBLER; break;
-        case XScanEngine::RECORD_NAME_AUTOIT: ssLanguage.name = XScanEngine::RECORD_NAME_AUTOIT; break;
-        case XScanEngine::RECORD_NAME_OBJECTPASCAL:
-        case XScanEngine::RECORD_NAME_LAZARUS:
-        case XScanEngine::RECORD_NAME_FPC:
-        case XScanEngine::RECORD_NAME_VIRTUALPASCAL:
-        case XScanEngine::RECORD_NAME_IBMPCPASCAL: ssLanguage.name = XScanEngine::RECORD_NAME_OBJECTPASCAL; break;
-        case XScanEngine::RECORD_NAME_BORLANDDELPHI:
-        case XScanEngine::RECORD_NAME_BORLANDDELPHIDOTNET:
-        case XScanEngine::RECORD_NAME_BORLANDOBJECTPASCALDELPHI:
-        case XScanEngine::RECORD_NAME_CODEGEARDELPHI:
-        case XScanEngine::RECORD_NAME_CODEGEAROBJECTPASCALDELPHI:
-        case XScanEngine::RECORD_NAME_EMBARCADERODELPHI:
-        case XScanEngine::RECORD_NAME_EMBARCADERODELPHIDOTNET:
-        case XScanEngine::RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI: ssLanguage.name = XScanEngine::RECORD_NAME_OBJECTPASCALDELPHI; break;
-        case XScanEngine::RECORD_NAME_D:
-        case XScanEngine::RECORD_NAME_DMD:
-        case XScanEngine::RECORD_NAME_DMD32:
-        case XScanEngine::RECORD_NAME_LDC: ssLanguage.name = XScanEngine::RECORD_NAME_D; break;
-        case XScanEngine::RECORD_NAME_CSHARP:
-        case XScanEngine::RECORD_NAME_DOTNET: ssLanguage.name = XScanEngine::RECORD_NAME_CSHARP; break;
-        case XScanEngine::RECORD_NAME_GO: ssLanguage.name = XScanEngine::RECORD_NAME_GO; break;
-        case XScanEngine::RECORD_NAME_JAVA:
-        case XScanEngine::RECORD_NAME_JVM:
-        case XScanEngine::RECORD_NAME_JDK:
-        case XScanEngine::RECORD_NAME_OPENJDK:
-        case XScanEngine::RECORD_NAME_IBMJDK:
-        case XScanEngine::RECORD_NAME_APPLEJDK: ssLanguage.name = XScanEngine::RECORD_NAME_JAVA; break;
-        case XScanEngine::RECORD_NAME_JSCRIPT: ssLanguage.name = XScanEngine::RECORD_NAME_ECMASCRIPT; break;
-        case XScanEngine::RECORD_NAME_KOTLIN: ssLanguage.name = XScanEngine::RECORD_NAME_KOTLIN; break;
-        case XScanEngine::RECORD_NAME_FORTRAN:
-        case XScanEngine::RECORD_NAME_LAYHEYFORTRAN90: ssLanguage.name = XScanEngine::RECORD_NAME_FORTRAN; break;
-        case XScanEngine::RECORD_NAME_NIM: ssLanguage.name = XScanEngine::RECORD_NAME_NIM; break;
-        case XScanEngine::RECORD_NAME_OBJECTIVEC: ssLanguage.name = XScanEngine::RECORD_NAME_OBJECTIVEC; break;
-        case XScanEngine::RECORD_NAME_BASIC:
-        case XScanEngine::RECORD_NAME_BASIC4ANDROID:
-        case XScanEngine::RECORD_NAME_POWERBASIC:
-        case XScanEngine::RECORD_NAME_PUREBASIC:
-        case XScanEngine::RECORD_NAME_TURBOBASIC:
-        case XScanEngine::RECORD_NAME_VBNET:
-        case XScanEngine::RECORD_NAME_VISUALBASIC: ssLanguage.name = XScanEngine::RECORD_NAME_BASIC; break;
-        case XScanEngine::RECORD_NAME_RUST: ssLanguage.name = XScanEngine::RECORD_NAME_RUST; break;
-        case XScanEngine::RECORD_NAME_RUBY: ssLanguage.name = XScanEngine::RECORD_NAME_RUBY; break;
-        case XScanEngine::RECORD_NAME_PYTHON:
-        case XScanEngine::RECORD_NAME_PYINSTALLER: ssLanguage.name = XScanEngine::RECORD_NAME_PYTHON; break;
-        case XScanEngine::RECORD_NAME_SWIFT: ssLanguage.name = XScanEngine::RECORD_NAME_SWIFT; break;
-        case XScanEngine::RECORD_NAME_PERL: ssLanguage.name = XScanEngine::RECORD_NAME_PERL; break;
-        case XScanEngine::RECORD_NAME_ZIG: ssLanguage.name = XScanEngine::RECORD_NAME_ZIG; break;
-        case XScanEngine::RECORD_NAME_QML: ssLanguage.name = XScanEngine::RECORD_NAME_QML; break;
-        default: ssLanguage.name = XScanEngine::RECORD_NAME_UNKNOWN;
+            case XScanEngine::RECORD_NAME_C:
+            case XScanEngine::RECORD_NAME_ARMC:
+            case XScanEngine::RECORD_NAME_LCCLNK:
+            case XScanEngine::RECORD_NAME_LCCWIN:
+            case XScanEngine::RECORD_NAME_MICROSOFTC:
+            case XScanEngine::RECORD_NAME_THUMBC:
+            case XScanEngine::RECORD_NAME_TINYC:
+            case XScanEngine::RECORD_NAME_TURBOC:
+            case XScanEngine::RECORD_NAME_WATCOMC: ssLanguage.name = XScanEngine::RECORD_NAME_C; break;
+            case XScanEngine::RECORD_NAME_CCPP:
+            case XScanEngine::RECORD_NAME_ARMCCPP:
+            case XScanEngine::RECORD_NAME_ARMNEONCCPP:
+            case XScanEngine::RECORD_NAME_ARMTHUMBCCPP:
+            case XScanEngine::RECORD_NAME_BORLANDCCPP:
+            case XScanEngine::RECORD_NAME_MINGW:
+            case XScanEngine::RECORD_NAME_MSYS:
+            case XScanEngine::RECORD_NAME_MSYS2:
+            case XScanEngine::RECORD_NAME_VISUALCCPP:
+            case XScanEngine::RECORD_NAME_OPENWATCOMCCPP:
+            case XScanEngine::RECORD_NAME_WATCOMCCPP: ssLanguage.name = XScanEngine::RECORD_NAME_CCPP; break;
+            case XScanEngine::RECORD_NAME_CLANG:
+            case XScanEngine::RECORD_NAME_GCC:
+            case XScanEngine::RECORD_NAME_ALIPAYCLANG:
+            case XScanEngine::RECORD_NAME_ANDROIDCLANG:
+            case XScanEngine::RECORD_NAME_APPORTABLECLANG:
+            case XScanEngine::RECORD_NAME_PLEXCLANG:
+            case XScanEngine::RECORD_NAME_UBUNTUCLANG:
+            case XScanEngine::RECORD_NAME_DEBIANCLANG:
+                if (ssDetect.sInfo.contains("Objective-C")) {
+                    ssLanguage.name = XScanEngine::RECORD_NAME_OBJECTIVEC;
+                } else {
+                    ssLanguage.name = XScanEngine::RECORD_NAME_CCPP;
+                }
+                break;
+            case XScanEngine::RECORD_NAME_CPP:
+            case XScanEngine::RECORD_NAME_BORLANDCPP:
+            case XScanEngine::RECORD_NAME_BORLANDCPPBUILDER:
+            case XScanEngine::RECORD_NAME_CODEGEARCPP:
+            case XScanEngine::RECORD_NAME_CODEGEARCPPBUILDER:
+            case XScanEngine::RECORD_NAME_EMBARCADEROCPP:
+            case XScanEngine::RECORD_NAME_EMBARCADEROCPPBUILDER:
+            case XScanEngine::RECORD_NAME_MICROSOFTCPP:
+            case XScanEngine::RECORD_NAME_TURBOCPP: ssLanguage.name = XScanEngine::RECORD_NAME_CPP; break;
+            case XScanEngine::RECORD_NAME_ASSEMBLER:
+            case XScanEngine::RECORD_NAME_ARMTHUMBMACROASSEMBLER:
+            case XScanEngine::RECORD_NAME_GNUASSEMBLER: ssLanguage.name = XScanEngine::RECORD_NAME_ASSEMBLER; break;
+            case XScanEngine::RECORD_NAME_FASM:
+            case XScanEngine::RECORD_NAME_GOASM:
+            case XScanEngine::RECORD_NAME_MASM:
+            case XScanEngine::RECORD_NAME_MASM32:
+            case XScanEngine::RECORD_NAME_NASM: ssLanguage.name = XScanEngine::RECORD_NAME_X86ASSEMBLER; break;
+            case XScanEngine::RECORD_NAME_AUTOIT: ssLanguage.name = XScanEngine::RECORD_NAME_AUTOIT; break;
+            case XScanEngine::RECORD_NAME_OBJECTPASCAL:
+            case XScanEngine::RECORD_NAME_LAZARUS:
+            case XScanEngine::RECORD_NAME_FPC:
+            case XScanEngine::RECORD_NAME_VIRTUALPASCAL:
+            case XScanEngine::RECORD_NAME_IBMPCPASCAL: ssLanguage.name = XScanEngine::RECORD_NAME_OBJECTPASCAL; break;
+            case XScanEngine::RECORD_NAME_BORLANDDELPHI:
+            case XScanEngine::RECORD_NAME_BORLANDDELPHIDOTNET:
+            case XScanEngine::RECORD_NAME_BORLANDOBJECTPASCALDELPHI:
+            case XScanEngine::RECORD_NAME_CODEGEARDELPHI:
+            case XScanEngine::RECORD_NAME_CODEGEAROBJECTPASCALDELPHI:
+            case XScanEngine::RECORD_NAME_EMBARCADERODELPHI:
+            case XScanEngine::RECORD_NAME_EMBARCADERODELPHIDOTNET:
+            case XScanEngine::RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI: ssLanguage.name = XScanEngine::RECORD_NAME_OBJECTPASCALDELPHI; break;
+            case XScanEngine::RECORD_NAME_D:
+            case XScanEngine::RECORD_NAME_DMD:
+            case XScanEngine::RECORD_NAME_DMD32:
+            case XScanEngine::RECORD_NAME_LDC: ssLanguage.name = XScanEngine::RECORD_NAME_D; break;
+            case XScanEngine::RECORD_NAME_CSHARP:
+            case XScanEngine::RECORD_NAME_DOTNET: ssLanguage.name = XScanEngine::RECORD_NAME_CSHARP; break;
+            case XScanEngine::RECORD_NAME_GO: ssLanguage.name = XScanEngine::RECORD_NAME_GO; break;
+            case XScanEngine::RECORD_NAME_JAVA:
+            case XScanEngine::RECORD_NAME_JVM:
+            case XScanEngine::RECORD_NAME_JDK:
+            case XScanEngine::RECORD_NAME_OPENJDK:
+            case XScanEngine::RECORD_NAME_IBMJDK:
+            case XScanEngine::RECORD_NAME_APPLEJDK: ssLanguage.name = XScanEngine::RECORD_NAME_JAVA; break;
+            case XScanEngine::RECORD_NAME_JSCRIPT: ssLanguage.name = XScanEngine::RECORD_NAME_ECMASCRIPT; break;
+            case XScanEngine::RECORD_NAME_KOTLIN: ssLanguage.name = XScanEngine::RECORD_NAME_KOTLIN; break;
+            case XScanEngine::RECORD_NAME_FORTRAN:
+            case XScanEngine::RECORD_NAME_LAYHEYFORTRAN90: ssLanguage.name = XScanEngine::RECORD_NAME_FORTRAN; break;
+            case XScanEngine::RECORD_NAME_NIM: ssLanguage.name = XScanEngine::RECORD_NAME_NIM; break;
+            case XScanEngine::RECORD_NAME_OBJECTIVEC: ssLanguage.name = XScanEngine::RECORD_NAME_OBJECTIVEC; break;
+            case XScanEngine::RECORD_NAME_BASIC:
+            case XScanEngine::RECORD_NAME_BASIC4ANDROID:
+            case XScanEngine::RECORD_NAME_POWERBASIC:
+            case XScanEngine::RECORD_NAME_PUREBASIC:
+            case XScanEngine::RECORD_NAME_TURBOBASIC:
+            case XScanEngine::RECORD_NAME_VBNET:
+            case XScanEngine::RECORD_NAME_VISUALBASIC: ssLanguage.name = XScanEngine::RECORD_NAME_BASIC; break;
+            case XScanEngine::RECORD_NAME_RUST: ssLanguage.name = XScanEngine::RECORD_NAME_RUST; break;
+            case XScanEngine::RECORD_NAME_RUBY: ssLanguage.name = XScanEngine::RECORD_NAME_RUBY; break;
+            case XScanEngine::RECORD_NAME_PYTHON:
+            case XScanEngine::RECORD_NAME_PYINSTALLER: ssLanguage.name = XScanEngine::RECORD_NAME_PYTHON; break;
+            case XScanEngine::RECORD_NAME_SWIFT: ssLanguage.name = XScanEngine::RECORD_NAME_SWIFT; break;
+            case XScanEngine::RECORD_NAME_PERL: ssLanguage.name = XScanEngine::RECORD_NAME_PERL; break;
+            case XScanEngine::RECORD_NAME_ZIG: ssLanguage.name = XScanEngine::RECORD_NAME_ZIG; break;
+            case XScanEngine::RECORD_NAME_QML: ssLanguage.name = XScanEngine::RECORD_NAME_QML; break;
+            default: ssLanguage.name = XScanEngine::RECORD_NAME_UNKNOWN;
         }
 
         if (ssLanguage.name != XScanEngine::RECORD_NAME_UNKNOWN) {
