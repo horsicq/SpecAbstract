@@ -162,6 +162,48 @@ public:
         QString sHeaderText;
     };
 
+    // Scan table descriptors (moved from SpecAbstract)
+    struct _BASICINFO {
+        quint32 nVariant;
+        XBinary::FT fileType;
+        XScanEngine::RECORD_TYPE type;
+        XScanEngine::RECORD_NAME name;
+        const char *pszVersion;
+        const char *pszInfo;
+    };
+
+    struct SIGNATURE_RECORD {
+        _BASICINFO basicInfo;
+        const char *pszSignature;
+    };
+
+    struct STRING_RECORD {
+        _BASICINFO basicInfo;
+        const char *pszString;
+    };
+
+    struct PE_RESOURCES_RECORD {
+        _BASICINFO basicInfo;
+        bool bIsString1;
+        const char *pszName1;
+        quint32 nID1;
+        bool bIsString2;
+        const char *pszName2;
+        quint32 nID2;
+    };
+
+    struct CONST_RECORD {
+        _BASICINFO basicInfo;
+        quint64 nConst1;
+        quint64 nConst2;
+    };
+
+    struct MSRICH_RECORD {
+        _BASICINFO basicInfo;
+        quint16 nID;
+        quint32 nBuild;
+    };
+
     // Utility: stringify a scan struct (moved from SpecAbstract)
     static QString _SCANS_STRUCT_toString(const SCANS_STRUCT *pScanStruct, bool bShowType = true);
 
@@ -180,6 +222,9 @@ public:
     static SCANS_STRUCT getFormatScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo);
     static SCANS_STRUCT getOperationSystemScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo);
 
+    // Insert a header-detected record into result maps (packers/protectors) if present
+    static void addHeaderDetectToResults(BASIC_INFO *pBasicInfo, XScanEngine::RECORD_NAME rn, bool toProtector);
+
     // Moved from NFD_BinaryUtils: basic scan context init and final result synthesis
     static BASIC_INFO _initBasicInfo(XBinary *pBinary, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static void _handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPdStruct);
@@ -188,6 +233,37 @@ public:
     static Binary_Script::OPTIONS toOptions(const XScanEngine::SCAN_OPTIONS *pScanOptions);
 
     explicit NFD_Binary(XBinary *pBinary, XBinary::FILEPART filePart, Binary_Script::OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct);
+
+    // Scanning helpers moved from SpecAbstract
+    static void memoryScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                           qint64 nSize, SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
+                           DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+    static void signatureScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, const QString &sSignature, SIGNATURE_RECORD *pRecords,
+                              qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
+                              XBinary::PDSTRUCT *pPdStruct);
+    static void PE_resourcesScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources,
+                                 PE_RESOURCES_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
+                                 DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+    static void stringScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<QString> *pListStrings, STRING_RECORD *pRecords,
+                           qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
+                           XBinary::PDSTRUCT *pPdStruct);
+    static void constScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, CONST_RECORD *pRecords,
+                          qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
+                          XBinary::PDSTRUCT *pPdStruct);
+    static void MSDOS_richScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, quint32 nCount, MSRICH_RECORD *pRecords,
+                               qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
+                               XBinary::PDSTRUCT *pPdStruct);
+    static QList<SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, quint32 nCount, MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1,
+                                              XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+    static void archiveScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, STRING_RECORD *pRecords,
+                            qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
+                            XBinary::PDSTRUCT *pPdStruct);
+    static void archiveExpScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords,
+                               STRING_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
+                               DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+    static void signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemoryMap, QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords,
+                                 qint64 nOffset, SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
+                                 BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
 
 signals:
 };

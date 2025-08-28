@@ -37,6 +37,8 @@
 #include "modules/nfd_jpeg.h"
 #include "modules/nfd_cfbf.h"
 #include "modules/nfd_pdf.h"
+#include "modules/nfd_elf.h"
+#include "modules/nfd_com.h"
 
 class SpecAbstract : public XScanEngine {
     Q_OBJECT
@@ -117,14 +119,7 @@ public:
         QList<XArchive::RECORD> listArchiveRecords;
     };
 
-    struct COMINFO_STRUCT {
-        BASIC_INFO basic_info;
-        qint64 nEntryPointOffset;
-        QString sEntryPointSignature;
-        QString sOverlaySignature;
-        qint64 nOverlayOffset;
-        qint64 nOverlaySize;
-    };
+    using COMINFO_STRUCT = NFD_COM::COMINFO_STRUCT;
 
     struct MSDOSINFO_STRUCT {
         BASIC_INFO basic_info;
@@ -135,31 +130,7 @@ public:
         qint64 nOverlaySize;
     };
 
-    struct ELFINFO_STRUCT {
-        BASIC_INFO basic_info;
-        QString sEntryPointSignature;
-        bool bIs64;
-        bool bIsBigEndian;  // TODO move to basic
-        QList<XELF::TAG_STRUCT> listTags;
-        QList<QString> listLibraries;
-        QList<QString> listComments;
-        QList<XELF_DEF::Elf_Shdr> listSectionHeaders;
-        QList<XELF_DEF::Elf_Phdr> listProgramHeaders;
-        QList<XELF::SECTION_RECORD> listSectionRecords;
-        QList<XELF::NOTE> listNotes;
-        qint32 nSymTabSection;
-        qint64 nSymTabOffset;
-        qint32 nDebugSection;
-        qint64 nDWARFDebugOffset;
-        qint64 nDWARFDebugSize;
-
-        qint32 nCommentSection;
-        qint32 nStringTableSection;
-        QByteArray baStringTable;
-        QString sRunPath;
-
-        XBinary::OFFSETSIZE osCommentSection;
-    };
+    using ELFINFO_STRUCT = NFD_ELF::ELFINFO_STRUCT;
 
     struct LEINFO_STRUCT {
         BASIC_INFO basic_info;
@@ -263,46 +234,12 @@ public:
         XBinary::OFFSETSIZE osResourcesSection;
     };
 
-    struct _BASICINFO {
-        quint32 nVariant;
-        const XBinary::FT fileType;
-        const RECORD_TYPE type;
-        const RECORD_NAME name;
-        const char *pszVersion;
-        const char *pszInfo;
-    };
-
-    struct SIGNATURE_RECORD {
-        _BASICINFO basicInfo;
-        const char *pszSignature;
-    };
-
-    struct STRING_RECORD {
-        _BASICINFO basicInfo;
-        const char *pszString;
-    };
-
-    struct PE_RESOURCES_RECORD {
-        _BASICINFO basicInfo;
-        bool bIsString1;
-        const char *pszName1;
-        quint32 nID1;
-        bool bIsString2;
-        const char *pszName2;
-        quint32 nID2;
-    };
-
-    struct CONST_RECORD {
-        _BASICINFO basicInfo;
-        quint64 nConst1;
-        quint64 nConst2;
-    };
-
-    struct MSRICH_RECORD {
-        _BASICINFO basicInfo;
-        quint16 nID;
-        quint32 nBuild;
-    };
+    using _BASICINFO = NFD_Binary::_BASICINFO;
+    using SIGNATURE_RECORD = NFD_Binary::SIGNATURE_RECORD;
+    using STRING_RECORD = NFD_Binary::STRING_RECORD;
+    using PE_RESOURCES_RECORD = NFD_Binary::PE_RESOURCES_RECORD;
+    using CONST_RECORD = NFD_Binary::CONST_RECORD;
+    using MSRICH_RECORD = NFD_Binary::MSRICH_RECORD;
 
     struct VCL_STRUCT {
         quint32 nValue;
@@ -413,8 +350,6 @@ public:
     static void PE_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void COM_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, COMINFO_STRUCT *pCOMInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void COM_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, COMINFO_STRUCT *pCOMInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Binary_handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct);
     static void Binary_handle_Certificates(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
     static void Binary_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct);
@@ -478,12 +413,6 @@ public:
     static void Zip_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static void APK_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, APKINFO_STRUCT *pApkInfo, XBinary::PDSTRUCT *pPdStruct);
-
-    static void AmigaHunk_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, AMIGAHUNKINFO_STRUCT *pAmigaHunkInfo,
-                                                 XBinary::PDSTRUCT *pPdStruct);
-
-    static void PDF_handle_Formats(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void PDF_handle_Tags(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static DEXINFO_STRUCT APK_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, APKINFO_STRUCT *pApkInfo, XBinary::PDSTRUCT *pPdStruct,
                                        const QString &sFileName);

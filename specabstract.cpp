@@ -19,6 +19,7 @@
  * SOFTWARE.
  */
 #include "specabstract.h"
+#include "modules/nfd_elf.h"
 
 #include "signatures.cpp"  // Do not include in CMAKE files!
 
@@ -1057,10 +1058,6 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
                       XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
         signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _archive_records, sizeof(_archive_records), result.basic_info.id.fileType,
                       XBinary::FT_ARCHIVE, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
-        signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _COM_records, sizeof(_COM_records), result.basic_info.id.fileType,
-                      XBinary::FT_COM, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
-        signatureExpScan(&binary, &(result.basic_info.memoryMap), &result.basic_info.mapHeaderDetects, 0, _COM_Exp_records, sizeof(_COM_Exp_records),
-                         result.basic_info.id.fileType, XBinary::FT_COM, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
 
         if (result.basic_info.parentId.filePart == XBinary::FILEPART_OVERLAY) {
             signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_overlay_records, sizeof(_PE_overlay_records),
@@ -1151,46 +1148,7 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
 SpecAbstract::COMINFO_STRUCT SpecAbstract::getCOMInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                                       XBinary::PDSTRUCT *pPdStruct)
 {
-    QElapsedTimer timer;
-    timer.start();
-
-    COMINFO_STRUCT result = {};
-
-    XCOM com(pDevice, pOptions->bIsImage);
-
-    if (com.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info = _initBasicInfo(&com, parentId, pOptions, nOffset, pPdStruct);
-
-        //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
-
-        // Scan Header
-        signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _COM_records, sizeof(_COM_records), result.basic_info.id.fileType,
-                      XBinary::FT_COM, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
-        signatureExpScan(&com, &(result.basic_info.memoryMap), &result.basic_info.mapHeaderDetects, 0, _COM_Exp_records, sizeof(_COM_Exp_records),
-                         result.basic_info.id.fileType, XBinary::FT_COM, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
-
-        if (pOptions->bIsVerbose) {
-            COM_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
-        }
-
-        COM_handle_Protection(pDevice, pOptions, &result, pPdStruct);
-
-        if (result.basic_info.mapResultProtectors.size() || result.basic_info.mapResultPackers.size()) {
-            //            _SCANS_STRUCT ssOperationSystem=getScansStruct(0,XBinary::FT_ELF,RECORD_TYPE_OPERATIONSYSTEM,RECORD_NAME_MSDOS,"","",0);
-
-            //            result.mapResultOperationSystems.insert(ssOperationSystem.name,scansToScan(&(pCOMInfo->basic_info),&ssOperationSystem));
-
-            _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(com.getFileFormatInfo(pPdStruct));
-
-            result.basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(result.basic_info), &ssOperationSystem));
-        }
-
-        _handleResult(&(result.basic_info), pPdStruct);
-    }
-
-    result.basic_info.nElapsedTime = timer.elapsed();
-
-    return result;
+    return NFD_COM::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
 }
 
 SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
@@ -1246,82 +1204,26 @@ SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XS
 SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                                       XBinary::PDSTRUCT *pPdStruct)
 {
-    QElapsedTimer timer;
-    timer.start();
-
-    ELFINFO_STRUCT result = {};
+    // Delegate the core ELF info extraction to NFD_ELF, then continue with SpecAbstract-specific handlers.
+    ELFINFO_STRUCT result = NFD_ELF::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
 
     XELF elf(pDevice, pOptions->bIsImage);
-
     if (elf.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info = _initBasicInfo(&elf, parentId, pOptions, nOffset, pPdStruct);
-
-        result.bIs64 = elf.is64();
-        result.bIsBigEndian = elf.isBigEndian();
-
-        //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
-
-        result.sEntryPointSignature = elf.getSignature(elf.getEntryPointOffset(&(result.basic_info.memoryMap)), 150);
-
-        result.nStringTableSection = elf.getSectionStringTable(result.bIs64);
-        result.baStringTable = elf.getSection(result.nStringTableSection);
-
-        result.listTags = elf.getTagStructs();
-        result.listLibraries = elf.getLibraries(&(result.basic_info.memoryMap), &result.listTags);
-
-        result.listSectionHeaders = elf.getElf_ShdrList(100);
-        result.listProgramHeaders = elf.getElf_PhdrList(100);
-
-        result.listSectionRecords = XELF::getSectionRecords(&result.listSectionHeaders, pOptions->bIsImage, &result.baStringTable);
-        result.listNotes = elf.getNotes(&result.listProgramHeaders);
-
-        if (result.listNotes.count() == 0) {
-            result.listNotes = elf.getNotes(&result.listSectionHeaders);
-        }
-
-        result.sRunPath = elf.getRunPath(&(result.basic_info.memoryMap), &result.listTags).sString;
-
-        result.nSymTabSection = elf.getSectionIndexByName(".symtab", &result.listSectionRecords);
-
-        if (result.nSymTabSection != -1) {
-            result.nSymTabOffset = result.listSectionRecords.at(result.nSymTabSection).nOffset;
-        }
-
-        result.nDebugSection = elf.getSectionIndexByName(".debug_info", &result.listSectionRecords);
-
-        if (result.nDebugSection != -1) {
-            result.nDWARFDebugOffset = result.listSectionRecords.at(result.nDebugSection).nOffset;
-            result.nDWARFDebugSize = result.listSectionRecords.at(result.nDebugSection).nSize;
-        }
-
-        result.nCommentSection = XELF::getSectionNumber(".comment", &result.listSectionRecords);
-
-        if (result.nCommentSection != -1) {
-            result.osCommentSection.nOffset = result.listSectionRecords.at(result.nCommentSection).nOffset;
-            result.osCommentSection.nSize = result.listSectionRecords.at(result.nCommentSection).nSize;
-
-            result.listComments = elf.getStringsFromSection(result.nCommentSection).values();
-        }
-
+        // Keep existing SpecAbstract handlers that derive more detects from the core info
         signatureScan(&result.basic_info.mapEntryPointDetects, result.sEntryPointSignature, _ELF_entrypoint_records, sizeof(_ELF_entrypoint_records),
                       result.basic_info.id.fileType, XBinary::FT_ELF, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
 
         ELF_handle_CommentSection(pDevice, pOptions, &result, pPdStruct);
-
         ELF_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
         ELF_handle_GCC(pDevice, pOptions, &result, pPdStruct);
         ELF_handle_DebugData(pDevice, pOptions, &result, pPdStruct);
         ELF_handle_Tools(pDevice, pOptions, &result, pPdStruct);
         ELF_handle_Protection(pDevice, pOptions, &result, pPdStruct);
-
         ELF_handle_UnknownProtection(pDevice, pOptions, &result, pPdStruct);
-
         ELF_handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
 
         _handleResult(&(result.basic_info), pPdStruct);
     }
-
-    result.basic_info.nElapsedTime = timer.elapsed();
 
     return result;
 }
@@ -8427,74 +8329,6 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPT
     }
 }
 
-void SpecAbstract::COM_handle_OperationSystem(QIODevice *pDevice, SCAN_OPTIONS *pOptions, COMINFO_STRUCT *pCOMInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    XCOM xcom(pDevice, pOptions->bIsImage);
-
-    if (xcom.isValid(pPdStruct)) {
-        _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(xcom.getFileFormatInfo(pPdStruct));
-
-        pCOMInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, scansToScan(&(pCOMInfo->basic_info), &ssOperationSystem));
-    }
-}
-
-void SpecAbstract::COM_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, COMINFO_STRUCT *pCOMInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pDevice)
-    Q_UNUSED(pOptions)
-    Q_UNUSED(pPdStruct)
-
-    // XCOM com(pDevice, pOptions->bIsImage);
-
-    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_PKLITE)) {
-        pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
-        _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_PKLITE);
-        pCOMInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
-    }
-
-    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_UPX)) {
-        pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
-        _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_UPX);
-        pCOMInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
-    }
-
-    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_HACKSTOP)) {
-        pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
-        _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_HACKSTOP);
-        pCOMInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
-    }
-
-    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_CRYPTDISMEMBER)) {
-        pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
-        _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CRYPTDISMEMBER);
-        pCOMInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
-    }
-
-    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_SPIRIT)) {
-        pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
-        _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_SPIRIT);
-        pCOMInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
-    }
-
-    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_ICE)) {
-        pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
-        _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_ICE);
-        pCOMInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
-    }
-
-    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_DIET)) {
-        pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
-        _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_DIET);
-        pCOMInfo->basic_info.mapResultPackers.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
-    }
-
-    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_CRYPTCOM)) {
-        pCOMInfo->basic_info.id.fileType = XBinary::FT_COM;
-        _SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_CRYPTCOM);
-        pCOMInfo->basic_info.mapResultProtectors.insert(ss.name, scansToScan(&(pCOMInfo->basic_info), &ss));
-    }
-}
-
 void SpecAbstract::Binary_handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::BINARYINFO_STRUCT *pBinaryInfo,
                                           XBinary::PDSTRUCT *pPdStruct)
 {
@@ -10340,35 +10174,6 @@ void SpecAbstract::APK_handle_FixDetects(QIODevice *pDevice, SCAN_OPTIONS *pOpti
         }
     }
 }
-
-void SpecAbstract::AmigaHunk_handle_OperationSystem(QIODevice *pDevice, SCAN_OPTIONS *pOptions, AMIGAHUNKINFO_STRUCT *pAmigaHunkInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pDevice)
-    Q_UNUSED(pOptions)
-    Q_UNUSED(pAmigaHunkInfo)
-    Q_UNUSED(pPdStruct)
-    // Kept for API compatibility; functionality moved to NFD_Amiga::getInfo()
-}
-
-void SpecAbstract::PDF_handle_Formats(QIODevice *pDevice, SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pDevice)
-    Q_UNUSED(pOptions)
-    Q_UNUSED(pPDFInfo)
-    Q_UNUSED(pPdStruct)
-    // Deprecated: handled in NFD_PDF::getInfo
-}
-
-void SpecAbstract::PDF_handle_Tags(QIODevice *pDevice, SCAN_OPTIONS *pOptions, PDFINFO_STRUCT *pPDFInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pDevice)
-    Q_UNUSED(pOptions)
-    Q_UNUSED(pPDFInfo)
-    Q_UNUSED(pPdStruct)
-    // Deprecated: handled in NFD_PDF::getInfo if needed
-}
-
-// JPEG handling moved to NFD_JPEG
 
 SpecAbstract::DEXINFO_STRUCT SpecAbstract::APK_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::APKINFO_STRUCT *pApkInfo,
                                                         XBinary::PDSTRUCT *pPdStruct, const QString &sFileName)
@@ -14829,323 +14634,44 @@ void SpecAbstract::memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMmREcords, QIOD
                               SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
                               DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
-    if (nSize) {
-        XBinary binary(pDevice, pOptions->bIsImage);
-
-        qint32 nSignaturesCount = nRecordsSize / sizeof(SIGNATURE_RECORD);
-
-        for (qint32 i = 0; (i < nSignaturesCount) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
-            if ((pRecords[i].basicInfo.fileType == fileType1) || (pRecords[i].basicInfo.fileType == fileType2)) {
-                if ((!pMmREcords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
-                    qint64 _nOffset = binary.find_signature(&(pBasicInfo->memoryMap), nOffset, nSize, (char *)pRecords[i].pszSignature, nullptr, pPdStruct);
-
-                    if (_nOffset != -1) {
-                        if (!pMmREcords->contains(pRecords[i].basicInfo.name)) {
-                            _SCANS_STRUCT record = {};
-                            record.nVariant = pRecords[i].basicInfo.nVariant;
-                            record.fileType = pRecords[i].basicInfo.fileType;
-                            record.type = pRecords[i].basicInfo.type;
-                            record.name = pRecords[i].basicInfo.name;
-                            record.sVersion = pRecords[i].basicInfo.pszVersion;
-                            record.sInfo = pRecords[i].basicInfo.pszInfo;
-                            record.nOffset = _nOffset;
-
-                            pMmREcords->insert(record.name, record);
-                        }
-
-                        if (pBasicInfo->scanOptions.bShowInternalDetects) {
-                            DETECT_RECORD heurRecord = {};
-
-                            heurRecord.nVariant = pRecords[i].basicInfo.nVariant;
-                            heurRecord.fileType = pRecords[i].basicInfo.fileType;
-                            heurRecord.type = pRecords[i].basicInfo.type;
-                            heurRecord.name = pRecords[i].basicInfo.name;
-                            heurRecord.sVersion = pRecords[i].basicInfo.pszVersion;
-                            heurRecord.sInfo = pRecords[i].basicInfo.pszInfo;
-                            heurRecord.nOffset = _nOffset;
-                            heurRecord.filepart = pBasicInfo->id.filePart;
-                            heurRecord.detectType = detectType;
-                            heurRecord.sValue = pRecords[i].pszSignature;
-
-                            pBasicInfo->listHeurs.append(heurRecord);
-                        }
-                    }
-                }
-            }
-        }
-    }
+    NFD_Binary::memoryScan(reinterpret_cast<QMap<XScanEngine::RECORD_NAME, NFD_Binary::SCANS_STRUCT> *>(pMmREcords), pDevice, pOptions, nOffset, nSize,
+                           reinterpret_cast<NFD_Binary::SIGNATURE_RECORD *>(pRecords), nRecordsSize, fileType1, fileType2,
+                           reinterpret_cast<NFD_Binary::BASIC_INFO *>(pBasicInfo), detectType, pPdStruct);
 }
 
 void SpecAbstract::signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, const QString &sSignature, SpecAbstract::SIGNATURE_RECORD *pRecords, qint32 nRecordsSize,
                                  XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
-    qint32 nSignaturesCount = nRecordsSize / (int)sizeof(SIGNATURE_RECORD);
-
-    for (qint32 i = 0; (i < nSignaturesCount) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
-        if ((pRecords[i].basicInfo.fileType == fileType1) || (pRecords[i].basicInfo.fileType == fileType2)) {
-            if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
-                if (XBinary::compareSignatureStrings(sSignature, pRecords[i].pszSignature)) {
-                    if (!pMapRecords->contains(pRecords[i].basicInfo.name)) {
-                        _SCANS_STRUCT record = {};
-                        record.nVariant = pRecords[i].basicInfo.nVariant;
-                        record.fileType = pRecords[i].basicInfo.fileType;
-                        record.type = pRecords[i].basicInfo.type;
-                        record.name = pRecords[i].basicInfo.name;
-                        record.sVersion = pRecords[i].basicInfo.pszVersion;
-                        record.sInfo = pRecords[i].basicInfo.pszInfo;
-
-                        record.nOffset = 0;
-
-                        pMapRecords->insert(record.name, record);
-
-#ifdef QT_DEBUG
-                        qDebug("SIGNATURE SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
-#endif
-                    }
-
-                    if (pBasicInfo->scanOptions.bShowInternalDetects) {
-                        DETECT_RECORD heurRecord = {};
-
-                        heurRecord.nVariant = pRecords[i].basicInfo.nVariant;
-                        heurRecord.fileType = pRecords[i].basicInfo.fileType;
-                        heurRecord.type = pRecords[i].basicInfo.type;
-                        heurRecord.name = pRecords[i].basicInfo.name;
-                        heurRecord.sVersion = pRecords[i].basicInfo.pszVersion;
-                        heurRecord.sInfo = pRecords[i].basicInfo.pszInfo;
-                        heurRecord.nOffset = 0;
-                        heurRecord.filepart = pBasicInfo->id.filePart;
-                        heurRecord.detectType = detectType;
-                        heurRecord.sValue = pRecords[i].pszSignature;
-
-                        pBasicInfo->listHeurs.append(heurRecord);
-                    }
-                }
-            }
-        }
-    }
+    NFD_Binary::signatureScan(reinterpret_cast<QMap<XScanEngine::RECORD_NAME, NFD_Binary::SCANS_STRUCT> *>(pMapRecords), sSignature,
+                              reinterpret_cast<NFD_Binary::SIGNATURE_RECORD *>(pRecords), nRecordsSize, fileType1, fileType2,
+                              reinterpret_cast<NFD_Binary::BASIC_INFO *>(pBasicInfo), detectType, pPdStruct);
 }
 
 void SpecAbstract::PE_resourcesScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources,
                                     PE_RESOURCES_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
                                     DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
-    qint32 nSignaturesCount = nRecordsSize / sizeof(PE_RESOURCES_RECORD);
-
-    for (qint32 i = 0; (i < nSignaturesCount) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
-        if ((pRecords[i].basicInfo.fileType == fileType1) || (pRecords[i].basicInfo.fileType == fileType2)) {
-            if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
-                bool bSuccess = false;
-
-                QString sValue;
-
-                if (pRecords[i].bIsString1) {
-                    if (pRecords[i].bIsString2) {
-                        bSuccess = XPE::isResourcePresent(pRecords[i].pszName1, pRecords[i].pszName2, pListResources);
-
-                        sValue = QString("%1 %2").arg(pRecords[i].pszName1).arg(pRecords[i].pszName2);
-                    } else {
-                        bSuccess = XPE::isResourcePresent(pRecords[i].pszName1, pRecords[i].nID2, pListResources);
-
-                        sValue = QString("%1 %2").arg(pRecords[i].pszName1).arg(pRecords[i].nID2);
-                    }
-                } else {
-                    if (pRecords[i].bIsString2) {
-                        bSuccess = XPE::isResourcePresent(pRecords[i].nID1, pRecords[i].pszName2, pListResources);
-
-                        sValue = QString("%1 %2").arg(pRecords[i].nID1).arg(pRecords[i].pszName2);
-                    } else {
-                        bSuccess = XPE::isResourcePresent(pRecords[i].nID1, pRecords[i].nID2, pListResources);
-
-                        sValue = QString("%1 %2").arg(pRecords[i].nID1).arg(pRecords[i].nID2);
-                    }
-                }
-
-                if (bSuccess) {
-                    if (!pMapRecords->contains(pRecords[i].basicInfo.name)) {
-                        _SCANS_STRUCT record = {};
-                        record.nVariant = pRecords[i].basicInfo.nVariant;
-                        record.fileType = pRecords[i].basicInfo.fileType;
-                        record.type = pRecords[i].basicInfo.type;
-                        record.name = pRecords[i].basicInfo.name;
-                        record.sVersion = pRecords[i].basicInfo.pszVersion;
-                        record.sInfo = pRecords[i].basicInfo.pszInfo;
-                        record.nOffset = 0;
-
-                        pMapRecords->insert(record.name, record);
-
-#ifdef QT_DEBUG
-                        qDebug("RESOURCES SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
-#endif
-                    }
-
-                    if (pBasicInfo->scanOptions.bShowInternalDetects) {
-                        DETECT_RECORD heurRecord = {};
-
-                        heurRecord.nVariant = pRecords[i].basicInfo.nVariant;
-                        heurRecord.fileType = pRecords[i].basicInfo.fileType;
-                        heurRecord.type = pRecords[i].basicInfo.type;
-                        heurRecord.name = pRecords[i].basicInfo.name;
-                        heurRecord.sVersion = pRecords[i].basicInfo.pszVersion;
-                        heurRecord.sInfo = pRecords[i].basicInfo.pszInfo;
-                        heurRecord.nOffset = 0;
-                        heurRecord.filepart = pBasicInfo->id.filePart;
-                        heurRecord.detectType = detectType;
-                        heurRecord.sValue = sValue;
-
-                        pBasicInfo->listHeurs.append(heurRecord);
-                    }
-                }
-            }
-        }
-    }
+    NFD_Binary::PE_resourcesScan(reinterpret_cast<QMap<XScanEngine::RECORD_NAME, NFD_Binary::SCANS_STRUCT> *>(pMapRecords), pListResources,
+                                 reinterpret_cast<NFD_Binary::PE_RESOURCES_RECORD *>(pRecords), nRecordsSize, fileType1, fileType2,
+                                 reinterpret_cast<NFD_Binary::BASIC_INFO *>(pBasicInfo), detectType, pPdStruct);
 }
 
 void SpecAbstract::stringScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<QString> *pListStrings,
                               SpecAbstract::STRING_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
                               DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
-    QList<quint32> listStringCRC;
-    QList<quint32> listSignatureCRC;
-
-    qint32 nNumberOfStrings = pListStrings->count();
-    qint32 nNumberOfSignatures = nRecordsSize / sizeof(STRING_RECORD);
-
-    {
-        qint32 _nFreeIndex = XBinary::getFreeIndex(pPdStruct);
-        XBinary::setPdStructInit(pPdStruct, _nFreeIndex, nNumberOfStrings);
-
-        for (qint32 i = 0; (i < nNumberOfStrings) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
-            quint32 nCRC = XBinary::getStringCustomCRC32(pListStrings->at(i));
-            listStringCRC.append(nCRC);
-            XBinary::setPdStructCurrentIncrement(pPdStruct, _nFreeIndex);
-        }
-
-        XBinary::setPdStructFinished(pPdStruct, _nFreeIndex);
-    }
-    {
-        qint32 _nFreeIndex = XBinary::getFreeIndex(pPdStruct);
-        XBinary::setPdStructInit(pPdStruct, _nFreeIndex, nNumberOfStrings);
-
-        for (qint32 i = 0; (i < nNumberOfSignatures) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
-            quint32 nCRC = XBinary::getStringCustomCRC32(pRecords[i].pszString);
-            listSignatureCRC.append(nCRC);
-            XBinary::setPdStructCurrentIncrement(pPdStruct, _nFreeIndex);
-        }
-
-        XBinary::setPdStructFinished(pPdStruct, _nFreeIndex);
-    }
-
-    {
-        qint32 _nFreeIndex = XBinary::getFreeIndex(pPdStruct);
-        XBinary::setPdStructInit(pPdStruct, _nFreeIndex, nNumberOfStrings);
-
-        for (qint32 i = 0; (i < nNumberOfStrings) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
-            for (qint32 j = 0; j < nNumberOfSignatures; j++) {
-                if ((pRecords[j].basicInfo.fileType == fileType1) || (pRecords[j].basicInfo.fileType == fileType2)) {
-                    if ((!pMapRecords->contains(pRecords[j].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
-                        quint32 nCRC1 = listStringCRC[i];
-                        quint32 nCRC2 = listSignatureCRC[j];
-
-                        if (nCRC1 == nCRC2) {
-                            if (!pMapRecords->contains(pRecords[j].basicInfo.name)) {
-                                _SCANS_STRUCT record = {};
-                                record.nVariant = pRecords[j].basicInfo.nVariant;
-                                record.fileType = pRecords[j].basicInfo.fileType;
-                                record.type = pRecords[j].basicInfo.type;
-                                record.name = pRecords[j].basicInfo.name;
-                                record.sVersion = pRecords[j].basicInfo.pszVersion;
-                                record.sInfo = pRecords[j].basicInfo.pszInfo;
-
-                                record.nOffset = 0;
-
-                                pMapRecords->insert(record.name, record);
-
-#ifdef QT_DEBUG
-                                qDebug("STRING SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
-#endif
-                            }
-
-                            if (pBasicInfo->scanOptions.bShowInternalDetects) {
-                                DETECT_RECORD heurRecord = {};
-
-                                heurRecord.nVariant = pRecords[j].basicInfo.nVariant;
-                                heurRecord.fileType = pRecords[j].basicInfo.fileType;
-                                heurRecord.type = pRecords[j].basicInfo.type;
-                                heurRecord.name = pRecords[j].basicInfo.name;
-                                heurRecord.sVersion = pRecords[j].basicInfo.pszVersion;
-                                heurRecord.sInfo = pRecords[j].basicInfo.pszInfo;
-                                heurRecord.nOffset = 0;
-                                heurRecord.filepart = pBasicInfo->id.filePart;
-                                heurRecord.detectType = detectType;
-                                heurRecord.sValue = pRecords[j].pszString;
-
-                                pBasicInfo->listHeurs.append(heurRecord);
-                            }
-                        }
-                    }
-                }
-            }
-
-            XBinary::setPdStructCurrentIncrement(pPdStruct, _nFreeIndex);
-        }
-
-        XBinary::setPdStructFinished(pPdStruct, _nFreeIndex);
-    }
+    NFD_Binary::stringScan(reinterpret_cast<QMap<XScanEngine::RECORD_NAME, NFD_Binary::SCANS_STRUCT> *>(pMapRecords), pListStrings,
+                           reinterpret_cast<NFD_Binary::STRING_RECORD *>(pRecords), nRecordsSize, fileType1, fileType2,
+                           reinterpret_cast<NFD_Binary::BASIC_INFO *>(pBasicInfo), detectType, pPdStruct);
 }
 
 void SpecAbstract::constScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2,
                              SpecAbstract::CONST_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
                              DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
-    qint32 nSignaturesCount = nRecordsSize / (int)sizeof(CONST_RECORD);
-
-    for (qint32 i = 0; (i < nSignaturesCount) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
-        if ((pRecords[i].basicInfo.fileType == fileType1) || (pRecords[i].basicInfo.fileType == fileType2)) {
-            if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects) || (pRecords[i].nConst1 == 0xFFFFFFFF)) {
-                bool bSuccess = false;
-
-                bSuccess =
-                    ((pRecords[i].nConst1 == nCost1) || (pRecords[i].nConst1 == 0xFFFFFFFF)) && ((pRecords[i].nConst2 == nCost2) || (pRecords[i].nConst2 == 0xFFFFFFFF));
-
-                if (bSuccess) {
-                    if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pRecords[i].nConst1 == 0xFFFFFFFF)) {
-                        _SCANS_STRUCT record = {};
-                        record.nVariant = pRecords[i].basicInfo.nVariant;
-                        record.fileType = pRecords[i].basicInfo.fileType;
-                        record.type = pRecords[i].basicInfo.type;
-                        record.name = pRecords[i].basicInfo.name;
-                        record.sVersion = pRecords[i].basicInfo.pszVersion;
-                        record.sInfo = pRecords[i].basicInfo.pszInfo;
-
-                        record.nOffset = 0;
-
-                        pMapRecords->insert(record.name, record);
-
-#ifdef QT_DEBUG
-                        qDebug("CONST SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
-#endif
-                    }
-
-                    if (pBasicInfo->scanOptions.bShowInternalDetects) {
-                        DETECT_RECORD heurRecord = {};
-
-                        heurRecord.nVariant = pRecords[i].basicInfo.nVariant;
-                        heurRecord.fileType = pRecords[i].basicInfo.fileType;
-                        heurRecord.type = pRecords[i].basicInfo.type;
-                        heurRecord.name = pRecords[i].basicInfo.name;
-                        heurRecord.sVersion = pRecords[i].basicInfo.pszVersion;
-                        heurRecord.sInfo = pRecords[i].basicInfo.pszInfo;
-                        heurRecord.nOffset = 0;
-                        heurRecord.filepart = pBasicInfo->id.filePart;
-                        heurRecord.detectType = detectType;
-                        heurRecord.sValue = QString("%1 %2").arg(XBinary::valueToHex(pRecords[i].nConst1)).arg(XBinary::valueToHex(pRecords[i].nConst2));
-
-                        pBasicInfo->listHeurs.append(heurRecord);
-                    }
-                }
-            }
-        }
-    }
+    NFD_Binary::constScan(reinterpret_cast<QMap<XScanEngine::RECORD_NAME, NFD_Binary::SCANS_STRUCT> *>(pMapRecords), nCost1, nCost2,
+                          reinterpret_cast<NFD_Binary::CONST_RECORD *>(pRecords), nRecordsSize, fileType1, fileType2,
+                          reinterpret_cast<NFD_Binary::BASIC_INFO *>(pBasicInfo), detectType, pPdStruct);
 }
 
 void SpecAbstract::MSDOS_richScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, quint32 nCount,
@@ -15188,174 +14714,28 @@ void SpecAbstract::archiveScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SC
                                SpecAbstract::STRING_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
                                SpecAbstract::BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
-    QList<quint32> listStringCRC;
-    QList<quint32> listSignatureCRC;
-
-    qint32 nNumberOfArchives = pListArchiveRecords->count();
-    qint32 nNumberOfSignatures = nRecordsSize / sizeof(STRING_RECORD);
-
-    for (qint32 i = 0; (i < nNumberOfArchives) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
-        //        qDebug("%s",pListArchiveRecords->at(i).sFileName.toLatin1().data());
-        quint32 nCRC = XBinary::getStringCustomCRC32(pListArchiveRecords->at(i).spInfo.sRecordName);
-        listStringCRC.append(nCRC);
-    }
-
-    for (qint32 i = 0; (i < nNumberOfSignatures) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
-        //        qDebug("%s",pRecords[i].pszString);
-        quint32 nCRC = XBinary::getStringCustomCRC32(pRecords[i].pszString);
-        listSignatureCRC.append(nCRC);
-    }
-
-    for (qint32 i = 0; (i < nNumberOfArchives) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
-        for (qint32 j = 0; (j < nNumberOfSignatures) && XBinary::isPdStructNotCanceled(pPdStruct); j++) {
-            if ((pRecords[j].basicInfo.fileType == fileType1) || (pRecords[j].basicInfo.fileType == fileType2)) {
-                if ((!pMapRecords->contains(pRecords[j].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
-                    quint32 nCRC1 = listStringCRC[i];
-                    quint32 nCRC2 = listSignatureCRC[j];
-
-                    if (nCRC1 == nCRC2) {
-                        if (!pMapRecords->contains(pRecords[j].basicInfo.name)) {
-                            _SCANS_STRUCT record = {};
-                            record.nVariant = pRecords[j].basicInfo.nVariant;
-                            record.fileType = pRecords[j].basicInfo.fileType;
-                            record.type = pRecords[j].basicInfo.type;
-                            record.name = pRecords[j].basicInfo.name;
-                            record.sVersion = pRecords[j].basicInfo.pszVersion;
-                            record.sInfo = pRecords[j].basicInfo.pszInfo;
-
-                            record.nOffset = 0;
-
-                            pMapRecords->insert(record.name, record);
-
-#ifdef QT_DEBUG
-                            qDebug("ARCHIVE SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
-#endif
-                        }
-
-                        if (pBasicInfo->scanOptions.bShowInternalDetects) {
-                            DETECT_RECORD heurRecord = {};
-
-                            heurRecord.nVariant = pRecords[j].basicInfo.nVariant;
-                            heurRecord.fileType = pRecords[j].basicInfo.fileType;
-                            heurRecord.type = pRecords[j].basicInfo.type;
-                            heurRecord.name = pRecords[j].basicInfo.name;
-                            heurRecord.sVersion = pRecords[j].basicInfo.pszVersion;
-                            heurRecord.sInfo = pRecords[j].basicInfo.pszInfo;
-                            heurRecord.nOffset = 0;
-                            heurRecord.filepart = pBasicInfo->id.filePart;
-                            heurRecord.detectType = detectType;
-                            heurRecord.sValue = pRecords[j].pszString;
-
-                            pBasicInfo->listHeurs.append(heurRecord);
-                        }
-                    }
-                }
-            }
-        }
-    }
+    NFD_Binary::archiveScan(reinterpret_cast<QMap<XScanEngine::RECORD_NAME, NFD_Binary::SCANS_STRUCT> *>(pMapRecords), pListArchiveRecords,
+                            reinterpret_cast<NFD_Binary::STRING_RECORD *>(pRecords), nRecordsSize, fileType1, fileType2,
+                            reinterpret_cast<NFD_Binary::BASIC_INFO *>(pBasicInfo), detectType, pPdStruct);
 }
 
 void SpecAbstract::archiveExpScan(QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords,
                                   SpecAbstract::STRING_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
                                   SpecAbstract::BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
-    qint32 nNumberOfArchives = pListArchiveRecords->count();
-    qint32 nNumberOfSignatures = nRecordsSize / sizeof(STRING_RECORD);
-
-    for (qint32 i = 0; (i < nNumberOfArchives) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
-        for (qint32 j = 0; (j < nNumberOfSignatures) && XBinary::isPdStructNotCanceled(pPdStruct); j++) {
-            if ((pRecords[j].basicInfo.fileType == fileType1) || (pRecords[j].basicInfo.fileType == fileType2)) {
-                if ((!pMapRecords->contains(pRecords[j].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
-                    if (XBinary::isRegExpPresent(pRecords[j].pszString, pListArchiveRecords->at(i).spInfo.sRecordName)) {
-                        if (!pMapRecords->contains(pRecords[j].basicInfo.name)) {
-                            _SCANS_STRUCT record = {};
-                            record.nVariant = pRecords[j].basicInfo.nVariant;
-                            record.fileType = pRecords[j].basicInfo.fileType;
-                            record.type = pRecords[j].basicInfo.type;
-                            record.name = pRecords[j].basicInfo.name;
-                            record.sVersion = pRecords[j].basicInfo.pszVersion;
-                            record.sInfo = pRecords[j].basicInfo.pszInfo;
-
-                            record.nOffset = 0;
-
-                            pMapRecords->insert(record.name, record);
-
-#ifdef QT_DEBUG
-                            qDebug("ARCHIVE SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
-#endif
-                        }
-
-                        if (pBasicInfo->scanOptions.bShowInternalDetects) {
-                            DETECT_RECORD heurRecord = {};
-
-                            heurRecord.nVariant = pRecords[j].basicInfo.nVariant;
-                            heurRecord.fileType = pRecords[j].basicInfo.fileType;
-                            heurRecord.type = pRecords[j].basicInfo.type;
-                            heurRecord.name = pRecords[j].basicInfo.name;
-                            heurRecord.sVersion = pRecords[j].basicInfo.pszVersion;
-                            heurRecord.sInfo = pRecords[j].basicInfo.pszInfo;
-                            heurRecord.nOffset = 0;
-                            heurRecord.filepart = pBasicInfo->id.filePart;
-                            heurRecord.detectType = detectType;
-                            heurRecord.sValue = pRecords[j].pszString;
-
-                            pBasicInfo->listHeurs.append(heurRecord);
-                        }
-                    }
-                }
-            }
-        }
-    }
+    NFD_Binary::archiveExpScan(reinterpret_cast<QMap<XScanEngine::RECORD_NAME, NFD_Binary::SCANS_STRUCT> *>(pMapRecords), pListArchiveRecords,
+                               reinterpret_cast<NFD_Binary::STRING_RECORD *>(pRecords), nRecordsSize, fileType1, fileType2,
+                               reinterpret_cast<NFD_Binary::BASIC_INFO *>(pBasicInfo), detectType, pPdStruct);
 }
 
 void SpecAbstract::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemoryMap, QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *pMapRecords,
                                     qint64 nOffset, SpecAbstract::SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
                                     BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
-    qint32 nSignaturesCount = nRecordsSize / (int)sizeof(SIGNATURE_RECORD);
-
-    for (qint32 i = 0; (i < nSignaturesCount) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
-        if ((pRecords[i].basicInfo.fileType == fileType1) || (pRecords[i].basicInfo.fileType == fileType2)) {
-            if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects)) {
-                if (pXBinary->compareSignature(pMemoryMap, pRecords[i].pszSignature, nOffset)) {
-                    if (!pMapRecords->contains(pRecords[i].basicInfo.name)) {
-                        _SCANS_STRUCT record = {};
-                        record.nVariant = pRecords[i].basicInfo.nVariant;
-                        record.fileType = pRecords[i].basicInfo.fileType;
-                        record.type = pRecords[i].basicInfo.type;
-                        record.name = pRecords[i].basicInfo.name;
-                        record.sVersion = pRecords[i].basicInfo.pszVersion;
-                        record.sInfo = pRecords[i].basicInfo.pszInfo;
-
-                        record.nOffset = 0;
-
-                        pMapRecords->insert(record.name, record);
-
-#ifdef QT_DEBUG
-                        qDebug("SIGNATURE EXP SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
-#endif
-                    }
-
-                    if (pBasicInfo->scanOptions.bShowInternalDetects) {
-                        DETECT_RECORD heurRecord = {};
-
-                        heurRecord.nVariant = pRecords[i].basicInfo.nVariant;
-                        heurRecord.fileType = pRecords[i].basicInfo.fileType;
-                        heurRecord.type = pRecords[i].basicInfo.type;
-                        heurRecord.name = pRecords[i].basicInfo.name;
-                        heurRecord.sVersion = pRecords[i].basicInfo.pszVersion;
-                        heurRecord.sInfo = pRecords[i].basicInfo.pszInfo;
-                        heurRecord.nOffset = 0;
-                        heurRecord.filepart = pBasicInfo->id.filePart;
-                        heurRecord.detectType = detectType;
-                        heurRecord.sValue = pRecords[i].pszSignature;
-
-                        pBasicInfo->listHeurs.append(heurRecord);
-                    }
-                }
-            }
-        }
-    }
+    NFD_Binary::signatureExpScan(pXBinary, pMemoryMap,
+                                 reinterpret_cast<QMap<XScanEngine::RECORD_NAME, NFD_Binary::SCANS_STRUCT> *>(pMapRecords), nOffset,
+                                 reinterpret_cast<NFD_Binary::SIGNATURE_RECORD *>(pRecords), nRecordsSize, fileType1, fileType2,
+                                 reinterpret_cast<NFD_Binary::BASIC_INFO *>(pBasicInfo), detectType, pPdStruct);
 }
 
 QList<SpecAbstract::_SCANS_STRUCT> SpecAbstract::MSDOS_richScan(quint16 nID, quint32 nBuild, quint32 nCount, SpecAbstract::MSRICH_RECORD *pRecords, qint32 nRecordsSize,
