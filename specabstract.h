@@ -271,7 +271,7 @@ public:
 
     static QString append(const QString &sResult, const QString &sString);  // Move
 
-    static QString heurTypeIdToString(qint32 nId);
+    // heurTypeIdToString moved to XScanEngine
 
     static QString _SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, bool bShowType = true);
 

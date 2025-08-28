@@ -23,39 +23,13 @@
 
 #include "signatures.cpp"  // Do not include in CMAKE files!
 
-SpecAbstract::SpecAbstract(QObject *pParent) : XScanEngine(pParent)
-{
-}
-
 QString SpecAbstract::append(const QString &sResult, const QString &sString)
 {
     return XBinary::appendText(sResult, sString, ", ");
 }
 
-QString SpecAbstract::heurTypeIdToString(qint32 nId)
+SpecAbstract::SpecAbstract(QObject *pParent) : XScanEngine(pParent)
 {
-    QString sResult = tr("Unknown");
-
-    switch (nId) {
-        case DETECTTYPE_UNKNOWN: sResult = tr("Unknown"); break;
-        case DETECTTYPE_HEADER: sResult = tr("Header"); break;
-        case DETECTTYPE_OVERLAY: sResult = tr("Overlay"); break;
-        case DETECTTYPE_DEBUGDATA: sResult = tr("Debug data"); break;
-        case DETECTTYPE_ENTRYPOINT: sResult = tr("Entry point"); break;
-        case DETECTTYPE_SECTIONNAME: sResult = tr("Section name"); break;
-        case DETECTTYPE_IMPORTHASH: sResult = tr("Import hash"); break;
-        case DETECTTYPE_CODESECTION: sResult = tr("Code section"); break;
-        case DETECTTYPE_ENTRYPOINTSECTION: sResult = tr("Entry point section"); break;
-        case DETECTTYPE_NETANSISTRING: sResult = QString(".NET ANSI %1").arg(tr("String")); break;
-        case DETECTTYPE_NETUNICODESTRING: sResult = QString(".NET Unicode %1").arg(tr("String")); break;
-        case DETECTTYPE_RICH: sResult = QString("Rich"); break;
-        case DETECTTYPE_ARCHIVE: sResult = tr("Archive"); break;
-        case DETECTTYPE_RESOURCES: sResult = tr("Resources"); break;
-        case DETECTTYPE_DEXSTRING: sResult = QString("DEX %1").arg(tr("String")); break;
-        case DETECTTYPE_DEXTYPE: sResult = QString("DEX %1").arg(tr("Type")); break;
-    }
-
-    return sResult;
 }
 
 QString SpecAbstract::_SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, bool bShowType)
@@ -14886,7 +14860,7 @@ QList<XScanEngine::DEBUG_RECORD> SpecAbstract::convertHeur(QList<DETECT_RECORD> 
     for (qint32 i = 0; i < nNumberOfRecords; i++) {
         XScanEngine::DEBUG_RECORD record = {};
 
-        record.sType = heurTypeIdToString(pListDetectRecords->at(i).detectType);
+    record.sType = XScanEngine::heurTypeIdToString(pListDetectRecords->at(i).detectType);
         record.sName = QString("%1(%2)[%3]")
                            .arg(SpecAbstract::recordNameIdToString(pListDetectRecords->at(i).name), pListDetectRecords->at(i).sVersion, pListDetectRecords->at(i).sInfo);
         record.sValue = pListDetectRecords->at(i).sValue;
