@@ -39,6 +39,13 @@
 #include "modules/nfd_pdf.h"
 #include "modules/nfd_elf.h"
 #include "modules/nfd_com.h"
+#include "modules/nfd_msdos.h"
+// Newly delegated NFD modules
+#include "modules/nfd_javaclass.h"
+#include "modules/nfd_rar.h"
+#include "modules/nfd_le.h"
+#include "modules/nfd_lx.h"
+#include "modules/nfd_ne.h"
 
 class SpecAbstract : public XScanEngine {
     Q_OBJECT
@@ -53,6 +60,7 @@ public:
     using BINARYINFO_STRUCT = NFD_Binary::BINARYINFO_STRUCT;
     using AMIGAHUNKINFO_STRUCT = NFD_Amiga::AMIGAHUNKINFO_STRUCT;
     using CFBFINFO_STRUCT = NFD_CFBF::CFBFINFO_STRUCT;
+    using VI_STRUCT = NFD_Binary::VI_STRUCT;
 
     struct DEXINFO_STRUCT {
         BASIC_INFO basic_info;
@@ -88,11 +96,7 @@ public:
         bool bIsKotlin;
     };
 
-    struct RARINFO_STRUCT {
-        BASIC_INFO basic_info;
-
-        QList<XArchive::RECORD> listArchiveRecords;
-    };
+    using RARINFO_STRUCT = NFD_RAR::RARINFO_STRUCT;
 
     struct APKINFO_STRUCT {
         BASIC_INFO basic_info;
@@ -107,9 +111,7 @@ public:
 
     using JPEGINFO_STRUCT = NFD_JPEG::JPEGINFO_STRUCT;
 
-    struct JAVACLASSINFO_STRUCT {
-        BASIC_INFO basic_info;
-    };
+    using JAVACLASSINFO_STRUCT = NFD_JavaClass::JAVACLASSINFO_STRUCT;
 
     using PDFINFO_STRUCT = NFD_PDF::PDFINFO_STRUCT;
 
@@ -121,47 +123,15 @@ public:
 
     using COMINFO_STRUCT = NFD_COM::COMINFO_STRUCT;
 
-    struct MSDOSINFO_STRUCT {
-        BASIC_INFO basic_info;
-        qint64 nEntryPointOffset;
-        QString sEntryPointSignature;
-        QString sOverlaySignature;
-        qint64 nOverlayOffset;
-        qint64 nOverlaySize;
-    };
+    using MSDOSINFO_STRUCT = NFD_MSDOS::MSDOSINFO_STRUCT;
 
     using ELFINFO_STRUCT = NFD_ELF::ELFINFO_STRUCT;
 
-    struct LEINFO_STRUCT {
-        BASIC_INFO basic_info;
-        qint64 nEntryPointOffset;
-        QString sEntryPointSignature;
-        QString sOverlaySignature;
-        qint64 nOverlayOffset;
-        qint64 nOverlaySize;
+    using LEINFO_STRUCT = NFD_LE::LEINFO_STRUCT;
 
-        QList<XMSDOS::MS_RICH_RECORD> listRichSignatures;
-    };
+    using LXINFO_STRUCT = NFD_LX::LXINFO_STRUCT;
 
-    struct LXINFO_STRUCT {
-        BASIC_INFO basic_info;
-        qint64 nEntryPointOffset;
-        QString sEntryPointSignature;
-        QString sOverlaySignature;
-        qint64 nOverlayOffset;
-        qint64 nOverlaySize;
-
-        QList<XMSDOS::MS_RICH_RECORD> listRichSignatures;
-    };
-
-    struct NEINFO_STRUCT {
-        BASIC_INFO basic_info;
-        qint64 nEntryPointOffset;
-        QString sEntryPointSignature;
-        QString sOverlaySignature;
-        qint64 nOverlayOffset;
-        qint64 nOverlaySize;
-    };
+    using NEINFO_STRUCT = NFD_NE::NEINFO_STRUCT;
 
     struct MACHOINFO_STRUCT {
         BASIC_INFO basic_info;
@@ -260,26 +230,11 @@ public:
         QList<VCL_PACKAGEINFO_MODULE> listModules;
     };
 
-    struct VI_STRUCT {
-        bool bIsValid;
-        QString sVersion;
-        QString sInfo;
-        QVariant vValue;
-    };
 
     explicit SpecAbstract(QObject *pParent = nullptr);
 
-    static QString append(const QString &sResult, const QString &sString);  // Move
-
-    // heurTypeIdToString moved to XScanEngine
-
-    static QString _SCANS_STRUCT_toString(const _SCANS_STRUCT *pScanStruct, bool bShowType = true);
-
-    static BASIC_INFO _initBasicInfo(XBinary *pBinary, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
-
     static BINARYINFO_STRUCT getBinaryInfo(QIODevice *pDevice, XBinary::FT fileType, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                            XBinary::PDSTRUCT *pPdStruct);
-    static COMINFO_STRUCT getCOMInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static MSDOSINFO_STRUCT getMSDOSInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                          XBinary::PDSTRUCT *pPdStruct);
     static ELFINFO_STRUCT getELFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
@@ -385,19 +340,7 @@ public:
     static void MACHO_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct);
     static void MACHO_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct);
 
-    static void LE_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void LE_handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void LE_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void LE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LEINFO_STRUCT *pLEInfo, XBinary::PDSTRUCT *pPdStruct);
-
-    static void LX_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void LX_handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void LX_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void LX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, LXINFO_STRUCT *pLXInfo, XBinary::PDSTRUCT *pPdStruct);
-
-    static void NE_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void NE_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct);
-    static void NE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NEINFO_STRUCT *pNEInfo, XBinary::PDSTRUCT *pPdStruct);
+    // LE/LX Microsoft-specific handlers moved into NFD modules
 
     static void DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
     static void DEX_handle_Dexguard(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
@@ -424,75 +367,6 @@ public:
     static bool isScanStructPresent(QList<XScanEngine::SCANSTRUCT> *pListScanStructs, XBinary::FT fileType, RECORD_TYPE type = RECORD_TYPE_UNKNOWN,
                                     RECORD_NAME name = RECORD_NAME_UNKNOWN, const QString &sVersion = "", const QString &sInfo = "");
 
-    static VI_STRUCT get_UPX_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::FT fileType,
-                                XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT _get_UPX_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::FT fileType);
-    static VI_STRUCT get_GCC_vi1(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_GCC_vi2(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_Nim_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_Zig_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_Watcom_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_PyInstaller_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_DWRAF_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT _get_GCC_string(const QString &sString);
-    static VI_STRUCT get_WindowsInstaller_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_gold_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_TurboLinker_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions);
-    static VI_STRUCT get_Enigma_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_DeepSea_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_SmartAssembly_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_R8_marker_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_Go_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_Rust_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_ObfuscatorLLVM_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT _get_ObfuscatorLLVM_string(const QString &sString);
-    static VI_STRUCT get_AndroidClang_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT _get_AndroidClang_string(const QString &sString);
-    static VI_STRUCT _get_AlipayClang_string(const QString &sString);
-    static VI_STRUCT _get_AlpineClang_string(const QString &sString);
-    static VI_STRUCT _get_AlibabaClang_string(const QString &sString);
-    static VI_STRUCT _get_PlexClang_string(const QString &sString);
-    static VI_STRUCT _get_UbuntuClang_string(const QString &sString);
-    static VI_STRUCT _get_DebianClang_string(const QString &sString);
-    static VI_STRUCT _get_AlipayObfuscator_string(const QString &sString);
-    static VI_STRUCT _get_wangzehuaLLVM_string(const QString &sString);
-    static VI_STRUCT _get_ByteGuard_string(const QString &sString);
-    static VI_STRUCT _get_TencentObfuscation_string(const QString &sString);
-    static VI_STRUCT _get_AppImage_string(const QString &sString);
-    static VI_STRUCT _get_HikariObfuscator_string(const QString &sString);
-    static VI_STRUCT _get_SnapProtect_string(const QString &sString);
-    static VI_STRUCT _get_ByteDanceSecCompiler_string(const QString &sString);
-    static VI_STRUCT _get_DingbaozengNativeObfuscator_string(const QString &sString);
-    static VI_STRUCT _get_SafeengineLLVM_string(const QString &sString);
-    static VI_STRUCT _get_NagainLLVM_string(const QString &sString);
-    static VI_STRUCT _get_iJiami_string(const QString &sString);
-    static VI_STRUCT _get_AppleLLVM_string(const QString &sString);
-    static VI_STRUCT _get_ApportableClang_string(const QString &sString);
-    static VI_STRUCT _get_ARMAssembler_string(const QString &sString);
-    static VI_STRUCT _get_ARMLinker_string(const QString &sString);
-    static VI_STRUCT _get_ARMC_string(const QString &sString);
-    static VI_STRUCT _get_ARMCCPP_string(const QString &sString);
-    static VI_STRUCT _get_ARMNEONCCPP_string(const QString &sString);
-    static VI_STRUCT _get_ARMThumbCCPP_string(const QString &sString);
-    static VI_STRUCT _get_ARMThumbMacroAssembler_string(const QString &sString);
-    static VI_STRUCT _get_ThumbC_string(const QString &sString);
-    static VI_STRUCT _get_clang_string(const QString &sString);
-    static VI_STRUCT _get_DynASM_string(const QString &sString);
-    static VI_STRUCT _get_Delphi_string(const QString &sString);
-    static VI_STRUCT _get_LLD_string(const QString &sString);
-    static VI_STRUCT _get_mold_string(const QString &sString);
-    static VI_STRUCT _get_OracleSolarisLinkEditors_string(const QString &sString);
-    static VI_STRUCT _get_SunWorkShop_string(const QString &sString);
-    static VI_STRUCT _get_SunWorkShopCompilers_string(const QString &sString);
-    static VI_STRUCT _get_SnapdragonLLVMARM_string(const QString &sString);
-    static VI_STRUCT _get_NASM_string(const QString &sString);
-    static VI_STRUCT _get_TencentLegu_string(const QString &sString);
-    static VI_STRUCT _get_OllvmTll_string(const QString &sString);
-    static VI_STRUCT _get_DelphiVersionFromCompiler(const QString &sString);
-    static VI_STRUCT _get_SourceryCodeBench_string(const QString &sString);
-    static VI_STRUCT _get_Rust_string(const QString &sString);
-
-    static void _handleResult(BASIC_INFO *pBasic_info, XBinary::PDSTRUCT *pPdStruct);
 
     static bool PE_isValid_UPX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo);
     static void PE_x86Emul(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
@@ -504,46 +378,11 @@ public:
     static VCL_PACKAGEINFO PE_getVCLPackageInfo(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, QList<XPE::RESOURCE_RECORD> *pListResources,
                                                 XBinary::PDSTRUCT *pPdStruct);
 
-    static SCAN_STRUCT scansToScan(BASIC_INFO *pBasicInfo, _SCANS_STRUCT *pScansStruct);
-
-    static void memoryScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
-                           SpecAbstract::SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
-                           DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-    static void signatureScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, const QString &sSignature, SIGNATURE_RECORD *pRecords, qint32 nRecordsSize,
-                              XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-    static void PE_resourcesScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources, PE_RESOURCES_RECORD *pRecords,
-                                 qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
-                                 XBinary::PDSTRUCT *pPdStruct);
-    static void stringScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QList<QString> *pListStrings, STRING_RECORD *pRecords, qint32 nRecordsSize,
-                           XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-    static void constScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, CONST_RECORD *pRecords, qint32 nRecordsSize,
-                          XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-    static void MSDOS_richScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, quint32 nCount, MSRICH_RECORD *pRecords, qint32 nRecordsSize,
-                               XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-    static void archiveScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, STRING_RECORD *pRecords, qint32 nRecordsSize,
-                            XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-    static void archiveExpScan(QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, STRING_RECORD *pRecords, qint32 nRecordsSize,
-                               XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-
-    static void signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemoryMap, QMap<RECORD_NAME, _SCANS_STRUCT> *pMapRecords, qint64 nOffset,
-                                 SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
-                                 DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-
-    static QList<_SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, quint32 nCount, MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1,
-                                               XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-
-    static QByteArray serializeScanStruct(const SCAN_STRUCT &scanStruct, bool bIsHeader = false);
-    static SCAN_STRUCT deserializeScanStruct(const QByteArray &baData, bool *pbIsHeader = nullptr);
-
-    // Moved to NFD_Binary: getLanguage, fixLanguage, getOperationSystemScansStruct, getFormatScansStruct
-    static QString getMsRichString(quint16 nId, quint16 nBuild, quint32 nCount, XBinary::PDSTRUCT *pPdStruct);
-
     static QList<XScanEngine::SCANSTRUCT> convert(QList<SCAN_STRUCT> *pListScanStructs);
     static QList<XScanEngine::DEBUG_RECORD> convertHeur(QList<DETECT_RECORD> *pListDetectRecords);
 
 private:
-    static bool MSDOS_compareRichRecord(_SCANS_STRUCT *pResult, MSRICH_RECORD *pRecord, quint16 nID, quint32 nBuild, quint32 nCount, XBinary::FT fileType1,
-                                        XBinary::FT fileType2);
+    // MSDOS_compareRichRecord moved into NFD_MSDOS
     static void filterResult(QList<SCAN_STRUCT> *pListRecords, const QSet<RECORD_TYPE> &stRecordTypes, XBinary::PDSTRUCT *pPdStruct);
     static void _fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint32 nMajorLinkerVersion, qint32 nMinorLinkerVersion, XBinary::PDSTRUCT *pPdStruct);
 

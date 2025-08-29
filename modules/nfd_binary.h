@@ -49,6 +49,7 @@ enum DETECTTYPE {
     DETECTTYPE_SECTIONNAME
 };
 
+// Forward declaration to use SpecAbstract::VI_STRUCT in prototypes without cyclic include
 class NFD_Binary : public Binary_Script {
     Q_OBJECT
 
@@ -64,6 +65,15 @@ public:
         QString sVersion;
         QString sInfo;
     };
+
+    // Generic version/info result used by vi helpers (moved from SpecAbstract)
+    struct VI_STRUCT {
+        bool bIsValid;
+        QString sVersion;
+        QString sInfo;
+        QVariant vValue;
+    };
+
 
     struct DETECT_RECORD {
         qint64 nOffset;  // memory scan
@@ -250,11 +260,7 @@ public:
     static void constScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, CONST_RECORD *pRecords,
                           qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
                           XBinary::PDSTRUCT *pPdStruct);
-    static void MSDOS_richScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, quint32 nCount, MSRICH_RECORD *pRecords,
-                               qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
-                               XBinary::PDSTRUCT *pPdStruct);
-    static QList<SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, quint32 nCount, MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1,
-                                              XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+    // MSDOS Rich scan moved to NFD_MSDOS
     static void archiveScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, STRING_RECORD *pRecords,
                             qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
                             XBinary::PDSTRUCT *pPdStruct);
@@ -264,6 +270,84 @@ public:
     static void signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemoryMap, QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords,
                                  qint64 nOffset, SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
                                  BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+
+    // Version-info helpers moved from SpecAbstract
+    static VI_STRUCT get_UPX_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::FT fileType,
+                                XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT _get_UPX_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::FT fileType);
+
+    // Version-info helpers moved from SpecAbstract (delegated wrappers remain there)
+    static VI_STRUCT get_Enigma_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_DeepSea_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_SmartAssembly_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_R8_marker_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_Go_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_Rust_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_ObfuscatorLLVM_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT _get_ObfuscatorLLVM_string(const QString &sString);
+    static VI_STRUCT get_AndroidClang_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT _get_AndroidClang_string(const QString &sString);
+
+    // Version-info helpers moved from SpecAbstract (GCC/Nim/Zig)
+    static VI_STRUCT get_GCC_vi1(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_GCC_vi2(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_Nim_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_Zig_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+
+    // String parsers moved from SpecAbstract
+    static VI_STRUCT _get_GCC_string(const QString &sString);
+    static VI_STRUCT _get_AlipayClang_string(const QString &sString);
+    static VI_STRUCT _get_AlpineClang_string(const QString &sString);
+    static VI_STRUCT _get_AlibabaClang_string(const QString &sString);
+    static VI_STRUCT _get_PlexClang_string(const QString &sString);
+    static VI_STRUCT _get_UbuntuClang_string(const QString &sString);
+    static VI_STRUCT _get_DebianClang_string(const QString &sString);
+    static VI_STRUCT _get_AlipayObfuscator_string(const QString &sString);
+    static VI_STRUCT _get_wangzehuaLLVM_string(const QString &sString);
+    static VI_STRUCT _get_ByteGuard_string(const QString &sString);
+    static VI_STRUCT _get_TencentObfuscation_string(const QString &sString);
+    static VI_STRUCT _get_AppImage_string(const QString &sString);
+    static VI_STRUCT _get_HikariObfuscator_string(const QString &sString);
+    static VI_STRUCT _get_SnapProtect_string(const QString &sString);
+    static VI_STRUCT _get_ByteDanceSecCompiler_string(const QString &sString);
+    static VI_STRUCT _get_DingbaozengNativeObfuscator_string(const QString &sString);
+    static VI_STRUCT _get_SafeengineLLVM_string(const QString &sString);
+    static VI_STRUCT _get_NagainLLVM_string(const QString &sString);
+    static VI_STRUCT _get_iJiami_string(const QString &sString);
+    static VI_STRUCT _get_AppleLLVM_string(const QString &sString);
+    static VI_STRUCT _get_ApportableClang_string(const QString &sString);
+    static VI_STRUCT _get_ARMAssembler_string(const QString &sString);
+    static VI_STRUCT _get_ARMLinker_string(const QString &sString);
+    static VI_STRUCT _get_ARMC_string(const QString &sString);
+    static VI_STRUCT _get_ARMCCPP_string(const QString &sString);
+    static VI_STRUCT _get_ARMNEONCCPP_string(const QString &sString);
+    static VI_STRUCT _get_ARMThumbCCPP_string(const QString &sString);
+    static VI_STRUCT _get_ARMThumbMacroAssembler_string(const QString &sString);
+    static VI_STRUCT _get_ThumbC_string(const QString &sString);
+    static VI_STRUCT _get_clang_string(const QString &sString);
+    static VI_STRUCT _get_DynASM_string(const QString &sString);
+    static VI_STRUCT _get_Delphi_string(const QString &sString);
+    static VI_STRUCT _get_LLD_string(const QString &sString);
+    static VI_STRUCT _get_mold_string(const QString &sString);
+    static VI_STRUCT _get_OracleSolarisLinkEditors_string(const QString &sString);
+    static VI_STRUCT _get_SunWorkShop_string(const QString &sString);
+    static VI_STRUCT _get_SunWorkShopCompilers_string(const QString &sString);
+    static VI_STRUCT _get_SnapdragonLLVMARM_string(const QString &sString);
+    static VI_STRUCT _get_NASM_string(const QString &sString);
+    static VI_STRUCT _get_TencentLegu_string(const QString &sString);
+    static VI_STRUCT _get_OllvmTll_string(const QString &sString);
+    static VI_STRUCT _get_DelphiVersionFromCompiler(const QString &sString);
+    static VI_STRUCT _get_SourceryCodeBench_string(const QString &sString);
+    static VI_STRUCT _get_Rust_string(const QString &sString);
+
+    // Additional VI helpers moved from SpecAbstract
+    static VI_STRUCT get_Watcom_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_PyInstaller_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_DWRAF_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_WindowsInstaller_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                             XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_gold_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_TurboLinker_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions);
 
 signals:
 };

@@ -23,7 +23,6 @@
 #include "xbinary.h"
 #include "xpe.h"
 #include "xarchive.h"
-#include "specabstract.h"
 
 NFD_Binary::NFD_Binary(XBinary *pBinary, XBinary::FILEPART filePart, OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct)
     : Binary_Script(pBinary, filePart, pOptions, pPdStruct)
@@ -344,30 +343,7 @@ void NFD_Binary::constScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRec
     }
 }
 
-void NFD_Binary::MSDOS_richScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, quint32 nCount,
-                                MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
-                                DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
-{
-    // Keep delegating due to dependency on SpecAbstract::MSDOS_compareRichRecord
-    SpecAbstract::MSDOS_richScan(reinterpret_cast<QMap<SpecAbstract::RECORD_NAME, SpecAbstract::_SCANS_STRUCT> *>(pMapRecords), nID, nBuild, nCount,
-                                 reinterpret_cast<SpecAbstract::MSRICH_RECORD *>(pRecords), nRecordsSize, fileType1, fileType2,
-                                 reinterpret_cast<SpecAbstract::BASIC_INFO *>(pBasicInfo), detectType, pPdStruct);
-}
 
-QList<NFD_Binary::SCANS_STRUCT> NFD_Binary::MSDOS_richScan(quint16 nID, quint32 nBuild, quint32 nCount, MSRICH_RECORD *pRecords, qint32 nRecordsSize,
-                                                            XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
-                                                            XBinary::PDSTRUCT *pPdStruct)
-{
-    // Keep delegating due to dependency on SpecAbstract::MSDOS_compareRichRecord
-    QList<SpecAbstract::_SCANS_STRUCT> list = SpecAbstract::MSDOS_richScan(nID, nBuild, nCount,
-                                                                           reinterpret_cast<SpecAbstract::MSRICH_RECORD *>(pRecords), nRecordsSize, fileType1,
-                                                                           fileType2, reinterpret_cast<SpecAbstract::BASIC_INFO *>(pBasicInfo), detectType,
-                                                                           pPdStruct);
-    QList<NFD_Binary::SCANS_STRUCT> out;
-    out.reserve(list.size());
-    for (const auto &it : list) out.append(*reinterpret_cast<const NFD_Binary::SCANS_STRUCT *>(&it));
-    return out;
-}
 
 void NFD_Binary::archiveScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, STRING_RECORD *pRecords,
                              qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
@@ -901,4 +877,1290 @@ Binary_Script::OPTIONS NFD_Binary::toOptions(const XScanEngine::SCAN_OPTIONS *pS
     // Profiling is a runtime tracing option; default to false here
     opts.bIsProfiling = false;
     return opts;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_UPX_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::FT fileType,
+                                             XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    qint64 nStringOffset1 = binary.find_ansiString(nOffset, nSize, "$Id: UPX", pPdStruct);
+    qint64 nStringOffset2 = binary.find_ansiString(nOffset, nSize, "UPX!", pPdStruct);
+
+    if (nStringOffset1 != -1) {
+        result.bIsValid = true;
+
+        result.sVersion = binary.read_ansiString(nStringOffset1 + 9, 10);
+        result.sVersion = result.sVersion.section(" ", 0, 0);
+
+        if (!XBinary::checkVersionString(result.sVersion)) {
+            result.sVersion = "";
+        }
+
+        // NRV
+        qint64 nNRVStringOffset1 = binary.find_array(nOffset, nSize, "\x24\x49\x64\x3a\x20\x4e\x52\x56\x20", 9, pPdStruct);
+
+        if (nNRVStringOffset1 != -1) {
+            QString sNRVVersion = binary.read_ansiString(nNRVStringOffset1 + 9, 10);
+            sNRVVersion = sNRVVersion.section(" ", 0, 0);
+
+            if (XBinary::checkVersionString(sNRVVersion)) {
+                result.sInfo = QString("NRV %1").arg(sNRVVersion);
+            }
+        }
+    }
+
+    if (nStringOffset2 != -1) {
+    VI_STRUCT viUPX = _get_UPX_vi(pDevice, pOptions, nStringOffset2, 0x24, fileType);
+
+        if (viUPX.bIsValid) {
+            result.sInfo = XBinary::appendComma(result.sInfo, viUPX.sInfo);
+
+            if (result.sVersion == "") {
+                result.sVersion = viUPX.sVersion;
+            }
+        }
+
+        result.bIsValid = true;  // TODO Check
+
+        if (result.sVersion == "") {
+            result.sVersion = binary.read_ansiString(nStringOffset2 - 5, 4);
+        }
+    }
+
+    if (!XBinary::checkVersionString(result.sVersion)) {
+        result.sVersion = "";
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_UPX_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::FT fileType)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if (binary.isOffsetAndSizeValid(nOffset, nSize)) {
+        if (nSize >= 22) {
+            result.bIsValid = true;
+
+            quint8 nVersion = binary.read_uint8(nOffset + 4);
+            quint8 nFormat = binary.read_uint8(nOffset + 5);
+            quint8 nMethod = binary.read_uint8(nOffset + 6);
+            quint8 nLevel = binary.read_uint8(nOffset + 7);
+
+            quint32 nULen = 0;
+            quint32 nCLen = 0;
+            quint32 nUAdler = 0;
+            quint32 nCAdler = 0;
+            quint32 nFileSize = 0;
+            quint8 nFilter = 0;
+            quint8 nFilterCTO = 0;
+            quint8 nMRU = 0;
+            quint8 nHeaderChecksum = 0;
+
+            if (nFormat < 128) {
+                if ((nFormat == 1) || (nFormat == 2))  // UPX_F_DOS_COM, UPX_F_DOS_SYS
+                {
+                    if (nSize >= 22) {
+                        nULen = binary.read_uint16(nOffset + 16);
+                        nCLen = binary.read_uint16(nOffset + 18);
+                        nFilter = binary.read_uint8(nOffset + 20);
+                        nHeaderChecksum = binary.read_uint8(nOffset + 21);
+                    } else {
+                        result.bIsValid = false;
+                    }
+                } else if (nFormat == 3)  // UPX_F_DOS_EXE
+                {
+                    if (nSize >= 27) {
+                        nULen = binary.read_uint24(nOffset + 16);
+                        nCLen = binary.read_uint24(nOffset + 19);
+                        nFileSize = binary.read_uint24(nOffset + 22);
+                        nFilter = binary.read_uint8(nOffset + 25);
+                        nHeaderChecksum = binary.read_uint8(nOffset + 26);
+                    } else {
+                        result.bIsValid = false;
+                    }
+                } else {
+                    if (nSize >= 32) {
+                        nULen = binary.read_uint32(nOffset + 16);
+                        nCLen = binary.read_uint32(nOffset + 20);
+                        nFileSize = binary.read_uint32(nOffset + 24);
+                        nFilter = binary.read_uint8(nOffset + 28);
+                        nFilterCTO = binary.read_uint8(nOffset + 29);
+                        nMRU = binary.read_uint8(nOffset + 30);
+                        nHeaderChecksum = binary.read_uint8(nOffset + 31);
+                    } else {
+                        result.bIsValid = false;
+                    }
+                }
+
+                if (result.bIsValid) {
+                    nUAdler = binary.read_uint32(nOffset + 8);
+                    nCAdler = binary.read_uint32(nOffset + 12);
+                }
+            } else {
+                if (nSize >= 32) {
+                    nULen = binary.read_uint32(nOffset + 8, true);
+                    nCLen = binary.read_uint32(nOffset + 12, true);
+                    nUAdler = binary.read_uint32(nOffset + 16, true);
+                    nCAdler = binary.read_uint32(nOffset + 20, true);
+                    nFileSize = binary.read_uint32(nOffset + 24, true);
+                    nFilter = binary.read_uint8(nOffset + 28);
+                    nFilterCTO = binary.read_uint8(nOffset + 29);
+                    nMRU = binary.read_uint8(nOffset + 30);
+                    nHeaderChecksum = binary.read_uint8(nOffset + 31);
+                } else {
+                    result.bIsValid = false;
+                }
+            }
+
+            Q_UNUSED(nUAdler)
+            Q_UNUSED(nCAdler)
+            Q_UNUSED(nFileSize)
+            Q_UNUSED(nFilter)
+            Q_UNUSED(nFilterCTO)
+            Q_UNUSED(nMRU)
+            Q_UNUSED(nHeaderChecksum)
+
+            if (result.bIsValid) {
+                // Check Executable formats
+                if (nFormat == 0) result.bIsValid = false;
+                if ((nFormat > 42) && (nFormat < 129)) result.bIsValid = false;
+                if (nFormat > 142) result.bIsValid = false;
+                if (nFormat == 7) result.bIsValid = false;    // UPX_F_DOS_EXEH        OBSOLETE
+                if (nFormat == 6) result.bIsValid = false;    // UPX_F_VXD_LE NOT      IMPLEMENTED
+                if (nFormat == 11) result.bIsValid = false;   // UPX_F_WIN16_NE NOT    IMPLEMENTED
+                if (nFormat == 13) result.bIsValid = false;   // UPX_F_LINUX_SEP_i386  NOT IMPLEMENTED
+                if (nFormat == 17) result.bIsValid = false;   // UPX_F_ELKS_8086 NOT   IMPLEMENTED
+                if (nFormat == 130) result.bIsValid = false;  // UPX_F_SOLARIS_SPARC   NOT IMPLEMENTED
+
+                if (fileType == XBinary::FT_COM) {
+                    if ((nFormat != 1) &&  // UPX_F_DOS_COM
+                        (nFormat != 2))    // UPX_F_DOS_SYS
+                    {
+                        result.bIsValid = false;
+                    }
+                } else if (fileType == XBinary::FT_MSDOS) {
+                    if ((nFormat != 3))  // UPX_F_DOS_EXE
+                    {
+                        result.bIsValid = false;
+                    }
+                } else if ((fileType == XBinary::FT_LE) || (fileType == XBinary::FT_LX)) {
+                    if ((nFormat != 5))  // UPX_F_WATCOM_LE
+                    {
+                        result.bIsValid = false;
+                    }
+                } else if (fileType == XBinary::FT_PE) {
+                    if ((nFormat != 9) &&   // UPX_F_WIN32_PE
+                        (nFormat != 21) &&  // UPX_F_WINCE_ARM_PE
+                        (nFormat != 36))    // UPX_F_WIN64_PEP
+                    {
+                        result.bIsValid = false;
+                    }
+                } else if (fileType == XBinary::FT_MACHO) {
+                    if ((nFormat != 29) &&   // UPX_F_MACH_i386
+                        (nFormat != 32) &&   // UPX_F_MACH_ARMEL
+                        (nFormat != 33) &&   // UPX_F_DYLIB_i386
+                        (nFormat != 34) &&   // UPX_F_MACH_AMD64
+                        (nFormat != 35) &&   // UPX_F_DYLIB_AMD64
+                        (nFormat != 37) &&   // UPX_F_MACH_ARM64EL
+                        (nFormat != 38) &&   // UPX_F_MACH_PPC64LE
+                        (nFormat != 41) &&   // UPX_F_DYLIB_PPC64LE
+                        (nFormat != 131) &&  // UPX_F_MACH_PPC32
+                        (nFormat != 134) &&  // UPX_F_MACH_FAT
+                        (nFormat != 138) &&  // UPX_F_DYLIB_PPC32
+                        (nFormat != 139) &&  // UPX_F_MACH_PPC64
+                        (nFormat != 142))    // UPX_F_DYLIB_PPC64
+                    {
+                        result.bIsValid = false;
+                    }
+                } else if (fileType == XBinary::FT_ELF) {
+                    if ((nFormat != 10) &&   // UPX_F_LINUX_i386
+                        (nFormat != 12) &&   // UPX_F_LINUX_ELF_i386
+                        (nFormat != 14) &&   // UPX_F_LINUX_SH_i386
+                        (nFormat != 15) &&   // UPX_F_VMLINUZ_i386
+                        (nFormat != 16) &&   // UPX_F_BVMLINUZ_i386
+                        (nFormat != 19) &&   // UPX_F_VMLINUX_i386
+                        (nFormat != 20) &&   // UPX_F_LINUX_ELFI_i386
+                        (nFormat != 22) &&   // UPX_F_LINUX_ELF64_AMD
+                        (nFormat != 23) &&   // UPX_F_LINUX_ELF32_ARMEL
+                        (nFormat != 24) &&   // UPX_F_BSD_i386
+                        (nFormat != 25) &&   // UPX_F_BSD_ELF_i386
+                        (nFormat != 26) &&   // UPX_F_BSD_SH_i386
+                        (nFormat != 27) &&   // UPX_F_VMLINUX_AMD64
+                        (nFormat != 28) &&   // UPX_F_VMLINUX_ARMEL
+                        (nFormat != 30) &&   // UPX_F_LINUX_ELF32_MIPSEL
+                        (nFormat != 31) &&   // UPX_F_VMLINUZ_ARMEL
+                        (nFormat != 39) &&   // UPX_F_LINUX_ELFPPC64LE
+                        (nFormat != 40) &&   // UPX_F_VMLINUX_PPC64LE
+                        (nFormat != 42) &&   // UPX_F_LINUX_ELF64_ARM
+                        (nFormat != 132) &&  // UPX_F_LINUX_ELFPPC32
+                        (nFormat != 133) &&  // UPX_F_LINUX_ELF32_ARMEB
+                        (nFormat != 135) &&  // UPX_F_VMLINUX_ARMEB
+                        (nFormat != 136) &&  // UPX_F_VMLINUX_PPC32
+                        (nFormat != 137) &&  // UPX_F_LINUX_ELF32_MIPSEB
+                        (nFormat != 140) &&  // UPX_F_LINUX_ELFPPC64
+                        (nFormat != 141))    // UPX_F_VMLINUX_PPC64
+                    {
+                        result.bIsValid = false;
+                    }
+                }
+
+                // Check Version
+                if (nVersion > 14) {
+                    result.bIsValid = false;
+                }
+
+                // Check Methods
+                if ((nMethod < 2) || (nMethod > 15)) {
+                    result.bIsValid = false;
+                }
+
+                // Check Level
+                if (nLevel > 10) {
+                    result.bIsValid = false;
+                }
+
+                // Check size
+                if (nCLen > nULen) {
+                    result.bIsValid = false;
+                }
+            }
+
+            if (result.bIsValid) {
+                switch (nMethod)  // From https://github.com/upx/upx/blob/master/src/conf.h
+                {
+                    case 2: result.sInfo = XBinary::appendComma(result.sInfo, "NRV2B_LE32"); break;
+                    case 3: result.sInfo = XBinary::appendComma(result.sInfo, "NRV2B_8"); break;
+                    case 4: result.sInfo = XBinary::appendComma(result.sInfo, "NRV2B_LE16"); break;
+                    case 5: result.sInfo = XBinary::appendComma(result.sInfo, "NRV2D_LE32"); break;
+                    case 6: result.sInfo = XBinary::appendComma(result.sInfo, "NRV2D_8"); break;
+                    case 7: result.sInfo = XBinary::appendComma(result.sInfo, "NRV2D_LE16"); break;
+                    case 8: result.sInfo = XBinary::appendComma(result.sInfo, "NRV2E_LE32"); break;
+                    case 9: result.sInfo = XBinary::appendComma(result.sInfo, "NRV2E_8"); break;
+                    case 10: result.sInfo = XBinary::appendComma(result.sInfo, "NRV2E_LE16"); break;
+                    case 14: result.sInfo = XBinary::appendComma(result.sInfo, "LZMA"); break;
+                    case 15: result.sInfo = XBinary::appendComma(result.sInfo, "zlib"); break;
+                }
+
+                if (result.sInfo != "") {
+                    if (nLevel == 8) {
+                        result.sInfo = XBinary::appendComma(result.sInfo, "best");
+                    } else {
+                        result.sInfo = XBinary::appendComma(result.sInfo, "brute");
+                    }
+                }
+
+                result.vValue = binary.read_uint32(nOffset);
+
+                if (result.vValue.toUInt() != 0x21585055)  // UPX!
+                {
+                    result.sInfo = XBinary::appendComma(result.sInfo, QString("Modified(%1)").arg(XBinary::valueToHex((quint32)result.vValue.toUInt())));
+                }
+            }
+        }
+    }
+
+    return result;
+}
+
+// ---- VI helpers moved from SpecAbstract ----
+NFD_Binary::VI_STRUCT NFD_Binary::get_Enigma_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if (!result.bIsValid) {
+        qint64 _nOffset = binary.find_array(nOffset, nSize, "\x00\x00\x00\x45\x4e\x49\x47\x4d\x41", 9, pPdStruct);  // \x00\x00\x00ENIGMA
+
+        if (_nOffset != -1) {
+            quint8 nMajor = binary.read_uint8(_nOffset + 9);
+            quint8 nMinor = binary.read_uint8(_nOffset + 10);
+            quint16 nYear = binary.read_uint16(_nOffset + 11);
+            quint16 nMonth = binary.read_uint16(_nOffset + 13);
+            quint16 nDay = binary.read_uint16(_nOffset + 15);
+            quint16 nHour = binary.read_uint16(_nOffset + 17);
+            quint16 nMin = binary.read_uint16(_nOffset + 19);
+            quint16 nSec = binary.read_uint16(_nOffset + 21);
+
+            result.sVersion = QString("%1.%2 build %3.%4.%5 %6:%7:%8")
+                                  .arg(nMajor)
+                                  .arg(nMinor, 2, 10, QChar('0'))
+                                  .arg(nYear, 4, 10, QChar('0'))
+                                  .arg(nMonth, 2, 10, QChar('0'))
+                                  .arg(nDay, 2, 10, QChar('0'))
+                                  .arg(nHour, 2, 10, QChar('0'))
+                                  .arg(nMin, 2, 10, QChar('0'))
+                                  .arg(nSec, 2, 10, QChar('0'));
+
+            result.bIsValid = true;
+        }
+    }
+
+    if (!result.bIsValid) {
+        qint64 _nOffset = binary.find_ansiString(nOffset, nSize, " *** Enigma protector v", pPdStruct);
+
+        if (_nOffset != -1) {
+            result.sVersion = binary.read_ansiString(_nOffset + 23).section(" ", 0, 0);
+            result.bIsValid = true;
+        }
+    }
+
+    if (!result.bIsValid) {
+        qint64 _nOffset = binary.find_ansiString(nOffset, nSize, "The Enigma Protector version", pPdStruct);
+
+        if (_nOffset != -1) {
+            result.sVersion = binary.read_ansiString(_nOffset + 23).section(" ", 0, 0);
+            result.bIsValid = true;
+        }
+    }
+
+    if (!result.bIsValid) {
+        qint64 _nOffset = binary.find_ansiString(nOffset, nSize, "Enigma Protector", pPdStruct);
+
+        if (_nOffset != -1) {
+            result.sVersion = "5.XX";  // TODO version
+            result.bIsValid = true;
+        }
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_DeepSea_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    qint64 _nOffset = binary.find_ansiString(nOffset, nSize, "DeepSeaObfuscator", pPdStruct);
+
+    if (_nOffset != -1) {
+        result.bIsValid = true;  // TODO Check
+        result.sVersion = "4.X";
+
+        QString sFullString = binary.read_ansiString(_nOffset + 18);
+
+        if (sFullString.contains("Evaluation")) {
+            result.sInfo = "Evaluation";
+        }
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_SmartAssembly_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                                       XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    qint64 _nOffset = binary.find_ansiString(nOffset, nSize, "Powered by SmartAssembly ", pPdStruct);
+
+    if (_nOffset != -1) {
+        result.bIsValid = true;
+        result.sVersion = binary.read_ansiString(_nOffset + 25);
+        // TODO more checks!
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_R8_marker_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                                    XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    // https://r8.googlesource.com/r8/+/refs/heads/master/src/main/java/com/android/tools/r8/dex/Marker.java
+    // X~~D8{"compilation-mode":"release","has-checksums":false,"min-api":14,"version":"2.0.88"}
+    // h~~D8{"backend":"dex","compilation-mode":"release","has-checksums":false,"min-api":28,"version":"8.6.17"}
+    qint64 _nOffset = binary.find_ansiString(nOffset, nSize, "\"compilation-mode\":\"", pPdStruct);
+
+    if (_nOffset > 20)  // TODO rewrite
+    {
+        _nOffset = binary.find_ansiString(_nOffset - 21, 20, "~~", pPdStruct);
+
+        if (_nOffset != -1) {
+            result.bIsValid = true;
+            QString sString = binary.read_ansiString(_nOffset);
+
+            result.sVersion = XBinary::regExp("\"version\":\"(.*?)\"", sString, 1);
+
+            if (sString.contains("~~D8") || sString.contains("~~R8")) {
+                result.sInfo = XBinary::regExp("\"compilation-mode\":\"(.*?)\"", sString, 1);
+            } else {
+                result.sInfo = "CHECK D8: " + sString;
+            }
+        }
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_Go_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    qint64 _nOffset = nOffset;
+    qint64 _nSize = nSize;
+
+    QString sVersion;
+
+    qint64 nMaxVersion = 0;
+
+    while ((_nSize > 0) && XBinary::isPdStructNotCanceled(pPdStruct)) {
+        _nOffset = binary.find_ansiString(_nOffset, _nSize, "go1.", pPdStruct);
+
+        if (_nOffset == -1) {
+            break;
+        }
+
+        QString _sVersion = XBinary::getVersionString(binary.read_ansiString(_nOffset + 2, 10));
+
+        qint64 nVersionValue = XBinary::getVersionIntValue(_sVersion);
+
+        if (nVersionValue > nMaxVersion) {
+            nMaxVersion = nVersionValue;
+            sVersion = _sVersion;
+        }
+
+        _nOffset++;
+        _nSize = nSize - (_nOffset - nOffset) - 1;
+    }
+
+    if (sVersion != "") {
+        result.bIsValid = true;
+        result.sVersion = sVersion;
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_Rust_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    // TODO version
+    qint64 nOffset_Version = -1;
+
+    if (nOffset_Version == -1) {
+        // TODO false positives in die.exe
+        nOffset_Version = binary.find_ansiString(nOffset, nSize, "Local\\RustBacktraceMutex", pPdStruct);
+
+        if (nOffset_Version != -1) {
+            result.bIsValid = true;
+        }
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_ObfuscatorLLVM_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                                        XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    qint64 nOffset_Version = -1;  // TODO get max version
+
+    if (nOffset_Version == -1) {
+        nOffset_Version = binary.find_ansiString(nOffset, nSize, "Obfuscator-", pPdStruct);  // 3.4 - 6.0.0
+
+        if (nOffset_Version != -1) {
+            QString sVersionString = binary.read_ansiString(nOffset_Version);
+
+            result = _get_ObfuscatorLLVM_string(sVersionString);
+        }
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_ObfuscatorLLVM_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+
+    if (sString.contains("Obfuscator-clang version") ||     // 3.4
+        sString.contains("Obfuscator- clang version") ||    // 3.51
+        sString.contains("Obfuscator-LLVM clang version"))  // 3.6.1 - 6.0.0
+    {
+        result.bIsValid = true;
+
+        result.sVersion = sString.section("version ", 1, 1).section("(", 0, 0).section(" ", 0, 0);
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_AndroidClang_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                                       XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    qint64 nOffset_Version = binary.find_ansiString(nOffset, nSize, "Android clang", pPdStruct);
+
+    if (nOffset_Version != -1) {
+        QString sVersionString = binary.read_ansiString(nOffset_Version);
+
+        result = _get_AndroidClang_string(sVersionString);
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_AndroidClang_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+
+    if (sString.contains("Android clang")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 3, 3);
+    } else if (sString.contains("Android (") && sString.contains(" clang version ")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" clang version ", 1, 1).section(" ", 0, 0);
+    }
+
+    return result;
+}
+
+// ---- Additional VI helpers moved from SpecAbstract ----
+NFD_Binary::VI_STRUCT NFD_Binary::get_GCC_vi1(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                              XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    // TODO get max version
+    qint64 nOffset_Version = binary.find_ansiString(nOffset, nSize, "GCC:", pPdStruct);
+
+    if (nOffset_Version != -1) {
+        QString sVersionString = binary.read_ansiString(nOffset_Version);
+
+        // Inline parse copied from SpecAbstract::_get_GCC_string to avoid back dependency
+        if (sVersionString.contains("GCC:")) {
+            result.bIsValid = true;
+
+            if (sVersionString.contains("MinGW")) {
+                result.sInfo = "MinGW";
+            } else if (sVersionString.contains("MSYS2")) {
+                result.sInfo = "MSYS2";
+            } else if (sVersionString.contains("Cygwin")) {
+                result.sInfo = "Cygwin";
+            }
+
+            if ((sVersionString.contains("(experimental)")) || (sVersionString.contains("(prerelease)"))) {
+                result.sVersion = sVersionString.section(" ", -3, -1);
+            } else if (sVersionString.contains("(GNU) c ")) {
+                result.sVersion = sVersionString.section("(GNU) c ", 1, -1);
+            } else if (sVersionString.contains("GNU")) {
+                result.sVersion = sVersionString.section(" ", 2, -1);
+            } else if (sVersionString.contains("Rev1, Built by MSYS2 project")) {
+                result.sVersion = sVersionString.section(" ", -2, -1);
+            } else if (sVersionString.contains("(Ubuntu ")) {
+                result.sVersion = sVersionString.section(") ", 1, 1).section(" ", 0, 0);
+            } else if (sVersionString.contains("StartOS)")) {
+                result.sVersion = sVersionString.section(")", 1, 1).section(" ", 0, 0);
+            } else if (sVersionString.contains("GCC: (c) ")) {
+                result.sVersion = sVersionString.section("GCC: (c) ", 1, 1);
+            } else {
+                result.sVersion = sVersionString.section(" ", -1, -1);
+            }
+        }
+    }
+
+    return result;
+}
+
+// String-only parsers moved from SpecAbstract
+NFD_Binary::VI_STRUCT NFD_Binary::_get_GCC_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+
+    if (sString.contains("GCC:")) {
+        result.bIsValid = true;
+
+        if (sString.contains("MinGW")) {
+            result.sInfo = "MinGW";
+        } else if (sString.contains("MSYS2")) {
+            result.sInfo = "MSYS2";
+        } else if (sString.contains("Cygwin")) {
+            result.sInfo = "Cygwin";
+        }
+
+        if ((sString.contains("(experimental)")) || (sString.contains("(prerelease)"))) {
+            result.sVersion = sString.section(" ", -3, -1);  // TODO Check
+        } else if (sString.contains("(GNU) c ")) {
+            result.sVersion = sString.section("(GNU) c ", 1, -1);
+        } else if (sString.contains("GNU")) {
+            result.sVersion = sString.section(" ", 2, -1);
+        } else if (sString.contains("Rev1, Built by MSYS2 project")) {
+            result.sVersion = sString.section(" ", -2, -1);
+        } else if (sString.contains("(Ubuntu ")) {
+            result.sVersion = sString.section(") ", 1, 1).section(" ", 0, 0);
+        } else if (sString.contains("StartOS)")) {
+            result.sVersion = sString.section(")", 1, 1).section(" ", 0, 0);
+        } else if (sString.contains("GCC: (c) ")) {
+            result.sVersion = sString.section("GCC: (c) ", 1, 1);
+        } else {
+            result.sVersion = sString.section(" ", -1, -1);
+        }
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_AlipayClang_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("Alipay clang")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 3, 3);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_AlpineClang_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("Alpine clang")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 3, 3);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_AlibabaClang_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("Alibaba clang")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 3, 3);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_PlexClang_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("Plex clang")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 3, 3);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_UbuntuClang_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("Ubuntu clang")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 3, 3);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_DebianClang_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("Debian clang")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 3, 3);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_AlipayObfuscator_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("Alipay")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 3, 3);
+        if (sString.contains("Trial")) result.sInfo = "Trial";
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_wangzehuaLLVM_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("wangzehua  clang version")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section("wangzehua  clang version", 1, 1);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_ByteGuard_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("ByteGuard")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section("ByteGuard ", 1, 1).section("-", 0, 0).section(")", 0, 0);
+    } else if (sString.contains("Byteguard")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section("Byteguard ", 1, 1).section("-", 0, 0).section(")", 0, 0);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_TencentObfuscation_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("Tencent-Obfuscation Compiler")) {
+        result.bIsValid = true; // TODO Version
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_AppImage_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("AppImage by Simon Peter, http://appimage.org/")) {
+        result.bIsValid = true; // TODO Version
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_HikariObfuscator_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("HikariObfuscator") || sString.contains("_Hikari") || sString.contains("Hikari.git")) {
+        result.bIsValid = true; // TODO Version
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_SnapProtect_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("snap.protect version ")) {
+        result.sVersion = sString.section("snap.protect version ", 1, 1).section(" ", 0, 0);
+        result.bIsValid = true;
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_ByteDanceSecCompiler_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("ByteDance-SecCompiler")) {
+        result.bIsValid = true; // TODO Version
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_DingbaozengNativeObfuscator_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("dingbaozeng/native_obfuscator.git")) {
+        result.bIsValid = true; // TODO Version
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_SafeengineLLVM_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("Safengine clang version")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 3, 3);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_NagainLLVM_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("Nagain-LLVM clang version")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 3, 3);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_iJiami_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("ijiami LLVM Compiler- clang version")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 5, 5);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_AppleLLVM_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("Apple LLVM version")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section("Apple LLVM version ", 1, 1).section(" ", 0, 0);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_ApportableClang_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("Apportable clang version")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 3, 3);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_ARMAssembler_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("ARM Assembler,")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(", ", 1, -1);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_ARMLinker_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("ARM Linker,")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(", ", 1, -1).section("]", 0, 0) + "]";
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_ARMC_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("ARM C Compiler,")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(", ", 1, -1);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_ARMCCPP_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("ARM C/C++ Compiler,")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(", ", 1, -1);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_ARMNEONCCPP_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("ARM NEON C/C++ Compiler,")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(", ", 1, -1);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_ARMThumbCCPP_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("ARM/Thumb C/C++ Compiler,")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(", ", 1, -1);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_ARMThumbMacroAssembler_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("ARM/Thumb Macro Assembler")) {
+        result.bIsValid = true;
+        if (sString.contains("vsn ")) {
+            result.sVersion = sString.section("vsn ", 1, -1);
+        } else {
+            result.sVersion = sString.section(", ", 1, -1);
+        }
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_ThumbC_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("Thumb C Compiler,")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(", ", 1, -1);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_clang_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (XBinary::isRegExpPresent("^clang version", sString)) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 2, 2);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_DynASM_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("DynASM")) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 1, 1);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_Delphi_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (XBinary::isRegExpPresent("^Embarcadero Delphi for", sString)) {
+        result.bIsValid = true;
+        result.sVersion = sString.section("version ", 1, 1);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_LLD_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (XBinary::isRegExpPresent("^Linker: LLD", sString)) {
+        result.bIsValid = true;
+        result.sVersion = sString.section("Linker: LLD ", 1, 1).section("(", 0, 0);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_mold_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (XBinary::isRegExpPresent("^mold ", sString)) {
+        result.bIsValid = true; // TODO version
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_OracleSolarisLinkEditors_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (XBinary::isRegExpPresent("^ld: Software Generation Utilities - Solaris Link Editors:", sString)) {
+        result.bIsValid = true;
+        result.sVersion = sString.section("Solaris Link Editors: ", 1, 1);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_SunWorkShop_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (XBinary::isRegExpPresent("Sun WorkShop", sString)) {
+        result.bIsValid = true;
+        result.sVersion = sString.section("Sun WorkShop ", 1, 1).section(" ", 0, 1).section("\r", 0, 0).section("\n", 0, 0);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_SunWorkShopCompilers_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (XBinary::isRegExpPresent("WorkShop Compilers", sString)) {
+        result.bIsValid = true;
+        result.sVersion = sString.section("WorkShop Compilers ", 1, 1).section("\r", 0, 0).section("\n", 0, 0);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_SnapdragonLLVMARM_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (XBinary::isRegExpPresent("^Snapdragon LLVM ARM Compiler", sString)) {
+        result.bIsValid = true;
+        result.sVersion = sString.section(" ", 4, 4);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_NASM_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (XBinary::isRegExpPresent("^The Netwide Assembler", sString)) {
+        result.bIsValid = true;
+        result.sVersion = sString.section("The Netwide Assembler ", 1, 1);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_TencentLegu_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (XBinary::isRegExpPresent("^legu", sString)) {
+        result.bIsValid = true; // TODO Version
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_OllvmTll_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (sString.contains("ollvm-tll.git")) {
+        result.bIsValid = true; // TODO Version
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_DelphiVersionFromCompiler(const QString &sString)
+{
+    VI_STRUCT result = {};
+    QString _sString = sString.section(" ", 0, 0);
+    if (_sString != "") {
+        result.bIsValid = true;
+        result.sVersion = "12.x Athens++";
+        if (_sString == "28.0") {
+            result.sVersion = "XE7";
+        } else if (_sString == "29.0") {
+            result.sVersion = "XE8";
+        } else if (_sString == "30.0") {
+            result.sVersion = "10 Seattle";
+        } else if (_sString == "31.0") {
+            result.sVersion = "10.1 Berlin";
+        } else if (_sString == "32.0") {
+            result.sVersion = "10.2 Tokyo";
+        } else if (_sString == "33.0") {
+            result.sVersion = "10.3 Rio";
+        } else if (_sString == "34.0") {
+            result.sVersion = "10.4 Sydney";
+        } else if (_sString == "35.0") {
+            result.sVersion = "11.0 Alexandria";
+        } else if (_sString == "36.0") {
+            result.sVersion = "12.0 Athens";
+        }
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_SourceryCodeBench_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (XBinary::isRegExpPresent("Sourcery CodeBench Lite ", sString)) {
+        result.bIsValid = true;
+        result.sVersion = sString.section("Sourcery CodeBench Lite ", 1, 1).section(")", 0, 0);
+        result.sInfo = "lite";
+    } else if (XBinary::isRegExpPresent("Sourcery CodeBench ", sString)) {
+        result.bIsValid = true;
+        result.sVersion = sString.section("Sourcery CodeBench ", 1, 1).section(")", 0, 0);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::_get_Rust_string(const QString &sString)
+{
+    VI_STRUCT result = {};
+    if (XBinary::isRegExpPresent("^rustc ", sString)) {
+        result.bIsValid = true;
+        result.sVersion = sString.section("rustc version ", 1, 1).section(" ", 0, 0);
+    }
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_GCC_vi2(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                              XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    // TODO get max version
+    qint64 nOffset_Version = binary.find_ansiString(nOffset, nSize, "gcc-", pPdStruct);
+
+    if (nOffset_Version != -1) {
+        result.bIsValid = true;
+        QString sVersionString = binary.read_ansiString(nOffset_Version);
+        result.sVersion = sVersionString.section("-", 1, 1).section("/", 0, 0);
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_Nim_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                             XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    // TODO false positives in die.exe
+    if ((binary.find_ansiString(nOffset, nSize, "io.nim", pPdStruct) != -1) || (binary.find_ansiString(nOffset, nSize, "fatal.nim", pPdStruct) != -1)) {
+        result.bIsValid = true;
+        // TODO Version
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_Zig_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                             XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if ((binary.find_unicodeString(nOffset, nSize, "ZIG_DEBUG_COLOR", false, pPdStruct) != -1) ||
+        (binary.find_ansiString(nOffset, nSize, "ZIG_DEBUG_COLOR", pPdStruct) != -1)) {
+        result.bIsValid = true;
+        // TODO Version
+    }
+
+    return result;
+}
+
+// ---- VI helpers newly centralized from SpecAbstract ----
+NFD_Binary::VI_STRUCT NFD_Binary::get_Watcom_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                                XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if (binary.find_ansiString(nOffset, nSize, "Open Watcom", pPdStruct) != -1) {
+        result.bIsValid = true;
+        result.vValue = XScanEngine::RECORD_NAME_OPENWATCOMCCPP;
+
+        qint64 nVersionOffset = binary.find_ansiString(nOffset, nSize, " 2002-", pPdStruct);
+
+        if (nVersionOffset != -1) {
+            result.sVersion = binary.read_ansiString(nVersionOffset + 6, 4);
+        } else {
+            result.sVersion = "2002";
+        }
+    } else if (binary.find_ansiString(nOffset, nSize, "WATCOM", pPdStruct) != -1) {
+        result.bIsValid = true;
+        result.vValue = XScanEngine::RECORD_NAME_WATCOMCCPP;
+
+        qint64 nVersionOffset = binary.find_ansiString(nOffset, nSize, ". 1988-", pPdStruct);
+
+        if (nVersionOffset != -1) {
+            result.sVersion = binary.read_ansiString(nVersionOffset + 7, 4);
+        } else {
+            result.sVersion = "1988";
+        }
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_PyInstaller_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                                     XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    qint64 nOffset_Version = binary.find_ansiString(nOffset, nSize, "PyInstaller: FormatMessageW failed.", pPdStruct);
+
+    if (nOffset_Version != -1) {
+        result.bIsValid = true;
+        // TODO Version
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_DWRAF_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                               XBinary::PDSTRUCT *pPdStruct)
+{
+    Q_UNUSED(pPdStruct)
+
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if (nSize > 8) {
+        qint16 nVersion = binary.read_int16(nOffset + 4);
+
+        if ((nVersion >= 0) && (nVersion <= 7)) {
+            result.sVersion = QString::number(nVersion) + ".0";
+            result.bIsValid = true;
+        }
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_WindowsInstaller_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                                          XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    qint64 nStringOffset = binary.find_ansiString(nOffset, nSize, "Windows Installer", pPdStruct);
+
+    if (nStringOffset != -1) {
+        result.bIsValid = true;
+
+        QString _sString = binary.read_ansiString(nStringOffset);
+
+        if (_sString.contains("xml", Qt::CaseInsensitive)) {
+            result.sInfo = "XML";
+        }
+
+        QString sVersion = XBinary::regExp("\\((.*?)\\)", _sString, 1);
+
+        if (sVersion != "") {
+            result.sVersion = sVersion;
+        }
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_gold_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
+                                              XBinary::PDSTRUCT *pPdStruct)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    // TODO get max version
+    qint64 nOffset_Version = binary.find_ansiString(nOffset, nSize, "gold ", pPdStruct);
+
+    if (nOffset_Version != -1) {
+        result.bIsValid = true;
+        QString sVersionString = binary.read_ansiString(nOffset_Version, nSize - (nOffset_Version - nOffset));
+        result.sVersion = sVersionString.section(" ", 1, 1);
+    }
+
+    return result;
+}
+
+NFD_Binary::VI_STRUCT NFD_Binary::get_TurboLinker_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions)
+{
+    VI_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if (binary.read_uint8(0x1E) == 0xFB) {
+        result.bIsValid = true;
+
+        result.sVersion = QString::number((double)binary.read_uint8(0x1F) / 16, 'f', 1);
+    }
+
+    return result;
 }
