@@ -46,6 +46,13 @@
 #include "modules/nfd_le.h"
 #include "modules/nfd_lx.h"
 #include "modules/nfd_ne.h"
+#include "modules/nfd_dex.h"
+#include "modules/nfd_zip.h"
+#include "modules/nfd_jar.h"
+#include "modules/nfd_apk.h"
+#include "modules/nfd_machofat.h"
+#include "modules/nfd_mach.h"
+#include "modules/nfd_pe.h"
 
 class SpecAbstract : public XScanEngine {
     Q_OBJECT
@@ -61,149 +68,23 @@ public:
     using AMIGAHUNKINFO_STRUCT = NFD_Amiga::AMIGAHUNKINFO_STRUCT;
     using CFBFINFO_STRUCT = NFD_CFBF::CFBFINFO_STRUCT;
     using VI_STRUCT = NFD_Binary::VI_STRUCT;
-
-    struct DEXINFO_STRUCT {
-        BASIC_INFO basic_info;
-
-        XDEX_DEF::HEADER header;
-        QList<XDEX_DEF::MAP_ITEM> mapItems;
-        QList<QString> listStrings;
-        QList<QString> listTypeItemStrings;
-        QList<XDEX_DEF::FIELD_ITEM_ID> listFieldIDs;
-        QList<XDEX_DEF::METHOD_ITEM_ID> listMethodIDs;
-        bool bIsStringPoolSorted;
-        bool bIsOverlayPresent;
-    };
-
-    struct ZIPINFO_STRUCT {
-        BASIC_INFO basic_info;
-
-        QList<XArchive::RECORD> listArchiveRecords;
-
-        bool bIsJAR;
-        bool bIsIPA;
-        bool bIsAPKS;
-        bool bIsJava;
-        bool bIsKotlin;
-    };
-
-    struct JARINFO_STRUCT {
-        BASIC_INFO basic_info;
-
-        QList<XArchive::RECORD> listArchiveRecords;
-
-        bool bIsJava;
-        bool bIsKotlin;
-    };
-
+    using DEXINFO_STRUCT = NFD_DEX::DEXINFO_STRUCT;
+    using ZIPINFO_STRUCT = NFD_ZIP::ZIPINFO_STRUCT;
+    using JARINFO_STRUCT = NFD_JAR::JARINFO_STRUCT;
     using RARINFO_STRUCT = NFD_RAR::RARINFO_STRUCT;
-
-    struct APKINFO_STRUCT {
-        BASIC_INFO basic_info;
-
-        QList<XArchive::RECORD> listArchiveRecords;
-
-        bool bIsJava;
-        bool bIsKotlin;
-
-        DEXINFO_STRUCT dexInfoClasses;
-    };
-
+    using APKINFO_STRUCT = NFD_APK::APKINFO_STRUCT;
     using JPEGINFO_STRUCT = NFD_JPEG::JPEGINFO_STRUCT;
-
     using JAVACLASSINFO_STRUCT = NFD_JavaClass::JAVACLASSINFO_STRUCT;
-
     using PDFINFO_STRUCT = NFD_PDF::PDFINFO_STRUCT;
-
-    struct MACHOFATINFO_STRUCT {
-        BASIC_INFO basic_info;
-
-        QList<XArchive::RECORD> listArchiveRecords;
-    };
-
+    using MACHOFATINFO_STRUCT = NFD_MACHOFAT::MACHOFATINFO_STRUCT;
     using COMINFO_STRUCT = NFD_COM::COMINFO_STRUCT;
-
     using MSDOSINFO_STRUCT = NFD_MSDOS::MSDOSINFO_STRUCT;
-
     using ELFINFO_STRUCT = NFD_ELF::ELFINFO_STRUCT;
-
     using LEINFO_STRUCT = NFD_LE::LEINFO_STRUCT;
-
     using LXINFO_STRUCT = NFD_LX::LXINFO_STRUCT;
-
     using NEINFO_STRUCT = NFD_NE::NEINFO_STRUCT;
-
-    struct MACHOINFO_STRUCT {
-        BASIC_INFO basic_info;
-        QString sEntryPointSignature;
-        bool bIs64;
-        bool bIsBigEndian;
-        QList<XMACH::COMMAND_RECORD> listCommandRecords;
-        QList<XMACH::LIBRARY_RECORD> listLibraryRecords;
-        QList<XMACH::SEGMENT_RECORD> listSegmentRecords;
-        QList<XMACH::SECTION_RECORD> listSectionRecords;
-    };
-
-    struct PEINFO_STRUCT {
-        BASIC_INFO basic_info;
-        qint64 nEntryPointOffset;
-        QString sEntryPointSignature;
-        QString sOverlaySignature;
-        qint64 nOverlayOffset;
-        qint64 nOverlaySize;
-        XMSDOS_DEF::IMAGE_DOS_HEADEREX dosHeader;
-        XPE_DEF::IMAGE_FILE_HEADER fileHeader;
-        union OPTIONAL_HEADER {
-            XPE_DEF::IMAGE_OPTIONAL_HEADER32 optionalHeader32;
-            XPE_DEF::IMAGE_OPTIONAL_HEADER64 optionalHeader64;
-        } optional_header;
-        QList<XPE_DEF::IMAGE_SECTION_HEADER> listSectionHeaders;
-        QList<XPE::SECTION_RECORD> listSectionRecords;
-        QList<QString> listSectionNames;
-        QList<XPE::IMPORT_HEADER> listImports;
-        QList<XPE::IMPORT_RECORD> listImportRecords;
-        quint64 nImportHash64;
-        quint32 nImportHash32;
-        QList<quint32> listImportPositionHashes;
-        XPE::EXPORT_HEADER exportHeader;
-        QList<QString> listExportFunctionNames;
-        QList<XPE::RESOURCE_RECORD> listResources;
-        QList<XMSDOS::MS_RICH_RECORD> listRichSignatures;
-        QString sResourceManifest;
-        XPE::RESOURCES_VERSION resVersion;
-        XPE::CLI_INFO cliInfo;
-        QList<QString> listAnsiStrings;
-        QList<QString> listUnicodeStrings;
-
-        qint32 nEntryPointSection;
-        qint32 nResourcesSection;
-        qint32 nImportSection;
-        qint32 nCodeSection;
-        qint32 nDataSection;
-        qint32 nConstDataSection;
-        qint32 nRelocsSection;
-        qint32 nTLSSection;
-        qint32 nIATSection;
-        QString sEntryPointSectionName;
-        XADDR nEntryPointAddress;
-        XADDR nImageBaseAddress;
-        quint8 nMinorLinkerVersion;
-        quint8 nMajorLinkerVersion;
-        quint16 nMinorImageVersion;
-        quint16 nMajorImageVersion;
-        bool bIs64;
-        bool bIsNetPresent;
-        bool bIsTLSPresent;
-
-        XBinary::OFFSETSIZE osHeader;
-        XBinary::OFFSETSIZE osEntryPointSection;
-        XBinary::OFFSETSIZE osCodeSection;
-        XBinary::OFFSETSIZE osDataSection;
-        XBinary::OFFSETSIZE osConstDataSection;
-        XBinary::OFFSETSIZE osImportSection;
-        XBinary::OFFSETSIZE osResourcesSection;
-    };
-
+    using MACHOINFO_STRUCT = NFD_MACH::MACHOINFO_STRUCT;
+    using PEINFO_STRUCT = NFD_PE::PEINFO_STRUCT;
     using _BASICINFO = NFD_Binary::_BASICINFO;
     using SIGNATURE_RECORD = NFD_Binary::SIGNATURE_RECORD;
     using STRING_RECORD = NFD_Binary::STRING_RECORD;
@@ -230,34 +111,18 @@ public:
         QList<VCL_PACKAGEINFO_MODULE> listModules;
     };
 
-
     explicit SpecAbstract(QObject *pParent = nullptr);
 
     static BINARYINFO_STRUCT getBinaryInfo(QIODevice *pDevice, XBinary::FT fileType, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                            XBinary::PDSTRUCT *pPdStruct);
-    static MSDOSINFO_STRUCT getMSDOSInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                         XBinary::PDSTRUCT *pPdStruct);
     static ELFINFO_STRUCT getELFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static MACHOINFO_STRUCT getMACHOInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                          XBinary::PDSTRUCT *pPdStruct);
-    static LEINFO_STRUCT getLEInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
-    static LXINFO_STRUCT getLXInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
-    static NEINFO_STRUCT getNEInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static PEINFO_STRUCT getPEInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static DEXINFO_STRUCT getDEXInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
     static ZIPINFO_STRUCT getZIPInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
-    static JARINFO_STRUCT getJARInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
-    static RARINFO_STRUCT getRARInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
+    // JAR delegated to NFD_JAR::getInfo
     static APKINFO_STRUCT getAPKInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
-    static AMIGAHUNKINFO_STRUCT getAmigaHunkInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                                 XBinary::PDSTRUCT *pPdStruct);
-    static PDFINFO_STRUCT getPDFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
-    static JPEGINFO_STRUCT getJpegInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                       XBinary::PDSTRUCT *pPdStruct);
-    static CFBFINFO_STRUCT getCFBFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                       XBinary::PDSTRUCT *pPdStruct);
-    static JAVACLASSINFO_STRUCT getJavaClassInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                                 XBinary::PDSTRUCT *pPdStruct);
 
     static _SCANS_STRUCT getScansStruct(quint32 nVariant, XBinary::FT fileType, RECORD_TYPE type, RECORD_NAME name, const QString &sVersion, const QString &sInfo,
                                         qint64 nOffset);

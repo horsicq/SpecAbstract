@@ -32,31 +32,7 @@ SpecAbstract::SpecAbstract(QObject *pParent) : XScanEngine(pParent)
 {
 }
 
-SpecAbstract::JARINFO_STRUCT SpecAbstract::getJARInfo(QIODevice *pDevice, SCANID parentId, SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
-{
-    QElapsedTimer timer;
-    timer.start();
-
-    JARINFO_STRUCT result = {};
-
-    XJAR jar(pDevice);
-
-    if (jar.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        result.basic_info = NFD_Binary::_initBasicInfo(&jar, parentId, pOptions, nOffset, pPdStruct);
-
-        // TODO
-
-        NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
-    }
-
-    result.basic_info.nElapsedTime = timer.elapsed();
-
-#ifdef QT_DEBUG
-    qDebug("%lld msec", result.basic_info.nElapsedTime);
-#endif
-
-    return result;
-}
+// JARINFO delegated to NFD_JAR::getInfo
 
 SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, XBinary::FT fileType, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions,
                                                             qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
@@ -166,12 +142,6 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
     return result;
 }
 
-SpecAbstract::MSDOSINFO_STRUCT SpecAbstract::getMSDOSInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                                          XBinary::PDSTRUCT *pPdStruct)
-{
-    return NFD_MSDOS::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
-}
-
 SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                                       XBinary::PDSTRUCT *pPdStruct)
 {
@@ -239,24 +209,6 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XS
     result.basic_info.nElapsedTime = timer.elapsed();
 
     return result;
-}
-
-SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                                    XBinary::PDSTRUCT *pPdStruct)
-{
-    return NFD_LE::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
-}
-
-SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                                    XBinary::PDSTRUCT *pPdStruct)
-{
-    return NFD_LX::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
-}
-
-SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                                    XBinary::PDSTRUCT *pPdStruct)
-{
-    return NFD_NE::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
 }
 
 SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
@@ -12397,19 +12349,19 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
         SpecAbstract::MACHOINFO_STRUCT mach_info = SpecAbstract::getMACHOInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = mach_info.basic_info;
     } else if (fileType == XBinary::FT_LE) {
-        SpecAbstract::LEINFO_STRUCT le_info = SpecAbstract::getLEInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        SpecAbstract::LEINFO_STRUCT le_info = NFD_LE::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = le_info.basic_info;
     } else if (fileType == XBinary::FT_LX) {
-        SpecAbstract::LXINFO_STRUCT lx_info = SpecAbstract::getLXInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        SpecAbstract::LXINFO_STRUCT lx_info = NFD_LX::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = lx_info.basic_info;
     } else if (fileType == XBinary::FT_NE) {
-        SpecAbstract::NEINFO_STRUCT ne_info = SpecAbstract::getNEInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        SpecAbstract::NEINFO_STRUCT ne_info = NFD_NE::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = ne_info.basic_info;
     } else if (fileType == XBinary::FT_MSDOS) {
-        SpecAbstract::MSDOSINFO_STRUCT msdos_info = SpecAbstract::getMSDOSInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        SpecAbstract::MSDOSINFO_STRUCT msdos_info = NFD_MSDOS::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = msdos_info.basic_info;
     } else if (fileType == XBinary::FT_JAR) {
-        SpecAbstract::JARINFO_STRUCT jar_info = SpecAbstract::getJARInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        SpecAbstract::JARINFO_STRUCT jar_info = NFD_JAR::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = jar_info.basic_info;
     } else if (fileType == XBinary::FT_APK) {
         SpecAbstract::APKINFO_STRUCT apk_info = SpecAbstract::getAPKInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
