@@ -79,6 +79,8 @@ public:
     // Core info extractor migrated from SpecAbstract::getMSDOSInfo
     static MSDOSINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                     XBinary::PDSTRUCT *pPdStruct);
+
+    static QString getMsRichString(quint16 nId, quint16 nBuild, quint32 nCount, XBinary::PDSTRUCT *pPdStruct);
 };
 
 #endif  // NFD_MSDOS_H

@@ -827,6 +827,26 @@ void NFD_MSDOS::MSDOS_handle_DosExtenders(QIODevice *pDevice, XScanEngine::SCAN_
 	}
 }
 
+QString NFD_MSDOS::getMsRichString(quint16 nId, quint16 nBuild, quint32 nCount, XBinary::PDSTRUCT *pPdStruct)
+{
+    QString sResult;
+
+    NFD_Binary::MSRICH_RECORD *pRecords = getRichRecords();
+    qint32 nRecordsSize = getRichRecordsSize();
+
+    qint32 nSignaturesCount = nRecordsSize / (int)sizeof(NFD_Binary::MSRICH_RECORD);
+
+    for (qint32 i = 0; (i < nSignaturesCount) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
+        NFD_Binary::NFD_Binary::SCANS_STRUCT record = {};
+
+        if (_nfd_msdos_compareRichRecord(&record, &(pRecords[i]), nId, nBuild, nCount, XBinary::FT_PE, XBinary::FT_MSDOS)) {
+            sResult = NFD_Binary::_SCANS_STRUCT_toString(&record);
+        }
+    }
+
+    return sResult;
+}
+
 // Core info extractor migrated from SpecAbstract::getMSDOSInfo
 NFD_MSDOS::MSDOSINFO_STRUCT NFD_MSDOS::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
 											   XBinary::PDSTRUCT *pPdStruct)
