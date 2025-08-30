@@ -244,41 +244,19 @@ SpecAbstract::MACHOINFO_STRUCT SpecAbstract::getMACHOInfo(QIODevice *pDevice, XS
 SpecAbstract::LEINFO_STRUCT SpecAbstract::getLEInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                                     XBinary::PDSTRUCT *pPdStruct)
 {
-    LEINFO_STRUCT result = NFD_LE::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
-
-    // Keep SpecAbstract-specific handlers
-    if (XBinary::isPdStructNotCanceled(pPdStruct)) {
-        NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
-    }
-
-    return result;
+    return NFD_LE::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
 }
 
 SpecAbstract::LXINFO_STRUCT SpecAbstract::getLXInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                                     XBinary::PDSTRUCT *pPdStruct)
 {
-    LXINFO_STRUCT result = NFD_LX::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
-
-    if (XBinary::isPdStructNotCanceled(pPdStruct)) {
-        NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
-    }
-
-    return result;
+    return NFD_LX::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
 }
 
 SpecAbstract::NEINFO_STRUCT SpecAbstract::getNEInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                                     XBinary::PDSTRUCT *pPdStruct)
 {
-    NEINFO_STRUCT result = NFD_NE::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
-
-    if (XBinary::isPdStructNotCanceled(pPdStruct)) {
-    NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_MSDOS::getHeaderLinkerRecords(), NFD_MSDOS::getHeaderLinkerRecordsSize(),
-                      result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
-
-        NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
-    }
-
-    return result;
+    return NFD_NE::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
 }
 
 SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,

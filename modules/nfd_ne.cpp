@@ -26,6 +26,11 @@ NFD_NE::NEINFO_STRUCT NFD_NE::getInfo(QIODevice *pDevice, XScanEngine::SCANID pa
 			result.sOverlaySignature = ne.getSignature(result.nOverlayOffset, 150);
 		}
 
+		// MSDOS header linker signatures (moved from SpecAbstract)
+		NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature,
+								NFD_MSDOS::getHeaderLinkerRecords(), NFD_MSDOS::getHeaderLinkerRecordsSize(),
+								result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
+
 		// Operation System
 		{
 			NFD_Binary::SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(ne.getFileFormatInfo(pPdStruct));
