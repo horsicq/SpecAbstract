@@ -92,24 +92,9 @@ public:
     using CONST_RECORD = NFD_Binary::CONST_RECORD;
     using MSRICH_RECORD = NFD_Binary::MSRICH_RECORD;
 
-    struct VCL_STRUCT {
-        quint32 nValue;
-        qint64 nOffset;
-        bool bIs64;
-    };
-
-    struct VCL_PACKAGEINFO_MODULE {
-        quint8 nFlags;
-        quint8 nHashCode;
-        QString sName;
-    };
-
-    struct VCL_PACKAGEINFO {
-        quint32 nFlags;
-        quint32 nUnknown;
-        quint32 nRequiresCount;
-        QList<VCL_PACKAGEINFO_MODULE> listModules;
-    };
+    using VCL_STRUCT = NFD_PE::VCL_STRUCT;
+    using VCL_PACKAGEINFO_MODULE = NFD_PE::VCL_PACKAGEINFO_MODULE;
+    using VCL_PACKAGEINFO = NFD_PE::VCL_PACKAGEINFO;
 
     explicit SpecAbstract(QObject *pParent = nullptr);
 

@@ -13,6 +13,25 @@ class NFD_PE : public PE_Script {
 public:
     explicit NFD_PE(XPE *pPE, XBinary::FILEPART filePart, OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct);
 
+    struct VCL_STRUCT {
+        quint32 nValue;
+        qint64 nOffset;
+        bool bIs64;
+    };
+
+    struct VCL_PACKAGEINFO_MODULE {
+        quint8 nFlags;
+        quint8 nHashCode;
+        QString sName;
+    };
+
+    struct VCL_PACKAGEINFO {
+        quint32 nFlags;
+        quint32 nUnknown;
+        quint32 nRequiresCount;
+        QList<VCL_PACKAGEINFO_MODULE> listModules;
+    };
+
     struct PEINFO_STRUCT {
         NFD_Binary::BASIC_INFO basic_info;
         qint64 nEntryPointOffset;
