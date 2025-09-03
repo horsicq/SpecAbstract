@@ -214,6 +214,17 @@ public:
         quint32 nBuild;
     };
 
+    // Accessors for centralized signature tables used by Binary scans
+    // These return pointers to the local g_* tables in nfd_binary.cpp and their byte sizes
+    static SIGNATURE_RECORD *getBinaryRecords();
+    static qint32 getBinaryRecordsSize();
+    static SIGNATURE_RECORD *getDebugdataRecords();
+    static qint32 getDebugdataRecordsSize();
+    static SIGNATURE_RECORD *getArchiveRecords();
+    static qint32 getArchiveRecordsSize();
+    static SIGNATURE_RECORD *getPEOverlayRecords();
+    static qint32 getPEOverlayRecordsSize();
+
     // Utility: stringify a scan struct (moved from SpecAbstract)
     static QString _SCANS_STRUCT_toString(const SCANS_STRUCT *pScanStruct, bool bShowType = true);
 

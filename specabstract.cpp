@@ -51,18 +51,18 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
         // Scan Header
-        NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _binary_records, sizeof(_binary_records), result.basic_info.id.fileType,
+    NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_Binary::getBinaryRecords(), NFD_Binary::getBinaryRecordsSize(), result.basic_info.id.fileType,
                       XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
-        NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _archive_records, sizeof(_archive_records), result.basic_info.id.fileType,
+    NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_Binary::getArchiveRecords(), NFD_Binary::getArchiveRecordsSize(), result.basic_info.id.fileType,
                       XBinary::FT_ARCHIVE, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
 
         if (result.basic_info.parentId.filePart == XBinary::FILEPART_OVERLAY) {
-            NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_overlay_records, sizeof(_PE_overlay_records),
+                NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_Binary::getPEOverlayRecords(), NFD_Binary::getPEOverlayRecordsSize(),
                           result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
         }
 
         if (result.basic_info.parentId.filePart == XBinary::FILEPART_DEBUGDATA) {
-            NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _debugdata_records, sizeof(_debugdata_records),
+            NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_Binary::getDebugdataRecords(), NFD_Binary::getDebugdataRecordsSize(),
                           result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_DEBUGDATA, pPdStruct);
         }
 
@@ -390,11 +390,11 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
                       result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
         NFD_Binary::signatureExpScan(&pe, &(result.basic_info.memoryMap), &result.basic_info.mapEntryPointDetects, result.nEntryPointOffset, _PE_entrypointExp_records,
                          sizeof(_PE_entrypointExp_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
-        NFD_Binary::signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, _binary_records, sizeof(_binary_records), result.basic_info.id.fileType,
-                      XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
-        NFD_Binary::signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, _archive_records, sizeof(_archive_records), result.basic_info.id.fileType,
-                      XBinary::FT_ARCHIVE, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
-        NFD_Binary::signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, _PE_overlay_records, sizeof(_PE_overlay_records), result.basic_info.id.fileType,
+    NFD_Binary::signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, NFD_Binary::getBinaryRecords(), NFD_Binary::getBinaryRecordsSize(), result.basic_info.id.fileType,
+              XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
+    NFD_Binary::signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, NFD_Binary::getArchiveRecords(), NFD_Binary::getArchiveRecordsSize(), result.basic_info.id.fileType,
+              XBinary::FT_ARCHIVE, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
+    NFD_Binary::signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, NFD_Binary::getPEOverlayRecords(), NFD_Binary::getPEOverlayRecordsSize(), result.basic_info.id.fileType,
                       XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
 
         NFD_Binary::stringScan(&result.basic_info.mapSectionNamesDetects, &result.listSectionNames, _PE_sectionNames_records, sizeof(_PE_sectionNames_records),
