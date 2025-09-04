@@ -1,8 +1,8 @@
 #ifndef NFD_APK_H
 #define NFD_APK_H
 
-#include "apk_script.h"
 #include "nfd_binary.h"
+#include "apk_script.h"
 #include "xarchive.h"
 #include "nfd_dex.h"
 
@@ -22,6 +22,12 @@ public:
 
         NFD_DEX::DEXINFO_STRUCT dexInfoClasses;
     };
+
+    // STRING_RECORD based tables (migrated from SpecAbstract/signatures.cpp)
+    static NFD_Binary::STRING_RECORD *getFileRecords();
+    static qint32 getFileRecordsSize();
+    static NFD_Binary::STRING_RECORD *getFileExpRecords();
+    static qint32 getFileExpRecordsSize();
 };
 
 #endif  // NFD_APK_H

@@ -31,6 +31,7 @@ HEADERS += \
     $$PWD/modules/nfd_apk.h \
     $$PWD/modules/nfd_ipa.h \
     $$PWD/modules/nfd_pdf.h \
+    $$PWD/modules/nfd_text.h \
     $$PWD/modules/nfd_javaclass.h
 
 SOURCES += \
@@ -62,6 +63,7 @@ SOURCES += \
     $$PWD/modules/nfd_apk.cpp \
     $$PWD/modules/nfd_ipa.cpp \
     $$PWD/modules/nfd_pdf.cpp \
+    $$PWD/modules/nfd_text.cpp \
     $$PWD/modules/nfd_javaclass.cpp
 
 contains(XCONFIG, use_capstone_x86) {

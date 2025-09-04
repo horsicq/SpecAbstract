@@ -53,6 +53,7 @@
 #include "modules/nfd_machofat.h"
 #include "modules/nfd_mach.h"
 #include "modules/nfd_pe.h"
+#include "modules/nfd_text.h"
 
 class SpecAbstract : public XScanEngine {
     Q_OBJECT

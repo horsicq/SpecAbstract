@@ -41,6 +41,10 @@ public:
     };
 
     static ELFINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
+
+    // SIGNATURE_RECORD based tables (migrated from SpecAbstract/signatures.cpp)
+    static NFD_Binary::SIGNATURE_RECORD *getEntrypointRecords();
+    static qint32 getEntrypointRecordsSize();
 };
 
 #endif  // NFD_ELF_H
