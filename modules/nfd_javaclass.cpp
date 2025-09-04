@@ -5,8 +5,8 @@ NFD_JavaClass::NFD_JavaClass(XJavaClass *pJavaClass, XBinary::FILEPART filePart,
 {
 }
 
-NFD_JavaClass::JAVACLASSINFO_STRUCT NFD_JavaClass::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions,
-                                                           qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
+NFD_JavaClass::JAVACLASSINFO_STRUCT NFD_JavaClass::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                                           XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
     timer.start();

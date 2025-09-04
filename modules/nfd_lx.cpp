@@ -97,7 +97,7 @@ NFD_LX::LXINFO_STRUCT NFD_LX::getInfo(QIODevice *pDevice, XScanEngine::SCANID pa
 
 			QList<NFD_Binary::SCANS_STRUCT> listRichDescriptions;
 			for (qint32 i = 0; (i < nRichSignaturesCount) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
-				const auto &rr = result.listRichSignatures.at(i);
+                const XMSDOS::MS_RICH_RECORD &rr = result.listRichSignatures.at(i);
 				listRichDescriptions.append(NFD_MSDOS::MSDOS_richScan(rr.nId, rr.nVersion, rr.nCount,
 																	 NFD_MSDOS::getRichRecords(), NFD_MSDOS::getRichRecordsSize(),
 																	 result.basic_info.id.fileType, XBinary::FT_MSDOS,
@@ -105,7 +105,7 @@ NFD_LX::LXINFO_STRUCT NFD_LX::getInfo(QIODevice *pDevice, XScanEngine::SCANID pa
 			}
 
 			for (qint32 i = listRichDescriptions.count() - 1; (i >= 0) && (XBinary::isPdStructNotCanceled(pPdStruct)); i--) {
-				const auto &desc = listRichDescriptions.at(i);
+                const NFD_Binary::SCANS_STRUCT &desc = listRichDescriptions.at(i);
 				if (desc.type == XScanEngine::RECORD_TYPE_LINKER) {
 					recordLinker.name = desc.name;
 					recordLinker.sVersion = desc.sVersion;

@@ -22,8 +22,7 @@ public:
         bool bIsKotlin;
     };
 
-    static JARINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                  XBinary::PDSTRUCT *pPdStruct);
+    static JARINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
 };
 
 #endif  // NFD_JAR_H

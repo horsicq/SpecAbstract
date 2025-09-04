@@ -42,12 +42,12 @@ public:
 
     // Move of SpecAbstract::MSDOS_richScan
     static void MSDOS_richScan(QMap<XScanEngine::RECORD_NAME, NFD_Binary::SCANS_STRUCT> *pMapRecords, quint16 nID, quint32 nBuild, quint32 nCount,
-                               NFD_Binary::MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
-                               NFD_Binary::BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+                               NFD_Binary::MSRICH_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, NFD_Binary::BASIC_INFO *pBasicInfo,
+                               DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
 
-    static QList<NFD_Binary::SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, quint32 nCount, NFD_Binary::MSRICH_RECORD *pRecords,
-                                                          qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
-                                                          NFD_Binary::BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+    static QList<NFD_Binary::SCANS_STRUCT> MSDOS_richScan(quint16 nID, quint32 nBuild, quint32 nCount, NFD_Binary::MSRICH_RECORD *pRecords, qint32 nRecordsSize,
+                                                          XBinary::FT fileType1, XBinary::FT fileType2, NFD_Binary::BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
+                                                          XBinary::PDSTRUCT *pPdStruct);
 
     // Accessors for MSDOS linker header signature records (moved from SpecAbstract/signatures.cpp)
     static NFD_Binary::SIGNATURE_RECORD *getHeaderLinkerRecords();
@@ -68,8 +68,7 @@ public:
     static qint32 getEntryPointExpRecordsSize();
 
     // Handlers migrated from SpecAbstract
-    static void MSDOS_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo,
-                                             XBinary::PDSTRUCT *pPdStruct);
+    static void MSDOS_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
     static void MSDOS_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
     static void MSDOS_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
     static void MSDOS_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
@@ -77,8 +76,7 @@ public:
     static void MSDOS_handle_DosExtenders(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
 
     // Core info extractor migrated from SpecAbstract::getMSDOSInfo
-    static MSDOSINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                    XBinary::PDSTRUCT *pPdStruct);
+    static MSDOSINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
 
     static QString getMsRichString(quint16 nId, quint16 nBuild, quint32 nCount, XBinary::PDSTRUCT *pPdStruct);
 };

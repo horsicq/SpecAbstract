@@ -22,6 +22,12 @@ public:
         bool bIsStringPoolSorted;
         bool bIsOverlayPresent;
     };
+
+    // Accessors for DEX string/type signature records (moved from SpecAbstract/signatures.cpp)
+    static NFD_Binary::STRING_RECORD *getStringRecords();
+    static qint32 getStringRecordsSize();
+    static NFD_Binary::STRING_RECORD *getTypeRecords();
+    static qint32 getTypeRecordsSize();
 };
 
 #endif  // NFD_DEX_H

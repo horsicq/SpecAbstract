@@ -17,8 +17,7 @@ public:
         QList<XArchive::RECORD> listArchiveRecords;
     };
 
-    static RARINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                  XBinary::PDSTRUCT *pPdStruct);
+    static RARINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
 };
 
 #endif  // NFD_RAR_H

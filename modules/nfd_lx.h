@@ -23,8 +23,7 @@ public:
         QList<XMSDOS::MS_RICH_RECORD> listRichSignatures;
     };
 
-    static LXINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                 XBinary::PDSTRUCT *pPdStruct);
+    static LXINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
 };
 
 #endif  // NFD_LX_H

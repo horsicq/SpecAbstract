@@ -74,7 +74,6 @@ public:
         QVariant vValue;
     };
 
-
     struct DETECT_RECORD {
         qint64 nOffset;  // memory scan
         XBinary::FILEPART filepart;
@@ -259,28 +258,25 @@ public:
     static void memoryScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                            qint64 nSize, SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
                            DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-    static void signatureScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, const QString &sSignature, SIGNATURE_RECORD *pRecords,
-                              qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
-                              XBinary::PDSTRUCT *pPdStruct);
-    static void PE_resourcesScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources,
-                                 PE_RESOURCES_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
-                                 DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-    static void stringScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<QString> *pListStrings, STRING_RECORD *pRecords,
-                           qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
-                           XBinary::PDSTRUCT *pPdStruct);
-    static void constScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, CONST_RECORD *pRecords,
-                          qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
-                          XBinary::PDSTRUCT *pPdStruct);
+    static void signatureScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, const QString &sSignature, SIGNATURE_RECORD *pRecords, qint32 nRecordsSize,
+                              XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+    static void PE_resourcesScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources, PE_RESOURCES_RECORD *pRecords,
+                                 qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
+                                 XBinary::PDSTRUCT *pPdStruct);
+    static void stringScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<QString> *pListStrings, STRING_RECORD *pRecords, qint32 nRecordsSize,
+                           XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+    static void constScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, CONST_RECORD *pRecords, qint32 nRecordsSize,
+                          XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
     // MSDOS Rich scan moved to NFD_MSDOS
     static void archiveScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, STRING_RECORD *pRecords,
                             qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
                             XBinary::PDSTRUCT *pPdStruct);
-    static void archiveExpScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords,
-                               STRING_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
-                               DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
-    static void signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemoryMap, QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords,
-                                 qint64 nOffset, SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
-                                 BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
+    static void archiveExpScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, STRING_RECORD *pRecords,
+                               qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
+                               XBinary::PDSTRUCT *pPdStruct);
+    static void signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemoryMap, QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, qint64 nOffset,
+                                 SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
+                                 DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct);
 
     // Version-info helpers moved from SpecAbstract
     static VI_STRUCT get_UPX_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::FT fileType,
@@ -355,8 +351,7 @@ public:
     static VI_STRUCT get_Watcom_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT get_PyInstaller_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT get_DWRAF_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
-    static VI_STRUCT get_WindowsInstaller_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
-                                             XBinary::PDSTRUCT *pPdStruct);
+    static VI_STRUCT get_WindowsInstaller_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT get_gold_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT get_TurboLinker_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions);
 

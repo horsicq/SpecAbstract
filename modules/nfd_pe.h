@@ -91,6 +91,43 @@ public:
         XBinary::OFFSETSIZE osImportSection;
         XBinary::OFFSETSIZE osResourcesSection;
     };
+
+    // Accessors for PE signature tables (migrated from SpecAbstract/signatures.cpp)
+    // SIGNATURE_RECORD based tables
+    static NFD_Binary::SIGNATURE_RECORD *getHeaderRecords();
+    static qint32 getHeaderRecordsSize();
+    static NFD_Binary::SIGNATURE_RECORD *getEntrypointRecords();
+    static qint32 getEntrypointRecordsSize();
+    static NFD_Binary::SIGNATURE_RECORD *getEntrypointExpRecords();
+    static qint32 getEntrypointExpRecordsSize();
+    static NFD_Binary::SIGNATURE_RECORD *getCodeSectionRecords();
+    static qint32 getCodeSectionRecordsSize();
+    static NFD_Binary::SIGNATURE_RECORD *getEntrypointSectionRecords();
+    static qint32 getEntrypointSectionRecordsSize();
+    static NFD_Binary::SIGNATURE_RECORD *getDotCodeSectionRecords();
+    static qint32 getDotCodeSectionRecordsSize();
+
+    // CONST_RECORD based tables
+    static NFD_Binary::CONST_RECORD *getImportHashRecords();
+    static qint32 getImportHashRecordsSize();
+    static NFD_Binary::CONST_RECORD *getImportHashArmadilloRecords();
+    static qint32 getImportHashArmadilloRecordsSize();
+    static NFD_Binary::CONST_RECORD *getImportPositionHashRecords();
+    static qint32 getImportPositionHashRecordsSize();
+
+    // PE_RESOURCES_RECORD based tables
+    static NFD_Binary::PE_RESOURCES_RECORD *getResourcesRecords();
+    static qint32 getResourcesRecordsSize();
+
+    // STRING_RECORD based tables
+    static NFD_Binary::STRING_RECORD *getExportExpRecords();
+    static qint32 getExportExpRecordsSize();
+    static NFD_Binary::STRING_RECORD *getSectionNamesRecords();
+    static qint32 getSectionNamesRecordsSize();
+    static NFD_Binary::STRING_RECORD *getDotAnsiStringsRecords();
+    static qint32 getDotAnsiStringsRecordsSize();
+    static NFD_Binary::STRING_RECORD *getDotUnicodeStringsRecords();
+    static qint32 getDotUnicodeStringsRecordsSize();
 };
 
 #endif  // NFD_PE_H

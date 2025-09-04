@@ -105,9 +105,8 @@ void NFD_Binary::memoryScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRe
     }
 }
 
-void NFD_Binary::signatureScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, const QString &sSignature, SIGNATURE_RECORD *pRecords,
-                               qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
-                               XBinary::PDSTRUCT *pPdStruct)
+void NFD_Binary::signatureScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, const QString &sSignature, SIGNATURE_RECORD *pRecords, qint32 nRecordsSize,
+                               XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
     qint32 nSignaturesCount = nRecordsSize / (qint32)sizeof(SIGNATURE_RECORD);
 
@@ -150,9 +149,9 @@ void NFD_Binary::signatureScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMa
     }
 }
 
-void NFD_Binary::PE_resourcesScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources,
-                                  PE_RESOURCES_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
-                                  DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
+void NFD_Binary::PE_resourcesScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XPE::RESOURCE_RECORD> *pListResources, PE_RESOURCES_RECORD *pRecords,
+                                  qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
+                                  XBinary::PDSTRUCT *pPdStruct)
 {
     qint32 nSignaturesCount = nRecordsSize / (qint32)sizeof(PE_RESOURCES_RECORD);
 
@@ -216,9 +215,8 @@ void NFD_Binary::PE_resourcesScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *
     }
 }
 
-void NFD_Binary::stringScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<QString> *pListStrings, STRING_RECORD *pRecords,
-                            qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
-                            XBinary::PDSTRUCT *pPdStruct)
+void NFD_Binary::stringScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<QString> *pListStrings, STRING_RECORD *pRecords, qint32 nRecordsSize,
+                            XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
     QList<quint32> listStringCRC;
     QList<quint32> listSignatureCRC;
@@ -295,9 +293,8 @@ void NFD_Binary::stringScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRe
     }
 }
 
-void NFD_Binary::constScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, CONST_RECORD *pRecords,
-                           qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
-                           XBinary::PDSTRUCT *pPdStruct)
+void NFD_Binary::constScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, quint64 nCost1, quint64 nCost2, CONST_RECORD *pRecords, qint32 nRecordsSize,
+                           XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
     qint32 nSignaturesCount = nRecordsSize / (int)sizeof(CONST_RECORD);
 
@@ -305,8 +302,8 @@ void NFD_Binary::constScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRec
         if ((pRecords[i].basicInfo.fileType == fileType1) || (pRecords[i].basicInfo.fileType == fileType2)) {
             if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pBasicInfo->scanOptions.bShowInternalDetects) || (pRecords[i].nConst1 == 0xFFFFFFFF)) {
                 bool bSuccess = false;
-                bSuccess = ((pRecords[i].nConst1 == nCost1) || (pRecords[i].nConst1 == 0xFFFFFFFF)) &&
-                           ((pRecords[i].nConst2 == nCost2) || (pRecords[i].nConst2 == 0xFFFFFFFF));
+                bSuccess =
+                    ((pRecords[i].nConst1 == nCost1) || (pRecords[i].nConst1 == 0xFFFFFFFF)) && ((pRecords[i].nConst2 == nCost2) || (pRecords[i].nConst2 == 0xFFFFFFFF));
                 if (bSuccess) {
                     if ((!pMapRecords->contains(pRecords[i].basicInfo.name)) || (pRecords[i].nConst1 == 0xFFFFFFFF)) {
                         SCANS_STRUCT record = {};
@@ -342,8 +339,6 @@ void NFD_Binary::constScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRec
         }
     }
 }
-
-
 
 void NFD_Binary::archiveScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, STRING_RECORD *pRecords,
                              qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
@@ -407,9 +402,9 @@ void NFD_Binary::archiveScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapR
     }
 }
 
-void NFD_Binary::archiveExpScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords,
-                                STRING_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
-                                DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
+void NFD_Binary::archiveExpScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, QList<XArchive::RECORD> *pListArchiveRecords, STRING_RECORD *pRecords,
+                                qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo, DETECTTYPE detectType,
+                                XBinary::PDSTRUCT *pPdStruct)
 {
     qint32 nNumberOfArchives = pListArchiveRecords->count();
     qint32 nNumberOfSignatures = nRecordsSize / (qint32)sizeof(STRING_RECORD);
@@ -454,9 +449,9 @@ void NFD_Binary::archiveExpScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pM
     }
 }
 
-void NFD_Binary::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemoryMap, QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords,
-                                  qint64 nOffset, SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2,
-                                  BASIC_INFO *pBasicInfo, DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
+void NFD_Binary::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemoryMap, QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRecords, qint64 nOffset,
+                                  SIGNATURE_RECORD *pRecords, qint32 nRecordsSize, XBinary::FT fileType1, XBinary::FT fileType2, BASIC_INFO *pBasicInfo,
+                                  DETECTTYPE detectType, XBinary::PDSTRUCT *pPdStruct)
 {
     qint32 nSignaturesCount = nRecordsSize / (int)sizeof(SIGNATURE_RECORD);
 
@@ -755,7 +750,7 @@ void NFD_Binary::addHeaderDetectToResults(NFD_Binary::BASIC_INFO *pBasicInfo, XS
     if (!pBasicInfo) return;
 
     if (pBasicInfo->mapHeaderDetects.contains(rn)) {
-        pBasicInfo->id.fileType = XBinary::FT_COM; // context: caller sets FT as needed; COM callers rely on COM type
+        pBasicInfo->id.fileType = XBinary::FT_COM;  // context: caller sets FT as needed; COM callers rely on COM type
         NFD_Binary::SCANS_STRUCT ss = pBasicInfo->mapHeaderDetects.value(rn);
         if (toProtector) {
             pBasicInfo->mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(pBasicInfo, &ss));
@@ -913,7 +908,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::get_UPX_vi(QIODevice *pDevice, XScanEngine::SC
     }
 
     if (nStringOffset2 != -1) {
-    VI_STRUCT viUPX = _get_UPX_vi(pDevice, pOptions, nStringOffset2, 0x24, fileType);
+        VI_STRUCT viUPX = _get_UPX_vi(pDevice, pOptions, nStringOffset2, 0x24, fileType);
 
         if (viUPX.bIsValid) {
             result.sInfo = XBinary::appendComma(result.sInfo, viUPX.sInfo);
@@ -1272,8 +1267,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::get_SmartAssembly_vi(QIODevice *pDevice, XScan
     return result;
 }
 
-NFD_Binary::VI_STRUCT NFD_Binary::get_R8_marker_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
-                                                    XBinary::PDSTRUCT *pPdStruct)
+NFD_Binary::VI_STRUCT NFD_Binary::get_R8_marker_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
 {
     VI_STRUCT result = {};
 
@@ -1405,8 +1399,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::_get_ObfuscatorLLVM_string(const QString &sStr
     return result;
 }
 
-NFD_Binary::VI_STRUCT NFD_Binary::get_AndroidClang_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
-                                                       XBinary::PDSTRUCT *pPdStruct)
+NFD_Binary::VI_STRUCT NFD_Binary::get_AndroidClang_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
 {
     VI_STRUCT result = {};
 
@@ -1439,8 +1432,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::_get_AndroidClang_string(const QString &sStrin
 }
 
 // ---- Additional VI helpers moved from SpecAbstract ----
-NFD_Binary::VI_STRUCT NFD_Binary::get_GCC_vi1(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
-                                              XBinary::PDSTRUCT *pPdStruct)
+NFD_Binary::VI_STRUCT NFD_Binary::get_GCC_vi1(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
 {
     VI_STRUCT result = {};
 
@@ -1623,7 +1615,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::_get_TencentObfuscation_string(const QString &
 {
     VI_STRUCT result = {};
     if (sString.contains("Tencent-Obfuscation Compiler")) {
-        result.bIsValid = true; // TODO Version
+        result.bIsValid = true;  // TODO Version
     }
     return result;
 }
@@ -1632,7 +1624,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::_get_AppImage_string(const QString &sString)
 {
     VI_STRUCT result = {};
     if (sString.contains("AppImage by Simon Peter, http://appimage.org/")) {
-        result.bIsValid = true; // TODO Version
+        result.bIsValid = true;  // TODO Version
     }
     return result;
 }
@@ -1641,7 +1633,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::_get_HikariObfuscator_string(const QString &sS
 {
     VI_STRUCT result = {};
     if (sString.contains("HikariObfuscator") || sString.contains("_Hikari") || sString.contains("Hikari.git")) {
-        result.bIsValid = true; // TODO Version
+        result.bIsValid = true;  // TODO Version
     }
     return result;
 }
@@ -1660,7 +1652,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::_get_ByteDanceSecCompiler_string(const QString
 {
     VI_STRUCT result = {};
     if (sString.contains("ByteDance-SecCompiler")) {
-        result.bIsValid = true; // TODO Version
+        result.bIsValid = true;  // TODO Version
     }
     return result;
 }
@@ -1669,7 +1661,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::_get_DingbaozengNativeObfuscator_string(const 
 {
     VI_STRUCT result = {};
     if (sString.contains("dingbaozeng/native_obfuscator.git")) {
-        result.bIsValid = true; // TODO Version
+        result.bIsValid = true;  // TODO Version
     }
     return result;
 }
@@ -1852,7 +1844,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::_get_mold_string(const QString &sString)
 {
     VI_STRUCT result = {};
     if (XBinary::isRegExpPresent("^mold ", sString)) {
-        result.bIsValid = true; // TODO version
+        result.bIsValid = true;  // TODO version
     }
     return result;
 }
@@ -1911,7 +1903,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::_get_TencentLegu_string(const QString &sString
 {
     VI_STRUCT result = {};
     if (XBinary::isRegExpPresent("^legu", sString)) {
-        result.bIsValid = true; // TODO Version
+        result.bIsValid = true;  // TODO Version
     }
     return result;
 }
@@ -1920,7 +1912,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::_get_OllvmTll_string(const QString &sString)
 {
     VI_STRUCT result = {};
     if (sString.contains("ollvm-tll.git")) {
-        result.bIsValid = true; // TODO Version
+        result.bIsValid = true;  // TODO Version
     }
     return result;
 }
@@ -1979,8 +1971,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::_get_Rust_string(const QString &sString)
     return result;
 }
 
-NFD_Binary::VI_STRUCT NFD_Binary::get_GCC_vi2(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
-                                              XBinary::PDSTRUCT *pPdStruct)
+NFD_Binary::VI_STRUCT NFD_Binary::get_GCC_vi2(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
 {
     VI_STRUCT result = {};
 
@@ -1998,8 +1989,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::get_GCC_vi2(QIODevice *pDevice, XScanEngine::S
     return result;
 }
 
-NFD_Binary::VI_STRUCT NFD_Binary::get_Nim_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
-                                             XBinary::PDSTRUCT *pPdStruct)
+NFD_Binary::VI_STRUCT NFD_Binary::get_Nim_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
 {
     VI_STRUCT result = {};
 
@@ -2014,8 +2004,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::get_Nim_vi(QIODevice *pDevice, XScanEngine::SC
     return result;
 }
 
-NFD_Binary::VI_STRUCT NFD_Binary::get_Zig_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
-                                             XBinary::PDSTRUCT *pPdStruct)
+NFD_Binary::VI_STRUCT NFD_Binary::get_Zig_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
 {
     VI_STRUCT result = {};
 
@@ -2031,8 +2020,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::get_Zig_vi(QIODevice *pDevice, XScanEngine::SC
 }
 
 // ---- VI helpers newly centralized from SpecAbstract ----
-NFD_Binary::VI_STRUCT NFD_Binary::get_Watcom_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
-                                                XBinary::PDSTRUCT *pPdStruct)
+NFD_Binary::VI_STRUCT NFD_Binary::get_Watcom_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
 {
     VI_STRUCT result = {};
 
@@ -2065,8 +2053,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::get_Watcom_vi(QIODevice *pDevice, XScanEngine:
     return result;
 }
 
-NFD_Binary::VI_STRUCT NFD_Binary::get_PyInstaller_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
-                                                     XBinary::PDSTRUCT *pPdStruct)
+NFD_Binary::VI_STRUCT NFD_Binary::get_PyInstaller_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
 {
     VI_STRUCT result = {};
 
@@ -2082,8 +2069,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::get_PyInstaller_vi(QIODevice *pDevice, XScanEn
     return result;
 }
 
-NFD_Binary::VI_STRUCT NFD_Binary::get_DWRAF_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
-                                               XBinary::PDSTRUCT *pPdStruct)
+NFD_Binary::VI_STRUCT NFD_Binary::get_DWRAF_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pPdStruct)
 
@@ -2131,8 +2117,7 @@ NFD_Binary::VI_STRUCT NFD_Binary::get_WindowsInstaller_vi(QIODevice *pDevice, XS
     return result;
 }
 
-NFD_Binary::VI_STRUCT NFD_Binary::get_gold_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize,
-                                              XBinary::PDSTRUCT *pPdStruct)
+NFD_Binary::VI_STRUCT NFD_Binary::get_gold_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct)
 {
     VI_STRUCT result = {};
 
@@ -2166,154 +2151,150 @@ NFD_Binary::VI_STRUCT NFD_Binary::get_TurboLinker_vi(QIODevice *pDevice, XScanEn
 }
 
 // TODO separate
-NFD_Binary::SIGNATURE_RECORD g_binary_records[]=
-{
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_CERTIFICATE,      XScanEngine::RECORD_NAME_WINAUTH,                      "2.0",              "PKCS #7"},             "........00020200"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_DATABASE,         XScanEngine::RECORD_NAME_MICROSOFTACCESS,              "",                 ""},                    "00010000'Standard Jet DB'00"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_DATABASE,         XScanEngine::RECORD_NAME_MICROSOFTACCESS,              "2010",             ""},                    "00010000'Standard ACE DB'00"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_DATABASE,         XScanEngine::RECORD_NAME_MICROSOFTLINKERDATABASE,      "",                 ""},                    "'Microsoft Linker Database\n\n'071A"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_DATABASE,         XScanEngine::RECORD_NAME_PDB,                          "2.00",             ""},                    "'Microsoft C/C++ program database 2.00\r\n'1A'JG'0000"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_DATABASE,         XScanEngine::RECORD_NAME_PDB,                          "7.00",             ""},                    "'Microsoft C/C++ MSF 7.00\r\n'1A'DS'000000"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_AUTOIT,                       "2.XX-3.XX",        "Compiled script"},     "A3484BBE986C4AA9"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_AR,                           "",                 ""},                    "'!<arch>'0A"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_COFF,                         "",                 ""},                    "'!<arch>'0A2F"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_DEX,                          "",                 ""},                    "'dex\n'......00"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_JAVACOMPILEDCLASS,            "",                 ""},                    "CAFEBABE"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_LUACOMPILED,                  "",                 ""},                    "1B'Lua'..000104040408"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP,    "",                 ""},                    "'ITSF'03000000"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_MICROSOFTCOMPOUND,            "",                 "MSO 97-2003 or MSI"},  "D0CF11E0A1B11AE1"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_MICROSOFTWINHELP,             "",                 ""},                    "3f5f0300"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_MP3,                          "",                 ""},                    "'ID3'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_MP4,                          "",                 ""},                    "000000..'ftyp'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_PDF,                          "",                 ""},                    "'%PDF'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_RTF,                          "",                 ""},                    "'{'5C'rtf'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_SWF,                          "",                 "LZMA"},                "'ZWS'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_SWF,                          "",                 "Uncompressed"},        "'FWS'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_SWF,                          "",                 "zlib"},                "'CWS'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_WAV,                          "",                 ""},                    "................'WAVEfmt'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_DJVU,                         "",                 ""},                    "'AT&T'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_JPEG,                         "",                 ""},                    "FFD8FFE0....'JFIF'00"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_JPEG,                         "",                 "EXIF"},                "FFD8FFE1....'Exif'00"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_TIFF,                         "",                 "BE"},                  "'MM'002A"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_TIFF,                         "",                 "LE"},                  "'II'2A00"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_GIF,                          "",                 ""},                    "'GIF8'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_PNG,                          "",                 ""},                    "89'PNG\r\n'1A0A........'IHDR'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_WINDOWSBITMAP,                "",                 ""},                    "'BM'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_WINDOWSICON,                  "",                 ""},                    "00000100"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_WINDOWSCURSOR,                "",                 ""},                    "00000200"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_AU,                           "",                 ""},                    "'.snd'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_DEB,                          "",                 ""},                    "'!<arch>'0a'debian-binary'"}, // TODO Check
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_AVI,                          "",                 ""},                    "'RIFF'........'AVI '"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_WEBP,                         "",                 ""},                    "'RIFF'........'WEBPVP8'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_TTF,                          "",                 ""},                    "........................................................'OS/2'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_TTF,                          "",                 ""},                    "........................................................'BASE'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_TTF,                          "",                 ""},                    "........................................................'cmap'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_TTF,                          "",                 ""},                    "........................................................'DSIG'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_TTF,                          "",                 ""},                    "........................................................'EBDT'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_TTF,                          "",                 ""},                    "........................................................'Feat'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_TTF,                          "",                 ""},                    "........................................................'FFTM'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_TTF,                          "",                 ""},                    "........................................................'GPOS'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_TTF,                          "",                 ""},                    "........................................................'GSUB'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_TTF,                          "",                 ""},                    "........................................................'LTSH'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_ANDROIDXML,                   "",                 ""},                    "03000800"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_ANDROIDARSC,                  "",                 ""},                    "02000C00"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_WINDOWSMEDIA,                 "",                 ""},                    "3026B2758E66CF11A6D900AA0062CE6C"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_FLASHVIDEO,                   "",                 ""},                    "'FLV'01"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_SOURCECODE,       XScanEngine::RECORD_NAME_SHELL,                        "",                 ""},                    "'#!'"}, // "'#!c:\python\python.exe'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_DEBUGDATA,        XScanEngine::RECORD_NAME_BORLANDDEBUGINFO,             "",                 "TDS"},                 "FB52"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_DEBUGDATA,        XScanEngine::RECORD_NAME_BORLANDDEBUGINFO,             "",                 "Delphi TDS"},          "'FB09'"},
-    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_DEBUGDATA,        XScanEngine::RECORD_NAME_BORLANDDEBUGINFO,             "",                 "C++ TDS"},             "'FB0A'"}
+NFD_Binary::SIGNATURE_RECORD g_binary_records[] = {
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_CERTIFICATE, XScanEngine::RECORD_NAME_WINAUTH, "2.0", "PKCS #7"}, "........00020200"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DATABASE, XScanEngine::RECORD_NAME_MICROSOFTACCESS, "", ""}, "00010000'Standard Jet DB'00"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DATABASE, XScanEngine::RECORD_NAME_MICROSOFTACCESS, "2010", ""}, "00010000'Standard ACE DB'00"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DATABASE, XScanEngine::RECORD_NAME_MICROSOFTLINKERDATABASE, "", ""}, "'Microsoft Linker Database\n\n'071A"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DATABASE, XScanEngine::RECORD_NAME_PDB, "2.00", ""}, "'Microsoft C/C++ program database 2.00\r\n'1A'JG'0000"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DATABASE, XScanEngine::RECORD_NAME_PDB, "7.00", ""}, "'Microsoft C/C++ MSF 7.00\r\n'1A'DS'000000"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_AUTOIT, "2.XX-3.XX", "Compiled script"}, "A3484BBE986C4AA9"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_AR, "", ""}, "'!<arch>'0A"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_COFF, "", ""}, "'!<arch>'0A2F"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_DEX, "", ""}, "'dex\n'......00"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_JAVACOMPILEDCLASS, "", ""}, "CAFEBABE"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_LUACOMPILED, "", ""}, "1B'Lua'..000104040408"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP, "", ""}, "'ITSF'03000000"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_MICROSOFTCOMPOUND, "", "MSO 97-2003 or MSI"}, "D0CF11E0A1B11AE1"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_MICROSOFTWINHELP, "", ""}, "3f5f0300"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_MP3, "", ""}, "'ID3'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_MP4, "", ""}, "000000..'ftyp'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_PDF, "", ""}, "'%PDF'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_RTF, "", ""}, "'{'5C'rtf'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_SWF, "", "LZMA"}, "'ZWS'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_SWF, "", "Uncompressed"}, "'FWS'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_SWF, "", "zlib"}, "'CWS'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_WAV, "", ""}, "................'WAVEfmt'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_DJVU, "", ""}, "'AT&T'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_JPEG, "", ""}, "FFD8FFE0....'JFIF'00"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_JPEG, "", "EXIF"}, "FFD8FFE1....'Exif'00"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_TIFF, "", "BE"}, "'MM'002A"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_TIFF, "", "LE"}, "'II'2A00"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_GIF, "", ""}, "'GIF8'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_PNG, "", ""}, "89'PNG\r\n'1A0A........'IHDR'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_WINDOWSBITMAP, "", ""}, "'BM'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_WINDOWSICON, "", ""}, "00000100"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_WINDOWSCURSOR, "", ""}, "00000200"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_AU, "", ""}, "'.snd'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_DEB, "", ""}, "'!<arch>'0a'debian-binary'"},  // TODO Check
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_AVI, "", ""}, "'RIFF'........'AVI '"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_WEBP, "", ""}, "'RIFF'........'WEBPVP8'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_TTF, "", ""}, "........................................................'OS/2'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_TTF, "", ""}, "........................................................'BASE'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_TTF, "", ""}, "........................................................'cmap'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_TTF, "", ""}, "........................................................'DSIG'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_TTF, "", ""}, "........................................................'EBDT'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_TTF, "", ""}, "........................................................'Feat'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_TTF, "", ""}, "........................................................'FFTM'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_TTF, "", ""}, "........................................................'GPOS'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_TTF, "", ""}, "........................................................'GSUB'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_TTF, "", ""}, "........................................................'LTSH'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_ANDROIDXML, "", ""}, "03000800"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_ANDROIDARSC, "", ""}, "02000C00"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_WINDOWSMEDIA, "", ""}, "3026B2758E66CF11A6D900AA0062CE6C"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_FLASHVIDEO, "", ""}, "'FLV'01"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_SOURCECODE, XScanEngine::RECORD_NAME_SHELL, "", ""}, "'#!'"},  // "'#!c:\python\python.exe'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_BORLANDDEBUGINFO, "", "TDS"}, "FB52"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_BORLANDDEBUGINFO, "", "Delphi TDS"}, "'FB09'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_BORLANDDEBUGINFO, "", "C++ TDS"}, "'FB0A'"}};
+
+static NFD_Binary::SIGNATURE_RECORD g_debugdata_records[] = {
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_PDBFILELINK, "7.0", ""}, "'RSDS'"},
 };
 
-static NFD_Binary::SIGNATURE_RECORD g_debugdata_records[]=
-    {
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_DEBUGDATA,        XScanEngine::RECORD_NAME_PDBFILELINK,                  "7.0",              ""},                    "'RSDS'"},
-        };
+static NFD_Binary::SIGNATURE_RECORD g_archive_records[] = {
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_7Z, "", ""}, "'7z'BCAF271C"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_ARJ, "", ""}, "60EA"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_BZIP2, "", ""}, "'BZh'"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_CAB, "", ""}, "'MSCF'00000000"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_GZIP, "", ""}, "1F8B08"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_LHA, "", ""}, "....'-lh'..2D"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_LHA, "", ""}, "....'-lz'..2D"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_LZFSE, "", ""}, "'bvxn'"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_RAR, "1.4", ""}, "'RE~^'"},
+    {{1, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_RAR, "4.X", ""}, "'Rar!'1A0700"},
+    {{1, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_RAR, "5.X", ""}, "'Rar!'1A070100"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_XAR, "", ""}, "'xar!'001C00010000"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_ZLIB, "", "level 1(no/low)"}, "7801"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_ZLIB, "", "level 2-5"}, "785E"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_ZLIB, "", "level 6(default)"}, "789C"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_ZLIB, "", "level 7-9(best)"}, "78DA"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_XZ, "", ""}, "FD'7zXZ'00"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_MACHOFAT, "", ""}, "CAFEBABE"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_MACHOFAT, "", ""}, "BEBAFECA"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_ZIP, "", ""}, "'PK'0304"},
+    {{0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_ZIP, "", "Empty"}, "'PK'0506"},
+};
 
-static NFD_Binary::SIGNATURE_RECORD g_archive_records[]=
-    {
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_7Z,                           "",                 ""},                    "'7z'BCAF271C"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_ARJ,                          "",                 ""},                    "60EA"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_BZIP2,                        "",                 ""},                    "'BZh'"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_CAB,                          "",                 ""},                    "'MSCF'00000000"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_GZIP,                         "",                 ""},                    "1F8B08"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_LHA,                          "",                 ""},                    "....'-lh'..2D"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_LHA,                          "",                 ""},                    "....'-lz'..2D"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_LZFSE,                        "",                 ""},                    "'bvxn'"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_RAR,                          "1.4",              ""},                    "'RE~^'"},
-        {{1, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_RAR,                          "4.X",              ""},                    "'Rar!'1A0700"},
-        {{1, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_RAR,                          "5.X",              ""},                    "'Rar!'1A070100"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_XAR,                          "",                 ""},                    "'xar!'001C00010000"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_ZLIB,                         "",                 "level 1(no/low)"},     "7801"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_ZLIB,                         "",                 "level 2-5"},           "785E"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_ZLIB,                         "",                 "level 6(default)"},    "789C"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_ZLIB,                         "",                 "level 7-9(best)"},     "78DA"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_XZ,                           "",                 ""},                    "FD'7zXZ'00"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_MACHOFAT,                     "",                 ""},                    "CAFEBABE"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_MACHOFAT,                     "",                 ""},                    "BEBAFECA"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_ZIP,                          "",                 ""},                    "'PK'0304"},
-        {{0, XBinary::FT_ARCHIVE,   XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_ZIP,                          "",                 "Empty"},               "'PK'0506"},
-        };
-
-static NFD_Binary::SIGNATURE_RECORD g_PE_overlay_records[]=
-    {
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_ACTUALINSTALLER,              "",                 ""},                    "....................'MSCF'00"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_AVASTANTIVIRUS,               "",                 ""},                    "'ASWsetupFPkgFil3'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_CLICKTEAM,                    "",                 ""},                    "'wwgT)'"},
-        {{1, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_CLICKTEAM,                    "",                 ""},                    "..120100....0000"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_GHOSTINSTALLER,               "1.0",              "Xored MSCF, mask: 8D"},"C0DECECB8D8D8D8D"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_GPINSTALL,                    "",                 ""},                    "........'SPIS'1a'LH5'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_INNOSETUP,                    "",                 ""},                    "'Inno Setup Setup Data'"}, // TODO Check version
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_INNOSETUP,                    "",                 "Install"},             "'idska32'1A"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_INNOSETUP,                    "",                 "Install"},             "'zlb'1A"}, // TODO none
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_INNOSETUP,                    "",                 "Uninstall"},           "'Inno Setup Messages'"},  // TODO check
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_INSTALL4J,                    "",                 ""},                    "D513E4E801000000"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_INSTALLANYWHERE,              "",                 ""},                    "5B3E"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_INSTALLSHIELD,                "",                 ""},                    "'ISSetupStream'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_INSTALLSHIELD,                "",                 "PackageForTheWeb"},    "....0000dcedbd"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_NSIS,                         "",                 ""},                    "EFBEADDE'Null'..'oftInst'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_NSIS,                         "",                 ""},                    "..000000EFBEADDE'NullsoftInst'"},
-        {{1, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_NSIS,                         "",                 ""},                    "EFBEADDE'nsisinstall'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_OPERA,                        "",                 ""},                    "'OPR7z'BCAF271C"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_QTINSTALLER,                  "",                 ""},                    "'qres'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_SETUPFACTORY,                 "4.X-7.X",          ""},                    "E0E1E2E3E4E5E6"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_SETUPFACTORY,                 "8.X-9.X",          ""},                    "E0E0E1E1E2E2E3E3E4E4E5E5E6E6E7E7"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_SMARTINSTALLMAKER,            "",                 ""},                    "'Smart Install Maker v'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_TARMAINSTALLER,               "",                 "zlib"},                "'tiz1'........78DA'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_VMWARE,                       "",                 ""},                    "'RWMV'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_1337EXECRYPTER,               "1",                ""},                    "60'*[S-P-L-I-T]*'60"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_1337EXECRYPTER,               "2",                ""},                    "'~SPLIT~'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_ACTIVEMARK,                   "",                 ""},                    "00'TMSAMVOH"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_AGAINNATIVITYCRYPTER,         "",                 ""},                    "'<%*#%>'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_ARCRYPT,                      "",                 ""},                    "'@@##@@'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_FASTFILECRYPT,                "",                 ""},                    "'(==#==)'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_FISHNET,                      "1.X",              ""},                    "0800'FISH_NET'0100"},
-        {{1, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_FISHNET,                      "1.X",              ""},                    "000800'FISH_NET'0100"},
-        {{2, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_FISHNET,                      "1.X",              ""},                    "00000800'FISH_NET'0100"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_LIGHTNINGCRYPTERSCANTIME,     "",                 ""},                    "'F3B14NVA'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_MOLEBOXULTRA,                 "",                 ""},                    "'XOJUMANJ'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_NOXCRYPT,                     "",                 ""},                    "'|||'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_WLCRYPT,                      "",                 ""},                    "'[Crypted Key]'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_WOUTHRSEXECRYPTER,            "",                 ""},                    "'<%>'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_XENOCODE,                     "",                 ""},                    "'xvm'0001"}, // Check Turbo https://en.wikipedia.org/wiki/Turbo_(software)
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_SPOONSTUDIO,                  "",                 ""},                    "'xvm'0003"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_ZELDACRYPT,                   "",                 ""},                    "2F232F2B5C235C"}, // '/#/+\#\'
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_SFXDATA,          XScanEngine::RECORD_NAME_7Z,                           "",                 ""},                    "';!@Install@!UTF-8!'"},
-        {{1, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_SFXDATA,          XScanEngine::RECORD_NAME_7Z,                           "",                 ""},                    "EFBBBF';!@Install@!UTF-8!'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_SFXDATA,          XScanEngine::RECORD_NAME_SQUEEZSFX,                    "",                 ""},                    "'SQ5SFX'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_SFXDATA,          XScanEngine::RECORD_NAME_WINRAR,                       "",                 ""},                    "'***messages***'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_ADVANCEDINSTALLER,            "",                 ""},                    "2F30EE1F5E4EE51E"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_DEBUGDATA,        XScanEngine::RECORD_NAME_MINGW,                        "",                 ""},                    "'.file'000000"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_DEBUGDATA,        XScanEngine::RECORD_NAME_PDBFILELINK,                  "2.0",              ""},                    "'NB10'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_DEBUGDATA,        XScanEngine::RECORD_NAME_PDBFILELINK,                  "7.0",              ""},                    "'RSDS'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_DOTNETSHRINK,                 "2.01",             ""},                    "5D00000002"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_SIXXPACK,                     "",                 ""},                    "5D0000800000"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_THINSTALL,                    "",                 ""},                    "09050000"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_INSTALLERDATA,    XScanEngine::RECORD_NAME_NOSINSTALLER,                 "",                 ""},                    "'NOS_PO'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_SECUROM,                      "",                 ""},                    "'AddD'03"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_SERGREENAPPACKER,             "",                 ""},                    "'<SerGreen>'"},
-        {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_PROTECTORDATA,    XScanEngine::RECORD_NAME_NATIVECRYPTORBYDOSX,          "",                 ""},                    "'7stgc_hdr'00"},
-        };
+static NFD_Binary::SIGNATURE_RECORD g_PE_overlay_records[] = {
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_ACTUALINSTALLER, "", ""}, "....................'MSCF'00"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_AVASTANTIVIRUS, "", ""}, "'ASWsetupFPkgFil3'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_CLICKTEAM, "", ""}, "'wwgT)'"},
+    {{1, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_CLICKTEAM, "", ""}, "..120100....0000"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_GHOSTINSTALLER, "1.0", "Xored MSCF, mask: 8D"}, "C0DECECB8D8D8D8D"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_GPINSTALL, "", ""}, "........'SPIS'1a'LH5'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_INNOSETUP, "", ""}, "'Inno Setup Setup Data'"},  // TODO Check version
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_INNOSETUP, "", "Install"}, "'idska32'1A"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_INNOSETUP, "", "Install"}, "'zlb'1A"},                  // TODO none
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_INNOSETUP, "", "Uninstall"}, "'Inno Setup Messages'"},  // TODO check
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_INSTALL4J, "", ""}, "D513E4E801000000"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_INSTALLANYWHERE, "", ""}, "5B3E"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_INSTALLSHIELD, "", ""}, "'ISSetupStream'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_INSTALLSHIELD, "", "PackageForTheWeb"}, "....0000dcedbd"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_NSIS, "", ""}, "EFBEADDE'Null'..'oftInst'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_NSIS, "", ""}, "..000000EFBEADDE'NullsoftInst'"},
+    {{1, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_NSIS, "", ""}, "EFBEADDE'nsisinstall'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_OPERA, "", ""}, "'OPR7z'BCAF271C"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_QTINSTALLER, "", ""}, "'qres'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_SETUPFACTORY, "4.X-7.X", ""}, "E0E1E2E3E4E5E6"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_SETUPFACTORY, "8.X-9.X", ""}, "E0E0E1E1E2E2E3E3E4E4E5E5E6E6E7E7"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_SMARTINSTALLMAKER, "", ""}, "'Smart Install Maker v'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_TARMAINSTALLER, "", "zlib"}, "'tiz1'........78DA'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_VMWARE, "", ""}, "'RWMV'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_1337EXECRYPTER, "1", ""}, "60'*[S-P-L-I-T]*'60"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_1337EXECRYPTER, "2", ""}, "'~SPLIT~'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_ACTIVEMARK, "", ""}, "00'TMSAMVOH"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_AGAINNATIVITYCRYPTER, "", ""}, "'<%*#%>'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_ARCRYPT, "", ""}, "'@@##@@'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_FASTFILECRYPT, "", ""}, "'(==#==)'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_FISHNET, "1.X", ""}, "0800'FISH_NET'0100"},
+    {{1, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_FISHNET, "1.X", ""}, "000800'FISH_NET'0100"},
+    {{2, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_FISHNET, "1.X", ""}, "00000800'FISH_NET'0100"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_LIGHTNINGCRYPTERSCANTIME, "", ""}, "'F3B14NVA'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_MOLEBOXULTRA, "", ""}, "'XOJUMANJ'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_NOXCRYPT, "", ""}, "'|||'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_WLCRYPT, "", ""}, "'[Crypted Key]'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_WOUTHRSEXECRYPTER, "", ""}, "'<%>'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_XENOCODE, "", ""},
+     "'xvm'0001"},  // Check Turbo https://en.wikipedia.org/wiki/Turbo_(software)
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_SPOONSTUDIO, "", ""}, "'xvm'0003"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_ZELDACRYPT, "", ""}, "2F232F2B5C235C"},  // '/#/+\#\'
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_SFXDATA, XScanEngine::RECORD_NAME_7Z, "", ""}, "';!@Install@!UTF-8!'"},
+    {{1, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_SFXDATA, XScanEngine::RECORD_NAME_7Z, "", ""}, "EFBBBF';!@Install@!UTF-8!'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_SFXDATA, XScanEngine::RECORD_NAME_SQUEEZSFX, "", ""}, "'SQ5SFX'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_SFXDATA, XScanEngine::RECORD_NAME_WINRAR, "", ""}, "'***messages***'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_ADVANCEDINSTALLER, "", ""}, "2F30EE1F5E4EE51E"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_MINGW, "", ""}, "'.file'000000"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_PDBFILELINK, "2.0", ""}, "'NB10'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_PDBFILELINK, "7.0", ""}, "'RSDS'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_DOTNETSHRINK, "2.01", ""}, "5D00000002"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_SIXXPACK, "", ""}, "5D0000800000"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_THINSTALL, "", ""}, "09050000"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_NOSINSTALLER, "", ""}, "'NOS_PO'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_SECUROM, "", ""}, "'AddD'03"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_SERGREENAPPACKER, "", ""}, "'<SerGreen>'"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_PROTECTORDATA, XScanEngine::RECORD_NAME_NATIVECRYPTORBYDOSX, "", ""}, "'7stgc_hdr'00"},
+};
 
 // Accessors for centralized signature arrays
 NFD_Binary::SIGNATURE_RECORD *NFD_Binary::getBinaryRecords()

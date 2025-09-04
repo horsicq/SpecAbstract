@@ -20,7 +20,7 @@ public:
         bool bIsJava;
         bool bIsKotlin;
 
-    NFD_DEX::DEXINFO_STRUCT dexInfoClasses;
+        NFD_DEX::DEXINFO_STRUCT dexInfoClasses;
     };
 };
 

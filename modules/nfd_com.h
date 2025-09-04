@@ -21,8 +21,7 @@ public:
         qint64 nOverlaySize;
     };
 
-    static COMINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                  XBinary::PDSTRUCT *pPdStruct);
+    static COMINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
 
     // Handlers migrated from SpecAbstract
     static void handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, COMINFO_STRUCT *pCOMInfo, XBinary::PDSTRUCT *pPdStruct);
@@ -30,9 +29,9 @@ public:
 
     // Accessors for COM signature arrays (moved from SpecAbstract/signatures.cpp)
     static NFD_Binary::SIGNATURE_RECORD *getHeaderRecords();
-    static qint32 getHeaderRecordsSize(); // size in bytes
+    static qint32 getHeaderRecordsSize();  // size in bytes
     static NFD_Binary::SIGNATURE_RECORD *getHeaderExpRecords();
-    static qint32 getHeaderExpRecordsSize(); // size in bytes
+    static qint32 getHeaderExpRecordsSize();  // size in bytes
 };
 
 #endif  // NFD_COM_H

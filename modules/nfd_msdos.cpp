@@ -697,39 +697,69 @@ void NFD_MSDOS::MSDOS_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OP
 			pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
 		}
 
-		auto insertEP = [&](XScanEngine::RECORD_NAME rn){ if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(rn)) { auto ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(rn); pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss)); } };
-		insertEP(XScanEngine::RECORD_NAME_AINEXE);
-		insertEP(XScanEngine::RECORD_NAME_PGMPAK);
+		// Insert known entry-point detections into result packers (explicit, no lambdas/no auto)
+		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_AINEXE)) {
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_AINEXE);
+			pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+		}
+		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_PGMPAK)) {
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_PGMPAK);
+			pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+		}
 		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_JAM)) {
-			auto ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_JAM);
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_JAM);
 			pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
 		}
 		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_LOCKTITE)) {
-			auto ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_LOCKTITE);
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_LOCKTITE);
 			pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
 		}
 		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_PCOM)) {
-			auto ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_PCOM);
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_PCOM);
 			pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
 		}
-		insertEP(XScanEngine::RECORD_NAME_AVPACK);
-		insertEP(XScanEngine::RECORD_NAME_LGLZ);
-		insertEP(XScanEngine::RECORD_NAME_PROPACK);
-		insertEP(XScanEngine::RECORD_NAME_RELPACK);
-		insertEP(XScanEngine::RECORD_NAME_SCRNCH);
-		insertEP(XScanEngine::RECORD_NAME_TINYPROG);
-		insertEP(XScanEngine::RECORD_NAME_UCEXE);
-		insertEP(XScanEngine::RECORD_NAME_APACK);
+		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_AVPACK)) {
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_AVPACK);
+			pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+		}
+		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_LGLZ)) {
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_LGLZ);
+			pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+		}
+		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_PROPACK)) {
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_PROPACK);
+			pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+		}
+		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_RELPACK)) {
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_RELPACK);
+			pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+		}
+		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_SCRNCH)) {
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_SCRNCH);
+			pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+		}
+		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_TINYPROG)) {
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_TINYPROG);
+			pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+		}
+		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_UCEXE)) {
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_UCEXE);
+			pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+		}
+		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_APACK)) {
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_APACK);
+			pMSDOSInfo->basic_info.mapResultPackers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+		}
 		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_CCBYVORONTSOV)) {
-			auto ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_CCBYVORONTSOV);
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_CCBYVORONTSOV);
 			pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
 		}
 		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_CRYPTCOM)) {
-			auto ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_CRYPTCOM);
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_CRYPTCOM);
 			pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
 		}
 		if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_CRYPTORBYDISMEMBER)) {
-			auto ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_CRYPTORBYDISMEMBER);
+			NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_CRYPTORBYDISMEMBER);
 			pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
 		}
 
