@@ -566,7 +566,7 @@ NFD_Binary::CONST_RECORD _PE_importhash_records[] = {
     {{0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_VPACKER, "0.02.10", ""}, 0x3404eaa9b, 0x3789c118},
     {{0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_XCOMP, "0.97-0.98", ""}, 0x2f6afb438, 0xea1e66e4},
     //{{0, XBinary::FT_PE32,      XScanEngine::RECORD_TYPE_PACKER,           XScanEngine::RECORD_NAME_PECOMPACT,                    "2.40-3.XX",        ""}, 0x1eb276f62,
-    //0xdb8fbb75},
+    // 0xdb8fbb75},
     {{0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_THEMIDAWINLICENSE, "", ""}, 0x16a45c345, 0x108edf16},
     {{0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_NPACK, "", ""}, 0x2d86e7bf1, 0xd0c4c278},
     {{0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_PEPACK, "0.99", ""}, 0x341f3f6e9, 0xeaf00a09},

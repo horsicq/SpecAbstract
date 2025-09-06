@@ -5,9 +5,8 @@ NFD_ELF::NFD_ELF(XELF *pELF, XBinary::FILEPART filePart, OPTIONS *pOptions, XBin
 }
 
 // ELF entrypoint signature table (migrated from SpecAbstract/signatures.cpp)
-static NFD_Binary::SIGNATURE_RECORD g_ELF_entrypoint_records[] =
-{
-    {{0, XBinary::FT_ELF32,     XScanEngine::RECORD_TYPE_PROTECTOR,        XScanEngine::RECORD_NAME_BURNEYE,                      "1.00",             ""},                    "FF35........9C608B0D........E9"},
+static NFD_Binary::SIGNATURE_RECORD g_ELF_entrypoint_records[] = {
+    {{0, XBinary::FT_ELF32, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_BURNEYE, "1.00", ""}, "FF35........9C608B0D........E9"},
 };
 
 NFD_Binary::SIGNATURE_RECORD *NFD_ELF::getEntrypointRecords()

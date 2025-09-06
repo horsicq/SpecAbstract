@@ -160,8 +160,9 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XScanE
     XELF elf(pDevice, pOptions->bIsImage);
     if (elf.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
         // Keep existing SpecAbstract handlers that derive more detects from the core info
-    NFD_Binary::signatureScan(&result.basic_info.mapEntryPointDetects, result.sEntryPointSignature, NFD_ELF::getEntrypointRecords(), NFD_ELF::getEntrypointRecordsSize(),
-                                  result.basic_info.id.fileType, XBinary::FT_ELF, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
+        NFD_Binary::signatureScan(&result.basic_info.mapEntryPointDetects, result.sEntryPointSignature, NFD_ELF::getEntrypointRecords(),
+                                  NFD_ELF::getEntrypointRecordsSize(), result.basic_info.id.fileType, XBinary::FT_ELF, &(result.basic_info), DETECTTYPE_ENTRYPOINT,
+                                  pPdStruct);
 
         ELF_handle_CommentSection(pDevice, pOptions, &result, pPdStruct);
         ELF_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
@@ -735,9 +736,9 @@ SpecAbstract::APKINFO_STRUCT SpecAbstract::getAPKInfo(QIODevice *pDevice, SCANID
         result.bIsKotlin = XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version", &(result.listArchiveRecords), pPdStruct) ||
                            XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins", &(result.listArchiveRecords), pPdStruct);
 
-    NFD_Binary::archiveScan(&(result.basic_info.mapArchiveDetects), &(result.listArchiveRecords), NFD_APK::getFileRecords(), NFD_APK::getFileRecordsSize(),
+        NFD_Binary::archiveScan(&(result.basic_info.mapArchiveDetects), &(result.listArchiveRecords), NFD_APK::getFileRecords(), NFD_APK::getFileRecordsSize(),
                                 result.basic_info.id.fileType, XBinary::FT_APK, &(result.basic_info), DETECTTYPE_ARCHIVE, pPdStruct);
-    NFD_Binary::archiveExpScan(&(result.basic_info.mapArchiveDetects), &(result.listArchiveRecords), NFD_APK::getFileExpRecords(), NFD_APK::getFileExpRecordsSize(),
+        NFD_Binary::archiveExpScan(&(result.basic_info.mapArchiveDetects), &(result.listArchiveRecords), NFD_APK::getFileExpRecords(), NFD_APK::getFileExpRecordsSize(),
                                    result.basic_info.id.fileType, XBinary::FT_APK, &(result.basic_info), DETECTTYPE_ARCHIVE, pPdStruct);
 
         if (XArchive::isArchiveRecordPresent("classes.dex", &(result.listArchiveRecords), pPdStruct)) {
@@ -7069,7 +7070,7 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPT
     XBinary binary(pDevice, pOptions->bIsImage);
 
     if ((pBinaryInfo->bIsPlainText) || (pBinaryInfo->unicodeType != XBinary::UNICODE_TYPE_NONE) || (pBinaryInfo->bIsUTF8)) {
-    qint32 nSignaturesCount = NFD_TEXT::getTextExpRecordsSize() / sizeof(NFD_Binary::STRING_RECORD);
+        qint32 nSignaturesCount = NFD_TEXT::getTextExpRecordsSize() / sizeof(NFD_Binary::STRING_RECORD);
 
         for (qint32 i = 0; (i < nSignaturesCount) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++)  // TODO move to an own function !!!
         {
