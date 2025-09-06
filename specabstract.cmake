@@ -65,4 +65,6 @@ set(SPECABSTRACT_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_pdf.h
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_javaclass.cpp
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_javaclass.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_text.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_text.h
 )
