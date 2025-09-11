@@ -48,6 +48,11 @@ public:
     static qint32 getStringRecordsSize();
     static NFD_Binary::STRING_RECORD *getTypeRecords();
     static qint32 getTypeRecordsSize();
+
+    // Handlers migrated from SpecAbstract
+    static void handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
+    static void handle_Dexguard(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
+    static void handle_Protection(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct);
 };
 
 #endif  // NFD_DEX_H

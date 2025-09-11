@@ -22,9 +22,14 @@
 #include "modules/nfd_elf.h"
 #include "modules/nfd_javaclass.h"
 #include "modules/nfd_rar.h"
+#include "modules/nfd_apk.h"
 #include "modules/nfd_le.h"
 #include "modules/nfd_lx.h"
 #include "modules/nfd_ne.h"
+#include "modules/nfd_dex.h"
+#include "modules/nfd_pe.h"
+#include "modules/nfd_text.h"
+#include "modules/nfd_dex.h"
 
 #include "signatures.cpp"  // Do not include in CMAKE files!
 
@@ -51,23 +56,28 @@ SpecAbstract::BINARYINFO_STRUCT SpecAbstract::getBinaryInfo(QIODevice *pDevice, 
         //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
 
         // Scan Header
-        NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _binary_records, sizeof(_binary_records), result.basic_info.id.fileType,
-                      XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
-        NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _archive_records, sizeof(_archive_records), result.basic_info.id.fileType,
-                      XBinary::FT_ARCHIVE, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
+        NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_Binary::getBinaryRecords(),
+                                  NFD_Binary::getBinaryRecordsSize(), result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_HEADER,
+                                  pPdStruct);
+        NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_Binary::getArchiveRecords(),
+                                  NFD_Binary::getArchiveRecordsSize(), result.basic_info.id.fileType, XBinary::FT_ARCHIVE, &(result.basic_info), DETECTTYPE_HEADER,
+                                  pPdStruct);
 
         if (result.basic_info.parentId.filePart == XBinary::FILEPART_OVERLAY) {
-            NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_overlay_records, sizeof(_PE_overlay_records),
-                          result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
+            NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_Binary::getPEOverlayRecords(),
+                                      NFD_Binary::getPEOverlayRecordsSize(), result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_OVERLAY,
+                                      pPdStruct);
         }
 
         if (result.basic_info.parentId.filePart == XBinary::FILEPART_DEBUGDATA) {
-            NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _debugdata_records, sizeof(_debugdata_records),
-                          result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_DEBUGDATA, pPdStruct);
+            NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_Binary::getDebugdataRecords(),
+                                      NFD_Binary::getDebugdataRecordsSize(), result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info),
+                                      DETECTTYPE_DEBUGDATA, pPdStruct);
         }
 
         if (result.basic_info.parentId.filePart == XBinary::FILEPART_RESOURCE) {
-            //            NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_resource_records, sizeof(_PE_resource_records),
+            //            NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_resource_records,
+            //            sizeof(_PE_resource_records),
             //                          result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
 
             // TODO a function
@@ -151,8 +161,9 @@ SpecAbstract::ELFINFO_STRUCT SpecAbstract::getELFInfo(QIODevice *pDevice, XScanE
     XELF elf(pDevice, pOptions->bIsImage);
     if (elf.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
         // Keep existing SpecAbstract handlers that derive more detects from the core info
-        NFD_Binary::signatureScan(&result.basic_info.mapEntryPointDetects, result.sEntryPointSignature, _ELF_entrypoint_records, sizeof(_ELF_entrypoint_records),
-                      result.basic_info.id.fileType, XBinary::FT_ELF, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
+        NFD_Binary::signatureScan(&result.basic_info.mapEntryPointDetects, result.sEntryPointSignature, NFD_ELF::getEntrypointRecords(),
+                                  NFD_ELF::getEntrypointRecordsSize(), result.basic_info.id.fileType, XBinary::FT_ELF, &(result.basic_info), DETECTTYPE_ENTRYPOINT,
+                                  pPdStruct);
 
         ELF_handle_CommentSection(pDevice, pOptions, &result, pPdStruct);
         ELF_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
@@ -382,42 +393,49 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
 
         //        memoryScan(&result.mapHeaderScanDetects,pDevice,0,qMin(result.basic_info.nSize,(qint64)1024),_headerscan_records,sizeof(_headerscan_records),result.basic_info.id.filetype,SpecAbstract::XBinary::FT_PE);
 
-    NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_MSDOS::getHeaderLinkerRecords(), NFD_MSDOS::getHeaderLinkerRecordsSize(),
-                      result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
-        NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_header_records, sizeof(_PE_header_records),
-                      result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
-        NFD_Binary::signatureScan(&result.basic_info.mapEntryPointDetects, result.sEntryPointSignature, _PE_entrypoint_records, sizeof(_PE_entrypoint_records),
-                      result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
-        NFD_Binary::signatureExpScan(&pe, &(result.basic_info.memoryMap), &result.basic_info.mapEntryPointDetects, result.nEntryPointOffset, _PE_entrypointExp_records,
-                         sizeof(_PE_entrypointExp_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
-        NFD_Binary::signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, _binary_records, sizeof(_binary_records), result.basic_info.id.fileType,
-                      XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
-        NFD_Binary::signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, _archive_records, sizeof(_archive_records), result.basic_info.id.fileType,
-                      XBinary::FT_ARCHIVE, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
-        NFD_Binary::signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, _PE_overlay_records, sizeof(_PE_overlay_records), result.basic_info.id.fileType,
-                      XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
+        NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_MSDOS::getHeaderLinkerRecords(),
+                                  NFD_MSDOS::getHeaderLinkerRecordsSize(), result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_HEADER,
+                                  pPdStruct);
+        NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_PE::getHeaderRecords(), NFD_PE::getHeaderRecordsSize(),
+                                  result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
+        NFD_Binary::signatureScan(&result.basic_info.mapEntryPointDetects, result.sEntryPointSignature, NFD_PE::getEntrypointRecords(),
+                                  NFD_PE::getEntrypointRecordsSize(), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_ENTRYPOINT,
+                                  pPdStruct);
+        NFD_Binary::signatureExpScan(&pe, &(result.basic_info.memoryMap), &result.basic_info.mapEntryPointDetects, result.nEntryPointOffset,
+                                     NFD_PE::getEntrypointExpRecords(), NFD_PE::getEntrypointExpRecordsSize(), result.basic_info.id.fileType, XBinary::FT_PE,
+                                     &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
+        NFD_Binary::signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, NFD_Binary::getBinaryRecords(), NFD_Binary::getBinaryRecordsSize(),
+                                  result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
+        NFD_Binary::signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, NFD_Binary::getArchiveRecords(), NFD_Binary::getArchiveRecordsSize(),
+                                  result.basic_info.id.fileType, XBinary::FT_ARCHIVE, &(result.basic_info), DETECTTYPE_OVERLAY, pPdStruct);
+        NFD_Binary::signatureScan(&result.basic_info.mapOverlayDetects, result.sOverlaySignature, NFD_Binary::getPEOverlayRecords(),
+                                  NFD_Binary::getPEOverlayRecordsSize(), result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_OVERLAY,
+                                  pPdStruct);
 
-        NFD_Binary::stringScan(&result.basic_info.mapSectionNamesDetects, &result.listSectionNames, _PE_sectionNames_records, sizeof(_PE_sectionNames_records),
-                   result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_SECTIONNAME, pPdStruct);
+        NFD_Binary::stringScan(&result.basic_info.mapSectionNamesDetects, &result.listSectionNames, NFD_PE::getSectionNamesRecords(),
+                               NFD_PE::getSectionNamesRecordsSize(), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_SECTIONNAME,
+                               pPdStruct);
 
         // Import
-        NFD_Binary::constScan(&(result.basic_info.mapImportDetects), result.nImportHash64, result.nImportHash32, _PE_importhash_records, sizeof(_PE_importhash_records),
-                  result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_IMPORTHASH, pPdStruct);
+        NFD_Binary::constScan(&(result.basic_info.mapImportDetects), result.nImportHash64, result.nImportHash32, NFD_PE::getImportHashRecords(),
+                              NFD_PE::getImportHashRecordsSize(), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_IMPORTHASH, pPdStruct);
 
-        NFD_Binary::constScan(&(result.basic_info.mapImportDetects), result.nImportHash64, result.nImportHash32, _PE_importhash_records_armadillo,
-                  sizeof(_PE_importhash_records_armadillo), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_IMPORTHASH, pPdStruct);
+        NFD_Binary::constScan(&(result.basic_info.mapImportDetects), result.nImportHash64, result.nImportHash32, NFD_PE::getImportHashArmadilloRecords(),
+                              NFD_PE::getImportHashArmadilloRecordsSize(), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_IMPORTHASH,
+                              pPdStruct);
 
         // Export
         qint32 nNumberOfImports = result.listImportPositionHashes.count();
 
         for (qint32 i = 0; (i < nNumberOfImports) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
-            NFD_Binary::constScan(&(result.basic_info.mapImportDetects), i, result.listImportPositionHashes.at(i), _PE_importpositionhash_records,
-                      sizeof(_PE_importpositionhash_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_IMPORTHASH, pPdStruct);
+            NFD_Binary::constScan(&(result.basic_info.mapImportDetects), i, result.listImportPositionHashes.at(i), NFD_PE::getImportPositionHashRecords(),
+                                  NFD_PE::getImportPositionHashRecordsSize(), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_IMPORTHASH,
+                                  pPdStruct);
         }
 
         // TODO Resources scan
-        NFD_Binary::PE_resourcesScan(&(result.basic_info.mapResourcesDetects), &(result.listResources), _PE_resources_records, sizeof(_PE_resources_records),
-                         result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_RESOURCES, pPdStruct);
+        NFD_Binary::PE_resourcesScan(&(result.basic_info.mapResourcesDetects), &(result.listResources), NFD_PE::getResourcesRecords(), NFD_PE::getResourcesRecordsSize(),
+                                     result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_RESOURCES, pPdStruct);
 
         PE_x86Emul(pDevice, pOptions, &result, pPdStruct);
 
@@ -442,10 +460,12 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         //        resourcesScan(&result.mapResourcesDetects,&result.listResources,_resources_records,sizeof(_resources_records),result.basic_info.id.filetype,SpecAbstract::XBinary::FT_PE);
 
         if (result.bIsNetPresent) {
-            NFD_Binary::stringScan(&result.basic_info.mapDotAnsiStringsDetects, &result.listAnsiStrings, _PE_dot_ansistrings_records, sizeof(_PE_dot_ansistrings_records),
-                       result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_NETANSISTRING, pPdStruct);
-            NFD_Binary::stringScan(&result.basic_info.mapDotUnicodeStringsDetects, &result.listUnicodeStrings, _PE_dot_unicodestrings_records, sizeof(_PE_dot_unicodestrings_records),
-                       result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_NETUNICODESTRING, pPdStruct);
+            NFD_Binary::stringScan(&result.basic_info.mapDotAnsiStringsDetects, &result.listAnsiStrings, NFD_PE::getDotAnsiStringsRecords(),
+                                   NFD_PE::getDotAnsiStringsRecordsSize(), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_NETANSISTRING,
+                                   pPdStruct);
+            NFD_Binary::stringScan(&result.basic_info.mapDotUnicodeStringsDetects, &result.listUnicodeStrings, NFD_PE::getDotUnicodeStringsRecords(),
+                                   NFD_PE::getDotUnicodeStringsRecordsSize(), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info),
+                                   DETECTTYPE_NETUNICODESTRING, pPdStruct);
 
             //            for(qint32 i=0;i<result.cliInfo.listUnicodeStrings.count();i++)
             //            {
@@ -457,9 +477,9 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
                     qint64 nSectionOffset = result.osCodeSection.nOffset;
                     qint64 nSectionSize = result.osCodeSection.nSize;
 
-                    NFD_Binary::memoryScan(&result.basic_info.mapCodeSectionDetects, pDevice, pOptions, nSectionOffset, nSectionSize, _PE_dot_codesection_records,
-                               sizeof(_PE_dot_codesection_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_CODESECTION,
-                               pPdStruct);
+                    NFD_Binary::memoryScan(&result.basic_info.mapCodeSectionDetects, pDevice, pOptions, nSectionOffset, nSectionSize, NFD_PE::getDotCodeSectionRecords(),
+                                           NFD_PE::getDotCodeSectionRecordsSize(), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info),
+                                           DETECTTYPE_CODESECTION, pPdStruct);
                 }
             }
         }
@@ -469,17 +489,18 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
                 qint64 nSectionOffset = result.osCodeSection.nOffset;
                 qint64 nSectionSize = result.osCodeSection.nSize;
 
-                NFD_Binary::memoryScan(&result.basic_info.mapCodeSectionDetects, pDevice, pOptions, nSectionOffset, nSectionSize, _PE_codesection_records,
-                           sizeof(_PE_codesection_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_CODESECTION, pPdStruct);
+                NFD_Binary::memoryScan(&result.basic_info.mapCodeSectionDetects, pDevice, pOptions, nSectionOffset, nSectionSize, NFD_PE::getCodeSectionRecords(),
+                                       NFD_PE::getCodeSectionRecordsSize(), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_CODESECTION,
+                                       pPdStruct);
             }
 
             if (pe.checkOffsetSize(result.osEntryPointSection)) {
                 qint64 nSectionOffset = result.osEntryPointSection.nOffset;
                 qint64 nSectionSize = result.osEntryPointSection.nSize;
 
-                NFD_Binary::memoryScan(&result.basic_info.mapEntryPointSectionDetects, pDevice, pOptions, nSectionOffset, nSectionSize, _PE_entrypointsection_records,
-                           sizeof(_PE_entrypointsection_records), result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_ENTRYPOINTSECTION,
-                           pPdStruct);
+                NFD_Binary::memoryScan(&result.basic_info.mapEntryPointSectionDetects, pDevice, pOptions, nSectionOffset, nSectionSize,
+                                       NFD_PE::getEntrypointSectionRecords(), NFD_PE::getEntrypointSectionRecordsSize(), result.basic_info.id.fileType, XBinary::FT_PE,
+                                       &(result.basic_info), DETECTTYPE_ENTRYPOINTSECTION, pPdStruct);
             }
         }
 
@@ -571,10 +592,10 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XScanE
         qDebug("%lli msec", timer.elapsed());
 #endif
 
-        NFD_Binary::stringScan(&result.basic_info.mapStringDetects, &result.listStrings, _DEX_string_records, sizeof(_DEX_string_records), result.basic_info.id.fileType,
-                   XBinary::FT_DEX, &(result.basic_info), DETECTTYPE_DEXSTRING, pPdStruct);
-        NFD_Binary::stringScan(&result.basic_info.mapTypeDetects, &result.listTypeItemStrings, _DEX_type_records, sizeof(_DEX_type_records), result.basic_info.id.fileType,
-                   XBinary::FT_DEX, &(result.basic_info), DETECTTYPE_DEXTYPE, pPdStruct);
+        NFD_Binary::stringScan(&result.basic_info.mapStringDetects, &result.listStrings, NFD_DEX::getStringRecords(), NFD_DEX::getStringRecordsSize(),
+                               result.basic_info.id.fileType, XBinary::FT_DEX, &(result.basic_info), DETECTTYPE_DEXSTRING, pPdStruct);
+        NFD_Binary::stringScan(&result.basic_info.mapTypeDetects, &result.listTypeItemStrings, NFD_DEX::getTypeRecords(), NFD_DEX::getTypeRecordsSize(),
+                               result.basic_info.id.fileType, XBinary::FT_DEX, &(result.basic_info), DETECTTYPE_DEXTYPE, pPdStruct);
 
         if (pOptions->bIsDeepScan) {
             //            QList<XDEX_DEF::STRING_ITEM_ID> getList_STRING_ITEM_ID(&mapItems);
@@ -619,9 +640,9 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::getDEXInfo(QIODevice *pDevice, XScanE
 
         // TODO Check Strings
 
-        DEX_handle_Tools(pDevice, pOptions, &result, pPdStruct);
-        DEX_handle_Protection(pDevice, &result, pPdStruct);
-        DEX_handle_Dexguard(pDevice, &result, pPdStruct);
+        NFD_DEX::handle_Tools(pDevice, pOptions, &result, pPdStruct);
+        NFD_DEX::handle_Protection(pDevice, &result, pPdStruct);
+        NFD_DEX::handle_Dexguard(pDevice, &result, pPdStruct);
 
         NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
     }
@@ -716,10 +737,10 @@ SpecAbstract::APKINFO_STRUCT SpecAbstract::getAPKInfo(QIODevice *pDevice, SCANID
         result.bIsKotlin = XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version", &(result.listArchiveRecords), pPdStruct) ||
                            XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins", &(result.listArchiveRecords), pPdStruct);
 
-        NFD_Binary::archiveScan(&(result.basic_info.mapArchiveDetects), &(result.listArchiveRecords), _APK_file_records, sizeof(_APK_file_records), result.basic_info.id.fileType,
-                    XBinary::FT_APK, &(result.basic_info), DETECTTYPE_ARCHIVE, pPdStruct);
-        NFD_Binary::archiveExpScan(&(result.basic_info.mapArchiveDetects), &(result.listArchiveRecords), _APK_fileExp_records, sizeof(_APK_fileExp_records),
-                       result.basic_info.id.fileType, XBinary::FT_APK, &(result.basic_info), DETECTTYPE_ARCHIVE, pPdStruct);
+        NFD_Binary::archiveScan(&(result.basic_info.mapArchiveDetects), &(result.listArchiveRecords), NFD_APK::getFileRecords(), NFD_APK::getFileRecordsSize(),
+                                result.basic_info.id.fileType, XBinary::FT_APK, &(result.basic_info), DETECTTYPE_ARCHIVE, pPdStruct);
+        NFD_Binary::archiveExpScan(&(result.basic_info.mapArchiveDetects), &(result.listArchiveRecords), NFD_APK::getFileExpRecords(), NFD_APK::getFileExpRecordsSize(),
+                                   result.basic_info.id.fileType, XBinary::FT_APK, &(result.basic_info), DETECTTYPE_ARCHIVE, pPdStruct);
 
         if (XArchive::isArchiveRecordPresent("classes.dex", &(result.listArchiveRecords), pPdStruct)) {
             result.dexInfoClasses = APK_scan_DEX(pDevice, pOptions, &result, pPdStruct, "classes.dex");
@@ -804,11 +825,8 @@ void SpecAbstract::PE_handle_import(QIODevice *pDevice, XScanEngine::SCAN_OPTION
                     (pPEInfo->listImports.at(0).listPositions.at(8).sName == "GetSystemDirectoryA") &&
                     (pPEInfo->listImports.at(0).listPositions.at(9).sName == "GetFileTime") && (pPEInfo->listImports.at(0).listPositions.at(10).sName == "SetFileTime") &&
                     (pPEInfo->listImports.at(0).listPositions.at(11).sName == "GetWindowsDirectoryA") &&
-                    (pPEInfo->listImports.at(0).listPositions.at(12).sName == "lstrcatA") && (pPEInfo->listImports.at(0).listPositions.at(13).sName == "FreeLibrary") &&
                     (pPEInfo->listImports.at(0).listPositions.at(14).sName == "GetTempPathA")) {
-                    if (pPEInfo->listImports.count() == 1) {
-                        stDetects.insert("kernel32_alloy2");
-                    }
+                    stDetects.insert("kernel32_alloy2");
                 }
             }
         } else if (pPEInfo->listImports.at(0).sName.toUpper() == "USER32.DLL") {
@@ -2142,11 +2160,12 @@ void SpecAbstract::PE_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OP
                         }
 
                         if (_nOffset) {
-                            NFD_Binary::signatureScan(&(pPEInfo->basic_info.mapEntryPointDetects), _sSignature, _PE_entrypoint_records, sizeof(_PE_entrypoint_records),
-                                          pPEInfo->basic_info.id.fileType, XBinary::FT_PE, &(pPEInfo->basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
-                            NFD_Binary::signatureExpScan(&pe, &(pPEInfo->basic_info.memoryMap), &(pPEInfo->basic_info.mapEntryPointDetects), pPEInfo->nEntryPointOffset + _nOffset,
-                                             _PE_entrypointExp_records, sizeof(_PE_entrypointExp_records), pPEInfo->basic_info.id.fileType, XBinary::FT_PE,
-                                             &(pPEInfo->basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
+                            NFD_Binary::signatureScan(&(pPEInfo->basic_info.mapEntryPointDetects), _sSignature, NFD_PE::getEntrypointRecords(),
+                                                      NFD_PE::getEntrypointRecordsSize(), pPEInfo->basic_info.id.fileType, XBinary::FT_PE, &(pPEInfo->basic_info),
+                                                      DETECTTYPE_ENTRYPOINT, pPdStruct);
+                            NFD_Binary::signatureExpScan(&pe, &(pPEInfo->basic_info.memoryMap), &(pPEInfo->basic_info.mapEntryPointDetects),
+                                                         pPEInfo->nEntryPointOffset + _nOffset, NFD_PE::getEntrypointExpRecords(), NFD_PE::getEntrypointExpRecordsSize(),
+                                                         pPEInfo->basic_info.id.fileType, XBinary::FT_PE, &(pPEInfo->basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
                         }
 
                         if (_nOffset > 20) {
@@ -3265,7 +3284,7 @@ void SpecAbstract::PE_handle_NETProtection(QIODevice *pDevice, XScanEngine::SCAN
 
             if ((pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_FISHNET)) || (pPEInfo->basic_info.mapCodeSectionDetects.contains(RECORD_NAME_FISHNET))) {
                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_NETOBFUSCATOR, RECORD_NAME_FISHNET, "1.X", "", 0);  // TODO
-                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));                   // TODO obfuscator?
+                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));       // TODO obfuscator?
             }
 
             if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(RECORD_NAME_NSPACK)) {
@@ -3573,8 +3592,7 @@ void SpecAbstract::PE_handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPT
 
         for (qint32 i = 0; (i < nRichSignaturesCount) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
             listRichDescriptions.append(NFD_MSDOS::MSDOS_richScan(pPEInfo->listRichSignatures.at(i).nId, pPEInfo->listRichSignatures.at(i).nVersion,
-                                                                  pPEInfo->listRichSignatures.at(i).nCount,
-                                                                  NFD_MSDOS::getRichRecords(), NFD_MSDOS::getRichRecordsSize(),
+                                                                  pPEInfo->listRichSignatures.at(i).nCount, NFD_MSDOS::getRichRecords(), NFD_MSDOS::getRichRecordsSize(),
                                                                   pPEInfo->basic_info.id.fileType, XBinary::FT_MSDOS,
                                                                   reinterpret_cast<NFD_Binary::BASIC_INFO *>(&(pPEInfo->basic_info)), DETECTTYPE_RICH, pPdStruct));
         }
@@ -4500,7 +4518,7 @@ void SpecAbstract::PE_handle_Watcom(QIODevice *pDevice, XScanEngine::SCAN_OPTION
             ssCompiler = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_WATCOMCCPP);
         }
 
-    SpecAbstract::VI_STRUCT vi = NFD_Binary::get_Watcom_vi(pDevice, pOptions, pPEInfo->nEntryPointOffset, 0x100, pPdStruct);
+        SpecAbstract::VI_STRUCT vi = NFD_Binary::get_Watcom_vi(pDevice, pOptions, pPEInfo->nEntryPointOffset, 0x100, pPdStruct);
 
         if (vi.bIsValid) {
             ssCompiler.fileType = XBinary::FT_PE;
@@ -5176,7 +5194,8 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
                         QString _sGCCVersion;
 
                         if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
-                            _sGCCVersion = NFD_Binary::get_GCC_vi2(pDevice, pOptions, pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, pPdStruct).sVersion;
+                            _sGCCVersion =
+                                NFD_Binary::get_GCC_vi2(pDevice, pOptions, pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, pPdStruct).sVersion;
 
                             if (_sGCCVersion != "") {
                                 ssCompiler.sVersion = _sGCCVersion;
@@ -5185,7 +5204,8 @@ void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
 
                         if (_sGCCVersion == "") {
                             if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
-                                _sGCCVersion = NFD_Binary::get_GCC_vi2(pDevice, pOptions, pPEInfo->osDataSection.nOffset, pPEInfo->osDataSection.nSize, pPdStruct).sVersion;
+                                _sGCCVersion =
+                                    NFD_Binary::get_GCC_vi2(pDevice, pOptions, pPEInfo->osDataSection.nOffset, pPEInfo->osDataSection.nSize, pPdStruct).sVersion;
 
                                 if (_sGCCVersion != "") {
                                     ssCompiler.sVersion = _sGCCVersion;
@@ -7051,18 +7071,18 @@ void SpecAbstract::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPT
     XBinary binary(pDevice, pOptions->bIsImage);
 
     if ((pBinaryInfo->bIsPlainText) || (pBinaryInfo->unicodeType != XBinary::UNICODE_TYPE_NONE) || (pBinaryInfo->bIsUTF8)) {
-        qint32 nSignaturesCount = sizeof(_TEXT_Exp_records) / sizeof(STRING_RECORD);
+        qint32 nSignaturesCount = NFD_TEXT::getTextExpRecordsSize() / sizeof(NFD_Binary::STRING_RECORD);
 
         for (qint32 i = 0; (i < nSignaturesCount) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++)  // TODO move to an own function !!!
         {
-            if (XBinary::isRegExpPresent(_TEXT_Exp_records[i].pszString, pBinaryInfo->sHeaderText)) {
+            if (XBinary::isRegExpPresent(NFD_TEXT::getTextExpRecords()[i].pszString, pBinaryInfo->sHeaderText)) {
                 _SCANS_STRUCT record = {};
-                record.nVariant = _TEXT_Exp_records[i].basicInfo.nVariant;
-                record.fileType = _TEXT_Exp_records[i].basicInfo.fileType;
-                record.type = _TEXT_Exp_records[i].basicInfo.type;
-                record.name = _TEXT_Exp_records[i].basicInfo.name;
-                record.sVersion = _TEXT_Exp_records[i].basicInfo.pszVersion;
-                record.sInfo = _TEXT_Exp_records[i].basicInfo.pszInfo;
+                record.nVariant = NFD_TEXT::getTextExpRecords()[i].basicInfo.nVariant;
+                record.fileType = NFD_TEXT::getTextExpRecords()[i].basicInfo.fileType;
+                record.type = NFD_TEXT::getTextExpRecords()[i].basicInfo.type;
+                record.name = NFD_TEXT::getTextExpRecords()[i].basicInfo.name;
+                record.sVersion = NFD_TEXT::getTextExpRecords()[i].basicInfo.pszVersion;
+                record.sInfo = NFD_TEXT::getTextExpRecords()[i].basicInfo.pszInfo;
                 record.nOffset = 0;
 
                 pBinaryInfo->basic_info.mapTextHeaderDetects.insert(record.name, record);
@@ -9045,7 +9065,6 @@ void SpecAbstract::Binary_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCA
     }
 }
 
-
 void SpecAbstract::ELF_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::ELFINFO_STRUCT *pELFInfo,
                                               XBinary::PDSTRUCT *pPdStruct)
 {
@@ -9811,8 +9830,8 @@ void SpecAbstract::ELF_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTION
 
             pELFInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ssCompiler));
 
-            _SCANS_STRUCT ssTool =
-                getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_TOOL, RECORD_NAME_EMBARCADERODELPHI, NFD_Binary::_get_DelphiVersionFromCompiler(ssCompiler.sVersion).sVersion, "", 0);
+            _SCANS_STRUCT ssTool = getScansStruct(0, XBinary::FT_ELF, RECORD_TYPE_TOOL, RECORD_NAME_EMBARCADERODELPHI,
+                                                  NFD_Binary::_get_DelphiVersionFromCompiler(ssCompiler.sVersion).sVersion, "", 0);
 
             pELFInfo->basic_info.mapResultTools.insert(ssTool.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ssTool));
         }
@@ -9946,8 +9965,8 @@ void SpecAbstract::ELF_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_O
 
     if (elf.isValid(pPdStruct)) {
         // UPX
-    VI_STRUCT viUPXEnd = NFD_Binary::_get_UPX_vi(pDevice, pOptions, pELFInfo->basic_info.id.nSize - 0x24, 0x24, XBinary::FT_ELF);
-    VI_STRUCT viUPX = NFD_Binary::get_UPX_vi(pDevice, pOptions, 0, pELFInfo->basic_info.id.nSize, XBinary::FT_ELF, pPdStruct);
+        VI_STRUCT viUPXEnd = NFD_Binary::_get_UPX_vi(pDevice, pOptions, pELFInfo->basic_info.id.nSize - 0x24, 0x24, XBinary::FT_ELF);
+        VI_STRUCT viUPX = NFD_Binary::get_UPX_vi(pDevice, pOptions, 0, pELFInfo->basic_info.id.nSize, XBinary::FT_ELF, pPdStruct);
 
         if ((viUPXEnd.bIsValid) || (viUPX.bIsValid)) {
             _SCANS_STRUCT recordSS = {};
@@ -11352,571 +11371,8 @@ void SpecAbstract::MACHO_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN
     }
 }
 
-
 // LX Microsoft-specific handling moved to NFD_LX::getInfo
 
-
-void SpecAbstract::DEX_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    XDEX dex(pDevice);
-
-    if (dex.isValid(pPdStruct)) {
-        _SCANS_STRUCT recordAndroidSDK = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_TOOL, RECORD_NAME_ANDROIDSDK, "", "", 0);
-
-        QString sDDEXVersion = dex.getVersion();
-
-        // https://source.android.com/devices/tech/dalvik/dex-format
-        if (sDDEXVersion == "035") {
-            recordAndroidSDK.sVersion = "API 14";
-        }
-        //        else if (sDDEXVersion=="036")
-        //        {
-        //            // Due to a Dalvik bug present in older versions of Android, Dex version 036 has been skipped.
-        //            // Dex version 036 is not valid for any version of Android and never will be.
-        //        }
-        else if (sDDEXVersion == "037") {
-            recordAndroidSDK.sVersion = "API 24";
-        } else if (sDDEXVersion == "038") {
-            recordAndroidSDK.sVersion = "API 26";
-        } else if (sDDEXVersion == "039") {
-            recordAndroidSDK.sVersion = "API 28";
-        } else {
-            recordAndroidSDK.sVersion = sDDEXVersion;
-        }
-
-        pDEXInfo->basic_info.mapResultTools.insert(recordAndroidSDK.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordAndroidSDK));
-
-        _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(dex.getFileFormatInfo(pPdStruct));
-
-        pDEXInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ssOperationSystem));
-
-        //        qint32 nNumberOfMapItems=listMaps.count();
-
-        // dx
-        // https://github.com/aosp-mirror/platform_dalvik/blob/master/dx/src/com/android/dx/dex/file/DexFile.java#L122
-        //        QList<quint16> listDx;
-        //        listDx.append(XDEX_DEF::TYPE_HEADER_ITEM);
-        //        listDx.append(XDEX_DEF::TYPE_STRING_ID_ITEM);
-        //        listDx.append(XDEX_DEF::TYPE_TYPE_ID_ITEM);
-        //        listDx.append(XDEX_DEF::TYPE_PROTO_ID_ITEM);
-        //        listDx.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
-        //        listDx.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
-        //        listDx.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
-        //        listDx.append(XDEX_DEF::TYPE_CALL_SITE_ID_ITEM);  // Optional API 26+
-        //        listDx.append(XDEX_DEF::TYPE_METHOD_HANDLE_ITEM); // Optional API 26+
-        //        listDx.append(XDEX_DEF::TYPE_CODE_ITEM);
-        //        listDx.append(XDEX_DEF::TYPE_TYPE_LIST);
-        //        listDx.append(XDEX_DEF::TYPE_STRING_DATA_ITEM);
-        //        listDx.append(XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM);
-        //        listDx.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
-        //        listDx.append(XDEX_DEF::TYPE_MAP_LIST);
-        QList<quint16> listDx;
-        listDx.append(XDEX_DEF::TYPE_HEADER_ITEM);
-        listDx.append(XDEX_DEF::TYPE_STRING_ID_ITEM);
-        listDx.append(XDEX_DEF::TYPE_TYPE_ID_ITEM);
-        listDx.append(XDEX_DEF::TYPE_PROTO_ID_ITEM);
-        listDx.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
-        listDx.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
-        listDx.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
-        listDx.append(XDEX_DEF::TYPE_CALL_SITE_ID_ITEM);   // Optional API 26+
-        listDx.append(XDEX_DEF::TYPE_METHOD_HANDLE_ITEM);  // Optional API 26+
-        listDx.append(XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST);
-        listDx.append(XDEX_DEF::TYPE_ANNOTATION_SET_ITEM);
-        listDx.append(XDEX_DEF::TYPE_CODE_ITEM);
-        listDx.append(XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM);
-        listDx.append(XDEX_DEF::TYPE_TYPE_LIST);
-        listDx.append(XDEX_DEF::TYPE_STRING_DATA_ITEM);
-        listDx.append(XDEX_DEF::TYPE_DEBUG_INFO_ITEM);
-        listDx.append(XDEX_DEF::TYPE_ANNOTATION_ITEM);
-        listDx.append(XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM);
-        listDx.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
-        listDx.append(XDEX_DEF::TYPE_MAP_LIST);
-
-        // DexLib
-        // https://android.googlesource.com/platform/external/smali/+/9a12fbef9912a824a4824e392f0d2fdd5319f580/dexlib/src/main/java/org/jf/dexlib/DexFile.java?autodive=0%2F#210
-        QList<quint16> listDexLib;
-        listDexLib.append(XDEX_DEF::TYPE_HEADER_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_STRING_ID_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_TYPE_ID_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_PROTO_ID_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST);
-        listDexLib.append(XDEX_DEF::TYPE_ANNOTATION_SET_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_CODE_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_TYPE_LIST);
-        listDexLib.append(XDEX_DEF::TYPE_STRING_DATA_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_ANNOTATION_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_DEBUG_INFO_ITEM);
-        listDexLib.append(XDEX_DEF::TYPE_MAP_LIST);
-
-        // dexlib2
-        // https://github.com/JesusFreke/smali/blob/master/dexlib2/src/main/java/org/jf/dexlib2/writer/DexWriter.java#L1465
-        QList<quint16> listDexLib2;
-        listDexLib2.append(XDEX_DEF::TYPE_HEADER_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_STRING_ID_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_TYPE_ID_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_PROTO_ID_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_CALL_SITE_ID_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_METHOD_HANDLE_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_STRING_DATA_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_TYPE_LIST);
-        listDexLib2.append(XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_ANNOTATION_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_ANNOTATION_SET_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST);
-        listDexLib2.append(XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_DEBUG_INFO_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_CODE_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
-        listDexLib2.append(XDEX_DEF::TYPE_HIDDENAPI_CLASS_DATA_ITEM);  // Optional
-        listDexLib2.append(XDEX_DEF::TYPE_MAP_LIST);
-
-        QList<quint16> listDexLib2heur;
-        listDexLib2heur.append(XDEX_DEF::TYPE_HEADER_ITEM);
-        listDexLib2heur.append(XDEX_DEF::TYPE_STRING_ID_ITEM);
-        listDexLib2heur.append(XDEX_DEF::TYPE_TYPE_ID_ITEM);
-        listDexLib2heur.append(XDEX_DEF::TYPE_PROTO_ID_ITEM);
-        listDexLib2heur.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
-        listDexLib2heur.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
-        listDexLib2heur.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
-        listDexLib2heur.append(XDEX_DEF::TYPE_STRING_DATA_ITEM);
-
-        // r8
-        // https://r8.googlesource.com/r8/+/refs/heads/master/src/main/java/com/android/tools/r8/dex/FileWriter.java#752
-        QList<quint16> listR8;
-        listR8.append(XDEX_DEF::TYPE_HEADER_ITEM);
-        listR8.append(XDEX_DEF::TYPE_STRING_ID_ITEM);
-        listR8.append(XDEX_DEF::TYPE_TYPE_ID_ITEM);
-        listR8.append(XDEX_DEF::TYPE_PROTO_ID_ITEM);
-        listR8.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
-        listR8.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
-        listR8.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
-        listR8.append(XDEX_DEF::TYPE_CALL_SITE_ID_ITEM);   // Optional
-        listR8.append(XDEX_DEF::TYPE_METHOD_HANDLE_ITEM);  // Optional
-        listR8.append(XDEX_DEF::TYPE_CODE_ITEM);
-        listR8.append(XDEX_DEF::TYPE_DEBUG_INFO_ITEM);
-        listR8.append(XDEX_DEF::TYPE_TYPE_LIST);
-        listR8.append(XDEX_DEF::TYPE_STRING_DATA_ITEM);
-        listR8.append(XDEX_DEF::TYPE_ANNOTATION_ITEM);
-        listR8.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
-        listR8.append(XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM);
-        listR8.append(XDEX_DEF::TYPE_ANNOTATION_SET_ITEM);
-        listR8.append(XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST);  // Check
-        listR8.append(XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM);
-        listR8.append(XDEX_DEF::TYPE_MAP_LIST);
-
-        // DexMerge
-        // https://github.com/aosp-mirror/platform_dalvik/blob/master/dx/src/com/android/dx/merge/DexMerger.java#L95
-        QList<quint16> listDexMerge;
-        listDexMerge.append(XDEX_DEF::TYPE_HEADER_ITEM);
-        listDexMerge.append(XDEX_DEF::TYPE_STRING_ID_ITEM);
-        listDexMerge.append(XDEX_DEF::TYPE_TYPE_ID_ITEM);
-        listDexMerge.append(XDEX_DEF::TYPE_PROTO_ID_ITEM);
-        listDexMerge.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
-        listDexMerge.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
-        listDexMerge.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
-        listDexMerge.append(XDEX_DEF::TYPE_MAP_LIST);
-        listDexMerge.append(XDEX_DEF::TYPE_TYPE_LIST);
-        listDexMerge.append(XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST);  // Check
-        listDexMerge.append(XDEX_DEF::TYPE_ANNOTATION_SET_ITEM);
-        listDexMerge.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
-        listDexMerge.append(XDEX_DEF::TYPE_CODE_ITEM);
-        listDexMerge.append(XDEX_DEF::TYPE_STRING_DATA_ITEM);
-        listDexMerge.append(XDEX_DEF::TYPE_DEBUG_INFO_ITEM);
-        listDexMerge.append(XDEX_DEF::TYPE_ANNOTATION_ITEM);
-        listDexMerge.append(XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM);
-        listDexMerge.append(XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM);
-
-        // fast-proxy
-        // https://github.com/int02h/fast-proxy/blob/master/fastproxy/src/main/java/com/dpforge/fastproxy/dex/writer/DexWriter.java#L57
-        // TODO more researches
-        QList<quint16> listFastProxy;
-        listFastProxy.append(XDEX_DEF::TYPE_HEADER_ITEM);
-        listFastProxy.append(XDEX_DEF::TYPE_STRING_ID_ITEM);
-        listFastProxy.append(XDEX_DEF::TYPE_TYPE_ID_ITEM);
-        listFastProxy.append(XDEX_DEF::TYPE_PROTO_ID_ITEM);
-        listFastProxy.append(XDEX_DEF::TYPE_FIELD_ID_ITEM);
-        listFastProxy.append(XDEX_DEF::TYPE_METHOD_ID_ITEM);
-        listFastProxy.append(XDEX_DEF::TYPE_CLASS_DEF_ITEM);
-        listFastProxy.append(XDEX_DEF::TYPE_STRING_DATA_ITEM);
-        listFastProxy.append(XDEX_DEF::TYPE_TYPE_LIST);
-        listFastProxy.append(XDEX_DEF::TYPE_CODE_ITEM);
-        listFastProxy.append(XDEX_DEF::TYPE_CLASS_DATA_ITEM);
-        listFastProxy.append(XDEX_DEF::TYPE_MAP_LIST);
-
-        // TODO Check https://github.com/facebookexperimental/r8
-        // TODO https://github.com/davidbrazdil/dexter-backup/blob/e09c9397aa727f6180799254fb08e15955c1a89e/src/org/jf/dexlib/DexFromMemory.java
-        // TODO https://github.com/rchiossi/dexterity/blob/ce66ca62a6df4c6d913bdde1d7d91f5fa90ff916/dx/dxlib.py#L505
-        // TODO https://github.com/rchiossi/dexterity/blob/ce66ca62a6df4c6d913bdde1d7d91f5fa90ff916/lib/dex_builder.c#L404
-        // TODO redex https://github.com/lzoghbi/thesis
-        // TODO https://github.com/zyq8709/DexHunter/tree/master/dalvik/dx
-
-        // https://r8.googlesource.com/r8/+/refs/heads/master/src/main/java/com/android/tools/r8/dex/Marker.java
-        // Example: X~~D8{"compilation-mode":"release","has-checksums":false,"min-api":14,"version":"2.0.88"}
-
-    VI_STRUCT viR8 = NFD_Binary::get_R8_marker_vi(pDevice, pOptions, 0, pDEXInfo->basic_info.id.nSize, pPdStruct);
-        bool bR8_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listR8, pPdStruct);
-        bool bDX_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDx, pPdStruct);
-        //        bool bDexLib_map=XDEX::compareMapItems(&listMaps,&listDexLib);
-        bool bDexLib2_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexLib2, pPdStruct);
-        bool bDexLib2heur_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexLib2heur, pPdStruct);
-        bool bDexMerge_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexMerge, pPdStruct);
-        bool bFastProxy_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listFastProxy, pPdStruct);
-
-        if (viR8.bIsValid) {
-            _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_R8, "", "", 0);
-            recordCompiler.sVersion = viR8.sVersion;
-            recordCompiler.sInfo = viR8.sInfo;
-            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
-        } else if (!(pDEXInfo->bIsStringPoolSorted)) {
-            _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_DEXLIB, "", "", 0);
-            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
-        } else if (bDX_map) {
-            _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_DX, "", "", 0);
-            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
-        } else if (bDexLib2_map) {
-            _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_DEXLIB2, "", "", 0);
-            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
-        } else if (bR8_map) {
-            _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_R8, "", "", 0);
-            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
-        } else if (bDexLib2heur_map) {
-            _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_DEXLIB2, "", "", 0);
-            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
-        } else if (bFastProxy_map) {
-            _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_FASTPROXY, "", "", 0);
-            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
-        }
-
-        if (bDexMerge_map) {
-            _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_DEXMERGE, "", "", 0);
-            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
-        }
-
-        if (viR8.bIsValid && (!bR8_map)) {
-            _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_R8, "", "", 0);
-            recordCompiler.sVersion = viR8.sVersion;
-            recordCompiler.sInfo = XBinary::appendComma(recordCompiler.sInfo, "CHECK !!!");
-            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
-        }
-
-        if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
-            qint32 nJackIndex = dex.getStringNumberFromListExp(&(pDEXInfo->listStrings), "^emitter: jack");
-
-            if (nJackIndex != -1) {
-                _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_JACK, "", "", 0);
-                recordCompiler.sVersion = pDEXInfo->listStrings.at(nJackIndex).section("-", 1, -1);
-                pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
-            }
-        }
-
-        if (pDEXInfo->basic_info.mapResultCompilers.size() == 0) {
-            _SCANS_STRUCT recordCompiler = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_COMPILER, RECORD_NAME_UNKNOWN,
-                                                          QString("%1").arg(dex.getMapItemsHash(&(pDEXInfo->mapItems), pPdStruct)), "", 0);
-            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_APKTOOLPLUS)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_APKTOOLPLUS);
-            pDEXInfo->basic_info.mapResultTools.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_UNICOMSDK)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_UNICOMSDK);
-            pDEXInfo->basic_info.mapResultLibraries.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
-            bool bInvalidHeaderSize = (pDEXInfo->header.header_size != 0x70);
-            bool bLink = (pDEXInfo->header.link_off || pDEXInfo->header.link_size);
-
-            QString sOverlay;
-
-            if (pDEXInfo->basic_info.scanOptions.bIsVerbose) {
-                bool bIsFieldNamesUnicode = dex.isFieldNamesUnicode(&(pDEXInfo->listFieldIDs), &(pDEXInfo->listStrings), pPdStruct);
-                bool bIsMethodNamesUnicode = dex.isMethodNamesUnicode(&(pDEXInfo->listMethodIDs), &(pDEXInfo->listStrings), pPdStruct);
-
-                sOverlay = QString("Maps %1").arg(dex.getMapItemsHash(&(pDEXInfo->mapItems), pPdStruct));
-
-                if (pDEXInfo->bIsOverlayPresent) {
-                    sOverlay = XBinary::appendComma(sOverlay, "Overlay");
-                }
-
-                if (bInvalidHeaderSize) {
-                    sOverlay = XBinary::appendComma(sOverlay, "Invalid header size");
-                }
-
-                if (bLink) {
-                    sOverlay = XBinary::appendComma(sOverlay, QString("Invalid Link(%1,%2)").arg(pDEXInfo->header.link_size).arg(pDEXInfo->header.link_off));
-                }
-
-                if (bIsFieldNamesUnicode) {
-                    sOverlay = XBinary::appendComma(sOverlay, "bIsFieldNamesUnicode");
-                }
-
-                if (bIsMethodNamesUnicode) {
-                    sOverlay = XBinary::appendComma(sOverlay, "bIsMethodNamesUnicode");
-                }
-
-                if (viR8.bIsValid) {
-                    if (bDX_map) {
-                        sOverlay = XBinary::appendComma(sOverlay, "DX");
-                    }
-
-                    if (bDexLib2_map) {
-                        sOverlay = XBinary::appendComma(sOverlay, "DexLib2");
-                    }
-
-                    if (!(pDEXInfo->bIsStringPoolSorted)) {
-                        sOverlay = XBinary::appendComma(sOverlay, "DexLib");
-                    }
-
-                    if (bDexMerge_map) {
-                        sOverlay = XBinary::appendComma(sOverlay, "DexMerge");
-                    }
-                }
-            }
-
-            qint32 nNumberOfRecords = pDEXInfo->listStrings.count();
-
-            for (qint32 i = 0; (i < nNumberOfRecords) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
-                if (pDEXInfo->basic_info.scanOptions.bIsTest && pDEXInfo->basic_info.scanOptions.bIsVerbose) {
-                    // TODO find!
-                    _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_APK, RECORD_TYPE_PROTECTOR, RECORD_NAME_UNKNOWN, "", "", 0);
-
-                    if (pDEXInfo->listStrings.at(i).contains("agconfig") || pDEXInfo->listStrings.at(i).contains("AntiSkid") ||
-                        pDEXInfo->listStrings.at(i).contains("ALLATORI") || pDEXInfo->listStrings.at(i).contains("AppSuit") ||
-                        pDEXInfo->listStrings.at(i).contains("appsuit") || pDEXInfo->listStrings.at(i).contains("gemalto") ||
-                        pDEXInfo->listStrings.at(i).contains("WapperApplication") || pDEXInfo->listStrings.at(i).contains("AppSealing") ||
-                        pDEXInfo->listStrings.at(i).contains("whitecryption") || pDEXInfo->listStrings.at(i).contains("ModGuard") ||
-                        pDEXInfo->listStrings.at(i).contains("InjectedActivity")) {
-                        ss.sVersion = pDEXInfo->listStrings.at(i);
-                        pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-                        ss.sInfo = XBinary::appendComma(ss.sInfo, sOverlay);
-
-                        break;
-                    }
-                }
-            }
-        }
-        // Check Ljava/lang/ClassLoader;
-    }
-}
-
-void SpecAbstract::DEX_handle_Dexguard(QIODevice *pDevice, SpecAbstract::DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    XDEX dex(pDevice);
-
-    if (dex.isValid(pPdStruct)) {
-        if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
-            if (XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings), "dexguard\\/", pPdStruct)) {
-                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXGUARD, "", "", 0);
-                pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-            }
-
-            // if (!pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_DEXGUARD)) {
-            //     qint32 nNumberOfTypes = pDEXInfo->listTypeItemStrings.count();
-
-            //     for (qint32 i = 0; (i < nNumberOfTypes) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
-            //         QString sType = pDEXInfo->listTypeItemStrings.at(i);
-
-            //         // TODO Check!
-            //         if (sType.size() <= 7) {
-            //             if (XBinary::isRegExpPresent("^Lo/", sType)) {
-            //                 _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXGUARD, "", "", 0);
-            //                 pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-
-            //                 break;
-            //             }
-            //         }
-            //     }
-            // }
-        }
-    }
-}
-
-void SpecAbstract::DEX_handle_Protection(QIODevice *pDevice, SpecAbstract::DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    XDEX dex(pDevice);
-
-    if (dex.isValid(pPdStruct)) {
-        // DexProtect
-        // 070002000000020083dc63003e000000120113000e0048000500e0000010011239022a001232d563ff0048030503d533ff00e1040608d544ff0048040504d544ff00e0040408b643e1040610d544ff0048040504d544ff00e0040410b643e1040618d544ff0048000504e0000018b6300f000d023901feff1221dd02067f48000502e100000828f50d0328cb0d000000
-        if (pDEXInfo->bIsOverlayPresent) {
-            if (dex.getOverlaySize(&(pDEXInfo->basic_info.memoryMap), pPdStruct) == 0x60) {
-                _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXPROTECTOR, "", "", 0);
-                pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-            }
-        } else {
-            if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
-                if (XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings), "\\/dexprotector\\/", pPdStruct)) {
-                    _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_DEXPROTECTOR, "", "", 0);
-                    pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-                }
-            }
-        }
-
-        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_EASYPROTECTOR)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_EASYPROTECTOR);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_QDBH)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_QDBH);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_JIAGU)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_JIAGU);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_BANGCLEPROTECTION)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_BANGCLEPROTECTION);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_ALLATORIOBFUSCATOR)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_ALLATORIOBFUSCATOR);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_PANGXIE)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_PANGXIE);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_NAGAPTPROTECTION)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_NAGAPTPROTECTION);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_MODGUARD)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_MODGUARD);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_KIWIVERSIONOBFUSCATOR)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_KIWIVERSIONOBFUSCATOR);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_APKPROTECT)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_APKPROTECT);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        } else {
-            if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
-                if (XBinary::isStringInListPresentExp(&(pDEXInfo->listStrings), "http://www.apkprotect.net/", pPdStruct)) {
-                    _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_APKPROTECT, "", "", 0);
-                    pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-                }
-            }
-        }
-
-        if (pDEXInfo->basic_info.scanOptions.bIsHeuristicScan) {
-            if (pDEXInfo->basic_info.mapStringDetects.contains(RECORD_NAME_AESOBFUSCATOR)) {
-                _SCANS_STRUCT ss = pDEXInfo->basic_info.mapStringDetects.value(RECORD_NAME_AESOBFUSCATOR);
-                pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-            } else {
-                if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
-                    if (XBinary::isStringInListPresentExp(&(pDEXInfo->listStrings), "licensing/AESObfuscator;", pPdStruct)) {
-                        _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_AESOBFUSCATOR, "", "", 0);
-                        pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-                    }
-                }
-            }
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_BTWORKSCODEGUARD)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_BTWORKSCODEGUARD);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_QIHOO360PROTECTION))  // Check overlay
-        {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_QIHOO360PROTECTION);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_ALIBABAPROTECTION))  // Check overlay
-        {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_ALIBABAPROTECTION);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_BAIDUPROTECTION))  // Check overlay
-        {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_BAIDUPROTECTION);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_TENCENTPROTECTION))  // Check overlay
-        {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_TENCENTPROTECTION);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_SECNEO)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_SECNEO);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_LIAPP)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_LIAPP);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_VDOG)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_VDOG);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_APPSOLID)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_APPSOLID);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_MEDUSAH)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_MEDUSAH);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_NQSHIELD)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_NQSHIELD);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_YIDUN)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_YIDUN);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_APKENCRYPTOR)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_APKENCRYPTOR);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        }
-
-        if (pDEXInfo->basic_info.mapTypeDetects.contains(RECORD_NAME_PROGUARD)) {
-            _SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(RECORD_NAME_PROGUARD);
-            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-        } else {
-            if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
-                if (XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings), "\\/proguard\\/", pPdStruct)) {
-                    _SCANS_STRUCT ss = getScansStruct(0, XBinary::FT_DEX, RECORD_TYPE_PROTECTOR, RECORD_NAME_PROGUARD, "", "", 0);
-                    pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-                }
-            }
-        }
-    }
-}
 
 // void SpecAbstract::fixDetects(SpecAbstract::PEINFO_STRUCT *pPEInfo)
 //{
@@ -11985,12 +11441,10 @@ bool SpecAbstract::isScanStructPresent(QList<XScanEngine::SCANSTRUCT> *pListScan
     return bResult;
 }
 
-
 // moved: get_GCC_vi1 -> NFD_Binary
 // moved: get_GCC_vi2 -> NFD_Binary
 // moved: get_Nim_vi -> NFD_Binary
 // moved: get_Zig_vi -> NFD_Binary
-
 
 bool SpecAbstract::PE_isValid_UPX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo)
 {
@@ -12245,7 +11699,7 @@ QList<XScanEngine::DEBUG_RECORD> SpecAbstract::convertHeur(QList<DETECT_RECORD> 
     for (qint32 i = 0; i < nNumberOfRecords; i++) {
         XScanEngine::DEBUG_RECORD record = {};
 
-    record.sType = XScanEngine::heurTypeIdToString(pListDetectRecords->at(i).detectType);
+        record.sType = XScanEngine::heurTypeIdToString(pListDetectRecords->at(i).detectType);
         record.sName = QString("%1(%2)[%3]")
                            .arg(SpecAbstract::recordNameIdToString(pListDetectRecords->at(i).name), pListDetectRecords->at(i).sVersion, pListDetectRecords->at(i).sInfo);
         record.sValue = pListDetectRecords->at(i).sValue;

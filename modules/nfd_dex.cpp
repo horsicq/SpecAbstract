@@ -81,3 +81,276 @@ qint32 NFD_DEX::getTypeRecordsSize()
 {
     return sizeof(g_DEX_type_records);
 }
+
+// Local helper to construct a SCANS_STRUCT (mirrors SpecAbstract::getScansStruct)
+static NFD_Binary::SCANS_STRUCT _mkScan(quint32 nVariant, XBinary::FT fileType, XScanEngine::RECORD_TYPE type, XScanEngine::RECORD_NAME name,
+                                        const QString &sVersion = QString(), const QString &sInfo = QString(), qint64 nOffset = 0)
+{
+    NFD_Binary::SCANS_STRUCT ss = {};
+    ss.nVariant = nVariant;
+    ss.fileType = fileType;
+    ss.type = type;
+    ss.name = name;
+    ss.sVersion = sVersion;
+    ss.sInfo = sInfo;
+    ss.nOffset = nOffset;
+    return ss;
+}
+
+void NFD_DEX::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XDEX dex(pDevice);
+
+    if (!dex.isValid(pPdStruct)) {
+        return;
+    }
+
+    NFD_Binary::SCANS_STRUCT recordAndroidSDK = _mkScan(0, XBinary::FT_DEX, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_ANDROIDSDK);
+    QString sDDEXVersion = dex.getVersion();
+    if (sDDEXVersion == "035") {
+        recordAndroidSDK.sVersion = "API 14";
+    } else if (sDDEXVersion == "037") {
+        recordAndroidSDK.sVersion = "API 24";
+    } else if (sDDEXVersion == "038") {
+        recordAndroidSDK.sVersion = "API 26";
+    } else if (sDDEXVersion == "039") {
+        recordAndroidSDK.sVersion = "API 28";
+    } else {
+        recordAndroidSDK.sVersion = sDDEXVersion;
+    }
+    pDEXInfo->basic_info.mapResultTools.insert(recordAndroidSDK.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordAndroidSDK));
+
+    NFD_Binary::SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(dex.getFileFormatInfo(pPdStruct));
+    pDEXInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ssOperationSystem));
+
+    // Compiler identification via map item patterns
+    QList<quint16> listDx{XDEX_DEF::TYPE_HEADER_ITEM,          XDEX_DEF::TYPE_STRING_ID_ITEM,          XDEX_DEF::TYPE_TYPE_ID_ITEM,
+                          XDEX_DEF::TYPE_PROTO_ID_ITEM,        XDEX_DEF::TYPE_FIELD_ID_ITEM,           XDEX_DEF::TYPE_METHOD_ID_ITEM,
+                          XDEX_DEF::TYPE_CLASS_DEF_ITEM,       XDEX_DEF::TYPE_CALL_SITE_ID_ITEM,       XDEX_DEF::TYPE_METHOD_HANDLE_ITEM,
+                          XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST, XDEX_DEF::TYPE_ANNOTATION_SET_ITEM,  XDEX_DEF::TYPE_CODE_ITEM,
+                          XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM, XDEX_DEF::TYPE_TYPE_LIST,        XDEX_DEF::TYPE_STRING_DATA_ITEM,
+                          XDEX_DEF::TYPE_DEBUG_INFO_ITEM,      XDEX_DEF::TYPE_ANNOTATION_ITEM,         XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM,
+                          XDEX_DEF::TYPE_CLASS_DATA_ITEM,      XDEX_DEF::TYPE_MAP_LIST};
+
+    QList<quint16> listDexLib{XDEX_DEF::TYPE_HEADER_ITEM,     XDEX_DEF::TYPE_STRING_ID_ITEM,    XDEX_DEF::TYPE_TYPE_ID_ITEM,      XDEX_DEF::TYPE_PROTO_ID_ITEM,
+                              XDEX_DEF::TYPE_FIELD_ID_ITEM,   XDEX_DEF::TYPE_METHOD_ID_ITEM,    XDEX_DEF::TYPE_CLASS_DEF_ITEM,    XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST,
+                              XDEX_DEF::TYPE_ANNOTATION_SET_ITEM, XDEX_DEF::TYPE_CODE_ITEM,     XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM, XDEX_DEF::TYPE_TYPE_LIST,
+                              XDEX_DEF::TYPE_STRING_DATA_ITEM, XDEX_DEF::TYPE_ANNOTATION_ITEM,  XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM, XDEX_DEF::TYPE_CLASS_DATA_ITEM,
+                              XDEX_DEF::TYPE_DEBUG_INFO_ITEM, XDEX_DEF::TYPE_MAP_LIST};
+
+    QList<quint16> listDexLib2{XDEX_DEF::TYPE_HEADER_ITEM,         XDEX_DEF::TYPE_STRING_ID_ITEM,      XDEX_DEF::TYPE_TYPE_ID_ITEM,      XDEX_DEF::TYPE_PROTO_ID_ITEM,
+                               XDEX_DEF::TYPE_FIELD_ID_ITEM,       XDEX_DEF::TYPE_METHOD_ID_ITEM,      XDEX_DEF::TYPE_CLASS_DEF_ITEM,    XDEX_DEF::TYPE_CALL_SITE_ID_ITEM,
+                               XDEX_DEF::TYPE_METHOD_HANDLE_ITEM,  XDEX_DEF::TYPE_STRING_DATA_ITEM,    XDEX_DEF::TYPE_TYPE_LIST,         XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM,
+                               XDEX_DEF::TYPE_ANNOTATION_ITEM,     XDEX_DEF::TYPE_ANNOTATION_SET_ITEM, XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST,
+                               XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM, XDEX_DEF::TYPE_DEBUG_INFO_ITEM, XDEX_DEF::TYPE_CODE_ITEM,   XDEX_DEF::TYPE_CLASS_DATA_ITEM,
+                               XDEX_DEF::TYPE_HIDDENAPI_CLASS_DATA_ITEM, XDEX_DEF::TYPE_MAP_LIST};
+
+    QList<quint16> listDexLib2heur{XDEX_DEF::TYPE_HEADER_ITEM,    XDEX_DEF::TYPE_STRING_ID_ITEM, XDEX_DEF::TYPE_TYPE_ID_ITEM, XDEX_DEF::TYPE_PROTO_ID_ITEM,
+                                   XDEX_DEF::TYPE_FIELD_ID_ITEM,  XDEX_DEF::TYPE_METHOD_ID_ITEM, XDEX_DEF::TYPE_CLASS_DEF_ITEM, XDEX_DEF::TYPE_STRING_DATA_ITEM};
+
+    QList<quint16> listR8{XDEX_DEF::TYPE_HEADER_ITEM,        XDEX_DEF::TYPE_STRING_ID_ITEM,    XDEX_DEF::TYPE_TYPE_ID_ITEM,     XDEX_DEF::TYPE_PROTO_ID_ITEM,
+                          XDEX_DEF::TYPE_FIELD_ID_ITEM,      XDEX_DEF::TYPE_METHOD_ID_ITEM,    XDEX_DEF::TYPE_CLASS_DEF_ITEM,   XDEX_DEF::TYPE_CALL_SITE_ID_ITEM,
+                          XDEX_DEF::TYPE_METHOD_HANDLE_ITEM, XDEX_DEF::TYPE_CODE_ITEM,         XDEX_DEF::TYPE_DEBUG_INFO_ITEM,  XDEX_DEF::TYPE_TYPE_LIST,
+                          XDEX_DEF::TYPE_STRING_DATA_ITEM,   XDEX_DEF::TYPE_ANNOTATION_ITEM,   XDEX_DEF::TYPE_CLASS_DATA_ITEM,  XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM,
+                          XDEX_DEF::TYPE_ANNOTATION_SET_ITEM, XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST, XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM, XDEX_DEF::TYPE_MAP_LIST};
+
+    QList<quint16> listDexMerge{XDEX_DEF::TYPE_HEADER_ITEM,        XDEX_DEF::TYPE_STRING_ID_ITEM,       XDEX_DEF::TYPE_TYPE_ID_ITEM, XDEX_DEF::TYPE_PROTO_ID_ITEM,
+                                XDEX_DEF::TYPE_FIELD_ID_ITEM,      XDEX_DEF::TYPE_METHOD_ID_ITEM,       XDEX_DEF::TYPE_CLASS_DEF_ITEM, XDEX_DEF::TYPE_MAP_LIST,
+                                XDEX_DEF::TYPE_TYPE_LIST,          XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST, XDEX_DEF::TYPE_ANNOTATION_SET_ITEM, XDEX_DEF::TYPE_CLASS_DATA_ITEM,
+                                XDEX_DEF::TYPE_CODE_ITEM,          XDEX_DEF::TYPE_STRING_DATA_ITEM,     XDEX_DEF::TYPE_DEBUG_INFO_ITEM, XDEX_DEF::TYPE_ANNOTATION_ITEM,
+                                XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM, XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM};
+
+    QList<quint16> listFastProxy{XDEX_DEF::TYPE_HEADER_ITEM,     XDEX_DEF::TYPE_STRING_ID_ITEM, XDEX_DEF::TYPE_TYPE_ID_ITEM,   XDEX_DEF::TYPE_PROTO_ID_ITEM,
+                                 XDEX_DEF::TYPE_FIELD_ID_ITEM,   XDEX_DEF::TYPE_METHOD_ID_ITEM, XDEX_DEF::TYPE_CLASS_DEF_ITEM, XDEX_DEF::TYPE_STRING_DATA_ITEM,
+                                 XDEX_DEF::TYPE_TYPE_LIST,       XDEX_DEF::TYPE_CODE_ITEM,      XDEX_DEF::TYPE_CLASS_DATA_ITEM, XDEX_DEF::TYPE_MAP_LIST};
+
+    NFD_Binary::VI_STRUCT viR8 = NFD_Binary::get_R8_marker_vi(pDevice, pOptions, 0, pDEXInfo->basic_info.id.nSize, pPdStruct);
+    bool bR8_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listR8, pPdStruct);
+    bool bDX_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDx, pPdStruct);
+    bool bDexLib2_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexLib2, pPdStruct);
+    bool bDexLib2heur_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexLib2heur, pPdStruct);
+    bool bDexMerge_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexMerge, pPdStruct);
+    bool bFastProxy_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listFastProxy, pPdStruct);
+
+    auto addCompiler = [&](XScanEngine::RECORD_NAME name, const NFD_Binary::VI_STRUCT *pVi = nullptr, const QString &sInfoAppend = QString()) {
+        NFD_Binary::SCANS_STRUCT recordCompiler = _mkScan(0, XBinary::FT_DEX, XScanEngine::RECORD_TYPE_COMPILER, name);
+        if (pVi && pVi->bIsValid) {
+            recordCompiler.sVersion = pVi->sVersion;
+            recordCompiler.sInfo = pVi->sInfo;
+        }
+        if (!sInfoAppend.isEmpty()) {
+            recordCompiler.sInfo = XBinary::appendComma(recordCompiler.sInfo, sInfoAppend);
+        }
+        pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
+    };
+
+    if (viR8.bIsValid) {
+        addCompiler(XScanEngine::RECORD_NAME_R8, &viR8);
+    } else if (!(pDEXInfo->bIsStringPoolSorted)) {
+        addCompiler(XScanEngine::RECORD_NAME_DEXLIB);
+    } else if (bDX_map) {
+        addCompiler(XScanEngine::RECORD_NAME_DX);
+    } else if (bDexLib2_map) {
+        addCompiler(XScanEngine::RECORD_NAME_DEXLIB2);
+    } else if (bR8_map) {
+        addCompiler(XScanEngine::RECORD_NAME_R8);
+    } else if (bDexLib2heur_map) {
+        addCompiler(XScanEngine::RECORD_NAME_DEXLIB2);
+    } else if (bFastProxy_map) {
+        addCompiler(XScanEngine::RECORD_NAME_FASTPROXY);
+    }
+
+    if (bDexMerge_map) {
+        addCompiler(XScanEngine::RECORD_NAME_DEXMERGE);
+    }
+
+    if (viR8.bIsValid && (!bR8_map)) {
+        addCompiler(XScanEngine::RECORD_NAME_R8, &viR8, "CHECK !!!");
+    }
+
+    if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
+        qint32 nJackIndex = dex.getStringNumberFromListExp(&(pDEXInfo->listStrings), "^emitter: jack");
+        if (nJackIndex != -1) {
+            NFD_Binary::SCANS_STRUCT recordCompiler = _mkScan(0, XBinary::FT_DEX, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_JACK);
+            recordCompiler.sVersion = pDEXInfo->listStrings.at(nJackIndex).section("-", 1, -1);
+            pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
+        }
+    }
+
+    if (pDEXInfo->basic_info.mapResultCompilers.size() == 0) {
+        NFD_Binary::SCANS_STRUCT recordCompiler = _mkScan(0, XBinary::FT_DEX, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_UNKNOWN,
+                                                          QString::number(dex.getMapItemsHash(&(pDEXInfo->mapItems), pPdStruct)));
+        pDEXInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &recordCompiler));
+    }
+
+    if (pDEXInfo->basic_info.mapTypeDetects.contains(XScanEngine::RECORD_NAME_APKTOOLPLUS)) {
+        NFD_Binary::SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(XScanEngine::RECORD_NAME_APKTOOLPLUS);
+        pDEXInfo->basic_info.mapResultTools.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
+    }
+    if (pDEXInfo->basic_info.mapTypeDetects.contains(XScanEngine::RECORD_NAME_UNICOMSDK)) {
+        NFD_Binary::SCANS_STRUCT ss = pDEXInfo->basic_info.mapTypeDetects.value(XScanEngine::RECORD_NAME_UNICOMSDK);
+        pDEXInfo->basic_info.mapResultLibraries.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
+    }
+
+    if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
+        bool bInvalidHeaderSize = (pDEXInfo->header.header_size != 0x70);
+        bool bLink = (pDEXInfo->header.link_off || pDEXInfo->header.link_size);
+        QString sOverlay;
+        if (pDEXInfo->basic_info.scanOptions.bIsVerbose) {
+            bool bIsFieldNamesUnicode = dex.isFieldNamesUnicode(&(pDEXInfo->listFieldIDs), &(pDEXInfo->listStrings), pPdStruct);
+            bool bIsMethodNamesUnicode = dex.isMethodNamesUnicode(&(pDEXInfo->listMethodIDs), &(pDEXInfo->listStrings), pPdStruct);
+            sOverlay = QString("Maps %1").arg(dex.getMapItemsHash(&(pDEXInfo->mapItems), pPdStruct));
+            if (pDEXInfo->bIsOverlayPresent) sOverlay = XBinary::appendComma(sOverlay, "Overlay");
+            if (bInvalidHeaderSize) sOverlay = XBinary::appendComma(sOverlay, "Invalid header size");
+            if (bLink) sOverlay = XBinary::appendComma(sOverlay, QString("Invalid Link(%1,%2)").arg(pDEXInfo->header.link_size).arg(pDEXInfo->header.link_off));
+            if (bIsFieldNamesUnicode) sOverlay = XBinary::appendComma(sOverlay, "bIsFieldNamesUnicode");
+            if (bIsMethodNamesUnicode) sOverlay = XBinary::appendComma(sOverlay, "bIsMethodNamesUnicode");
+            if (viR8.bIsValid) {
+                if (bDX_map) sOverlay = XBinary::appendComma(sOverlay, "DX");
+                if (bDexLib2_map) sOverlay = XBinary::appendComma(sOverlay, "DexLib2");
+                if (!(pDEXInfo->bIsStringPoolSorted)) sOverlay = XBinary::appendComma(sOverlay, "DexLib");
+                if (bDexMerge_map) sOverlay = XBinary::appendComma(sOverlay, "DexMerge");
+            }
+        }
+        if (pDEXInfo->basic_info.scanOptions.bIsTest && pDEXInfo->basic_info.scanOptions.bIsVerbose) {
+            for (const QString &s : std::as_const(pDEXInfo->listStrings)) {
+                if (XBinary::isPdStructStopped(pPdStruct)) break;
+                if (s.contains("agconfig") || s.contains("AntiSkid") || s.contains("ALLATORI") || s.contains("AppSuit") || s.contains("appsuit") ||
+                    s.contains("gemalto") || s.contains("WapperApplication") || s.contains("AppSealing") || s.contains("whitecryption") ||
+                    s.contains("ModGuard") || s.contains("InjectedActivity")) {
+                    NFD_Binary::SCANS_STRUCT ss = _mkScan(0, XBinary::FT_APK, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_UNKNOWN, s, sOverlay);
+                    pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
+                    break;
+                }
+            }
+        }
+    }
+}
+
+void NFD_DEX::handle_Dexguard(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XDEX dex(pDevice);
+    if (!dex.isValid(pPdStruct)) return;
+    if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
+        if (XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings), "dexguard\\/", pPdStruct)) {
+            NFD_Binary::SCANS_STRUCT ss = _mkScan(0, XBinary::FT_DEX, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_DEXGUARD);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
+        }
+    }
+}
+
+void NFD_DEX::handle_Protection(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XDEX dex(pDevice);
+    if (!dex.isValid(pPdStruct)) return;
+
+    auto addIfPresent = [&](QMap<XScanEngine::RECORD_NAME, NFD_Binary::SCANS_STRUCT> &srcMap, XScanEngine::RECORD_NAME name) {
+        if (srcMap.contains(name)) {
+            auto ss = srcMap.value(name);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
+        }
+    };
+
+    if (pDEXInfo->bIsOverlayPresent) {
+        if (dex.getOverlaySize(&(pDEXInfo->basic_info.memoryMap), pPdStruct) == 0x60) {
+            NFD_Binary::SCANS_STRUCT ss = _mkScan(0, XBinary::FT_DEX, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_DEXPROTECTOR);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
+        }
+    } else if (pDEXInfo->basic_info.scanOptions.bIsDeepScan) {
+        if (XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings), "\\/dexprotector\\/", pPdStruct)) {
+            NFD_Binary::SCANS_STRUCT ss = _mkScan(0, XBinary::FT_DEX, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_DEXPROTECTOR);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
+        }
+    }
+
+    addIfPresent(pDEXInfo->basic_info.mapStringDetects, XScanEngine::RECORD_NAME_EASYPROTECTOR);
+    addIfPresent(pDEXInfo->basic_info.mapStringDetects, XScanEngine::RECORD_NAME_QDBH);
+    addIfPresent(pDEXInfo->basic_info.mapStringDetects, XScanEngine::RECORD_NAME_JIAGU);
+    addIfPresent(pDEXInfo->basic_info.mapStringDetects, XScanEngine::RECORD_NAME_BANGCLEPROTECTION);
+    addIfPresent(pDEXInfo->basic_info.mapStringDetects, XScanEngine::RECORD_NAME_ALLATORIOBFUSCATOR);
+    addIfPresent(pDEXInfo->basic_info.mapStringDetects, XScanEngine::RECORD_NAME_PANGXIE);
+    addIfPresent(pDEXInfo->basic_info.mapStringDetects, XScanEngine::RECORD_NAME_NAGAPTPROTECTION);
+    addIfPresent(pDEXInfo->basic_info.mapStringDetects, XScanEngine::RECORD_NAME_MODGUARD);
+    addIfPresent(pDEXInfo->basic_info.mapStringDetects, XScanEngine::RECORD_NAME_KIWIVERSIONOBFUSCATOR);
+
+    if (pDEXInfo->basic_info.mapStringDetects.contains(XScanEngine::RECORD_NAME_APKPROTECT)) {
+        addIfPresent(pDEXInfo->basic_info.mapStringDetects, XScanEngine::RECORD_NAME_APKPROTECT);
+    } else if (pDEXInfo->basic_info.scanOptions.bIsDeepScan &&
+               XBinary::isStringInListPresentExp(&(pDEXInfo->listStrings), "http://www.apkprotect.net/", pPdStruct)) {
+        NFD_Binary::SCANS_STRUCT ss = _mkScan(0, XBinary::FT_DEX, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_APKPROTECT);
+        pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
+    }
+
+    if (pDEXInfo->basic_info.scanOptions.bIsHeuristicScan) {
+        if (pDEXInfo->basic_info.mapStringDetects.contains(XScanEngine::RECORD_NAME_AESOBFUSCATOR)) {
+            addIfPresent(pDEXInfo->basic_info.mapStringDetects, XScanEngine::RECORD_NAME_AESOBFUSCATOR);
+        } else if (pDEXInfo->basic_info.scanOptions.bIsDeepScan &&
+                   XBinary::isStringInListPresentExp(&(pDEXInfo->listStrings), "licensing/AESObfuscator;", pPdStruct)) {
+            NFD_Binary::SCANS_STRUCT ss = _mkScan(0, XBinary::FT_DEX, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_AESOBFUSCATOR);
+            pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
+        }
+    }
+
+    // Type-based detections
+    addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_BTWORKSCODEGUARD);
+    addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_QIHOO360PROTECTION);
+    addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_ALIBABAPROTECTION);
+    addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_BAIDUPROTECTION);
+    addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_TENCENTPROTECTION);
+    addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_SECNEO);
+    addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_LIAPP);
+    addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_VDOG);
+    addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_APPSOLID);
+    addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_MEDUSAH);
+    addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_NQSHIELD);
+    addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_YIDUN);
+    addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_APKENCRYPTOR);
+
+    if (pDEXInfo->basic_info.mapTypeDetects.contains(XScanEngine::RECORD_NAME_PROGUARD)) {
+        addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_PROGUARD);
+    } else if (pDEXInfo->basic_info.scanOptions.bIsDeepScan &&
+               XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings), "\\/proguard\\/", pPdStruct)) {
+        NFD_Binary::SCANS_STRUCT ss = _mkScan(0, XBinary::FT_DEX, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_PROGUARD);
+        pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
+    }
+}
