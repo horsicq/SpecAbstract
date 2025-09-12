@@ -21,7 +21,7 @@
 #ifndef NFD_MACH_H
 #define NFD_MACH_H
 
-#include "mach_script.h"
+#include "xscanengine.h"
 #include "nfd_binary.h"
 #include "xmach.h"
 

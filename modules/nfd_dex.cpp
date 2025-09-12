@@ -252,18 +252,18 @@ void NFD_DEX::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptio
                 if (bDexMerge_map) sOverlay = XBinary::appendComma(sOverlay, "DexMerge");
             }
         }
-        if (pDEXInfo->basic_info.scanOptions.bIsTest && pDEXInfo->basic_info.scanOptions.bIsVerbose) {
-            for (const QString &s : std::as_const(pDEXInfo->listStrings)) {
-                if (XBinary::isPdStructStopped(pPdStruct)) break;
-                if (s.contains("agconfig") || s.contains("AntiSkid") || s.contains("ALLATORI") || s.contains("AppSuit") || s.contains("appsuit") ||
-                    s.contains("gemalto") || s.contains("WapperApplication") || s.contains("AppSealing") || s.contains("whitecryption") ||
-                    s.contains("ModGuard") || s.contains("InjectedActivity")) {
-                    NFD_Binary::SCANS_STRUCT ss = _mkScan(0, XBinary::FT_APK, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_UNKNOWN, s, sOverlay);
-                    pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
-                    break;
-                }
-            }
-        }
+        // if (pDEXInfo->basic_info.scanOptions.bIsTest && pDEXInfo->basic_info.scanOptions.bIsVerbose) {
+        //     for (const QString &s : std::as_const(pDEXInfo->listStrings)) {
+        //         if (XBinary::isPdStructStopped(pPdStruct)) break;
+        //         if (s.contains("agconfig") || s.contains("AntiSkid") || s.contains("ALLATORI") || s.contains("AppSuit") || s.contains("appsuit") ||
+        //             s.contains("gemalto") || s.contains("WapperApplication") || s.contains("AppSealing") || s.contains("whitecryption") ||
+        //             s.contains("ModGuard") || s.contains("InjectedActivity")) {
+        //             NFD_Binary::SCANS_STRUCT ss = _mkScan(0, XBinary::FT_APK, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_UNKNOWN, s, sOverlay);
+        //             pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
+        //             break;
+        //         }
+        //     }
+        // }
     }
 }
 
