@@ -493,6 +493,22 @@ void NFD_Binary::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemo
     }
 }
 
+NFD_Binary::SCANS_STRUCT NFD_Binary::getScansStruct(quint32 nVariant, XBinary::FT fileType, XScanEngine::RECORD_TYPE type, XScanEngine::RECORD_NAME name, const QString &sVersion, const QString &sInfo, qint64 nOffset)
+{
+    // TODO bIsHeuristic;
+    SCANS_STRUCT result = {};
+
+    result.nVariant = nVariant;
+    result.fileType = fileType;
+    result.type = type;
+    result.name = name;
+    result.sVersion = sVersion;
+    result.sInfo = sInfo;
+    result.nOffset = nOffset;
+
+    return result;
+}
+
 NFD_Binary::SCAN_STRUCT NFD_Binary::scansToScan(NFD_Binary::BASIC_INFO *pBasicInfo, NFD_Binary::SCANS_STRUCT *pScansStruct)
 {
     SCAN_STRUCT result = {};

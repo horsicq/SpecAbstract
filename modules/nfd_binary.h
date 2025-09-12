@@ -355,6 +355,9 @@ public:
     static VI_STRUCT get_gold_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, XBinary::PDSTRUCT *pPdStruct);
     static VI_STRUCT get_TurboLinker_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions);
 
+    static SCANS_STRUCT getScansStruct(quint32 nVariant, XBinary::FT fileType, XScanEngine::RECORD_TYPE type, XScanEngine::RECORD_NAME name, const QString &sVersion, const QString &sInfo,
+                                        qint64 nOffset);
+
 signals:
 };
 
