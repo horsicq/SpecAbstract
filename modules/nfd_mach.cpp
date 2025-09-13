@@ -24,6 +24,47 @@ NFD_MACH::NFD_MACH(XMACH *pMACH, XBinary::FILEPART filePart, OPTIONS *pOptions, 
 {
 }
 
+NFD_MACH::MACHOINFO_STRUCT NFD_MACH::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    MACHOINFO_STRUCT result = {};
+
+    XMACH mach(pDevice, pOptions->bIsImage);
+
+    if (mach.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
+        result.basic_info = NFD_Binary::_initBasicInfo(&mach, parentId, pOptions, nOffset, pPdStruct);
+
+        result.bIs64 = mach.is64();
+        result.bIsBigEndian = mach.isBigEndian();
+
+        //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
+
+        result.sEntryPointSignature = mach.getSignature(mach.getEntryPointOffset(&(result.basic_info.memoryMap)), 150);
+
+        result.listCommandRecords = mach.getCommandRecords();
+
+        result.listLibraryRecords = mach.getLibraryRecords(&result.listCommandRecords, XMACH_DEF::S_LC_LOAD_DYLIB);
+        result.listSegmentRecords = mach.getSegmentRecords(&result.listCommandRecords);
+        result.listSectionRecords = mach.getSectionRecords(&result.listCommandRecords);
+
+        // TODO Segments
+        // TODO Sections
+
+        NFD_MACH::handle_Tools(pDevice, pOptions, &result, pPdStruct);
+        NFD_MACH::handle_Protection(pDevice, pOptions, &result, pPdStruct);
+
+        NFD_MACH::handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
+
+        NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
+    }
+
+    result.basic_info.nElapsedTime = timer.elapsed();
+
+    return result;
+}
+
 void NFD_MACH::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MACH::MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct)
 {
 	XMACH mach(pDevice, pOptions->bIsImage);

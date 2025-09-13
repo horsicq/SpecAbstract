@@ -42,6 +42,9 @@ public:
         QList<XMACH::SECTION_RECORD> listSectionRecords;
     };
 
+    static MACHOINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                         XBinary::PDSTRUCT *pPdStruct);
+
     // Handlers migrated from SpecAbstract
     static void handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct);
     static void handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MACHOINFO_STRUCT *pMACHInfo, XBinary::PDSTRUCT *pPdStruct);
