@@ -45,6 +45,10 @@ public:
 
     static NFD_Binary::SIGNATURE_RECORD *getEntrypointRecords();
     static qint32 getEntrypointRecordsSize();
+
+    static void ELF_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct);
+    static void ELF_handle_CommentSection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct);
+    static void ELF_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct);
 };
 
 #endif  // NFD_ELF_H
