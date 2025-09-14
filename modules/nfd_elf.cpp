@@ -914,3 +914,420 @@ void NFD_ELF::ELF_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
 		}
 	}
 }
+
+void NFD_ELF::ELF_handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XELF elf(pDevice, pOptions->bIsImage);
+
+    if (elf.isValid(pPdStruct)) {
+        _SCANS_STRUCT recordCompiler = {};
+        // GCC
+        if (XELF::isSectionNamePresent(".gcc_except_table", &(pELFInfo->listSectionRecords)))  // TODO
+        {
+            recordCompiler.type = XScanEngine::RECORD_TYPE_COMPILER;
+            recordCompiler.name = XScanEngine::RECORD_NAME_GCC;
+        }
+
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_GCC)) {
+            recordCompiler = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_GCC);
+        }
+
+        if (recordCompiler.type != XScanEngine::RECORD_TYPE_UNKNOWN) {
+            pELFInfo->basic_info.mapResultCompilers.insert(recordCompiler.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordCompiler));
+        }
+    }
+}
+
+void NFD_ELF::ELF_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XELF elf(pDevice, pOptions->bIsImage);
+
+    if (elf.isValid(pPdStruct)) {
+        if (pELFInfo->nSymTabOffset > 0) {
+            qint32 nNumberOfSymbols = elf.getNumberOfSymbols(pELFInfo->nSymTabOffset);
+
+            if (nNumberOfSymbols) {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_SYMBOLTABLE, "", "", 0);
+
+                ss.sInfo = pELFInfo->listSectionRecords.at(pELFInfo->nSymTabSection).sName;
+                ss.sInfo = XBinary::appendComma(ss.sInfo, QString("%1 symbols").arg(nNumberOfSymbols));
+
+                pELFInfo->basic_info.mapResultDebugData.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+            }
+        }
+
+        if (elf.isSectionNamePresent(".stab", &(pELFInfo->listSectionRecords)) && elf.isSectionNamePresent(".stabstr", &(pELFInfo->listSectionRecords))) {
+            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_STABSDEBUGINFO, "", "", 0);
+            pELFInfo->basic_info.mapResultDebugData.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        if (pELFInfo->nDWARFDebugOffset > 0) {
+            VI_STRUCT viStruct = NFD_Binary::get_DWRAF_vi(pDevice, pOptions, pELFInfo->nDWARFDebugOffset, pELFInfo->nDWARFDebugSize, pPdStruct);
+
+            if (viStruct.bIsValid) {
+                _SCANS_STRUCT ssDebugInfo = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
+                ssDebugInfo.sVersion = viStruct.sVersion;
+
+                pELFInfo->basic_info.mapResultDebugData.insert(ssDebugInfo.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ssDebugInfo));
+            }
+        }
+    }
+}
+
+NFD_ELF::ELFINFO_STRUCT NFD_ELF::getELFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                            XBinary::PDSTRUCT *pPdStruct)
+{
+    // Delegate the core ELF info extraction to NFD_ELF, then continue with SpecAbstract-specific handlers.
+    ELFINFO_STRUCT result = NFD_ELF::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
+
+    XELF elf(pDevice, pOptions->bIsImage);
+    if (elf.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
+        // Keep existing SpecAbstract handlers that derive more detects from the core info
+        NFD_Binary::signatureScan(&result.basic_info.mapEntryPointDetects, result.sEntryPointSignature, NFD_ELF::getEntrypointRecords(),
+                                  NFD_ELF::getEntrypointRecordsSize(), result.basic_info.id.fileType, XBinary::FT_ELF, &(result.basic_info), DETECTTYPE_ENTRYPOINT,
+                                  pPdStruct);
+
+        NFD_ELF::ELF_handle_CommentSection(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::ELF_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::ELF_handle_GCC(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::ELF_handle_DebugData(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::ELF_handle_Tools(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::ELF_handle_Protection(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::ELF_handle_UnknownProtection(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::ELF_handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
+
+        NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
+    }
+
+    return result;
+}
+
+void NFD_ELF::ELF_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    Q_UNUSED(pELFInfo)
+
+    XELF elf(pDevice, pOptions->bIsImage);
+
+    if (elf.isValid(pPdStruct)) {
+        // UPX
+        VI_STRUCT viUPXEnd = NFD_Binary::_get_UPX_vi(pDevice, pOptions, pELFInfo->basic_info.id.nSize - 0x24, 0x24, XBinary::FT_ELF);
+        VI_STRUCT viUPX = NFD_Binary::get_UPX_vi(pDevice, pOptions, 0, pELFInfo->basic_info.id.nSize, XBinary::FT_ELF, pPdStruct);
+
+        if ((viUPXEnd.bIsValid) || (viUPX.bIsValid)) {
+            _SCANS_STRUCT recordSS = {};
+
+            recordSS.type = XScanEngine::RECORD_TYPE_PACKER;
+            recordSS.name = XScanEngine::RECORD_NAME_UPX;
+
+            if (viUPXEnd.sVersion != "") recordSS.sVersion = viUPXEnd.sVersion;
+            if (viUPX.sVersion != "") recordSS.sVersion = viUPX.sVersion;
+
+            if (viUPXEnd.sInfo != "") recordSS.sInfo = viUPXEnd.sInfo;
+            if (viUPX.sInfo != "") recordSS.sInfo = viUPX.sInfo;
+
+            pELFInfo->basic_info.mapResultPackers.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+        }
+
+        if (viUPXEnd.vValue.toUInt() == 0x21434553)  // SEC!
+        {
+            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_SECNEO, "Old", "UPX", 0);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        } else if (viUPXEnd.vValue.toUInt() == 0x00010203) {
+            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_SECNEO, "", "UPX", 0);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        } else if (viUPXEnd.vValue.toUInt() == 0x214d4a41)  // "AJM!"
+        {
+            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_IJIAMI, "", "UPX", 0);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // Burneye
+        if (pELFInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_BURNEYE)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_BURNEYE);
+
+            qint64 _nOffset = 0x1000;
+            qint64 _nSize = 0x200;
+
+            qint64 nOffset_Id = elf.find_ansiString(_nOffset, _nSize, "TEEE burneye - TESO ELF Encryption Engine", pPdStruct);
+
+            if (nOffset_Id == -1) {
+                ss.sInfo = "Modified";
+            }
+
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // Obfuscator-LLVM
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_OBFUSCATORLLVM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_OBFUSCATORLLVM);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // wangzehua LLVM
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_WANGZEHUALLVM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_WANGZEHUALLVM);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // Byteguard
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_BYTEGUARD)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_BYTEGUARD);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // Alipay Obfuscator
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ALIPAYOBFUSCATOR)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ALIPAYOBFUSCATOR);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // Tencent Legu
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_TENCENTLEGU)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_TENCENTLEGU);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // Safeengine LLVM
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_SAFEENGINELLVM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_SAFEENGINELLVM);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // Tencent-Obfuscation
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_TENCENTPROTECTION)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_TENCENTPROTECTION);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // AppImage
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_APPIMAGE))  // Check overlay
+        {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_APPIMAGE);
+            pELFInfo->basic_info.mapResultTools.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // HikariObfuscator
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_HIKARIOBFUSCATOR)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_HIKARIOBFUSCATOR);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // SnapProtect
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_SNAPPROTECT)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_SNAPPROTECT);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // ByteDance-SecCompiler
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_BYTEDANCESECCOMPILER)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_BYTEDANCESECCOMPILER);
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // Dingbaozeng native obfuscator
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR);
+
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // Nagain LLVM
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_NAGAINLLVM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_NAGAINLLVM);
+
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // iJiami LLVM
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_IJIAMILLVM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_IJIAMILLVM);
+
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        // LLVM 6.0 + Ollvm + Armariris
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_OLLVMTLL)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_OLLVMTLL);
+
+            pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
+
+        {
+            // Virbox Protector
+            QList<XELF_DEF::Elf_Phdr> listNotes = elf._getPrograms(&(pELFInfo->listProgramHeaders), XELF_DEF::S_PT_NOTE);
+
+            qint32 nNumberOfNotes = listNotes.count();
+
+            for (qint32 i = 0; (i < nNumberOfNotes) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
+                qint64 nOffset = 0;
+
+                if (pOptions->bIsImage) {
+                    nOffset = listNotes.at(i).p_vaddr;  // TODO Check
+                } else {
+                    nOffset = listNotes.at(i).p_offset;
+                }
+
+                qint64 nSize = listNotes.at(i).p_filesz;
+
+                QString sString = elf.read_ansiString(nOffset, nSize);
+
+                if (sString == "Virbox Protector") {
+                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_VIRBOXPROTECTOR, "", "", 0);
+
+                    pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+                }
+
+                break;
+            }
+        }
+    }
+}
+
+void NFD_ELF::ELF_handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo,
+                                           XBinary::PDSTRUCT *pPdStruct)
+{
+    Q_UNUSED(pELFInfo)
+
+    XELF elf(pDevice, pOptions->bIsImage);
+
+    if (elf.isValid(pPdStruct)) {
+        if (pELFInfo->basic_info.scanOptions.bIsTest && pELFInfo->basic_info.scanOptions.bIsVerbose) {
+            // TODO names of note sections
+
+            qint32 nIndex = 1;
+
+            {
+                qint32 nNumberOfRecords = pELFInfo->listLibraries.count();
+
+                for (qint32 i = 0; (i < nNumberOfRecords) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
+                    _SCANS_STRUCT recordSS = {};
+
+                    recordSS.type = XScanEngine::RECORD_TYPE_LIBRARY;
+                    recordSS.name = (XScanEngine::RECORD_NAME)(XScanEngine::RECORD_NAME_UNKNOWN9 + nIndex);
+                    recordSS.sVersion = QString("LIBRARY_") + pELFInfo->listLibraries.at(i);
+
+                    pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+
+                    nIndex++;
+                }
+            }
+
+            {
+                XBinary::OS_STRING asInterpeter = elf.getProgramInterpreterName();
+
+                if (asInterpeter.nSize) {
+                    _SCANS_STRUCT recordSS = {};
+
+                    recordSS.type = XScanEngine::RECORD_TYPE_LIBRARY;
+                    recordSS.name = (XScanEngine::RECORD_NAME)(XScanEngine::RECORD_NAME_UNKNOWN9 + nIndex);
+                    recordSS.sVersion = QString("Interpreter_") + asInterpeter.sString;
+
+                    pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+
+                    nIndex++;
+                }
+            }
+
+            {
+                QSet<QString> stRecords;
+
+                qint32 nNumberOfRecords = pELFInfo->listComments.count();
+
+                for (qint32 i = 0; (i < nNumberOfRecords) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
+                    if (!stRecords.contains(pELFInfo->listComments.at(i))) {
+                        _SCANS_STRUCT recordSS = {};
+
+                        recordSS.type = XScanEngine::RECORD_TYPE_LIBRARY;
+                        recordSS.name = (XScanEngine::RECORD_NAME)(XScanEngine::RECORD_NAME_UNKNOWN9 + nIndex);
+                        recordSS.sVersion = QString("COMMENT_") + pELFInfo->listComments.at(i);
+
+                        pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+
+                        stRecords.insert(pELFInfo->listComments.at(i));
+
+                        nIndex++;
+                    }
+                }
+            }
+
+            {
+                QSet<QString> stRecords;
+
+                qint32 nNumberOfRecords = pELFInfo->listNotes.count();
+
+                for (qint32 i = 0; (i < nNumberOfRecords) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
+                    if (!stRecords.contains(pELFInfo->listNotes.at(i).sName)) {
+                        _SCANS_STRUCT recordSS = {};
+
+                        recordSS.type = XScanEngine::RECORD_TYPE_LIBRARY;
+                        recordSS.name = (XScanEngine::RECORD_NAME)(XScanEngine::RECORD_NAME_UNKNOWN9 + nIndex);
+                        recordSS.sVersion = QString("NOTE_") + pELFInfo->listNotes.at(i).sName;
+
+                        pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+
+                        stRecords.insert(pELFInfo->listNotes.at(i).sName);
+
+                        nIndex++;
+                    }
+                }
+            }
+
+            {
+                QSet<quint32> stRecords;
+
+                qint32 nNumberOfRecords = pELFInfo->listNotes.count();
+
+                for (qint32 i = 0; (i < nNumberOfRecords) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
+                    if (!stRecords.contains(pELFInfo->listNotes.at(i).nType)) {
+                        _SCANS_STRUCT recordSS = {};
+
+                        recordSS.type = XScanEngine::RECORD_TYPE_LIBRARY;
+                        recordSS.name = (XScanEngine::RECORD_NAME)(XScanEngine::RECORD_NAME_UNKNOWN9 + nIndex);
+                        recordSS.sVersion = QString("NOTE_TYPE_%1").arg(pELFInfo->listNotes.at(i).nType);
+
+                        pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+
+                        stRecords.insert(pELFInfo->listNotes.at(i).nType);
+
+                        nIndex++;
+                    }
+                }
+            }
+
+            {
+                QSet<QString> stRecords;
+
+                qint32 nNumberOfRecords = pELFInfo->listSectionRecords.count();
+
+                for (qint32 i = 0; (i < nNumberOfRecords) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
+                    if (!stRecords.contains(pELFInfo->listSectionRecords.at(i).sName)) {
+                        _SCANS_STRUCT recordSS = {};
+
+                        recordSS.type = XScanEngine::RECORD_TYPE_LIBRARY;
+                        recordSS.name = (XScanEngine::RECORD_NAME)(XScanEngine::RECORD_NAME_UNKNOWN9 + nIndex);
+                        recordSS.sVersion = QString("SECTION_") + pELFInfo->listSectionRecords.at(i).sName;
+
+                        pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+
+                        stRecords.insert(pELFInfo->listSectionRecords.at(i).sName);
+
+                        nIndex++;
+                    }
+                }
+            }
+        }
+    }
+}
+
+void NFD_ELF::ELF_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(pOptions)
+    Q_UNUSED(pPdStruct)
+
+    if (pELFInfo->basic_info.mapResultCompilers.contains(XScanEngine::RECORD_NAME_GCC) || pELFInfo->basic_info.mapResultCompilers.contains(XScanEngine::RECORD_NAME_APPORTABLECLANG)) {
+        if (pELFInfo->basic_info.mapResultCompilers.value(XScanEngine::RECORD_NAME_GCC).sVersion == "") {
+            pELFInfo->basic_info.mapResultCompilers.remove(XScanEngine::RECORD_NAME_GCC);
+        }
+    }
+}

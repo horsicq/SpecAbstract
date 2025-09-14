@@ -354,3 +354,103 @@ void NFD_DEX::handle_Protection(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XB
         pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
     }
 }
+
+NFD_DEX::DEXINFO_STRUCT NFD_DEX::getDEXInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                            XBinary::PDSTRUCT *pPdStruct)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    DEXINFO_STRUCT result = {};
+
+    XDEX dex(pDevice);
+
+    if (dex.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
+        result.basic_info = NFD_Binary::_initBasicInfo(&dex, parentId, pOptions, nOffset, pPdStruct);
+
+        //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
+
+        result.header = dex.getHeader();
+        result.mapItems = dex.getMapItems(pPdStruct);
+
+#ifdef QT_DEBUG
+        qDebug("%lli msec", timer.elapsed());
+#endif
+
+        result.bIsStringPoolSorted = dex.isStringPoolSorted(&(result.mapItems), pPdStruct);
+        result.bIsOverlayPresent = dex.isOverlayPresent(&(result.basic_info.memoryMap), pPdStruct);
+
+#ifdef QT_DEBUG
+        qDebug("%lli msec", timer.elapsed());
+#endif
+
+        result.listStrings = dex.getStrings(&(result.mapItems), pPdStruct);
+        result.listTypeItemStrings = dex.getTypeItemStrings(&(result.mapItems), &result.listStrings, pPdStruct);
+
+#ifdef QT_DEBUG
+        qDebug("%lli msec", timer.elapsed());
+#endif
+
+        NFD_Binary::stringScan(&result.basic_info.mapStringDetects, &result.listStrings, NFD_DEX::getStringRecords(), NFD_DEX::getStringRecordsSize(),
+                               result.basic_info.id.fileType, XBinary::FT_DEX, &(result.basic_info), DETECTTYPE_DEXSTRING, pPdStruct);
+        NFD_Binary::stringScan(&result.basic_info.mapTypeDetects, &result.listTypeItemStrings, NFD_DEX::getTypeRecords(), NFD_DEX::getTypeRecordsSize(),
+                               result.basic_info.id.fileType, XBinary::FT_DEX, &(result.basic_info), DETECTTYPE_DEXTYPE, pPdStruct);
+
+        if (pOptions->bIsDeepScan) {
+            //            QList<XDEX_DEF::STRING_ITEM_ID> getList_STRING_ITEM_ID(&mapItems);
+            //            QList<XDEX_DEF::TYPE_ITEM_ID> getList_TYPE_ITEM_ID(&mapItems);
+            //            QList<XDEX_DEF::PROTO_ITEM_ID> getList_PROTO_ITEM_ID(&mapItems);
+            result.listFieldIDs = dex.getList_FIELD_ITEM_ID(&(result.mapItems), pPdStruct);
+            result.listMethodIDs = dex.getList_METHOD_ITEM_ID(&(result.mapItems), pPdStruct);
+            //            QList<XDEX_DEF::CLASS_ITEM_DEF> getList_CLASS_ITEM_DEF(&mapItems);
+
+#ifdef QT_DEBUG
+//            {
+//                QList<XDEX_DEF::CLASS_ITEM_DEF> listClasses=dex.getList_CLASS_ITEM_DEF(&mapItems);
+
+//                qint32 nNumberOfItems=listClasses.count();
+
+//                for(qint32 i=0;i<nNumberOfItems;i++)
+//                {
+
+//                    QString sString=QString("%1|%2|%3") .arg(XBinary::getStringByIndex(&result.listTypeItemStrings,listClasses.at(i).class_idx))
+//                                                        .arg(XBinary::getStringByIndex(&result.listTypeItemStrings,listClasses.at(i).superclass_idx))
+//                                                        .arg(XBinary::getStringByIndex(&result.listStrings,listClasses.at(i).source_file_idx));
+
+//                    qDebug(sString.toLatin1().data());
+//                }
+//            }
+//            {
+//                QList<XDEX_DEF::METHOD_ITEM_ID> listMethods=dex.getList_METHOD_ITEM_ID(&mapItems);
+
+//                qint32 nNumberOfItems=listMethods.count();
+
+//                for(qint32 i=0;i<nNumberOfItems;i++)
+//                {
+
+//                    QString sString=QString("%1|%2") .arg(XBinary::getStringByIndex(&result.listTypeItemStrings,listMethods.at(i).class_idx))
+//                                                        .arg(XBinary::getStringByIndex(&result.listStrings,listMethods.at(i).name_idx));
+
+//                    qDebug(sString.toLatin1().data());
+//                }
+//            }
+#endif
+        }
+
+        // TODO Check Strings
+
+        NFD_DEX::handle_Tools(pDevice, pOptions, &result, pPdStruct);
+        NFD_DEX::handle_Protection(pDevice, &result, pPdStruct);
+        NFD_DEX::handle_Dexguard(pDevice, &result, pPdStruct);
+
+        NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
+    }
+
+    result.basic_info.nElapsedTime = timer.elapsed();
+
+#ifdef QT_DEBUG
+    qDebug("%lld msec", result.basic_info.nElapsedTime);
+#endif
+
+    return result;
+}

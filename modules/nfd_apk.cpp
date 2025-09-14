@@ -19,6 +19,7 @@
  * SOFTWARE.
  */
 #include "nfd_apk.h"
+#include "../specabstract.h"
 
 // APK file-based signature records (migrated from SpecAbstract/signatures.cpp)
 static NFD_Binary::STRING_RECORD g_APK_file_records[] = {
@@ -177,4 +178,45 @@ qint32 NFD_APK::getFileExpRecordsSize()
 
 NFD_APK::NFD_APK(XAPK *pAPK, XBinary::FILEPART filePart, OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct) : APK_Script(pAPK, filePart, pOptions, pPdStruct)
 {
+}
+
+NFD_APK::APKINFO_STRUCT NFD_APK::getAPKInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                           XBinary::PDSTRUCT *pPdStruct)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    APKINFO_STRUCT result = {};
+
+    XZip xzip(pDevice);
+
+    if (xzip.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
+        result.basic_info = NFD_Binary::_initBasicInfo(&xzip, parentId, pOptions, nOffset, pPdStruct);
+
+        //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
+        result.listArchiveRecords = xzip.getRecords(20000, pPdStruct);
+
+        result.bIsKotlin = XArchive::isArchiveRecordPresent("META-INF/androidx.core_core-ktx.version", &(result.listArchiveRecords), pPdStruct) ||
+                           XArchive::isArchiveRecordPresent("kotlin/kotlin.kotlin_builtins", &(result.listArchiveRecords), pPdStruct);
+
+        NFD_Binary::archiveScan(&(result.basic_info.mapArchiveDetects), &(result.listArchiveRecords), NFD_APK::getFileRecords(), NFD_APK::getFileRecordsSize(),
+                                result.basic_info.id.fileType, XBinary::FT_APK, &(result.basic_info), DETECTTYPE_ARCHIVE, pPdStruct);
+        NFD_Binary::archiveExpScan(&(result.basic_info.mapArchiveDetects), &(result.listArchiveRecords), NFD_APK::getFileExpRecords(), NFD_APK::getFileExpRecordsSize(),
+                                   result.basic_info.id.fileType, XBinary::FT_APK, &(result.basic_info), DETECTTYPE_ARCHIVE, pPdStruct);
+
+        if (XArchive::isArchiveRecordPresent("classes.dex", &(result.listArchiveRecords), pPdStruct)) {
+            result.dexInfoClasses = NFD_DEX::getDEXInfo(pDevice, parentId, pOptions, 0, pPdStruct);
+        }
+
+        SpecAbstract::Zip_handle_Metainfos(pDevice, pOptions, &(result.basic_info), &(result.listArchiveRecords), pPdStruct);
+
+        SpecAbstract::APK_handle(pDevice, pOptions, &result, pPdStruct);
+        SpecAbstract::APK_handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
+
+        NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
+    }
+
+    result.basic_info.nElapsedTime = timer.elapsed();
+
+    return result;
 }

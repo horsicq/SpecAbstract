@@ -48,6 +48,9 @@ public:
     static qint32 getFileRecordsSize();
     static NFD_Binary::STRING_RECORD *getFileExpRecords();
     static qint32 getFileExpRecordsSize();
+
+    // Main APK analysis function
+    static APKINFO_STRUCT getAPKInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
 };
 
 #endif  // NFD_APK_H
