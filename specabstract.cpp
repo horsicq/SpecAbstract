@@ -442,8 +442,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         NFD_PE::PE_handle_VProtect(pDevice, pOptions, &result, pPdStruct);
         NFD_PE::PE_handle_TTProtect(pDevice, pOptions, &result, pPdStruct);  // TODO remove
         NFD_PE::PE_handle_VMProtect(pDevice, pOptions, &result, pPdStruct);
-        PE_handle_tElock(pDevice, pOptions, &result, pPdStruct);
-        PE_handle_Armadillo(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::PE_handle_tElock(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::PE_handle_Armadillo(pDevice, pOptions, &result, pPdStruct);
         PE_handle_Obsidium(pDevice, pOptions, &result, pPdStruct);
         PE_handle_Themida(pDevice, pOptions, &result, pPdStruct);
         PE_handle_StarForce(pDevice, pOptions, &result, pPdStruct);
@@ -547,89 +547,6 @@ SpecAbstract::ZIPINFO_STRUCT SpecAbstract::getZIPInfo(QIODevice *pDevice, XScanE
     result.basic_info.nElapsedTime = timer.elapsed();
 
     return result;
-}
-
-void SpecAbstract::PE_handle_tElock(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    XPE pe(pDevice, pOptions->bIsImage);
-
-    if (pe.isValid(pPdStruct)) {
-        if (!pPEInfo->cliInfo.bValid) {
-            if (pPEInfo->listImports.count() == 2) {
-                bool bKernel32 = false;
-                bool bUser32 = false;
-
-                // TODO
-                if (pPEInfo->listImports.at(0).sName == "kernel32.dll") {
-                    if (pPEInfo->listImports.at(0).listPositions.count() == 1) {
-                        if (pPEInfo->listImports.at(0).listPositions.at(0).sFunction == "GetModuleHandleA") {
-                            bKernel32 = true;
-                        }
-                    }
-                }
-                if (pPEInfo->listImports.at(1).sName == "user32.dll") {
-                    if (pPEInfo->listImports.at(1).listPositions.count() == 1) {
-                        if ((pPEInfo->listImports.at(1).listPositions.at(0).sFunction == "MessageBoxA")) {
-                            bUser32 = true;
-                        }
-                    }
-                }
-
-                if (bKernel32 && bUser32) {
-                    if (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_TELOCK)) {
-                        _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_TELOCK);
-
-                        pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
-                    }
-                }
-            }
-        }
-    }
-}
-
-void SpecAbstract::PE_handle_Armadillo(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    XPE pe(pDevice, pOptions->bIsImage);
-
-    if (pe.isValid(pPdStruct)) {
-        if (!pPEInfo->cliInfo.bValid) {
-            bool bHeaderDetect = false;
-            bool bImportDetect = false;
-
-            if ((pPEInfo->nMajorLinkerVersion == 0x53) && (pPEInfo->nMinorLinkerVersion == 0x52)) {
-                bHeaderDetect = true;
-            }
-
-            qint32 nNumberOfImports = pPEInfo->listImports.count();
-
-            if (nNumberOfImports >= 3) {
-                bImportDetect = ((pPEInfo->listImports.at(0).sName.toUpper() == "KERNEL32.DLL") && (pPEInfo->listImports.at(1).sName.toUpper() == "USER32.DLL") &&
-                                 (pPEInfo->listImports.at(2).sName.toUpper() == "GDI32.DLL")) ||
-                                ((pPEInfo->listImports.at(0).sName.toUpper() == "KERNEL32.DLL") && (pPEInfo->listImports.at(1).sName.toUpper() == "GDI32.DLL") &&
-                                 (pPEInfo->listImports.at(2).sName.toUpper() == "USER32.DLL"));
-            }
-
-            if (bImportDetect || bHeaderDetect) {
-                bool bDetect = false;
-
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_PROTECTOR, RECORD_NAME_ARMADILLO, "", "", 0);
-
-                if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_ARMADILLO)) {
-                    ss = pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_ARMADILLO);
-
-                    bDetect = true;
-                }
-
-                if (bHeaderDetect) {
-                    bDetect = true;
-                }
-
-                if (bDetect) {
-                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
-                }
-            }
-        }
-    }
 }
 
 void SpecAbstract::PE_handle_Obsidium(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)

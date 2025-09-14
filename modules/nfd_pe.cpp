@@ -3169,6 +3169,51 @@ void NFD_PE::PE_handle_tElock(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
     }
 }
 
+void NFD_PE::PE_handle_Armadillo(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XPE pe(pDevice, pOptions->bIsImage);
+
+    if (pe.isValid(pPdStruct)) {
+        if (!pPEInfo->cliInfo.bValid) {
+            bool bHeaderDetect = false;
+            bool bImportDetect = false;
+
+            if ((pPEInfo->nMajorLinkerVersion == 0x53) && (pPEInfo->nMinorLinkerVersion == 0x52)) {
+                bHeaderDetect = true;
+            }
+
+            qint32 nNumberOfImports = pPEInfo->listImports.count();
+
+            if (nNumberOfImports >= 3) {
+                bImportDetect = ((pPEInfo->listImports.at(0).sName.toUpper() == "KERNEL32.DLL") && (pPEInfo->listImports.at(1).sName.toUpper() == "USER32.DLL") &&
+                                 (pPEInfo->listImports.at(2).sName.toUpper() == "GDI32.DLL")) ||
+                                ((pPEInfo->listImports.at(0).sName.toUpper() == "KERNEL32.DLL") && (pPEInfo->listImports.at(1).sName.toUpper() == "GDI32.DLL") &&
+                                 (pPEInfo->listImports.at(2).sName.toUpper() == "USER32.DLL"));
+            }
+
+            if (bImportDetect || bHeaderDetect) {
+                bool bDetect = false;
+
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ARMADILLO, "", "", 0);
+
+                if (pPEInfo->basic_info.mapImportDetects.contains(XScanEngine::RECORD_NAME_ARMADILLO)) {
+                    ss = pPEInfo->basic_info.mapImportDetects.value(XScanEngine::RECORD_NAME_ARMADILLO);
+
+                    bDetect = true;
+                }
+
+                if (bHeaderDetect) {
+                    bDetect = true;
+                }
+
+                if (bDetect) {
+                    pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+                }
+            }
+        }
+    }
+}
+
 void NFD_PE::PE_handle_VMProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
