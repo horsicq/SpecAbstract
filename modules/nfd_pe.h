@@ -148,6 +148,8 @@ public:
     static qint32 getDotAnsiStringsRecordsSize();
     static NFD_Binary::STRING_RECORD *getDotUnicodeStringsRecords();
     static qint32 getDotUnicodeStringsRecordsSize();
+
+    static void PE_handle_import(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct);
 };
 
 #endif  // NFD_PE_H

@@ -1287,3 +1287,154 @@ qint32 NFD_PE::getDotUnicodeStringsRecordsSize()
 {
     return _PE_dot_unicodestrings_records_size;
 }
+
+void NFD_PE::PE_handle_import(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(pOptions)
+    Q_UNUSED(pPdStruct)
+    // Import Check
+
+    // #ifdef QT_DEBUG
+    //     for(qint32 j=0;j<pPEInfo->listImports.count();j++)
+    //     {
+    //         for(qint32 i=0;i<pPEInfo->listImports.at(j).listPositions.count();i++)
+    //         {
+    //             qDebug("(pPEInfo->listImports.at(%d).listPositions.at(%d).sName==\"%s\")&&",j,i,pPEInfo->listImports.at(j).listPositions.at(i).sName.toLatin1().data());
+    //         }
+    //     }
+    // #endif
+
+    QSet<QString> stDetects;
+
+    if (pPEInfo->listImports.count() >= 1) {
+        if (pPEInfo->listImports.at(0).sName.toUpper() == "KERNEL32.DLL") {
+            if (pPEInfo->listImports.at(0).listPositions.count() == 2) {
+                if ((pPEInfo->listImports.at(0).listPositions.at(0).sName == "GetProcAddress") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(1).sName == "LoadLibraryA")) {
+                    stDetects.insert("kernel32_zprotect");
+                }
+            } else if (pPEInfo->listImports.at(0).listPositions.count() == 13) {
+                if ((pPEInfo->listImports.at(0).listPositions.at(0).sName == "LoadLibraryA") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(1).sName == "GetProcAddress") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(2).sName == "VirtualAlloc") && (pPEInfo->listImports.at(0).listPositions.at(3).sName == "VirtualFree") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(4).sName == "ExitProcess") && (pPEInfo->listImports.at(0).listPositions.at(5).sName == "CreateFileA") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(6).sName == "CloseHandle") && (pPEInfo->listImports.at(0).listPositions.at(7).sName == "WriteFile") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(8).sName == "GetSystemDirectoryA") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(9).sName == "GetFileTime") && (pPEInfo->listImports.at(0).listPositions.at(10).sName == "SetFileTime") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(11).sName == "GetWindowsDirectoryA") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(12).sName == "lstrcatA")) {
+                    if (pPEInfo->listImports.count() == 1) {
+                        stDetects.insert("kernel32_alloy0");
+                    }
+                }
+            } else if (pPEInfo->listImports.at(0).listPositions.count() == 15) {
+                if ((pPEInfo->listImports.at(0).listPositions.at(0).sName == "LoadLibraryA") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(1).sName == "GetProcAddress") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(2).sName == "VirtualAlloc") && (pPEInfo->listImports.at(0).listPositions.at(3).sName == "VirtualFree") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(4).sName == "ExitProcess") && (pPEInfo->listImports.at(0).listPositions.at(5).sName == "CreateFileA") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(6).sName == "CloseHandle") && (pPEInfo->listImports.at(0).listPositions.at(7).sName == "WriteFile") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(8).sName == "GetSystemDirectoryA") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(9).sName == "GetFileTime") && (pPEInfo->listImports.at(0).listPositions.at(10).sName == "SetFileTime") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(11).sName == "GetWindowsDirectoryA") &&
+                    (pPEInfo->listImports.at(0).listPositions.at(14).sName == "GetTempPathA")) {
+                    stDetects.insert("kernel32_alloy2");
+                }
+            }
+        } else if (pPEInfo->listImports.at(0).sName.toUpper() == "USER32.DLL") {
+            if (pPEInfo->listImports.at(0).listPositions.count() == 1) {
+                if ((pPEInfo->listImports.at(0).listPositions.at(0).sName == "MessageBoxA")) {
+                    if (pPEInfo->listImports.count() == 2) {
+                        stDetects.insert("user32_pespina");
+                    }
+
+                    if (pPEInfo->listImports.count() == 3) {
+                        stDetects.insert("user32_pespin");
+                    }
+                }
+            }
+        } else if (pPEInfo->listImports.at(0).sName.toUpper() == "KERNEL32") {
+            if (pPEInfo->listImports.at(0).listPositions.count() == 1) {
+                if ((pPEInfo->listImports.at(0).listPositions.at(0).nOrdinal == 1)) {
+                    if (pPEInfo->listImports.count() == 1) {
+                        stDetects.insert("kernel32_yzpack_b");
+                    }
+                }
+            }
+        }
+    }
+
+    if (pPEInfo->listImports.count() >= 2) {
+        if (pPEInfo->listImports.at(1).sName.toUpper() == "COMCTL32.DLL") {
+            if (pPEInfo->listImports.at(1).listPositions.count() == 1) {
+                if ((pPEInfo->listImports.at(1).listPositions.at(0).sName == "InitCommonControls")) {
+                    if (pPEInfo->listImports.count() == 2) {
+                        stDetects.insert("comctl32_pespina");
+                    }
+
+                    if (pPEInfo->listImports.count() == 3) {
+                        stDetects.insert("comctl32_pespin");
+                    }
+                }
+            }
+        }
+    }
+
+    if (pPEInfo->listImports.count() >= 3) {
+        if (pPEInfo->listImports.at(2).sName.toUpper() == "KERNEL32.DLL") {
+            if (pPEInfo->listImports.at(2).listPositions.count() == 2) {
+                if ((pPEInfo->listImports.at(2).listPositions.at(0).sName == "LoadLibraryA") &&
+                    (pPEInfo->listImports.at(2).listPositions.at(1).sName == "GetProcAddress")) {
+                    if (pPEInfo->listImports.count() == 3) {
+                        stDetects.insert("kernel32_pespinx");
+                    }
+                }
+            } else if (pPEInfo->listImports.at(2).listPositions.count() == 4) {
+                if ((pPEInfo->listImports.at(2).listPositions.at(0).sName == "LoadLibraryA") &&
+                    (pPEInfo->listImports.at(2).listPositions.at(1).sName == "GetProcAddress") &&
+                    (pPEInfo->listImports.at(2).listPositions.at(2).sName == "VirtualAlloc") && (pPEInfo->listImports.at(2).listPositions.at(3).sName == "VirtualFree")) {
+                    if (pPEInfo->listImports.count() == 3) {
+                        stDetects.insert("kernel32_pespin");
+                    }
+                }
+            }
+        }
+    }
+
+#ifdef QT_DEBUG
+    qDebug() << stDetects;
+#endif
+
+    // TODO 32/64
+    if (stDetects.contains("kernel32_zprotect")) {
+        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_ZPROTECT, NFD_Binary::getScansStruct(0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ZPROTECT, "", "", 0));
+    }
+
+    if (stDetects.contains("user32_pespina") && stDetects.contains("comctl32_pespina")) {
+        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_PESPIN, NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_PESPIN, "1.0-1.2", "", 0));
+    }
+
+    if (stDetects.contains("user32_pespin") && stDetects.contains("comctl32_pespin") && stDetects.contains("kernel32_pespin")) {
+        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_PESPIN, NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_PESPIN, "", "", 0));
+    }
+
+    if (stDetects.contains("user32_pespin") && stDetects.contains("comctl32_pespin") && stDetects.contains("kernel32_pespinx")) {
+        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_PESPIN, NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_PESPIN, "1.3X", "", 0));
+    }
+
+    if (stDetects.contains("kernel32_alloy0")) {
+        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_ALLOY, NFD_Binary::getScansStruct(0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ALLOY, "4.X", "", 0));
+    }
+
+    if (stDetects.contains("kernel32_alloy2")) {
+        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_ALLOY, NFD_Binary::getScansStruct(2, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ALLOY, "4.X", "", 0));
+    }
+
+    //    if(stDetects.contains("kernel32_pecompact2"))
+    //    {
+    //        pPEInfo->basic_info.mapImportDetects.insert(RECORD_NAME_PECOMPACT,NFD_Binary::getScansStruct(0,XBinary::FT_PE,RECORD_TYPE_PACKER,RECORD_NAME_PECOMPACT,"2.X","",0));
+    //    }
+
+    // TODO
+    // Import
+}
