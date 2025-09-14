@@ -455,8 +455,8 @@ SpecAbstract::PEINFO_STRUCT SpecAbstract::getPEInfo(QIODevice *pDevice, XScanEng
         PE_handle_Watcom(pDevice, pOptions, &result, pPdStruct);
         PE_handle_Tools(pDevice, pOptions, &result, pPdStruct);
         PE_handle_wxWidgets(pDevice, pOptions, &result, pPdStruct);
-        PE_handle_GCC(pDevice, pOptions, &result, pPdStruct);
-        PE_handle_Signtools(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::PE_handle_GCC(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::PE_handle_Signtools(pDevice, pOptions, &result, pPdStruct);
         PE_handle_SFX(pDevice, pOptions, &result, pPdStruct);
         PE_handle_Installers(pDevice, pOptions, &result, pPdStruct);
         PE_handle_DongleProtection(pDevice, pOptions, &result, pPdStruct);
@@ -2647,269 +2647,6 @@ void SpecAbstract::PE_handle_wxWidgets(QIODevice *pDevice, XScanEngine::SCAN_OPT
     }
 }
 
-void SpecAbstract::PE_handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    _SCANS_STRUCT ssLinker = {};
-    _SCANS_STRUCT ssCompiler = {};
-    _SCANS_STRUCT ssTool = {};
-
-    XPE pe(pDevice, pOptions->bIsImage);
-
-    if (pe.isValid(pPdStruct)) {
-        if (!pPEInfo->cliInfo.bValid) {
-            bool bDetectGCC = false;
-            bool bHeurGCC = false;
-
-            if (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER)) {
-                switch (pPEInfo->nMajorLinkerVersion) {
-                    case 2:
-                        switch (pPEInfo->nMinorLinkerVersion)  // TODO Check MinGW versions
-                        {
-                            case 22:
-                            case 23:
-                            case 24:
-                            case 25:
-                            case 26:
-                            case 27:
-                            case 28:
-                            case 29:
-                            case 30:
-                            case 31:
-                            case 32:
-                            case 33:
-                            case 34:
-                            case 35:
-                            case 36:
-                            case 56: bHeurGCC = true; break;
-                        }
-
-                        break;
-                }
-            }
-
-            QString sDllLib;
-
-            if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
-                sDllLib = pe.read_ansiString(pPEInfo->osConstDataSection.nOffset);
-            }
-
-            if (XPE::isImportLibraryPresentI("msys-1.0.dll", &(pPEInfo->listImports)) || sDllLib.contains("msys-")) {
-                // Msys 1.0
-                ssTool.type = RECORD_TYPE_TOOL;
-                ssTool.name = RECORD_NAME_MSYS;
-                ssTool.sVersion = "1.0";
-            }
-
-            if ((sDllLib.contains("gcc")) || (sDllLib.contains("libgcj")) || (sDllLib.contains("cyggcj")) || (sDllLib == "_set_invalid_parameter_handler") ||
-                XPE::isImportLibraryPresentI("libgcc_s_dw2-1.dll", &(pPEInfo->listImports)) || pPEInfo->basic_info.mapOverlayDetects.contains(RECORD_NAME_MINGW) ||
-                pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_GCC)) {
-                bDetectGCC = true;
-            }
-
-            if (bDetectGCC || bHeurGCC) {
-                // Mingw
-                // Msys
-                if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
-                    VI_STRUCT viStruct = NFD_Binary::get_GCC_vi1(pDevice, pOptions, pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, pPdStruct);
-
-                    ssCompiler.sVersion = viStruct.sVersion;
-
-                    // TODO MinGW-w64
-                    if (viStruct.sInfo.contains("MinGW")) {
-                        ssTool.type = RECORD_TYPE_TOOL;
-                        ssTool.name = RECORD_NAME_MINGW;
-                    } else if (viStruct.sInfo.contains("MSYS2")) {
-                        ssTool.type = RECORD_TYPE_TOOL;
-                        ssTool.name = RECORD_NAME_MSYS2;
-                    } else if (viStruct.sInfo.contains("Cygwin")) {
-                        ssTool.type = RECORD_TYPE_TOOL;
-                        ssTool.name = RECORD_NAME_CYGWIN;
-                    }
-
-                    if (ssCompiler.sVersion == "") {
-                        QString _sGCCVersion;
-
-                        if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
-                            _sGCCVersion =
-                                NFD_Binary::get_GCC_vi2(pDevice, pOptions, pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, pPdStruct).sVersion;
-
-                            if (_sGCCVersion != "") {
-                                ssCompiler.sVersion = _sGCCVersion;
-                            }
-                        }
-
-                        if (_sGCCVersion == "") {
-                            if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
-                                _sGCCVersion =
-                                    NFD_Binary::get_GCC_vi2(pDevice, pOptions, pPEInfo->osDataSection.nOffset, pPEInfo->osDataSection.nSize, pPdStruct).sVersion;
-
-                                if (_sGCCVersion != "") {
-                                    ssCompiler.sVersion = _sGCCVersion;
-                                }
-                            }
-                        }
-                    }
-
-                    if ((ssTool.type == RECORD_TYPE_UNKNOWN) && (pPEInfo->basic_info.mapEntryPointDetects.contains(RECORD_NAME_GCC))) {
-                        if (pPEInfo->basic_info.mapEntryPointDetects.value(RECORD_NAME_GCC).sInfo.contains("MinGW")) {
-                            ssTool.type = RECORD_TYPE_TOOL;
-                            ssTool.name = RECORD_NAME_MINGW;
-                        }
-                    }
-                }
-
-                if (ssCompiler.sVersion != "") {
-                    bDetectGCC = true;
-                }
-
-                if (!bDetectGCC) {
-                    if (pPEInfo->basic_info.scanOptions.bIsDeepScan) {
-                        qint64 nGCC_MinGW =
-                            pe.find_ansiString(pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, "Mingw-w64 runtime failure:", pPdStruct);
-
-                        if (nGCC_MinGW != -1) {
-                            ssTool.type = RECORD_TYPE_TOOL;
-                            ssTool.name = RECORD_NAME_MINGW;
-
-                            bDetectGCC = true;
-                        }
-                    }
-                }
-
-                if (bDetectGCC) {
-                    ssCompiler.type = RECORD_TYPE_COMPILER;
-                    ssCompiler.name = RECORD_NAME_GCC;
-                }
-            }
-
-            qint32 nNumberOfImports = pPEInfo->listImports.count();
-
-            for (qint32 i = 0; (i < nNumberOfImports) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
-                if (XBinary::isRegExpPresent("^CYGWIN", pPEInfo->listImports.at(i).sName.toUpper())) {
-                    QString sVersion = XBinary::regExp("(\\d+)", pPEInfo->listImports.at(i).sName.toUpper(), 0);
-
-                    if (sVersion != "") {
-                        double dVersion = sVersion.toDouble();
-
-                        if (dVersion) {
-                            ssTool.sVersion = QString::number(dVersion, 'f', 2);
-                        }
-                    }
-
-                    ssTool.type = RECORD_TYPE_TOOL;
-                    ssTool.name = RECORD_NAME_CYGWIN;
-
-                    break;
-                }
-            }
-
-            if (ssCompiler.type == RECORD_TYPE_UNKNOWN) {
-                if (XPE::isSectionNamePresent(".stabstr", &(pPEInfo->listSectionRecords)))  // TODO
-                {
-                    XPE::SECTION_RECORD sr = XPE::getSectionRecordByName(".stabstr", &(pPEInfo->listSectionRecords));
-
-                    if (sr.nSize) {
-                        qint64 _nOffset = sr.nOffset;
-                        qint64 _nSize = sr.nSize;
-
-                        bool bSuccess = false;
-
-                        if (!bSuccess) {
-                            qint64 nGCC_MinGW = pe.find_ansiString(_nOffset, _nSize, "/gcc/mingw32/", pPdStruct);
-
-                            if (nGCC_MinGW != -1) {
-                                ssTool.type = RECORD_TYPE_TOOL;
-                                ssTool.name = RECORD_NAME_MINGW;
-
-                                bSuccess = true;
-                            }
-                        }
-
-                        if (!bSuccess) {
-                            qint64 nCygwin = pe.find_ansiString(_nOffset, _nSize, "/gcc/i686-pc-cygwin/", pPdStruct);
-
-                            if (nCygwin != -1) {
-                                ssTool.type = RECORD_TYPE_TOOL;
-                                ssTool.name = RECORD_NAME_CYGWIN;
-
-                                bSuccess = true;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (ssCompiler.type == RECORD_TYPE_UNKNOWN) {
-                if ((ssTool.name == RECORD_NAME_MINGW) || (ssTool.name == RECORD_NAME_MSYS) || (ssTool.name == RECORD_NAME_MSYS2) ||
-                    (ssTool.name == RECORD_NAME_CYGWIN)) {
-                    ssCompiler.type = RECORD_TYPE_COMPILER;
-                    ssCompiler.name = RECORD_NAME_GCC;
-                }
-            }
-
-            if ((ssCompiler.name == RECORD_NAME_GCC) && (ssTool.type == RECORD_TYPE_UNKNOWN)) {
-                ssTool.type = RECORD_TYPE_TOOL;
-                ssTool.name = RECORD_NAME_MINGW;
-            }
-
-            if ((ssCompiler.name == RECORD_NAME_GCC) && (pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER))) {
-                ssLinker.type = RECORD_TYPE_LINKER;
-                ssLinker.name = RECORD_NAME_GNULINKER;
-                ssLinker.sVersion = QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
-            }
-
-            if (ssTool.name == RECORD_NAME_MINGW) {
-                if (ssTool.sVersion == "") {
-                    switch (pPEInfo->nMajorLinkerVersion) {
-                        case 2:
-                            switch (pPEInfo->nMinorLinkerVersion) {
-                                case 23: ssTool.sVersion = "4.7.0-4.8.0"; break;
-                                case 24: ssTool.sVersion = "4.8.2-4.9.2"; break;
-                                case 25: ssTool.sVersion = "5.3.0"; break;
-                                case 29: ssTool.sVersion = "7.3.0"; break;
-                                case 30: ssTool.sVersion = "7.3.0"; break;  // TODO Check
-                            }
-                            break;
-                    }
-                }
-            }
-
-            // TODO Check overlay debug
-
-            if (ssLinker.type != RECORD_TYPE_UNKNOWN) {
-                pPEInfo->basic_info.mapResultLinkers.insert(ssLinker.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ssLinker));
-            }
-            if (ssCompiler.type != RECORD_TYPE_UNKNOWN) {
-                pPEInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ssCompiler));
-            }
-            if (ssTool.type != RECORD_TYPE_UNKNOWN) {
-                pPEInfo->basic_info.mapResultTools.insert(ssTool.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ssTool));
-            }
-        }
-    }
-}
-
-void SpecAbstract::PE_handle_Signtools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    XPE pe(pDevice, pOptions->bIsImage);
-
-    if (pe.isValid(pPdStruct)) {
-        if (pe.isSignPresent()) {
-            // TODO image
-            XPE_DEF::IMAGE_DATA_DIRECTORY dd = pe.getOptionalHeader_DataDirectory(XPE_DEF::S_IMAGE_DIRECTORY_ENTRY_SECURITY);
-
-            QList<XPE::CERT> listCerts = pe.getCertList(dd.VirtualAddress, dd.Size);
-
-            if (listCerts.count()) {
-                if ((listCerts.at(0).record.wRevision == 0x200) && (listCerts.at(0).record.wCertificateType == 2)) {
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, RECORD_TYPE_SIGNTOOL, RECORD_NAME_WINAUTH, "2.0", "PKCS #7", 0);
-                    pPEInfo->basic_info.mapResultSigntools.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
-                }
-            }
-        }
-    }
-}
-
 void SpecAbstract::PE_handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
@@ -4357,15 +4094,6 @@ void SpecAbstract::PE_handle_DebugData(QIODevice *pDevice, SCAN_OPTIONS *pOption
     }
 }
 
-bool SpecAbstract::PE_isProtectionPresent(SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
-{
-    Q_UNUSED(pPdStruct)
-
-    return (pPEInfo->basic_info.mapResultPackers.count() || pPEInfo->basic_info.mapResultProtectors.count() || pPEInfo->basic_info.mapResultSFX.count() ||
-            pPEInfo->basic_info.mapResultInstallers.count() || pPEInfo->basic_info.mapResultNETObfuscators.count() ||
-            pPEInfo->basic_info.mapResultDongleProtection.count());
-}
-
 void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo,
                                                XBinary::PDSTRUCT *pPdStruct)
 {
@@ -4392,7 +4120,7 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, XScanEngine::
 
 #endif
 
-        if (!PE_isProtectionPresent(pPEInfo, pPdStruct)) {
+        if (!NFD_Binary::isProtectionPresent(&(pPEInfo->basic_info), pPdStruct)) {
             if (pPEInfo->listSectionRecords.count()) {
                 if (pPEInfo->listSectionRecords.at(0).nSize == 0) {
                     if (pPEInfo->basic_info.mapImportDetects.contains(RECORD_NAME_UPX) && (pPEInfo->basic_info.mapImportDetects.value(RECORD_NAME_UPX).nVariant == 0)) {
@@ -4408,7 +4136,7 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, XScanEngine::
             }
         }
 
-        if (!PE_isProtectionPresent(pPEInfo, pPdStruct)) {
+        if (!NFD_Binary::isProtectionPresent(&(pPEInfo->basic_info), pPdStruct)) {
             QMapIterator<RECORD_NAME, _SCANS_STRUCT> i(pPEInfo->basic_info.mapEntryPointDetects);
 
             while (i.hasNext() && (XBinary::isPdStructNotCanceled(pPdStruct))) {
@@ -4486,7 +4214,7 @@ void SpecAbstract::PE_handle_UnknownProtection(QIODevice *pDevice, XScanEngine::
             }
         }
 
-        if (!PE_isProtectionPresent(pPEInfo, pPdStruct)) {
+        if (!NFD_Binary::isProtectionPresent(&(pPEInfo->basic_info), pPdStruct)) {
             bool bLastSectionEntryPoint = false;
             bool bEmptyFirstSection = false;
             bool bHighEntropyFirstSection = false;

@@ -358,6 +358,9 @@ public:
     static SCANS_STRUCT getScansStruct(quint32 nVariant, XBinary::FT fileType, XScanEngine::RECORD_TYPE type, XScanEngine::RECORD_NAME name, const QString &sVersion, const QString &sInfo,
                                         qint64 nOffset);
 
+    // Check if any protection-related detections are present (moved from SpecAbstract)
+    static bool isProtectionPresent(BASIC_INFO *pBasicInfo, XBinary::PDSTRUCT *pPdStruct);
+
 signals:
 };
 

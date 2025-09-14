@@ -2352,3 +2352,13 @@ qint32 NFD_Binary::getPEOverlayRecordsSize()
 {
     return sizeof(g_PE_overlay_records);
 }
+
+// Check if any protection-related detections are present (moved from SpecAbstract)
+bool NFD_Binary::isProtectionPresent(BASIC_INFO *pBasicInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    Q_UNUSED(pPdStruct)
+
+    return (pBasicInfo->mapResultPackers.count() || pBasicInfo->mapResultProtectors.count() || pBasicInfo->mapResultSFX.count() ||
+            pBasicInfo->mapResultInstallers.count() || pBasicInfo->mapResultNETObfuscators.count() ||
+            pBasicInfo->mapResultDongleProtection.count());
+}
