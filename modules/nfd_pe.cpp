@@ -4178,3 +4178,98 @@ void NFD_PE::PE_handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
         }
     }
 }
+
+void NFD_PE::PE_handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XPE pe(pDevice, pOptions->bIsImage);
+
+    if (pe.isValid(pPdStruct)) {
+        if (!pPEInfo->cliInfo.bValid) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_RAR)) {
+                if (XPE::isResourcePresent(XPE_DEF::S_RT_DIALOG, "STARTDLG", &(pPEInfo->listResources)) &&
+                    XPE::isResourcePresent(XPE_DEF::S_RT_DIALOG, "LICENSEDLG", &(pPEInfo->listResources))) {
+                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_SFX, XScanEngine::RECORD_NAME_WINRAR, "", "", 0);
+                    // TODO Version
+                    pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+                }
+            }
+
+            if ((pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_WINRAR)) || (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_ZIP))) {
+                if (pPEInfo->sResourceManifest.contains("WinRAR")) {
+                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_SFX, XScanEngine::RECORD_NAME_WINRAR, "", "", 0);
+                    // TODO Version
+                    pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+                }
+            }
+
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_ZIP)) {
+                if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
+                    qint64 _nOffset = pPEInfo->osDataSection.nOffset;
+                    qint64 _nSize = pPEInfo->osDataSection.nSize;
+
+                    qint64 nOffset_Version = pe.find_ansiString(_nOffset, _nSize, "ZIP self-extractor", pPdStruct);
+                    if (nOffset_Version != -1) {
+                        _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_SFX, XScanEngine::RECORD_NAME_ZIP, "", "", 0);
+                        // TODO Version
+                        pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+                    }
+                }
+            }
+
+            // 7z SFX
+            if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("7-Zip")) {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_SFX, XScanEngine::RECORD_NAME_7Z, "", "", 0);
+                ss.sVersion = XPE::getResourcesVersionValue("ProductVersion", &(pPEInfo->resVersion));
+                pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+            }
+
+            if ((!pPEInfo->basic_info.mapResultSFX.contains(XScanEngine::RECORD_NAME_7Z)) && (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_7Z))) {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_SFX, XScanEngine::RECORD_NAME_7Z, "", "", 0);
+                ss.sInfo = "Modified";
+                pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+            }
+
+            // SQUEEZ SFX
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_SQUEEZSFX)) {
+                if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("Squeez")) {
+                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::RECORD_NAME_SQUEEZSFX, "", "", 0);
+                    ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
+                    pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+                }
+            }
+
+            // WinACE
+            if (XPE::getResourcesVersionValue("InternalName", &(pPEInfo->resVersion)).contains("WinACE") ||
+                XPE::getResourcesVersionValue("InternalName", &(pPEInfo->resVersion)).contains("WinAce") ||
+                XPE::getResourcesVersionValue("InternalName", &(pPEInfo->resVersion)).contains("UNACE")) {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_SFX, XScanEngine::RECORD_NAME_WINACE, "", "", 0);
+                ss.sVersion = XPE::getResourcesVersionValue("ProductVersion", &(pPEInfo->resVersion));
+                pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+            }
+
+            // WinZip
+            if ((pPEInfo->sResourceManifest.contains("WinZipComputing.WinZip")) || (XPE::isSectionNamePresent("_winzip_", &(pPEInfo->listSectionRecords))))  // TODO
+            {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_SFX, XScanEngine::RECORD_NAME_WINZIP, "", "", 0);
+
+                QString _sManifest = pPEInfo->sResourceManifest.section("assemblyIdentity", 1, 1);
+                ss.sVersion = XBinary::regExp("version=\"(.*?)\"", _sManifest, 1);
+                pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+            }
+
+            // Cab
+            if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("Self-Extracting Cabinet")) {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_SFX, XScanEngine::RECORD_NAME_CAB, "", "", 0);
+                ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion));
+                pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+            }
+
+            // GkSetup SFX
+            if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("GkSetup Self extractor")) {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_SFX, XScanEngine::RECORD_NAME_GKSETUPSFX, "", "", 0);
+                ss.sVersion = XPE::getResourcesVersionValue("ProductVersion", &(pPEInfo->resVersion));
+                pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+            }
+        }
+    }
+}
