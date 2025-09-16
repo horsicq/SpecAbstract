@@ -58,55 +58,11 @@ class SpecAbstract : public XScanEngine {
     Q_OBJECT
 
 public:
-    // TODO flags(static scan/emul/heur) ? Check
-    using SCAN_STRUCT = NFD_Binary::SCAN_STRUCT;
-    // DETECTTYPE is declared as a global unscoped enum in nfd_binary.h
-    using DETECT_RECORD = NFD_Binary::DETECT_RECORD;
-    using _SCANS_STRUCT = NFD_Binary::SCANS_STRUCT;
-    using BASIC_INFO = NFD_Binary::BASIC_INFO;
-    using BINARYINFO_STRUCT = NFD_Binary::BINARYINFO_STRUCT;
-    using AMIGAHUNKINFO_STRUCT = NFD_Amiga::AMIGAHUNKINFO_STRUCT;
-    using CFBFINFO_STRUCT = NFD_CFBF::CFBFINFO_STRUCT;
-    using VI_STRUCT = NFD_Binary::VI_STRUCT;
-    using DEXINFO_STRUCT = NFD_DEX::DEXINFO_STRUCT;
-    using ZIPINFO_STRUCT = NFD_ZIP::ZIPINFO_STRUCT;
-    using JARINFO_STRUCT = NFD_JAR::JARINFO_STRUCT;
-    using RARINFO_STRUCT = NFD_RAR::RARINFO_STRUCT;
-    using APKINFO_STRUCT = NFD_APK::APKINFO_STRUCT;
-    using JPEGINFO_STRUCT = NFD_JPEG::JPEGINFO_STRUCT;
-    using JAVACLASSINFO_STRUCT = NFD_JavaClass::JAVACLASSINFO_STRUCT;
-    using PDFINFO_STRUCT = NFD_PDF::PDFINFO_STRUCT;
-    using MACHOFATINFO_STRUCT = NFD_MACHOFAT::MACHOFATINFO_STRUCT;
-    using COMINFO_STRUCT = NFD_COM::COMINFO_STRUCT;
-    using MSDOSINFO_STRUCT = NFD_MSDOS::MSDOSINFO_STRUCT;
-    using ELFINFO_STRUCT = NFD_ELF::ELFINFO_STRUCT;
-    using LEINFO_STRUCT = NFD_LE::LEINFO_STRUCT;
-    using LXINFO_STRUCT = NFD_LX::LXINFO_STRUCT;
-    using NEINFO_STRUCT = NFD_NE::NEINFO_STRUCT;
-    using MACHOINFO_STRUCT = NFD_MACH::MACHOINFO_STRUCT;
-    using PEINFO_STRUCT = NFD_PE::PEINFO_STRUCT;
-    using _BASICINFO = NFD_Binary::_BASICINFO;
-    using SIGNATURE_RECORD = NFD_Binary::SIGNATURE_RECORD;
-    using STRING_RECORD = NFD_Binary::STRING_RECORD;
-    using PE_RESOURCES_RECORD = NFD_Binary::PE_RESOURCES_RECORD;
-    using CONST_RECORD = NFD_Binary::CONST_RECORD;
-    using MSRICH_RECORD = NFD_Binary::MSRICH_RECORD;
-
     explicit SpecAbstract(QObject *pParent = nullptr);
-
-    // JAR delegated to NFD_JAR::getInfo
-    // APK delegated to NFD_APK::getInfo
-
-    static void APK_handle(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, APKINFO_STRUCT *pApkInfo, XBinary::PDSTRUCT *pPdStruct);
-
-    static void APK_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, APKINFO_STRUCT *pApkInfo, XBinary::PDSTRUCT *pPdStruct);
-
-    static DEXINFO_STRUCT APK_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, APKINFO_STRUCT *pApkInfo, XBinary::PDSTRUCT *pPdStruct,
-                                       const QString &sFileName);
 
 private:
     // MSDOS_compareRichRecord moved into NFD_MSDOS
-    static void filterResult(QList<SCAN_STRUCT> *pListRecords, const QSet<RECORD_TYPE> &stRecordTypes, XBinary::PDSTRUCT *pPdStruct);
+    static void filterResult(QList<NFD_Binary::SCAN_STRUCT> *pListRecords, const QSet<RECORD_TYPE> &stRecordTypes, XBinary::PDSTRUCT *pPdStruct);
 
 protected:
     virtual void _processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCAN_RESULT *pScanResult, QIODevice *pDevice, const XScanEngine::SCANID &parentId,

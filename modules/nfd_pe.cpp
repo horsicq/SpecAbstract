@@ -19,7 +19,6 @@
  * SOFTWARE.
  */
 #include "nfd_pe.h"
-#include "../specabstract.h"
 // We reference legacy tables in signatures.cpp via extern and expose them through getters here.
 // After verification, these tables can be physically moved into this TU.
 
@@ -3045,7 +3044,7 @@ void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
     }
 }
 
-void NFD_PE::handle_VProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_VProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -3078,7 +3077,7 @@ void NFD_PE::handle_VProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpt
     }
 }
 
-void NFD_PE::handle_TTProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_TTProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -3101,7 +3100,7 @@ void NFD_PE::handle_TTProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
     }
 }
 
-void NFD_PE::handle_SafeengineShielden(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo,
+void NFD_PE::handle_SafeengineShielden(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo,
                                                 XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
@@ -5577,14 +5576,14 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
         _SCANS_STRUCT _ssCompilerVB = {};
 
         for (qint32 i = nRichDescriptionsCount - 1; (i >= 0) && (XBinary::isPdStructNotCanceled(pPdStruct)); i--) {
-            if (listRichDescriptions.at(i).type == SpecAbstract::XScanEngine::RECORD_TYPE_LINKER) {
+            if (listRichDescriptions.at(i).type == XScanEngine::RECORD_TYPE_LINKER) {
                 if (listRichDescriptions.at(i).sVersion > _ssLinker.sVersion) {
                     _ssLinker.name = listRichDescriptions.at(i).name;
                     _ssLinker.sVersion = listRichDescriptions.at(i).sVersion;
                     _ssLinker.sInfo = listRichDescriptions.at(i).sInfo;
                     _ssLinker.type = listRichDescriptions.at(i).type;
                 }
-            } else if (listRichDescriptions.at(i).type == SpecAbstract::XScanEngine::RECORD_TYPE_COMPILER) {
+            } else if (listRichDescriptions.at(i).type == XScanEngine::RECORD_TYPE_COMPILER) {
                 if (listRichDescriptions.at(i).name == XScanEngine::RECORD_NAME_UNIVERSALTUPLECOMPILER) {
                     if (listRichDescriptions.at(i).sInfo != "Basic") {
                         if (listRichDescriptions.at(i).sVersion > _ssCompilerCPP.sVersion) {
@@ -5626,7 +5625,7 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                 }
             }
 
-            //            if (listRichDescriptions.at(i).name == SpecAbstract::XScanEngine::RECORD_NAME_IMPORT) {
+            //            if (listRichDescriptions.at(i).name == XScanEngine::RECORD_NAME_IMPORT) {
             //                break;
             //            }
         }
@@ -5708,8 +5707,8 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                 }
             }
         } else {
-            ssNET.type = SpecAbstract::XScanEngine::RECORD_TYPE_LIBRARY;
-            ssNET.name = SpecAbstract::XScanEngine::RECORD_NAME_DOTNET;
+            ssNET.type = XScanEngine::RECORD_TYPE_LIBRARY;
+            ssNET.name = XScanEngine::RECORD_NAME_DOTNET;
             ssNET.sVersion = pPEInfo->cliInfo.metaData.header.sVersion;
 
             if (pPEInfo->cliInfo.bHidden) {
@@ -5728,8 +5727,8 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
         }
 
         if ((ssMFC.name == XScanEngine::RECORD_NAME_MFC) && (ssCompilerCPP.type == XScanEngine::RECORD_TYPE_UNKNOWN)) {
-            ssCompilerCPP.type = SpecAbstract::XScanEngine::RECORD_TYPE_COMPILER;
-            ssCompilerCPP.name = SpecAbstract::XScanEngine::RECORD_NAME_VISUALCCPP;
+            ssCompilerCPP.type = XScanEngine::RECORD_TYPE_COMPILER;
+            ssCompilerCPP.name = XScanEngine::RECORD_NAME_VISUALCCPP;
 
             QString _sVersion = mapVersions.value(ssMFC.sVersion.section(".", 0, 0)) + "." + ssMFC.sVersion.section(".", 1, 1);
 
@@ -5759,13 +5758,13 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
         }
 
         if ((ssMFC.name == XScanEngine::RECORD_NAME_MFC) && (ssLinker.name != XScanEngine::RECORD_NAME_MICROSOFTLINKER)) {
-            ssLinker.type = SpecAbstract::XScanEngine::RECORD_TYPE_LINKER;
-            ssLinker.name = SpecAbstract::XScanEngine::RECORD_NAME_MICROSOFTLINKER;
+            ssLinker.type = XScanEngine::RECORD_TYPE_LINKER;
+            ssLinker.name = XScanEngine::RECORD_NAME_MICROSOFTLINKER;
         }
 
         if ((ssCompilerCPP.name == XScanEngine::RECORD_NAME_VISUALCCPP) && (ssLinker.name != XScanEngine::RECORD_NAME_MICROSOFTLINKER)) {
-            ssLinker.type = SpecAbstract::XScanEngine::RECORD_TYPE_LINKER;
-            ssLinker.name = SpecAbstract::XScanEngine::RECORD_NAME_MICROSOFTLINKER;
+            ssLinker.type = XScanEngine::RECORD_TYPE_LINKER;
+            ssLinker.name = XScanEngine::RECORD_NAME_MICROSOFTLINKER;
         }
 
         if ((ssLinker.name == XScanEngine::RECORD_NAME_MICROSOFTLINKER) && (ssLinker.sVersion == "")) {
@@ -5801,8 +5800,8 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                 bNewMSVC = true;
             }
 
-            ssTool.type = SpecAbstract::XScanEngine::RECORD_TYPE_TOOL;
-            ssTool.name = SpecAbstract::XScanEngine::RECORD_NAME_MICROSOFTVISUALSTUDIO;
+            ssTool.type = XScanEngine::RECORD_TYPE_TOOL;
+            ssTool.name = XScanEngine::RECORD_NAME_MICROSOFTVISUALSTUDIO;
 
             // https://docs.microsoft.com/en-us/cpp/error-messages/compiler-warnings/compiler-warnings-by-compiler-version?view=vs-2019
             // https://github.com/dishather/richprint/blob/master/comp_id.txt
@@ -6029,13 +6028,13 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
             if (ssTool.sVersion == "") {
                 // TODO
             }
-        } else if (ssCompilerMASM.name == SpecAbstract::XScanEngine::RECORD_NAME_MASM) {
+        } else if (ssCompilerMASM.name == XScanEngine::RECORD_NAME_MASM) {
             QString sCompilerVersion = ssCompilerMASM.sVersion;
             QString sLinkerVersion = ssLinker.sVersion;
 
             if ((sLinkerVersion == "5.12.8078") && (sCompilerVersion == "6.14.8444")) {
-                ssTool.type = SpecAbstract::XScanEngine::RECORD_TYPE_TOOL;
-                ssTool.name = SpecAbstract::XScanEngine::RECORD_NAME_MASM32;
+                ssTool.type = XScanEngine::RECORD_TYPE_TOOL;
+                ssTool.name = XScanEngine::RECORD_NAME_MASM32;
                 ssTool.sVersion = "8-11";
             }
         }
@@ -6091,8 +6090,8 @@ void NFD_PE::handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpti
         _SCANS_STRUCT recordTool = {};
         _SCANS_STRUCT recordVCL = {};
 
-        if (pPEInfo->basic_info.mapHeaderDetects.contains(SpecAbstract::XScanEngine::RECORD_NAME_TURBOLINKER)) {
-            _SCANS_STRUCT recordTurboLinker = pPEInfo->basic_info.mapHeaderDetects.value(SpecAbstract::XScanEngine::RECORD_NAME_TURBOLINKER);
+        if (pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_TURBOLINKER)) {
+            _SCANS_STRUCT recordTurboLinker = pPEInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_TURBOLINKER);
 
             VI_STRUCT vi = NFD_Binary::get_TurboLinker_vi(pDevice, pOptions);
 
@@ -6488,7 +6487,7 @@ void NFD_PE::handle_Watcom(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptio
             ssCompiler = pPEInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_WATCOMCCPP);
         }
 
-        SpecAbstract::VI_STRUCT vi = NFD_Binary::get_Watcom_vi(pDevice, pOptions, pPEInfo->nEntryPointOffset, 0x100, pPdStruct);
+        NFD_PE::VI_STRUCT vi = NFD_Binary::get_Watcom_vi(pDevice, pOptions, pPEInfo->nEntryPointOffset, 0x100, pPdStruct);
 
         if (vi.bIsValid) {
             ssCompiler.fileType = XBinary::FT_PE;
