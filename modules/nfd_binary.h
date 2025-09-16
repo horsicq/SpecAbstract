@@ -361,6 +361,9 @@ public:
     // Check if any protection-related detections are present (moved from SpecAbstract)
     static bool isProtectionPresent(BASIC_INFO *pBasicInfo, XBinary::PDSTRUCT *pPdStruct);
 
+    // Handle text-based file analysis (moved from SpecAbstract)
+    static void Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct);
+
 signals:
 };
 

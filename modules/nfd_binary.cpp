@@ -23,6 +23,7 @@
 #include "xbinary.h"
 #include "xpe.h"
 #include "xarchive.h"
+#include "nfd_text.h"
 
 NFD_Binary::NFD_Binary(XBinary *pBinary, XBinary::FILEPART filePart, OPTIONS *pOptions, XBinary::PDSTRUCT *pPdStruct)
     : Binary_Script(pBinary, filePart, pOptions, pPdStruct)
@@ -2361,4 +2362,121 @@ bool NFD_Binary::isProtectionPresent(BASIC_INFO *pBasicInfo, XBinary::PDSTRUCT *
     return (pBasicInfo->mapResultPackers.count() || pBasicInfo->mapResultProtectors.count() || pBasicInfo->mapResultSFX.count() ||
             pBasicInfo->mapResultInstallers.count() || pBasicInfo->mapResultNETObfuscators.count() ||
             pBasicInfo->mapResultDongleProtection.count());
+}
+
+void NFD_Binary::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo,
+                                     XBinary::PDSTRUCT *pPdStruct)
+{
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if ((pBinaryInfo->bIsPlainText) || (pBinaryInfo->unicodeType != XBinary::UNICODE_TYPE_NONE) || (pBinaryInfo->bIsUTF8)) {
+        qint32 nSignaturesCount = NFD_TEXT::getTextExpRecordsSize() / sizeof(NFD_Binary::STRING_RECORD);
+
+        for (qint32 i = 0; (i < nSignaturesCount) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++)  // TODO move to an own function !!!
+        {
+            if (XBinary::isRegExpPresent(NFD_TEXT::getTextExpRecords()[i].pszString, pBinaryInfo->sHeaderText)) {
+                _SCANS_STRUCT record = {};
+                record.nVariant = NFD_TEXT::getTextExpRecords()[i].basicInfo.nVariant;
+                record.fileType = NFD_TEXT::getTextExpRecords()[i].basicInfo.fileType;
+                record.type = NFD_TEXT::getTextExpRecords()[i].basicInfo.type;
+                record.name = NFD_TEXT::getTextExpRecords()[i].basicInfo.name;
+                record.sVersion = NFD_TEXT::getTextExpRecords()[i].basicInfo.pszVersion;
+                record.sInfo = NFD_TEXT::getTextExpRecords()[i].basicInfo.pszInfo;
+                record.nOffset = 0;
+
+                pBinaryInfo->basic_info.mapTextHeaderDetects.insert(record.name, record);
+            }
+        }
+
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_CCPP)) {
+            _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_CCPP);
+            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_PYTHON)) {
+            if ((pBinaryInfo->sHeaderText.contains("class")) && (pBinaryInfo->sHeaderText.contains("self"))) {
+                _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_PYTHON);
+                pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+            }
+        }
+
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_HTML)) {
+            _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_HTML);
+            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_XML)) {
+            _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_XML);
+            ss.sVersion = XBinary::regExp("version=['\"](.*?)['\"]", pBinaryInfo->sHeaderText, 1);
+
+            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_PHP)) {
+            _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_PHP);
+            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+
+        //        if(pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_PERL))
+        //        {
+        //            _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_PERL);
+        //            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        //        }
+
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_SHELL)) {
+            QString sInterpreter;
+
+            if (sInterpreter == "") sInterpreter = XBinary::regExp("#!\\/usr\\/local\\/bin\\/(\\w+)", pBinaryInfo->sHeaderText, 1);  // #!/usr/local/bin/ruby
+            if (sInterpreter == "") sInterpreter = XBinary::regExp("#!\\/usr\\/bin\\/env (\\w+)", pBinaryInfo->sHeaderText, 1);      // #!/usr/bin/env perl
+            if (sInterpreter == "") sInterpreter = XBinary::regExp("#!\\/usr\\/bin\\/(\\w+)", pBinaryInfo->sHeaderText, 1);          // #!/usr/bin/perl
+            if (sInterpreter == "") sInterpreter = XBinary::regExp("#!\\/bin\\/(\\w+)", pBinaryInfo->sHeaderText, 1);                // #!/bin/sh
+            if (sInterpreter == "") sInterpreter = XBinary::regExp("#!(\\w+)", pBinaryInfo->sHeaderText, 1);                         // #!perl
+
+            if (sInterpreter == "perl") {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_PERL, "", "", 0);
+                pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+            } else if (sInterpreter == "sh") {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_SHELL, "", "", 0);
+                pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+            } else if (sInterpreter == "ruby") {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_RUBY, "", "", 0);
+                pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+            } else if (sInterpreter == "python") {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_PYTHON, "", "", 0);
+                pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+            } else {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_SHELL, sInterpreter, "", 0);
+                pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+            }
+        }
+
+        //        if(pBinaryInfo->basic_info.mapResultTexts.count()==0)
+        //        {
+        //            _SCANS_STRUCT ss=NFD_Binary::getScansStruct(0,XBinary::FT_TEXT,RECORD_TYPE_FORMAT,RECORD_NAME_PLAIN,"","",0);
+
+        //            if(pBinaryInfo->unicodeType!=XBinary::UNICODE_TYPE_NONE)
+        //            {
+        //                ss.name=RECORD_NAME_UNICODE;
+
+        //                if(pBinaryInfo->unicodeType==XBinary::UNICODE_TYPE_BE)
+        //                {
+        //                    ss.sVersion="Big Endian";
+        //                }
+        //                else if(pBinaryInfo->unicodeType==XBinary::UNICODE_TYPE_LE)
+        //                {
+        //                    ss.sVersion="Little Endian";
+        //                }
+        //            }
+        //            else if(pBinaryInfo->bIsUTF8)
+        //            {
+        //                ss.name=RECORD_NAME_UTF8;
+        //            }
+        //            else if(pBinaryInfo->bIsPlainText)
+        //            {
+        //                ss.name=RECORD_NAME_PLAIN;
+        //            }
+
+        //            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        //        }
+    }
 }
