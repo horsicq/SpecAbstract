@@ -1289,7 +1289,7 @@ qint32 NFD_PE::getDotUnicodeStringsRecordsSize()
     return _PE_dot_unicodestrings_records_size;
 }
 
-void NFD_PE::PE_handle_import(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_import(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
@@ -1440,7 +1440,7 @@ void NFD_PE::PE_handle_import(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
     // Import
 }
 
-void NFD_PE::PE_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -1451,7 +1451,7 @@ void NFD_PE::PE_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPT
     }
 }
 
-void NFD_PE::PE_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -1651,7 +1651,7 @@ void NFD_PE::PE_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
 
                     pPEInfo->basic_info.mapResultPackers.insert(recordPC.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &recordPC));
                 } else {
-                    VI_STRUCT viPECompact = NFD_PE::PE_get_PECompact_vi(pDevice, pOptions, pPEInfo);
+                    VI_STRUCT viPECompact = NFD_PE::get_PECompact_vi(pDevice, pOptions, pPEInfo);
 
                     if (viPECompact.bIsValid) {
                         recordPC.sVersion = viPECompact.sVersion;
@@ -3045,7 +3045,7 @@ void NFD_PE::PE_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
     }
 }
 
-void NFD_PE::PE_handle_VProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_VProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -3078,7 +3078,7 @@ void NFD_PE::PE_handle_VProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *p
     }
 }
 
-void NFD_PE::PE_handle_TTProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_TTProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -3101,7 +3101,7 @@ void NFD_PE::PE_handle_TTProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
     }
 }
 
-void NFD_PE::PE_handle_SafeengineShielden(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo,
+void NFD_PE::handle_SafeengineShielden(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, SpecAbstract::PEINFO_STRUCT *pPEInfo,
                                                 XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
@@ -3131,7 +3131,7 @@ void NFD_PE::PE_handle_SafeengineShielden(QIODevice *pDevice, XScanEngine::SCAN_
     }
 }
 
-void NFD_PE::PE_handle_tElock(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_tElock(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -3169,7 +3169,7 @@ void NFD_PE::PE_handle_tElock(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
     }
 }
 
-void NFD_PE::PE_handle_Armadillo(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_Armadillo(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -3214,7 +3214,7 @@ void NFD_PE::PE_handle_Armadillo(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
     }
 }
 
-void NFD_PE::PE_handle_VMProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_VMProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -3229,7 +3229,7 @@ void NFD_PE::PE_handle_VMProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
     }
 }
 
-void NFD_PE::PE_handle_Themida(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_Themida(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -3321,7 +3321,7 @@ void NFD_PE::PE_handle_Themida(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
     }
 }
 
-void NFD_PE::PE_handle_Obsidium(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_Obsidium(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -3378,7 +3378,7 @@ void NFD_PE::PE_handle_Obsidium(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *p
     }
 }
 
-void NFD_PE::PE_handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     _SCANS_STRUCT ssLinker = {};
     _SCANS_STRUCT ssCompiler = {};
@@ -3620,7 +3620,7 @@ void NFD_PE::PE_handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptio
     }
 }
 
-void NFD_PE::PE_handle_Signtools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_Signtools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -3641,7 +3641,7 @@ void NFD_PE::PE_handle_Signtools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
     }
 }
 
-void NFD_PE::PE_handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -4179,7 +4179,7 @@ void NFD_PE::PE_handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
     }
 }
 
-void NFD_PE::PE_handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -4274,7 +4274,7 @@ void NFD_PE::PE_handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptio
     }
 }
 
-void NFD_PE::PE_handle_PolyMorph(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_PolyMorph(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
@@ -4283,7 +4283,7 @@ void NFD_PE::PE_handle_PolyMorph(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
     // ExeSax
 }
 
-void NFD_PE::PE_handle_DongleProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_DongleProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
@@ -4297,7 +4297,7 @@ void NFD_PE::PE_handle_DongleProtection(QIODevice *pDevice, XScanEngine::SCAN_OP
     }
 }
 
-void NFD_PE::PE_handle_NeoLite(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_NeoLite(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -4320,7 +4320,7 @@ void NFD_PE::PE_handle_NeoLite(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
     }
 }
 
-void NFD_PE::PE_handle_PrivateEXEProtector(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo,
+void NFD_PE::handle_PrivateEXEProtector(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo,
                                            XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
@@ -4387,7 +4387,7 @@ void NFD_PE::PE_handle_PrivateEXEProtector(QIODevice *pDevice, XScanEngine::SCAN
     }
 }
 
-void NFD_PE::PE_handle_VisualBasicCryptors(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo,
+void NFD_PE::handle_VisualBasicCryptors(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo,
                                            XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
@@ -4706,7 +4706,7 @@ void NFD_PE::PE_handle_VisualBasicCryptors(QIODevice *pDevice, XScanEngine::SCAN
     }
 }
 
-void NFD_PE::PE_handle_DelphiCryptors(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_DelphiCryptors(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -4987,7 +4987,7 @@ void NFD_PE::PE_handle_DelphiCryptors(QIODevice *pDevice, XScanEngine::SCAN_OPTI
     }
 }
 
-void NFD_PE::PE_handle_StarForce(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_StarForce(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -5023,7 +5023,7 @@ void NFD_PE::PE_handle_StarForce(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
     }
 }
 
-void NFD_PE::PE_handle_Petite(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_Petite(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -5121,7 +5121,7 @@ void NFD_PE::PE_handle_Petite(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
             }
         }
     }
-}void NFD_PE::PE_handle_NETProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+}void NFD_PE::handle_NETProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -5440,7 +5440,7 @@ void NFD_PE::PE_handle_Petite(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
     }
 }
 
-void NFD_PE::PE_handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     _SCANS_STRUCT ssLinker = {};
     _SCANS_STRUCT ssCompilerCPP = {};
@@ -6078,7 +6078,7 @@ void NFD_PE::PE_handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
     }
 }
 
-void NFD_PE::PE_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     // TODO Turbo Linker
     // https://delphi.fandom.com/wiki/Determine_Delphi_Application
@@ -6138,7 +6138,7 @@ void NFD_PE::PE_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                             nOffset_String = pe.find_array(_nOffset, _nSize, "\x06\x53\x74\x72\x69\x6e\x67", 7, pPdStruct);  // String
                         }
 
-                        listVCL = NFD_PE::PE_getVCLstruct(pDevice, pOptions, _nOffset, _nSize, pPEInfo->bIs64, pPdStruct);
+                        listVCL = NFD_PE::getVCLstruct(pDevice, pOptions, _nOffset, _nSize, pPEInfo->bIs64, pPdStruct);
                     }
                 }
                 //            nOffset_AnsiString=pe.find_array(_nOffset,_nSize,"\x0a\x41\x6e\x73\x69\x53\x74\x72\x69\x6e\x67",11); // AnsiString
@@ -6224,7 +6224,7 @@ void NFD_PE::PE_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                 }
 
                 if (bPackageinfo) {
-                    VCL_PACKAGEINFO pi = NFD_PE::PE_getVCLPackageInfo(pDevice, pOptions, &pPEInfo->listResources, pPdStruct);
+                    VCL_PACKAGEINFO pi = NFD_PE::getVCLPackageInfo(pDevice, pOptions, &pPEInfo->listResources, pPdStruct);
 
                     if (pi.listModules.count()) {
                         quint32 nProducer = (pi.nFlags >> 26) & 0x3;
@@ -6468,7 +6468,7 @@ void NFD_PE::PE_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
     }
 }
 
-void NFD_PE::PE_handle_Watcom(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_Watcom(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -6516,7 +6516,7 @@ void NFD_PE::PE_handle_Watcom(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
     }
 }
 
-void NFD_PE::PE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -6968,7 +6968,7 @@ void NFD_PE::PE_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpt
     }
 }
 
-void NFD_PE::PE_handle_wxWidgets(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_wxWidgets(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -7118,7 +7118,7 @@ void NFD_PE::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint3
     }
 }
 
-QList<NFD_PE::VCL_STRUCT> NFD_PE::PE_getVCLstruct(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, bool bIs64,
+QList<NFD_PE::VCL_STRUCT> NFD_PE::getVCLstruct(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, bool bIs64,
                                                   XBinary::PDSTRUCT *pPdStruct)
 {
     QList<VCL_STRUCT> listResult;
@@ -7167,7 +7167,7 @@ QList<NFD_PE::VCL_STRUCT> NFD_PE::PE_getVCLstruct(QIODevice *pDevice, XScanEngin
     return listResult;
 }
 
-NFD_PE::VCL_PACKAGEINFO NFD_PE::PE_getVCLPackageInfo(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, QList<XPE::RESOURCE_RECORD> *pListResources,
+NFD_PE::VCL_PACKAGEINFO NFD_PE::getVCLPackageInfo(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, QList<XPE::RESOURCE_RECORD> *pListResources,
                                                     XBinary::PDSTRUCT *pPdStruct)
 {
     VCL_PACKAGEINFO result = {};
@@ -7220,7 +7220,7 @@ NFD_PE::VCL_PACKAGEINFO NFD_PE::PE_getVCLPackageInfo(QIODevice *pDevice, XScanEn
     return result;
 }
 
-void NFD_PE::PE_handle_PETools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_PETools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -7245,7 +7245,7 @@ void NFD_PE::PE_handle_PETools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
     }
 }
 
-void NFD_PE::PE_handle_Joiners(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_Joiners(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -7288,7 +7288,7 @@ void NFD_PE::PE_handle_Joiners(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
     }
 }
 
-void NFD_PE::PE_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -7329,7 +7329,7 @@ void NFD_PE::PE_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
     }
 }
 
-void NFD_PE::PE_handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo,
+void NFD_PE::handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo,
                                          XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
@@ -7421,7 +7421,7 @@ void NFD_PE::PE_handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_O
         }
 
         if (!pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_PECOMPACT)) {
-            VI_STRUCT viPECompact = NFD_PE::PE_get_PECompact_vi(pDevice, pOptions, pPEInfo);
+            VI_STRUCT viPECompact = NFD_PE::get_PECompact_vi(pDevice, pOptions, pPEInfo);
 
             if (viPECompact.bIsValid) {
                 _SCANS_STRUCT recordSS = {};
@@ -7529,7 +7529,7 @@ void NFD_PE::PE_handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_O
     }
 }
 
-void NFD_PE::PE_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
@@ -7564,7 +7564,7 @@ void NFD_PE::PE_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
     }
 }
 
-NFD_PE::VI_STRUCT NFD_PE::PE_get_PECompact_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo)
+NFD_PE::VI_STRUCT NFD_PE::get_PECompact_vi(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
@@ -7627,7 +7627,7 @@ NFD_PE::VI_STRUCT NFD_PE::PE_get_PECompact_vi(QIODevice *pDevice, XScanEngine::S
     return result;
 }
 
-bool NFD_PE::PE_isValid_UPX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo)
+bool NFD_PE::isValid_UPX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
@@ -7644,7 +7644,7 @@ bool NFD_PE::PE_isValid_UPX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpti
     return bResult;
 }
 
-void NFD_PE::PE_x86Emul(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::x86Emul(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
@@ -7990,7 +7990,7 @@ NFD_PE::PEINFO_STRUCT NFD_PE::getPEInfo(QIODevice *pDevice, XScanEngine::SCANID 
         NFD_Binary::PE_resourcesScan(&(result.basic_info.mapResourcesDetects), &(result.listResources), NFD_PE::getResourcesRecords(), NFD_PE::getResourcesRecordsSize(),
                                      result.basic_info.id.fileType, XBinary::FT_PE, &(result.basic_info), DETECTTYPE_RESOURCES, pPdStruct);
 
-        NFD_PE::PE_x86Emul(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::x86Emul(pDevice, pOptions, &result, pPdStruct);
 
         // Rich
         //        qint32 nNumberOfRichSignatures=result.listRichSignatures.count();
@@ -8057,49 +8057,49 @@ NFD_PE::PEINFO_STRUCT NFD_PE::getPEInfo(QIODevice *pDevice, XScanEngine::SCANID 
             }
         }
 
-        NFD_PE::PE_handle_import(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_import(pDevice, pOptions, &result, pPdStruct);
 
-        NFD_PE::PE_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_Protection(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_SafeengineShielden(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_VProtect(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_TTProtect(pDevice, pOptions, &result, pPdStruct);  // TODO remove
-        NFD_PE::PE_handle_VMProtect(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_tElock(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_Armadillo(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_Obsidium(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_Themida(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_StarForce(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_Petite(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_NETProtection(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_PolyMorph(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_Microsoft(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_Borland(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_Watcom(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_Tools(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_wxWidgets(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_GCC(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_Signtools(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_SFX(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_Installers(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_DongleProtection(pDevice, pOptions, &result, pPdStruct);
-        //        PE_handle_AnslymPacker(pDevice,pOptions,&result);
-        NFD_PE::PE_handle_NeoLite(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_PrivateEXEProtector(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_Protection(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_SafeengineShielden(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_VProtect(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_TTProtect(pDevice, pOptions, &result, pPdStruct);  // TODO remove
+        NFD_PE::handle_VMProtect(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_tElock(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_Armadillo(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_Obsidium(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_Themida(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_StarForce(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_Petite(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_NETProtection(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_PolyMorph(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_Microsoft(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_Borland(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_Watcom(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_Tools(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_wxWidgets(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_GCC(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_Signtools(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_SFX(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_Installers(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_DongleProtection(pDevice, pOptions, &result, pPdStruct);
+        //        handle_AnslymPacker(pDevice,pOptions,&result);
+        NFD_PE::handle_NeoLite(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_PrivateEXEProtector(pDevice, pOptions, &result, pPdStruct);
 
-        NFD_PE::PE_handle_VisualBasicCryptors(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_DelphiCryptors(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_VisualBasicCryptors(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_DelphiCryptors(pDevice, pOptions, &result, pPdStruct);
 
-        NFD_PE::PE_handle_Joiners(pDevice, pOptions, &result, pPdStruct);
-        NFD_PE::PE_handle_PETools(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_Joiners(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_PETools(pDevice, pOptions, &result, pPdStruct);
 
-        NFD_PE::PE_handle_DebugData(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_DebugData(pDevice, pOptions, &result, pPdStruct);
 
         if (pOptions->bIsHeuristicScan) {
-            NFD_PE::PE_handle_UnknownProtection(pDevice, pOptions, &result, pPdStruct);
+            NFD_PE::handle_UnknownProtection(pDevice, pOptions, &result, pPdStruct);
         }
 
-        NFD_PE::PE_handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
+        NFD_PE::handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
 
         NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
     }
