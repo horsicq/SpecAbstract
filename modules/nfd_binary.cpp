@@ -30,7 +30,7 @@ NFD_Binary::NFD_Binary(XBinary *pBinary, XBinary::FILEPART filePart, OPTIONS *pO
 {
 }
 
-QString NFD_Binary::_SCANS_STRUCT_toString(const SCANS_STRUCT *pScanStruct, bool bShowType)
+QString NFD_Binary::SCANS_STRUCT_toString(const SCANS_STRUCT *pScanStruct, bool bShowType)
 {
     QString sResult;
 
@@ -126,7 +126,7 @@ void NFD_Binary::signatureScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMa
                         record.nOffset = 0;
                         pMapRecords->insert(record.name, record);
 #ifdef QT_DEBUG
-                        qDebug("SIGNATURE SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
+                        qDebug("SIGNATURE SCAN: %s", SCANS_STRUCT_toString(&record).toLatin1().data());
 #endif
                     }
 
@@ -192,7 +192,7 @@ void NFD_Binary::PE_resourcesScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *
                         record.nOffset = 0;
                         pMapRecords->insert(record.name, record);
 #ifdef QT_DEBUG
-                        qDebug("RESOURCES SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
+                        qDebug("RESOURCES SCAN: %s", SCANS_STRUCT_toString(&record).toLatin1().data());
 #endif
                     }
 
@@ -267,7 +267,7 @@ void NFD_Binary::stringScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRe
                                 record.nOffset = 0;
                                 pMapRecords->insert(record.name, record);
 #ifdef QT_DEBUG
-                                qDebug("STRING SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
+                                qDebug("STRING SCAN: %s", SCANS_STRUCT_toString(&record).toLatin1().data());
 #endif
                             }
                             if (pBasicInfo->scanOptions.bShowInternalDetects) {
@@ -317,7 +317,7 @@ void NFD_Binary::constScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapRec
                         record.nOffset = 0;
                         pMapRecords->insert(record.name, record);
 #ifdef QT_DEBUG
-                        qDebug("CONST SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
+                        qDebug("CONST SCAN: %s", SCANS_STRUCT_toString(&record).toLatin1().data());
 #endif
                     }
 
@@ -379,7 +379,7 @@ void NFD_Binary::archiveScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pMapR
                             record.nOffset = 0;
                             pMapRecords->insert(record.name, record);
 #ifdef QT_DEBUG
-                            qDebug("ARCHIVE SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
+                            qDebug("ARCHIVE SCAN: %s", SCANS_STRUCT_toString(&record).toLatin1().data());
 #endif
                         }
                         if (pBasicInfo->scanOptions.bShowInternalDetects) {
@@ -426,7 +426,7 @@ void NFD_Binary::archiveExpScan(QMap<XScanEngine::RECORD_NAME, SCANS_STRUCT> *pM
                             record.nOffset = 0;
                             pMapRecords->insert(record.name, record);
 #ifdef QT_DEBUG
-                            qDebug("ARCHIVE SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
+                            qDebug("ARCHIVE SCAN: %s", SCANS_STRUCT_toString(&record).toLatin1().data());
 #endif
                         }
                         if (pBasicInfo->scanOptions.bShowInternalDetects) {
@@ -471,7 +471,7 @@ void NFD_Binary::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemo
                         record.nOffset = 0;
                         pMapRecords->insert(record.name, record);
 #ifdef QT_DEBUG
-                        qDebug("SIGNATURE EXP SCAN: %s", _SCANS_STRUCT_toString(&record).toLatin1().data());
+                        qDebug("SIGNATURE EXP SCAN: %s", SCANS_STRUCT_toString(&record).toLatin1().data());
 #endif
                     }
                     if (pBasicInfo->scanOptions.bShowInternalDetects) {
@@ -2419,7 +2419,7 @@ void NFD_Binary::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
 
         //        if(pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_PERL))
         //        {
-        //            _SCANS_STRUCT ss=pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_PERL);
+        //            SCANS_STRUCT ss=pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_PERL);
         //            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
         //        }
 
@@ -2452,7 +2452,7 @@ void NFD_Binary::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
 
         //        if(pBinaryInfo->basic_info.mapResultTexts.count()==0)
         //        {
-        //            _SCANS_STRUCT ss=NFD_Binary::getScansStruct(0,XBinary::FT_TEXT,RECORD_TYPE_FORMAT,RECORD_NAME_PLAIN,"","",0);
+        //            SCANS_STRUCT ss=NFD_Binary::getScansStruct(0,XBinary::FT_TEXT,RECORD_TYPE_FORMAT,RECORD_NAME_PLAIN,"","",0);
 
         //            if(pBinaryInfo->unicodeType!=XBinary::UNICODE_TYPE_NONE)
         //            {
@@ -2479,4 +2479,1021 @@ void NFD_Binary::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
         //            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
         //        }
     }
+}
+
+void NFD_Binary::Binary_handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo,
+                                        XBinary::PDSTRUCT *pPdStruct)
+{
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    // 7-Zip
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_7Z)) && (pBinaryInfo->basic_info.id.nSize >= 64)) {
+        //        // TODO more options
+        //        SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_7Z);
+
+        //        if(ss.type==RECORD_TYPE_ARCHIVE)
+        //        {
+        //            ss.sVersion=QString("%1.%2").arg(XBinary::hexToUint8(pBinaryInfo->basic_info.sHeaderSignature.mid(6*2,2))).arg(XBinary::hexToUint8(pBinaryInfo->basic_info.sHeaderSignature.mid(7*2,2)));
+        //            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
+        //        }
+
+        XSevenZip xsevenzip(pDevice);
+
+        if (xsevenzip.isValid(pPdStruct)) {
+            pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+
+            SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_7Z);
+
+            ss.sVersion = xsevenzip.getVersion();
+#ifdef QT_DEBUG
+            qint32 nNumberOfRecords = xsevenzip.getNumberOfRecords(pPdStruct);
+            Q_UNUSED(nNumberOfRecords)
+#endif
+            //            ss.sInfo=QString("%1 records").arg(xsevenzip.getNumberOfRecords());
+
+            // TODO options
+            // TODO files
+            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+    }
+    // ZIP
+    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ZIP)) && (pBinaryInfo->basic_info.id.nSize >= 64))  // TODO min size
+    {
+        XZip xzip(pDevice);
+
+        if (xzip.isValid(pPdStruct)) {
+            pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+            // TODO deep scan
+            SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_ZIP);
+
+            ss.sVersion = xzip.getVersion();
+            ss.sInfo = QString("%1 records").arg(xzip.getNumberOfRecords(pPdStruct));
+
+            if (xzip.isEncrypted()) {
+                ss.sInfo = XBinary::appendComma(ss.sInfo, "Encrypted");
+            }
+
+            // TODO files
+            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+    }
+    // GZIP
+    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_GZIP)) && (pBinaryInfo->basic_info.id.nSize >= 9)) {
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_GZIP);
+
+        // TODO options
+        // TODO type gzip
+        // TODO files
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+    // xar
+    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_XAR)) && (pBinaryInfo->basic_info.id.nSize >= 9)) {
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_XAR);
+
+        // TODO options
+        // TODO files
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+    // LZFSE
+    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_LZFSE)) && (pBinaryInfo->basic_info.id.nSize >= 9)) {
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_LZFSE);
+
+        // TODO options
+        // TODO files
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+    // CAB
+    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_CAB)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
+        XCab xcab(pDevice);
+
+        if (xcab.isValid(pPdStruct)) {
+            pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+            SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_CAB);
+
+            ss.sVersion = xcab.getVersion();
+            ss.sInfo = QString("%1 records").arg(xcab.getNumberOfRecords(pPdStruct));
+
+            // TODO options
+            // TODO files
+            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+    }
+    // MAch-O FAT
+    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_MACHOFAT)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
+        XMACHOFat xmachofat(pDevice);
+
+        if (xmachofat.isValid(pPdStruct)) {
+            pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+            SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_MACHOFAT);
+
+            ss.sVersion = xmachofat.getVersion();
+            ss.sInfo = QString("%1 records").arg(xmachofat.getNumberOfRecords(pPdStruct));
+
+            // TODO options
+            // TODO files
+            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+    }
+    // RAR
+    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_RAR)) && (pBinaryInfo->basic_info.id.nSize >= 64)) {
+        XRar xrar(pDevice);
+
+        if (xrar.isValid(pPdStruct)) {
+            pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+            SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_RAR);
+
+            ss.sVersion = xrar.getVersion();
+            ss.sInfo = QString("%1 records").arg(xrar.getNumberOfRecords(pPdStruct));
+            // TODO options
+
+            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+    }
+    // zlib
+    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ZLIB)) && (pBinaryInfo->basic_info.id.nSize >= 32)) {
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_ZLIB);
+
+        // TODO options
+        // TODO files
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+    // XZ
+    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_XZ)) && (pBinaryInfo->basic_info.id.nSize >= 32)) {
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_XZ);
+
+        // TODO options
+        // TODO files
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+    // ARJ
+    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ARJ)) && (pBinaryInfo->basic_info.id.nSize >= 4)) {
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_ARJ);
+
+        // TODO options
+        // TODO files
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+    // LHA
+    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_LHA)) && (pBinaryInfo->basic_info.id.nSize >= 4)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_LHA);
+
+        bool bDetected = false;
+
+        switch (binary.read_uint8(0x5)) {
+            case 0x30: bDetected = 1; break;
+            case 0x31: bDetected = 1; break;
+            case 0x32: bDetected = 1; break;
+            case 0x33: bDetected = 1; break;
+            case 0x34: bDetected = 1; break;
+            case 0x35: bDetected = 1; break;
+            case 0x36: bDetected = 1; break;
+            case 0x64: bDetected = 1; break;
+            case 0x73: bDetected = 1; break;
+        }
+
+        if (bDetected) {
+            pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+            // TODO options
+            // TODO files
+            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+    }
+    // BZIP2
+    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_BZIP2)) && (pBinaryInfo->basic_info.id.nSize >= 9)) {
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_BZIP2);
+
+        // TODO options
+        // TODO files
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+    // TAR
+    else if ((pBinaryInfo->basic_info.id.nSize >= 500) && (binary.getSignature(0x100, 6) == "007573746172"))  // "00'ustar'"
+    {
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+
+        SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_TAR, "", "", 0);
+
+        // TODO options
+        // TODO files
+        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+}
+
+void NFD_Binary::Binary_handle_Certificates(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+{
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    // Windows Authenticode Portable Executable Signature Format
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_WINAUTH)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        quint32 nLength = XBinary::hexToUint32(pBinaryInfo->basic_info.sHeaderSignature.mid(0, 8));
+
+        if (nLength >= pBinaryInfo->basic_info.id.nSize) {
+            SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_WINAUTH);
+            pBinaryInfo->basic_info.mapResultCertificates.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+    }
+}
+
+void NFD_Binary::Binary_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo,
+                                         XBinary::PDSTRUCT *pPdStruct)
+{
+    Q_UNUSED(pPdStruct)
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_MINGW)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // MinGW debug data
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_MINGW);
+        pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_PDBFILELINK)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // PDB File Link
+        // TODO more infos
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_PDBFILELINK);
+        pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_BORLANDDEBUGINFO)) && (pBinaryInfo->basic_info.id.nSize >= 16)) {
+        quint16 nSignature = binary.read_uint16(0);
+
+        if (nSignature == 0x52FB) {
+            SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_BORLANDDEBUGINFO, "", "", 0);
+
+            quint8 nMajor = binary.read_uint8(3);
+            quint8 nMinor = binary.read_uint8(2);
+            quint16 nNumberOfSymbols = binary.read_uint16(0xE);
+            double dVersion = nMajor + (double)nMinor / 100.0;
+
+            ss.type = XScanEngine::RECORD_TYPE_DEBUGDATA;
+            ss.name = XScanEngine::RECORD_NAME_BORLANDDEBUGINFO;
+            ss.sVersion = QString::number(dVersion, 'f', 2);
+            ss.sInfo = "TDS";
+
+            if (nNumberOfSymbols) {
+                ss.sInfo = XBinary::appendComma(ss.sInfo, QString("%1 symbols").arg(nNumberOfSymbols));
+            }
+
+            pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        } else {
+            SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_BORLANDDEBUGINFO);
+            pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+    }
+    if (binary.getSize() > 16) {
+        // unsigned_16     signature;      /* == 0x8386                    */
+        // unsigned_8      exe_major_ver;  /* == 2 or 3                    */
+        // unsigned_8      exe_minor_ver;  /* == 0                         */
+        // unsigned_8      obj_major_ver;  /* == 1                         */
+        // unsigned_8      obj_minor_ver;  /* == 1                         */
+        // unsigned_16     lang_size;
+        // unsigned_16     segment_size;
+        // unsigned_32     debug_size;
+        // TODO more
+        if (binary.read_uint16(binary.getSize() - 14) == 0x8386) {
+            qint64 nHeaderOffset = binary.getSize() - 14;
+            quint8 exe_major_ver = binary.read_uint16(nHeaderOffset + 2);
+            quint8 exe_minor_ver = binary.read_uint16(nHeaderOffset + 3);
+            // quint8 obj_major_ver = binary.read_uint16(nHeaderOffset + 4);
+            // quint8 obj_minor_ver = binary.read_uint16(nHeaderOffset + 5);
+            // quint16 nLangSize = binary.read_uint16(nHeaderOffset + 6);
+            // quint16 nSegmentSize = binary.read_uint16(nHeaderOffset + 8);
+            quint32 nDebugSize = binary.read_uint32(nHeaderOffset + 10);
+
+            qint64 nDebugOffset = binary.getSize() - nDebugSize;
+
+            if (nDebugOffset >= 0) {
+                // TODO Language
+                // https://github.com/open-watcom/open-watcom-v2/blob/e7d0bef544987dd0429f547a2119e0c9d9472770/bld/exedump/c/wdwarf.c#L132
+                SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_WATCOMDEBUGINFO, "", "", 0);
+                ss.sVersion = QString("%1.%2").arg(QString::number(exe_major_ver), QString::number(exe_minor_ver));
+                ss.sInfo = QString("0x%1 bytes").arg(XBinary::valueToHexEx(nDebugSize));
+
+                pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+            }
+        }
+    }
+
+    if (binary.getSize() > 16) {
+        if (binary.read_uint16(binary.getSize() - 8) == 0x424E) {
+            QString sSignature = binary.read_ansiString(binary.getSize() - 8, 4);
+
+            if ((sSignature == "NB05") || (sSignature == "NB07") || (sSignature == "NB08") || (sSignature == "NB09") || (sSignature == "NB10") ||
+                (sSignature == "NB11")) {
+                qint64 nHeaderOffset = binary.getSize() - 8;
+                quint32 nDebugSize = binary.read_uint32(nHeaderOffset + 4);
+
+                qint64 nDebugOffset = binary.getSize() - nDebugSize;
+
+                if (nDebugOffset >= 0) {
+                    SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_CODEVIEWDEBUGINFO, "", "", 0);
+                    ss.sVersion = "4.0";
+                    ss.sInfo = QString("0x%1 bytes").arg(XBinary::valueToHexEx(nDebugSize));
+
+                    pBinaryInfo->basic_info.mapResultDebugData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+                }
+            }
+        }
+    }
+
+    if (binary.getSize() > 16) {
+        if (binary.read_uint32(binary.getSize() - 16) == 0x534954) {
+            // typedef struct {
+            //     unsigned_32 signature;
+            //     unsigned_32 vendor;
+            //     unsigned_32 type;
+            //     unsigned_32 size;
+            // } TISTrailer;
+
+            qint64 nHeaderOffset = binary.getSize() - 16;
+
+            quint32 nVendor = binary.read_uint32(nHeaderOffset + 4);
+            quint32 nType = binary.read_uint32(nHeaderOffset + 8);
+            quint32 nDebugSize = binary.read_uint32(nHeaderOffset + 12);
+
+            if ((nVendor == 0) && (nType == 0)) {
+                qint64 nDebugOffset = nHeaderOffset - nDebugSize;
+
+                if (nDebugOffset >= 0) {
+                    VI_STRUCT viStruct = NFD_Binary::get_DWRAF_vi(pDevice, pOptions, nDebugOffset, binary.getSize() - nDebugOffset, pPdStruct);
+
+                    if (viStruct.bIsValid) {
+                        SCANS_STRUCT ssDebugInfo = NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
+                        ssDebugInfo.sVersion = viStruct.sVersion;
+                        ssDebugInfo.sInfo = QString("0x%1 bytes").arg(XBinary::valueToHexEx(nDebugSize));
+                        ssDebugInfo.sInfo = XBinary::appendComma(ssDebugInfo.sInfo, "Watcom");
+
+                        pBinaryInfo->basic_info.mapResultDebugData.insert(ssDebugInfo.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ssDebugInfo));
+                    }
+                }
+            }
+        }
+    }
+}
+
+void NFD_Binary::Binary_handle_Formats(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+{
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if (pBinaryInfo->basic_info.id.nSize == 0) {
+        SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_EMPTYFILE, "", "", 0);
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_PDF)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // TODO move to own type
+        // PDF
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_PDF);
+        ss.sVersion = XBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(5 * 2, 6));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_MICROSOFTCOMPOUND)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // Microsoft Compound
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_MICROSOFTCOMPOUND);
+
+        quint16 nSub1 = binary.read_uint16(0x200);
+        quint16 nSub2 = binary.read_uint16(0x1000);
+
+        // TODO More
+        if ((nSub1 == 0) && (nSub2 == 0xFFFD)) {
+            ss.type = XScanEngine::RECORD_TYPE_INSTALLER;  // TODO mapResultInstallers
+            ss.name = XScanEngine::RECORD_NAME_MICROSOFTINSTALLER;
+            ss.sVersion = "";
+            ss.sInfo = "";
+        } else if (nSub1 == 0xA5EC) {
+            ss.type = XScanEngine::RECORD_TYPE_FORMAT;
+            ss.name = XScanEngine::RECORD_NAME_MICROSOFTOFFICEWORD;
+            ss.sVersion = "97-2003";
+            ss.sInfo = "";
+        }
+
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // Microsoft Compiled HTML Help
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_MICROSOFTCOMPILEDHTMLHELP);
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_AUTOIT)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // AutoIt Compiled Script
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_AUTOIT);
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_RTF)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // RTF
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_RTF);
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_LUACOMPILED)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // Lua
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_LUACOMPILED);
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_JAVACOMPILEDCLASS)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // java
+        quint16 nMinor = binary.read_uint16(4, true);
+        quint16 nMajor = binary.read_uint16(6, true);
+
+        if (nMajor) {
+            QString sVersion = XJavaClass::_getJDKVersion(nMajor, nMinor);
+
+            if (sVersion != "") {
+                SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_JAVACOMPILEDCLASS);
+                ss.sVersion = sVersion;
+                pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+            }
+        }
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_COFF)) && (pBinaryInfo->basic_info.id.nSize >= 76)) {
+        // COFF
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_COFF);
+
+        bool bDetected = false;
+
+        qint64 nOffset = binary.read_uint32(72, true) + 58;
+
+        if (binary.compareSignature(&(pBinaryInfo->basic_info.memoryMap), "600A4C01", nOffset)) {
+            ss.sInfo = "I386";
+            bDetected = true;
+        }
+        if (binary.compareSignature(&(pBinaryInfo->basic_info.memoryMap), "600A6486", nOffset)) {
+            ss.sInfo = "AMD64";
+            bDetected = true;
+        }
+        if (binary.compareSignature(&(pBinaryInfo->basic_info.memoryMap), "600A0000FFFF....4C01", nOffset)) {
+            ss.sInfo = "I386";
+            bDetected = true;
+        }
+        if (binary.compareSignature(&(pBinaryInfo->basic_info.memoryMap), "600A0000FFFF....6486", nOffset)) {
+            ss.sInfo = "AMD64";
+            bDetected = true;
+        }
+
+        if (bDetected) {
+            pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_DEX)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // dex
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_DEX);
+        ss.sVersion = XBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(8, 6));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_SWF)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // SWF
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_SWF);
+        ss.sVersion = QString("%1").arg(binary.read_uint8(3));
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_MICROSOFTWINHELP)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // Microsoft WinHelp
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_MICROSOFTWINHELP);
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_MP3)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // MP3
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_MP3);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_MP4)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // MP4
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_MP4);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_WINDOWSMEDIA)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // Windows Media
+        // TODO WMV/WMA
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_WINDOWSMEDIA);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_FLASHVIDEO)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // Flash Video
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_FLASHVIDEO);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_WAV)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // VAW
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_WAV);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_AU)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // AU
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_AU);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_DEB)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // DEB
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_DEB);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_AVI)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_AVI);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_WEBP)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_WEBP);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_TTF)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // TTF
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_TTF);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ANDROIDARSC)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_ANDROIDARSC);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ANDROIDXML)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_ANDROIDXML);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_AR)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // AR
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_AR);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+
+    if (pBinaryInfo->basic_info.id.nSize >= 0x8010) {
+        if (binary.compareSignature("01'CD001'01", 0x8000)) {
+            SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_ISO9660, "", "", 0);
+            // TODO Version
+            pBinaryInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+    }
+}
+
+void NFD_Binary::Binary_handle_Databases(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+{
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_PDB)) && (pBinaryInfo->basic_info.id.nSize >= 32)) {
+        // PDB
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_PDB);
+        pBinaryInfo->basic_info.mapResultDatabases.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_MICROSOFTLINKERDATABASE)) && (pBinaryInfo->basic_info.id.nSize >= 32)) {
+        // Microsoft Linker Database
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_MICROSOFTLINKERDATABASE);
+        //        ss.sVersion=QString("%1.%2").arg(QBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(32*2,4))).arg(QBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(34*2,4)));
+        pBinaryInfo->basic_info.mapResultDatabases.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_MICROSOFTACCESS)) && (pBinaryInfo->basic_info.id.nSize >= 128)) {
+        // Microsoft Access Database
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_MICROSOFTACCESS);
+
+        quint32 nVersion = binary.read_int32(0x14);
+
+        switch (nVersion) {
+            case 0x0000: ss.sVersion = "JET3"; break;  // TODO
+            case 0x0001: ss.sVersion = "JET4"; break;  // TODO
+            case 0x0002: ss.sVersion = "2007"; break;
+            case 0x0103: ss.sVersion = "2010"; break;
+        }
+
+        pBinaryInfo->basic_info.mapResultDatabases.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+}
+
+void NFD_Binary::Binary_handle_Images(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+{
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_JPEG)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // JPEG
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_IMAGE;
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_JPEG);
+        quint32 nMajor = pBinaryInfo->basic_info.sHeaderSignature.mid(11 * 2, 2).toUInt(nullptr, 16);
+        quint32 nMinor = pBinaryInfo->basic_info.sHeaderSignature.mid(12 * 2, 2).toUInt(nullptr, 16);
+        ss.sVersion = QString("%1.%2").arg(nMajor).arg(nMinor, 2, 10, QChar('0'));
+        pBinaryInfo->basic_info.mapResultImages.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_GIF)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // GIF
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_IMAGE;
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_GIF);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultImages.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_TIFF)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // TIFF
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_IMAGE;
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_TIFF);
+        // More information
+        pBinaryInfo->basic_info.mapResultImages.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_WINDOWSICON)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
+        // Windows Icon
+        // TODO more information
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_IMAGE;
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_WINDOWSICON);
+        pBinaryInfo->basic_info.mapResultImages.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_WINDOWSCURSOR)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
+        // Windows Cursor
+        // TODO more information
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_WINDOWSCURSOR);
+        pBinaryInfo->basic_info.mapResultImages.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_WINDOWSBITMAP)) && (pBinaryInfo->basic_info.id.nSize >= 40)) {
+        // Windows Bitmap
+        // TODO more information
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_IMAGE;
+        quint32 _nSize = qFromBigEndian(pBinaryInfo->basic_info.sHeaderSignature.mid(2 * 2, 8).toUInt(nullptr, 16));
+        if (pBinaryInfo->basic_info.id.nSize >= _nSize) {
+            QString sVersion;
+
+            switch (qFromBigEndian(pBinaryInfo->basic_info.sHeaderSignature.mid(14 * 2, 8).toUInt(nullptr, 16))) {
+                case 40: sVersion = "3"; break;
+                case 108: sVersion = "4"; break;
+                case 124: sVersion = "5"; break;
+            }
+
+            if (sVersion != "") {
+                SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_WINDOWSBITMAP);
+                ss.sVersion = sVersion;
+                pBinaryInfo->basic_info.mapResultImages.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+            }
+        }
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_PNG)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // PNG
+        // TODO options
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_IMAGE;
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_PNG);
+
+        ss.sInfo = QString("%1x%2").arg(binary.read_uint32(16, true)).arg(binary.read_uint32(20, true));
+
+        pBinaryInfo->basic_info.mapResultImages.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_DJVU)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // DJVU
+        // TODO options
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_IMAGE;
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_DJVU);
+        pBinaryInfo->basic_info.mapResultImages.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+}
+
+void NFD_Binary::Binary_handle_InstallerData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+{
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    // Inno Setup
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_INNOSETUP)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_INNOSETUP);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_INSTALLANYWHERE)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_INSTALLANYWHERE);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_GHOSTINSTALLER)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_GHOSTINSTALLER);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_NSIS)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_NSIS);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_SIXXPACK)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_SIXXPACK);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_THINSTALL)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_THINSTALL);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_SMARTINSTALLMAKER)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_SMARTINSTALLMAKER);
+        ss.sVersion = XBinary::hexToString(pBinaryInfo->basic_info.sHeaderSignature.mid(46, 14));
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_TARMAINSTALLER)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_TARMAINSTALLER);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_CLICKTEAM)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_CLICKTEAM);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_QTINSTALLER)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_QTINSTALLER);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ADVANCEDINSTALLER)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_ADVANCEDINSTALLER);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_OPERA)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_OPERA);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_GPINSTALL)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_GPINSTALL);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_AVASTANTIVIRUS)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_AVASTANTIVIRUS);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_INSTALLSHIELD)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_INSTALLSHIELD);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_SETUPFACTORY)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_SETUPFACTORY);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ACTUALINSTALLER)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_ACTUALINSTALLER);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_INSTALL4J)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_INSTALL4J);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_VMWARE)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_VMWARE);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_NOSINSTALLER)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_NOSINSTALLER);
+        pBinaryInfo->basic_info.mapResultInstallerData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+}
+
+void NFD_Binary::Binary_handle_ProtectorData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+{
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_FISHNET)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // Inno Setup
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_FISHNET);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_XENOCODE)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        // Xenocode
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_XENOCODE);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_MOLEBOXULTRA)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_MOLEBOXULTRA);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_1337EXECRYPTER)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_1337EXECRYPTER);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ACTIVEMARK)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_ACTIVEMARK);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_AGAINNATIVITYCRYPTER)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_AGAINNATIVITYCRYPTER);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ARCRYPT)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_ARCRYPT);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_NOXCRYPT)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_NOXCRYPT);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_FASTFILECRYPT)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_FASTFILECRYPT);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_LIGHTNINGCRYPTERSCANTIME)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_LIGHTNINGCRYPTERSCANTIME);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ZELDACRYPT)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_ZELDACRYPT);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_WOUTHRSEXECRYPTER)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_WOUTHRSEXECRYPTER);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_WLCRYPT)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_WLCRYPT);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_DOTNETSHRINK)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_DOTNETSHRINK);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_SPOONSTUDIO)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_SPOONSTUDIO);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_SECUROM)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_SECUROM);
+        ss.sVersion = binary.read_ansiString(8);
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_SERGREENAPPACKER)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_SERGREENAPPACKER);
+        // TODO Version
+        pBinaryInfo->basic_info.mapResultProtectorData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+}
+
+void NFD_Binary::Binary_handle_LibraryData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+{
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_SHELL)) && (pBinaryInfo->basic_info.id.nSize >= 8)) {
+        QString sString = binary.read_ansiString(0);
+
+        if (sString.contains("python")) {
+            SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_LIBRARY, XScanEngine::RECORD_NAME_PYTHON, "", "", 0);
+            pBinaryInfo->basic_info.mapResultLibraryData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+    }
+}
+
+void NFD_Binary::Binary_handle_Resources(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+{
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_RESOURCE_VERSIONINFO)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_RESOURCE_VERSIONINFO);
+        // TODO
+        pBinaryInfo->basic_info.mapResultResources.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_BITMAPINFOHEADER)) && (pBinaryInfo->basic_info.id.nSize >= 30)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_BITMAPINFOHEADER);
+
+        ss.sInfo = QString("%1x%2").arg(binary.read_uint32(4)).arg(binary.read_uint32(8));
+        // TODO
+        pBinaryInfo->basic_info.mapResultResources.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_RESOURCE_STRINGTABLE)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_RESOURCE_STRINGTABLE);
+
+        pBinaryInfo->basic_info.mapResultResources.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_RESOURCE_DIALOG)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_RESOURCE_DIALOG);
+
+        pBinaryInfo->basic_info.mapResultResources.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_RESOURCE_ICON)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_RESOURCE_ICON);
+
+        pBinaryInfo->basic_info.mapResultResources.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_RESOURCE_CURSOR)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_RESOURCE_CURSOR);
+
+        pBinaryInfo->basic_info.mapResultResources.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if (pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_RESOURCE_MENU)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_RESOURCE_MENU);
+
+        pBinaryInfo->basic_info.mapResultResources.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    }
+}
+
+void NFD_Binary::Binary_handle_SFXData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+{
+    XBinary binary(pDevice, pOptions->bIsImage);
+
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_WINRAR)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_WINRAR);
+        pBinaryInfo->basic_info.mapResultSFXData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_SQUEEZSFX)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_SQUEEZSFX);
+        pBinaryInfo->basic_info.mapResultSFXData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    } else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_7Z)) && (pBinaryInfo->basic_info.id.nSize >= 20)) {
+        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_7Z);
+
+        if (ss.type == XScanEngine::RECORD_TYPE_SFXDATA) {
+            pBinaryInfo->basic_info.mapResultSFXData.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+        }
+    }
+}
+
+void NFD_Binary::Binary_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+{
+    Q_UNUSED(pDevice)
+    Q_UNUSED(pOptions)
+
+    if (pBinaryInfo->basic_info.mapResultFormats.contains(XScanEngine::RECORD_NAME_PDF)) {
+        pBinaryInfo->basic_info.mapResultTexts.clear();
+
+        pBinaryInfo->basic_info.mapResultFormats[XScanEngine::RECORD_NAME_PDF].id.fileType = XBinary::FT_BINARY;
+        pBinaryInfo->basic_info.id.fileType = XBinary::FT_BINARY;
+    }
+}
+
+NFD_Binary::BINARYINFO_STRUCT NFD_Binary::getInfo(QIODevice *pDevice, XBinary::FT fileType, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions,
+                                                        qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
+{
+    QElapsedTimer timer;
+    timer.start();
+
+    BINARYINFO_STRUCT result = {};
+
+    XBinary binary(pDevice, pOptions->bIsImage);
+    binary.setFileType(fileType);
+
+    if (binary.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
+        result.basic_info = NFD_Binary::_initBasicInfo(&binary, parentId, pOptions, nOffset, pPdStruct);
+
+        //        setStatus(pOptions,XBinary::fileTypeIdToString(result.basic_info.id.fileType));
+
+        // Scan Header
+        NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_Binary::getBinaryRecords(),
+                                  NFD_Binary::getBinaryRecordsSize(), result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_HEADER,
+                                  pPdStruct);
+        NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_Binary::getArchiveRecords(),
+                                  NFD_Binary::getArchiveRecordsSize(), result.basic_info.id.fileType, XBinary::FT_ARCHIVE, &(result.basic_info), DETECTTYPE_HEADER,
+                                  pPdStruct);
+
+        if (result.basic_info.parentId.filePart == XBinary::FILEPART_OVERLAY) {
+            NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_Binary::getPEOverlayRecords(),
+                                      NFD_Binary::getPEOverlayRecordsSize(), result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_OVERLAY,
+                                      pPdStruct);
+        }
+
+        if (result.basic_info.parentId.filePart == XBinary::FILEPART_DEBUGDATA) {
+            NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_Binary::getDebugdataRecords(),
+                                      NFD_Binary::getDebugdataRecordsSize(), result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info),
+                                      DETECTTYPE_DEBUGDATA, pPdStruct);
+        }
+
+        if (result.basic_info.parentId.filePart == XBinary::FILEPART_RESOURCE) {
+            //            NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, _PE_resource_records,
+            //            sizeof(_PE_resource_records),
+            //                          result.basic_info.id.fileType, XBinary::FT_BINARY, &(result.basic_info), DETECTTYPE_HEADER, pPdStruct);
+
+            // TODO a function
+
+            if (result.basic_info.mapHeaderDetects.count() == 0) {
+                SCANS_STRUCT ss = {};
+                ss.fileType = result.basic_info.id.fileType;
+                ss.type = XScanEngine::RECORD_TYPE_FORMAT;
+
+                quint32 nId = pOptions->varInfo.toUInt();
+
+                if (nId == XPE_DEF::S_RT_DIALOG) {
+                    ss.name = XScanEngine::RECORD_NAME_RESOURCE_DIALOG;
+                } else if (nId == XPE_DEF::S_RT_STRING) {
+                    ss.name = XScanEngine::RECORD_NAME_RESOURCE_STRINGTABLE;
+                } else if (nId == XPE_DEF::S_RT_VERSION) {
+                    ss.name = XScanEngine::RECORD_NAME_RESOURCE_VERSIONINFO;
+                } else if (nId == XPE_DEF::S_RT_ICON) {
+                    ss.name = XScanEngine::RECORD_NAME_RESOURCE_ICON;
+                } else if (nId == XPE_DEF::S_RT_CURSOR) {
+                    ss.name = XScanEngine::RECORD_NAME_RESOURCE_CURSOR;
+                } else if (nId == XPE_DEF::S_RT_MENU) {
+                    ss.name = XScanEngine::RECORD_NAME_RESOURCE_MENU;
+                }
+
+                if (ss.name != XScanEngine::RECORD_NAME_UNKNOWN) {
+                    result.basic_info.mapHeaderDetects.insert(ss.name, ss);
+                }
+            }
+        }
+
+        // TODO header data!
+        result.bIsPlainText = binary.isPlainTextType();
+        result.bIsUTF8 = binary.isUTF8TextType();
+        result.unicodeType = binary.getUnicodeType();
+
+        // TODO Try QTextStream functions! Check
+        if (result.unicodeType != XBinary::UNICODE_TYPE_NONE) {
+            result.sHeaderText = binary.read_unicodeString(2, qMin(result.basic_info.id.nSize, (qint64)0x1000), (result.unicodeType == XBinary::UNICODE_TYPE_BE));
+            result.basic_info.id.fileType = XBinary::FT_UNICODE;
+        } else if (result.bIsUTF8) {
+            result.sHeaderText = binary.read_utf8String(3, qMin(result.basic_info.id.nSize, (qint64)0x1000));
+            result.basic_info.id.fileType = XBinary::FT_UTF8;
+        } else if (result.bIsPlainText) {
+            result.sHeaderText = binary.read_ansiString(0, qMin(result.basic_info.id.nSize, (qint64)0x1000));
+            result.basic_info.id.fileType = XBinary::FT_PLAINTEXT;
+        }
+
+        NFD_Binary::Binary_handle_Texts(pDevice, pOptions, &result, pPdStruct);
+        NFD_Binary::Binary_handle_Formats(pDevice, pOptions, &result);
+        NFD_Binary::Binary_handle_Databases(pDevice, pOptions, &result);
+        NFD_Binary::Binary_handle_Images(pDevice, pOptions, &result);
+        NFD_Binary::Binary_handle_Archives(pDevice, pOptions, &result, pPdStruct);
+        NFD_Binary::Binary_handle_Certificates(pDevice, pOptions, &result);
+        NFD_Binary::Binary_handle_DebugData(pDevice, pOptions, &result, pPdStruct);
+        NFD_Binary::Binary_handle_InstallerData(pDevice, pOptions, &result);
+        NFD_Binary::Binary_handle_SFXData(pDevice, pOptions, &result);
+        NFD_Binary::Binary_handle_ProtectorData(pDevice, pOptions, &result);
+        NFD_Binary::Binary_handle_LibraryData(pDevice, pOptions, &result);
+
+        if (result.basic_info.parentId.filePart == XBinary::FILEPART_RESOURCE) {
+            NFD_Binary::Binary_handle_Resources(pDevice, pOptions, &result);
+        }
+
+        NFD_Binary::Binary_handle_FixDetects(pDevice, pOptions, &result);
+
+        NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
+    }
+
+    result.basic_info.nElapsedTime = timer.elapsed();
+
+    return result;
+}
+
+QList<XScanEngine::SCANSTRUCT> NFD_Binary::convert(QList<SCAN_STRUCT> *pListScanStructs)
+{
+    QList<XScanEngine::SCANSTRUCT> listResult;
+
+    qint32 nNumberOfRecords = pListScanStructs->count();
+
+    for (qint32 i = 0; i < nNumberOfRecords; i++) {
+        XScanEngine::SCANSTRUCT record = {};
+
+        record.bIsHeuristic = pListScanStructs->at(i).bIsHeuristic;
+        record.bIsUnknown = pListScanStructs->at(i).bIsUnknown;
+        record.id = pListScanStructs->at(i).id;
+        record.parentId = pListScanStructs->at(i).parentId;
+        record.nType = pListScanStructs->at(i).type;
+        record.nName = pListScanStructs->at(i).name;
+        record.sType = XScanEngine::recordTypeIdToString(pListScanStructs->at(i).type);
+        record.sName = XScanEngine::recordNameIdToString(pListScanStructs->at(i).name);
+        record.sVersion = pListScanStructs->at(i).sVersion;
+        record.sInfo = pListScanStructs->at(i).sInfo;
+
+        record.globalColorRecord = XScanEngine::typeToGlobalColorRecord(record.sType);
+        record.nPrio = XScanEngine::typeToPrio(record.sType);
+        record.bIsProtection = XScanEngine::isProtection(record.sType);
+        record.sType = XScanEngine::translateType(record.sType);
+
+        listResult.append(record);
+    }
+
+    // XFormats::sortRecords(&listResult); // TODO Check
+
+    return listResult;
+}
+
+QList<XScanEngine::DEBUG_RECORD> NFD_Binary::convertHeur(QList<DETECT_RECORD> *pListDetectRecords)
+{
+    QList<XScanEngine::DEBUG_RECORD> listResult;
+
+    qint32 nNumberOfRecords = pListDetectRecords->count();
+
+    for (qint32 i = 0; i < nNumberOfRecords; i++) {
+        XScanEngine::DEBUG_RECORD record = {};
+
+        record.sType = XScanEngine::heurTypeIdToString(pListDetectRecords->at(i).detectType);
+        record.sName = QString("%1(%2)[%3]")
+                           .arg(XScanEngine::recordNameIdToString(pListDetectRecords->at(i).name), pListDetectRecords->at(i).sVersion, pListDetectRecords->at(i).sInfo);
+        record.sValue = pListDetectRecords->at(i).sValue;
+
+        listResult.append(record);
+    }
+
+    return listResult;
 }

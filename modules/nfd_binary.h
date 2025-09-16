@@ -225,10 +225,15 @@ public:
     static qint32 getPEOverlayRecordsSize();
 
     // Utility: stringify a scan struct (moved from SpecAbstract)
-    static QString _SCANS_STRUCT_toString(const SCANS_STRUCT *pScanStruct, bool bShowType = true);
+    static QString SCANS_STRUCT_toString(const SCANS_STRUCT *pScanStruct, bool bShowType = true);
 
     // Utility: convert SCANS_STRUCT + BASIC_INFO into a concrete SCAN_STRUCT (moved from SpecAbstract)
     static SCAN_STRUCT scansToScan(BASIC_INFO *pBasicInfo, SCANS_STRUCT *pScansStruct);
+
+    // Convert SCAN_STRUCT list to XScanEngine::SCANSTRUCT list
+    static QList<XScanEngine::SCANSTRUCT> convert(QList<SCAN_STRUCT> *pListScanStructs);
+    // Convert DETECT_RECORD list to XScanEngine::DEBUG_RECORD list
+    static QList<XScanEngine::DEBUG_RECORD> convertHeur(QList<DETECT_RECORD> *pListDetectRecords);
 
     // Derive Operation System directly from a binary instance
     static SCANS_STRUCT detectOperationSystem(XBinary *pBinary, XBinary::PDSTRUCT *pPdStruct);
@@ -363,6 +368,46 @@ public:
 
     // Handle text-based file analysis (moved from SpecAbstract)
     static void Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct);
+
+    // Handle archive file analysis (moved from SpecAbstract)
+    static void Binary_handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct);
+
+    // Handle certificate analysis (moved from SpecAbstract)
+    static void Binary_handle_Certificates(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
+
+    // Handle debug data analysis (moved from SpecAbstract)
+    static void Binary_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct);
+
+    // Handle format analysis (moved from SpecAbstract)
+    static void Binary_handle_Formats(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
+
+    // Handle database analysis (moved from SpecAbstract)
+    static void Binary_handle_Databases(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
+
+    // Handle image analysis (moved from SpecAbstract)
+    static void Binary_handle_Images(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
+
+    // Handle installer data analysis (moved from SpecAbstract)
+    static void Binary_handle_InstallerData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
+
+    // Handle SFX data analysis (moved from SpecAbstract)
+    static void Binary_handle_SFXData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
+
+    // Handle protector data analysis (moved from SpecAbstract)
+    static void Binary_handle_ProtectorData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
+
+    // Handle library data analysis (moved from SpecAbstract)
+    static void Binary_handle_LibraryData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
+
+    // Handle resources analysis (moved from SpecAbstract)
+    static void Binary_handle_Resources(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
+
+    // Handle fix detects (moved from SpecAbstract)
+    static void Binary_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BINARYINFO_STRUCT *pBinaryInfo);
+
+    // Get binary info (moved from SpecAbstract)
+    static BINARYINFO_STRUCT getInfo(QIODevice *pDevice, XBinary::FT fileType, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                           XBinary::PDSTRUCT *pPdStruct);
 
 signals:
 };

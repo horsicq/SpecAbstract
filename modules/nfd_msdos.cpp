@@ -1012,7 +1012,7 @@ QString NFD_MSDOS::getMsRichString(quint16 nId, quint16 nBuild, quint32 nCount, 
         NFD_Binary::NFD_Binary::SCANS_STRUCT record = {};
 
         if (_nfd_msdos_compareRichRecord(&record, &(pRecords[i]), nId, nBuild, nCount, XBinary::FT_PE, XBinary::FT_MSDOS)) {
-            sResult = NFD_Binary::_SCANS_STRUCT_toString(&record);
+            sResult = NFD_Binary::SCANS_STRUCT_toString(&record);
         }
     }
 
