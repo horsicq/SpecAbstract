@@ -2320,7 +2320,7 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
     BASIC_INFO basic_info = {};
 
     if ((fileType == XBinary::FT_PE32) || (fileType == XBinary::FT_PE64)) {
-        NFD_PE::PEINFO_STRUCT pe_info = NFD_PE::getPEInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        NFD_PE::PEINFO_STRUCT pe_info = NFD_PE::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = pe_info.basic_info;
     } else if ((fileType == XBinary::FT_ELF32) || (fileType == XBinary::FT_ELF64)) {
         SpecAbstract::ELFINFO_STRUCT elf_info = NFD_ELF::getELFInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);

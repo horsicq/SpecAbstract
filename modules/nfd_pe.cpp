@@ -7775,7 +7775,7 @@ void NFD_PE::x86Emul(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PE
     }
 }
 
-NFD_PE::PEINFO_STRUCT NFD_PE::getPEInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+NFD_PE::PEINFO_STRUCT NFD_PE::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                        XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;

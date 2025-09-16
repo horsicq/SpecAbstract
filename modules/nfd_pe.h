@@ -116,7 +116,7 @@ public:
         XBinary::OFFSETSIZE osResourcesSection;
     };
 
-    static PEINFO_STRUCT getPEInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
+    static PEINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
 
     // Accessors for PE signature tables (migrated from SpecAbstract/signatures.cpp)
     // SIGNATURE_RECORD based tables
