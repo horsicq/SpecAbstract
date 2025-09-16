@@ -2375,7 +2375,7 @@ void NFD_Binary::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
         for (qint32 i = 0; (i < nSignaturesCount) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++)  // TODO move to an own function !!!
         {
             if (XBinary::isRegExpPresent(NFD_TEXT::getTextExpRecords()[i].pszString, pBinaryInfo->sHeaderText)) {
-                _SCANS_STRUCT record = {};
+                SCANS_STRUCT record = {};
                 record.nVariant = NFD_TEXT::getTextExpRecords()[i].basicInfo.nVariant;
                 record.fileType = NFD_TEXT::getTextExpRecords()[i].basicInfo.fileType;
                 record.type = NFD_TEXT::getTextExpRecords()[i].basicInfo.type;
@@ -2388,32 +2388,32 @@ void NFD_Binary::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
             }
         }
 
-        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_CCPP)) {
-            _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_CCPP);
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(XScanEngine::RECORD_NAME_CCPP)) {
+            SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(XScanEngine::RECORD_NAME_CCPP);
             pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
 
-        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_PYTHON)) {
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(XScanEngine::RECORD_NAME_PYTHON)) {
             if ((pBinaryInfo->sHeaderText.contains("class")) && (pBinaryInfo->sHeaderText.contains("self"))) {
-                _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_PYTHON);
+                SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(XScanEngine::RECORD_NAME_PYTHON);
                 pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
             }
         }
 
-        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_HTML)) {
-            _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_HTML);
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(XScanEngine::RECORD_NAME_HTML)) {
+            SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(XScanEngine::RECORD_NAME_HTML);
             pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
 
-        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_XML)) {
-            _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_XML);
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(XScanEngine::RECORD_NAME_XML)) {
+            SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(XScanEngine::RECORD_NAME_XML);
             ss.sVersion = XBinary::regExp("version=['\"](.*?)['\"]", pBinaryInfo->sHeaderText, 1);
 
             pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
 
-        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_PHP)) {
-            _SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(RECORD_NAME_PHP);
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(XScanEngine::RECORD_NAME_PHP)) {
+            SCANS_STRUCT ss = pBinaryInfo->basic_info.mapTextHeaderDetects.value(XScanEngine::RECORD_NAME_PHP);
             pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
 
@@ -2423,7 +2423,7 @@ void NFD_Binary::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
         //            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
         //        }
 
-        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(RECORD_NAME_SHELL)) {
+        if (pBinaryInfo->basic_info.mapTextHeaderDetects.contains(XScanEngine::RECORD_NAME_SHELL)) {
             QString sInterpreter;
 
             if (sInterpreter == "") sInterpreter = XBinary::regExp("#!\\/usr\\/local\\/bin\\/(\\w+)", pBinaryInfo->sHeaderText, 1);  // #!/usr/local/bin/ruby
@@ -2433,19 +2433,19 @@ void NFD_Binary::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
             if (sInterpreter == "") sInterpreter = XBinary::regExp("#!(\\w+)", pBinaryInfo->sHeaderText, 1);                         // #!perl
 
             if (sInterpreter == "perl") {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_PERL, "", "", 0);
+                SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, XScanEngine::RECORD_TYPE_SOURCECODE, XScanEngine::RECORD_NAME_PERL, "", "", 0);
                 pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
             } else if (sInterpreter == "sh") {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_SHELL, "", "", 0);
+                SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, XScanEngine::RECORD_TYPE_SOURCECODE, XScanEngine::RECORD_NAME_SHELL, "", "", 0);
                 pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
             } else if (sInterpreter == "ruby") {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_RUBY, "", "", 0);
+                SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, XScanEngine::RECORD_TYPE_SOURCECODE, XScanEngine::RECORD_NAME_RUBY, "", "", 0);
                 pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
             } else if (sInterpreter == "python") {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_PYTHON, "", "", 0);
+                SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, XScanEngine::RECORD_TYPE_SOURCECODE, XScanEngine::RECORD_NAME_PYTHON, "", "", 0);
                 pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
             } else {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, RECORD_TYPE_SOURCECODE, RECORD_NAME_SHELL, sInterpreter, "", 0);
+                SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, XScanEngine::RECORD_TYPE_SOURCECODE, XScanEngine::RECORD_NAME_SHELL, sInterpreter, "", 0);
                 pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
             }
         }
@@ -2469,11 +2469,11 @@ void NFD_Binary::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
         //            }
         //            else if(pBinaryInfo->bIsUTF8)
         //            {
-        //                ss.name=RECORD_NAME_UTF8;
+        //                ss.name=XScanEngine::RECORD_NAME_UTF8;
         //            }
         //            else if(pBinaryInfo->bIsPlainText)
         //            {
-        //                ss.name=RECORD_NAME_PLAIN;
+        //                ss.name=XScanEngine::RECORD_NAME_PLAIN;
         //            }
 
         //            pBinaryInfo->basic_info.mapResultTexts.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
