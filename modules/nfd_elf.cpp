@@ -23,7 +23,7 @@ qint32 NFD_ELF::getEntrypointRecordsSize()
     return sizeof(g_ELF_entrypoint_records);
 }
 
-NFD_ELF::ELFINFO_STRUCT NFD_ELF::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+NFD_ELF::ELFINFO_STRUCT NFD_ELF::getELFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
 										 XBinary::PDSTRUCT *pPdStruct)
 {
 	QElapsedTimer timer;
@@ -974,11 +974,11 @@ void NFD_ELF::ELF_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
     }
 }
 
-NFD_ELF::ELFINFO_STRUCT NFD_ELF::getELFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+NFD_ELF::ELFINFO_STRUCT NFD_ELF::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                             XBinary::PDSTRUCT *pPdStruct)
 {
     // Delegate the core ELF info extraction to NFD_ELF, then continue with SpecAbstract-specific handlers.
-    ELFINFO_STRUCT result = NFD_ELF::getInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
+    ELFINFO_STRUCT result = NFD_ELF::getELFInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
 
     XELF elf(pDevice, pOptions->bIsImage);
     if (elf.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {

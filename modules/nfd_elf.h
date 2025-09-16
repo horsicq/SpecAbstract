@@ -40,9 +40,9 @@ public:
         XBinary::OFFSETSIZE osCommentSection;
     };
 
-    static ELFINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                  XBinary::PDSTRUCT *pPdStruct);
     static ELFINFO_STRUCT getELFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+                                  XBinary::PDSTRUCT *pPdStruct);
+    static ELFINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                      XBinary::PDSTRUCT *pPdStruct);
 
     static NFD_Binary::SIGNATURE_RECORD *getEntrypointRecords();

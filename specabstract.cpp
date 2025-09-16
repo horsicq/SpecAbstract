@@ -2202,7 +2202,7 @@ SpecAbstract::DEXINFO_STRUCT SpecAbstract::APK_scan_DEX(QIODevice *pDevice, XSca
         QBuffer buffer(&baRecordData);
 
         if (buffer.open(QIODevice::ReadOnly)) {
-            result = NFD_DEX::getDEXInfo(&buffer, pApkInfo->basic_info.id, pOptions, 0, pPdStruct);
+            result = NFD_DEX::getInfo(&buffer, pApkInfo->basic_info.id, pOptions, 0, pPdStruct);
 
             buffer.close();
         }
@@ -2323,7 +2323,7 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
         NFD_PE::PEINFO_STRUCT pe_info = NFD_PE::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = pe_info.basic_info;
     } else if ((fileType == XBinary::FT_ELF32) || (fileType == XBinary::FT_ELF64)) {
-        SpecAbstract::ELFINFO_STRUCT elf_info = NFD_ELF::getELFInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        SpecAbstract::ELFINFO_STRUCT elf_info = NFD_ELF::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = elf_info.basic_info;
     } else if ((fileType == XBinary::FT_MACHO32) || (fileType == XBinary::FT_MACHO64)) {
         SpecAbstract::MACHOINFO_STRUCT mach_info = NFD_MACH::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
@@ -2344,7 +2344,7 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
         SpecAbstract::JARINFO_STRUCT jar_info = NFD_JAR::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = jar_info.basic_info;
     } else if (fileType == XBinary::FT_APK) {
-        SpecAbstract::APKINFO_STRUCT apk_info = NFD_APK::getAPKInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        SpecAbstract::APKINFO_STRUCT apk_info = NFD_APK::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = apk_info.basic_info;
     } else if ((fileType == XBinary::FT_ZIP) || (fileType == XBinary::FT_IPA)) {
         // mb TODO split detects
@@ -2357,7 +2357,7 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
         SpecAbstract::JAVACLASSINFO_STRUCT javaclass_info = NFD_JavaClass::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = javaclass_info.basic_info;
     } else if (fileType == XBinary::FT_DEX) {
-        SpecAbstract::DEXINFO_STRUCT dex_info = NFD_DEX::getDEXInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        SpecAbstract::DEXINFO_STRUCT dex_info = NFD_DEX::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = dex_info.basic_info;
     } else if (fileType == XBinary::FT_AMIGAHUNK) {
         SpecAbstract::AMIGAHUNKINFO_STRUCT amigaHunk_info = NFD_Amiga::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);

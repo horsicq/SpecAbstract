@@ -180,7 +180,7 @@ NFD_APK::NFD_APK(XAPK *pAPK, XBinary::FILEPART filePart, OPTIONS *pOptions, XBin
 {
 }
 
-NFD_APK::APKINFO_STRUCT NFD_APK::getAPKInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+NFD_APK::APKINFO_STRUCT NFD_APK::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                            XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
@@ -205,7 +205,7 @@ NFD_APK::APKINFO_STRUCT NFD_APK::getAPKInfo(QIODevice *pDevice, XScanEngine::SCA
                                    result.basic_info.id.fileType, XBinary::FT_APK, &(result.basic_info), DETECTTYPE_ARCHIVE, pPdStruct);
 
         if (XArchive::isArchiveRecordPresent("classes.dex", &(result.listArchiveRecords), pPdStruct)) {
-            result.dexInfoClasses = NFD_DEX::getDEXInfo(pDevice, parentId, pOptions, 0, pPdStruct);
+            result.dexInfoClasses = NFD_DEX::getInfo(pDevice, parentId, pOptions, 0, pPdStruct);
         }
 
         SpecAbstract::Zip_handle_Metainfos(pDevice, pOptions, &(result.basic_info), &(result.listArchiveRecords), pPdStruct);

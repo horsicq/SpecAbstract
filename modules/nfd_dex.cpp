@@ -355,7 +355,7 @@ void NFD_DEX::handle_Protection(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XB
     }
 }
 
-NFD_DEX::DEXINFO_STRUCT NFD_DEX::getDEXInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+NFD_DEX::DEXINFO_STRUCT NFD_DEX::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                             XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
