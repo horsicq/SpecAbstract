@@ -835,7 +835,7 @@ NFD_APK::APKINFO_STRUCT NFD_APK::getInfo(QIODevice *pDevice, XScanEngine::SCANID
             result.dexInfoClasses = NFD_DEX::getInfo(pDevice, parentId, pOptions, 0, pPdStruct);
         }
 
-        NFD_ZIP::Zip_handle_Metainfos(pDevice, pOptions, &(result.basic_info), &(result.listArchiveRecords), pPdStruct);
+        NFD_ZIP::handle_Metainfos(pDevice, pOptions, &(result.basic_info), &(result.listArchiveRecords), pPdStruct);
 
         NFD_APK::APK_handle(pDevice, pOptions, &result, pPdStruct);
         NFD_APK::APK_handle_FixDetects(pDevice, pOptions, &result, pPdStruct);

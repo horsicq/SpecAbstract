@@ -38,37 +38,6 @@ SpecAbstract::SpecAbstract(QObject *pParent) : XScanEngine(pParent)
 {
 }
 
-// JARINFO delegated to NFD_JAR::getInfo
-
-
-
-
-
-
-
-// LX Microsoft-specific handling moved to NFD_LX::getInfo
-
-
-// void SpecAbstract::fixDetects(SpecAbstract::PEINFO_STRUCT *pPEInfo)
-//{
-//     if(pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_MICROSOFTLINKER)&&pPEInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME_GENERICLINKER))
-//     {
-//         pPEInfo->basic_info.mapHeaderDetects.remove(RECORD_NAME_MICROSOFTLINKER);
-//     }
-
-//    if(pPEInfo->_mapImportDetects.contains(RECORD_NAME_C)&&pPEInfo->_mapImportDetects.contains(RECORD_NAME_VISUALCPP))
-//    {
-//        pPEInfo->_mapImportDetects.remove(RECORD_NAME_VISUALCPP);
-//    }
-
-//    if(pPEInfo->basic_info.mapSpecialDetects.contains(RECORD_NAME_ENIGMA))
-//    {
-//        pPEInfo->basic_info.mapEntryPointDetects.remove(RECORD_NAME_BORLANDCPP);
-//    }
-//}
-
-// MSDOS_compareRichRecord moved to NFD_MSDOS
-
 void SpecAbstract::filterResult(QList<NFD_Binary::SCAN_STRUCT> *pListRecords, const QSet<SpecAbstract::RECORD_TYPE> &stRecordTypes, XBinary::PDSTRUCT *pPdStruct)
 {
     QList<NFD_Binary::SCAN_STRUCT> listRecords;
@@ -117,7 +86,7 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
         basic_info = apk_info.basic_info;
     } else if ((fileType == XBinary::FT_ZIP) || (fileType == XBinary::FT_IPA)) {
         // mb TODO split detects
-        NFD_ZIP::ZIPINFO_STRUCT zip_info = NFD_ZIP::getZIPInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        NFD_ZIP::ZIPINFO_STRUCT zip_info = NFD_ZIP::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = zip_info.basic_info;
     } else if (fileType == XBinary::FT_RAR) {
         NFD_RAR::RARINFO_STRUCT rar_info = NFD_RAR::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);

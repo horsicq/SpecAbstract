@@ -24,7 +24,7 @@ NFD_ZIP::NFD_ZIP(XZip *pZip, XBinary::FILEPART filePart, OPTIONS *pOptions, XBin
 {
 }
 
-NFD_ZIP::ZIPINFO_STRUCT NFD_ZIP::getZIPInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
+NFD_ZIP::ZIPINFO_STRUCT NFD_ZIP::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                             XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
@@ -65,19 +65,19 @@ NFD_ZIP::ZIPINFO_STRUCT NFD_ZIP::getZIPInfo(QIODevice *pDevice, XScanEngine::SCA
             result.basic_info.id.fileType = XBinary::FT_APKS;
         }
 
-        NFD_ZIP::Zip_handle_Metainfos(pDevice, pOptions, &(result.basic_info), &(result.listArchiveRecords), pPdStruct);
-        NFD_ZIP::Zip_handle_Microsoftoffice(pDevice, pOptions, &result, pPdStruct);
-        NFD_ZIP::Zip_handle_OpenOffice(pDevice, pOptions, &result, pPdStruct);
+        NFD_ZIP::handle_Metainfos(pDevice, pOptions, &(result.basic_info), &(result.listArchiveRecords), pPdStruct);
+        NFD_ZIP::handle_Microsoftoffice(pDevice, pOptions, &result, pPdStruct);
+        NFD_ZIP::handle_OpenOffice(pDevice, pOptions, &result, pPdStruct);
 
         if (result.bIsJAR) {
-            NFD_ZIP::Zip_handle_JAR(pDevice, pOptions, &result, pPdStruct);
+            NFD_ZIP::handle_JAR(pDevice, pOptions, &result, pPdStruct);
         }
 
         if (result.bIsIPA) {
-            NFD_ZIP::Zip_handle_IPA(pDevice, pOptions, &result, pPdStruct);
+            NFD_ZIP::handle_IPA(pDevice, pOptions, &result, pPdStruct);
         }
 
-        NFD_ZIP::Zip_handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
+        NFD_ZIP::handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
 
         NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
     }
@@ -87,7 +87,7 @@ NFD_ZIP::ZIPINFO_STRUCT NFD_ZIP::getZIPInfo(QIODevice *pDevice, XScanEngine::SCA
     return result;
 }
 
-void NFD_ZIP::Zip_handle_Microsoftoffice(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_ZIP::handle_Microsoftoffice(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
 
@@ -123,7 +123,7 @@ void NFD_ZIP::Zip_handle_Microsoftoffice(QIODevice *pDevice, XScanEngine::SCAN_O
     }
 }
 
-void NFD_ZIP::Zip_handle_OpenOffice(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_ZIP::handle_OpenOffice(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
 
@@ -149,7 +149,7 @@ void NFD_ZIP::Zip_handle_OpenOffice(QIODevice *pDevice, XScanEngine::SCAN_OPTION
     }
 }
 
-void NFD_ZIP::Zip_handle_Metainfos(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BASIC_INFO *pBasicInfo, QList<XArchive::RECORD> *pListArchiveRecords,
+void NFD_ZIP::handle_Metainfos(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BASIC_INFO *pBasicInfo, QList<XArchive::RECORD> *pListArchiveRecords,
                                    XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
@@ -165,7 +165,7 @@ void NFD_ZIP::Zip_handle_Metainfos(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
     }
 }
 
-void NFD_ZIP::Zip_handle_JAR(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_ZIP::handle_JAR(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
 
@@ -176,7 +176,7 @@ void NFD_ZIP::Zip_handle_JAR(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpt
     }
 }
 
-void NFD_ZIP::Zip_handle_IPA(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_ZIP::handle_IPA(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
 
@@ -189,7 +189,7 @@ void NFD_ZIP::Zip_handle_IPA(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpt
     }
 }
 
-void NFD_ZIP::Zip_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_ZIP::handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
 
