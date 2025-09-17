@@ -600,7 +600,7 @@ qint32 NFD_MSDOS::getRichRecordsSize()
 }
 
 // ========================= Handlers migrated from SpecAbstract =========================
-void NFD_MSDOS::MSDOS_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo,
+void NFD_MSDOS::handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo,
                                              XBinary::PDSTRUCT *pPdStruct)
 {
     XMSDOS msdos(pDevice, pOptions->bIsImage);
@@ -610,7 +610,7 @@ void NFD_MSDOS::MSDOS_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SC
     }
 }
 
-void NFD_MSDOS::MSDOS_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_MSDOS::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XMSDOS msdos(pDevice, pOptions->bIsImage);
     if (msdos.isValid(pPdStruct)) {
@@ -648,7 +648,7 @@ void NFD_MSDOS::MSDOS_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
     }
 }
 
-void NFD_MSDOS::MSDOS_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_MSDOS::handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XMSDOS msdos(pDevice, pOptions->bIsImage);
     if (msdos.isValid(pPdStruct)) {
@@ -760,7 +760,7 @@ void NFD_MSDOS::MSDOS_handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
     }
 }
 
-void NFD_MSDOS::MSDOS_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_MSDOS::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XMSDOS msdos(pDevice, pOptions->bIsImage);
     if (msdos.isValid(pPdStruct)) {
@@ -909,7 +909,7 @@ void NFD_MSDOS::MSDOS_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OP
     }
 }
 
-void NFD_MSDOS::MSDOS_handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_MSDOS::handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XMSDOS msdos(pDevice, pOptions->bIsImage);
     if (msdos.isValid(pPdStruct)) {
@@ -926,7 +926,7 @@ void NFD_MSDOS::MSDOS_handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
     }
 }
 
-void NFD_MSDOS::MSDOS_handle_DosExtenders(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_MSDOS::handle_DosExtenders(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XMSDOS msdos(pDevice, pOptions->bIsImage);
     if (msdos.isValid(pPdStruct)) {
@@ -1060,12 +1060,12 @@ NFD_MSDOS::MSDOSINFO_STRUCT NFD_MSDOS::getInfo(QIODevice *pDevice, XScanEngine::
                                      &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
 
         // Handlers
-        NFD_MSDOS::MSDOS_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
-        NFD_MSDOS::MSDOS_handle_Borland(pDevice, pOptions, &result, pPdStruct);
-        NFD_MSDOS::MSDOS_handle_Tools(pDevice, pOptions, &result, pPdStruct);
-        NFD_MSDOS::MSDOS_handle_Protection(pDevice, pOptions, &result, pPdStruct);
-        NFD_MSDOS::MSDOS_handle_SFX(pDevice, pOptions, &result, pPdStruct);
-        NFD_MSDOS::MSDOS_handle_DosExtenders(pDevice, pOptions, &result, pPdStruct);
+        NFD_MSDOS::handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
+        NFD_MSDOS::handle_Borland(pDevice, pOptions, &result, pPdStruct);
+        NFD_MSDOS::handle_Tools(pDevice, pOptions, &result, pPdStruct);
+        NFD_MSDOS::handle_Protection(pDevice, pOptions, &result, pPdStruct);
+        NFD_MSDOS::handle_SFX(pDevice, pOptions, &result, pPdStruct);
+        NFD_MSDOS::handle_DosExtenders(pDevice, pOptions, &result, pPdStruct);
 
         NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
     }

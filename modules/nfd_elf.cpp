@@ -84,7 +84,7 @@ NFD_ELF::ELFINFO_STRUCT NFD_ELF::getELFInfo(QIODevice *pDevice, XScanEngine::SCA
 	return result;
 }
 
-void NFD_ELF::ELF_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_ELF::handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
 	XELF elf(pDevice, pOptions->bIsImage);
 
@@ -95,7 +95,7 @@ void NFD_ELF::ELF_handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_O
 	}
 }
 
-void NFD_ELF::ELF_handle_CommentSection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_ELF::handle_CommentSection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
 	Q_UNUSED(pDevice)
 	Q_UNUSED(pOptions)
@@ -580,7 +580,7 @@ void NFD_ELF::ELF_handle_CommentSection(QIODevice *pDevice, XScanEngine::SCAN_OP
 	}
 }
 
-void NFD_ELF::ELF_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_ELF::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
 	XELF elf(pDevice, pOptions->bIsImage);
 
@@ -915,7 +915,7 @@ void NFD_ELF::ELF_handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
 	}
 }
 
-void NFD_ELF::ELF_handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_ELF::handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XELF elf(pDevice, pOptions->bIsImage);
 
@@ -938,7 +938,7 @@ void NFD_ELF::ELF_handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpt
     }
 }
 
-void NFD_ELF::ELF_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_ELF::handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XELF elf(pDevice, pOptions->bIsImage);
 
@@ -987,14 +987,14 @@ NFD_ELF::ELFINFO_STRUCT NFD_ELF::getInfo(QIODevice *pDevice, XScanEngine::SCANID
                                   NFD_ELF::getEntrypointRecordsSize(), result.basic_info.id.fileType, XBinary::FT_ELF, &(result.basic_info), DETECTTYPE_ENTRYPOINT,
                                   pPdStruct);
 
-        NFD_ELF::ELF_handle_CommentSection(pDevice, pOptions, &result, pPdStruct);
-        NFD_ELF::ELF_handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
-        NFD_ELF::ELF_handle_GCC(pDevice, pOptions, &result, pPdStruct);
-        NFD_ELF::ELF_handle_DebugData(pDevice, pOptions, &result, pPdStruct);
-        NFD_ELF::ELF_handle_Tools(pDevice, pOptions, &result, pPdStruct);
-        NFD_ELF::ELF_handle_Protection(pDevice, pOptions, &result, pPdStruct);
-        NFD_ELF::ELF_handle_UnknownProtection(pDevice, pOptions, &result, pPdStruct);
-        NFD_ELF::ELF_handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::handle_CommentSection(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::handle_GCC(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::handle_DebugData(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::handle_Tools(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::handle_Protection(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::handle_UnknownProtection(pDevice, pOptions, &result, pPdStruct);
+        NFD_ELF::handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
 
         NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
     }
@@ -1002,7 +1002,7 @@ NFD_ELF::ELFINFO_STRUCT NFD_ELF::getInfo(QIODevice *pDevice, XScanEngine::SCANID
     return result;
 }
 
-void NFD_ELF::ELF_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_ELF::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pELFInfo)
 
@@ -1183,7 +1183,7 @@ void NFD_ELF::ELF_handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTION
     }
 }
 
-void NFD_ELF::ELF_handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo,
+void NFD_ELF::handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo,
                                            XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pELFInfo)
@@ -1319,7 +1319,7 @@ void NFD_ELF::ELF_handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN
     }
 }
 
-void NFD_ELF::ELF_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
+void NFD_ELF::handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
