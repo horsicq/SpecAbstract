@@ -22,11 +22,12 @@
 #define NFD_APK_H
 
 #include "nfd_binary.h"
-// #include "apk_script.h"  // Removed - not needed for static functions
+#include "apk_script.h"  // Removed - not needed for static functions
 #include "xarchive.h"
 #include "nfd_dex.h"
 
-class NFD_APK {
+class NFD_APK : public APK_Script {
+    Q_OBJECT
 
 public:
 
