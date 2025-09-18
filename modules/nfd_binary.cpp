@@ -2364,7 +2364,7 @@ bool NFD_Binary::isProtectionPresent(BASIC_INFO *pBasicInfo, XBinary::PDSTRUCT *
             pBasicInfo->mapResultDongleProtection.count());
 }
 
-void NFD_Binary::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo,
+void NFD_Binary::handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo,
                                      XBinary::PDSTRUCT *pPdStruct)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
@@ -2481,7 +2481,7 @@ void NFD_Binary::Binary_handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
     }
 }
 
-void NFD_Binary::Binary_handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo,
+void NFD_Binary::handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo,
                                         XBinary::PDSTRUCT *pPdStruct)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
@@ -2686,7 +2686,7 @@ void NFD_Binary::Binary_handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OP
     }
 }
 
-void NFD_Binary::Binary_handle_Certificates(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+void NFD_Binary::handle_Certificates(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
@@ -2701,7 +2701,7 @@ void NFD_Binary::Binary_handle_Certificates(QIODevice *pDevice, XScanEngine::SCA
     }
 }
 
-void NFD_Binary::Binary_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo,
+void NFD_Binary::handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo,
                                          XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pPdStruct)
@@ -2836,7 +2836,7 @@ void NFD_Binary::Binary_handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_O
     }
 }
 
-void NFD_Binary::Binary_handle_Formats(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+void NFD_Binary::handle_Formats(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
@@ -3015,7 +3015,7 @@ void NFD_Binary::Binary_handle_Formats(QIODevice *pDevice, XScanEngine::SCAN_OPT
     }
 }
 
-void NFD_Binary::Binary_handle_Databases(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+void NFD_Binary::handle_Databases(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
@@ -3045,7 +3045,7 @@ void NFD_Binary::Binary_handle_Databases(QIODevice *pDevice, XScanEngine::SCAN_O
     }
 }
 
-void NFD_Binary::Binary_handle_Images(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+void NFD_Binary::handle_Images(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
@@ -3118,7 +3118,7 @@ void NFD_Binary::Binary_handle_Images(QIODevice *pDevice, XScanEngine::SCAN_OPTI
     }
 }
 
-void NFD_Binary::Binary_handle_InstallerData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+void NFD_Binary::handle_InstallerData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
@@ -3187,7 +3187,7 @@ void NFD_Binary::Binary_handle_InstallerData(QIODevice *pDevice, XScanEngine::SC
     }
 }
 
-void NFD_Binary::Binary_handle_ProtectorData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+void NFD_Binary::handle_ProtectorData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
@@ -3249,7 +3249,7 @@ void NFD_Binary::Binary_handle_ProtectorData(QIODevice *pDevice, XScanEngine::SC
     }
 }
 
-void NFD_Binary::Binary_handle_LibraryData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+void NFD_Binary::handle_LibraryData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
@@ -3263,7 +3263,7 @@ void NFD_Binary::Binary_handle_LibraryData(QIODevice *pDevice, XScanEngine::SCAN
     }
 }
 
-void NFD_Binary::Binary_handle_Resources(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+void NFD_Binary::handle_Resources(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
@@ -3300,7 +3300,7 @@ void NFD_Binary::Binary_handle_Resources(QIODevice *pDevice, XScanEngine::SCAN_O
     }
 }
 
-void NFD_Binary::Binary_handle_SFXData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+void NFD_Binary::handle_SFXData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
@@ -3319,7 +3319,7 @@ void NFD_Binary::Binary_handle_SFXData(QIODevice *pDevice, XScanEngine::SCAN_OPT
     }
 }
 
-void NFD_Binary::Binary_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
+void NFD_Binary::handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo)
 {
     Q_UNUSED(pDevice)
     Q_UNUSED(pOptions)
@@ -3419,23 +3419,23 @@ NFD_Binary::BINARYINFO_STRUCT NFD_Binary::getInfo(QIODevice *pDevice, XBinary::F
             result.basic_info.id.fileType = XBinary::FT_PLAINTEXT;
         }
 
-        NFD_Binary::Binary_handle_Texts(pDevice, pOptions, &result, pPdStruct);
-        NFD_Binary::Binary_handle_Formats(pDevice, pOptions, &result);
-        NFD_Binary::Binary_handle_Databases(pDevice, pOptions, &result);
-        NFD_Binary::Binary_handle_Images(pDevice, pOptions, &result);
-        NFD_Binary::Binary_handle_Archives(pDevice, pOptions, &result, pPdStruct);
-        NFD_Binary::Binary_handle_Certificates(pDevice, pOptions, &result);
-        NFD_Binary::Binary_handle_DebugData(pDevice, pOptions, &result, pPdStruct);
-        NFD_Binary::Binary_handle_InstallerData(pDevice, pOptions, &result);
-        NFD_Binary::Binary_handle_SFXData(pDevice, pOptions, &result);
-        NFD_Binary::Binary_handle_ProtectorData(pDevice, pOptions, &result);
-        NFD_Binary::Binary_handle_LibraryData(pDevice, pOptions, &result);
+        NFD_Binary::handle_Texts(pDevice, pOptions, &result, pPdStruct);
+        NFD_Binary::handle_Formats(pDevice, pOptions, &result);
+        NFD_Binary::handle_Databases(pDevice, pOptions, &result);
+        NFD_Binary::handle_Images(pDevice, pOptions, &result);
+        NFD_Binary::handle_Archives(pDevice, pOptions, &result, pPdStruct);
+        NFD_Binary::handle_Certificates(pDevice, pOptions, &result);
+        NFD_Binary::handle_DebugData(pDevice, pOptions, &result, pPdStruct);
+        NFD_Binary::handle_InstallerData(pDevice, pOptions, &result);
+        NFD_Binary::handle_SFXData(pDevice, pOptions, &result);
+        NFD_Binary::handle_ProtectorData(pDevice, pOptions, &result);
+        NFD_Binary::handle_LibraryData(pDevice, pOptions, &result);
 
         if (result.basic_info.parentId.filePart == XBinary::FILEPART_RESOURCE) {
-            NFD_Binary::Binary_handle_Resources(pDevice, pOptions, &result);
+            NFD_Binary::handle_Resources(pDevice, pOptions, &result);
         }
 
-        NFD_Binary::Binary_handle_FixDetects(pDevice, pOptions, &result);
+        NFD_Binary::handle_FixDetects(pDevice, pOptions, &result);
 
         NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
     }
