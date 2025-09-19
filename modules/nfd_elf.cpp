@@ -23,67 +23,6 @@ qint32 NFD_ELF::getEntrypointRecordsSize()
     return sizeof(g_ELF_entrypoint_records);
 }
 
-NFD_ELF::ELFINFO_STRUCT NFD_ELF::getELFInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-										 XBinary::PDSTRUCT *pPdStruct)
-{
-	QElapsedTimer timer;
-	timer.start();
-
-	ELFINFO_STRUCT result = {};
-
-	XELF elf(pDevice, pOptions->bIsImage);
-
-	if (elf.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-		// Basic info
-		result.basic_info = NFD_Binary::_initBasicInfo(&elf, parentId, pOptions, nOffset, pPdStruct);
-
-		result.bIs64 = elf.is64();
-		result.bIsBigEndian = elf.isBigEndian();
-		result.sEntryPointSignature = elf.getSignature(elf.getEntryPointOffset(&(result.basic_info.memoryMap)), 150);
-
-		result.nStringTableSection = elf.getSectionStringTable(result.bIs64);
-		result.baStringTable = elf.getSection(result.nStringTableSection);
-
-		result.listTags = elf.getTagStructs();
-		result.listLibraries = elf.getLibraries(&(result.basic_info.memoryMap), &result.listTags);
-
-		result.listSectionHeaders = elf.getElf_ShdrList(100);
-		result.listProgramHeaders = elf.getElf_PhdrList(100);
-		result.listSectionRecords = XELF::getSectionRecords(&result.listSectionHeaders, pOptions->bIsImage, &result.baStringTable);
-		result.listNotes = elf.getNotes(&result.listProgramHeaders);
-		if (result.listNotes.count() == 0) {
-			result.listNotes = elf.getNotes(&result.listSectionHeaders);
-		}
-
-		result.sRunPath = elf.getRunPath(&(result.basic_info.memoryMap), &result.listTags).sString;
-
-		result.nSymTabSection = elf.getSectionIndexByName(".symtab", &result.listSectionRecords);
-		if (result.nSymTabSection != -1) {
-			result.nSymTabOffset = result.listSectionRecords.at(result.nSymTabSection).nOffset;
-		}
-
-		result.nDebugSection = elf.getSectionIndexByName(".debug_info", &result.listSectionRecords);
-		if (result.nDebugSection != -1) {
-			result.nDWARFDebugOffset = result.listSectionRecords.at(result.nDebugSection).nOffset;
-			result.nDWARFDebugSize = result.listSectionRecords.at(result.nDebugSection).nSize;
-		}
-
-		result.nCommentSection = XELF::getSectionNumber(".comment", &result.listSectionRecords);
-		if (result.nCommentSection != -1) {
-			result.osCommentSection.nOffset = result.listSectionRecords.at(result.nCommentSection).nOffset;
-			result.osCommentSection.nSize = result.listSectionRecords.at(result.nCommentSection).nSize;
-			result.listComments = elf.getStringsFromSection(result.nCommentSection).values();
-		}
-
-		// Format/OS contribution to maps via common helpers can be added by callers as needed.
-		NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
-	}
-
-	result.basic_info.nElapsedTime = timer.elapsed();
-
-	return result;
-}
-
 void NFD_ELF::handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
 	XELF elf(pDevice, pOptions->bIsImage);
@@ -977,12 +916,55 @@ void NFD_ELF::handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
 NFD_ELF::ELFINFO_STRUCT NFD_ELF::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
                                             XBinary::PDSTRUCT *pPdStruct)
 {
-    // Delegate the core ELF info extraction to NFD_ELF, then continue with SpecAbstract-specific handlers.
-    ELFINFO_STRUCT result = NFD_ELF::getELFInfo(pDevice, parentId, pOptions, nOffset, pPdStruct);
+    QElapsedTimer timer;
+    timer.start();
+
+    ELFINFO_STRUCT result = {};
 
     XELF elf(pDevice, pOptions->bIsImage);
+
     if (elf.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        // Keep existing SpecAbstract handlers that derive more detects from the core info
+        // Basic info
+        result.basic_info = NFD_Binary::_initBasicInfo(&elf, parentId, pOptions, nOffset, pPdStruct);
+
+        result.bIs64 = elf.is64();
+        result.bIsBigEndian = elf.isBigEndian();
+        result.sEntryPointSignature = elf.getSignature(elf.getEntryPointOffset(&(result.basic_info.memoryMap)), 150);
+
+        result.nStringTableSection = elf.getSectionStringTable(result.bIs64);
+        result.baStringTable = elf.getSection(result.nStringTableSection);
+
+        result.listTags = elf.getTagStructs();
+        result.listLibraries = elf.getLibraries(&(result.basic_info.memoryMap), &result.listTags);
+
+        result.listSectionHeaders = elf.getElf_ShdrList(100);
+        result.listProgramHeaders = elf.getElf_PhdrList(100);
+        result.listSectionRecords = XELF::getSectionRecords(&result.listSectionHeaders, pOptions->bIsImage, &result.baStringTable);
+        result.listNotes = elf.getNotes(&result.listProgramHeaders);
+        if (result.listNotes.count() == 0) {
+            result.listNotes = elf.getNotes(&result.listSectionHeaders);
+        }
+
+        result.sRunPath = elf.getRunPath(&(result.basic_info.memoryMap), &result.listTags).sString;
+
+        result.nSymTabSection = elf.getSectionIndexByName(".symtab", &result.listSectionRecords);
+        if (result.nSymTabSection != -1) {
+            result.nSymTabOffset = result.listSectionRecords.at(result.nSymTabSection).nOffset;
+        }
+
+        result.nDebugSection = elf.getSectionIndexByName(".debug_info", &result.listSectionRecords);
+        if (result.nDebugSection != -1) {
+            result.nDWARFDebugOffset = result.listSectionRecords.at(result.nDebugSection).nOffset;
+            result.nDWARFDebugSize = result.listSectionRecords.at(result.nDebugSection).nSize;
+        }
+
+        result.nCommentSection = XELF::getSectionNumber(".comment", &result.listSectionRecords);
+        if (result.nCommentSection != -1) {
+            result.osCommentSection.nOffset = result.listSectionRecords.at(result.nCommentSection).nOffset;
+            result.osCommentSection.nSize = result.listSectionRecords.at(result.nCommentSection).nSize;
+            result.listComments = elf.getStringsFromSection(result.nCommentSection).values();
+        }
+
         NFD_Binary::signatureScan(&result.basic_info.mapEntryPointDetects, result.sEntryPointSignature, NFD_ELF::getEntrypointRecords(),
                                   NFD_ELF::getEntrypointRecordsSize(), result.basic_info.id.fileType, XBinary::FT_ELF, &(result.basic_info), DETECTTYPE_ENTRYPOINT,
                                   pPdStruct);
@@ -998,6 +980,8 @@ NFD_ELF::ELFINFO_STRUCT NFD_ELF::getInfo(QIODevice *pDevice, XScanEngine::SCANID
 
         NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
     }
+
+    result.basic_info.nElapsedTime = timer.elapsed();
 
     return result;
 }
