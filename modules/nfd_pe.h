@@ -118,7 +118,6 @@ public:
 
     static PEINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
 
-    // Accessors for PE signature tables (migrated from SpecAbstract/signatures.cpp)
     // SIGNATURE_RECORD based tables
     static NFD_Binary::SIGNATURE_RECORD *getHeaderRecords();
     static qint32 getHeaderRecordsSize();
