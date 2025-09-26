@@ -25,7 +25,7 @@ NFD_ZIP::NFD_ZIP(XZip *pZip, XBinary::FILEPART filePart, OPTIONS *pOptions, XBin
 }
 
 NFD_ZIP::ZIPINFO_STRUCT NFD_ZIP::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                            XBinary::PDSTRUCT *pPdStruct)
+                                         XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
     timer.start();
@@ -103,7 +103,8 @@ void NFD_ZIP::handle_Microsoftoffice(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
                 QString sData = xzip.decompress(&record, pPdStruct).data();
                 QString sApplication = XBinary::regExp("<Application>(.*?)</Application>", sData, 1);
 
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_MICROSOFTOFFICE, "", "", 0);
+                _SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_MICROSOFTOFFICE, "", "", 0);
 
                 if (sApplication == "Microsoft Office Word") {
                     ss.name = XScanEngine::RECORD_NAME_MICROSOFTOFFICEWORD;
@@ -140,7 +141,8 @@ void NFD_ZIP::handle_OpenOffice(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *p
                 if (sData.contains(":opendocument:")) {
                     pZipInfo->basic_info.id.fileType = XBinary::FT_DOCUMENT;
 
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_OPENDOCUMENT, "", "", 0);
+                    _SCANS_STRUCT ss =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_OPENDOCUMENT, "", "", 0);
 
                     pZipInfo->basic_info.mapResultFormats.insert(ss.name, NFD_Binary::scansToScan(&(pZipInfo->basic_info), &ss));
                 }
@@ -150,7 +152,7 @@ void NFD_ZIP::handle_OpenOffice(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *p
 }
 
 void NFD_ZIP::handle_Metainfos(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BASIC_INFO *pBasicInfo, QList<XArchive::RECORD> *pListArchiveRecords,
-                                   XBinary::PDSTRUCT *pPdStruct)
+                               XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pOptions)
 

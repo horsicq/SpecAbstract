@@ -201,7 +201,8 @@ void NFD_APK::APK_handle(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions
 
         QList<XAPK::APK_SIG_BLOCK_RECORD> listApkSignaturesBlockRecords = xapk.getAPKSignaturesBlockRecordsList();
 
-        _SCANS_STRUCT ssSignTool = NFD_Binary::getScansStruct(0, XBinary::FT_APK, XScanEngine::RECORD_TYPE_SIGNTOOL, XScanEngine::RECORD_NAME_APKSIGNATURESCHEME, "", "", 0);
+        _SCANS_STRUCT ssSignTool =
+            NFD_Binary::getScansStruct(0, XBinary::FT_APK, XScanEngine::RECORD_TYPE_SIGNTOOL, XScanEngine::RECORD_NAME_APKSIGNATURESCHEME, "", "", 0);
 
         if (XAPK::isAPKSignatureBlockRecordPresent(&listApkSignaturesBlockRecords, 0x7109871a)) {
             ssSignTool.sVersion = "v2";
@@ -269,7 +270,8 @@ void NFD_APK::APK_handle(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions
             if (!XBinary::checkStringNumber(sCompileSdkVersionCodename.section(".", 0, 0), 1, 15)) sCompileSdkVersionCodename = "";
 
             if ((sCompileSdkVersion != "") || (sCompileSdkVersionCodename != "") || (sTargetSdkVersion != "") || (sMinSdkVersion != "")) {
-                _SCANS_STRUCT ssAndroidSDK = NFD_Binary::getScansStruct(0, XBinary::FT_APK, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_ANDROIDSDK, "", "", 0);
+                _SCANS_STRUCT ssAndroidSDK =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_APK, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_ANDROIDSDK, "", "", 0);
 
                 QString _sVersion;
                 QString _sAndroidVersion;
@@ -783,8 +785,8 @@ void NFD_APK::APK_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTION
     }
 }
 
-NFD_DEX::DEXINFO_STRUCT NFD_APK::APK_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, APKINFO_STRUCT *pApkInfo,
-                                              XBinary::PDSTRUCT *pPdStruct, const QString &sFileName)
+NFD_DEX::DEXINFO_STRUCT NFD_APK::APK_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, APKINFO_STRUCT *pApkInfo, XBinary::PDSTRUCT *pPdStruct,
+                                              const QString &sFileName)
 {
     Q_UNUSED(pOptions)
 
@@ -808,7 +810,7 @@ NFD_DEX::DEXINFO_STRUCT NFD_APK::APK_scan_DEX(QIODevice *pDevice, XScanEngine::S
 }
 
 NFD_APK::APKINFO_STRUCT NFD_APK::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                           XBinary::PDSTRUCT *pPdStruct)
+                                         XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
     timer.start();

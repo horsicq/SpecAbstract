@@ -1407,27 +1407,33 @@ void NFD_PE::handle_import(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptio
 
     // TODO 32/64
     if (stDetects.contains("kernel32_zprotect")) {
-        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_ZPROTECT, NFD_Binary::getScansStruct(0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ZPROTECT, "", "", 0));
+        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_ZPROTECT, NFD_Binary::getScansStruct(0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                                                                                  XScanEngine::RECORD_NAME_ZPROTECT, "", "", 0));
     }
 
     if (stDetects.contains("user32_pespina") && stDetects.contains("comctl32_pespina")) {
-        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_PESPIN, NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_PESPIN, "1.0-1.2", "", 0));
+        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_PESPIN, NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                                                                                XScanEngine::RECORD_NAME_PESPIN, "1.0-1.2", "", 0));
     }
 
     if (stDetects.contains("user32_pespin") && stDetects.contains("comctl32_pespin") && stDetects.contains("kernel32_pespin")) {
-        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_PESPIN, NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_PESPIN, "", "", 0));
+        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_PESPIN, NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                                                                                XScanEngine::RECORD_NAME_PESPIN, "", "", 0));
     }
 
     if (stDetects.contains("user32_pespin") && stDetects.contains("comctl32_pespin") && stDetects.contains("kernel32_pespinx")) {
-        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_PESPIN, NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_PESPIN, "1.3X", "", 0));
+        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_PESPIN, NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                                                                                XScanEngine::RECORD_NAME_PESPIN, "1.3X", "", 0));
     }
 
     if (stDetects.contains("kernel32_alloy0")) {
-        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_ALLOY, NFD_Binary::getScansStruct(0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ALLOY, "4.X", "", 0));
+        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_ALLOY, NFD_Binary::getScansStruct(0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                                                                               XScanEngine::RECORD_NAME_ALLOY, "4.X", "", 0));
     }
 
     if (stDetects.contains("kernel32_alloy2")) {
-        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_ALLOY, NFD_Binary::getScansStruct(2, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ALLOY, "4.X", "", 0));
+        pPEInfo->basic_info.mapImportDetects.insert(XScanEngine::RECORD_NAME_ALLOY, NFD_Binary::getScansStruct(2, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                                                                               XScanEngine::RECORD_NAME_ALLOY, "4.X", "", 0));
     }
 
     //    if(stDetects.contains("kernel32_pecompact2"))
@@ -1487,26 +1493,31 @@ void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
             pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
         } else if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2009")) {
             // Xenocode Virtual Application Studio 2009
-            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2009, "", "", 0);
+            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                          XScanEngine::RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2009, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
             pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
         } else if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2010 ISV Edition")) {
             // Xenocode Virtual Application Studio 2010 (ISV Edition)
-            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010ISVEDITION, "", "", 0);
+            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                          XScanEngine::RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010ISVEDITION, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
             pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
         } else if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2010")) {
-            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010, "", "", 0);
+            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                          XScanEngine::RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2010, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
             pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
         } else if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2012 ISV Edition")) {
             // Xenocode Virtual Application Studio 2012 (ISV Edition)
-            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2012ISVEDITION, "", "", 0);
+            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                          XScanEngine::RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2012ISVEDITION, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
             pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
         } else if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Xenocode Virtual Application Studio 2013 ISV Edition")) {
             // Xenocode Virtual Application Studio 2013 (ISV Edition)
-            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2013ISVEDITION, "", "", 0);
+            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                          XScanEngine::RECORD_NAME_XENOCODEVIRTUALAPPLICATIONSTUDIO2013ISVEDITION, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
             pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
         } else if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Turbo Studio")) {
@@ -1539,7 +1550,8 @@ void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
         if (pPEInfo->listSectionNames.count() >= 3) {
             if (pPEInfo->listSectionRecords.at(0).nSize == 0) {
                 if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_NATIVECRYPTORBYDOSX)) {
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_NATIVECRYPTORBYDOSX, "", "", 0);
+                    _SCANS_STRUCT ss =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_NATIVECRYPTORBYDOSX, "", "", 0);
                     pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
@@ -1547,14 +1559,16 @@ void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
 
         if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_ACTIVEMARK)) {
             _SCANS_STRUCT ssOverlay = pPEInfo->basic_info.mapOverlayDetects.value(XScanEngine::RECORD_NAME_ACTIVEMARK);
-            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ACTIVEMARK, ssOverlay.sVersion, ssOverlay.sInfo, 0);
+            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ACTIVEMARK, ssOverlay.sVersion,
+                                                          ssOverlay.sInfo, 0);
             pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_SECUROM)) {
             // TODO Version
             _SCANS_STRUCT ssOverlay = pPEInfo->basic_info.mapOverlayDetects.value(XScanEngine::RECORD_NAME_SECUROM);
-            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_SECUROM, ssOverlay.sVersion, ssOverlay.sInfo, 0);
+            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_SECUROM, ssOverlay.sVersion,
+                                                          ssOverlay.sInfo, 0);
             pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
@@ -1607,8 +1621,9 @@ void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
             }
 
             // EXPRESSOR
-            if (pPEInfo->basic_info.mapImportDetects.contains(XScanEngine::RECORD_NAME_EXPRESSOR) || (pPEInfo->basic_info.mapImportDetects.contains(XScanEngine::RECORD_NAME_EXPRESSOR_KERNEL32) &&
-                                                                                                     pPEInfo->basic_info.mapImportDetects.contains(XScanEngine::RECORD_NAME_EXPRESSOR_USER32))) {
+            if (pPEInfo->basic_info.mapImportDetects.contains(XScanEngine::RECORD_NAME_EXPRESSOR) ||
+                (pPEInfo->basic_info.mapImportDetects.contains(XScanEngine::RECORD_NAME_EXPRESSOR_KERNEL32) &&
+                 pPEInfo->basic_info.mapImportDetects.contains(XScanEngine::RECORD_NAME_EXPRESSOR_USER32))) {
                 if (pPEInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_EXPRESSOR)) {
                     _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_EXPRESSOR);
 
@@ -1794,10 +1809,12 @@ void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                 }
 
                 if (pe.find_signature(pPEInfo->nOverlaySize, nSize, "'asmg-protected'00", nullptr, pPdStruct) != -1) {
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ASMGUARD, "2.XX", "", 0);
+                    _SCANS_STRUCT ss =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ASMGUARD, "2.XX", "", 0);
                     pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                 } else if (pPEInfo->basic_info.mapSectionNamesDetects.contains(XScanEngine::RECORD_NAME_ASMGUARD)) {
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ASMGUARD, "2.XX", "", 0);
+                    _SCANS_STRUCT ss =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ASMGUARD, "2.XX", "", 0);
                     pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
@@ -1984,7 +2001,8 @@ void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                         if (pPEInfo->listSectionRecords.count() >= 2) {
                             if (pe.compareSignature(&(pPEInfo->basic_info.memoryMap), "'kernel32.dll'00000000'VirtualAlloc'00000000",
                                                     pPEInfo->listSectionRecords.at(1).nOffset)) {
-                                _SCANS_STRUCT recordZProtect = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ZPROTECT, "1.3-1.4.4", "", 0);
+                                _SCANS_STRUCT recordZProtect = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                                                          XScanEngine::RECORD_NAME_ZPROTECT, "1.3-1.4.4", "", 0);
                                 pPEInfo->basic_info.mapResultProtectors.insert(recordZProtect.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &recordZProtect));
                             }
                         }
@@ -2005,7 +2023,8 @@ void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                                                                     pPEInfo->listSectionRecords.at(2).nSize, pPdStruct) > 7.6);
 
                                 if (bDetect1 || bDetect2) {
-                                    _SCANS_STRUCT recordZProtect = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ZPROTECT, "1.XX", "", 0);
+                                    _SCANS_STRUCT recordZProtect = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                                                              XScanEngine::RECORD_NAME_ZPROTECT, "1.XX", "", 0);
                                     pPEInfo->basic_info.mapResultProtectors.insert(recordZProtect.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &recordZProtect));
                                 }
                             }
@@ -2141,7 +2160,8 @@ void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                 }
 
                 // ANDpakk2
-                if (pPEInfo->basic_info.mapImportDetects.contains(XScanEngine::RECORD_NAME_ANDPAKK2) || pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ANDPAKK2)) {
+                if (pPEInfo->basic_info.mapImportDetects.contains(XScanEngine::RECORD_NAME_ANDPAKK2) ||
+                    pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ANDPAKK2)) {
                     // TODO compare entryPoint and import sections TODO Check
                     if (pPEInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_ANDPAKK2)) {
                         _SCANS_STRUCT recordANFpakk2 = pPEInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_ANDPAKK2);
@@ -2220,7 +2240,8 @@ void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
 
                 // KKrunchy
                 if (pPEInfo->basic_info.mapImportDetects.contains(XScanEngine::RECORD_NAME_KKRUNCHY)) {
-                    if (pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_KKRUNCHY) || pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_GENERIC)) {
+                    if (pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_KKRUNCHY) ||
+                        pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_GENERIC)) {
                         if (pPEInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_KKRUNCHY)) {
                             _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_KKRUNCHY);
 
@@ -2535,7 +2556,8 @@ void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                 if (pPEInfo->basic_info.mapImportDetects.contains(XScanEngine::RECORD_NAME_HMIMYSPACKER)) {
                     if (XPE::isSectionNamePresent(".hmimys", &(pPEInfo->listSectionRecords)))  // TODO Check, pdStruct
                     {
-                        _SCANS_STRUCT recordSS = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_HMIMYSPACKER, "", "", 0);
+                        _SCANS_STRUCT recordSS =
+                            NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_HMIMYSPACKER, "", "", 0);
                         pPEInfo->basic_info.mapResultPackers.insert(recordSS.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &recordSS));
                     }
                 }
@@ -3060,7 +3082,8 @@ void NFD_PE::handle_VProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpt
                         qint64 nOffset_Version = pe.find_ansiString(nSectionOffset, nSectionSize, "VProtect", pPdStruct);
 
                         if (nOffset_Version != -1) {
-                            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_VIRTUALIZEPROTECT, "", "", 0);
+                            _SCANS_STRUCT ss =
+                                NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_VIRTUALIZEPROTECT, "", "", 0);
 
                             nOffset_Version = pe.find_ansiString(nSectionOffset, nSectionSize, "VProtect Ultimate v", pPdStruct);
 
@@ -3089,7 +3112,8 @@ void NFD_PE::handle_TTProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                     if (pPEInfo->nEntryPointSection > 0) {
                         if (pPEInfo->sEntryPointSectionName == ".TTP")  // TODO !!!
                         {
-                            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_TTPROTECT, "", "", 0);
+                            _SCANS_STRUCT ss =
+                                NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_TTPROTECT, "", "", 0);
 
                             pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                         }
@@ -3100,8 +3124,7 @@ void NFD_PE::handle_TTProtect(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
     }
 }
 
-void NFD_PE::handle_SafeengineShielden(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo,
-                                                XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_SafeengineShielden(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -3111,7 +3134,8 @@ void NFD_PE::handle_SafeengineShielden(QIODevice *pDevice, XScanEngine::SCAN_OPT
                 if (pPEInfo->nEntryPointSection > 0) {
                     if (pPEInfo->sEntryPointSectionName == ".sedata")  // TODO !!!
                     {
-                        _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_SAFEENGINESHIELDEN, "2.XX", "", 0);
+                        _SCANS_STRUCT ss =
+                            NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_SAFEENGINESHIELDEN, "2.XX", "", 0);
 
                         qint64 nSectionOffset = pPEInfo->listSectionRecords.at(1).nOffset;
                         qint64 nSectionSize = pPEInfo->listSectionRecords.at(1).nSize;
@@ -3275,7 +3299,8 @@ void NFD_PE::handle_Themida(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpti
 
                 if (bKernel32 && bComctl32) {
                     // TODO Version
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_THEMIDAWINLICENSE, "1.XX-2.XX", "", 0);
+                    _SCANS_STRUCT ss =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_THEMIDAWINLICENSE, "1.XX-2.XX", "", 0);
 
                     pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                 }
@@ -3299,7 +3324,8 @@ void NFD_PE::handle_Themida(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpti
                         if (pPEInfo->listSectionNames.at(0) == "        ") {
                             bSuccess = false;
 
-                            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_THEMIDAWINLICENSE, "3.XX", "", 0);
+                            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                                          XScanEngine::RECORD_NAME_THEMIDAWINLICENSE, "3.XX", "", 0);
 
                             if (XPE::isSectionNamePresent(".themida", &(pPEInfo->listSectionRecords))) {
                                 ss.sInfo = "Themida";
@@ -3367,7 +3393,8 @@ void NFD_PE::handle_Obsidium(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpt
                 if (bKernel32 && bUser32) {
                     if (pe.compareEntryPoint(&(pPEInfo->basic_info.memoryMap), "EB$$50EB$$E8") ||
                         pe.compareEntryPoint(&(pPEInfo->basic_info.memoryMap), "EB$$E8........EB$$EB")) {
-                        _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_OBSIDIUM, "", "", 0);
+                        _SCANS_STRUCT ss =
+                            NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_OBSIDIUM, "", "", 0);
 
                         pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                     }
@@ -3431,7 +3458,8 @@ void NFD_PE::handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions,
             }
 
             if ((sDllLib.contains("gcc")) || (sDllLib.contains("libgcj")) || (sDllLib.contains("cyggcj")) || (sDllLib == "_set_invalid_parameter_handler") ||
-                XPE::isImportLibraryPresentI("libgcc_s_dw2-1.dll", &(pPEInfo->listImports)) || pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_MINGW) ||
+                XPE::isImportLibraryPresentI("libgcc_s_dw2-1.dll", &(pPEInfo->listImports)) ||
+                pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_MINGW) ||
                 pPEInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_GCC)) {
                 bDetectGCC = true;
             }
@@ -3570,8 +3598,8 @@ void NFD_PE::handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions,
             }
 
             if (ssCompiler.type == XScanEngine::RECORD_TYPE_UNKNOWN) {
-                if ((ssTool.name == XScanEngine::RECORD_NAME_MINGW) || (ssTool.name == XScanEngine::RECORD_NAME_MSYS) || (ssTool.name == XScanEngine::RECORD_NAME_MSYS2) ||
-                    (ssTool.name == XScanEngine::RECORD_NAME_CYGWIN)) {
+                if ((ssTool.name == XScanEngine::RECORD_NAME_MINGW) || (ssTool.name == XScanEngine::RECORD_NAME_MSYS) ||
+                    (ssTool.name == XScanEngine::RECORD_NAME_MSYS2) || (ssTool.name == XScanEngine::RECORD_NAME_CYGWIN)) {
                     ssCompiler.type = XScanEngine::RECORD_TYPE_COMPILER;
                     ssCompiler.name = XScanEngine::RECORD_NAME_GCC;
                 }
@@ -3632,7 +3660,8 @@ void NFD_PE::handle_Signtools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
 
             if (listCerts.count()) {
                 if ((listCerts.at(0).record.wRevision == 0x200) && (listCerts.at(0).record.wCertificateType == 2)) {
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_SIGNTOOL, XScanEngine::RECORD_NAME_WINAUTH, "2.0", "PKCS #7", 0);
+                    _SCANS_STRUCT ss =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_SIGNTOOL, XScanEngine::RECORD_NAME_WINAUTH, "2.0", "PKCS #7", 0);
                     pPEInfo->basic_info.mapResultSigntools.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
@@ -3647,7 +3676,8 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
     if (pe.isValid(pPdStruct)) {
         if (!pPEInfo->cliInfo.bValid) {
             // Inno Setup
-            if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_INNOSETUP) || pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_INNOSETUP)) {
+            if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_INNOSETUP) ||
+                pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_INNOSETUP)) {
                 _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::RECORD_NAME_INNOSETUP, "", "", 0);
 
                 if ((pe.read_uint32(0x30) == 0x6E556E49))  // Uninstall
@@ -3770,14 +3800,16 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
             if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_NOSINSTALLER)) {
                 if (pPEInfo->basic_info.mapSectionNamesDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_NOSINSTALLER)) {
                     // TODO Version from resources!
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_NOSINSTALLER, "", "", 0);
+                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                                  XScanEngine::XScanEngine::RECORD_NAME_NOSINSTALLER, "", "", 0);
                     pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
             // CAB SFX
             if (pPEInfo->sResourceManifest.contains("sfxcab.exe")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_CAB, "", "", 0);
+                _SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_CAB, "", "", 0);
 
                 if (pe.checkOffsetSize(pPEInfo->osResourcesSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                     qint64 nSectionOffset = pPEInfo->listSectionHeaders.at(pPEInfo->nResourcesSection).PointerToRawData +
@@ -3799,50 +3831,58 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
             // Install Anywhere
             if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_INSTALLANYWHERE)) {
                 if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)) == "InstallAnywhere") {
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_INSTALLANYWHERE, "", "", 0);
+                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                                  XScanEngine::XScanEngine::RECORD_NAME_INSTALLANYWHERE, "", "", 0);
                     ss.sVersion = XPE::getResourcesVersionValue("ProductVersion", &(pPEInfo->resVersion));
                     pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
             if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_GHOSTINSTALLER)) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_GHOSTINSTALLER, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_GHOSTINSTALLER, "", "", 0);
                 ss.sVersion = "1.0";
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_QTINSTALLER)) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_QTINSTALLER, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_QTINSTALLER, "", "", 0);
                 // ss.sVersion="";
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_INSTALL4J)) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_INSTALL4J, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_INSTALL4J, "", "", 0);
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_SMARTINSTALLMAKER)) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_SMARTINSTALLMAKER, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_SMARTINSTALLMAKER, "", "", 0);
                 ss.sVersion = XBinary::hexToString(pPEInfo->sOverlaySignature.mid(46, 14));  // TODO make 1 function
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_TARMAINSTALLER)) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_TARMAINSTALLER, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_TARMAINSTALLER, "", "", 0);
                 // TODO version
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_CLICKTEAM)) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_CLICKTEAM, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_CLICKTEAM, "", "", 0);
                 // TODO version
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // NSIS
             if ((pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_NSIS)) || (pPEInfo->sResourceManifest.contains("Nullsoft.NSIS"))) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_NSIS, "", "", 0);
+                _SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_NSIS, "", "", 0);
 
                 QString _sInfo = pPEInfo->basic_info.mapOverlayDetects.value(XScanEngine::XScanEngine::RECORD_NAME_NSIS).sInfo;
 
@@ -3870,12 +3910,14 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
 
             // InstallShield
             if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("InstallShield")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_INSTALLSHIELD, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_INSTALLSHIELD, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
                 ss.sVersion.replace(", ", ".");
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             } else if (pPEInfo->sResourceManifest.contains("InstallShield")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_INSTALLSHIELD, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_INSTALLSHIELD, "", "", 0);
 
                 if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                     qint64 _nOffset = pPEInfo->osDataSection.nOffset;
@@ -3896,11 +3938,13 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             } else if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_INSTALLSHIELD)) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_INSTALLSHIELD, "", "PackageForTheWeb", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_INSTALLSHIELD, "", "PackageForTheWeb", 0);
                 // TODO version
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             } else if (XPE::getResourcesVersionValue("CompanyName", &(pPEInfo->resVersion)).contains("InstallShield")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_INSTALLSHIELD, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_INSTALLSHIELD, "", "", 0);
 
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion));
 
@@ -3912,7 +3956,8 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
             }
 
             if (pPEInfo->sResourceManifest.contains("AdvancedInstallerSetup")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_ADVANCEDINSTALLER, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_ADVANCEDINSTALLER, "", "", 0);
 
                 if ((pPEInfo->nOverlayOffset) && (pPEInfo->nOverlaySize) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                     qint64 _nOffset = pPEInfo->nOverlayOffset;
@@ -3930,25 +3975,29 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
             }
 
             if (pPEInfo->sResourceManifest.contains("Illustrate.Spoon.Installer")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_SPOONINSTALLER, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_SPOONINSTALLER, "", "", 0);
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (pPEInfo->sResourceManifest.contains("DeployMaster Installer")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_DEPLOYMASTER, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_DEPLOYMASTER, "", "", 0);
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if ((pPEInfo->sResourceManifest.contains("Gentee.Installer.Install")) || (pPEInfo->sResourceManifest.contains("name=\"gentee\""))) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_GENTEEINSTALLER, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_GENTEEINSTALLER, "", "", 0);
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             } else {
                 if (pPEInfo->basic_info.mapSectionNamesDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_GENTEEINSTALLER)) {
                     if (XPE::isResourcePresent(XPE_DEF::S_RT_RCDATA, "SETUP_TEMP", &(pPEInfo->listResources))) {
-                        _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_GENTEEINSTALLER, "", "", 0);
+                        _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                                      XScanEngine::XScanEngine::RECORD_NAME_GENTEEINSTALLER, "", "", 0);
 
                         pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                     }
@@ -3956,90 +4005,103 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
             }
 
             if (pPEInfo->sResourceManifest.contains("BitRock Installer")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_BITROCKINSTALLER, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_BITROCKINSTALLER, "", "", 0);
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("GP-Install") &&
                 XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("TASPro6-Install")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_GPINSTALL, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_GPINSTALL, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
                 ss.sVersion.replace(", ", ".");
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("Total Commander Installer")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_TOTALCOMMANDERINSTALLER, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_TOTALCOMMANDERINSTALLER, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("Comments", &(pPEInfo->resVersion)).contains("Actual Installer")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_ACTUALINSTALLER, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_ACTUALINSTALLER, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("Comments", &(pPEInfo->resVersion)).contains("Avast Antivirus")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_AVASTANTIVIRUS, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_AVASTANTIVIRUS, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("Opera Installer")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_OPERA, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_OPERA, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("Yandex Installer")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_YANDEX, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_YANDEX, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("Google Update")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_GOOGLE, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_GOOGLE, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("Visual Studio Installer")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_MICROSOFTVISUALSTUDIO, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_MICROSOFTVISUALSTUDIO, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("InternalName", &(pPEInfo->resVersion)).contains("Dropbox Update Setup")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_DROPBOX, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_DROPBOX, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("VeraCrypt")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_VERACRYPT, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_VERACRYPT, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("Microsoft .NET Framework")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_MICROSOFTDOTNETFRAMEWORK, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_MICROSOFTDOTNETFRAMEWORK, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (XPE::getResourcesVersionValue("LegalTrademarks", &(pPEInfo->resVersion)).contains("Setup Factory")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_SETUPFACTORY, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_SETUPFACTORY, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("ProductVersion", &(pPEInfo->resVersion)).trimmed();
 
                 if (ss.sVersion.contains(",")) {
@@ -4051,7 +4113,8 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
             }
 
             if (XPE::getResourcesVersionValue("Comments", &(pPEInfo->resVersion)).contains("This installation was built with InstallAware")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_INSTALLAWARE, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_INSTALLAWARE, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
@@ -4059,7 +4122,8 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
 
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("Microsoft Office")) {
                 if (XPE::getResourcesVersionValue("InternalName", &(pPEInfo->resVersion)).contains("Bootstrapper.exe")) {
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_MICROSOFTOFFICE, "", "", 0);
+                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                                  XScanEngine::XScanEngine::RECORD_NAME_MICROSOFTOFFICE, "", "", 0);
                     ss.sVersion = XPE::getResourcesVersionValue("ProductVersion", &(pPEInfo->resVersion)).trimmed();
 
                     if (ss.sVersion.contains(",")) {
@@ -4073,7 +4137,8 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
 
             // Squirrel Installer
             if (XPE::getResourcesVersionValue("SquirrelAwareVersion", &(pPEInfo->resVersion)) != "") {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_SQUIRRELINSTALLER, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_SQUIRRELINSTALLER, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("SquirrelAwareVersion", &(pPEInfo->resVersion)).trimmed();
 
                 if (ss.sVersion == "1") {
@@ -4085,7 +4150,8 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
 
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("Java") &&
                 XPE::getResourcesVersionValue("InternalName", &(pPEInfo->resVersion)).contains("Setup Launcher")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_JAVA, "", "", 0);
+                _SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_JAVA, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
@@ -4093,7 +4159,8 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
 
             if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_VMWARE) ||
                 XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("VMware installation")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_VMWARE, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_VMWARE, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
@@ -4103,7 +4170,8 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                 VI_STRUCT vi = NFD_Binary::get_WindowsInstaller_vi(pDevice, pOptions, pPEInfo->nOverlayOffset, pPEInfo->nOverlaySize, pPdStruct);
 
                 if (vi.sVersion != "") {
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_WINDOWSINSTALLER, "", "", 0);
+                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                                  XScanEngine::XScanEngine::RECORD_NAME_WINDOWSINSTALLER, "", "", 0);
 
                     ss.sVersion = vi.sVersion;
                     ss.sInfo = vi.sInfo;
@@ -4115,7 +4183,8 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
             // Alchemy Mindworks
             if (XPE::isResourcePresent(XPE_DEF::S_RT_RCDATA, 4001, &(pPEInfo->listResources)) &&
                 XPE::isResourcePresent(XPE_DEF::S_RT_RCDATA, 5001, &(pPEInfo->listResources))) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_ALCHEMYMINDWORKS, "", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_ALCHEMYMINDWORKS, "", "", 0);
                 // TODO versions
 
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
@@ -4137,7 +4206,8 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                             VI_STRUCT vi = NFD_Binary::get_WindowsInstaller_vi(pDevice, pOptions, _nOffset, _nSize, pPdStruct);
 
                             if (vi.sVersion != "") {
-                                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_WINDOWSINSTALLER, "", "", 0);
+                                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                                              XScanEngine::XScanEngine::RECORD_NAME_WINDOWSINSTALLER, "", "", 0);
 
                                 ss.sVersion = vi.sVersion;
                                 ss.sInfo = vi.sInfo;
@@ -4156,7 +4226,8 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                 if (pPEInfo->exportHeader.listPositions.count() == 2) {
                     if ((pPEInfo->exportHeader.listPositions.at(0).sFunctionName == "_MainWndProc@16") ||
                         (pPEInfo->exportHeader.listPositions.at(1).sFunctionName == "_StubFileWrite@12")) {
-                        _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_WISE, "", "", 0);
+                        _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                                      XScanEngine::XScanEngine::RECORD_NAME_WISE, "", "", 0);
 
                         // Check version
                         pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
@@ -4167,7 +4238,8 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                         (pPEInfo->exportHeader.listPositions.at(2).sFunctionName == "_ProgressDlg@16") ||
                         (pPEInfo->exportHeader.listPositions.at(3).sFunctionName == "_UpdateCRC@8") ||
                         (pPEInfo->exportHeader.listPositions.at(4).sFunctionName == "_t1@40") || (pPEInfo->exportHeader.listPositions.at(5).sFunctionName == "_t2@12")) {
-                        _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_WISE, "", "", 0);
+                        _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                                      XScanEngine::XScanEngine::RECORD_NAME_WISE, "", "", 0);
 
                         // Check version
                         pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
@@ -4187,15 +4259,18 @@ void NFD_PE::handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions,
             if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_RAR)) {
                 if (XPE::isResourcePresent(XPE_DEF::S_RT_DIALOG, "STARTDLG", &(pPEInfo->listResources)) &&
                     XPE::isResourcePresent(XPE_DEF::S_RT_DIALOG, "LICENSEDLG", &(pPEInfo->listResources))) {
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_WINRAR, "", "", 0);
+                    _SCANS_STRUCT ss =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_WINRAR, "", "", 0);
                     // TODO Version
                     pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
 
-            if ((pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_WINRAR)) || (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_ZIP))) {
+            if ((pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_WINRAR)) ||
+                (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_ZIP))) {
                 if (pPEInfo->sResourceManifest.contains("WinRAR")) {
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_WINRAR, "", "", 0);
+                    _SCANS_STRUCT ss =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_WINRAR, "", "", 0);
                     // TODO Version
                     pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                 }
@@ -4208,7 +4283,8 @@ void NFD_PE::handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions,
 
                     qint64 nOffset_Version = pe.find_ansiString(_nOffset, _nSize, "ZIP self-extractor", pPdStruct);
                     if (nOffset_Version != -1) {
-                        _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_ZIP, "", "", 0);
+                        _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX,
+                                                                      XScanEngine::XScanEngine::RECORD_NAME_ZIP, "", "", 0);
                         // TODO Version
                         pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                     }
@@ -4217,13 +4293,16 @@ void NFD_PE::handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions,
 
             // 7z SFX
             if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("7-Zip")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_7Z, "", "", 0);
+                _SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_7Z, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("ProductVersion", &(pPEInfo->resVersion));
                 pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
-            if ((!pPEInfo->basic_info.mapResultSFX.contains(XScanEngine::XScanEngine::RECORD_NAME_7Z)) && (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_7Z))) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_7Z, "", "", 0);
+            if ((!pPEInfo->basic_info.mapResultSFX.contains(XScanEngine::XScanEngine::RECORD_NAME_7Z)) &&
+                (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_7Z))) {
+                _SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_7Z, "", "", 0);
                 ss.sInfo = "Modified";
                 pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
@@ -4231,7 +4310,8 @@ void NFD_PE::handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions,
             // SQUEEZ SFX
             if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_SQUEEZSFX)) {
                 if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("Squeez")) {
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::XScanEngine::RECORD_NAME_SQUEEZSFX, "", "", 0);
+                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_INSTALLER,
+                                                                  XScanEngine::XScanEngine::RECORD_NAME_SQUEEZSFX, "", "", 0);
                     ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion)).trimmed();
                     pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                 }
@@ -4241,7 +4321,8 @@ void NFD_PE::handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions,
             if (XPE::getResourcesVersionValue("InternalName", &(pPEInfo->resVersion)).contains("WinACE") ||
                 XPE::getResourcesVersionValue("InternalName", &(pPEInfo->resVersion)).contains("WinAce") ||
                 XPE::getResourcesVersionValue("InternalName", &(pPEInfo->resVersion)).contains("UNACE")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_WINACE, "", "", 0);
+                _SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_WINACE, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("ProductVersion", &(pPEInfo->resVersion));
                 pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
@@ -4249,7 +4330,8 @@ void NFD_PE::handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions,
             // WinZip
             if ((pPEInfo->sResourceManifest.contains("WinZipComputing.WinZip")) || (XPE::isSectionNamePresent("_winzip_", &(pPEInfo->listSectionRecords))))  // TODO
             {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_WINZIP, "", "", 0);
+                _SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_WINZIP, "", "", 0);
 
                 QString _sManifest = pPEInfo->sResourceManifest.section("assemblyIdentity", 1, 1);
                 ss.sVersion = XBinary::regExp("version=\"(.*?)\"", _sManifest, 1);
@@ -4258,14 +4340,16 @@ void NFD_PE::handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions,
 
             // Cab
             if (XPE::getResourcesVersionValue("FileDescription", &(pPEInfo->resVersion)).contains("Self-Extracting Cabinet")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_CAB, "", "", 0);
+                _SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_CAB, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("FileVersion", &(pPEInfo->resVersion));
                 pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             // GkSetup SFX
             if (XPE::getResourcesVersionValue("ProductName", &(pPEInfo->resVersion)).contains("GkSetup Self extractor")) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_GKSETUPSFX, "", "", 0);
+                _SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_SFX, XScanEngine::XScanEngine::RECORD_NAME_GKSETUPSFX, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("ProductVersion", &(pPEInfo->resVersion));
                 pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
@@ -4290,7 +4374,8 @@ void NFD_PE::handle_DongleProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
 
     if (pPEInfo->listImports.count() == 1) {
         if (XBinary::isRegExpPresent("^NOVEX", pPEInfo->listImports.at(0).sName.toUpper())) {
-            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_DONGLEPROTECTION, XScanEngine::XScanEngine::RECORD_NAME_GUARDIANSTEALTH, "", "", 0);
+            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_DONGLEPROTECTION,
+                                                          XScanEngine::XScanEngine::RECORD_NAME_GUARDIANSTEALTH, "", "", 0);
             pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
         }
     }
@@ -4310,7 +4395,8 @@ void NFD_PE::handle_NeoLite(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpti
                     qint64 nOffset_Version = pe.find_ansiString(_nOffset, _nSize, "NeoLite Executable File Compressor", pPdStruct);
 
                     if (nOffset_Version != -1) {
-                        _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_PACKER, XScanEngine::XScanEngine::RECORD_NAME_NEOLITE, "1.0", "", 0);
+                        _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_PACKER,
+                                                                      XScanEngine::XScanEngine::RECORD_NAME_NEOLITE, "1.0", "", 0);
                         pPEInfo->basic_info.mapResultPackers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
@@ -4319,8 +4405,7 @@ void NFD_PE::handle_NeoLite(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpti
     }
 }
 
-void NFD_PE::handle_PrivateEXEProtector(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo,
-                                           XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_PrivateEXEProtector(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -4372,13 +4457,15 @@ void NFD_PE::handle_PrivateEXEProtector(QIODevice *pDevice, XScanEngine::SCAN_OP
             }
 
             if (bKernel32 && bCharacteristics && bTurboLinker) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::XScanEngine::RECORD_NAME_PRIVATEEXEPROTECTOR, "2.25", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_PRIVATEEXEPROTECTOR, "2.25", "", 0);
 
                 pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
             if (bKernel32 && bUser32 && bCharacteristics && bTurboLinker) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::XScanEngine::RECORD_NAME_PRIVATEEXEPROTECTOR, "2.30-2.70", "", 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_PRIVATEEXEPROTECTOR, "2.30-2.70", "", 0);
 
                 pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
@@ -4386,8 +4473,7 @@ void NFD_PE::handle_PrivateEXEProtector(QIODevice *pDevice, XScanEngine::SCAN_OP
     }
 }
 
-void NFD_PE::handle_VisualBasicCryptors(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo,
-                                           XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_VisualBasicCryptors(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -4396,7 +4482,8 @@ void NFD_PE::handle_VisualBasicCryptors(QIODevice *pDevice, XScanEngine::SCAN_OP
         if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::XScanEngine::RECORD_NAME_1337EXECRYPTER)) {
             if (XPE::isImportLibraryPresentI("MSVBVM60.DLL", &(pPEInfo->listImports))) {
                 _SCANS_STRUCT ssOverlay = pPEInfo->basic_info.mapOverlayDetects.value(XScanEngine::XScanEngine::RECORD_NAME_1337EXECRYPTER);
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::XScanEngine::RECORD_NAME_1337EXECRYPTER, ssOverlay.sVersion, ssOverlay.sInfo, 0);
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::XScanEngine::RECORD_TYPE_PROTECTOR,
+                                                              XScanEngine::XScanEngine::RECORD_NAME_1337EXECRYPTER, ssOverlay.sVersion, ssOverlay.sInfo, 0);
                 pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
         }
@@ -5016,7 +5103,8 @@ void NFD_PE::handle_StarForce(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                 }
             }
 
-            _SCANS_STRUCT recordSS = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_STARFORCE, sVersion, sInfo, 0);
+            _SCANS_STRUCT recordSS =
+                NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_STARFORCE, sVersion, sInfo, 0);
             pPEInfo->basic_info.mapResultProtectors.insert(recordSS.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &recordSS));
         }
     }
@@ -5120,7 +5208,8 @@ void NFD_PE::handle_Petite(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptio
             }
         }
     }
-}void NFD_PE::handle_NETProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
+}
+void NFD_PE::handle_NETProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -5136,7 +5225,8 @@ void NFD_PE::handle_Petite(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptio
                 VI_STRUCT viEnigma = NFD_Binary::get_Enigma_vi(pDevice, pOptions, nSectionOffset, nSectionSize, pPdStruct);
 
                 if (viEnigma.bIsValid) {
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ENIGMA, viEnigma.sVersion, ".NET", 0);
+                    _SCANS_STRUCT ss =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ENIGMA, viEnigma.sVersion, ".NET", 0);
                     pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                 }
             }
@@ -5151,7 +5241,8 @@ void NFD_PE::handle_Petite(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptio
                                                                   "5266686E204D182276B5331112330C6D0A204D18229EA129611C76B505190158", nullptr, pPdStruct);
 
                     if (nOffset_NetReactor != -1) {
-                        _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_DOTNETREACTOR, "4.8-4.9", "", 0);
+                        _SCANS_STRUCT ss =
+                            NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_DOTNETREACTOR, "4.8-4.9", "", 0);
                         pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                     }
                 }
@@ -5244,16 +5335,19 @@ void NFD_PE::handle_Petite(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptio
                         qint64 nOffset_CliSecure = pe.find_unicodeString(_nOffset, _nSize, "CliSecure", false, pPdStruct);
 
                         if (nOffset_CliSecure != -1) {
-                            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_NETOBFUSCATOR, XScanEngine::RECORD_NAME_CLISECURE, "4.X", "", 0);
+                            _SCANS_STRUCT ss =
+                                NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_NETOBFUSCATOR, XScanEngine::RECORD_NAME_CLISECURE, "4.X", "", 0);
                             pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
                         }
                     }
                 }
             }
 
-            if ((pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_FISHNET)) || (pPEInfo->basic_info.mapCodeSectionDetects.contains(XScanEngine::RECORD_NAME_FISHNET))) {
-                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_NETOBFUSCATOR, XScanEngine::RECORD_NAME_FISHNET, "1.X", "", 0);  // TODO
-                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));       // TODO obfuscator?
+            if ((pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_FISHNET)) ||
+                (pPEInfo->basic_info.mapCodeSectionDetects.contains(XScanEngine::RECORD_NAME_FISHNET))) {
+                _SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_NETOBFUSCATOR, XScanEngine::RECORD_NAME_FISHNET, "1.X", "", 0);  // TODO
+                pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));  // TODO obfuscator?
             }
 
             if (pPEInfo->basic_info.mapDotAnsiStringsDetects.contains(XScanEngine::RECORD_NAME_NSPACK)) {
@@ -5409,14 +5503,16 @@ void NFD_PE::handle_Petite(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptio
 
         // Xenocode Virtual Application Studio 2009
         if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Xenocode Postbuild 2009 for .NET")) {
-            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_NETOBFUSCATOR, XScanEngine::RECORD_NAME_XENOCODEPOSTBUILD2009FORDOTNET, "", "", 0);
+            _SCANS_STRUCT ss =
+                NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_NETOBFUSCATOR, XScanEngine::RECORD_NAME_XENOCODEPOSTBUILD2009FORDOTNET, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
             pPEInfo->basic_info.mapResultNETObfuscators.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         // Xenocode Postbuild 2010 for .NET
         if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Xenocode Postbuild 2010 for .NET")) {
-            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_XENOCODEPOSTBUILD2010FORDOTNET, "", "", 0);
+            _SCANS_STRUCT ss =
+                NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_XENOCODEPOSTBUILD2010FORDOTNET, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
             pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
         }
@@ -5469,7 +5565,8 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
 
     if (pe.isValid(pPdStruct)) {
         // Linker
-        if ((pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_MICROSOFTLINKER)) && (!pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_GENERICLINKER))) {
+        if ((pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_MICROSOFTLINKER)) &&
+            (!pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_GENERICLINKER))) {
             ssLinker.type = XScanEngine::RECORD_TYPE_LINKER;
             ssLinker.name = XScanEngine::RECORD_NAME_MICROSOFTLINKER;
             //        } else if (pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_GENERICLINKER)) {
@@ -6598,7 +6695,8 @@ void NFD_PE::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOption
                 if (nSignature == 0x43506164) {
                     quint32 nVersion = pe.read_uint32(sr.nOffset + 8);
 
-                    _SCANS_STRUCT ssLibrary = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_LIBRARY, XScanEngine::RECORD_NAME_CHROMIUMCRASHPAD, "", "", 0);
+                    _SCANS_STRUCT ssLibrary =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_LIBRARY, XScanEngine::RECORD_NAME_CHROMIUMCRASHPAD, "", "", 0);
                     ssLibrary.sVersion = QString("%1.0").arg(nVersion);
                     pPEInfo->basic_info.mapResultLibraries.insert(ssLibrary.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ssLibrary));
                 }
@@ -6611,11 +6709,13 @@ void NFD_PE::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOption
             pPEInfo->basic_info.mapResultLibraries.insert(ssLibrary.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ssLibrary));
 
             // TODO Version
-            _SCANS_STRUCT ssCompiler = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_EXCELSIORJET, "", "", 0);  // mb Tool
+            _SCANS_STRUCT ssCompiler =
+                NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_EXCELSIORJET, "", "", 0);  // mb Tool
             pPEInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ssCompiler));
         }
 
-        if (pPEInfo->basic_info.mapSectionNamesDetects.contains(XScanEngine::RECORD_NAME_GO) || pPEInfo->basic_info.mapCodeSectionDetects.contains(XScanEngine::RECORD_NAME_GO)) {
+        if (pPEInfo->basic_info.mapSectionNamesDetects.contains(XScanEngine::RECORD_NAME_GO) ||
+            pPEInfo->basic_info.mapCodeSectionDetects.contains(XScanEngine::RECORD_NAME_GO)) {
             _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_GO, "1.X", "", 0);
 
             if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
@@ -6818,7 +6918,8 @@ void NFD_PE::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOption
                     }
 
                     if (nOffset_Lazarus != -1) {
-                        _SCANS_STRUCT ssLazarus = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_LAZARUS, "", "", 0);
+                        _SCANS_STRUCT ssLazarus =
+                            NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_LAZARUS, "", "", 0);
 
                         ssLazarus.sVersion = sLazarusVersion;
 
@@ -6830,7 +6931,8 @@ void NFD_PE::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOption
                     //                    if(nOffset_TObject!=-1)
                     //                    {
 
-                    //                        SCANS_STRUCT ss=NFD_Binary::getScansStruct(0,XBinary::FT_PE,XScanEngine::RECORD_TYPE_COMPILER,XScanEngine::RECORD_NAME_FPC,"","",0);
+                    //                        SCANS_STRUCT
+                    //                        ss=NFD_Binary::getScansStruct(0,XBinary::FT_PE,XScanEngine::RECORD_TYPE_COMPILER,XScanEngine::RECORD_NAME_FPC,"","",0);
 
                     //                        // TODO Version
                     //                        pPEInfo->basic_info.mapResultCompilers.insert(ss.name,scansToScan(&(pPEInfo->basic_info),&ss));
@@ -6859,7 +6961,8 @@ void NFD_PE::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOption
                         double dVersion = sVersion.toDouble();
 
                         if (dVersion) {
-                            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_LIBRARY, XScanEngine::RECORD_NAME_PYTHON, "", "", 0);
+                            _SCANS_STRUCT ss =
+                                NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_LIBRARY, XScanEngine::RECORD_NAME_PYTHON, "", "", 0);
 
                             ss.sVersion = QString::number(dVersion / 10, 'f', 1);
                             pPEInfo->basic_info.mapResultLibraries.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
@@ -6874,7 +6977,8 @@ void NFD_PE::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOption
                         double dVersion = sVersion.toDouble();
 
                         if (dVersion) {
-                            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_LIBRARY, XScanEngine::RECORD_NAME_PYTHON, "", "", 0);
+                            _SCANS_STRUCT ss =
+                                NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_LIBRARY, XScanEngine::RECORD_NAME_PYTHON, "", "", 0);
 
                             ss.sVersion = QString::number(dVersion);
                             pPEInfo->basic_info.mapResultLibraries.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
@@ -6916,7 +7020,8 @@ void NFD_PE::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOption
                     pe.find_ansiString(_nOffset, _nSize, "Virtual Pascal - Copyright (C) ", pPdStruct);  // "Virtual Pascal - Copyright (C) 1996-2000 vpascal.com"
 
                 if (nOffset_VP != -1) {
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_VIRTUALPASCAL, "", "", 0);
+                    _SCANS_STRUCT ss =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_VIRTUALPASCAL, "", "", 0);
 
                     // TODO Version???
                     ss.sVersion = QString("%1.%2").arg(QString::number(pPEInfo->nMajorLinkerVersion), QString::number(pPEInfo->nMinorLinkerVersion));
@@ -7118,7 +7223,7 @@ void NFD_PE::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint3
 }
 
 QList<NFD_PE::VCL_STRUCT> NFD_PE::getVCLstruct(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, qint64 nSize, bool bIs64,
-                                                  XBinary::PDSTRUCT *pPdStruct)
+                                               XBinary::PDSTRUCT *pPdStruct)
 {
     QList<VCL_STRUCT> listResult;
 
@@ -7167,7 +7272,7 @@ QList<NFD_PE::VCL_STRUCT> NFD_PE::getVCLstruct(QIODevice *pDevice, XScanEngine::
 }
 
 NFD_PE::VCL_PACKAGEINFO NFD_PE::getVCLPackageInfo(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, QList<XPE::RESOURCE_RECORD> *pListResources,
-                                                    XBinary::PDSTRUCT *pPdStruct)
+                                                  XBinary::PDSTRUCT *pPdStruct)
 {
     VCL_PACKAGEINFO result = {};
 
@@ -7318,7 +7423,8 @@ void NFD_PE::handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                 VI_STRUCT viStruct = NFD_Binary::get_DWRAF_vi(pDevice, pOptions, sr.nOffset, sr.nSize, pPdStruct);
 
                 if (viStruct.bIsValid) {
-                    _SCANS_STRUCT ssDebugInfo = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
+                    _SCANS_STRUCT ssDebugInfo =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
                     ssDebugInfo.sVersion = viStruct.sVersion;
 
                     pPEInfo->basic_info.mapResultDebugData.insert(ssDebugInfo.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ssDebugInfo));
@@ -7328,8 +7434,7 @@ void NFD_PE::handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
     }
 }
 
-void NFD_PE::handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo,
-                                         XBinary::PDSTRUCT *pPdStruct)
+void NFD_PE::handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_PE::PEINFO_STRUCT *pPEInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XPE pe(pDevice, pOptions->bIsImage);
 
@@ -7357,7 +7462,8 @@ void NFD_PE::handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTI
         if (!NFD_Binary::isProtectionPresent(&(pPEInfo->basic_info), pPdStruct)) {
             if (pPEInfo->listSectionRecords.count()) {
                 if (pPEInfo->listSectionRecords.at(0).nSize == 0) {
-                    if (pPEInfo->basic_info.mapImportDetects.contains(XScanEngine::RECORD_NAME_UPX) && (pPEInfo->basic_info.mapImportDetects.value(XScanEngine::RECORD_NAME_UPX).nVariant == 0)) {
+                    if (pPEInfo->basic_info.mapImportDetects.contains(XScanEngine::RECORD_NAME_UPX) &&
+                        (pPEInfo->basic_info.mapImportDetects.value(XScanEngine::RECORD_NAME_UPX).nVariant == 0)) {
                         _SCANS_STRUCT ss = {};
 
                         ss.type = XScanEngine::RECORD_TYPE_PACKER;
@@ -7390,7 +7496,8 @@ void NFD_PE::handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTI
             }
         }
 
-        if ((!pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_UPX)) && (!pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_UNK_UPXLIKE))) {
+        if ((!pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_UPX)) &&
+            (!pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_UNK_UPXLIKE))) {
             VI_STRUCT viUPX = NFD_Binary::get_UPX_vi(pDevice, pOptions, pPEInfo->osHeader.nOffset, pPEInfo->osHeader.nSize, XBinary::FT_PE, pPdStruct);
 
             if ((viUPX.bIsValid)) {
@@ -7534,13 +7641,15 @@ void NFD_PE::handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
     Q_UNUSED(pOptions)
     Q_UNUSED(pPdStruct)
 
-    if (pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_RLPACK) || pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR)) {
+    if (pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_RLPACK) ||
+        pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_BACKDOORPECOMPRESSPROTECTOR)) {
         pPEInfo->basic_info.mapResultLinkers.remove(XScanEngine::RECORD_NAME_MICROSOFTLINKER);
         pPEInfo->basic_info.mapResultCompilers.remove(XScanEngine::RECORD_NAME_MASM);
         pPEInfo->basic_info.mapResultTools.remove(XScanEngine::RECORD_NAME_MASM32);
     }
 
-    if (pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_AHPACKER) || pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_EPEXEPACK)) {
+    if (pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_AHPACKER) ||
+        pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_EPEXEPACK)) {
         pPEInfo->basic_info.mapResultPackers.remove(XScanEngine::RECORD_NAME_AHPACKER);
     }
 
@@ -7550,15 +7659,18 @@ void NFD_PE::handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
         pPEInfo->basic_info.mapResultCompilers.remove(XScanEngine::RECORD_NAME_BORLANDOBJECTPASCALDELPHI);
     }
 
-    if (pPEInfo->basic_info.mapResultLinkers.contains(XScanEngine::RECORD_NAME_MICROSOFTLINKER) && pPEInfo->basic_info.mapResultLinkers.contains(XScanEngine::RECORD_NAME_TURBOLINKER)) {
+    if (pPEInfo->basic_info.mapResultLinkers.contains(XScanEngine::RECORD_NAME_MICROSOFTLINKER) &&
+        pPEInfo->basic_info.mapResultLinkers.contains(XScanEngine::RECORD_NAME_TURBOLINKER)) {
         pPEInfo->basic_info.mapResultLinkers.remove(XScanEngine::RECORD_NAME_TURBOLINKER);
     }
 
-    if (pPEInfo->basic_info.mapResultTools.contains(XScanEngine::RECORD_NAME_MICROSOFTVISUALSTUDIO) && pPEInfo->basic_info.mapResultTools.contains(XScanEngine::RECORD_NAME_BORLANDDELPHI)) {
+    if (pPEInfo->basic_info.mapResultTools.contains(XScanEngine::RECORD_NAME_MICROSOFTVISUALSTUDIO) &&
+        pPEInfo->basic_info.mapResultTools.contains(XScanEngine::RECORD_NAME_BORLANDDELPHI)) {
         pPEInfo->basic_info.mapResultTools.remove(XScanEngine::RECORD_NAME_BORLANDDELPHI);
     }
 
-    if (pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_SIMPLEPACK) && pPEInfo->basic_info.mapResultCompilers.contains(XScanEngine::RECORD_NAME_FASM)) {
+    if (pPEInfo->basic_info.mapResultPackers.contains(XScanEngine::RECORD_NAME_SIMPLEPACK) &&
+        pPEInfo->basic_info.mapResultCompilers.contains(XScanEngine::RECORD_NAME_FASM)) {
         pPEInfo->basic_info.mapResultCompilers.remove(XScanEngine::RECORD_NAME_FASM);
     }
 }
@@ -7774,8 +7886,7 @@ void NFD_PE::x86Emul(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, PE
     }
 }
 
-NFD_PE::PEINFO_STRUCT NFD_PE::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                       XBinary::PDSTRUCT *pPdStruct)
+NFD_PE::PEINFO_STRUCT NFD_PE::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
     timer.start();

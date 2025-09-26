@@ -600,8 +600,7 @@ qint32 NFD_MSDOS::getRichRecordsSize()
 }
 
 // ========================= Handlers migrated from SpecAbstract =========================
-void NFD_MSDOS::handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo,
-                                             XBinary::PDSTRUCT *pPdStruct)
+void NFD_MSDOS::handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XMSDOS msdos(pDevice, pOptions->bIsImage);
     if (msdos.isValid(pPdStruct)) {

@@ -124,45 +124,105 @@ void NFD_DEX::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptio
     pDEXInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ssOperationSystem));
 
     // Compiler identification via map item patterns
-    QList<quint16> listDx{XDEX_DEF::TYPE_HEADER_ITEM,          XDEX_DEF::TYPE_STRING_ID_ITEM,          XDEX_DEF::TYPE_TYPE_ID_ITEM,
-                          XDEX_DEF::TYPE_PROTO_ID_ITEM,        XDEX_DEF::TYPE_FIELD_ID_ITEM,           XDEX_DEF::TYPE_METHOD_ID_ITEM,
-                          XDEX_DEF::TYPE_CLASS_DEF_ITEM,       XDEX_DEF::TYPE_CALL_SITE_ID_ITEM,       XDEX_DEF::TYPE_METHOD_HANDLE_ITEM,
-                          XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST, XDEX_DEF::TYPE_ANNOTATION_SET_ITEM,  XDEX_DEF::TYPE_CODE_ITEM,
-                          XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM, XDEX_DEF::TYPE_TYPE_LIST,        XDEX_DEF::TYPE_STRING_DATA_ITEM,
-                          XDEX_DEF::TYPE_DEBUG_INFO_ITEM,      XDEX_DEF::TYPE_ANNOTATION_ITEM,         XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM,
-                          XDEX_DEF::TYPE_CLASS_DATA_ITEM,      XDEX_DEF::TYPE_MAP_LIST};
+    QList<quint16> listDx{XDEX_DEF::TYPE_HEADER_ITEM,
+                          XDEX_DEF::TYPE_STRING_ID_ITEM,
+                          XDEX_DEF::TYPE_TYPE_ID_ITEM,
+                          XDEX_DEF::TYPE_PROTO_ID_ITEM,
+                          XDEX_DEF::TYPE_FIELD_ID_ITEM,
+                          XDEX_DEF::TYPE_METHOD_ID_ITEM,
+                          XDEX_DEF::TYPE_CLASS_DEF_ITEM,
+                          XDEX_DEF::TYPE_CALL_SITE_ID_ITEM,
+                          XDEX_DEF::TYPE_METHOD_HANDLE_ITEM,
+                          XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST,
+                          XDEX_DEF::TYPE_ANNOTATION_SET_ITEM,
+                          XDEX_DEF::TYPE_CODE_ITEM,
+                          XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM,
+                          XDEX_DEF::TYPE_TYPE_LIST,
+                          XDEX_DEF::TYPE_STRING_DATA_ITEM,
+                          XDEX_DEF::TYPE_DEBUG_INFO_ITEM,
+                          XDEX_DEF::TYPE_ANNOTATION_ITEM,
+                          XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM,
+                          XDEX_DEF::TYPE_CLASS_DATA_ITEM,
+                          XDEX_DEF::TYPE_MAP_LIST};
 
-    QList<quint16> listDexLib{XDEX_DEF::TYPE_HEADER_ITEM,     XDEX_DEF::TYPE_STRING_ID_ITEM,    XDEX_DEF::TYPE_TYPE_ID_ITEM,      XDEX_DEF::TYPE_PROTO_ID_ITEM,
-                              XDEX_DEF::TYPE_FIELD_ID_ITEM,   XDEX_DEF::TYPE_METHOD_ID_ITEM,    XDEX_DEF::TYPE_CLASS_DEF_ITEM,    XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST,
-                              XDEX_DEF::TYPE_ANNOTATION_SET_ITEM, XDEX_DEF::TYPE_CODE_ITEM,     XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM, XDEX_DEF::TYPE_TYPE_LIST,
-                              XDEX_DEF::TYPE_STRING_DATA_ITEM, XDEX_DEF::TYPE_ANNOTATION_ITEM,  XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM, XDEX_DEF::TYPE_CLASS_DATA_ITEM,
-                              XDEX_DEF::TYPE_DEBUG_INFO_ITEM, XDEX_DEF::TYPE_MAP_LIST};
+    QList<quint16> listDexLib{XDEX_DEF::TYPE_HEADER_ITEM,
+                              XDEX_DEF::TYPE_STRING_ID_ITEM,
+                              XDEX_DEF::TYPE_TYPE_ID_ITEM,
+                              XDEX_DEF::TYPE_PROTO_ID_ITEM,
+                              XDEX_DEF::TYPE_FIELD_ID_ITEM,
+                              XDEX_DEF::TYPE_METHOD_ID_ITEM,
+                              XDEX_DEF::TYPE_CLASS_DEF_ITEM,
+                              XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST,
+                              XDEX_DEF::TYPE_ANNOTATION_SET_ITEM,
+                              XDEX_DEF::TYPE_CODE_ITEM,
+                              XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM,
+                              XDEX_DEF::TYPE_TYPE_LIST,
+                              XDEX_DEF::TYPE_STRING_DATA_ITEM,
+                              XDEX_DEF::TYPE_ANNOTATION_ITEM,
+                              XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM,
+                              XDEX_DEF::TYPE_CLASS_DATA_ITEM,
+                              XDEX_DEF::TYPE_DEBUG_INFO_ITEM,
+                              XDEX_DEF::TYPE_MAP_LIST};
 
-    QList<quint16> listDexLib2{XDEX_DEF::TYPE_HEADER_ITEM,         XDEX_DEF::TYPE_STRING_ID_ITEM,      XDEX_DEF::TYPE_TYPE_ID_ITEM,      XDEX_DEF::TYPE_PROTO_ID_ITEM,
-                               XDEX_DEF::TYPE_FIELD_ID_ITEM,       XDEX_DEF::TYPE_METHOD_ID_ITEM,      XDEX_DEF::TYPE_CLASS_DEF_ITEM,    XDEX_DEF::TYPE_CALL_SITE_ID_ITEM,
-                               XDEX_DEF::TYPE_METHOD_HANDLE_ITEM,  XDEX_DEF::TYPE_STRING_DATA_ITEM,    XDEX_DEF::TYPE_TYPE_LIST,         XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM,
-                               XDEX_DEF::TYPE_ANNOTATION_ITEM,     XDEX_DEF::TYPE_ANNOTATION_SET_ITEM, XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST,
-                               XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM, XDEX_DEF::TYPE_DEBUG_INFO_ITEM, XDEX_DEF::TYPE_CODE_ITEM,   XDEX_DEF::TYPE_CLASS_DATA_ITEM,
-                               XDEX_DEF::TYPE_HIDDENAPI_CLASS_DATA_ITEM, XDEX_DEF::TYPE_MAP_LIST};
+    QList<quint16> listDexLib2{XDEX_DEF::TYPE_HEADER_ITEM,
+                               XDEX_DEF::TYPE_STRING_ID_ITEM,
+                               XDEX_DEF::TYPE_TYPE_ID_ITEM,
+                               XDEX_DEF::TYPE_PROTO_ID_ITEM,
+                               XDEX_DEF::TYPE_FIELD_ID_ITEM,
+                               XDEX_DEF::TYPE_METHOD_ID_ITEM,
+                               XDEX_DEF::TYPE_CLASS_DEF_ITEM,
+                               XDEX_DEF::TYPE_CALL_SITE_ID_ITEM,
+                               XDEX_DEF::TYPE_METHOD_HANDLE_ITEM,
+                               XDEX_DEF::TYPE_STRING_DATA_ITEM,
+                               XDEX_DEF::TYPE_TYPE_LIST,
+                               XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM,
+                               XDEX_DEF::TYPE_ANNOTATION_ITEM,
+                               XDEX_DEF::TYPE_ANNOTATION_SET_ITEM,
+                               XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST,
+                               XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM,
+                               XDEX_DEF::TYPE_DEBUG_INFO_ITEM,
+                               XDEX_DEF::TYPE_CODE_ITEM,
+                               XDEX_DEF::TYPE_CLASS_DATA_ITEM,
+                               XDEX_DEF::TYPE_HIDDENAPI_CLASS_DATA_ITEM,
+                               XDEX_DEF::TYPE_MAP_LIST};
 
-    QList<quint16> listDexLib2heur{XDEX_DEF::TYPE_HEADER_ITEM,    XDEX_DEF::TYPE_STRING_ID_ITEM, XDEX_DEF::TYPE_TYPE_ID_ITEM, XDEX_DEF::TYPE_PROTO_ID_ITEM,
-                                   XDEX_DEF::TYPE_FIELD_ID_ITEM,  XDEX_DEF::TYPE_METHOD_ID_ITEM, XDEX_DEF::TYPE_CLASS_DEF_ITEM, XDEX_DEF::TYPE_STRING_DATA_ITEM};
+    QList<quint16> listDexLib2heur{XDEX_DEF::TYPE_HEADER_ITEM,   XDEX_DEF::TYPE_STRING_ID_ITEM, XDEX_DEF::TYPE_TYPE_ID_ITEM,   XDEX_DEF::TYPE_PROTO_ID_ITEM,
+                                   XDEX_DEF::TYPE_FIELD_ID_ITEM, XDEX_DEF::TYPE_METHOD_ID_ITEM, XDEX_DEF::TYPE_CLASS_DEF_ITEM, XDEX_DEF::TYPE_STRING_DATA_ITEM};
 
-    QList<quint16> listR8{XDEX_DEF::TYPE_HEADER_ITEM,        XDEX_DEF::TYPE_STRING_ID_ITEM,    XDEX_DEF::TYPE_TYPE_ID_ITEM,     XDEX_DEF::TYPE_PROTO_ID_ITEM,
-                          XDEX_DEF::TYPE_FIELD_ID_ITEM,      XDEX_DEF::TYPE_METHOD_ID_ITEM,    XDEX_DEF::TYPE_CLASS_DEF_ITEM,   XDEX_DEF::TYPE_CALL_SITE_ID_ITEM,
-                          XDEX_DEF::TYPE_METHOD_HANDLE_ITEM, XDEX_DEF::TYPE_CODE_ITEM,         XDEX_DEF::TYPE_DEBUG_INFO_ITEM,  XDEX_DEF::TYPE_TYPE_LIST,
-                          XDEX_DEF::TYPE_STRING_DATA_ITEM,   XDEX_DEF::TYPE_ANNOTATION_ITEM,   XDEX_DEF::TYPE_CLASS_DATA_ITEM,  XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM,
-                          XDEX_DEF::TYPE_ANNOTATION_SET_ITEM, XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST, XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM, XDEX_DEF::TYPE_MAP_LIST};
+    QList<quint16> listR8{XDEX_DEF::TYPE_HEADER_ITEM,
+                          XDEX_DEF::TYPE_STRING_ID_ITEM,
+                          XDEX_DEF::TYPE_TYPE_ID_ITEM,
+                          XDEX_DEF::TYPE_PROTO_ID_ITEM,
+                          XDEX_DEF::TYPE_FIELD_ID_ITEM,
+                          XDEX_DEF::TYPE_METHOD_ID_ITEM,
+                          XDEX_DEF::TYPE_CLASS_DEF_ITEM,
+                          XDEX_DEF::TYPE_CALL_SITE_ID_ITEM,
+                          XDEX_DEF::TYPE_METHOD_HANDLE_ITEM,
+                          XDEX_DEF::TYPE_CODE_ITEM,
+                          XDEX_DEF::TYPE_DEBUG_INFO_ITEM,
+                          XDEX_DEF::TYPE_TYPE_LIST,
+                          XDEX_DEF::TYPE_STRING_DATA_ITEM,
+                          XDEX_DEF::TYPE_ANNOTATION_ITEM,
+                          XDEX_DEF::TYPE_CLASS_DATA_ITEM,
+                          XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM,
+                          XDEX_DEF::TYPE_ANNOTATION_SET_ITEM,
+                          XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST,
+                          XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM,
+                          XDEX_DEF::TYPE_MAP_LIST};
 
-    QList<quint16> listDexMerge{XDEX_DEF::TYPE_HEADER_ITEM,        XDEX_DEF::TYPE_STRING_ID_ITEM,       XDEX_DEF::TYPE_TYPE_ID_ITEM, XDEX_DEF::TYPE_PROTO_ID_ITEM,
-                                XDEX_DEF::TYPE_FIELD_ID_ITEM,      XDEX_DEF::TYPE_METHOD_ID_ITEM,       XDEX_DEF::TYPE_CLASS_DEF_ITEM, XDEX_DEF::TYPE_MAP_LIST,
-                                XDEX_DEF::TYPE_TYPE_LIST,          XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST, XDEX_DEF::TYPE_ANNOTATION_SET_ITEM, XDEX_DEF::TYPE_CLASS_DATA_ITEM,
-                                XDEX_DEF::TYPE_CODE_ITEM,          XDEX_DEF::TYPE_STRING_DATA_ITEM,     XDEX_DEF::TYPE_DEBUG_INFO_ITEM, XDEX_DEF::TYPE_ANNOTATION_ITEM,
-                                XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM, XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM};
+    QList<quint16> listDexMerge{XDEX_DEF::TYPE_HEADER_ITEM,         XDEX_DEF::TYPE_STRING_ID_ITEM,
+                                XDEX_DEF::TYPE_TYPE_ID_ITEM,        XDEX_DEF::TYPE_PROTO_ID_ITEM,
+                                XDEX_DEF::TYPE_FIELD_ID_ITEM,       XDEX_DEF::TYPE_METHOD_ID_ITEM,
+                                XDEX_DEF::TYPE_CLASS_DEF_ITEM,      XDEX_DEF::TYPE_MAP_LIST,
+                                XDEX_DEF::TYPE_TYPE_LIST,           XDEX_DEF::TYPE_ANNOTATION_SET_REF_LIST,
+                                XDEX_DEF::TYPE_ANNOTATION_SET_ITEM, XDEX_DEF::TYPE_CLASS_DATA_ITEM,
+                                XDEX_DEF::TYPE_CODE_ITEM,           XDEX_DEF::TYPE_STRING_DATA_ITEM,
+                                XDEX_DEF::TYPE_DEBUG_INFO_ITEM,     XDEX_DEF::TYPE_ANNOTATION_ITEM,
+                                XDEX_DEF::TYPE_ENCODED_ARRAY_ITEM,  XDEX_DEF::TYPE_ANNOTATIONS_DIRECTORY_ITEM};
 
-    QList<quint16> listFastProxy{XDEX_DEF::TYPE_HEADER_ITEM,     XDEX_DEF::TYPE_STRING_ID_ITEM, XDEX_DEF::TYPE_TYPE_ID_ITEM,   XDEX_DEF::TYPE_PROTO_ID_ITEM,
-                                 XDEX_DEF::TYPE_FIELD_ID_ITEM,   XDEX_DEF::TYPE_METHOD_ID_ITEM, XDEX_DEF::TYPE_CLASS_DEF_ITEM, XDEX_DEF::TYPE_STRING_DATA_ITEM,
-                                 XDEX_DEF::TYPE_TYPE_LIST,       XDEX_DEF::TYPE_CODE_ITEM,      XDEX_DEF::TYPE_CLASS_DATA_ITEM, XDEX_DEF::TYPE_MAP_LIST};
+    QList<quint16> listFastProxy{XDEX_DEF::TYPE_HEADER_ITEM,   XDEX_DEF::TYPE_STRING_ID_ITEM, XDEX_DEF::TYPE_TYPE_ID_ITEM,    XDEX_DEF::TYPE_PROTO_ID_ITEM,
+                                 XDEX_DEF::TYPE_FIELD_ID_ITEM, XDEX_DEF::TYPE_METHOD_ID_ITEM, XDEX_DEF::TYPE_CLASS_DEF_ITEM,  XDEX_DEF::TYPE_STRING_DATA_ITEM,
+                                 XDEX_DEF::TYPE_TYPE_LIST,     XDEX_DEF::TYPE_CODE_ITEM,      XDEX_DEF::TYPE_CLASS_DATA_ITEM, XDEX_DEF::TYPE_MAP_LIST};
 
     NFD_Binary::VI_STRUCT viR8 = NFD_Binary::get_R8_marker_vi(pDevice, pOptions, 0, pDEXInfo->basic_info.id.nSize, pPdStruct);
     bool bR8_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listR8, pPdStruct);
@@ -315,8 +375,7 @@ void NFD_DEX::handle_Protection(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XB
 
     if (pDEXInfo->basic_info.mapStringDetects.contains(XScanEngine::RECORD_NAME_APKPROTECT)) {
         addIfPresent(pDEXInfo->basic_info.mapStringDetects, XScanEngine::RECORD_NAME_APKPROTECT);
-    } else if (pDEXInfo->basic_info.scanOptions.bIsDeepScan &&
-               XBinary::isStringInListPresentExp(&(pDEXInfo->listStrings), "http://www.apkprotect.net/", pPdStruct)) {
+    } else if (pDEXInfo->basic_info.scanOptions.bIsDeepScan && XBinary::isStringInListPresentExp(&(pDEXInfo->listStrings), "http://www.apkprotect.net/", pPdStruct)) {
         NFD_Binary::SCANS_STRUCT ss = _mkScan(0, XBinary::FT_DEX, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_APKPROTECT);
         pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
     }
@@ -324,8 +383,7 @@ void NFD_DEX::handle_Protection(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XB
     if (pDEXInfo->basic_info.scanOptions.bIsHeuristicScan) {
         if (pDEXInfo->basic_info.mapStringDetects.contains(XScanEngine::RECORD_NAME_AESOBFUSCATOR)) {
             addIfPresent(pDEXInfo->basic_info.mapStringDetects, XScanEngine::RECORD_NAME_AESOBFUSCATOR);
-        } else if (pDEXInfo->basic_info.scanOptions.bIsDeepScan &&
-                   XBinary::isStringInListPresentExp(&(pDEXInfo->listStrings), "licensing/AESObfuscator;", pPdStruct)) {
+        } else if (pDEXInfo->basic_info.scanOptions.bIsDeepScan && XBinary::isStringInListPresentExp(&(pDEXInfo->listStrings), "licensing/AESObfuscator;", pPdStruct)) {
             NFD_Binary::SCANS_STRUCT ss = _mkScan(0, XBinary::FT_DEX, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_AESOBFUSCATOR);
             pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
         }
@@ -348,15 +406,14 @@ void NFD_DEX::handle_Protection(QIODevice *pDevice, DEXINFO_STRUCT *pDEXInfo, XB
 
     if (pDEXInfo->basic_info.mapTypeDetects.contains(XScanEngine::RECORD_NAME_PROGUARD)) {
         addIfPresent(pDEXInfo->basic_info.mapTypeDetects, XScanEngine::RECORD_NAME_PROGUARD);
-    } else if (pDEXInfo->basic_info.scanOptions.bIsDeepScan &&
-               XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings), "\\/proguard\\/", pPdStruct)) {
+    } else if (pDEXInfo->basic_info.scanOptions.bIsDeepScan && XBinary::isStringInListPresentExp(&(pDEXInfo->listTypeItemStrings), "\\/proguard\\/", pPdStruct)) {
         NFD_Binary::SCANS_STRUCT ss = _mkScan(0, XBinary::FT_DEX, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_PROGUARD);
         pDEXInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pDEXInfo->basic_info), &ss));
     }
 }
 
 NFD_DEX::DEXINFO_STRUCT NFD_DEX::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                            XBinary::PDSTRUCT *pPdStruct)
+                                         XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
     timer.start();

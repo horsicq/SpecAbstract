@@ -494,7 +494,8 @@ void NFD_Binary::signatureExpScan(XBinary *pXBinary, XBinary::_MEMORY_MAP *pMemo
     }
 }
 
-NFD_Binary::SCANS_STRUCT NFD_Binary::getScansStruct(quint32 nVariant, XBinary::FT fileType, XScanEngine::RECORD_TYPE type, XScanEngine::RECORD_NAME name, const QString &sVersion, const QString &sInfo, qint64 nOffset)
+NFD_Binary::SCANS_STRUCT NFD_Binary::getScansStruct(quint32 nVariant, XBinary::FT fileType, XScanEngine::RECORD_TYPE type, XScanEngine::RECORD_NAME name,
+                                                    const QString &sVersion, const QString &sInfo, qint64 nOffset)
 {
     // TODO bIsHeuristic;
     SCANS_STRUCT result = {};
@@ -2360,12 +2361,10 @@ bool NFD_Binary::isProtectionPresent(BASIC_INFO *pBasicInfo, XBinary::PDSTRUCT *
     Q_UNUSED(pPdStruct)
 
     return (pBasicInfo->mapResultPackers.count() || pBasicInfo->mapResultProtectors.count() || pBasicInfo->mapResultSFX.count() ||
-            pBasicInfo->mapResultInstallers.count() || pBasicInfo->mapResultNETObfuscators.count() ||
-            pBasicInfo->mapResultDongleProtection.count());
+            pBasicInfo->mapResultInstallers.count() || pBasicInfo->mapResultNETObfuscators.count() || pBasicInfo->mapResultDongleProtection.count());
 }
 
-void NFD_Binary::handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo,
-                                     XBinary::PDSTRUCT *pPdStruct)
+void NFD_Binary::handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
@@ -2445,7 +2444,8 @@ void NFD_Binary::handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                 SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, XScanEngine::RECORD_TYPE_SOURCECODE, XScanEngine::RECORD_NAME_PYTHON, "", "", 0);
                 pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
             } else {
-                SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, XScanEngine::RECORD_TYPE_SOURCECODE, XScanEngine::RECORD_NAME_SHELL, sInterpreter, "", 0);
+                SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_TEXT, XScanEngine::RECORD_TYPE_SOURCECODE, XScanEngine::RECORD_NAME_SHELL, sInterpreter, "", 0);
                 pBinaryInfo->basic_info.mapResultTexts.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
             }
         }
@@ -2481,8 +2481,7 @@ void NFD_Binary::handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
     }
 }
 
-void NFD_Binary::handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo,
-                                        XBinary::PDSTRUCT *pPdStruct)
+void NFD_Binary::handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
@@ -2701,8 +2700,7 @@ void NFD_Binary::handle_Certificates(QIODevice *pDevice, XScanEngine::SCAN_OPTIO
     }
 }
 
-void NFD_Binary::handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo,
-                                         XBinary::PDSTRUCT *pPdStruct)
+void NFD_Binary::handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pPdStruct)
 
@@ -2770,7 +2768,8 @@ void NFD_Binary::handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
             if (nDebugOffset >= 0) {
                 // TODO Language
                 // https://github.com/open-watcom/open-watcom-v2/blob/e7d0bef544987dd0429f547a2119e0c9d9472770/bld/exedump/c/wdwarf.c#L132
-                SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_WATCOMDEBUGINFO, "", "", 0);
+                SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_WATCOMDEBUGINFO, "", "", 0);
                 ss.sVersion = QString("%1.%2").arg(QString::number(exe_major_ver), QString::number(exe_minor_ver));
                 ss.sInfo = QString("0x%1 bytes").arg(XBinary::valueToHexEx(nDebugSize));
 
@@ -2791,7 +2790,8 @@ void NFD_Binary::handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
                 qint64 nDebugOffset = binary.getSize() - nDebugSize;
 
                 if (nDebugOffset >= 0) {
-                    SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_CODEVIEWDEBUGINFO, "", "", 0);
+                    SCANS_STRUCT ss =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_CODEVIEWDEBUGINFO, "", "", 0);
                     ss.sVersion = "4.0";
                     ss.sInfo = QString("0x%1 bytes").arg(XBinary::valueToHexEx(nDebugSize));
 
@@ -2823,7 +2823,8 @@ void NFD_Binary::handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
                     VI_STRUCT viStruct = NFD_Binary::get_DWRAF_vi(pDevice, pOptions, nDebugOffset, binary.getSize() - nDebugOffset, pPdStruct);
 
                     if (viStruct.bIsValid) {
-                        SCANS_STRUCT ssDebugInfo = NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
+                        SCANS_STRUCT ssDebugInfo =
+                            NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
                         ssDebugInfo.sVersion = viStruct.sVersion;
                         ssDebugInfo.sInfo = QString("0x%1 bytes").arg(XBinary::valueToHexEx(nDebugSize));
                         ssDebugInfo.sInfo = XBinary::appendComma(ssDebugInfo.sInfo, "Watcom");
@@ -3333,7 +3334,7 @@ void NFD_Binary::handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS
 }
 
 NFD_Binary::BINARYINFO_STRUCT NFD_Binary::getInfo(QIODevice *pDevice, XBinary::FT fileType, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions,
-                                                        qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
+                                                  qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
     timer.start();

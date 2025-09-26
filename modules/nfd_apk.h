@@ -30,7 +30,6 @@ class NFD_APK : public APK_Script {
     Q_OBJECT
 
 public:
-
     struct APKINFO_STRUCT {
         NFD_Binary::BASIC_INFO basic_info;
 
@@ -54,6 +53,7 @@ public:
     // APK handling functions
     static void APK_handle(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, APKINFO_STRUCT *pApkInfo, XBinary::PDSTRUCT *pPdStruct);
     static void APK_handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, APKINFO_STRUCT *pApkInfo, XBinary::PDSTRUCT *pPdStruct);
-    static NFD_DEX::DEXINFO_STRUCT APK_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, APKINFO_STRUCT *pApkInfo, XBinary::PDSTRUCT *pPdStruct, const QString &sFileName);
+    static NFD_DEX::DEXINFO_STRUCT APK_scan_DEX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, APKINFO_STRUCT *pApkInfo, XBinary::PDSTRUCT *pPdStruct,
+                                                const QString &sFileName);
 };
 #endif  // NFD_APK_H

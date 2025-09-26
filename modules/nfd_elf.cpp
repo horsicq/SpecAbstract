@@ -11,7 +11,7 @@ NFD_ELF::NFD_ELF(XELF *pELF, XBinary::FILEPART filePart, OPTIONS *pOptions, XBin
 // ELF entrypoint signature table (migrated from SpecAbstract/signatures.cpp)
 static NFD_Binary::SIGNATURE_RECORD g_ELF_entrypoint_records[] = {
     {{0, XBinary::FT_ELF32, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_BURNEYE, "1.00", ""}, "FF35........9C608B0D........E9"},
-    };
+};
 
 NFD_Binary::SIGNATURE_RECORD *NFD_ELF::getEntrypointRecords()
 {
@@ -25,833 +25,847 @@ qint32 NFD_ELF::getEntrypointRecordsSize()
 
 void NFD_ELF::handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
-	XELF elf(pDevice, pOptions->bIsImage);
+    XELF elf(pDevice, pOptions->bIsImage);
 
-	if (elf.isValid(pPdStruct)) {
-		_SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(elf.getFileFormatInfo(pPdStruct));
+    if (elf.isValid(pPdStruct)) {
+        _SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(elf.getFileFormatInfo(pPdStruct));
 
-		pELFInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ssOperationSystem));
-	}
+        pELFInfo->basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ssOperationSystem));
+    }
 }
 
 void NFD_ELF::handle_CommentSection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
-	Q_UNUSED(pDevice)
-	Q_UNUSED(pOptions)
+    Q_UNUSED(pDevice)
+    Q_UNUSED(pOptions)
 
-	qint32 nNumberOfComments = pELFInfo->listComments.count();
+    qint32 nNumberOfComments = pELFInfo->listComments.count();
 
-	for (qint32 i = 0; (i < nNumberOfComments) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
-		QString sComment = pELFInfo->listComments.at(i);
+    for (qint32 i = 0; (i < nNumberOfComments) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
+        QString sComment = pELFInfo->listComments.at(i);
 
-		VI_STRUCT vi = {};
-		_SCANS_STRUCT ss = {};
+        VI_STRUCT vi = {};
+        _SCANS_STRUCT ss = {};
 
-		// Apple LLVM / clang
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_ByteGuard_string(sComment);
+        // Apple LLVM / clang
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_ByteGuard_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_BYTEGUARD, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_BYTEGUARD, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_GCC_string(sComment);  // TODO Max version
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_GCC_string(sComment);  // TODO Max version
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_GCC, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_GCC, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_AppleLLVM_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_AppleLLVM_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_APPLELLVM, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_APPLELLVM, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_AndroidClang_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_AndroidClang_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ANDROIDCLANG, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ANDROIDCLANG, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_AlipayClang_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_AlipayClang_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ALIPAYCLANG, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ALIPAYCLANG, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_AlpineClang_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_AlpineClang_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ALPINECLANG, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ALPINECLANG, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_AlibabaClang_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_AlibabaClang_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ALIBABACLANG, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ALIBABACLANG, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_PlexClang_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_PlexClang_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_PLEXCLANG, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_PLEXCLANG, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_UbuntuClang_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_UbuntuClang_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_UBUNTUCLANG, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_UBUNTUCLANG, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_DebianClang_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_DebianClang_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_DEBIANCLANG, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_DEBIANCLANG, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_ApportableClang_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_ApportableClang_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_APPORTABLECLANG, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_APPORTABLECLANG, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_ARMAssembler_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_ARMAssembler_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARMASSEMBLER, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARMASSEMBLER, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_ARMLinker_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_ARMLinker_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_LINKER, XScanEngine::RECORD_NAME_ARMLINKER, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_LINKER, XScanEngine::RECORD_NAME_ARMLINKER, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_ARMC_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_ARMC_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARMC, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARMC, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_ARMCCPP_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_ARMCCPP_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARMCCPP, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARMCCPP, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_ARMNEONCCPP_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_ARMNEONCCPP_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARMNEONCCPP, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARMNEONCCPP, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_ARMThumbCCPP_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_ARMThumbCCPP_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARMTHUMBCCPP, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARMTHUMBCCPP, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_ARMThumbMacroAssembler_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_ARMThumbMacroAssembler_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARMTHUMBMACROASSEMBLER, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARMTHUMBMACROASSEMBLER, vi.sVersion,
+                                                vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_ThumbC_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_ThumbC_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_THUMBC, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_THUMBC, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_clang_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_clang_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_CLANG, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_CLANG, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_DynASM_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_DynASM_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_DYNASM, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_DYNASM, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_Delphi_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_Delphi_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI,
+                                                vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_LLD_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_LLD_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_LINKER, XScanEngine::RECORD_NAME_LLD, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_LINKER, XScanEngine::RECORD_NAME_LLD, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_mold_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_mold_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_LINKER, XScanEngine::RECORD_NAME_MOLD, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_LINKER, XScanEngine::RECORD_NAME_MOLD, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_OracleSolarisLinkEditors_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_OracleSolarisLinkEditors_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_LINKER, XScanEngine::RECORD_NAME_ORACLESOLARISLINKEDITORS, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_LINKER, XScanEngine::RECORD_NAME_ORACLESOLARISLINKEDITORS, vi.sVersion,
+                                                vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_SunWorkShop_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_SunWorkShop_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_SUNWORKSHOP, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_SUNWORKSHOP, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_SunWorkShopCompilers_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_SunWorkShopCompilers_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_SUNWORKSHOPCOMPILERS, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_SUNWORKSHOPCOMPILERS, vi.sVersion, vi.sInfo,
+                                                0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_SnapdragonLLVMARM_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_SnapdragonLLVMARM_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_SNAPDRAGONLLVMARM, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_SNAPDRAGONLLVMARM, vi.sVersion, vi.sInfo,
+                                                0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_NASM_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_NASM_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_NASM, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_NASM, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_TencentLegu_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_TencentLegu_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_TENCENTLEGU, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_TENCENTLEGU, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		{
-			vi = NFD_Binary::_get_AlipayObfuscator_string(sComment);
+        {
+            vi = NFD_Binary::_get_AlipayObfuscator_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ALIPAYOBFUSCATOR, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ALIPAYOBFUSCATOR, vi.sVersion, vi.sInfo,
+                                                0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_wangzehuaLLVM_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_wangzehuaLLVM_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_WANGZEHUALLVM, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_WANGZEHUALLVM, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_ObfuscatorLLVM_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_ObfuscatorLLVM_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_OBFUSCATORLLVM, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_OBFUSCATORLLVM, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_NagainLLVM_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_NagainLLVM_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_NAGAINLLVM, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_NAGAINLLVM, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_iJiami_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_iJiami_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_IJIAMILLVM, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_IJIAMILLVM, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_SafeengineLLVM_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_SafeengineLLVM_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_SAFEENGINELLVM, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_SAFEENGINELLVM, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_TencentObfuscation_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_TencentObfuscation_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_TENCENTPROTECTION, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_TENCENTPROTECTION, vi.sVersion, vi.sInfo,
+                                                0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (!vi.bIsValid) {
-			vi = NFD_Binary::_get_AppImage_string(sComment);
+        if (!vi.bIsValid) {
+            vi = NFD_Binary::_get_AppImage_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_APPIMAGE, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_APPIMAGE, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		{
-			vi = NFD_Binary::_get_HikariObfuscator_string(sComment);
+        {
+            vi = NFD_Binary::_get_HikariObfuscator_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_HIKARIOBFUSCATOR, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_HIKARIOBFUSCATOR, vi.sVersion, vi.sInfo,
+                                                0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		{
-			vi = NFD_Binary::_get_SnapProtect_string(sComment);
+        {
+            vi = NFD_Binary::_get_SnapProtect_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_SNAPPROTECT, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_SNAPPROTECT, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		{
-			vi = NFD_Binary::_get_ByteDanceSecCompiler_string(sComment);
+        {
+            vi = NFD_Binary::_get_ByteDanceSecCompiler_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_BYTEDANCESECCOMPILER, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_BYTEDANCESECCOMPILER, vi.sVersion,
+                                                vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		{
-			vi = NFD_Binary::_get_DingbaozengNativeObfuscator_string(sComment);
+        {
+            vi = NFD_Binary::_get_DingbaozengNativeObfuscator_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_DINGBAOZENGNATIVEOBFUSCATOR, vi.sVersion,
+                                                vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		{
-			vi = NFD_Binary::_get_OllvmTll_string(sComment);
+        {
+            vi = NFD_Binary::_get_OllvmTll_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_OLLVMTLL, vi.sVersion, vi.sInfo, 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_OLLVMTLL, vi.sVersion, vi.sInfo, 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		{
-			vi = NFD_Binary::_get_SourceryCodeBench_string(sComment);
+        {
+            vi = NFD_Binary::_get_SourceryCodeBench_string(sComment);
 
-			if (vi.bIsValid) {
-				if (vi.sInfo == "lite") {
-					ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_SOURCERYCODEBENCHLITE, vi.sVersion, "", 0);
-				} else {
-					ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_SOURCERYCODEBENCH, vi.sVersion, "", 0);
-				}
+            if (vi.bIsValid) {
+                if (vi.sInfo == "lite") {
+                    ss =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_SOURCERYCODEBENCHLITE, vi.sVersion, "", 0);
+                } else {
+                    ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_SOURCERYCODEBENCH, vi.sVersion, "", 0);
+                }
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		{
-			vi = NFD_Binary::_get_Rust_string(sComment);
+        {
+            vi = NFD_Binary::_get_Rust_string(sComment);
 
-			if (vi.bIsValid) {
-				ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_RUST, vi.sVersion, "", 0);
+            if (vi.bIsValid) {
+                ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_RUST, vi.sVersion, "", 0);
 
-				pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
-			}
-		}
+                pELFInfo->basic_info.mapCommentSectionDetects.insert(ss.name, ss);
+            }
+        }
 
-		if (pELFInfo->basic_info.scanOptions.bIsTest && pELFInfo->basic_info.scanOptions.bIsVerbose) {
-			if (ss.name == XScanEngine::RECORD_NAME_UNKNOWN) {
-				if ((!vi.bIsValid) && (!XBinary::isRegExpPresent(".o$", sComment)) && (!XBinary::isRegExpPresent(".c$", sComment)) &&
-					(!XBinary::isRegExpPresent(".S22$", sComment)) && (!XBinary::isRegExpPresent(".s$", sComment)) && (!XBinary::isRegExpPresent(".S$", sComment))) {
-					_SCANS_STRUCT recordSS = {};
+        if (pELFInfo->basic_info.scanOptions.bIsTest && pELFInfo->basic_info.scanOptions.bIsVerbose) {
+            if (ss.name == XScanEngine::RECORD_NAME_UNKNOWN) {
+                if ((!vi.bIsValid) && (!XBinary::isRegExpPresent(".o$", sComment)) && (!XBinary::isRegExpPresent(".c$", sComment)) &&
+                    (!XBinary::isRegExpPresent(".S22$", sComment)) && (!XBinary::isRegExpPresent(".s$", sComment)) && (!XBinary::isRegExpPresent(".S$", sComment))) {
+                    _SCANS_STRUCT recordSS = {};
 
-					recordSS.type = XScanEngine::RECORD_TYPE_PROTECTOR;
-					recordSS.name = (XScanEngine::RECORD_NAME)(XScanEngine::RECORD_NAME_UNKNOWN9 + (XScanEngine::RECORD_NAME)(i + 1));
-					recordSS.sVersion = "COMMENT:" + sComment;
+                    recordSS.type = XScanEngine::RECORD_TYPE_PROTECTOR;
+                    recordSS.name = (XScanEngine::RECORD_NAME)(XScanEngine::RECORD_NAME_UNKNOWN9 + (XScanEngine::RECORD_NAME)(i + 1));
+                    recordSS.sVersion = "COMMENT:" + sComment;
 
-					pELFInfo->basic_info.mapResultProtectors.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
-				}
-			}
-		}
-	}
+                    pELFInfo->basic_info.mapResultProtectors.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+                }
+            }
+        }
+    }
 }
 
 void NFD_ELF::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
-	XELF elf(pDevice, pOptions->bIsImage);
+    XELF elf(pDevice, pOptions->bIsImage);
 
-	if (elf.isValid(pPdStruct)) {
-		// Qt
-		if (XELF::isSectionNamePresent(".qtversion", &(pELFInfo->listSectionRecords))) {
-			_SCANS_STRUCT recordSS = {};
+    if (elf.isValid(pPdStruct)) {
+        // Qt
+        if (XELF::isSectionNamePresent(".qtversion", &(pELFInfo->listSectionRecords))) {
+            _SCANS_STRUCT recordSS = {};
 
-			recordSS.type = XScanEngine::RECORD_TYPE_LIBRARY;
-			recordSS.name = XScanEngine::RECORD_NAME_QT;
+            recordSS.type = XScanEngine::RECORD_TYPE_LIBRARY;
+            recordSS.name = XScanEngine::RECORD_NAME_QT;
 
-			XELF::SECTION_RECORD record = elf._getSectionRecords(&(pELFInfo->listSectionRecords), ".qtversion").at(0);
+            XELF::SECTION_RECORD record = elf._getSectionRecords(&(pELFInfo->listSectionRecords), ".qtversion").at(0);
 
-			quint64 nVersion = 0;
+            quint64 nVersion = 0;
 
-			if (pELFInfo->bIs64) {
-				if (record.nSize == 16) {
-					nVersion = elf.read_uint64(record.nOffset + 8, pELFInfo->bIsBigEndian);
-				}
-			} else {
-				if (record.nSize == 8) {
-					nVersion = elf.read_uint32(record.nOffset + 4, pELFInfo->bIsBigEndian);
-				}
-			}
+            if (pELFInfo->bIs64) {
+                if (record.nSize == 16) {
+                    nVersion = elf.read_uint64(record.nOffset + 8, pELFInfo->bIsBigEndian);
+                }
+            } else {
+                if (record.nSize == 8) {
+                    nVersion = elf.read_uint32(record.nOffset + 4, pELFInfo->bIsBigEndian);
+                }
+            }
 
-			if (nVersion) {
-				recordSS.sVersion = XBinary::get_uint32_full_version(nVersion);
-			}
+            if (nVersion) {
+                recordSS.sVersion = XBinary::get_uint32_full_version(nVersion);
+            }
 
-			pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
-		} else if (XELF::isSectionNamePresent(".qtplugin", &(pELFInfo->listSectionRecords))) {
-			XELF::SECTION_RECORD record = elf._getSectionRecords(&(pELFInfo->listSectionRecords), ".qtplugin").at(0);
+            pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+        } else if (XELF::isSectionNamePresent(".qtplugin", &(pELFInfo->listSectionRecords))) {
+            XELF::SECTION_RECORD record = elf._getSectionRecords(&(pELFInfo->listSectionRecords), ".qtplugin").at(0);
 
-			_SCANS_STRUCT recordSS = {};
+            _SCANS_STRUCT recordSS = {};
 
-			recordSS.type = XScanEngine::RECORD_TYPE_LIBRARY;
-			recordSS.name = XScanEngine::RECORD_NAME_QT;
+            recordSS.type = XScanEngine::RECORD_TYPE_LIBRARY;
+            recordSS.name = XScanEngine::RECORD_NAME_QT;
 
-			QString sVersionString = elf.read_ansiString(record.nOffset);
-			recordSS.sVersion = XBinary::regExp("version=(.*?)\\\n", sVersionString, 1);
+            QString sVersionString = elf.read_ansiString(record.nOffset);
+            recordSS.sVersion = XBinary::regExp("version=(.*?)\\\n", sVersionString, 1);
 
-			pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
-		} else if (XBinary::isStringInListPresent(&(pELFInfo->listLibraries), "libQt5Core.so.5", pPdStruct)) {
-			_SCANS_STRUCT recordSS = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_LIBRARY, XScanEngine::RECORD_NAME_QT, "5.X", "", 0);
+            pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+        } else if (XBinary::isStringInListPresent(&(pELFInfo->listLibraries), "libQt5Core.so.5", pPdStruct)) {
+            _SCANS_STRUCT recordSS = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_LIBRARY, XScanEngine::RECORD_NAME_QT, "5.X", "", 0);
 
-			pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
-		} else if (XBinary::isStringInListPresent(&(pELFInfo->listLibraries), "libQt6Core_x86.so", pPdStruct)) {
-			_SCANS_STRUCT recordSS = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_LIBRARY, XScanEngine::RECORD_NAME_QT, "6.X", "", 0);
+            pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+        } else if (XBinary::isStringInListPresent(&(pELFInfo->listLibraries), "libQt6Core_x86.so", pPdStruct)) {
+            _SCANS_STRUCT recordSS = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_LIBRARY, XScanEngine::RECORD_NAME_QT, "6.X", "", 0);
 
-			pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
-		} else if (XBinary::isStringInListPresent(&(pELFInfo->listLibraries), "libQt6Core.so.6", pPdStruct)) {
-			_SCANS_STRUCT recordSS = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_LIBRARY, XScanEngine::RECORD_NAME_QT, "6.X", "", 0);
+            pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+        } else if (XBinary::isStringInListPresent(&(pELFInfo->listLibraries), "libQt6Core.so.6", pPdStruct)) {
+            _SCANS_STRUCT recordSS = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_LIBRARY, XScanEngine::RECORD_NAME_QT, "6.X", "", 0);
 
-			pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
-		}
+            pELFInfo->basic_info.mapResultLibraries.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+        }
 
-		if (XELF::isNotePresent(&(pELFInfo->listNotes), "Android")) {
-			XELF::NOTE note = XELF::getNote(&(pELFInfo->listNotes), "Android");
+        if (XELF::isNotePresent(&(pELFInfo->listNotes), "Android")) {
+            XELF::NOTE note = XELF::getNote(&(pELFInfo->listNotes), "Android");
 
-			_SCANS_STRUCT ssAndroidSDK = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_ANDROIDSDK, "", "", 0);
-			_SCANS_STRUCT ssAndroidNDK = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_ANDROIDNDK, "", "", 0);
+            _SCANS_STRUCT ssAndroidSDK = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_ANDROIDSDK, "", "", 0);
+            _SCANS_STRUCT ssAndroidNDK = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_ANDROIDNDK, "", "", 0);
 
-			if (note.nSize >= 4) {
-				quint32 nSDKVersion = elf.read_uint32(note.nDataOffset);
-				ssAndroidSDK.sVersion = QString("API %1(Android %2)").arg(QString::number(nSDKVersion), XBinary::getAndroidVersionFromApi(nSDKVersion));  // TODO
-			}
+            if (note.nSize >= 4) {
+                quint32 nSDKVersion = elf.read_uint32(note.nDataOffset);
+                ssAndroidSDK.sVersion = QString("API %1(Android %2)").arg(QString::number(nSDKVersion), XBinary::getAndroidVersionFromApi(nSDKVersion));  // TODO
+            }
 
-			if (note.nSize >= 4 + 64 * 2) {
-				QString sNdkVersion = elf.read_ansiString(note.nDataOffset + 4);
-				QString sNdkBuild = elf.read_ansiString(note.nDataOffset + 4 + 64);
+            if (note.nSize >= 4 + 64 * 2) {
+                QString sNdkVersion = elf.read_ansiString(note.nDataOffset + 4);
+                QString sNdkBuild = elf.read_ansiString(note.nDataOffset + 4 + 64);
 
-				ssAndroidNDK.sVersion = QString("%1(%2)").arg(sNdkVersion).arg(sNdkBuild);
-			}
+                ssAndroidNDK.sVersion = QString("%1(%2)").arg(sNdkVersion).arg(sNdkBuild);
+            }
 
-			pELFInfo->basic_info.mapResultTools.insert(ssAndroidSDK.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ssAndroidSDK));
-			pELFInfo->basic_info.mapResultTools.insert(ssAndroidNDK.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ssAndroidNDK));
-		}
+            pELFInfo->basic_info.mapResultTools.insert(ssAndroidSDK.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ssAndroidSDK));
+            pELFInfo->basic_info.mapResultTools.insert(ssAndroidNDK.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ssAndroidNDK));
+        }
 
-		if (XELF::isNotePresent(&(pELFInfo->listNotes), "Go")) {
-			_SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_GO, "", "", 0);
+        if (XELF::isNotePresent(&(pELFInfo->listNotes), "Go")) {
+            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_GO, "", "", 0);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// gold
-		if (XELF::isSectionNamePresent(".note.gnu.gold-version", &(pELFInfo->listSectionRecords))) {
-			_SCANS_STRUCT recordSS = {};
+        // gold
+        if (XELF::isSectionNamePresent(".note.gnu.gold-version", &(pELFInfo->listSectionRecords))) {
+            _SCANS_STRUCT recordSS = {};
 
-			recordSS.type = XScanEngine::RECORD_TYPE_LINKER;
-			recordSS.name = XScanEngine::RECORD_NAME_GOLD;
+            recordSS.type = XScanEngine::RECORD_TYPE_LINKER;
+            recordSS.name = XScanEngine::RECORD_NAME_GOLD;
 
-			XELF::SECTION_RECORD record = elf._getSectionRecords(&(pELFInfo->listSectionRecords), ".note.gnu.gold-version").at(0);
+            XELF::SECTION_RECORD record = elf._getSectionRecords(&(pELFInfo->listSectionRecords), ".note.gnu.gold-version").at(0);
 
-			VI_STRUCT vi = NFD_Binary::get_gold_vi(pDevice, pOptions, record.nOffset, record.nSize, pPdStruct);
+            VI_STRUCT vi = NFD_Binary::get_gold_vi(pDevice, pOptions, record.nOffset, record.nSize, pPdStruct);
 
-			if (vi.bIsValid) {
-				recordSS.sVersion = vi.sVersion;
-			}
+            if (vi.bIsValid) {
+                recordSS.sVersion = vi.sVersion;
+            }
 
-			pELFInfo->basic_info.mapResultLinkers.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
-		}
+            pELFInfo->basic_info.mapResultLinkers.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+        }
 
-		// dotnet
-		if (pELFInfo->sRunPath == "$ORIGIN/netcoredeps") {
-			_SCANS_STRUCT recordSS = {};
+        // dotnet
+        if (pELFInfo->sRunPath == "$ORIGIN/netcoredeps") {
+            _SCANS_STRUCT recordSS = {};
 
-			recordSS.type = XScanEngine::RECORD_TYPE_LOADER;
-			recordSS.name = XScanEngine::RECORD_NAME_DOTNET;
+            recordSS.type = XScanEngine::RECORD_TYPE_LOADER;
+            recordSS.name = XScanEngine::RECORD_NAME_DOTNET;
 
-			pELFInfo->basic_info.mapResultTools.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
-		}
+            pELFInfo->basic_info.mapResultTools.insert(recordSS.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &recordSS));
+        }
 
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_SOURCERYCODEBENCH)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_SOURCERYCODEBENCH);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_SOURCERYCODEBENCH)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_SOURCERYCODEBENCH);
 
-			pELFInfo->basic_info.mapResultTools.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		} else if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_SOURCERYCODEBENCHLITE)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_SOURCERYCODEBENCHLITE);
+            pELFInfo->basic_info.mapResultTools.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        } else if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_SOURCERYCODEBENCHLITE)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_SOURCERYCODEBENCHLITE);
 
-			pELFInfo->basic_info.mapResultTools.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultTools.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_RUST)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_RUST);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_RUST)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_RUST);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_APPLELLVM)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_APPLELLVM);
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_APPLELLVM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_APPLELLVM);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// Android clang
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ANDROIDCLANG)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ANDROIDCLANG);
+        // Android clang
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ANDROIDCLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ANDROIDCLANG);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// Alipay clang
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ALIPAYCLANG)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ALIPAYCLANG);
+        // Alipay clang
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ALIPAYCLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ALIPAYCLANG);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// Alpine clang
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ALPINECLANG)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ALPINECLANG);
+        // Alpine clang
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ALPINECLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ALPINECLANG);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// Alibaba clang
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ALIBABACLANG)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ALIBABACLANG);
+        // Alibaba clang
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ALIBABACLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ALIBABACLANG);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// Plex clang
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_PLEXCLANG)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_PLEXCLANG);
+        // Plex clang
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_PLEXCLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_PLEXCLANG);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// Ubuntu clang
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_UBUNTUCLANG)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_UBUNTUCLANG);
+        // Ubuntu clang
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_UBUNTUCLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_UBUNTUCLANG);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// Debian clang
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_DEBIANCLANG)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_DEBIANCLANG);
+        // Debian clang
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_DEBIANCLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_DEBIANCLANG);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// Apportable clang
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_APPORTABLECLANG)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_APPORTABLECLANG);
+        // Apportable clang
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_APPORTABLECLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_APPORTABLECLANG);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// ARM Assembler
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ARMASSEMBLER)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ARMASSEMBLER);
+        // ARM Assembler
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ARMASSEMBLER)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ARMASSEMBLER);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// ARM C
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ARMC)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ARMC);
+        // ARM C
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ARMC)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ARMC);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// ARM C/C++
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ARMCCPP)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ARMCCPP);
+        // ARM C/C++
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ARMCCPP)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ARMCCPP);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// ARM NEON C/C++
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ARMNEONCCPP)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ARMNEONCCPP);
+        // ARM NEON C/C++
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ARMNEONCCPP)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ARMNEONCCPP);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// ARM/Thumb C/C++
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ARMTHUMBCCPP)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ARMTHUMBCCPP);
+        // ARM/Thumb C/C++
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ARMTHUMBCCPP)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ARMTHUMBCCPP);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// Thumb C
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_THUMBC)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_THUMBC);
+        // Thumb C
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_THUMBC)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_THUMBC);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// ARM/Thumb Macro Assembler
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ARMTHUMBMACROASSEMBLER)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ARMTHUMBMACROASSEMBLER);
+        // ARM/Thumb Macro Assembler
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ARMTHUMBMACROASSEMBLER)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ARMTHUMBMACROASSEMBLER);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// ARM Linker
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ARMLINKER)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ARMLINKER);
+        // ARM Linker
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ARMLINKER)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ARMLINKER);
 
-			pELFInfo->basic_info.mapResultLinkers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultLinkers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// clang
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_CLANG)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_CLANG);
+        // clang
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_CLANG)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_CLANG);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// DynASM
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_DYNASM)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_DYNASM);
+        // DynASM
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_DYNASM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_DYNASM);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// Delphi
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI)) {
-			_SCANS_STRUCT ssCompiler = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI);
+        // Delphi
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI)) {
+            _SCANS_STRUCT ssCompiler = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_EMBARCADEROOBJECTPASCALDELPHI);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ssCompiler));
+            pELFInfo->basic_info.mapResultCompilers.insert(ssCompiler.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ssCompiler));
 
-			_SCANS_STRUCT ssTool = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_EMBARCADERODELPHI,
-												  NFD_Binary::_get_DelphiVersionFromCompiler(ssCompiler.sVersion).sVersion, "", 0);
+            _SCANS_STRUCT ssTool = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_EMBARCADERODELPHI,
+                                                              NFD_Binary::_get_DelphiVersionFromCompiler(ssCompiler.sVersion).sVersion, "", 0);
 
-			pELFInfo->basic_info.mapResultTools.insert(ssTool.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ssTool));
-		}
+            pELFInfo->basic_info.mapResultTools.insert(ssTool.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ssTool));
+        }
 
-		// LLD
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_LLD)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_LLD);
+        // LLD
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_LLD)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_LLD);
 
-			pELFInfo->basic_info.mapResultLinkers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultLinkers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// Oracle Solaris Link Editors
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ORACLESOLARISLINKEDITORS)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ORACLESOLARISLINKEDITORS);
+        // Oracle Solaris Link Editors
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_ORACLESOLARISLINKEDITORS)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_ORACLESOLARISLINKEDITORS);
 
-			pELFInfo->basic_info.mapResultLinkers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultLinkers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// Sun WorkShop
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_SUNWORKSHOP)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_SUNWORKSHOP);
+        // Sun WorkShop
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_SUNWORKSHOP)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_SUNWORKSHOP);
 
-			pELFInfo->basic_info.mapResultTools.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultTools.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// Sun WorkShop Compilers
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_SUNWORKSHOPCOMPILERS)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_SUNWORKSHOPCOMPILERS);
+        // Sun WorkShop Compilers
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_SUNWORKSHOPCOMPILERS)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_SUNWORKSHOPCOMPILERS);
 
-			pELFInfo->basic_info.mapResultTools.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultTools.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// Snapdragon LLVM ARM
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_SNAPDRAGONLLVMARM)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_SNAPDRAGONLLVMARM);
+        // Snapdragon LLVM ARM
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_SNAPDRAGONLLVMARM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_SNAPDRAGONLLVMARM);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		// NASM
-		if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_NASM)) {
-			_SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_NASM);
+        // NASM
+        if (pELFInfo->basic_info.mapCommentSectionDetects.contains(XScanEngine::RECORD_NAME_NASM)) {
+            _SCANS_STRUCT ss = pELFInfo->basic_info.mapCommentSectionDetects.value(XScanEngine::RECORD_NAME_NASM);
 
-			pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-		}
+            pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+        }
 
-		if (XELF::isSectionNamePresent(".rodata", &(pELFInfo->listSectionRecords))) {
-			qint32 nIndex = XELF::getSectionNumber(".rodata", &(pELFInfo->listSectionRecords));
+        if (XELF::isSectionNamePresent(".rodata", &(pELFInfo->listSectionRecords))) {
+            qint32 nIndex = XELF::getSectionNumber(".rodata", &(pELFInfo->listSectionRecords));
 
-			qint64 nDataOffset = XELF::getElf_Shdr_offset(nIndex, &(pELFInfo->listSectionHeaders));
-			qint64 nDataSize = XELF::getElf_Shdr_size(nIndex, &(pELFInfo->listSectionHeaders));
+            qint64 nDataOffset = XELF::getElf_Shdr_offset(nIndex, &(pELFInfo->listSectionHeaders));
+            qint64 nDataSize = XELF::getElf_Shdr_size(nIndex, &(pELFInfo->listSectionHeaders));
 
-			VI_STRUCT viStruct = NFD_Binary::get_Zig_vi(pDevice, pOptions, nDataOffset, nDataSize, pPdStruct);
+            VI_STRUCT viStruct = NFD_Binary::get_Zig_vi(pDevice, pOptions, nDataOffset, nDataSize, pPdStruct);
 
-			if (viStruct.bIsValid) {
-				_SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ZIG, "", "", 0);
+            if (viStruct.bIsValid) {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ZIG, "", "", 0);
 
-				ss.sVersion = viStruct.sVersion;
-				ss.sInfo = viStruct.sInfo;
+                ss.sVersion = viStruct.sVersion;
+                ss.sInfo = viStruct.sInfo;
 
-				pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
-			}
-		}
-	}
+                pELFInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
+            }
+        }
+    }
 }
 
 void NFD_ELF::handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
@@ -904,7 +918,8 @@ void NFD_ELF::handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
             VI_STRUCT viStruct = NFD_Binary::get_DWRAF_vi(pDevice, pOptions, pELFInfo->nDWARFDebugOffset, pELFInfo->nDWARFDebugSize, pPdStruct);
 
             if (viStruct.bIsValid) {
-                _SCANS_STRUCT ssDebugInfo = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
+                _SCANS_STRUCT ssDebugInfo =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_DEBUGDATA, XScanEngine::RECORD_NAME_DWARFDEBUGINFO, "", "", 0);
                 ssDebugInfo.sVersion = viStruct.sVersion;
 
                 pELFInfo->basic_info.mapResultDebugData.insert(ssDebugInfo.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ssDebugInfo));
@@ -914,7 +929,7 @@ void NFD_ELF::handle_DebugData(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
 }
 
 NFD_ELF::ELFINFO_STRUCT NFD_ELF::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset,
-                                            XBinary::PDSTRUCT *pPdStruct)
+                                         XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
     timer.start();
@@ -1156,7 +1171,8 @@ void NFD_ELF::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *p
                 QString sString = elf.read_ansiString(nOffset, nSize);
 
                 if (sString == "Virbox Protector") {
-                    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_VIRBOXPROTECTOR, "", "", 0);
+                    _SCANS_STRUCT ss =
+                        NFD_Binary::getScansStruct(0, XBinary::FT_ELF, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_VIRBOXPROTECTOR, "", "", 0);
 
                     pELFInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pELFInfo->basic_info), &ss));
                 }
@@ -1167,8 +1183,7 @@ void NFD_ELF::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *p
     }
 }
 
-void NFD_ELF::handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo,
-                                           XBinary::PDSTRUCT *pPdStruct)
+void NFD_ELF::handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_ELF::ELFINFO_STRUCT *pELFInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     Q_UNUSED(pELFInfo)
 
@@ -1309,7 +1324,8 @@ void NFD_ELF::handle_FixDetects(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *p
     Q_UNUSED(pOptions)
     Q_UNUSED(pPdStruct)
 
-    if (pELFInfo->basic_info.mapResultCompilers.contains(XScanEngine::RECORD_NAME_GCC) || pELFInfo->basic_info.mapResultCompilers.contains(XScanEngine::RECORD_NAME_APPORTABLECLANG)) {
+    if (pELFInfo->basic_info.mapResultCompilers.contains(XScanEngine::RECORD_NAME_GCC) ||
+        pELFInfo->basic_info.mapResultCompilers.contains(XScanEngine::RECORD_NAME_APPORTABLECLANG)) {
         if (pELFInfo->basic_info.mapResultCompilers.value(XScanEngine::RECORD_NAME_GCC).sVersion == "") {
             pELFInfo->basic_info.mapResultCompilers.remove(XScanEngine::RECORD_NAME_GCC);
         }
