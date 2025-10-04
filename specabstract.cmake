@@ -53,6 +53,8 @@ set(SPECABSTRACT_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_lx.h
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_amiga.cpp
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_amiga.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_atarist.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_atarist.h
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_dos16m.cpp
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_dos16m.h
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_dos4g.cpp

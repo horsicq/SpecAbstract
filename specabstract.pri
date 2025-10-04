@@ -26,6 +26,7 @@ HEADERS += \
     $$PWD/modules/nfd_le.h \
     $$PWD/modules/nfd_lx.h \
     $$PWD/modules/nfd_amiga.h \
+    $$PWD/modules/nfd_atarist.h \
     $$PWD/modules/nfd_dos16m.h \
     $$PWD/modules/nfd_dos4g.h \
     $$PWD/modules/nfd_apk.h \
@@ -58,6 +59,7 @@ SOURCES += \
     $$PWD/modules/nfd_le.cpp \
     $$PWD/modules/nfd_lx.cpp \
     $$PWD/modules/nfd_amiga.cpp \
+    $$PWD/modules/nfd_atarist.cpp \
     $$PWD/modules/nfd_dos16m.cpp \
     $$PWD/modules/nfd_dos4g.cpp \
     $$PWD/modules/nfd_apk.cpp \
