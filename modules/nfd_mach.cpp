@@ -205,8 +205,9 @@ void NFD_MACH::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpti
                 else if (nVersion < S_FULL_VERSION(1141, 1, 0)) recordSDK.sVersion = "8.0.0";
                 else if (nVersion < S_FULL_VERSION(1142, 14, 0)) recordSDK.sVersion = "8.1.0";
                 else if (nVersion < S_FULL_VERSION(1144, 17, 0)) recordSDK.sVersion = "8.2.0";
-                else if (nVersion < S_FULL_VERSION(1200, 0, 0)) recordSDK.sVersion = "8.3.0";  // TODO Check
-                                                                                               // TODO
+                else if (nVersion < S_FULL_VERSION(1200, 0, 0))
+                    recordSDK.sVersion = "8.3.0";  // TODO Check
+                                                   // TODO
             }
 
             QString sVersion = XBinary::get_uint32_full_version(nVersion);
