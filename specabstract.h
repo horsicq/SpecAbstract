@@ -60,10 +60,6 @@ class SpecAbstract : public XScanEngine {
 public:
     explicit SpecAbstract(QObject *pParent = nullptr);
 
-private:
-    // MSDOS_compareRichRecord moved into NFD_MSDOS
-    static void filterResult(QList<NFD_Binary::SCAN_STRUCT> *pListRecords, const QSet<RECORD_TYPE> &stRecordTypes, XBinary::PDSTRUCT *pPdStruct);
-
 protected:
     virtual void _processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCAN_RESULT *pScanResult, QIODevice *pDevice, const XScanEngine::SCANID &parentId,
                                 XBinary::FT fileType, XScanEngine::SCAN_OPTIONS *pScanOptions, bool bAddUnknown, XBinary::PDSTRUCT *pPdStruct);

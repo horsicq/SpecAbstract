@@ -38,20 +38,6 @@ SpecAbstract::SpecAbstract(QObject *pParent) : XScanEngine(pParent)
 {
 }
 
-void SpecAbstract::filterResult(QList<NFD_Binary::SCAN_STRUCT> *pListRecords, const QSet<SpecAbstract::RECORD_TYPE> &stRecordTypes, XBinary::PDSTRUCT *pPdStruct)
-{
-    QList<NFD_Binary::SCAN_STRUCT> listRecords;
-    qint32 nNumberOfRecords = pListRecords->count();
-
-    for (qint32 i = 0; (i < nNumberOfRecords) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
-        if (stRecordTypes.contains((RECORD_TYPE)pListRecords->at(i).type)) {
-            listRecords.append(pListRecords->at(i));
-        }
-    }
-
-    *pListRecords = listRecords;
-}
-
 void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCAN_RESULT *pScanResult, QIODevice *pDevice, const XScanEngine::SCANID &parentId,
                                   XBinary::FT fileType, XScanEngine::SCAN_OPTIONS *pScanOptions, bool bAddUnknown, XBinary::PDSTRUCT *pPdStruct)
 {

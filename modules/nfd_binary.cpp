@@ -3498,3 +3498,17 @@ QList<XScanEngine::DEBUG_RECORD> NFD_Binary::convertHeur(QList<DETECT_RECORD> *p
 
     return listResult;
 }
+
+void NFD_Binary::filterResult(QList<NFD_Binary::SCAN_STRUCT> *pListRecords, const QSet<XScanEngine::RECORD_TYPE> &stRecordTypes, XBinary::PDSTRUCT *pPdStruct)
+{
+    QList<NFD_Binary::SCAN_STRUCT> listRecords;
+    qint32 nNumberOfRecords = pListRecords->count();
+
+    for (qint32 i = 0; (i < nNumberOfRecords) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
+        if (stRecordTypes.contains((XScanEngine::RECORD_TYPE)pListRecords->at(i).type)) {
+            listRecords.append(pListRecords->at(i));
+        }
+    }
+
+    *pListRecords = listRecords;
+}

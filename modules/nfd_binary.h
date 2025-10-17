@@ -235,6 +235,9 @@ public:
     // Convert DETECT_RECORD list to XScanEngine::DEBUG_RECORD list
     static QList<XScanEngine::DEBUG_RECORD> convertHeur(QList<DETECT_RECORD> *pListDetectRecords);
 
+    // Filter scan results by record types
+    static void filterResult(QList<SCAN_STRUCT> *pListRecords, const QSet<XScanEngine::RECORD_TYPE> &stRecordTypes, XBinary::PDSTRUCT *pPdStruct);
+
     // Derive Operation System directly from a binary instance
     static SCANS_STRUCT detectOperationSystem(XBinary *pBinary, XBinary::PDSTRUCT *pPdStruct);
 
