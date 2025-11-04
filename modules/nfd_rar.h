@@ -38,6 +38,7 @@ public:
     };
 
     static RARINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
+    static void handle_formats(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, RARINFO_STRUCT *pRARInfo, XBinary::PDSTRUCT *pPdStruct);
 };
 
 #endif  // NFD_RAR_H
