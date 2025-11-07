@@ -29,7 +29,6 @@ void NFD_RAR::handle_formats(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpt
     XRar xrar(pDevice);
 
     if (xrar.isValid(pPdStruct) && XBinary::isPdStructNotCanceled(pPdStruct)) {
-        // VMProtect
         if (XBinary::getDeviceFileSuffix(pDevice).toLower() == "cbr") {
             NFD_Binary::SCANS_STRUCT recordSS = NFD_Binary::getScansStruct(0, XBinary::FT_RAR, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_COMICBOOKARCHIVE, "", "", 0);
             pRARInfo->basic_info.mapResultProtectors.insert(recordSS.name, NFD_Binary::scansToScan(&(pRARInfo->basic_info), &recordSS));
@@ -52,6 +51,9 @@ NFD_RAR::RARINFO_STRUCT NFD_RAR::getInfo(QIODevice *pDevice, XScanEngine::SCANID
 
         // Populate
         result.listArchiveRecords = rar.getRecords(20000, pPdStruct);
+
+        NFD_Binary::SCANS_STRUCT ssFormat = NFD_Binary::getFormatScansStruct(rar.getFileFormatInfo(pPdStruct));
+        result.basic_info.mapResultFormats.insert(ssFormat.name, NFD_Binary::scansToScan(&(result.basic_info), &ssFormat));
 
         handle_formats(pDevice, pOptions, &result, pPdStruct);
 
