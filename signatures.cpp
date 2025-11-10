@@ -20,14 +20,3 @@
  */
 #include "specabstract.h"
 
-//SpecAbstract::SIGNATURE_RECORD _PE_resource_records[]=
-//{
-//    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_RESOURCE_VERSIONINFO,         "",                 ""},                    "........0000560053005F00560045005200530049004F004E005F0049004E0046004F00"},
-//    {{0, XBinary::FT_BINARY,    XScanEngine::RECORD_TYPE_FORMAT,           XScanEngine::RECORD_NAME_BITMAPINFOHEADER,             "",                 ""},                    "28000000................0100"},
-//};
-
-// TEXT regex records moved to modules/nfd_text.cpp
-
-// ELF entrypoint records moved to modules/nfd_elf.cpp
-
-// APK records moved to modules/nfd_apk.cpp
