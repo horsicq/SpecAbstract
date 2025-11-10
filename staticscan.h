@@ -72,15 +72,15 @@ public slots:
     void process();
 
 private:
-    QString g_sFileName;
-    QString g_sDirectoryName;
-    QIODevice *g_pDevice;
-    char *g_pData;
-    qint32 g_nDataSize;
-    XScanEngine::SCAN_OPTIONS *g_pOptions;
-    XScanEngine::SCAN_RESULT *g_pScanResult;
-    SCAN_TYPE g_scanType;
-    XBinary::PDSTRUCT *g_pPdStruct;
+    QString m_sFileName;
+    QString m_sDirectoryName;
+    QIODevice *m_pDevice;
+    char *m_pData;
+    qint32 m_nDataSize;
+    XScanEngine::SCAN_OPTIONS *m_pOptions;
+    XScanEngine::SCAN_RESULT *m_pScanResult;
+    SCAN_TYPE m_scanType;
+    XBinary::PDSTRUCT *m_pPdStruct;
 };
 
 #endif  // STATICSCAN_H
