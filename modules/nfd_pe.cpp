@@ -6032,49 +6032,60 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                 else if (sCompilerBuildVersion == "30151") ssTool.sVersion = "2019 version 16.11.27";
 
                 if (ssTool.sVersion == "") {
-                    if (sCompilerBuildVersion == "30401") ssTool.sVersion = "2022 version 17.0.0 preview2";  // 14.30
-                    else if (sCompilerBuildVersion == "30423") ssTool.sVersion = "2022 version 17.0.0 pre 3.1";
-                    else if (sCompilerBuildVersion == "30528") ssTool.sVersion = "2022 version 17.0.0 pre 4.0";
-                    else if (sCompilerBuildVersion == "30704") ssTool.sVersion = "2022 version 17.0.0 pre 5.0";
-                    else if (sCompilerBuildVersion == "30705") ssTool.sVersion = "2022 version 17.0.0 pre 7.0";
-                    else if (sCompilerBuildVersion == "30818") ssTool.sVersion = "2022 version 17.1.0 pre 1.0";  // 14.31
-                    else if (sCompilerBuildVersion == "30919") ssTool.sVersion = "2022 version 17.1.0 pre 2.0";
-                    else if (sCompilerBuildVersion == "31103") ssTool.sVersion = "2022 version 17.1.0 pre 3.0";
-                    else if (sCompilerBuildVersion == "31104") ssTool.sVersion = "2022 version 17.1.0 pre 5.0";
-                    else if (sCompilerBuildVersion == "31114") ssTool.sVersion = "2022 version 17.2.0 pre 1.0";  // 14.32
-                    else if (sCompilerBuildVersion == "31302") ssTool.sVersion = "2022 version 17.2.0 pre 2.1";
-                    else if (sCompilerBuildVersion == "31326") ssTool.sVersion = "2022 version 17.2.0 pre 3.0";
-                    else if (sCompilerBuildVersion == "31328") ssTool.sVersion = "2022 version 17.2.0 pre 5.0";
-                    else if (sCompilerBuildVersion == "31329") ssTool.sVersion = "2022 version 17.2.1-17.2.4";
+                    if (sCompilerBuildVersion == "30401") ssTool.sVersion = "2022 version 17.0.0 preview 2";  // 14.30
+                    else if (sCompilerBuildVersion == "30423") ssTool.sVersion = "2022 version 17.0.0 preview 3.1";
+                    else if (sCompilerBuildVersion == "30528") ssTool.sVersion = "2022 version 17.0.0 preview 4.0";
+                    else if (sCompilerBuildVersion == "30704") ssTool.sVersion = "2022 version 17.0.0 preview 5.0";
+                    else if (sCompilerBuildVersion == "30705") ssTool.sVersion = "2022 version 17.0.1";
+                    else if (sCompilerBuildVersion == "30706") ssTool.sVersion = "2022 version 17.0.2";
+                    else if (sCompilerBuildVersion == "30818") ssTool.sVersion = "2022 version 17.1.0 preview 1.0";  // 14.31
+                    else if (sCompilerBuildVersion == "30919") ssTool.sVersion = "2022 version 17.1.0 preview 2.0";
+                    else if (sCompilerBuildVersion == "31103") ssTool.sVersion = "2022 version 17.1.0";
+                    else if (sCompilerBuildVersion == "31104") ssTool.sVersion = "2022 version 17.1.0 preview 5.0";
+                    else if (sCompilerBuildVersion == "31114") ssTool.sVersion = "2022 version 17.2.0 preview 1.0";  // 14.32
+                    else if (sCompilerBuildVersion == "31302") ssTool.sVersion = "2022 version 17.2.0 preview 2.1";
+                    else if (sCompilerBuildVersion == "31326") ssTool.sVersion = "2022 version 17.2.0 preview 3.0";
+                    else if (sCompilerBuildVersion == "31328") ssTool.sVersion = "2022 version 17.2.0 preview 5.0";
+                    else if (sCompilerBuildVersion == "31329") ssTool.sVersion = "2022 version 17.2.2";
                     else if (sCompilerBuildVersion == "31332") ssTool.sVersion = "2022 version 17.2.5";
-                    else if (sCompilerBuildVersion == "31424") ssTool.sVersion = "2022 version 17.3.0 pre 1.0";  // 14.33
-                    else if (sCompilerBuildVersion == "31517") ssTool.sVersion = "2022 version 17.3.0 pre 2.0";
-                    else if (sCompilerBuildVersion == "31627") ssTool.sVersion = "2022 version 17.3.0 pre 3.0";
-                    else if (sCompilerBuildVersion == "31628") ssTool.sVersion = "2022 version 17.3.0 pre 4.0";
-                    else if (sCompilerBuildVersion == "31629") ssTool.sVersion = "2022 version 17.3.0 pre 5.0";
+                    else if (sCompilerBuildVersion == "31424") ssTool.sVersion = "2022 version 17.3.0 preview 1.0";  // 14.33
+                    else if (sCompilerBuildVersion == "31517") ssTool.sVersion = "2022 version 17.3.0 preview 2.0";
+                    else if (sCompilerBuildVersion == "31627") ssTool.sVersion = "2022 version 17.3.0 preview 3.0";
+                    else if (sCompilerBuildVersion == "31628") ssTool.sVersion = "2022 version 17.3.0 preview 4.0";
+                    else if (sCompilerBuildVersion == "31629") ssTool.sVersion = "2022 version 17.3.0 preview 5.0";
                     else if (sCompilerBuildVersion == "31630") ssTool.sVersion = "2022 version 17.3.4";
-                    else if (sCompilerBuildVersion == "31721") ssTool.sVersion = "2022 version 17.4.0 pre 1.0";  // 14.34
-                    else if (sCompilerBuildVersion == "31823") ssTool.sVersion = "2022 version 17.4.0 pre 2.0";
-                    else if (sCompilerBuildVersion == "31921") ssTool.sVersion = "2022 version 17.4.0 pre 4.0";
-                    else if (sCompilerBuildVersion == "31932") ssTool.sVersion = "2022 version 17.4.0 pre 5.0";
-                    else if (sCompilerBuildVersion == "31933") ssTool.sVersion = "2022 version 17.4.0 pre 6.0";
+                    else if (sCompilerBuildVersion == "31721") ssTool.sVersion = "2022 version 17.4.0 preview 1.0";  // 14.34
+                    else if (sCompilerBuildVersion == "31823") ssTool.sVersion = "2022 version 17.4.0 preview 2.0";
+                    else if (sCompilerBuildVersion == "31921") ssTool.sVersion = "2022 version 17.4.0 preview 4.0";
+                    else if (sCompilerBuildVersion == "31932") ssTool.sVersion = "2022 version 17.4.0 preview 5.0";
+                    else if (sCompilerBuildVersion == "31933") ssTool.sVersion = "2022 version 17.4.0";
                     else if (sCompilerBuildVersion == "31935") ssTool.sVersion = "2022 version 17.4.2";
                     else if (sCompilerBuildVersion == "31937") ssTool.sVersion = "2022 version 17.4.3";
                     else if (sCompilerBuildVersion == "31942") ssTool.sVersion = "2022 version 17.4.5";
-                    else if (sCompilerBuildVersion == "32019") ssTool.sVersion = "2022 version 17.5.0 pre 1.0";  // 14.35
-                    else if (sCompilerBuildVersion == "32124") ssTool.sVersion = "2022 version 17.5.0 pre 2.0";
-                    else if (sCompilerBuildVersion == "32213") ssTool.sVersion = "2022 version 17.5.0 pre 4.0";
-                    else if (sCompilerBuildVersion == "32215") ssTool.sVersion = "2022 version 17.5.0-17.5.2";
+                    else if (sCompilerBuildVersion == "32019") ssTool.sVersion = "2022 version 17.5.0 preview 1.0";  // 14.35
+                    else if (sCompilerBuildVersion == "32124") ssTool.sVersion = "2022 version 17.5.0 preview 2.0";
+                    else if (sCompilerBuildVersion == "32213") ssTool.sVersion = "2022 version 17.5.0 preview 4.0";
+                    else if (sCompilerBuildVersion == "32215") ssTool.sVersion = "2022 version 17.5.0";
                     else if (sCompilerBuildVersion == "32216") ssTool.sVersion = "2022 version 17.5.3";
                     else if (sCompilerBuildVersion == "32217") ssTool.sVersion = "2022 version 17.5.4-17.5.5";
-                    else if (sCompilerBuildVersion == "32323") ssTool.sVersion = "2022 version 17.6.0 pre 1.0";  // 14.36
-                    else if (sCompilerBuildVersion == "32502") ssTool.sVersion = "2022 version 17.6.0 pre 2.0";
-                    else if (sCompilerBuildVersion == "32522") ssTool.sVersion = "2022 version 17.6.0 pre 3.0-4.0";
-                    else if (sCompilerBuildVersion == "32530") ssTool.sVersion = "2022 version 17.6.0 pre 5.0-7.0";
-                    else if (sCompilerBuildVersion == "32532") ssTool.sVersion = "2022 version 17.6.0-17.6.2";
+                    else if (sCompilerBuildVersion == "32323") ssTool.sVersion = "2022 version 17.6.0 preview 1.0";  // 14.36
+                    else if (sCompilerBuildVersion == "32502") ssTool.sVersion = "2022 version 17.6.0 preview 2.0";
+                    else if (sCompilerBuildVersion == "32522") ssTool.sVersion = "2022 version 17.6.0 preview 3.0-4.0";
+                    else if (sCompilerBuildVersion == "32530") ssTool.sVersion = "2022 version 17.6.0 preview 5.0-7.0";
+                    else if (sCompilerBuildVersion == "32532") ssTool.sVersion = "2022 version 17.6.2";
                     else if (sCompilerBuildVersion == "32534") ssTool.sVersion = "2022 version 17.6.3";
                     else if (sCompilerBuildVersion == "32535") ssTool.sVersion = "2022 version 17.6.4";
-                    else if (sCompilerBuildVersion == "32705") ssTool.sVersion = "2022 version 17.7.0 pre 1.0-2.0";  // 14.37
+                    else if (sCompilerBuildVersion == "32705") ssTool.sVersion = "2022 version 17.7.0 preview 1.0-2.0";  // 14.37
+                    else if (sCompilerBuildVersion == "32822") ssTool.sVersion = "2022 version 17.7.0";
+                    else if (sCompilerBuildVersion == "33133") ssTool.sVersion = "2022 version 17.8.3";  // 14.38
+                    else if (sCompilerBuildVersion == "33521") ssTool.sVersion = "2022 version 17.9.2";  // 14.39
+                    else if (sCompilerBuildVersion == "33523") ssTool.sVersion = "2022 version 17.9.6";
+                    else if (sCompilerBuildVersion == "33811") ssTool.sVersion = "2022 version 17.10.1";  // 14.40
+                    else if (sCompilerBuildVersion == "34120") ssTool.sVersion = "2022 version 17.11.3";  // 14.41
+                    else if (sCompilerBuildVersion == "34123") ssTool.sVersion = "2022 version 17.11.6";
+                    else if (sCompilerBuildVersion == "34433") ssTool.sVersion = "2022 version 17.12.4";  // 14.42
+                    else if (sCompilerBuildVersion == "34808") ssTool.sVersion = "2022 version 17.13.0";  // 14.43
+                    else if (sCompilerBuildVersion == "35213") ssTool.sVersion = "2022 version 17.14.9";  // 14.44
                 }
             }
 
@@ -6082,20 +6093,20 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                 QString sLinkerMajorVersion = ssLinker.sVersion.section(".", 0, 1);
 
                 if (sLinkerMajorVersion != "") {
-                    if (sLinkerMajorVersion == "4.00") ssTool.sVersion = "4.00";
-                    else if (sLinkerMajorVersion == "4.20") ssTool.sVersion = "4.20";
+                    if (sLinkerMajorVersion == "4.00") ssTool.sVersion = "4.0";
+                    else if (sLinkerMajorVersion == "4.20") ssTool.sVersion = "4.2";
                     else if (sLinkerMajorVersion == "5.00") ssTool.sVersion = "5.0";
                     else if (sLinkerMajorVersion == "6.00") ssTool.sVersion = "6.0";
                     else if (sLinkerMajorVersion == "7.00") ssTool.sVersion = "2002";
                     else if (sLinkerMajorVersion == "7.10") ssTool.sVersion = "2003";
                     else if (sLinkerMajorVersion == "8.00") ssTool.sVersion = "2005";
-                    else if (sLinkerMajorVersion == "9.00") ssTool.sVersion = "2008";
+                    else if (sLinkerMajorVersion == "9.00") ssTool. sVersion = "2008";
                     else if (sLinkerMajorVersion == "10.00") ssTool.sVersion = "2010";
                     else if (sLinkerMajorVersion == "11.00") ssTool.sVersion = "2012";
                     else if (sLinkerMajorVersion == "12.00") ssTool.sVersion = "2013";
                     else if (sLinkerMajorVersion == "14.00") ssTool.sVersion = "2015";
                     else if (sLinkerMajorVersion == "14.10") ssTool.sVersion = "2017 version 15.0-15.2";
-                    else if (sLinkerMajorVersion == "14.11") ssTool.sVersion = "2017 version 15.3";
+                    else if (sLinkerMajorVersion == "14.11") ssTool.sVersion = "2017 version 15.3-15.4";
                     else if (sLinkerMajorVersion == "14.12") ssTool.sVersion = "2017 version 15.5";
                     else if (sLinkerMajorVersion == "14.13") ssTool.sVersion = "2017 version 15.6";
                     else if (sLinkerMajorVersion == "14.14") ssTool.sVersion = "2017 version 15.7";
@@ -6108,8 +6119,8 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                     else if (sLinkerMajorVersion == "14.24") ssTool.sVersion = "2019 version 16.4";
                     else if (sLinkerMajorVersion == "14.25") ssTool.sVersion = "2019 version 16.5";
                     else if (sLinkerMajorVersion == "14.26") ssTool.sVersion = "2019 version 16.6";
-                    else if (sLinkerMajorVersion == "14.27") ssTool.sVersion = "2019 version 16.7-16.8";
-                    else if (sLinkerMajorVersion == "14.28") ssTool.sVersion = "2019 version 16.9-16.10";
+                    else if (sLinkerMajorVersion == "14.27") ssTool.sVersion = "2019 version 16.7";
+                    else if (sLinkerMajorVersion == "14.28") ssTool.sVersion = "2019 version 16.8-16.9";
                     else if (sLinkerMajorVersion == "14.29") ssTool.sVersion = "2019 version 16.11";
                     else if (sLinkerMajorVersion == "14.30") ssTool.sVersion = "2022 version 17.0";
                     else if (sLinkerMajorVersion == "14.31") ssTool.sVersion = "2022 version 17.1";
@@ -6119,6 +6130,13 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                     else if (sLinkerMajorVersion == "14.35") ssTool.sVersion = "2022 version 17.5";
                     else if (sLinkerMajorVersion == "14.36") ssTool.sVersion = "2022 version 17.6";
                     else if (sLinkerMajorVersion == "14.37") ssTool.sVersion = "2022 version 17.7";
+                    else if (sLinkerMajorVersion == "14.38") ssTool.sVersion = "2022 version 17.8";
+                    else if (sLinkerMajorVersion == "14.39") ssTool.sVersion = "2022 version 17.9";
+                    else if (sLinkerMajorVersion == "14.40") ssTool.sVersion = "2022 version 17.10";
+                    else if (sLinkerMajorVersion == "14.41") ssTool.sVersion = "2022 version 17.11";
+                    else if (sLinkerMajorVersion == "14.42") ssTool.sVersion = "2022 version 17.12";
+                    else if (sLinkerMajorVersion == "14.43") ssTool.sVersion = "2022 version 17.13";
+                    else if (sLinkerMajorVersion == "14.44") ssTool.sVersion = "2022 version 17.14";
                 }
             }
 
