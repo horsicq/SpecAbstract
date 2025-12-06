@@ -6100,7 +6100,7 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                     else if (sLinkerMajorVersion == "7.00") ssTool.sVersion = "2002";
                     else if (sLinkerMajorVersion == "7.10") ssTool.sVersion = "2003";
                     else if (sLinkerMajorVersion == "8.00") ssTool.sVersion = "2005";
-                    else if (sLinkerMajorVersion == "9.00") ssTool. sVersion = "2008";
+                    else if (sLinkerMajorVersion == "9.00") ssTool.sVersion = "2008";
                     else if (sLinkerMajorVersion == "10.00") ssTool.sVersion = "2010";
                     else if (sLinkerMajorVersion == "11.00") ssTool.sVersion = "2012";
                     else if (sLinkerMajorVersion == "12.00") ssTool.sVersion = "2013";
