@@ -1008,7 +1008,7 @@ QString NFD_MSDOS::getMsRichString(quint16 nId, quint16 nBuild, quint32 nCount, 
     qint32 nSignaturesCount = nRecordsSize / (int)sizeof(NFD_Binary::MSRICH_RECORD);
 
     for (qint32 i = 0; (i < nSignaturesCount) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
-        NFD_Binary::NFD_Binary::SCANS_STRUCT record = {};
+        NFD_Binary::SCANS_STRUCT record = {};
 
         if (_nfd_msdos_compareRichRecord(&record, &(pRecords[i]), nId, nBuild, nCount, XBinary::FT_PE, XBinary::FT_MSDOS)) {
             sResult = NFD_Binary::SCANS_STRUCT_toString(&record);
