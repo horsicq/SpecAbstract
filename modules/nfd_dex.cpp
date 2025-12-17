@@ -218,7 +218,7 @@ void NFD_DEX::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptio
     bool bDexMerge_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listDexMerge, pPdStruct);
     bool bFastProxy_map = XDEX::compareMapItems(&(pDEXInfo->mapItems), &listFastProxy, pPdStruct);
 
-    auto addCompiler = [&](XScanEngine::RECORD_NAME name, const NFD_Binary::VI_STRUCT *pVi = nullptr, const QString &sInfoAppend = QString()) {
+    auto addCompiler = [&](XScanEngine::RECORD_NAME name, const NFD_Binary::VI_STRUCT *pVi, const QString &sInfoAppend) {
         NFD_Binary::SCANS_STRUCT recordCompiler = NFD_Binary::getScansStruct(0, XBinary::FT_DEX, XScanEngine::RECORD_TYPE_COMPILER, name, "", "", 0);
         if (pVi && pVi->bIsValid) {
             recordCompiler.sVersion = pVi->sVersion;
@@ -231,23 +231,23 @@ void NFD_DEX::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptio
     };
 
     if (viR8.bIsValid) {
-        addCompiler(XScanEngine::RECORD_NAME_R8, &viR8);
+        addCompiler(XScanEngine::RECORD_NAME_R8, &viR8, QString());
     } else if (!(pDEXInfo->bIsStringPoolSorted)) {
-        addCompiler(XScanEngine::RECORD_NAME_DEXLIB);
+        addCompiler(XScanEngine::RECORD_NAME_DEXLIB, nullptr, QString());
     } else if (bDX_map) {
-        addCompiler(XScanEngine::RECORD_NAME_DX);
+        addCompiler(XScanEngine::RECORD_NAME_DX, nullptr, QString());
     } else if (bDexLib2_map) {
-        addCompiler(XScanEngine::RECORD_NAME_DEXLIB2);
+        addCompiler(XScanEngine::RECORD_NAME_DEXLIB2, nullptr, QString());
     } else if (bR8_map) {
-        addCompiler(XScanEngine::RECORD_NAME_R8);
+        addCompiler(XScanEngine::RECORD_NAME_R8, nullptr, QString());
     } else if (bDexLib2heur_map) {
-        addCompiler(XScanEngine::RECORD_NAME_DEXLIB2);
+        addCompiler(XScanEngine::RECORD_NAME_DEXLIB2, nullptr, QString());
     } else if (bFastProxy_map) {
-        addCompiler(XScanEngine::RECORD_NAME_FASTPROXY);
+        addCompiler(XScanEngine::RECORD_NAME_FASTPROXY, nullptr, QString());
     }
 
     if (bDexMerge_map) {
-        addCompiler(XScanEngine::RECORD_NAME_DEXMERGE);
+        addCompiler(XScanEngine::RECORD_NAME_DEXMERGE, nullptr, QString());
     }
 
     if (viR8.bIsValid && (!bR8_map)) {
