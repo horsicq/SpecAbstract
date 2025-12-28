@@ -7202,7 +7202,19 @@ void NFD_PE::_fixRichSignatures(QList<_SCANS_STRUCT> *pListRichSignatures, qint3
                 else if (nBuild < 31721) nMinorVersion = 33;
                 else if (nBuild < 32019) nMinorVersion = 34;
                 else if (nBuild < 32323) nMinorVersion = 35;
-                else if (nBuild >= 32323) nMinorVersion = 36;
+                else if (nBuild < 32532) nMinorVersion = 36;  // VS 2022 17.6.x
+                else if (nBuild < 32543) nMinorVersion = 36;  // VS 2022 17.6.x (14.36.32532-14.36.32535)
+                else if (nBuild < 32822) nMinorVersion = 36;  // VS 2022 17.7.0 (14.36.32543)
+                else if (nBuild < 33130) nMinorVersion = 37;  // VS 2022 17.7.x
+                else if (nBuild < 33520) nMinorVersion = 38;  // VS 2022 17.8.0 (14.38.33135)
+                else if (nBuild < 33811) nMinorVersion = 39;  // VS 2022 17.9.x (14.39.33520-14.39.33523)
+                else if (nBuild < 34120) nMinorVersion = 40;  // VS 2022 17.10.x (14.40.33811-14.40.33818)
+                else if (nBuild < 34436) nMinorVersion = 41;  // VS 2022 17.11.0 (14.41.34120)
+                else if (nBuild < 34808) nMinorVersion = 42;  // VS 2022 17.12.4 (14.42.34436)
+                else if (nBuild < 35000) nMinorVersion = 43;  // VS 2022 17.13.x (14.43.34808-14.43.34810)
+                else if (nBuild < 35214) nMinorVersion = 44;  // VS 2022 17.14.x (14.44.35207-14.44.35213)
+                else if (nBuild < 36000) nMinorVersion = 50;
+                else nMinorVersion = 50;  // Future versions
             }
 
             (*pListRichSignatures)[i].sVersion = QString("%1.%2.%3").arg(sMajor, QString::number(nMinorVersion), sBuild);
