@@ -5897,7 +5897,7 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                 else if (sCompilerVersion == "18.00.20617") ssTool.sVersion = "2013 Preview [12.0]";
                 else if (sCompilerVersion == "18.00.20827") ssTool.sVersion = "2013 RC [12.0]";
                 else if (sCompilerVersion == "18.00.21005") ssTool.sVersion = "2013 RTM";
-                else if (sCompilerVersion == "18.00.21114") ssTool.sVersion = "2013 Nobemver CTP [12.0";
+                else if (sCompilerVersion == "18.00.21114") ssTool.sVersion = "2013 November CTP [12.0]";
                 else if (sCompilerVersion == "18.00.30324") ssTool.sVersion = "2013 Update2 RC [12.0]";
                 else if (sCompilerVersion == "18.00.30501") ssTool.sVersion = "2013 12.0.30501.00 Update 2";
                 else if (sCompilerVersion == "18.00.30723") ssTool.sVersion = "2013 12.0.30723.00 Update 3";
@@ -6037,16 +6037,23 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                     else if (sCompilerBuildVersion == "32532") ssTool.sVersion = "2022 version 17.6.2";
                     else if (sCompilerBuildVersion == "32534") ssTool.sVersion = "2022 version 17.6.3";
                     else if (sCompilerBuildVersion == "32535") ssTool.sVersion = "2022 version 17.6.4";
+                    else if (sCompilerBuildVersion == "32543") ssTool.sVersion = "2022 version 17.6.5";
                     else if (sCompilerBuildVersion == "32705") ssTool.sVersion = "2022 version 17.7.0 preview 1.0-2.0";  // 14.37
                     else if (sCompilerBuildVersion == "32822") ssTool.sVersion = "2022 version 17.7.0";
+                    else if (sCompilerBuildVersion == "33130") ssTool.sVersion = "2022 version 17.7.6";
                     else if (sCompilerBuildVersion == "33133") ssTool.sVersion = "2022 version 17.8.3";  // 14.38
+                    else if (sCompilerBuildVersion == "33135") ssTool.sVersion = "2022 version 17.8.5";
                     else if (sCompilerBuildVersion == "33521") ssTool.sVersion = "2022 version 17.9.2";  // 14.39
                     else if (sCompilerBuildVersion == "33523") ssTool.sVersion = "2022 version 17.9.6";
                     else if (sCompilerBuildVersion == "33811") ssTool.sVersion = "2022 version 17.10.1";  // 14.40
+                    else if (sCompilerBuildVersion == "33818") ssTool.sVersion = "2022 version 17.10.5";
                     else if (sCompilerBuildVersion == "34120") ssTool.sVersion = "2022 version 17.11.3";  // 14.41
                     else if (sCompilerBuildVersion == "34123") ssTool.sVersion = "2022 version 17.11.6";
                     else if (sCompilerBuildVersion == "34433") ssTool.sVersion = "2022 version 17.12.4";  // 14.42
+                    else if (sCompilerBuildVersion == "34436") ssTool.sVersion = "2022 version 17.12.6";
                     else if (sCompilerBuildVersion == "34808") ssTool.sVersion = "2022 version 17.13.0";  // 14.43
+                    else if (sCompilerBuildVersion == "34810") ssTool.sVersion = "2022 version 17.13.2";
+                    else if (sCompilerBuildVersion == "35207") ssTool.sVersion = "2022 version 17.14.0";  // 14.44
                     else if (sCompilerBuildVersion == "35213") ssTool.sVersion = "2022 version 17.14.9";  // 14.44
                 }
             }
@@ -6099,6 +6106,7 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                     else if (sLinkerMajorVersion == "14.42") ssTool.sVersion = "2022 version 17.12";
                     else if (sLinkerMajorVersion == "14.43") ssTool.sVersion = "2022 version 17.13";
                     else if (sLinkerMajorVersion == "14.44") ssTool.sVersion = "2022 version 17.14";
+                    else if (sLinkerMajorVersion == "14.50") ssTool.sVersion = "2026 version 18.00";
                 }
             }
 
