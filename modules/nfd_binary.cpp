@@ -803,6 +803,7 @@ NFD_Binary::SCANS_STRUCT NFD_Binary::getFormatScansStruct(const XBinary::FILEFOR
     else if (fileFormatInfo.fileType == XBinary::FT_JPEG) result.name = XScanEngine::RECORD_NAME_JPEG;
     else if (fileFormatInfo.fileType == XBinary::FT_CFBF) result.name = XScanEngine::RECORD_NAME_MICROSOFTCOMPOUND;
     else if (fileFormatInfo.fileType == XBinary::FT_RAR) result.name = XScanEngine::RECORD_NAME_RAR;
+    else if (fileFormatInfo.fileType == XBinary::FT_ISO9660) result.name = XScanEngine::RECORD_NAME_ISO9660;
 
     else result.name = XScanEngine::RECORD_NAME_UNKNOWN;
     result.sVersion = fileFormatInfo.sVersion;
