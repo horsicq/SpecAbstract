@@ -3474,7 +3474,7 @@ QList<XScanEngine::SCANSTRUCT> NFD_Binary::convert(QList<SCAN_STRUCT> *pListScan
         record.sVersion = pListScanStructs->at(i).sVersion;
         record.sInfo = pListScanStructs->at(i).sInfo;
 
-        record.globalColorRecord = XScanEngine::typeToGlobalColorRecord(record.sType);
+        record.globalColorRecord = XScanEngine::typeToColorRecord(record.sType);
         record.nPrio = XScanEngine::typeToPrio(record.sType);
         record.bIsProtection = XScanEngine::isProtection(record.sType);
         record.sType = XScanEngine::translateType(record.sType);
