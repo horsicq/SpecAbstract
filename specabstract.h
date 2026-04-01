@@ -61,6 +61,7 @@ public:
     explicit SpecAbstract(QObject *pParent = nullptr);
 
     virtual QString getEngineName();
+    virtual SCANENGINETYPE getEngineType();
 
 protected:
     virtual void _processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCAN_RESULT *pScanResult, QIODevice *pDevice, const XScanEngine::SCANID &parentId,

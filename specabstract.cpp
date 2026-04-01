@@ -43,6 +43,11 @@ QString SpecAbstract::getEngineName()
     return QString("nfd");
 }
 
+XScanEngine::SCANENGINETYPE SpecAbstract::getEngineType()
+{
+    return XScanEngine::SCANENGINETYPE_NFD;
+}
+
 void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCAN_RESULT *pScanResult, QIODevice *pDevice, const XScanEngine::SCANID &parentId,
                                   XBinary::FT fileType, XScanEngine::SCAN_OPTIONS *pScanOptions, bool bAddUnknown, XBinary::PDSTRUCT *pPdStruct)
 {
