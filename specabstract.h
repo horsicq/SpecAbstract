@@ -32,6 +32,7 @@
 #endif
 
 #include "xscanengine.h"
+#include "xscanengineprocess.h"
 #include "modules/nfd_binary.h"
 #include "modules/nfd_amiga.h"
 #include "modules/nfd_jpeg.h"
