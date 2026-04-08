@@ -583,7 +583,7 @@ NFD_Binary::BASIC_INFO NFD_Binary::_initBasicInfo(XBinary *pBinary, XScanEngine:
     result.id.nSize = pBinary->getSize();
 
     result.id.fileType = result.memoryMap.fileType;
-    result.id.filePart = XBinary::FILEPART_HEADER;
+    result.id.filePart = parentId.filePart;
     result.id.sUuid = XBinary::generateUUID();
     result.scanOptions = *pOptions;
     result.id.nOffset = nOffset;
