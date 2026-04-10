@@ -2989,12 +2989,12 @@ void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                     _SCANS_STRUCT ss = pPEInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_THINSTALL);
 
                     pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
-                } else if (XPE::getResourcesVersionValue("ThinAppVersion", &(pPEInfo->resVersion)) != "") {
+                } else if (!XPE::getResourcesVersionValue("ThinAppVersion", &(pPEInfo->resVersion)).isEmpty()) {
                     _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_THINSTALL, "", "", 0);
                     ss.sVersion = XPE::getResourcesVersionValue("ThinAppVersion", &(pPEInfo->resVersion)).trimmed();
 
                     pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
-                } else if (XPE::getResourcesVersionValue("ThinstallVersion", &(pPEInfo->resVersion)) != "") {
+                } else if (!XPE::getResourcesVersionValue("ThinstallVersion", &(pPEInfo->resVersion)).isEmpty()) {
                     _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_THINSTALL, "", "", 0);
                     ss.sVersion = XPE::getResourcesVersionValue("ThinstallVersion", &(pPEInfo->resVersion)).trimmed();
 
@@ -3484,24 +3484,24 @@ void NFD_PE::handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions,
                         ssTool.name = XScanEngine::RECORD_NAME_CYGWIN;
                     }
 
-                    if (ssCompiler.sVersion == "") {
+                    if (ssCompiler.sVersion.isEmpty()) {
                         QString _sGCCVersion;
 
                         if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                             _sGCCVersion =
                                 NFD_Binary::get_GCC_vi2(pDevice, pOptions, pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, pPdStruct).sVersion;
 
-                            if (_sGCCVersion != "") {
+                            if (!_sGCCVersion.isEmpty()) {
                                 ssCompiler.sVersion = _sGCCVersion;
                             }
                         }
 
-                        if (_sGCCVersion == "") {
+                        if (_sGCCVersion.isEmpty()) {
                             if (pe.checkOffsetSize(pPEInfo->osDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
                                 _sGCCVersion =
                                     NFD_Binary::get_GCC_vi2(pDevice, pOptions, pPEInfo->osDataSection.nOffset, pPEInfo->osDataSection.nSize, pPdStruct).sVersion;
 
-                                if (_sGCCVersion != "") {
+                                if (!_sGCCVersion.isEmpty()) {
                                     ssCompiler.sVersion = _sGCCVersion;
                                 }
                             }
@@ -3516,7 +3516,7 @@ void NFD_PE::handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions,
                     }
                 }
 
-                if (ssCompiler.sVersion != "") {
+                if (!ssCompiler.sVersion.isEmpty()) {
                     bDetectGCC = true;
                 }
 
@@ -3546,7 +3546,7 @@ void NFD_PE::handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions,
                 if (XBinary::isRegExpPresent("^CYGWIN", pPEInfo->listImports.at(i).sName.toUpper())) {
                     QString sVersion = XBinary::regExp("(\\d+)", pPEInfo->listImports.at(i).sName.toUpper(), 0);
 
-                    if (sVersion != "") {
+                    if (!sVersion.isEmpty()) {
                         double dVersion = sVersion.toDouble();
 
                         if (dVersion) {
@@ -3617,7 +3617,7 @@ void NFD_PE::handle_GCC(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions,
             }
 
             if (ssTool.name == XScanEngine::RECORD_NAME_MINGW) {
-                if (ssTool.sVersion == "") {
+                if (ssTool.sVersion.isEmpty()) {
                     switch (pPEInfo->nMajorLinkerVersion) {
                         case 2:
                             switch (pPEInfo->nMinorLinkerVersion) {
@@ -3767,11 +3767,11 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                             QString sVersion = XBinary::regExp("\\((.*?)\\)", sSetupDataString, 1);
                             QString sOptions = XBinary::regExp("\\) \\((.*?)\\)", sSetupDataString, 1);
 
-                            if (sVersion != "") {
+                            if (!sVersion.isEmpty()) {
                                 ss.sVersion = sVersion;
                             }
 
-                            if (sOptions != "") {
+                            if (!sOptions.isEmpty()) {
                                 QString sEncode = sOptions;
 
                                 if (sEncode == "a") {
@@ -3879,7 +3879,7 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
 
                 QString _sInfo = pPEInfo->basic_info.mapOverlayDetects.value(XScanEngine::RECORD_NAME_NSIS).sInfo;
 
-                if (_sInfo != "") {
+                if (!_sInfo.isEmpty()) {
                     ss.sInfo = _sInfo;
                 }
 
@@ -3893,7 +3893,7 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
 
                 QString sVersion = XBinary::regExp("Null[sS]oft Install System v?(.*?)<", pPEInfo->sResourceManifest, 1);
 
-                if (sVersion != "") {
+                if (!sVersion.isEmpty()) {
                     ss.sVersion = sVersion;
                 }
 
@@ -3922,7 +3922,7 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                     }
                 }
 
-                if (ss.sVersion == "") {
+                if (ss.sVersion.isEmpty()) {
                     // TODO unicode
                     ss.sVersion = XPE::getResourcesVersionValue("ISInternalVersion", &(pPEInfo->resVersion));
                 }
@@ -4113,7 +4113,7 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
             }
 
             // Squirrel Installer
-            if (XPE::getResourcesVersionValue("SquirrelAwareVersion", &(pPEInfo->resVersion)) != "") {
+            if (!XPE::getResourcesVersionValue("SquirrelAwareVersion", &(pPEInfo->resVersion)).isEmpty()) {
                 _SCANS_STRUCT ss =
                     NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::RECORD_NAME_SQUIRRELINSTALLER, "", "", 0);
                 ss.sVersion = XPE::getResourcesVersionValue("SquirrelAwareVersion", &(pPEInfo->resVersion)).trimmed();
@@ -4144,7 +4144,7 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
             if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_MICROSOFTCOMPOUND)) {
                 VI_STRUCT vi = NFD_Binary::get_WindowsInstaller_vi(pDevice, pOptions, pPEInfo->nOverlayOffset, pPEInfo->nOverlaySize, pPdStruct);
 
-                if (vi.sVersion != "") {
+                if (!vi.sVersion.isEmpty()) {
                     _SCANS_STRUCT ss =
                         NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::RECORD_NAME_WINDOWSINSTALLER, "", "", 0);
 
@@ -4180,7 +4180,7 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                         {
                             VI_STRUCT vi = NFD_Binary::get_WindowsInstaller_vi(pDevice, pOptions, _nOffset, _nSize, pPdStruct);
 
-                            if (vi.sVersion != "") {
+                            if (!vi.sVersion.isEmpty()) {
                                 _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_INSTALLER,
                                                                               XScanEngine::RECORD_NAME_WINDOWSINSTALLER, "", "", 0);
 
@@ -5059,7 +5059,7 @@ void NFD_PE::handle_StarForce(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
 
             for (qint32 i = 0; (i < nNumberOfImports) && (XBinary::isPdStructNotCanceled(pPdStruct)); i++) {
                 if (pPEInfo->listImports.at(i).listPositions.count() == 1) {
-                    if ((pPEInfo->listImports.at(i).listPositions.at(0).sName == "") || (pPEInfo->listImports.at(i).listPositions.at(0).sName == "1")) {
+                    if (pPEInfo->listImports.at(i).listPositions.at(0).sName.isEmpty() || (pPEInfo->listImports.at(i).listPositions.at(0).sName == "1")) {
                         sInfo = pPEInfo->listImports.at(i).sName;
                     }
                 }
@@ -5594,7 +5594,7 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
 
                 QString sVersion = XBinary::regExp("(\\d+)", pPEInfo->listImports.at(i).sName.toUpper(), 0);
 
-                if (sVersion != "") {
+                if (!sVersion.isEmpty()) {
                     double dVersion = sVersion.toDouble() / 10;
 
                     if (dVersion) {
@@ -5660,7 +5660,7 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                             QString _sVersion = _ssCompilerVB.sVersion.section(".", 0, 0);
                             QString _sVersionCompiler = mapVersions.key(_sVersion, "");
 
-                            if (_sVersionCompiler != "") {
+                            if (!_sVersionCompiler.isEmpty()) {
                                 _ssCompilerVB.sVersion = _sVersionCompiler + "." + _ssCompilerVB.sVersion.section(".", 1, 2);
                             }
 
@@ -5791,7 +5791,7 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
 
             QString _sVersion = mapVersions.value(ssMFC.sVersion.section(".", 0, 0)) + "." + ssMFC.sVersion.section(".", 1, 1);
 
-            if (_sVersion != "") {
+            if (!_sVersion.isEmpty()) {
                 ssCompilerCPP.sVersion = _sVersion;
             }
         }
@@ -5810,8 +5810,8 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
 
         // TODO if Export ^? XScanEngine::RECORD_NAME_VISUALCCPP/C++
 
-        if ((ssMFC.name == XScanEngine::RECORD_NAME_MFC) && (ssMFC.sVersion == "")) {
-            if ((ssCompilerCPP.name == XScanEngine::RECORD_NAME_VISUALCCPP) && (ssLinker.sVersion != "")) {
+        if ((ssMFC.name == XScanEngine::RECORD_NAME_MFC) && ssMFC.sVersion.isEmpty()) {
+            if ((ssCompilerCPP.name == XScanEngine::RECORD_NAME_VISUALCCPP) && !ssLinker.sVersion.isEmpty()) {
                 ssMFC.sVersion = ssLinker.sVersion.section(".", 0, 1);
             }
         }
@@ -5826,24 +5826,24 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
             ssLinker.name = XScanEngine::RECORD_NAME_MICROSOFTLINKER;
         }
 
-        if ((ssLinker.name == XScanEngine::RECORD_NAME_MICROSOFTLINKER) && (ssLinker.sVersion == "")) {
+        if ((ssLinker.name == XScanEngine::RECORD_NAME_MICROSOFTLINKER) && ssLinker.sVersion.isEmpty()) {
             ssLinker.sVersion = QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion, 2, 10, QChar('0'));
         }
 
-        if ((ssMFC.name == XScanEngine::RECORD_NAME_MFC) && (ssLinker.sVersion == "") && (pPEInfo->nMinorLinkerVersion != 10)) {
+        if ((ssMFC.name == XScanEngine::RECORD_NAME_MFC) && ssLinker.sVersion.isEmpty() && (pPEInfo->nMinorLinkerVersion != 10)) {
             ssLinker.sVersion = ssMFC.sVersion;
             //            recordLinker.sVersion=QString("%1.%2").arg(pPEInfo->nMajorLinkerVersion).arg(pPEInfo->nMinorLinkerVersion);
         }
 
         if (ssLinker.name == XScanEngine::RECORD_NAME_MICROSOFTLINKER) {
             if (ssCompilerCPP.name == XScanEngine::RECORD_NAME_VISUALCCPP) {
-                if (ssCompilerCPP.sVersion == "") {
+                if (ssCompilerCPP.sVersion.isEmpty()) {
                     QString sLinkerVersion = ssLinker.sVersion;
                     QString sLinkerMajorVersion = sLinkerVersion.section(".", 0, 1);
 
                     QString _sVersion = mapVersions.value(sLinkerMajorVersion);
 
-                    if (_sVersion != "") {
+                    if (!_sVersion.isEmpty()) {
                         ssCompilerCPP.sVersion = _sVersion;
                     }
                 }
@@ -5993,7 +5993,7 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                 else if (sCompilerBuildVersion == "30148") ssTool.sVersion = "2019 version 16.11.24-16.11.26";
                 else if (sCompilerBuildVersion == "30151") ssTool.sVersion = "2019 version 16.11.27";
 
-                if (ssTool.sVersion == "") {
+                if (ssTool.sVersion.isEmpty()) {
                     if (sCompilerBuildVersion == "30401") ssTool.sVersion = "2022 version 17.0.0 preview 2";  // 14.30
                     else if (sCompilerBuildVersion == "30423") ssTool.sVersion = "2022 version 17.0.0 preview 3.1";
                     else if (sCompilerBuildVersion == "30528") ssTool.sVersion = "2022 version 17.0.0 preview 4.0";
@@ -6068,10 +6068,10 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                 }
             }
 
-            if (ssTool.sVersion == "") {
+            if (ssTool.sVersion.isEmpty()) {
                 QString sLinkerMajorVersion = ssLinker.sVersion.section(".", 0, 1);
 
-                if (sLinkerMajorVersion != "") {
+                if (!sLinkerMajorVersion.isEmpty()) {
                     if (sLinkerMajorVersion == "4.00") ssTool.sVersion = "4.0";
                     else if (sLinkerMajorVersion == "4.20") ssTool.sVersion = "4.2";
                     else if (sLinkerMajorVersion == "5.00") ssTool.sVersion = "5.0";
@@ -6121,7 +6121,7 @@ void NFD_PE::handle_Microsoft(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                 }
             }
 
-            if (ssTool.sVersion == "") {
+            if (ssTool.sVersion.isEmpty()) {
                 // TODO
             }
         } else if (ssCompilerMASM.name == XScanEngine::RECORD_NAME_MASM) {
@@ -6956,7 +6956,7 @@ void NFD_PE::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOption
                 if (XBinary::isRegExpPresent("^PYTHON", pPEInfo->listImports.at(i).sName.toUpper())) {
                     QString sVersion = XBinary::regExp("(\\d+)", pPEInfo->listImports.at(i).sName.toUpper(), 0);
 
-                    if (sVersion != "") {
+                    if (!sVersion.isEmpty()) {
                         double dVersion = sVersion.toDouble();
 
                         if (dVersion) {
@@ -6972,7 +6972,7 @@ void NFD_PE::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOption
                 } else if (XBinary::isRegExpPresent("^LIBPYTHON", pPEInfo->listImports.at(i).sName.toUpper())) {
                     QString sVersion = XBinary::regExp("(\\d.\\d)", pPEInfo->listImports.at(i).sName.toUpper(), 0);
 
-                    if (sVersion != "") {
+                    if (!sVersion.isEmpty()) {
                         double dVersion = sVersion.toDouble();
 
                         if (dVersion) {
@@ -6994,7 +6994,7 @@ void NFD_PE::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOption
                 if (XBinary::isRegExpPresent("^PERL", pPEInfo->listImports.at(i).sName.toUpper())) {
                     QString sVersion = XBinary::regExp("(\\d+)", pPEInfo->listImports.at(i).sName.toUpper(), 0);
 
-                    if (sVersion != "") {
+                    if (!sVersion.isEmpty()) {
                         double dVersion = sVersion.toDouble();
 
                         if (dVersion) {
@@ -7088,7 +7088,7 @@ void NFD_PE::handle_wxWidgets(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
                 if (XBinary::isRegExpPresent("^WX", pPEInfo->listImports.at(i).sName.toUpper())) {
                     QString sDllVersion = XBinary::regExp("(\\d+)", pPEInfo->listImports.at(i).sName.toUpper(), 0);
 
-                    if (sDllVersion != "") {
+                    if (!sDllVersion.isEmpty()) {
                         double dVersion = sDllVersion.toDouble();
 
                         if (dVersion) {
@@ -7582,7 +7582,7 @@ void NFD_PE::handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTI
 
             if (nNumberOfSections > 0) {
                 if (pPEInfo->listSectionRecords.at(0).nSize == 0) {
-                    bEmptyFirstSection = 0;
+                    bEmptyFirstSection = false;
                 }
             }
 
