@@ -3476,7 +3476,7 @@ QList<XScanEngine::SCANSTRUCT> NFD_Binary::convert(QList<SCAN_STRUCT> *pListScan
         record.sInfo = pListScanStructs->at(i).sInfo;
 
         record.nPrio = XScanEngine::typeToPrio(record.sType);
-        record.bIsProtection = XScanEngine::isProtection(record.sType);
+        // record.bIsProtection = XScanEngine::isProtection(record.sType);
 
         listResult.append(record);
     }
