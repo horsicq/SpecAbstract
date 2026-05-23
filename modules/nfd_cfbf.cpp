@@ -20,7 +20,8 @@
  */
 #include "nfd_cfbf.h"
 
-NFD_CFBF::NFD_CFBF(XCFBF *pCFBF, XBinary::FILEPART filePart, const OPTIONS &scanOptions, XBinary::PDSTRUCT *pPdStruct) : CFBF_Script(pCFBF, filePart, scanOptions, pPdStruct)
+NFD_CFBF::NFD_CFBF(XCFBF *pCFBF, XBinary::FILEPART filePart, const OPTIONS &scanOptions, XBinary::PDSTRUCT *pPdStruct)
+    : CFBF_Script(pCFBF, filePart, scanOptions, pPdStruct)
 {
 }
 
