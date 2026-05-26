@@ -117,6 +117,8 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
         if (!basic_info.listDetects.count()) {
             _SCANS_STRUCT ssUnknown = {};
 
+            //scanStruct.id = resultId;
+            //scanStruct.parentId = parentId;
             ssUnknown.type = SpecAbstract::RECORD_TYPE_UNKNOWN;
             ssUnknown.name = SpecAbstract::RECORD_NAME_UNKNOWN;
             ssUnknown.bIsUnknown = true;
