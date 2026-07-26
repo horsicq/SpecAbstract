@@ -250,8 +250,8 @@ public:
     static SCANS_STRUCT getFormatScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo);
     static SCANS_STRUCT getOperationSystemScansStruct(const XBinary::FILEFORMATINFO &fileFormatInfo);
 
-    // Insert a header-detected record into result maps (packers/protectors) if present
-    static void addHeaderDetectToResults(BASIC_INFO *pBasicInfo, XScanEngine::RECORD_NAME rn, bool toProtector);
+    // Insert a header-detected record into result maps (packers/protectors/tools/SFX) if present
+    static void addHeaderDetectToResults(BASIC_INFO *pBasicInfo, XScanEngine::RECORD_NAME rn, bool toProtector, bool toTool = false, bool toSFX = false);
 
     // Moved from NFD_BinaryUtils: basic scan context init and final result synthesis
     static BASIC_INFO _initBasicInfo(XBinary *pBinary, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);

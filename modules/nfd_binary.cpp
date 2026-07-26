@@ -768,14 +768,18 @@ void NFD_Binary::getLanguage(QMap<XScanEngine::RECORD_NAME, SCAN_STRUCT> *pMapDe
     }
 }
 
-void NFD_Binary::addHeaderDetectToResults(NFD_Binary::BASIC_INFO *pBasicInfo, XScanEngine::RECORD_NAME rn, bool toProtector)
+void NFD_Binary::addHeaderDetectToResults(NFD_Binary::BASIC_INFO *pBasicInfo, XScanEngine::RECORD_NAME rn, bool toProtector, bool toTool, bool toSFX)
 {
     if (!pBasicInfo) return;
 
     if (pBasicInfo->mapHeaderDetects.contains(rn)) {
         pBasicInfo->id.fileType = XBinary::FT_COM;  // context: caller sets FT as needed; COM callers rely on COM type
         NFD_Binary::SCANS_STRUCT ss = pBasicInfo->mapHeaderDetects.value(rn);
-        if (toProtector) {
+        if (toTool) {
+            pBasicInfo->mapResultTools.insert(ss.name, NFD_Binary::scansToScan(pBasicInfo, &ss));
+        } else if (toSFX) {
+            pBasicInfo->mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(pBasicInfo, &ss));
+        } else if (toProtector) {
             pBasicInfo->mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(pBasicInfo, &ss));
         } else {
             pBasicInfo->mapResultPackers.insert(ss.name, NFD_Binary::scansToScan(pBasicInfo, &ss));

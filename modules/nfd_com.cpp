@@ -51,6 +51,28 @@ static NFD_Binary::SIGNATURE_RECORD g_COM_records[] = {
     {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_UPX, "0.81-1.20", ""}, "81FC....77..CD20B9....BE....BF....BB....FDF3A4FC87F783EE"},
     {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_CRYPTDISMEMBER, "1.7", ""},
      "0E179C58F6C4..74..EB..90B4..BE....BF....B9....68....68....68....57F3A4C3"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_624, "1.1", ""}, "5B4553505DB5788BF98BE9BE....57F3A4C3"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_LGLZ, "1.04b", ""},
+     "BF....3BFC7219B409BA1201CD21B44CCD214D656D6F7279206661756C742434"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_PACK, "2.01", ""}, "B44CCD219D89....FFFFB80300CD10"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_SCRNCH, "1.02", ""},
+     "EB1373436566..............................BBFFFFB44ACD2181EBF01F7318"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_DIGPAK, "", ""}, "E9....44494750414B000D0A"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_MIDPAK, "", ""}, "E9....4D494450414B0D0A00"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_GPATCH, "1.2b", ""},
+     "E92A00............3338362B2050726F636573736F72206E656564656420746F20657865637574652E0D0A240E588E"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_TOOL, XScanEngine::RECORD_NAME_WOLVERINEPATCHER, "", ""},
+     "EB000E1FB409BA..02CD21BE..04E81C00803E..04007409B409BA..04CD21EB07B409BA..04CD21B8004CCD210E0746BF..04ACAA0AC07402EBF833C9"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_PCOM, "2.8b2-2.8b3", "-e -i"}, "BE1101B9....2E8A0434FF2E880446E2F5"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_BESTPROTECTIONKIT, "B (1993)", ""},
+     "EB3808083C2D200A0A0A090950726F74656374696F6E206B69742D42"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_SFX, XScanEngine::RECORD_NAME_PKZIPMINISFX, "2.04g", ""},
+     "B9....BF....2BCF32C0F3AAB430CD21A3....8DA5....8926"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_XPACK, "1.65", ""},
+     "E9..00FFFDFFFBFFF9FFF7F7F7F7F7F7F7F7....0E2EFF3612001E06505351525557568CC88ED82EA11200BB06002E89078CC80500108EC033F633FFFCB9"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_CRYPTORBYEVILGENIUS, "", ""}, "E9......C920EA59C157..EE06CCC45B"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_CONVERTER, XScanEngine::RECORD_NAME_EXE2COM, "1.0", ""}, "E9....5F5F5F436F6E766572746564204D5A"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_CONVERTER, XScanEngine::RECORD_NAME_EXE2COM, "", ""}, "E9....436F6E766572746564000000004D5A"},
 };
 
 static NFD_Binary::SIGNATURE_RECORD g_COM_Exp_records[] = {
@@ -129,7 +151,7 @@ NFD_COM::COMINFO_STRUCT NFD_COM::getInfo(QIODevice *pDevice, XScanEngine::SCANID
 
         NFD_COM::handle_Protection(pDevice, pOptions, &result, pPdStruct);
 
-        if (result.basic_info.mapResultProtectors.size() || result.basic_info.mapResultPackers.size()) {
+        if (result.basic_info.mapResultProtectors.size() || result.basic_info.mapResultPackers.size() || result.basic_info.mapResultTools.size()) {
             NFD_Binary::SCANS_STRUCT ssOperationSystem = NFD_Binary::getOperationSystemScansStruct(com.getFileFormatInfo(pPdStruct));
             result.basic_info.mapResultOperationSystems.insert(ssOperationSystem.name, NFD_Binary::scansToScan(&(result.basic_info), &ssOperationSystem));
         }
@@ -168,4 +190,18 @@ void NFD_COM::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *p
     NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_SPIRIT, true);
     NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_ICE, false);
     NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_DIET, false);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_624, false);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_LGLZ, false);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_PACK, false);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_SCRNCH, false);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_XPACK, false);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_PCOM, true);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_BESTPROTECTIONKIT, true);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_DIGPAK, false, true);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_MIDPAK, false, true);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_GPATCH, false, true);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_WOLVERINEPATCHER, false, true);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_PKZIPMINISFX, false, false, true);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_CRYPTORBYEVILGENIUS, true);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_EXE2COM, false, true);
 }
