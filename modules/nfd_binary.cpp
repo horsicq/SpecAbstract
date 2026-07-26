@@ -2041,8 +2041,11 @@ NFD_Binary::VI_STRUCT NFD_Binary::get_Zig_vi(QIODevice *pDevice, XScanEngine::SC
 
     XBinary binary(pDevice, pOptions->bIsImage);
 
+    // ZIG_DEBUG_COLOR is the older name; current Zig (0.11+) uses ZIG_PROGRESS
     if ((binary.find_unicodeString(nOffset, nSize, "ZIG_DEBUG_COLOR", false, pPdStruct) != -1) ||
-        (binary.find_ansiString(nOffset, nSize, "ZIG_DEBUG_COLOR", pPdStruct) != -1)) {
+        (binary.find_ansiString(nOffset, nSize, "ZIG_DEBUG_COLOR", pPdStruct) != -1) ||
+        (binary.find_unicodeString(nOffset, nSize, "ZIG_PROGRESS", false, pPdStruct) != -1) ||
+        (binary.find_ansiString(nOffset, nSize, "ZIG_PROGRESS", pPdStruct) != -1)) {
         result.bIsValid = true;
         // TODO Version
     }

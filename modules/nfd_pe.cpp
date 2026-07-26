@@ -6744,6 +6744,29 @@ void NFD_PE::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOption
             pPEInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
+        // LLD (LLVM linker). Two independent tells, neither of which MS link.exe produces:
+        //  - a ".buildid" section (lld --build-id)
+        //  - the literal "LLD PDB." written as the CodeView RSDS PDB path
+        {
+            bool bLLD = false;
+
+            if (XPE::isSectionNamePresent(".buildid", &(pPEInfo->listSectionRecords))) {
+                bLLD = true;
+            }
+
+            if ((!bLLD) && pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
+                if (pe.find_ansiString(pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, "LLD PDB.", pPdStruct) != -1) {
+                    bLLD = true;
+                }
+            }
+
+            if (bLLD) {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_LINKER, XScanEngine::RECORD_NAME_LLD, "", "", 0);
+                ss.sVersion = QString("%1.%2").arg(QString::number(pPEInfo->nMajorLinkerVersion)).arg(QString::number(pPEInfo->nMinorLinkerVersion));
+                pPEInfo->basic_info.mapResultLinkers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+            }
+        }
+
         // Zig
         if (pPEInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_GENERICLINKER) &&
             (pPEInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_GENERICLINKER).nVariant == 1)) {
@@ -7582,7 +7605,7 @@ void NFD_PE::handle_UnknownProtection(QIODevice *pDevice, XScanEngine::SCAN_OPTI
 
             if (nNumberOfSections > 0) {
                 if (pPEInfo->listSectionRecords.at(0).nSize == 0) {
-                    bEmptyFirstSection = false;
+                    bEmptyFirstSection = true;
                 }
             }
 
