@@ -45,6 +45,7 @@ public:
 
     // Handlers migrated from SpecAbstract
     static void handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, COMINFO_STRUCT *pCOMInfo, XBinary::PDSTRUCT *pPdStruct);
+    static bool isCPM(XCOM *pCOM, XBinary::PDSTRUCT *pPdStruct);
     static void handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, COMINFO_STRUCT *pCOMInfo, XBinary::PDSTRUCT *pPdStruct);
 
     static NFD_Binary::SIGNATURE_RECORD *getHeaderRecords();
