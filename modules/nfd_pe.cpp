@@ -8067,9 +8067,11 @@ NFD_PE::PEINFO_STRUCT NFD_PE::getInfo(QIODevice *pDevice, XScanEngine::SCANID pa
         result.listExportFunctionNames = pe.getExportFunctionsList(&(result.exportHeader), pPdStruct);
         result.listResources = pe.getResources(&(result.basic_info.memoryMap), 10000, pPdStruct);
         result.listRichSignatures = pe.getRichSignatureRecords(pPdStruct);
-        result.cliInfo = pe.getCliInfo(true, &(result.basic_info.memoryMap), pPdStruct);
-        result.listAnsiStrings = pe.getAnsiStrings(&(result.cliInfo), pPdStruct);
-        result.listUnicodeStrings = pe.getUnicodeStrings(&(result.cliInfo), pPdStruct);
+        // CLI/.NET parsing moved from XPE to XCLIAssembly; mirrors NFD_DOTNET::getInfo
+        XCLIAssembly cliAssembly(pDevice, pOptions->bIsImage);
+        result.cliInfo = cliAssembly.getCliInfo(true, pPdStruct);
+        result.listAnsiStrings = cliAssembly.getAnsiStrings(&(result.cliInfo), pPdStruct);
+        result.listUnicodeStrings = cliAssembly.getUnicodeStrings(&(result.cliInfo), pPdStruct);
         result.sResourceManifest = pe.getResourceManifest(&result.listResources);
         result.resVersion = pe.getResourcesVersion(&result.listResources, pPdStruct);
 
