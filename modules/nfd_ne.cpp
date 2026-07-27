@@ -24,6 +24,34 @@ NFD_NE::NFD_NE(XNE *pNE, XBinary::FILEPART filePart, const OPTIONS &scanOptions,
 {
 }
 
+// NE entry-point signatures. The NE entry point lands in the language runtime's startup code,
+// which is characteristic of the toolchain even though the rest of the image is user code.
+static NFD_Binary::SIGNATURE_RECORD g_NE_entrypoint_records[] = {
+    // Borland C++ for Windows - three distinct RTL startups
+    {{0, XBinary::FT_NE, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_BORLANDCPP, "1994", "type 2"},
+     "893E..0056571E510656E3"},
+    {{0, XBinary::FT_NE, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_BORLANDCPP, "1994", "type 1"},
+     "53510633C0509AFFFF0000"},
+    {{0, XBinary::FT_NE, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_BORLANDCPP, "1993", "type 1"},
+     "53510633C050E8....580759"},
+    // Borland Pascal for Windows 7.x
+    {{0, XBinary::FT_NE, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_TURBOPASCAL, "7.X", "Windows"},
+     "9AFFFF00009AFFFF00009AFF"},
+    // PKZIP self-extractor (NE build)
+    {{0, XBinary::FT_NE, XScanEngine::RECORD_TYPE_SFX, XScanEngine::RECORD_NAME_PKSFX, "", ""},
+     "FCA3....891E....49890E"},
+};
+
+NFD_Binary::SIGNATURE_RECORD *NFD_NE::getEntryPointRecords()
+{
+    return g_NE_entrypoint_records;
+}
+
+qint32 NFD_NE::getEntryPointRecordsSize()
+{
+    return sizeof(g_NE_entrypoint_records);
+}
+
 NFD_NE::NEINFO_STRUCT NFD_NE::getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct)
 {
     QElapsedTimer timer;
@@ -49,6 +77,59 @@ NFD_NE::NEINFO_STRUCT NFD_NE::getInfo(QIODevice *pDevice, XScanEngine::SCANID pa
         NFD_Binary::signatureScan(&result.basic_info.mapHeaderDetects, result.basic_info.sHeaderSignature, NFD_MSDOS::getHeaderLinkerRecords(),
                                   NFD_MSDOS::getHeaderLinkerRecordsSize(), result.basic_info.id.fileType, XBinary::FT_MSDOS, &(result.basic_info), DETECTTYPE_HEADER,
                                   pPdStruct);
+
+        // NE entry-point signatures (compiler/SFX runtime startups)
+        NFD_Binary::signatureScan(&result.basic_info.mapEntryPointDetects, result.sEntryPointSignature, g_NE_entrypoint_records, sizeof(g_NE_entrypoint_records),
+                                  result.basic_info.id.fileType, XBinary::FT_NE, &(result.basic_info), DETECTTYPE_ENTRYPOINT, pPdStruct);
+
+        if (result.basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_BORLANDCPP)) {
+            NFD_Binary::SCANS_STRUCT ss = result.basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_BORLANDCPP);
+            result.basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(result.basic_info), &ss));
+        }
+
+        if (result.basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_TURBOPASCAL)) {
+            NFD_Binary::SCANS_STRUCT ss = result.basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_TURBOPASCAL);
+            result.basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(result.basic_info), &ss));
+        }
+
+        if (result.basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_PKSFX)) {
+            NFD_Binary::SCANS_STRUCT ss = result.basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_PKSFX);
+            result.basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(result.basic_info), &ss));
+        }
+
+        // Deep-scan string tells. NE images are ordinary user applications, so only the runtime
+        // banner and the installer's own text are reliable.
+        if (result.basic_info.scanOptions.bIsDeepScan) {
+            qint64 _nOffset = 0;
+            qint64 _nSize = result.basic_info.id.nSize;
+
+            if (result.nOverlayOffset != -1) {
+                _nSize = result.nOverlayOffset;
+            }
+
+            if (!result.basic_info.mapResultCompilers.contains(XScanEngine::RECORD_NAME_BORLANDCPP)) {
+                if (ne.find_ansiString(_nOffset, _nSize, "Borland C++ - Copyright 1995 Borland Intl.", pPdStruct) != -1) {
+                    NFD_Binary::SCANS_STRUCT ss = {};
+                    ss.nVariant = 0;
+                    ss.fileType = XBinary::FT_NE;
+                    ss.type = XScanEngine::RECORD_TYPE_COMPILER;
+                    ss.name = XScanEngine::RECORD_NAME_BORLANDCPP;
+                    ss.sVersion = "1995";
+                    result.basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(result.basic_info), &ss));
+                }
+            }
+
+            // Setup-Specialist by Thilo-Alexander Ginkel. Only the branded builds carry this;
+            // the later stubs embed no vendor text at all.
+            if (ne.find_ansiString(_nOffset, _nSize, "Ginkel", pPdStruct) != -1) {
+                NFD_Binary::SCANS_STRUCT ss = {};
+                ss.nVariant = 0;
+                ss.fileType = XBinary::FT_NE;
+                ss.type = XScanEngine::RECORD_TYPE_INSTALLER;
+                ss.name = XScanEngine::RECORD_NAME_SETUPSPECIALIST;
+                result.basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(result.basic_info), &ss));
+            }
+        }
 
         // Operation System
         {

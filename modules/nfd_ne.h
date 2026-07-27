@@ -31,6 +31,8 @@ class NFD_NE : public NE_Script {
     Q_OBJECT
 
 public:
+    static NFD_Binary::SIGNATURE_RECORD *getEntryPointRecords();
+    static qint32 getEntryPointRecordsSize();
     explicit NFD_NE(XNE *pNE, XBinary::FILEPART filePart, const OPTIONS &scanOptions, XBinary::PDSTRUCT *pPdStruct);
 
     struct NEINFO_STRUCT {

@@ -78,6 +78,95 @@ static NFD_Binary::SIGNATURE_RECORD g_COM_records[] = {
      "EB60....DF03....0000B048'RUNTIME.OVY'"},
     {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MIXC, "2.51", ""},
      "EB6D....E103....0000B0490000'RUNTIME.OVY'"},
+    // --- cpm-compilers ---
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_JANUSADA, "1.4.5", ""},
+     "C3....'Copyright 1982 - RR Software P.O. Box 1512, Madison WI  53701'"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_JANUSADA, "1.5.0", ""},
+     "C3....'Copyright 1984-RR Software,Inc P.O.Box 1512, Madison WI 53701'"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARNORBCPL, "2.00", ""},
+     "21..1711....01..003E0AC39E010000000000000000CD5C01F578061029CB111730011910F7F1CB7FC8EB210000A7ED52C9"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_CLIVEPARTRIDGEBCPL, "", ""},
+     "2A0600F9FD21B801061021EE0636002310FB01000021CE0C545D7E23666FB42811195E235623EBB7ED42380309444DEB18E6"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_Z80BCPL, "", ""},
+     "C3A902....700A....000C010000FFFF010001000000FF09010103010201040105DD7300DD7201E900E9"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MIC, "3.18", ""},
+     "C33101000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000002A06002BF9CD....CD3F01C3000021"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_PLMX, "2.3", ""},
+     "C3..0169607D32....010200C53A....5F1600C1CD....C9C3..01696022....010900C52A....EBC1CD....C9C3..01010D00CD0301010A00CD0301C9"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_BDSC, "1.60", ""},
+     "2A0600F90000C30C01C30000CD4B03CD7F08C3B704....7F07........C3B304C3B704C3D204"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_BDSC, "1.50", ""},
+     "2A0600F90000C30C01C30000CD6203CDB808C37B04....B807........C37704C37B04C39604"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_BDSC, "1.44", ""},
+     "2A0600F90000000000000000CD4B03CD9E07C32B04....9E06........C32704C32B04C34604"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_BDSC, "1.1x-1.3", ""},
+     "2A0600F90000000000CDD70401....CDFF07C39305....FF0655AA697EC3FB0CCDA00DCDBB0D"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_BDSC, "Z 2.0", ""},
+     "C38D05'Z3ENV'0100000001CB0CD20C00C3F107....C007........C3D007C3D407C3FD07"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_DIGITALRESEARCHMTPASCAL, "5.5-5.6.1", ""},
+     "00000000000000000000000000000000C313012A0600F9CD"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_DIGITALRESEARCHMTPASCAL, "3.0b", ""},
+     "C3001BC31503C30904C31004C3D703C37C04C37005C35004C33602C31704C32206C34506C37D06C39A06C3F802C32E04"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_DIGITALRESEARCHPLI80, "1.0-1.4", ""},
+     "010002CD"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_HITECHC, "3.09", ""},
+     "EB04EBC3....B80009BA....CD21B8014CCD21'Compiled with Hi-Tech C'"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_HITECHC, "1.35", ""},
+     "C3....C30000C3....C3....C3....C3....C3....C3....C3....C3....C3....C30000C3....C3....C3....C3....C3....58F8E1E9FE303FD0FE3AC9"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_HISOFTPASCAL, "1985", ""},
+     "C3....C3....0000000000000000000000000000000000000000000000000000000000000000000000320133010100FF50000D1A"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_HISOFTPASCAL, "1986", ""},
+     "C3....C3....00000000000000000000000000000000000000000000000000000000000000000000310132010100FF50000D1A"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_AZTECC80, "1.05", ""},
+     "C3....CD........21..00EB21..0039732372"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_AZTECC80, "1.06b-1.06d", ""},
+     "C3....C521000039EB21....39F9D521..00EB21..0039732372"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTBASIC, "5", ""},
+     "21....01....11800109EB09037E122B1B0B78B1C20D01C3....00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000021....C3........000000000040....0000....CDA3"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTCOBOL, "4.65", ""},
+     "21004C01....11800109EB09037E122B1B0B78B1C20D01C3...."},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_CBASIC, "1.3", ""},
+     "C3............................000000000000000000000000000000002101FF22....CD96012A0D0101640009C1F9C50117010AB7C03D02221301EB221101C13600237D937C9ADA4201C5CD3D02"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_CBASIC, "2", ""},
+     "C3............................000000000000000000000000000000002101FF22....CD96012A0D0101C80009C1F9C50117010AB7C03D02221301EB221101C13600237D937C9ADA4201C5CD4402"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_CB80, "1", ""},
+     "C3........................11C905EB22....E122....E122....EBCD350A2A....E52A....E5C3320111C905EB22....21040039444DCDF50EC1D1F9D5C5"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MIXC, "2.0-2.1", ""},
+     "DD2100011832....604A........00'RUNTIME OVY'"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_NEVADAFORTRAN, "3.0", ""},
+     "C3573AC300400000000000....3000C30000FFFF0000000000000000000000"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_SBASIC, "5.4b", ""},
+     "C3130100008C148B02........0000000000002A0600F9CD....3E00CD....0100"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_DRACO, "2.3", ""},
+     "2A0600F921....232322....CD....0E00C30500"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_VANVALZAHPASCAL, "REV 00.8R", ""},
+     "C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....C3....310D'RTP REV 00.8R'"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_HOCHSTRASSERMODULA2, "2.01", ""},
+     "ED7B0600CD....CD....CD....C7"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_INTERSYSTEMSPASCALZ, "4", ""},
+     "2A06002BF9C3....0E19CD05002A06002B7701000021....D92A060011A3FF19E5E5DDE1FDE1F90609AF772310FC2377"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_OXFORDPASCAL, "2.1", ""},
+     "C31601C34109C33209C33A09C3EA17C3F517000000002A0600F9CDE3082180001123074E2306000DFA33017E12231304"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_TCLPASCAL, "1.4", ""},
+     "C31601C34209C33409C32D09C3E917C3F417000000002A0600F9CDDE082180001123074E2306000DFA33017E12231304"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_SOFTWARETOOLWORKSC80, "3.0", ""},
+     "00002A06002B25224803252246032522440301DCFF09228E0309228C0309228A030179FF0936002243022B36842BF921"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_SOFTWARETOOLWORKSC80, "3.0a-3.1", ""},
+     "00002A06002B25224A03252248032522460301DCFF0922970309229503092293030179FF0936002243022B36842BF921"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_QCCOMPILER, "3.1a", ""},
+     "C3....000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000800000000000'Too many command line args'"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_SMALLC, "1.2, plus 1.0", ""},
+     "2A0600F9CD....CD....CD...."},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_SMALLC, "1.2, plus 1.0", ""},
+     "E1D1C1C5D5E5CD0500C3...."},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_SUPERSOFTFORTRAN, "3.2", ""},
+     "ED7B0600000000C310011F..21..0000CD7C..00"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_WHITESMITHSC, "2.2", ""},
+     "2A0600F901....21....79954F789C4779B0CA1C019777230BC310012A....2B7DB4C22B0121....22....218000E5CD....C5CD....E1C1E323237E02237E03022B2B2B7E0302E1E5E5E9"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_WHITESMITHSC, "2.1", ""},
+     "2A0600F9CD....C5CD....210200394E2346D5235E2356237E23666FCD050022....6B6222....696022....D14F879F47C9"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_WHITESMITHSC, "2.0", ""},
+     "2A0600F9CD....C5CD....210200394E2346D5235E2356237E23666FCD050022....6B6222....696022....D14F879F47C9"},
 };
 
 static NFD_Binary::SIGNATURE_RECORD g_COM_Exp_records[] = {
@@ -103,6 +192,29 @@ static NFD_Binary::SIGNATURE_RECORD g_COM_Exp_records[] = {
      "E9$$$$E800005D8BCD83ED03BF0001BE03012BCFF3A4B9....BE4A0003F5E30C8CDB035E44AD8BF8011DE2F98CD8014644BA....03D08ED2BC....BB....B44ACD2133C0EA"},
     {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_MASK, "2.4", ""},
      "E8$$$$5557CD03FC'MASK'FA8BEC836E0603FF76065D49E800005B81EBAE0550D6515256C78759070D0A"},
+    // --- cpm-compilers-exp (need the real matcher: # address-follow / >150 bytes) ---
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTCOBOL, "4.01", ""},
+     "C3####00CD....0021....00C3................30240680........01800000000000007800....F0"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTFORTRAN, "3.44", ""},
+     "C3####01....C3####AF32....32....21....22....2A06002BF9C50E0CCD0500D61F9F32....211415C2....21212222"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_FTLMODULA2, "1.18", ""},
+     "C3####2A06002BF9CD####2100007D32....C9"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_FTLMODULA2, "1.30", ""},
+     "C3####2A06002BF9CD####2100007D32....2181007D32....2100007D32....2100007D32....C9"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_FTLMODULA2, "1.18-1.30", ""},
+     "C3####2A06002BF9CD....CD....C300000000000000000000"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_FTLMODULA2, "1.18-1.30", ""},
+     "C3####2A06002BF9C300000000000000000000"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_PROPASCAL, "2.1", ""},
+     "C3####21....C3....0101002100003E..32....ED431701221901010000210000ED431301221501"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_SUPERSOFTC, "1.1.25", ""},
+     "C3####0100003E023CEA....047832....11....0E09CD05002A0600F9CD....C7'SuperSoft C Copyright 1982'0D0A'Run Time Package V1.3'"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_SUPERSOFTADA, "2.10", ""},
+     "C3####AF3258002A06002BF9210000E5E5E5E5E5E52104003922....21F8FF39F9210080E5"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_SUPERSOFTADA, "1.00a", ""},
+     "C3####AF3258002A06002BF921000022....E5E5E5C3....E1D17B2F5F7A2F5713D5E9C1E1D1C5CD2B02EBE1D5E9447CEB"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_SUPERSOFTADA, "1.20a", ""},
+     "C3####AF3258002A06002BF921000022....E5E5E5C3....E1D17B2F5F7A2F5713D5E9C1E1D1C5CD2B02EBE1D5E9447C17"},
 };
 
 NFD_Binary::SIGNATURE_RECORD *NFD_COM::getHeaderRecords()
@@ -274,6 +386,148 @@ void NFD_COM::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *p
     NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_EXE2COM, false, true);
     NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_MASK, true);
     NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_EXECOMCONVERTERS, false, true);
+
+    // --- CP/M compiler promotions ---
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_ARNORBCPL)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_ARNORBCPL);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_AZTECC80)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_AZTECC80);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_BDSC)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_BDSC);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_CB80)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_CB80);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_CBASIC)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_CBASIC);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_CLIVEPARTRIDGEBCPL)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_CLIVEPARTRIDGEBCPL);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_DIGITALRESEARCHMTPASCAL)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_DIGITALRESEARCHMTPASCAL);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_DIGITALRESEARCHPLI80)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_DIGITALRESEARCHPLI80);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_DRACO)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_DRACO);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_FTLMODULA2)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_FTLMODULA2);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_HISOFTPASCAL)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_HISOFTPASCAL);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_HITECHC)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_HITECHC);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_HOCHSTRASSERMODULA2)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_HOCHSTRASSERMODULA2);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_INTERSYSTEMSPASCALZ)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_INTERSYSTEMSPASCALZ);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_JANUSADA)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_JANUSADA);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_MIC)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_MIC);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_MICROSOFTBASIC)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_MICROSOFTBASIC);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_MICROSOFTCOBOL)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_MICROSOFTCOBOL);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_MICROSOFTFORTRAN)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_MICROSOFTFORTRAN);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_MIXC)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_MIXC);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_NEVADAFORTRAN)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_NEVADAFORTRAN);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_OXFORDPASCAL)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_OXFORDPASCAL);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_PLMX)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_PLMX);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_PROPASCAL)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_PROPASCAL);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_QCCOMPILER)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_QCCOMPILER);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_SBASIC)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_SBASIC);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_SMALLC)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_SMALLC);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_SOFTWARETOOLWORKSC80)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_SOFTWARETOOLWORKSC80);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_SUPERSOFTADA)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_SUPERSOFTADA);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_SUPERSOFTC)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_SUPERSOFTC);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_SUPERSOFTFORTRAN)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_SUPERSOFTFORTRAN);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_TCLPASCAL)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_TCLPASCAL);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_VANVALZAHPASCAL)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_VANVALZAHPASCAL);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_WHITESMITHSC)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_WHITESMITHSC);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_Z80BCPL)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_Z80BCPL);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
 
     // Mix C emits flat .COM with its runtime loader at offset 0
     if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_MIXC)) {
