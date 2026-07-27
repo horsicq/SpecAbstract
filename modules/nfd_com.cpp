@@ -98,6 +98,11 @@ static NFD_Binary::SIGNATURE_RECORD g_COM_Exp_records[] = {
     {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_DIET, "1.44-1.45", ""}, "F99CEB$$55061E575652515350E8$$$$59B1..D3E98CC803C18ED88EC0"},
     {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_CRYPTCOM, "2.0", ""},
      "E9$$$$BE....56B9....C704....C644....8134....4646E2..31F631C9C3"},
+    // --- new-dos-packers-comexp ---
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_CONVERTER, XScanEngine::RECORD_NAME_EXECOMCONVERTERS, "9.50", ""},
+     "E9$$$$E800005D8BCD83ED03BF0001BE03012BCFF3A4B9....BE4A0003F5E30C8CDB035E44AD8BF8011DE2F98CD8014644BA....03D08ED2BC....BB....B44ACD2133C0EA"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_MASK, "2.4", ""},
+     "E8$$$$5557CD03FC'MASK'FA8BEC836E0603FF76065D49E800005B81EBAE0550D6515256C78759070D0A"},
 };
 
 NFD_Binary::SIGNATURE_RECORD *NFD_COM::getHeaderRecords()
@@ -209,6 +214,8 @@ void NFD_COM::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *p
     NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_PKZIPMINISFX, false, false, true);
     NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_CRYPTORBYEVILGENIUS, true);
     NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_EXE2COM, false, true);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_MASK, true);
+    NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_EXECOMCONVERTERS, false, true);
 
     // Mix C emits flat .COM with its runtime loader at offset 0
     if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_MIXC)) {
