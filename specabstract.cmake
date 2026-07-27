@@ -33,6 +33,8 @@ set(SPECABSTRACT_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_npm.h
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_machofat.cpp
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_machofat.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_dotnet.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_dotnet.h
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_dex.cpp
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_dex.h
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_cfbf.cpp

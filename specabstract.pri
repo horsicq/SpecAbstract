@@ -16,6 +16,7 @@ HEADERS += \
     $$PWD/modules/nfd_rar.h \
     $$PWD/modules/nfd_npm.h \
     $$PWD/modules/nfd_machofat.h \
+    $$PWD/modules/nfd_dotnet.h \
     $$PWD/modules/nfd_dex.h \
     $$PWD/modules/nfd_cfbf.h \
     $$PWD/modules/nfd_com.h \
@@ -49,6 +50,7 @@ SOURCES += \
     $$PWD/modules/nfd_rar.cpp \
     $$PWD/modules/nfd_npm.cpp \
     $$PWD/modules/nfd_machofat.cpp \
+    $$PWD/modules/nfd_dotnet.cpp \
     $$PWD/modules/nfd_dex.cpp \
     $$PWD/modules/nfd_cfbf.cpp \
     $$PWD/modules/nfd_com.cpp \

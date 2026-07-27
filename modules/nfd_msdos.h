@@ -70,6 +70,7 @@ public:
     // Handlers migrated from SpecAbstract
     static void handle_OperationSystem(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
     static void handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
+    static void handle_VintageCompilers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
     static void handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
     static void handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);
     static void handle_SFX(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct);

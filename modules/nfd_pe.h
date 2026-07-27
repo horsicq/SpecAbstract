@@ -25,6 +25,7 @@
 #include "nfd_msdos.h"
 #include "nfd_binary.h"
 #include "xpe.h"
+#include "xcliassembly.h"
 #include "xmsdos.h"
 #include "xscanengine.h"
 
@@ -83,7 +84,7 @@ public:
         QList<XMSDOS::MS_RICH_RECORD> listRichSignatures;
         QString sResourceManifest;
         XPE::RESOURCES_VERSION resVersion;
-        XPE::CLI_INFO cliInfo;
+        XCLIAssembly::CLI_INFO cliInfo;
         QList<QString> listAnsiStrings;
         QList<QString> listUnicodeStrings;
 

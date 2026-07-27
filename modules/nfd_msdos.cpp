@@ -322,6 +322,33 @@ static NFD_Binary::SIGNATURE_RECORD g_MSDOS_entrypoint_records[] = {
     // Stub is byte-identical across PKLITE 1.50/1.51/2.01; the header banner records above give the exact version when present
     {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_PKLITE, "1.50-2.01", ""},
      "50B8....BA....0500003B060200722AB409BA1C01CD21B8014CCD214E6F7420656E6F756768206D656D6F727924202020202020202020202020592D20008ED0512D..008EC050B9....33FF57BE5401FCF3A5CB"},
+    // --- vintage DOS compilers (vintage-ep2) ---
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTQUICKBASIC, "1.00", ""},
+ "9A0000..009A6700..00"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTQUICKBASIC, "4.00", ""},
+ "B430CD213C027302CD20BF....8B3602002BF781FE00107203BE0010FA8ED781C4....FB730C33C036C706....1802E9"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTQUICKBASIC, "4.50", ""},
+ "B430CD213C027302CD20BF....8B3602002BF781FE00107203BE0010FA8ED781C4....FB730B33C036C706....C102EB"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTQUICKBASIC, "7.x", "BASIC PDS"},
+ "B430CD213C02730533C00650CB86E03D0A02B004721EBF....8B3602002BF781FE00107203BE0010FA8ED781C4....FB"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTBASIC, "5.3x", "BASRUN"},
+ "9A0000..00558BEC81EC00009A..00..00C706..0C"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTCOBOL, "1.12", ""},
+ "8CC890BE1C0090EA0000..00........040030240680040004000180000000000000"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTCOBOL, "3.00A", ""},
+ "E8121851E86C0EE85E00721E0BED7508E8480DE82200EB0B1EE8DC09810E0A0000101F59E81D01E9CF17"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTCOBOL, "4.50", ""},
+ "8CD03D....750E8CC00BC07505E8EF017244EB609006368E060E0026F606490040077503EB4E90065755B8"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTCOBOL, "5.00", ""},
+ "8CD03D....750E8CC00BC07505E85502723BEB5790E84D027203EB4F90CB065755B8"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTC, "1.04", ""},
+     "FAB8....8ED88ED0268B1E02002BD8F7C300F07506B104D3E3EB03BBF0FF8BE3FB891E....B8..04A3....0633C0508BEC"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTC, "2.03", "Lattice C 2.00 runtime"},
+     "FAB8....8ED8B8....8ED0BC0001FBB8....A3....8C06....26A12C00A3....BE8000268A0C32EDE31546268A04"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTC, "4.00", ""},
+     "B430CD213C02730EB8040050E8....92B409CD21CD20BF....8B3602002BF781FE00107203BE0010FA8ED781C4....FB730B33C050E8....B8FF4CCD21"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTC, "5.10", ""},
+     "B430CD213C027302CD20BF....8B3602002BF781FE00107203BE0010FA8ED781C4....FB7310161FE8F70133C050E87604B8FF4CCD2183E4FE"},
     // --- vintage DOS compilers (vintage-ep) ---
     {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARTEKADA, "1.25", ""},
      "B8....BE....9A000100009A0000....9A0000....9A0000....0EE80500EA7D010000"},
@@ -768,6 +795,18 @@ void NFD_MSDOS::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpt
         }
 
         // --- vintage DOS compiler entry-point detections ---
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_MICROSOFTQUICKBASIC)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_MICROSOFTQUICKBASIC);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_MICROSOFTBASIC)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_MICROSOFTBASIC);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_MICROSOFTCOBOL)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_MICROSOFTCOBOL);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
         if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_ARTEKADA)) {
             NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_ARTEKADA);
             pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
@@ -951,6 +990,204 @@ void NFD_MSDOS::handle_Borland(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
     }
 }
 
+void NFD_MSDOS::handle_VintageCompilers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    XMSDOS msdos(pDevice, pOptions->bIsImage);
+
+    if (msdos.isValid(pPdStruct) && pMSDOSInfo->basic_info.scanOptions.bIsDeepScan) {
+        qint64 _nOffset = 0;
+        qint64 _nSize = pMSDOSInfo->basic_info.id.nSize;
+
+        if (pMSDOSInfo->nOverlayOffset != -1) {
+            _nSize = pMSDOSInfo->nOverlayOffset;
+        }
+
+        // These vintage runtimes stamp a vendor banner into the image. That is far more stable
+        // than an entry-point stub, which for most of them is the user's own program code.
+        struct VINTAGE_STRING_RECORD {
+            const char *pszString;
+            XScanEngine::RECORD_NAME name;
+            const char *pszVersion;
+        };
+
+        // Order matters: more specific strings first.
+        static const VINTAGE_STRING_RECORD records[] = {
+            {"pasuxm.pas[22,21]", XScanEngine::RECORD_NAME_MICROSOFTPASCAL, "1.00"},
+            {"conuxm.pas", XScanEngine::RECORD_NAME_MICROSOFTPASCAL, "2.00"},
+            {"pasuxu.pas", XScanEngine::RECORD_NAME_MICROSOFTPASCAL, "3.3X"},
+            {"PASFILEA", XScanEngine::RECORD_NAME_MICROSOFTPASCAL, "4.00"},
+            {"foruxm.pas", XScanEngine::RECORD_NAME_MICROSOFTFORTRAN, "3.1X-3.2X"},
+            {"foruxu.pas", XScanEngine::RECORD_NAME_MICROSOFTFORTRAN, "3.3X"},
+            {"Must link with BCOM10.LIB", XScanEngine::RECORD_NAME_MICROSOFTQUICKBASIC, "1.00"},
+            {"**COBOL: Attempt to use non-updated runtime module (COBRUN.EXE).", XScanEngine::RECORD_NAME_MICROSOFTCOBOL, "1.12"},
+            {"Insufficient environment space to run COBOL", XScanEngine::RECORD_NAME_MICROSOFTCOBOL, "3.00A"},
+            {"V1.1 CLEAR library.  Copyright 1983 by Digital Research.", XScanEngine::RECORD_NAME_DIGITALRESEARCHC, "1.1"},
+            {"Proc: \"        \" not found ovl:", XScanEngine::RECORD_NAME_DIGITALRESEARCHMTPASCAL, "3.1X"},
+            {"FREE Request Out-of-Range$", XScanEngine::RECORD_NAME_DIGITALRESEARCHPLI86, ""},
+            {"$typeguard check failed", XScanEngine::RECORD_NAME_OBERONM, "1.2"},
+            {"Artek Ada Runtime Module (C) ", XScanEngine::RECORD_NAME_ARTEKADA, "1.25"},
+            {"$stack overflow$heap overflow$function return error$", XScanEngine::RECORD_NAME_LOGITECHMODULA2, "3.X"},
+        };
+
+        qint32 nRecordsCount = (qint32)(sizeof(records) / sizeof(VINTAGE_STRING_RECORD));
+
+        for (qint32 i = 0; (i < nRecordsCount) && XBinary::isPdStructNotCanceled(pPdStruct); i++) {
+            if (pMSDOSInfo->basic_info.mapResultCompilers.contains(records[i].name)) {
+                continue;
+            }
+
+            if (msdos.find_ansiString(_nOffset, _nSize, records[i].pszString, pPdStruct) != -1) {
+                NFD_Binary::SCANS_STRUCT ss = {};
+                ss.nVariant = 0;
+                ss.fileType = XBinary::FT_MSDOS;
+                ss.type = XScanEngine::RECORD_TYPE_COMPILER;
+                ss.name = records[i].name;
+                ss.sVersion = records[i].pszVersion;
+                pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            }
+        }
+
+        // Microsoft Fortran 4.x/5.x: the "MS Run-Time Library" banner alone is NOT enough - the
+        // same runtime ships with MS C / QuickC of the same era. Require a Fortran-only marker
+        // (the INQUIRE statement's error text) and use the banner year only for the version.
+        if (!pMSDOSInfo->basic_info.mapResultCompilers.contains(XScanEngine::RECORD_NAME_MICROSOFTFORTRAN)) {
+            if (msdos.find_ansiString(_nOffset, _nSize, ": INQUIRE(", pPdStruct) != -1) {
+                NFD_Binary::SCANS_STRUCT ss = {};
+                ss.nVariant = 0;
+                ss.fileType = XBinary::FT_MSDOS;
+                ss.type = XScanEngine::RECORD_TYPE_COMPILER;
+                ss.name = XScanEngine::RECORD_NAME_MICROSOFTFORTRAN;
+
+                if (msdos.find_ansiString(_nOffset, _nSize, "MS Run-Time Library - Copyright (c) 1990, Microsoft Corp", pPdStruct) != -1) {
+                    ss.sVersion = "5.1";
+                } else if (msdos.find_ansiString(_nOffset, _nSize, "MS Run-Time Library - Copyright (c) 1989, Microsoft Corp", pPdStruct) != -1) {
+                    ss.sVersion = "5.0";
+                } else if (msdos.find_ansiString(_nOffset, _nSize, "MS Run-Time Library - Copyright (c) 1987, Microsoft Corp", pPdStruct) != -1) {
+                    ss.sVersion = "4.0-4.1";
+                }
+
+                pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            }
+        }
+
+        // Turbo Pascal: the System-unit runtime-error block is the family anchor; the bytes
+        // immediately following it carry the version.
+        qint64 nOffsetTP = msdos.find_signature(&(pMSDOSInfo->basic_info.memoryMap), _nOffset, _nSize, "'Runtime error '00' at '002E0D0A00", nullptr, pPdStruct);
+
+        if (nOffsetTP != -1) {
+            qint64 nTail = nOffsetTP + 24;
+
+            NFD_Binary::SCANS_STRUCT ss = {};
+            ss.nVariant = 0;
+            ss.fileType = XBinary::FT_MSDOS;
+            ss.type = XScanEngine::RECORD_TYPE_COMPILER;
+            ss.name = XScanEngine::RECORD_NAME_TURBOPASCAL;
+
+            if (msdos.compareSignature(&(pMSDOSInfo->basic_info.memoryMap), "'Portions Copyright (c) 1983,92 Borland'", nTail, pPdStruct)) {
+                ss.sVersion = "7.0";
+            } else if (msdos.compareSignature(&(pMSDOSInfo->basic_info.memoryMap), "'Portions Copyright (c) 1983,90 Borland'", nTail, pPdStruct)) {
+                ss.sVersion = "6.0";
+            } else if (msdos.compareSignature(&(pMSDOSInfo->basic_info.memoryMap), "FB83C4065881E71F0081C79600", nTail, pPdStruct)) {
+                ss.sVersion = "4.0";
+            } else if (msdos.compareSignature(&(pMSDOSInfo->basic_info.memoryMap), "33C08706....CB833E....007501CBA1....E9B5FE", nTail, pPdStruct)) {
+                ss.sVersion = "5.0-5.5";
+            }
+
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+
+        // Microsoft QuickPascal: same "Runtime error" wording as Turbo Pascal but without the
+        // trailing period, followed by its own 80x87/80286 messages.
+        if (msdos.find_signature(&(pMSDOSInfo->basic_info.memoryMap), _nOffset, _nSize, "'Runtime error '00' at '000D0A00'80x87 required'0D0A00'80286 or 80386 required'0D0A00", nullptr, pPdStruct) != -1) {
+            NFD_Binary::SCANS_STRUCT ss = {};
+            ss.nVariant = 0;
+            ss.fileType = XBinary::FT_MSDOS;
+            ss.type = XScanEngine::RECORD_TYPE_COMPILER;
+            ss.name = XScanEngine::RECORD_NAME_QUICKPASCAL;
+            ss.sVersion = "1.0";
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+
+        // JPI / Clarion TopSpeed runtime banner
+        qint64 nOffsetTS = msdos.find_ansiString(_nOffset, _nSize, "TopSpeed RTL (C) ", pPdStruct);
+
+        if (nOffsetTS != -1) {
+            QString sBanner = msdos.read_ansiString(nOffsetTS);
+
+            NFD_Binary::SCANS_STRUCT ss = {};
+            ss.nVariant = 0;
+            ss.fileType = XBinary::FT_MSDOS;
+            ss.type = XScanEngine::RECORD_TYPE_COMPILER;
+            ss.name = XScanEngine::RECORD_NAME_TOPSPEED;
+            ss.sInfo = "RTL";
+
+            if (sBanner.contains("Clarion Software Corporation")) {
+                ss.sVersion = "2.X-3.X";
+            } else if (sBanner.contains("JPI")) {
+                ss.sVersion = "1.X-2.X";
+            }
+
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+
+        // IBM/Microsoft joint-copyright banner: the leading serial picks the product
+        if (msdos.find_ansiString(_nOffset, _nSize, "1270000000          (C)Copyright IBM Corp", pPdStruct) != -1) {
+            NFD_Binary::SCANS_STRUCT ss = {};
+            ss.nVariant = 0;
+            ss.fileType = XBinary::FT_MSDOS;
+            ss.type = XScanEngine::RECORD_TYPE_COMPILER;
+            ss.name = XScanEngine::RECORD_NAME_IBMPCFORTRAN;
+            ss.sVersion = "2.00(1984)";
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        } else if (msdos.find_ansiString(_nOffset, _nSize, "1280000000          (C)Copyright IBM Corp", pPdStruct) != -1) {
+            NFD_Binary::SCANS_STRUCT ss = {};
+            ss.nVariant = 0;
+            ss.fileType = XBinary::FT_MSDOS;
+            ss.type = XScanEngine::RECORD_TYPE_COMPILER;
+            ss.name = XScanEngine::RECORD_NAME_IBMPCPASCAL;
+            ss.sVersion = "2.00(1984)";
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+
+        // QuickBASIC 4.x / 7.x: distinguished by the exact wording of the runtime-init and
+        // DOS-version messages ("runtime" vs "run-time").
+        if (!pMSDOSInfo->basic_info.mapResultCompilers.contains(XScanEngine::RECORD_NAME_MICROSOFTQUICKBASIC)) {
+            NFD_Binary::SCANS_STRUCT ss = {};
+            ss.nVariant = 0;
+            ss.fileType = XBinary::FT_MSDOS;
+            ss.type = XScanEngine::RECORD_TYPE_COMPILER;
+            ss.name = XScanEngine::RECORD_NAME_MICROSOFTQUICKBASIC;
+
+            if (msdos.find_ansiString(_nOffset, _nSize, "Error during runtime initialization", pPdStruct) != -1) {
+                ss.sVersion = "4.00";
+            } else if (msdos.find_ansiString(_nOffset, _nSize, "- DOS 2.10 or later required", pPdStruct) != -1) {
+                ss.sVersion = "7.10";
+            } else if (msdos.find_ansiString(_nOffset, _nSize, "Error during run-time initialization", pPdStruct) != -1) {
+                ss.sVersion = "4.50";
+            }
+
+            if (ss.sVersion != "") {
+                pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            }
+        }
+
+        // Microsoft/IBM BASIC compiler (BASRUN family)
+        if (!pMSDOSInfo->basic_info.mapResultCompilers.contains(XScanEngine::RECORD_NAME_MICROSOFTBASIC) &&
+            !pMSDOSInfo->basic_info.mapResultCompilers.contains(XScanEngine::RECORD_NAME_MICROSOFTQUICKBASIC)) {
+            if (msdos.find_ansiString(_nOffset, _nSize, "Cannot find A:BASRUN.EXE", pPdStruct) != -1) {
+                NFD_Binary::SCANS_STRUCT ss = {};
+                ss.nVariant = 0;
+                ss.fileType = XBinary::FT_MSDOS;
+                ss.type = XScanEngine::RECORD_TYPE_COMPILER;
+                ss.name = XScanEngine::RECORD_NAME_MICROSOFTBASIC;
+                ss.sVersion = "5.3X";
+                ss.sInfo = "BASRUN";
+                pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+            }
+        }
+    }
+}
+
 void NFD_MSDOS::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, NFD_MSDOS::MSDOSINFO_STRUCT *pMSDOSInfo, XBinary::PDSTRUCT *pPdStruct)
 {
     XMSDOS msdos(pDevice, pOptions->bIsImage);
@@ -1041,7 +1278,10 @@ void NFD_MSDOS::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS 
             NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_JAM);
             pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
-        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_LOCKTITE)) {
+        // The LockTite stub is a generic self-relocating loader that the Mix Power C runtime also
+        // uses, so a positive Power C identification wins (its signature is a strict superset).
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_LOCKTITE) &&
+            (!pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_POWERC))) {
             NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_LOCKTITE);
             pMSDOSInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
@@ -1371,6 +1611,7 @@ NFD_MSDOS::MSDOSINFO_STRUCT NFD_MSDOS::getInfo(QIODevice *pDevice, XScanEngine::
         NFD_MSDOS::handle_OperationSystem(pDevice, pOptions, &result, pPdStruct);
         NFD_MSDOS::handle_Borland(pDevice, pOptions, &result, pPdStruct);
         NFD_MSDOS::handle_Tools(pDevice, pOptions, &result, pPdStruct);
+        NFD_MSDOS::handle_VintageCompilers(pDevice, pOptions, &result, pPdStruct);
         NFD_MSDOS::handle_Protection(pDevice, pOptions, &result, pPdStruct);
         NFD_MSDOS::handle_SFX(pDevice, pOptions, &result, pPdStruct);
         NFD_MSDOS::handle_DosExtenders(pDevice, pOptions, &result, pPdStruct);

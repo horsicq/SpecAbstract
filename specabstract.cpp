@@ -29,6 +29,7 @@
 #include "modules/nfd_ne.h"
 #include "modules/nfd_dex.h"
 #include "modules/nfd_pe.h"
+#include "modules/nfd_dotnet.h"
 #include "modules/nfd_text.h"
 #include "modules/nfd_dex.h"
 
@@ -90,6 +91,9 @@ void SpecAbstract::_processDetect(XScanEngine::SCANID *pScanID, XScanEngine::SCA
     } else if (fileType == XBinary::FT_JAVACLASS) {
         NFD_JavaClass::JAVACLASSINFO_STRUCT javaclass_info = NFD_JavaClass::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = javaclass_info.basic_info;
+    } else if (fileType == XBinary::FT_CLI_ASSEMBLY) {
+        NFD_DOTNET::DOTNETINFO_STRUCT dotnet_info = NFD_DOTNET::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
+        basic_info = dotnet_info.basic_info;
     } else if (fileType == XBinary::FT_DEX) {
         NFD_DEX::DEXINFO_STRUCT dex_info = NFD_DEX::getInfo(pDevice, parentId, pScanOptions, 0, pPdStruct);
         basic_info = dex_info.basic_info;
