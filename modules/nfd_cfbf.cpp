@@ -61,6 +61,27 @@ NFD_CFBF::CFBFINFO_STRUCT NFD_CFBF::getInfo(QIODevice *pDevice, XScanEngine::SCA
 
         result.basic_info.mapResultFormats.insert(ssFormat.name, NFD_Binary::scansToScan(&(result.basic_info), &ssFormat));
 
+        // Advanced Installer stamps an AI_PACKAGING_TOOL property (followed by its own version)
+        // into the MSI _StringData stream of every package it builds.
+        if (pOptions->bIsDeepScan) {
+            qint64 nAIOffset = cfbf.find_ansiString(0, cfbf.getSize(), "AI_PACKAGING_TOOL", pPdStruct);
+
+            if (nAIOffset != -1) {
+                NFD_Binary::SCANS_STRUCT ssAI = {};
+                ssAI.type = XScanEngine::RECORD_TYPE_INSTALLER;
+                ssAI.name = XScanEngine::RECORD_NAME_ADVANCEDINSTALLER;
+                ssAI.fileType = result.basic_info.id.fileType;
+
+                QString sTail = cfbf.read_ansiString(nAIOffset + 17, 64);
+
+                if (sTail.startsWith("Advanced Installer")) {
+                    ssAI.sVersion = sTail.section(" ", 2, 2);
+                }
+
+                result.basic_info.mapResultInstallers.insert(ssAI.name, NFD_Binary::scansToScan(&(result.basic_info), &ssAI));
+            }
+        }
+
         // Finalize
         NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
     }

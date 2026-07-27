@@ -938,8 +938,12 @@ NFD_Binary::STRING_RECORD _PE_sectionNames_records[] = {
     {{0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ELECKEY, "2.00.X", ""}, ".sstb"},
     {{0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ENCRYPTPE, "1.XX-2.XX", ""}, "EPE0"},
     {{0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ENCRYPTPE, "1.XX-2.XX", ""}, "EPE1"},
-    {{0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ENIGMAVIRTUALBOX, "", ""}, ".enigma1"},
-    {{0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ENIGMAVIRTUALBOX, "", ""}, ".enigma2"},
+    // FT_PE (not FT_PE32): Enigma Virtual Box also produces x64 output
+    {{0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ENIGMAVIRTUALBOX, "", ""}, ".enigma1"},
+    {{0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_ENIGMAVIRTUALBOX, "", ""}, ".enigma2"},
+    {{0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_BOXEDAPPPACKER, "", ""}, ".bxpck"},
+    {{0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::RECORD_NAME_TARMAINSTALLER, "", ""}, ".tsuarch"},
+    {{0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::RECORD_NAME_TARMAINSTALLER, "", ""}, ".tsustub"},
     {{0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_EPROT, "0.01", ""}, "!eprot"},
     {{0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_EPEXEPACK, "1.0", ""}, "!EPack"},
     {{0, XBinary::FT_PE32, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_EPEXEPACK, "1.4", ""}, ".!ep"},
@@ -1481,6 +1485,35 @@ void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
         }
 
         // Spoon Studio
+        // Advanced Installer bootstrapper: the RT_MANIFEST "AdvancedInstallerSetup" tell below is
+        // absent from recent builds (23.x), which instead reference the vendor's registry key.
+        if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
+            if (pe.find_ansiString(pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, "Software\\Caphyon\\Advanced Installer", pPdStruct) != -1) {
+                _SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::RECORD_NAME_ADVANCEDINSTALLER, "", "", 0);
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+            }
+        }
+
+        // Actual Installer: Delphi-built stub whose setup form caption carries the product name
+        // ("Actual Installer Free"/"Pro"). The older 'MSCF' payload record misses builds that do
+        // not append a CAB.
+        if (pe.checkOffsetSize(pPEInfo->osResourcesSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
+            if (pe.find_ansiString(pPEInfo->osResourcesSection.nOffset, pPEInfo->osResourcesSection.nSize, "Actual Installer", pPdStruct) != -1) {
+                _SCANS_STRUCT ss =
+                    NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::RECORD_NAME_ACTUALINSTALLER, "", "", 0);
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+            }
+        }
+
+        // InstallForge stamps its own name+version into the version-info "Comments" field,
+        // e.g. "Created with InstallForge 1.6.1"
+        if (XPE::getResourcesVersionValue("Comments", &(pPEInfo->resVersion)).contains("InstallForge")) {
+            _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::RECORD_NAME_INSTALLFORGE, "", "", 0);
+            ss.sVersion = XPE::getResourcesVersionValue("Comments", &(pPEInfo->resVersion)).section("InstallForge", 1, 1).trimmed();
+            pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+        }
+
         if (XPE::getResourcesVersionValue("Packager", &(pPEInfo->resVersion)).contains("Spoon Studio 2011")) {
             _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_SPOONSTUDIO2011, "", "", 0);
             ss.sVersion = XPE::getResourcesVersionValue("PackagerVersion", &(pPEInfo->resVersion)).trimmed();
@@ -1575,6 +1608,19 @@ void NFD_PE::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
         if (pPEInfo->basic_info.mapSectionNamesDetects.contains(XScanEngine::RECORD_NAME_ENIGMAVIRTUALBOX)) {
             _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(XScanEngine::RECORD_NAME_ENIGMAVIRTUALBOX);
             pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+        }
+
+        // BoxedApp Packer: application virtualizer, always carries a .bxpck section
+        if (pPEInfo->basic_info.mapSectionNamesDetects.contains(XScanEngine::RECORD_NAME_BOXEDAPPPACKER)) {
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(XScanEngine::RECORD_NAME_BOXEDAPPPACKER);
+            pPEInfo->basic_info.mapResultProtectors.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+        }
+
+        // Tarma InstallMate keeps its payload in a .tsuarch section (the existing overlay
+        // 'tiz1' record only covers builds that append it instead)
+        if (pPEInfo->basic_info.mapSectionNamesDetects.contains(XScanEngine::RECORD_NAME_TARMAINSTALLER)) {
+            _SCANS_STRUCT ss = pPEInfo->basic_info.mapSectionNamesDetects.value(XScanEngine::RECORD_NAME_TARMAINSTALLER);
+            pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
         }
 
         if (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_ZLIB)) {
@@ -3942,6 +3988,15 @@ void NFD_PE::handle_Installers(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pO
                     ss.sInfo = "PackageForTheWeb";
                 }
 
+                pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+            }
+
+            // Install Simple (installsimple.com). The setup stub is a UPX-packed MASM32 program,
+            // but its RT_MANIFEST is left uncompressed and always carries name="InstallSimple".
+            if ((pPEInfo->sResourceManifest.contains("name=\"InstallSimple\"")) ||
+                (pPEInfo->basic_info.mapOverlayDetects.contains(XScanEngine::RECORD_NAME_INSTALLSIMPLE))) {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_INSTALLER, XScanEngine::RECORD_NAME_INSTALLSIMPLE, "", "", 0);
+                // TODO version (not stored in the manifest; only the stub revision differs)
                 pPEInfo->basic_info.mapResultInstallers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
             }
 
@@ -6742,6 +6797,14 @@ void NFD_PE::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOption
             _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_FASM, "", "", 0);
             ss.sVersion = QString("%1.%2").arg(QString::number(pPEInfo->nMajorLinkerVersion)).arg(QString::number(pPEInfo->nMinorLinkerVersion));
             pPEInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+        }
+
+        // IExpress / wextract SFX: the stub embeds its SED directive names verbatim
+        if (pe.checkOffsetSize(pPEInfo->osConstDataSection) && (pPEInfo->basic_info.scanOptions.bIsDeepScan)) {
+            if (pe.find_ansiString(pPEInfo->osConstDataSection.nOffset, pPEInfo->osConstDataSection.nSize, "POSTRUNPROGRAM", pPdStruct) != -1) {
+                _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_PE, XScanEngine::RECORD_TYPE_SFX, XScanEngine::RECORD_NAME_IEXPRESS, "", "", 0);
+                pPEInfo->basic_info.mapResultSFX.insert(ss.name, NFD_Binary::scansToScan(&(pPEInfo->basic_info), &ss));
+            }
         }
 
         // LLD (LLVM linker). Two independent tells, neither of which MS link.exe produces:

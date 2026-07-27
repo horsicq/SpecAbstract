@@ -322,6 +322,59 @@ static NFD_Binary::SIGNATURE_RECORD g_MSDOS_entrypoint_records[] = {
     // Stub is byte-identical across PKLITE 1.50/1.51/2.01; the header banner records above give the exact version when present
     {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_PACKER, XScanEngine::RECORD_NAME_PKLITE, "1.50-2.01", ""},
      "50B8....BA....0500003B060200722AB409BA1C01CD21B8014CCD214E6F7420656E6F756768206D656D6F727924202020202020202020202020592D20008ED0512D..008EC050B9....33FF57BE5401FCF3A5CB"},
+    // --- vintage DOS compilers (vintage-ep) ---
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ARTEKADA, "1.25", ""},
+     "B8....BE....9A000100009A0000....9A0000....9A0000....0EE80500EA7D010000"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_JANUSADA, "1.5X", ""},
+     "E95300....2600..000010'Copyright 1982,83,84,85 - RR Software, Inc.'"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_STONYBROOKPASCAL, "6.1X", ""},
+     "31ED9A..00..005589E5"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_SMALLC, "1", ""},
+     "B8....8BE0B800008ED88EC08ED0B8....A3....33C9EA....0000"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_INTELIC86, "4.5", ""},
+     "902E8E1E..00EA0000000000000000000000000000000000"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROC, "3.x", "Dave Dunfield"},
+     "BB....8EDB8CC02BD881C30010B44ACD218CD88ED033C08BE0BF....B9....2BCF061E07F3AA07BE8100BF....BB....B90100268A043C0D741E463C2074F489"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_POWERC, "1.x", ""},
+     "8CC88ED88CC381C310008BC3030606008EC08B0E02008BF14E8BFEFDF3A450B8340050CB8B3604008CD82D00108ED88CC02D00108EC0BFFFFFFD8A144E4E8B0C"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_POWERC, "2.2", ""},
+     "8CC88ED88CC381C31000891E10008BC3030606008EC08B0E02008BF14E8BFEFDF3A450B83A0050CB8B3604008CD82D0010730AF7D8B104D3E02BF033C08ED88C"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_LIBRARY, XScanEngine::RECORD_NAME_DIGITALRESEARCH, "", "Runtime startup"},
+     "EB102EFF1E17032EFF2E1B03........08030E17BC7F03A102008CDB0E1F891E1D03A301038CC80306FF02A31903B908002BDB8BF3BFC7028CC803050306FF02"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_IBMPCFORTRAN, "1.00", ""},
+     "BA....D1EAB900802BCAD1EAD1EAD1EA42268B1E020081EB....2BDAF7DB7D0233DB2BD3B8....8ED8"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ZORTECHC, "2.00", ""},
+     "EB0190FAB8....050F00B90400D3E88CC903C18ED88C06....268B1E2C00891E47018BD82B1E....891EAD00"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ZORTECHC, "3.0r1", ""},
+     "EB0190FAB8....050F00B90400D3E88CC903C18ED88C06....268B1E2C00891E4C018BD82B1E....891EAF00"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_ZORTECHC, "", ""},
+     "EB0190FAB8....050F00B90400D3E88CC903C18ED88C06....268B1E2C00891E..018BD82B1E....891E..00268B1E02002BD881FB00107203BBFF0F8BD003D342B104D3E38ED08BE381EB....80FF027306BA..00E9..01FBB430CD21A3...."},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_LATTICEC, "2.12", ""},
+     "FAB8....8ED8B8....8ED0BC8000FBB430CD210AC07503B80100A310008C065C00803E1000027C2726A12C00A36E000BC0741C06FCC43E6C"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_LATTICEC, "3.30", ""},
+     "FC508CC00BC058745FB8....8ED8BB....2B1E....FA8ED003E3FB8CC0A36B0029066D008B1E6D00B44ACD2126A12C00A375008CC0A37B00"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_AZTECC86, "3.40a", ""},
+     "BD....85ED75028CDD2E8C1E....8B1E02002BDD81FB0010760F8D9E00108CC02BD8B44ACD21BB00108EC5268C1E....B104D3E326833E....00741726A1....D1E0268B1E....D3E33BD877028BD881C3....FA8ED58BE3FB85DB7503BBFFFF26891E....26833E....007437"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_AZTECC86, "4.2b", ""},
+     "BD....85ED75028CDD2E8C1E....8B1E02002BDD81FB0010760F8D9E00108CC02BD8B44ACD21BB00108EC5268C1E....B104D3E326833E....00741726A1....D1E0268B1E....D3E33BD877028BD881C3....FA8ED58BE3FB85DB7503BBFFFF26891E....26833E....007436"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_AZTECC86, "5.2a", ""},
+     "BD....85ED75028CDD8B1E02002BDD81FB0010760F8D9E00108CC02BD8B44ACD21BB00108EC5268C1E....B104D3E326833E....00741726A1....D1E0268B1E....D3E33BD877028BD881C3....FA8ED58BE3FB85DB7503BBFFFF26891E....E85A0326833E....007438"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_AZTECC86, "3.4x-4.2x", ""},
+     "BD....85ED75028CDD2E8C1E....8B1E02002BDD81FB0010760F8D9E00108CC02BD8B44ACD21BB00108EC5268C1E....B104D3E3"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_AZTECC86, "5.x", ""},
+     "BD....85ED75028CDD8B1E02002BDD81FB0010760F8D9E00108CC02BD8B44ACD21BB00108EC5268C1E....B104D3E3"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MARKWILLIAMSC, "3.11", ""},
+     "8CD08ED88EC0BF....B9....2BCF2AC0FCF3AA2BEDF7C4010074014CB8....4025FEFFA3....8C0E....E8....5050FC5858B44CCD215657"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MARKWILLIAMSC, "4.0", ""},
+     "B8....8ED08ED88C06....8EC08D06....A3....8BE02BEDE8....5050FC5858B44CCD21000000000000000000000000"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTC, "3.00", ""},
+     "BF....8B3602002BF781FE00107203BE0010FA8ED781C4....FB7303E9490181E4FEFF368926....368926....8BC6B104D3E04836A3....B430CD21"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTQUICKC, "1.0", "1987"},
+     "B430CD213C027302CD20BF....8B3602002BF781FE00107203BE0010FA8ED781C4....FB7310161FE8F90133C050E87004B8FF4CCD2181E4FEFF"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTC, "6.00/QuickC 2.5x", ""},
+     "B430CD213C02730533C00650CBBF....8B3602002BF781FE00107203BE0010FA8ED781C4....FB7310161FE85A0233C050E8EB04B8FF4CCD218BC6B104D3E04836A3....BB....368C1783E4FE368967"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MICROSOFTC, "6.00/QuickC 2.x", ""},
+     "B430CD213C02730533C00650CBBF....8B3602002BF781FE00107203BE0010FA8ED781C4....FB7310161FE8....33C050E8....B8FF4CCD218BC6B104D3E04836A3....BB....368C1783E4FE36896704B8FEFF503689670AF7D0503689670636896708368926....03F7893602008CC32BDEF7DBB44ACD21"},
     // TODO More
 };
 
@@ -345,6 +398,13 @@ static NFD_Binary::SIGNATURE_RECORD g_MSDOS_entrypointExp_records[] = {
      "0E179C58F6....74..EB$$B0..E6..33C9E2..B430CD213C..73..33C00650CB"},
     {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_CRYPTORBYDISMEMBER, "2.0", ""},
      "E9$$$$BF....8BF7ACAD918AE157AC32C4F6D0D0C412E1AAE2"},
+    // --- vintage DOS compilers (vintage-epexp) ---
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_LOGITECHMODULA2, "3.4", ""},
+     "EB$$B8....8ED8C706....00008C06....8CC7BB....26891E02002BDF891E....B44ACD21BD0000"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_DESMETC, "C88 2.4 / PCC 1.2c", ""},
+     "E9$$$$368C1E....A102008CD32BC37703E9D300483D00107203B8FF0FB104D3E03BC47303E9BF00368B1E000036031E020083C37F3BE375028BE0368926....B430CD213C0272"},
+    {{0, XBinary::FT_MSDOS, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_DESMETC, "C88 3.1b", ""},
+     "E9$$$$368C1E....A12C0036A3....A102008CD32BC37703E97301483D00107203B8FF0FB104D3E03BC47303E95F01368B1E000036031E020083C37F3BE375028BE0368926....B430CD2136A2"},
 };
 
 NFD_Binary::SIGNATURE_RECORD *NFD_MSDOS::getEntryPointRecords()
@@ -704,6 +764,76 @@ void NFD_MSDOS::handle_Tools(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOpt
         // BAT2EXEC
         if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_BAT2EXEC)) {
             NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_BAT2EXEC);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+
+        // --- vintage DOS compiler entry-point detections ---
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_ARTEKADA)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_ARTEKADA);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_AZTECC86)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_AZTECC86);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_DESMETC)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_DESMETC);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_DIGITALRESEARCH)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_DIGITALRESEARCH);
+            pMSDOSInfo->basic_info.mapResultLibraries.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_IBMPCFORTRAN)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_IBMPCFORTRAN);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_INTELIC86)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_INTELIC86);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_JANUSADA)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_JANUSADA);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_LATTICEC)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_LATTICEC);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_LOGITECHMODULA2)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_LOGITECHMODULA2);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_MARKWILLIAMSC)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_MARKWILLIAMSC);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_MICROC)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_MICROC);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_MICROSOFTC)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_MICROSOFTC);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_MICROSOFTQUICKC)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_MICROSOFTQUICKC);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_POWERC)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_POWERC);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_SMALLC)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_SMALLC);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_STONYBROOKPASCAL)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_STONYBROOKPASCAL);
+            pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
+        }
+        if (pMSDOSInfo->basic_info.mapEntryPointDetects.contains(XScanEngine::RECORD_NAME_ZORTECHC)) {
+            NFD_Binary::SCANS_STRUCT ss = pMSDOSInfo->basic_info.mapEntryPointDetects.value(XScanEngine::RECORD_NAME_ZORTECHC);
             pMSDOSInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pMSDOSInfo->basic_info), &ss));
         }
     }

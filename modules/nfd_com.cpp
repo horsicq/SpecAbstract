@@ -73,6 +73,11 @@ static NFD_Binary::SIGNATURE_RECORD g_COM_records[] = {
     {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_PROTECTOR, XScanEngine::RECORD_NAME_CRYPTORBYEVILGENIUS, "", ""}, "E9......C920EA59C157..EE06CCC45B"},
     {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_CONVERTER, XScanEngine::RECORD_NAME_EXE2COM, "1.0", ""}, "E9....5F5F5F436F6E766572746564204D5A"},
     {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_CONVERTER, XScanEngine::RECORD_NAME_EXE2COM, "", ""}, "E9....436F6E766572746564000000004D5A"},
+    // --- vintage DOS compilers (vintage-com) ---
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MIXC, "2.02", ""},
+     "EB60....DF03....0000B048'RUNTIME.OVY'"},
+    {{0, XBinary::FT_COM, XScanEngine::RECORD_TYPE_COMPILER, XScanEngine::RECORD_NAME_MIXC, "2.51", ""},
+     "EB6D....E103....0000B0490000'RUNTIME.OVY'"},
 };
 
 static NFD_Binary::SIGNATURE_RECORD g_COM_Exp_records[] = {
@@ -204,4 +209,10 @@ void NFD_COM::handle_Protection(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *p
     NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_PKZIPMINISFX, false, false, true);
     NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_CRYPTORBYEVILGENIUS, true);
     NFD_Binary::addHeaderDetectToResults(&pCOMInfo->basic_info, RECORD_NAME::RECORD_NAME_EXE2COM, false, true);
+
+    // Mix C emits flat .COM with its runtime loader at offset 0
+    if (pCOMInfo->basic_info.mapHeaderDetects.contains(RECORD_NAME::RECORD_NAME_MIXC)) {
+        NFD_Binary::SCANS_STRUCT ss = pCOMInfo->basic_info.mapHeaderDetects.value(RECORD_NAME::RECORD_NAME_MIXC);
+        pCOMInfo->basic_info.mapResultCompilers.insert(ss.name, NFD_Binary::scansToScan(&(pCOMInfo->basic_info), &ss));
+    }
 }

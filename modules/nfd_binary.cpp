@@ -2285,6 +2285,8 @@ static NFD_Binary::SIGNATURE_RECORD g_PE_overlay_records[] = {
     {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_INSTALLANYWHERE, "", ""}, "5B3E"},
     {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_INSTALLSHIELD, "", ""}, "'ISSetupStream'"},
     {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_INSTALLSHIELD, "", "PackageForTheWeb"}, "....0000dcedbd"},
+    {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_INSTALLSIMPLE, "", ""},
+     "6E010000FFFFFFFF00009E7FFFFFFF57A0E4415C40470FDD107EF7DE400687C2"},
     {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_NSIS, "", ""}, "EFBEADDE'Null'..'oftInst'"},
     {{0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_NSIS, "", ""}, "..000000EFBEADDE'NullsoftInst'"},
     {{1, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_INSTALLERDATA, XScanEngine::RECORD_NAME_NSIS, "", ""}, "EFBEADDE'nsisinstall'"},
