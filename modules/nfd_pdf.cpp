@@ -41,9 +41,21 @@ NFD_PDF::PDFINFO_STRUCT NFD_PDF::getInfo(QIODevice *pDevice, XScanEngine::SCANID
         // Collect objects
         result.listObjects = pdf.getParts(20, pPdStruct);
 
-        // Format mapping
+        // Format mapping. getFileFormatInfo()->bIsEncrypted (XPDF::isEncrypted override) makes the format
+        // record itself carry "Encrypted"; below we also raise a distinct, prominent protection detect.
         NFD_Binary::SCANS_STRUCT ssFormat = NFD_Binary::getFormatScansStruct(pdf.getFileFormatInfo(pPdStruct));
         result.basic_info.mapResultFormats.insert(ssFormat.name, NFD_Binary::scansToScan(&(result.basic_info), &ssFormat));
+
+        // Protection: PDF Standard security handler (encryption).
+        const QString sEncryption = pdf.getEncryption(pPdStruct);
+        if (!sEncryption.isEmpty()) {
+            NFD_Binary::SCANS_STRUCT ssEnc = {};
+            ssEnc.type = XScanEngine::RECORD_TYPE_PROTECTOR;
+            ssEnc.name = XScanEngine::RECORD_NAME_UNKNOWN;
+            ssEnc.sVersion = sEncryption;  // "Standard V4 R4 128-bit AESV2 P=-3904"
+            ssEnc.sInfo = "Encrypted";
+            result.basic_info.mapResultProtectors.insert(ssEnc.name, NFD_Binary::scansToScan(&(result.basic_info), &ssEnc));
+        }
 
         // Tags: Producer
         QList<XBinary::XVARIANT> listProd = pdf.getValuesByKey(&(result.listObjects), QString("/Producer"));
