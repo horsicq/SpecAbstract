@@ -20,6 +20,8 @@
  */
 #include "nfd_zip.h"
 
+#include <QtEndian>
+
 NFD_ZIP::NFD_ZIP(XZip *pZip, XBinary::FILEPART filePart, const OPTIONS &scanOptions, XBinary::PDSTRUCT *pPdStruct) : ZIP_Script(pZip, filePart, scanOptions, pPdStruct)
 {
 }
@@ -78,13 +80,127 @@ NFD_ZIP::ZIPINFO_STRUCT NFD_ZIP::getInfo(QIODevice *pDevice, XScanEngine::SCANID
         }
 
         NFD_ZIP::handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
+        NFD_ZIP::handle_Container(&(result.basic_info), &(result.listArchiveRecords), pPdStruct);
 
         NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
+    } else if (XBinary::isPdStructNotCanceled(pPdStruct)) {
+        result.basic_info = NFD_Binary::_initBasicInfo(&xzip, parentId, pOptions, nOffset, pPdStruct);
+        if (NFD_ZIP::handle_ContainerHeader(pDevice, &(result.basic_info), pPdStruct)) {
+            NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
+        }
     }
 
     result.basic_info.nElapsedTime = timer.elapsed();
 
     return result;
+}
+
+void NFD_ZIP::handle_Container(BASIC_INFO *pBasicInfo, const QList<XArchive::RECORD> *pListArchiveRecords, XBinary::PDSTRUCT *pPdStruct)
+{
+    if (!XBinary::isPdStructNotCanceled(pPdStruct)) return;
+
+    quint32 nMinimumVersion = 0;
+    bool bIsEncrypted = false;
+
+    for (const XArchive::RECORD &record : *pListArchiveRecords) {
+        if (!XBinary::isPdStructNotCanceled(pPdStruct)) return;
+
+        // Entry requirements are reader compatibility, not the creator's release
+        // or a container revision. This API keeps the compatibility number in the low byte.
+        const quint32 nVersion = record.mapProperties.value(XBinary::FPART_PROP_VERSIONNEEDED).toUInt() & 0xFF;
+        nMinimumVersion = qMax(nMinimumVersion, nVersion);
+        bIsEncrypted = bIsEncrypted || record.mapProperties.value(XBinary::FPART_PROP_ENCRYPTED).toBool();
+    }
+
+    _SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_ZIP, "", "", 0);
+    // Enumeration is bounded by the caller and may stop before every entry.
+    ss.sInfo = QString("%1 records inspected").arg(pListArchiveRecords->count());
+    if (nMinimumVersion) {
+        ss.sInfo = XBinary::appendComma(ss.sInfo, QString("Declared minimum reader version: %1.%2 (inspected entries)").arg(nMinimumVersion / 10).arg(nMinimumVersion % 10));
+    }
+    if (bIsEncrypted) {
+        ss.sInfo = XBinary::appendComma(ss.sInfo, "Encrypted");
+    }
+
+    pBasicInfo->mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(pBasicInfo, &ss));
+}
+
+namespace {
+quint16 u16(const QByteArray &data, int offset)
+{
+    return qFromLittleEndian<quint16>(reinterpret_cast<const uchar *>(data.constData() + offset));
+}
+
+quint32 u32(const QByteArray &data, int offset)
+{
+    return qFromLittleEndian<quint32>(reinterpret_cast<const uchar *>(data.constData() + offset));
+}
+
+bool checkContainerHeader(XBinary &binary, qint64 size, BASIC_INFO *pBasicInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    const qint64 tailOffset = qMax(static_cast<qint64>(0), size - 65557);
+    const QByteArray tail = binary.read_array(tailOffset, size - tailOffset);
+    int end = tail.lastIndexOf(QByteArray("PK\x05\x06", 4));
+    while (end >= 0) {
+        if (tail.size() - end >= 22 && u16(tail, end + 20) == tail.size() - end - 22) break;
+        if (!end) return false;
+        end = tail.lastIndexOf(QByteArray("PK\x05\x06", 4), end - 1);
+    }
+    if (end < 0 || u16(tail, end + 4) || u16(tail, end + 6)) return false;
+    const quint16 count = u16(tail, end + 10);
+    if (count > 20000 || u16(tail, end + 8) != count) return false;
+    const qint64 directorySize = u32(tail, end + 12);
+    const qint64 directoryOffset = u32(tail, end + 16);
+    const qint64 endOffset = tailOffset + end;
+    // This fallback validates an ordinary single-disk central directory.
+    // ZIP64 local size placeholders are allowed; ZIP64 EOCD is not inferred.
+    if (directorySize > 4 * 1024 * 1024 || directorySize < static_cast<qint64>(count) * 46 ||
+        directoryOffset > endOffset || directorySize != endOffset - directoryOffset) return false;
+    const QByteArray directory = binary.read_array(directoryOffset, directorySize);
+    if (directory.size() != directorySize) return false;
+    QList<XArchive::RECORD> records;
+    int cursor = 0;
+    for (quint32 i = 0; i < count; ++i) {
+        if (!XBinary::isPdStructNotCanceled(pPdStruct) || directory.size() - cursor < 46 || u32(directory, cursor) != 0x02014b50) return false;
+        const int nameSize = u16(directory, cursor + 28);
+        const int recordSize = 46 + nameSize + u16(directory, cursor + 30) + u16(directory, cursor + 32);
+        if (recordSize > directory.size() - cursor || u16(directory, cursor + 34)) return false;
+        const qint64 localOffset = u32(directory, cursor + 42);
+        const qint64 packedSize = u32(directory, cursor + 20);
+        if (localOffset > directoryOffset || directoryOffset - localOffset < 30 || packedSize == Q_INT64_C(0xffffffff)) return false;
+        const QByteArray local = binary.read_array(localOffset, 30);
+        if (local.size() != 30 || u32(local, 0) != 0x04034b50 || u16(local, 8) != u16(directory, cursor + 10) || u16(local, 26) != nameSize) return false;
+        const qint64 dataOffset = localOffset + 30 + nameSize + u16(local, 28);
+        if (dataOffset > directoryOffset || packedSize > directoryOffset - dataOffset ||
+            binary.read_array(localOffset + 30, nameSize) != directory.mid(cursor + 46, nameSize)) return false;
+        // Data-descriptor fixtures can disagree with local flags/CRC. Such
+        // damage does not change the format of their complete ZIP headers.
+        XArchive::RECORD record = {};
+        record.mapProperties.insert(XBinary::FPART_PROP_VERSIONNEEDED, static_cast<quint32>(u16(directory, cursor + 6)));
+        record.mapProperties.insert(XBinary::FPART_PROP_ENCRYPTED, (u16(directory, cursor + 8) & 1) != 0 || u16(directory, cursor + 10) == 99);
+        records.append(record);
+        cursor += recordSize;
+    }
+    if (cursor != directory.size() || !XBinary::isPdStructNotCanceled(pPdStruct)) return false;
+    pBasicInfo->id.fileType = XBinary::FT_ARCHIVE;
+    NFD_ZIP::handle_Container(pBasicInfo, &records, pPdStruct);
+    NFD_Binary::SCAN_STRUCT &record = pBasicInfo->mapResultArchives[XScanEngine::RECORD_NAME_ZIP];
+    record.sInfo = XBinary::appendComma(record.sInfo, "central/local headers verified");
+    return true;
+}
+}  // namespace
+
+bool NFD_ZIP::handle_ContainerHeader(QIODevice *pDevice, BASIC_INFO *pBasicInfo, XBinary::PDSTRUCT *pPdStruct)
+{
+    if (!pDevice || !pBasicInfo || !pDevice->isOpen() || !pDevice->isReadable() || pDevice->isSequential() ||
+        !XBinary::isPdStructNotCanceled(pPdStruct)) return false;
+    XBinary binary(pDevice);
+    const qint64 size = binary.getSize();
+    if (size < 22) return false;
+    const qint64 saved = pDevice->pos();
+    const bool found = checkContainerHeader(binary, size, pBasicInfo, pPdStruct);
+    if (saved >= 0) pDevice->seek(saved);
+    return found;
 }
 
 void NFD_ZIP::handle_Microsoftoffice(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct)

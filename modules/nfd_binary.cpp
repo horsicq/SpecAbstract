@@ -24,6 +24,11 @@
 #include "xpe.h"
 #include "xarchive.h"
 #include "nfd_text.h"
+#include "nfd_archiveheaders.h"
+#include "nfd_compression.h"
+#include "nfd_containers.h"
+#include "nfd_zip.h"
+#include "nfd_legacy.h"
 
 #include <QRegularExpression>
 
@@ -2517,55 +2522,35 @@ void NFD_Binary::handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
 {
     XBinary binary(pDevice, pOptions->bIsImage);
 
-    // 7-Zip
-    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_7Z)) && (pBinaryInfo->basic_info.id.nSize >= 64)) {
-        //        // TODO more options
-        //        SCANS_STRUCT ss=pBinaryInfo->basic_info.mapHeaderDetects.value(RECORD_NAME_7Z);
-
-        //        if(ss.type==RECORD_TYPE_ARCHIVE)
-        //        {
-        //            ss.sVersion=QString("%1.%2").arg(XBinary::hexToUint8(pBinaryInfo->basic_info.sHeaderSignature.mid(6*2,2))).arg(XBinary::hexToUint8(pBinaryInfo->basic_info.sHeaderSignature.mid(7*2,2)));
-        //            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name,scansToScan(&(pBinaryInfo->basic_info),&ss));
-        //        }
-
-        XSevenZip xsevenzip(pDevice);
-
-        if (xsevenzip.isValid(pPdStruct)) {
-            pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
-
-            SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_7Z);
-
-            ss.sVersion = xsevenzip.getVersion();
-#ifdef QT_DEBUG
-            qint32 nNumberOfRecords = xsevenzip.getNumberOfRecords(pPdStruct);
-            Q_UNUSED(nNumberOfRecords)
-#endif
-            //            ss.sInfo=QString("%1 records").arg(xsevenzip.getNumberOfRecords());
-
-            // TODO options
-            // TODO files
-            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    // Check outer containers first: a DMG data fork can itself start with zlib.
+    if (NFDContainers::detect(pDevice, pBinaryInfo, pPdStruct) || NFDLegacy::detect(pDevice, pBinaryInfo, pPdStruct) ||
+        NFDArchiveHeaders::detect(pDevice, pBinaryInfo, pPdStruct) || NFDCompression::detect(pDevice, pBinaryInfo, pPdStruct)) {
+        pBinaryInfo->basic_info.mapResultFormats.remove(XScanEngine::RECORD_NAME_PLAIN);
+        pBinaryInfo->basic_info.mapResultTexts.clear();
+        // Prefer the structural archive result over an earlier header-only
+        // record for the same family (notably ar and Debian packages).
+        for (QMap<XScanEngine::RECORD_NAME, NFD_Binary::SCAN_STRUCT>::const_iterator it = pBinaryInfo->basic_info.mapResultArchives.constBegin();
+             it != pBinaryInfo->basic_info.mapResultArchives.constEnd(); ++it) {
+            if (it.key() != XScanEngine::RECORD_NAME_UNKNOWN) pBinaryInfo->basic_info.mapResultFormats.remove(it.key());
         }
+        return;
     }
+
     // ZIP
-    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ZIP)) && (pBinaryInfo->basic_info.id.nSize >= 64))  // TODO min size
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ZIP)) && (pBinaryInfo->basic_info.id.nSize >= 22))
     {
         XZip xzip(pDevice);
 
         if (xzip.isValid(pPdStruct)) {
             pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
-            // TODO deep scan
-            SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_ZIP);
-
-            ss.sVersion = xzip.getVersion();
-            ss.sInfo = QString("%1 records").arg(xzip.getNumberOfRecords(pPdStruct));
-
-            if (xzip.isEncrypted()) {
-                ss.sInfo = XBinary::appendComma(ss.sInfo, "Encrypted");
+            const QList<XArchive::RECORD> listRecords = xzip.getRecords(20000, pPdStruct);
+            NFD_ZIP::handle_Container(&(pBinaryInfo->basic_info), &listRecords, pPdStruct);
+        } else {
+            const XBinary::FT originalType = pBinaryInfo->basic_info.id.fileType;
+            pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
+            if (!NFD_ZIP::handle_ContainerHeader(pDevice, &(pBinaryInfo->basic_info), pPdStruct)) {
+                pBinaryInfo->basic_info.id.fileType = originalType;
             }
-
-            // TODO files
-            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
         }
     }
     // GZIP
@@ -2629,7 +2614,8 @@ void NFD_Binary::handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
         }
     }
     // RAR
-    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_RAR)) && (pBinaryInfo->basic_info.id.nSize >= 64)) {
+    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_RAR)) &&
+             (binary.read_array(0, 4) == "RE~^") && (pBinaryInfo->basic_info.id.nSize >= 7)) {
         XRar xrar(pDevice);
 
         if (xrar.isValid(pPdStruct)) {
@@ -2661,40 +2647,6 @@ void NFD_Binary::handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
         // TODO files
         pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
-    // ARJ
-    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ARJ)) && (pBinaryInfo->basic_info.id.nSize >= 4)) {
-        pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
-        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_ARJ);
-
-        // TODO options
-        // TODO files
-        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
-    }
-    // LHA
-    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_LHA)) && (pBinaryInfo->basic_info.id.nSize >= 4)) {
-        SCANS_STRUCT ss = pBinaryInfo->basic_info.mapHeaderDetects.value(XScanEngine::RECORD_NAME_LHA);
-
-        bool bDetected = false;
-
-        switch (binary.read_uint8(0x5)) {
-            case 0x30: bDetected = 1; break;
-            case 0x31: bDetected = 1; break;
-            case 0x32: bDetected = 1; break;
-            case 0x33: bDetected = 1; break;
-            case 0x34: bDetected = 1; break;
-            case 0x35: bDetected = 1; break;
-            case 0x36: bDetected = 1; break;
-            case 0x64: bDetected = 1; break;
-            case 0x73: bDetected = 1; break;
-        }
-
-        if (bDetected) {
-            pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
-            // TODO options
-            // TODO files
-            pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
-        }
-    }
     // BZIP2
     else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_BZIP2)) && (pBinaryInfo->basic_info.id.nSize >= 9)) {
         pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
@@ -2704,16 +2656,9 @@ void NFD_Binary::handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
         // TODO files
         pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
     }
-    // TAR
-    else if ((pBinaryInfo->basic_info.id.nSize >= 500) && (binary.getSignature(0x100, 6) == "007573746172"))  // "00'ustar'"
-    {
-        pBinaryInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;
-
-        SCANS_STRUCT ss = NFD_Binary::getScansStruct(0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, XScanEngine::RECORD_NAME_TAR, "", "", 0);
-
-        // TODO options
-        // TODO files
-        pBinaryInfo->basic_info.mapResultArchives.insert(ss.name, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &ss));
+    if (!pBinaryInfo->basic_info.mapResultArchives.isEmpty()) {
+        pBinaryInfo->basic_info.mapResultFormats.remove(XScanEngine::RECORD_NAME_PLAIN);
+        pBinaryInfo->basic_info.mapResultTexts.clear();
     }
 }
 

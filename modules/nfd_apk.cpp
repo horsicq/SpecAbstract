@@ -842,6 +842,11 @@ NFD_APK::APKINFO_STRUCT NFD_APK::getInfo(QIODevice *pDevice, XScanEngine::SCANID
         NFD_APK::APK_handle(pDevice, pOptions, &result, pPdStruct);
         NFD_APK::APK_handle_FixDetects(pDevice, pOptions, &result, pPdStruct);
 
+        // All-types scanning already invokes the ZIP detector separately.
+        if (!pOptions->bIsAllTypesScan) {
+            NFD_ZIP::handle_Container(&(result.basic_info), &(result.listArchiveRecords), pPdStruct);
+        }
+
         NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);
     }
 

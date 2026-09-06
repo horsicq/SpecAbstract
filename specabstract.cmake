@@ -13,6 +13,14 @@ set(SPECABSTRACT_SOURCES
     ${CMAKE_CURRENT_LIST_DIR}/specabstract.h
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_binary.cpp
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_binary.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_compression.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_compression.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_containers.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_containers.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_legacy.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_legacy.h
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_archiveheaders.cpp
+    ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_archiveheaders.h
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_msdos.cpp
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_msdos.h
     ${CMAKE_CURRENT_LIST_DIR}/modules/nfd_pe.cpp

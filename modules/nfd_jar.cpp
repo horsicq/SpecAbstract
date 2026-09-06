@@ -19,6 +19,7 @@
  * SOFTWARE.
  */
 #include "nfd_jar.h"
+#include "nfd_zip.h"
 
 NFD_JAR::NFD_JAR(XZip *pZip, XBinary::FILEPART filePart, const OPTIONS &scanOptions, XBinary::PDSTRUCT *pPdStruct) : JAR_Script(pZip, filePart, scanOptions, pPdStruct)
 {
@@ -153,6 +154,11 @@ NFD_JAR::JARINFO_STRUCT NFD_JAR::getInfo(QIODevice *pDevice, XScanEngine::SCANID
                     result.basic_info.mapResultTools.insert(ss.name, NFD_Binary::scansToScan(&(result.basic_info), &ss));
                 }
             }
+        }
+
+        // All-types scanning already invokes the ZIP detector separately.
+        if (!pOptions->bIsAllTypesScan) {
+            NFD_ZIP::handle_Container(&(result.basic_info), &(result.listArchiveRecords), pPdStruct);
         }
 
         NFD_Binary::_handleResult(&(result.basic_info), pPdStruct);

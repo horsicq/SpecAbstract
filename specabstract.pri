@@ -6,6 +6,10 @@ DEPENDPATH += $$PWD/modules
 HEADERS += \
     $$PWD/specabstract.h \
     $$PWD/modules/nfd_binary.h \
+    $$PWD/modules/nfd_compression.h \
+    $$PWD/modules/nfd_containers.h \
+    $$PWD/modules/nfd_legacy.h \
+    $$PWD/modules/nfd_archiveheaders.h \
     $$PWD/modules/nfd_msdos.h \
     $$PWD/modules/nfd_pe.h \
     $$PWD/modules/nfd_elf.h \
@@ -39,6 +43,10 @@ SOURCES += \
     $$PWD/signatures.cpp \
     $$PWD/specabstract.cpp \
     $$PWD/modules/nfd_binary.cpp \
+    $$PWD/modules/nfd_compression.cpp \
+    $$PWD/modules/nfd_containers.cpp \
+    $$PWD/modules/nfd_legacy.cpp \
+    $$PWD/modules/nfd_archiveheaders.cpp \
     $$PWD/modules/nfd_msdos.cpp \
     $$PWD/modules/nfd_pe.cpp \
     $$PWD/modules/nfd_elf.cpp \

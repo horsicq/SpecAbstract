@@ -50,6 +50,10 @@ public:
 
     static ZIPINFO_STRUCT getInfo(QIODevice *pDevice, XScanEngine::SCANID parentId, XScanEngine::SCAN_OPTIONS *pOptions, qint64 nOffset, XBinary::PDSTRUCT *pPdStruct);
 
+    // The caller must validate the ZIP before publishing its container record.
+    static void handle_Container(BASIC_INFO *pBasicInfo, const QList<XArchive::RECORD> *pListArchiveRecords, XBinary::PDSTRUCT *pPdStruct);
+    static bool handle_ContainerHeader(QIODevice *pDevice, BASIC_INFO *pBasicInfo, XBinary::PDSTRUCT *pPdStruct);
+
     static void handle_Microsoftoffice(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
     static void handle_OpenOffice(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, ZIPINFO_STRUCT *pZipInfo, XBinary::PDSTRUCT *pPdStruct);
     static void handle_Metainfos(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOptions, BASIC_INFO *pBasicInfo, QList<XArchive::RECORD> *pListArchiveRecords,
