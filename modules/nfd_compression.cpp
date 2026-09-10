@@ -54,12 +54,16 @@ struct BitReader {
 
 bool powerPacker(const QByteArray &data, NFD_Binary::BINARYINFO_STRUCT *info, XBinary::PDSTRUCT *pd)
 {
-    if (data.size() < 13 || !data.startsWith("PP20")) return false;
-    const quint32 mode = qFromBigEndian<quint32>(reinterpret_cast<const uchar *>(data.constData() + 4));
+    // PPLS is PP20 with one extra 32-bit field, so its mode word sits at +8
+    const bool isPPLS = data.startsWith("PPLS");
+    if (data.size() < (isPPLS ? 17 : 13) || !(isPPLS || data.startsWith("PP20"))) return false;
+    const quint32 mode = qFromBigEndian<quint32>(reinterpret_cast<const uchar *>(data.constData() + (isPPLS ? 8 : 4)));
     if (mode != 0x09090909 && mode != 0x090a0a0a && mode != 0x090a0b0b && mode != 0x090a0c0c && mode != 0x090a0c0d) return false;
     const quint32 trailer = qFromBigEndian<quint32>(reinterpret_cast<const uchar *>(data.constData() + data.size() - 4));
     const quint32 outputSize = trailer >> 8;
     if (!outputSize || outputSize > static_cast<quint64>(MAX_OUTPUT) || (trailer & 0xff) > 31) return false;
+    const int modeBase = isPPLS ? 8 : 4;
+    const int headerSize = modeBase + 4;
     int cursor = data.size() - 5;
     int bit = 0;
     BitReader readBits(data, cursor, bit);
@@ -82,7 +86,7 @@ bool powerPacker(const QByteArray &data, NFD_Binary::BINARYINFO_STRUCT *info, XB
         }
         quint32 modeIndex = 0, distance = 0, count = 0;
         if (!readBits(2, modeIndex)) return false;
-        quint32 width = static_cast<quint8>(data.at(4 + static_cast<int>(modeIndex)));
+        quint32 width = static_cast<quint8>(data.at(modeBase + static_cast<int>(modeIndex)));
         if (modeIndex == 3) {
             if (!readBits(1, value)) return false;
             if (!value) width = 7;
@@ -101,8 +105,8 @@ bool powerPacker(const QByteArray &data, NFD_Binary::BINARYINFO_STRUCT *info, XB
         produced += count;
     }
     // Only alignment bits may precede the consumed stream.
-    if ((cursor - 7) * 8 - bit > 31 || !XBinary::isPdStructNotCanceled(pd)) return false;
-    return add(info, XScanEngine::RECORD_NAME_UNKNOWN, "PowerPacker (PP20)",
+    if ((cursor - (headerSize - 1)) * 8 - bit > 31 || !XBinary::isPdStructNotCanceled(pd)) return false;
+    return add(info, XScanEngine::RECORD_NAME_UNKNOWN, isPPLS ? "PowerPacker (PPLS)" : "PowerPacker (PP20)",
                QString("bitstream structure verified, %1 bytes unpacked").arg(outputSize));
 }
 
@@ -174,7 +178,8 @@ bool NFDCompression::detect(QIODevice *pDevice, NFD_Binary::BINARYINFO_STRUCT *p
     bool found = false;
     if (header.size() >= 12) {
         const XAncientDecoder::TYPE type = XAncientDecoder::identify(header);
-        const bool knownMagic = header.startsWith("PP20") || type == XAncientDecoder::TYPE_RNC || type == XAncientDecoder::TYPE_TPWM ||
+        const bool isPowerPacker = header.startsWith("PP20") || header.startsWith("PPLS");
+        const bool knownMagic = isPowerPacker || type == XAncientDecoder::TYPE_RNC || type == XAncientDecoder::TYPE_TPWM ||
                                 type == XAncientDecoder::TYPE_UNIX_PACK || type == XAncientDecoder::TYPE_FREEZE;
         const quint32 dictionary = qFromLittleEndian<quint32>(reinterpret_cast<const uchar *>(header.constData() + 1));
         const bool possibleLzma = header.size() >= 14 && static_cast<quint8>(header.at(0)) < 225 && header.at(13) == 0 && dictionary >= 4096 &&
@@ -183,7 +188,7 @@ bool NFDCompression::detect(QIODevice *pDevice, NFD_Binary::BINARYINFO_STRUCT *p
         if (knownMagic || possibleLzma) {
             const QByteArray data = binary.read_array(0, size);
             if (data.size() == size && XBinary::isPdStructNotCanceled(pPdStruct)) {
-                found = header.startsWith("PP20") ? powerPacker(data, pInfo, pPdStruct) :
+                found = isPowerPacker ? powerPacker(data, pInfo, pPdStruct) :
                         knownMagic ? ancient(data, pInfo, pPdStruct) : lzma(data, pInfo, pPdStruct);
             }
         }
