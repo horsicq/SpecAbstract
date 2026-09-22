@@ -3,7 +3,6 @@
  */
 #include "nfd_legacy.h"
 
-#include <QPointer>
 #include <QSet>
 #include <QtEndian>
 #include <algorithm>
@@ -24,7 +23,7 @@ class Reader {
 public:
     Reader(QIODevice *device, XBinary::PDSTRUCT *pd) : device(device), pd(pd), saved(device->pos()), size(device->size()), budget(MAX_READ) {}
     ~Reader() { if (device && saved >= 0) device->seek(saved); }
-    bool active() { return XBinary::isPdStructNotCanceled(pd) && !device.isNull(); }
+    bool active() { return XBinary::isPdStructNotCanceled(pd) && device; }
     QByteArray read(qint64 offset, qint64 length)
     {
         if (!within(size, offset, length) || length > budget || !active() || !device->seek(offset)) return QByteArray();
@@ -33,7 +32,7 @@ public:
         if (!device || data.size() != length || !active()) return QByteArray();
         return data;
     }
-    QPointer<QIODevice> device;
+    QIODevice *device;
     XBinary::PDSTRUCT *pd;
     qint64 saved, size, budget;
 };
