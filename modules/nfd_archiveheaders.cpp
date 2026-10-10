@@ -40,8 +40,7 @@ quint32 crc32(const QByteArray &data)
     return XBinary::_getCRC32(data, 0xffffffffU, XBinary::_getCRC32Table_EDB88320()) ^ 0xffffffffU;
 }
 
-bool add(NFD_Binary::BINARYINFO_STRUCT *info, XScanEngine::RECORD_NAME name, const QString &version, const QString &detail,
-         const QString &customName = QString())
+bool add(NFD_Binary::BINARYINFO_STRUCT *info, XScanEngine::RECORD_NAME name, const QString &version, const QString &detail, const QString &customName = QString())
 {
     info->basic_info.id.fileType = XBinary::FT_ARCHIVE;
     NFD_Binary::SCANS_STRUCT record = NFD_Binary::getScansStruct(0, XBinary::FT_ARCHIVE, XScanEngine::RECORD_TYPE_FORMAT, name, version, detail, 0);
@@ -82,7 +81,8 @@ bool lha(XBinary &binary, const QByteArray &header, NFD_Binary::BINARYINFO_STRUC
     if (level == 2 && byte(header, 23) == 'K') headerSize += 2;
     const quint64 minimum = level == 0 ? 24 : level == 1 ? 27 : level == 2 ? 26 : 32;
     if (headerSize < minimum || headerSize > 1024 * 1024 || headerSize > static_cast<quint64>(binary.getSize()) ||
-        le32(header, 7) > static_cast<quint64>(binary.getSize()) - headerSize) return false;
+        le32(header, 7) > static_cast<quint64>(binary.getSize()) - headerSize)
+        return false;
     const QByteArray full = binary.read_array(0, static_cast<qint64>(headerSize));
     if (static_cast<quint64>(full.size()) != headerSize) return false;
     if (level < 2) {
@@ -169,7 +169,8 @@ bool rar(XBinary &binary, const QByteArray &header, NFD_Binary::BINARYINFO_STRUC
             if (body.size() - cursor < required) return false;
         }
         if (dataSize > static_cast<quint64>(binary.getSize()) - 12 - static_cast<quint64>(block.size())) return false;
-        return add(info, XScanEngine::RECORD_NAME_RAR, "5.0", type == 4 ? "RAR5 format; encrypted archive header CRC verified" : "RAR5 format; archive header CRC verified");
+        return add(info, XScanEngine::RECORD_NAME_RAR, "5.0",
+                   type == 4 ? "RAR5 format; encrypted archive header CRC verified" : "RAR5 format; archive header CRC verified");
     }
     return false;
 }
@@ -210,7 +211,8 @@ bool compression(XBinary &binary, const QByteArray &header, NFD_Binary::BINARYIN
         const quint8 flags = byte(header, 2);
         const int bits = flags & 0x1f;
         if (!(flags & 0x60) && bits >= 9 && bits <= 16 && !(byte(header, 4) & 1)) {
-            return add(info, XScanEngine::RECORD_NAME_UNKNOWN, QString(), QString("LZW, %1-bit maximum%2").arg(bits).arg(flags & 0x80 ? ", block mode" : ""), "compress (Z)");
+            return add(info, XScanEngine::RECORD_NAME_UNKNOWN, QString(), QString("LZW, %1-bit maximum%2").arg(bits).arg(flags & 0x80 ? ", block mode" : ""),
+                       "compress (Z)");
         }
     }
     if (header.size() >= 36 && header.left(4) == "LZIP" && byte(header, 4) == 1) {
@@ -246,11 +248,15 @@ bool compression(XBinary &binary, const QByteArray &header, NFD_Binary::BINARYIN
         if (flags & 0x1000) checksum = crc32(checked);
         else {
             quint32 a = 1, b = 0;
-            for (char ch : checked) { a = (a + static_cast<quint8>(ch)) % 65521; b = (b + a) % 65521; }
+            for (char ch : checked) {
+                a = (a + static_cast<quint8>(ch)) % 65521;
+                b = (b + a) % 65521;
+            }
             checksum = (b << 16) | a;
         }
         if (checksum != be32(full, full.size() - 4)) return false;
-        QString detail = QString("header checksum verified, method %1, writer %2, LZO library %3").arg(method).arg(versionText(version)).arg(versionText(be16(header, 11)));
+        QString detail =
+            QString("header checksum verified, method %1, writer %2, LZO library %3").arg(method).arg(versionText(version)).arg(versionText(be16(header, 11)));
         if (version >= 0x940) detail += ", minimum reader " + versionText(be16(header, 13));
         return add(info, XScanEngine::RECORD_NAME_UNKNOWN, QString(), detail, "lzop");
     }
@@ -266,8 +272,8 @@ bool NFDArchiveHeaders::detect(QIODevice *pDevice, NFD_Binary::BINARYINFO_STRUCT
     if (pDevice->isSequential() || binary.getSize() <= 0) return false;
     const qint64 saved = pDevice->pos();
     const QByteArray header = binary.read_array(0, qMin(binary.getSize(), static_cast<qint64>(512)));
-    const bool found = sevenZip(binary, header, pInfo) || rar(binary, header, pInfo) || lha(binary, header, pInfo) || tar(header, pInfo) ||
-                       compression(binary, header, pInfo);
+    const bool found =
+        sevenZip(binary, header, pInfo) || rar(binary, header, pInfo) || lha(binary, header, pInfo) || tar(header, pInfo) || compression(binary, header, pInfo);
     if (saved >= 0) pDevice->seek(saved);
     return found;
 }

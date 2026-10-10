@@ -6,6 +6,6 @@
 namespace NFDContainers {
 // Content-only, bounded recognition. Restores the device position.
 bool detect(QIODevice *pDevice, NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo, XBinary::PDSTRUCT *pPdStruct);
-}
+}  // namespace NFDContainers
 
 #endif  // NFD_CONTAINERS_H

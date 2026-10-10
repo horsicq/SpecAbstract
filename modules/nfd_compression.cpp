@@ -14,13 +14,17 @@ const qint64 MAX_DECODER_MEMORY = 32 * 1024 * 1024;
 
 class DiscardDevice : public QIODevice {
 protected:
-    qint64 readData(char *, qint64) override { return -1; }
+    qint64 readData(char *, qint64) override
+    {
+        return -1;
+    }
     qint64 writeData(const char *, qint64 size) override
     {
         if (size < 0 || size > MAX_OUTPUT - m_count) return -1;
         m_count += size;
         return size;
     }
+
 private:
     qint64 m_count = 0;
 };
@@ -36,14 +40,19 @@ bool add(NFD_Binary::BINARYINFO_STRUCT *info, XScanEngine::RECORD_NAME name, con
 
 // Reads the PowerPacker stream backwards, advancing the shared cursor/bit pair.
 struct BitReader {
-    BitReader(const QByteArray &data, int &cursor, int &bit) : data(data), cursor(cursor), bit(bit) {}
+    BitReader(const QByteArray &data, int &cursor, int &bit) : data(data), cursor(cursor), bit(bit)
+    {
+    }
     bool operator()(quint32 count, quint32 &value)
     {
         value = 0;
         for (quint32 i = 0; i < count; ++i) {
             if (cursor < 8) return false;
             value = (value << 1) | ((static_cast<quint8>(data.at(cursor)) >> bit) & 1U);
-            if (++bit == 8) { bit = 0; --cursor; }
+            if (++bit == 8) {
+                bit = 0;
+                --cursor;
+            }
         }
         return true;
     }
@@ -80,7 +89,8 @@ bool powerPacker(const QByteArray &data, NFD_Binary::BINARYINFO_STRUCT *info, XB
                 if (!readBits(2, value) || value > outputSize - produced - count) return false;
                 count += value;
             } while (value == 3);
-            for (quint32 i = 0; i < count; ++i) if (!readBits(8, value)) return false;
+            for (quint32 i = 0; i < count; ++i)
+                if (!readBits(8, value)) return false;
             produced += count;
             if (produced == outputSize) break;
         }
@@ -116,11 +126,11 @@ bool ancient(const QByteArray &data, NFD_Binary::BINARYINFO_STRUCT *info, XBinar
     const bool rnc = type == XAncientDecoder::TYPE_RNC;
     if (!rnc && type != XAncientDecoder::TYPE_TPWM && type != XAncientDecoder::TYPE_UNIX_PACK && type != XAncientDecoder::TYPE_FREEZE) return false;
     XAncientDecoder::INFO description;
-    if (!XAncientDecoder::describe(data, type, &description) || (rnc && description.packedSize != data.size()) ||
-        description.rawSize <= 0 || description.rawSize > MAX_OUTPUT || description.imageSize > MAX_OUTPUT || !XBinary::isPdStructNotCanceled(pd)) return false;
+    if (!XAncientDecoder::describe(data, type, &description) || (rnc && description.packedSize != data.size()) || description.rawSize <= 0 ||
+        description.rawSize > MAX_OUTPUT || description.imageSize > MAX_OUTPUT || !XBinary::isPdStructNotCanceled(pd))
+        return false;
     QByteArray raw;
-    if (!XAncientDecoder::decode(data, type, &raw, &description, nullptr, true) || raw.size() != description.rawSize ||
-        !XBinary::isPdStructNotCanceled(pd)) return false;
+    if (!XAncientDecoder::decode(data, type, &raw, &description, nullptr, true) || raw.size() != description.rawSize || !XBinary::isPdStructNotCanceled(pd)) return false;
     if (description.packedSize <= 0 || description.packedSize > data.size()) return false;
     const qint64 trailingSize = data.size() - description.packedSize;
     if (type == XAncientDecoder::TYPE_TPWM && trailingSize) return false;
@@ -140,7 +150,8 @@ bool lzma(const QByteArray &data, NFD_Binary::BINARYINFO_STRUCT *info, XBinary::
     // LZMA-alone has no magic. Use plausible encoder dictionaries only as a
     // prefilter; a complete stream decode below is required for recognition.
     if (dictionary < 4096 || dictionary > static_cast<quint64>(MAX_OUTPUT) ||
-        ((dictionary & (dictionary - 1)) && (dictionary < 3 * 1024 * 1024 || (dictionary & 0xfffff)))) return false;
+        ((dictionary & (dictionary - 1)) && (dictionary < 3 * 1024 * 1024 || (dictionary & 0xfffff))))
+        return false;
     const quint64 declared = qFromLittleEndian<quint64>(reinterpret_cast<const uchar *>(data.constData() + 5));
     const bool unknownSize = declared == Q_UINT64_C(0xffffffffffffffff);
     if (!unknownSize && declared > static_cast<quint64>(MAX_OUTPUT)) return false;
@@ -160,8 +171,9 @@ bool lzma(const QByteArray &data, NFD_Binary::BINARYINFO_STRUCT *info, XBinary::
     // This existing policy also bounds the decoder's transient reservations.
     state.mapUnpackProperties.insert(XBinary::UNPACK_PROP_MAX_OUTPUT_SIZE, MAX_DECODER_MEMORY);
     if (!unknownSize) state.mapProperties.insert(XBinary::FPART_PROP_UNCOMPRESSEDSIZE, static_cast<qint64>(declared));
-    if (!XLZMADecoder::decompress(&state, properties, pd) || state.nCountInput != input.size() ||
-        state.nCountOutput < 0 || state.nCountOutput > MAX_OUTPUT || !XBinary::isPdStructNotCanceled(pd)) return false;
+    if (!XLZMADecoder::decompress(&state, properties, pd) || state.nCountInput != input.size() || state.nCountOutput < 0 || state.nCountOutput > MAX_OUTPUT ||
+        !XBinary::isPdStructNotCanceled(pd))
+        return false;
     return add(info, XScanEngine::RECORD_NAME_LZMA, "LZMA",
                QString("LZMA-alone stream verified, %1 bytes unpacked, %2-byte dictionary").arg(state.nCountOutput).arg(dictionary));
 }
@@ -179,8 +191,8 @@ bool NFDCompression::detect(QIODevice *pDevice, NFD_Binary::BINARYINFO_STRUCT *p
     if (header.size() >= 12) {
         const XAncientDecoder::TYPE type = XAncientDecoder::identify(header);
         const bool isPowerPacker = header.startsWith("PP20") || header.startsWith("PPLS");
-        const bool knownMagic = isPowerPacker || type == XAncientDecoder::TYPE_RNC || type == XAncientDecoder::TYPE_TPWM ||
-                                type == XAncientDecoder::TYPE_UNIX_PACK || type == XAncientDecoder::TYPE_FREEZE;
+        const bool knownMagic = isPowerPacker || type == XAncientDecoder::TYPE_RNC || type == XAncientDecoder::TYPE_TPWM || type == XAncientDecoder::TYPE_UNIX_PACK ||
+                                type == XAncientDecoder::TYPE_FREEZE;
         const quint32 dictionary = qFromLittleEndian<quint32>(reinterpret_cast<const uchar *>(header.constData() + 1));
         const bool possibleLzma = header.size() >= 14 && static_cast<quint8>(header.at(0)) < 225 && header.at(13) == 0 && dictionary >= 4096 &&
                                   dictionary <= static_cast<quint64>(MAX_OUTPUT) &&
@@ -188,8 +200,7 @@ bool NFDCompression::detect(QIODevice *pDevice, NFD_Binary::BINARYINFO_STRUCT *p
         if (knownMagic || possibleLzma) {
             const QByteArray data = binary.read_array(0, size);
             if (data.size() == size && XBinary::isPdStructNotCanceled(pPdStruct)) {
-                found = isPowerPacker ? powerPacker(data, pInfo, pPdStruct) :
-                        knownMagic ? ancient(data, pInfo, pPdStruct) : lzma(data, pInfo, pPdStruct);
+                found = isPowerPacker ? powerPacker(data, pInfo, pPdStruct) : knownMagic ? ancient(data, pInfo, pPdStruct) : lzma(data, pInfo, pPdStruct);
             }
         }
     }

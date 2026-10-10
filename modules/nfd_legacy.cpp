@@ -21,9 +21,17 @@ bool within(qint64 total, qint64 offset, qint64 length)
 
 class Reader {
 public:
-    Reader(QIODevice *device, XBinary::PDSTRUCT *pd) : device(device), pd(pd), saved(device->pos()), size(device->size()), budget(MAX_READ) {}
-    ~Reader() { if (device && saved >= 0) device->seek(saved); }
-    bool active() { return XBinary::isPdStructNotCanceled(pd) && device; }
+    Reader(QIODevice *device, XBinary::PDSTRUCT *pd) : device(device), pd(pd), saved(device->pos()), size(device->size()), budget(MAX_READ)
+    {
+    }
+    ~Reader()
+    {
+        if (device && saved >= 0) device->seek(saved);
+    }
+    bool active()
+    {
+        return XBinary::isPdStructNotCanceled(pd) && device;
+    }
     QByteArray read(qint64 offset, qint64 length)
     {
         if (!within(size, offset, length) || length > budget || !active() || !device->seek(offset)) return QByteArray();
@@ -37,11 +45,26 @@ public:
     qint64 saved, size, budget;
 };
 
-quint8 u8(const QByteArray &b, int n) { return static_cast<quint8>(b.at(n)); }
-quint16 be16(const QByteArray &b, int n) { return qFromBigEndian<quint16>(b.constData() + n); }
-quint32 be32(const QByteArray &b, int n) { return qFromBigEndian<quint32>(b.constData() + n); }
-quint16 le16(const QByteArray &b, int n) { return qFromLittleEndian<quint16>(b.constData() + n); }
-quint32 le32(const QByteArray &b, int n) { return qFromLittleEndian<quint32>(b.constData() + n); }
+quint8 u8(const QByteArray &b, int n)
+{
+    return static_cast<quint8>(b.at(n));
+}
+quint16 be16(const QByteArray &b, int n)
+{
+    return qFromBigEndian<quint16>(b.constData() + n);
+}
+quint32 be32(const QByteArray &b, int n)
+{
+    return qFromBigEndian<quint32>(b.constData() + n);
+}
+quint16 le16(const QByteArray &b, int n)
+{
+    return qFromLittleEndian<quint16>(b.constData() + n);
+}
+quint32 le32(const QByteArray &b, int n)
+{
+    return qFromLittleEndian<quint32>(b.constData() + n);
+}
 
 quint16 crc16(const QByteArray &b, int start, int length, bool ccitt)
 {
@@ -68,7 +91,10 @@ quint32 crc32(const QByteArray &b)
     return crc ^ 0xffffffffU;
 }
 
-qint64 padded(qint64 n) { return (n + 127) & ~qint64(127); }
+qint64 padded(qint64 n)
+{
+    return (n + 127) & ~qint64(127);
+}
 
 struct Result {
     QString name, version, info;
@@ -84,8 +110,10 @@ bool macBinary(Reader &r, const QByteArray &h, Result &out)
         // MacBinary I has no magic or CRC. Require its reserved/name padding and
         // exact fork framing to avoid accepting arbitrary binary zero fields.
         if (minimum || be16(h, 124)) return false;
-        for (int i = 2 + u8(h, 1); i < 65; ++i) if (h.at(i)) return false;
-        for (int i = 101; i < 128; ++i) if (h.at(i)) return false;
+        for (int i = 2 + u8(h, 1); i < 65; ++i)
+            if (h.at(i)) return false;
+        for (int i = 101; i < 128; ++i)
+            if (h.at(i)) return false;
     } else if (version == 129) {
         if (minimum != 129 || be16(h, 124) != crc16(h, 0, 124, true)) return false;
     } else if (version == 130) {
@@ -95,7 +123,8 @@ bool macBinary(Reader &r, const QByteArray &h, Result &out)
     if (!data && !resource && !comment) return false;
     const qint64 end = 128 + padded(secondary) + padded(data) + padded(resource) + padded(comment);
     if (end != r.size) return false;
-    out.name = QStringLiteral("MacBinary"); out.version = (version == 0) ? QStringLiteral("I") : (version == 129) ? QStringLiteral("II") : QStringLiteral("III");
+    out.name = QStringLiteral("MacBinary");
+    out.version = (version == 0) ? QStringLiteral("I") : (version == 129) ? QStringLiteral("II") : QStringLiteral("III");
     out.wrapper = true;
     return true;
 }
@@ -121,10 +150,12 @@ bool appleSingle(Reader &r, const QByteArray &h, Result &out)
         end = qMax(end, offset + length);
     }
     std::sort(ranges.begin(), ranges.end());
-    for (int i = 1; i < ranges.size(); ++i) if (ranges.at(i).first < ranges.at(i - 1).second) return false;
+    for (int i = 1; i < ranges.size(); ++i)
+        if (ranges.at(i).first < ranges.at(i - 1).second) return false;
     if (end != r.size || !r.active()) return false;
     out.name = (be32(h, 0) == 0x00051600U) ? QStringLiteral("AppleSingle") : QStringLiteral("AppleDouble");
-    out.version = (version == 0x00010000U) ? QStringLiteral("1") : QStringLiteral("2"); out.wrapper = true;
+    out.version = (version == 0x00010000U) ? QStringLiteral("1") : QStringLiteral("2");
+    out.wrapper = true;
     return true;
 }
 
@@ -145,7 +176,8 @@ bool binHex(Reader &r, const QByteArray &prefix, Result &out)
         if (c == '\r' || c == '\n') continue;
         const int digit = alphabet.indexOf(c);
         if (digit < 0) return false;
-        bits = (bits << 6) | quint32(digit); available += 6;
+        bits = (bits << 6) | quint32(digit);
+        available += 6;
         if (available < 8) continue;
         available -= 8;
         const quint8 value = static_cast<quint8>((bits >> available) & 0xffU);
@@ -171,7 +203,10 @@ bool binHex(Reader &r, const QByteArray &prefix, Result &out)
     if (header.size() != wanted || u8(header, u8(header, 0) + 1) != 0 || be16(header, wanted - 2) != crc16(header, 0, wanted - 2, true)) return false;
     const QByteArray tail = r.read(qMax(qint64(0), r.size - 128), qMin(qint64(128), r.size)).trimmed();
     if (!tail.endsWith(':')) return false;
-    out.name = QStringLiteral("BinHex"); out.version = QStringLiteral("4.0"); out.info = QStringLiteral("Header CRC verified"); out.wrapper = true;
+    out.name = QStringLiteral("BinHex");
+    out.version = QStringLiteral("4.0");
+    out.info = QStringLiteral("Header CRC verified");
+    out.wrapper = true;
     return true;
 }
 
@@ -209,7 +244,8 @@ bool uuencode(Reader &r, const QByteArray &prefix, Result &out)
     int name = 6;
     while (name < begin.size() && begin.at(name) >= '0' && begin.at(name) <= '7') ++name;
     if ((name != 9 && name != 10) || name + 1 >= begin.size() || begin.at(name) != ' ') return false;
-    for (int i = name + 1; i < begin.size(); ++i) if (u8(begin, i) < 0x20 || u8(begin, i) == 0x7f) return false;
+    for (int i = name + 1; i < begin.size(); ++i)
+        if (u8(begin, i) < 0x20 || u8(begin, i) == 0x7f) return false;
     bool data = false;
     for (int records = 0; records < 262144 && pos < b.size(); ++records) {
         if ((records & 255) == 0 && !r.active()) return false;
@@ -219,10 +255,14 @@ bool uuencode(Reader &r, const QByteArray &prefix, Result &out)
         if (u8(row, 0) < 0x20 || u8(row, 0) > 0x60 || count > 45) return false;
         if (!count) {
             if (row.size() != 1 || !data || nextLine(b, pos) != "end" || !b.mid(pos).trimmed().isEmpty()) return false;
-            out.name = QStringLiteral("UUE"); out.info = QStringLiteral("uuencode"); out.wrapper = true; return true;
+            out.name = QStringLiteral("UUE");
+            out.info = QStringLiteral("uuencode");
+            out.wrapper = true;
+            return true;
         }
         if (row.size() != 1 + 4 * ((count + 2) / 3)) return false;
-        for (int i = 1; i < row.size(); ++i) if (u8(row, i) < 0x20 || u8(row, i) > 0x60) return false;
+        for (int i = 1; i < row.size(); ++i)
+            if (u8(row, i) < 0x20 || u8(row, i) > 0x60) return false;
         data = true;
     }
     return false;
@@ -240,11 +280,15 @@ bool microsoftCompress(Reader &r, const QByteArray &h, Result &out)
     if (h.size() < 12) return false;
     if (h.startsWith(QByteArray::fromHex("535a444488f02733"))) {
         if (h.size() < 14 || h.at(8) != 'A' || (le32(h, 10) && r.size == 14)) return false;
-        out.name = QStringLiteral("SZDD"); out.info = QStringLiteral("LZSS"); return true;
+        out.name = QStringLiteral("SZDD");
+        out.info = QStringLiteral("LZSS");
+        return true;
     }
     if (h.startsWith(QByteArray::fromHex("535a2088f02733d1"))) {
         if (le32(h, 8) && r.size == 12) return false;
-        out.name = QStringLiteral("SZDD"); out.info = QStringLiteral("QBasic variant"); return true;
+        out.name = QStringLiteral("SZDD");
+        out.info = QStringLiteral("QBasic variant");
+        return true;
     }
     if (!h.startsWith(QByteArray::fromHex("4b57414a88f027d1")) || h.size() < 14) return false;
     const int method = le16(h, 8), end = le16(h, 10), flags = le16(h, 12);
@@ -253,19 +297,31 @@ bool microsoftCompress(Reader &r, const QByteArray &h, Result &out)
     if (header.size() != end) return false;
     int pos = 14;
     quint32 unpacked = 0;
-    if (flags & 1) { if (!skipBytes(4, end, pos)) return false; unpacked = le32(header, pos - 4); }
-    if ((flags & 2) && !skipBytes(2, end, pos)) return false;
-    if (flags & 4) { if (!skipBytes(2, end, pos)) return false; if (!skipBytes(le16(header, pos - 2), end, pos)) return false; }
-    for (int flag : {8, 16}) if (flags & flag) {
-        const int limit = qMin(end, pos + (flag == 8 ? 9 : 4));
-        while (pos < limit && header.at(pos)) ++pos;
-        if (pos == limit) return false;
-        ++pos;
+    if (flags & 1) {
+        if (!skipBytes(4, end, pos)) return false;
+        unpacked = le32(header, pos - 4);
     }
-    if (flags & 32) { if (!skipBytes(2, end, pos)) return false; if (!skipBytes(le16(header, pos - 2), end, pos)) return false; }
+    if ((flags & 2) && !skipBytes(2, end, pos)) return false;
+    if (flags & 4) {
+        if (!skipBytes(2, end, pos)) return false;
+        if (!skipBytes(le16(header, pos - 2), end, pos)) return false;
+    }
+    for (int flag : {8, 16})
+        if (flags & flag) {
+            const int limit = qMin(end, pos + (flag == 8 ? 9 : 4));
+            while (pos < limit && header.at(pos)) ++pos;
+            if (pos == limit) return false;
+            ++pos;
+        }
+    if (flags & 32) {
+        if (!skipBytes(2, end, pos)) return false;
+        if (!skipBytes(le16(header, pos - 2), end, pos)) return false;
+    }
     if ((flags & 1) && ((unpacked && end == r.size) || (method <= 1 && qint64(unpacked) != r.size - end))) return false;
     static const char *methods[] = {"Stored", "XOR", "LZSS", "LZH", "MSZIP"};
-    out.name = QStringLiteral("KWAJ"); out.info = QString::fromLatin1(methods[method]); return true;
+    out.name = QStringLiteral("KWAJ");
+    out.info = QString::fromLatin1(methods[method]);
+    return true;
 }
 
 bool arc(Reader &r, const QByteArray &h, Result &out)
@@ -278,7 +334,8 @@ bool arc(Reader &r, const QByteArray &h, Result &out)
         const int method = u8(entry, 1);
         if (!method) {
             if (!count) return false;
-            out.name = QStringLiteral("ARC"); return true;
+            out.name = QStringLiteral("ARC");
+            return true;
         }
         if ((method < 1 || method > 10) && method != 0x7f) return false;
         const int headerSize = (method == 1) ? 25 : 29;
@@ -287,7 +344,8 @@ bool arc(Reader &r, const QByteArray &h, Result &out)
         const QByteArray filename = entry.mid(2, 13);
         const int end = filename.indexOf('\0');
         if (end < 1) return false;
-        for (int i = 0; i < end; ++i) if (u8(filename, i) < 0x20 || u8(filename, i) > 0x7e) return false;
+        for (int i = 0; i < end; ++i)
+            if (u8(filename, i) < 0x20 || u8(filename, i) > 0x7e) return false;
         const qint64 packed = le32(entry, 15);
         if (!within(r.size, pos + headerSize, packed) || (method == 2 && packed != le32(entry, 25))) return false;
         pos += headerSize + packed;
@@ -301,8 +359,8 @@ bool arj(Reader &r, const QByteArray &h, Result &out)
     const int length = le16(h, 2);
     if (length < 30 || length > 2600) return false;
     const QByteArray header = r.read(4, length + 4);
-    if (header.size() != length + 4 || u8(header, 0) < 30 || u8(header, 0) > length - 2 || u8(header, 6) != 2 ||
-        crc32(header.left(length)) != le32(header, length)) return false;
+    if (header.size() != length + 4 || u8(header, 0) < 30 || u8(header, 0) > length - 2 || u8(header, 6) != 2 || crc32(header.left(length)) != le32(header, length))
+        return false;
     const int nameEnd = header.indexOf('\0', u8(header, 0));
     if (nameEnd < 0 || nameEnd >= length || header.indexOf('\0', nameEnd + 1) >= length || header.indexOf('\0', nameEnd + 1) < 0) return false;
     qint64 pos = 8 + length;
@@ -310,16 +368,22 @@ bool arj(Reader &r, const QByteArray &h, Result &out)
     for (int count = 0; count < 256; ++count) {
         const QByteArray size = r.read(pos, 2);
         if (size.size() != 2) return false;
-        const int extraLength = le16(size, 0); pos += 2;
-        if (!extraLength) { terminated = true; break; }
+        const int extraLength = le16(size, 0);
+        pos += 2;
+        if (!extraLength) {
+            terminated = true;
+            break;
+        }
         const QByteArray extra = r.read(pos, extraLength + 4);
         if (extra.size() != extraLength + 4 || crc32(extra.left(extraLength)) != le32(extra, extraLength)) return false;
         pos += extraLength + 4;
     }
     const QByteArray next = r.read(pos, 4);
     if (!terminated || next.size() != 4 || le16(next, 0) != 0xea60 || !within(r.size, pos + 4, le16(next, 2))) return false;
-    out.name = QStringLiteral("ARJ"); out.record = XScanEngine::RECORD_NAME_ARJ;
-    out.info = QStringLiteral("Header revision %1; minimum extractor revision %2").arg(u8(header, 1)).arg(u8(header, 2)); return true;
+    out.name = QStringLiteral("ARJ");
+    out.record = XScanEngine::RECORD_NAME_ARJ;
+    out.info = QStringLiteral("Header revision %1; minimum extractor revision %2").arg(u8(header, 1)).arg(u8(header, 2));
+    return true;
 }
 
 bool zoo(Reader &r, const QByteArray &h, Result &out)
@@ -334,10 +398,10 @@ bool zoo(Reader &r, const QByteArray &h, Result &out)
         if (!next) {
             if (!count) return false;
             out.name = QStringLiteral("ZOO");
-            out.info = QStringLiteral("Minimum extractor version %1.%2").arg(u8(h, 32)).arg(u8(h, 33)); return true;
+            out.info = QStringLiteral("Minimum extractor version %1.%2").arg(u8(h, 32)).arg(u8(h, 33));
+            return true;
         }
-        if (next <= pos || u8(e, 5) > 2 || !within(r.size, le32(e, 10), le32(e, 24)) ||
-            (u8(e, 5) == 0 && le32(e, 20) != le32(e, 24))) return false;
+        if (next <= pos || u8(e, 5) > 2 || !within(r.size, le32(e, 10), le32(e, 24)) || (u8(e, 5) == 0 && le32(e, 20) != le32(e, 24))) return false;
         pos = next;
     }
     return false;
@@ -365,16 +429,20 @@ bool lzx(Reader &r, const QByteArray &h, Result &out)
         pos += length + packed;
     }
     if (!count || pos != r.size || groupSize) return false;
-    out.name = QStringLiteral("LZX"); out.info = QStringLiteral("Amiga archive; header CRCs verified"); return true;
+    out.name = QStringLiteral("LZX");
+    out.info = QStringLiteral("Amiga archive; header CRCs verified");
+    return true;
 }
 
 bool dms(Reader &r, const QByteArray &h, Result &out)
 {
     if (h.size() < 56 || !h.startsWith("DMS!") || be16(h, 50) > 6 || crc16(h, 4, 50, false) != be16(h, 54)) return false;
     const QByteArray track = r.read(56, 20);
-    if (track.size() != 20 || !track.startsWith("TR") || u8(track, 13) > 6 || crc16(track, 0, 18, false) != be16(track, 18) ||
-        !within(r.size, 76, be16(track, 6))) return false;
-    out.name = QStringLiteral("DMS"); out.info = QStringLiteral("Disk Masher System; header CRCs verified"); return true;
+    if (track.size() != 20 || !track.startsWith("TR") || u8(track, 13) > 6 || crc16(track, 0, 18, false) != be16(track, 18) || !within(r.size, 76, be16(track, 6)))
+        return false;
+    out.name = QStringLiteral("DMS");
+    out.info = QStringLiteral("Disk Masher System; header CRCs verified");
+    return true;
 }
 
 bool diskDoubler(Reader &r, const QByteArray &h, Result &out)
@@ -389,13 +457,16 @@ bool diskDoubler(Reader &r, const QByteArray &h, Result &out)
         if (!within(r.size, 84, packed) || (u8(h, 20) & 0x7f) > 10 || (u8(h, 21) & 0x7f) > 10) return false;
         if (((u8(h, 20) & 0x7f) == 0 && be32(h, 4) != be32(h, 8)) || ((u8(h, 21) & 0x7f) == 0 && be32(h, 12) != be32(h, 16))) return false;
         if (end != r.size && (r.size - end != 84 || r.read(end, 84) != h.left(84))) return false;
-        out.name = QStringLiteral("Disk Doubler"); return true;
+        out.name = QStringLiteral("Disk Doubler");
+        return true;
     }
     if (magic == 0x44444152U) {
         if (h.size() < 78 || crc16(h, 0, 76, true) != be16(h, 76) || be32(h, 8) != r.size) return false;
         const QByteArray entry = r.read(78, 124);
         if (entry.size() != 124 || !entry.startsWith("DDAR") || u8(entry, 8) > 63) return false;
-        out.name = QStringLiteral("DDAR"); out.info = QStringLiteral("Disk Doubler archive; header CRC verified"); return true;
+        out.name = QStringLiteral("DDAR");
+        out.info = QStringLiteral("Disk Doubler archive; header CRC verified");
+        return true;
     }
     if (magic == 0x44444132U) {
         if (be16(h, 4) != 62 || crc16(h, 0, 60, true) != be16(h, 60)) return false;
@@ -405,7 +476,9 @@ bool diskDoubler(Reader &r, const QByteArray &h, Result &out)
             if (e.size() != 6 || !e.startsWith("DDA2")) return false;
             if (be16(e, 4) == 0xbbbb) {
                 if (!count || r.size - pos - 6 > 4096) return false;
-                out.name = QStringLiteral("DDA2"); out.info = QStringLiteral("Disk Doubler archive; header CRC verified"); return true;
+                out.name = QStringLiteral("DDA2");
+                out.info = QStringLiteral("Disk Doubler archive; header CRC verified");
+                return true;
             }
             e = r.read(pos, 46);
             if (e.size() != 46 || u8(e, 6) > 31 || be32(e, 42) < 46 || !within(r.size, pos, be32(e, 42))) return false;
@@ -421,7 +494,10 @@ bool stuffIt(Reader &r, const QByteArray &h, Result &out)
         if (be32(h, 6) != r.size || !be16(h, 4)) return false;
         const QByteArray entry = r.read(22, 112);
         if (entry.size() != 112 || u8(entry, 2) > 63 || crc16(entry, 0, 110, false) != be16(entry, 110)) return false;
-        out.name = QStringLiteral("StuffIt"); out.version = QString::number(u8(h, 14)); out.info = QStringLiteral("Archive header revision"); return true;
+        out.name = QStringLiteral("StuffIt");
+        out.version = QString::number(u8(h, 14));
+        out.info = QStringLiteral("Archive header revision");
+        return true;
     }
     const QByteArray suffix(" Aladdin Systems, Inc., http://www.aladdinsys.com/StuffIt/\r\n");
     if (h.size() >= 100 && h.startsWith("StuffIt (c)1997-") && h.mid(20, suffix.size()) == suffix) {
@@ -433,9 +509,13 @@ bool stuffIt(Reader &r, const QByteArray &h, Result &out)
         entry = r.read(pos, length);
         if (entry.size() != length) return false;
         const quint16 stored = be16(entry, 32);
-        entry[32] = 0; entry[33] = 0;
+        entry[32] = 0;
+        entry[33] = 0;
         if (crc16(entry, 0, length, false) != stored) return false;
-        out.name = QStringLiteral("StuffIt"); out.version = QStringLiteral("5"); out.info = QStringLiteral("Archive format; header CRC verified"); return true;
+        out.name = QStringLiteral("StuffIt");
+        out.version = QStringLiteral("5");
+        out.info = QStringLiteral("Archive format; header CRC verified");
+        return true;
     }
     return false;
 }
@@ -451,14 +531,24 @@ int nextBit(const QByteArray &h, int &pos)
 bool nextInteger(const QByteArray &h, int &pos, quint64 &value)
 {
     int ones = 1;
-    for (;;) { const int b = nextBit(h, pos); if (b < 0 || ones >= 64) return false; if (!b) break; ++ones; }
+    for (;;) {
+        const int b = nextBit(h, pos);
+        if (b < 0 || ones >= 64) return false;
+        if (!b) break;
+        ++ones;
+    }
     quint64 encoded = 0;
     for (int i = 0; i < 64 && ones; ++i) {
-        const int b = nextBit(h, pos); if (b < 0) return false;
-        if (b) { --ones; encoded |= Q_UINT64_C(1) << i; }
+        const int b = nextBit(h, pos);
+        if (b < 0) return false;
+        if (b) {
+            --ones;
+            encoded |= Q_UINT64_C(1) << i;
+        }
     }
     if (ones || !encoded) return false;
-    value = encoded - 1; return true;
+    value = encoded - 1;
+    return true;
 }
 
 // StuffIt X uses a bit-coded first element. Validate both bounded key/value
@@ -475,14 +565,18 @@ bool stuffItX(const QByteArray &h, Result &out)
         for (int i = 0; i < 32; ++i) {
             quint64 key = 0, value = 0;
             if (!nextInteger(h, pos, key)) return false;
-            if (!key) { terminated = true; break; }
+            if (!key) {
+                terminated = true;
+                break;
+            }
             if (key > quint64(list ? 6 : 10) || keys.contains(key) || !nextInteger(h, pos, value)) return false;
             keys.insert(key);
             if (list && key == 4 && !nextInteger(h, pos, value)) return false;
         }
         if (!terminated) return false;
     }
-    out.name = QStringLiteral("StuffIt X"); return true;
+    out.name = QStringLiteral("StuffIt X");
+    return true;
 }
 }  // namespace
 
@@ -494,9 +588,9 @@ bool NFDLegacy::detect(QIODevice *pDevice, NFD_Binary::BINARYINFO_STRUCT *pInfo,
     const QByteArray h = r.read(0, qMin(qint64(8192), r.size));
     if (h.isEmpty()) return false;
     Result result;
-    const bool found = appleSingle(r, h, result) || macBinary(r, h, result) || binHex(r, h, result) || uuencode(r, h, result) ||
-                       microsoftCompress(r, h, result) || arc(r, h, result) || arj(r, h, result) || zoo(r, h, result) || lzx(r, h, result) ||
-                       dms(r, h, result) || diskDoubler(r, h, result) || stuffIt(r, h, result) || stuffItX(h, result);
+    const bool found = appleSingle(r, h, result) || macBinary(r, h, result) || binHex(r, h, result) || uuencode(r, h, result) || microsoftCompress(r, h, result) ||
+                       arc(r, h, result) || arj(r, h, result) || zoo(r, h, result) || lzx(r, h, result) || dms(r, h, result) || diskDoubler(r, h, result) ||
+                       stuffIt(r, h, result) || stuffItX(h, result);
     if (!found || !r.active()) return false;
     NFD_Binary::SCAN_STRUCT scan = {};
     if (!result.wrapper) pInfo->basic_info.id.fileType = XBinary::FT_ARCHIVE;

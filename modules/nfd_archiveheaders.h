@@ -7,6 +7,6 @@
 namespace NFDArchiveHeaders {
 // Recognize archive headers without requiring the payload codec to be supported.
 bool detect(QIODevice *pDevice, NFD_Binary::BINARYINFO_STRUCT *pInfo, XBinary::PDSTRUCT *pPdStruct);
-}
+}  // namespace NFDArchiveHeaders
 
 #endif

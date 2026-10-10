@@ -116,7 +116,8 @@ void NFD_ZIP::handle_Container(BASIC_INFO *pBasicInfo, const QList<XArchive::REC
     // Enumeration is bounded by the caller and may stop before every entry.
     ss.sInfo = QString("%1 records inspected").arg(pListArchiveRecords->count());
     if (nMinimumVersion) {
-        ss.sInfo = XBinary::appendComma(ss.sInfo, QString("Declared minimum reader version: %1.%2 (inspected entries)").arg(nMinimumVersion / 10).arg(nMinimumVersion % 10));
+        ss.sInfo =
+            XBinary::appendComma(ss.sInfo, QString("Declared minimum reader version: %1.%2 (inspected entries)").arg(nMinimumVersion / 10).arg(nMinimumVersion % 10));
     }
     if (bIsEncrypted) {
         ss.sInfo = XBinary::appendComma(ss.sInfo, "Encrypted");
@@ -154,8 +155,8 @@ bool checkContainerHeader(XBinary &binary, qint64 size, BASIC_INFO *pBasicInfo, 
     const qint64 endOffset = tailOffset + end;
     // This fallback validates an ordinary single-disk central directory.
     // ZIP64 local size placeholders are allowed; ZIP64 EOCD is not inferred.
-    if (directorySize > 4 * 1024 * 1024 || directorySize < static_cast<qint64>(count) * 46 ||
-        directoryOffset > endOffset || directorySize != endOffset - directoryOffset) return false;
+    if (directorySize > 4 * 1024 * 1024 || directorySize < static_cast<qint64>(count) * 46 || directoryOffset > endOffset || directorySize != endOffset - directoryOffset)
+        return false;
     const QByteArray directory = binary.read_array(directoryOffset, directorySize);
     if (directory.size() != directorySize) return false;
     QList<XArchive::RECORD> records;
@@ -172,7 +173,8 @@ bool checkContainerHeader(XBinary &binary, qint64 size, BASIC_INFO *pBasicInfo, 
         if (local.size() != 30 || u32(local, 0) != 0x04034b50 || u16(local, 8) != u16(directory, cursor + 10) || u16(local, 26) != nameSize) return false;
         const qint64 dataOffset = localOffset + 30 + nameSize + u16(local, 28);
         if (dataOffset > directoryOffset || packedSize > directoryOffset - dataOffset ||
-            binary.read_array(localOffset + 30, nameSize) != directory.mid(cursor + 46, nameSize)) return false;
+            binary.read_array(localOffset + 30, nameSize) != directory.mid(cursor + 46, nameSize))
+            return false;
         // Data-descriptor fixtures can disagree with local flags/CRC. Such
         // damage does not change the format of their complete ZIP headers.
         XArchive::RECORD record = {};
@@ -192,8 +194,7 @@ bool checkContainerHeader(XBinary &binary, qint64 size, BASIC_INFO *pBasicInfo, 
 
 bool NFD_ZIP::handle_ContainerHeader(QIODevice *pDevice, BASIC_INFO *pBasicInfo, XBinary::PDSTRUCT *pPdStruct)
 {
-    if (!pDevice || !pBasicInfo || !pDevice->isOpen() || !pDevice->isReadable() || pDevice->isSequential() ||
-        !XBinary::isPdStructNotCanceled(pPdStruct)) return false;
+    if (!pDevice || !pBasicInfo || !pDevice->isOpen() || !pDevice->isReadable() || pDevice->isSequential() || !XBinary::isPdStructNotCanceled(pPdStruct)) return false;
     XBinary binary(pDevice);
     const qint64 size = binary.getSize();
     if (size < 22) return false;

@@ -37,8 +37,7 @@ namespace {
 void addTextRecord(NFD_Binary::BINARYINFO_STRUCT *pBinaryInfo, XScanEngine::RECORD_NAME key, const QString &sType, const QString &sName, const QString &sVersion,
                    const QString &sInfo)
 {
-    NFD_Binary::SCANS_STRUCT scansStruct =
-        NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_SOURCECODE, key, sVersion, sInfo, 0);
+    NFD_Binary::SCANS_STRUCT scansStruct = NFD_Binary::getScansStruct(0, XBinary::FT_BINARY, XScanEngine::RECORD_TYPE_SOURCECODE, key, sVersion, sInfo, 0);
     scansStruct.sType = sType;
     scansStruct.sName = sName;
     pBinaryInfo->basic_info.mapResultTexts.insert(key, NFD_Binary::scansToScan(&(pBinaryInfo->basic_info), &scansStruct));
@@ -2459,8 +2458,7 @@ void NFD_Binary::handle_Texts(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *pOp
         }
 
         if (bCSource) {
-            addTextRecord(pBinaryInfo, XScanEngine::RECORD_NAME_CCPP, "source", bCpp ? QString("C++") : QString("C/C++"), "",
-                          bHeader ? QString("header") : QString());
+            addTextRecord(pBinaryInfo, XScanEngine::RECORD_NAME_CCPP, "source", bCpp ? QString("C++") : QString("C/C++"), "", bHeader ? QString("header") : QString());
         }
 
         QRegularExpression htmlExpression("^<\\s*(?:!DOCTYPE\\s+)?html\\b[^>]*>", QRegularExpression::MultilineOption | QRegularExpression::CaseInsensitiveOption);
@@ -2537,8 +2535,7 @@ void NFD_Binary::handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
     }
 
     // ZIP
-    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ZIP)) && (pBinaryInfo->basic_info.id.nSize >= 22))
-    {
+    if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_ZIP)) && (pBinaryInfo->basic_info.id.nSize >= 22)) {
         XZip xzip(pDevice);
 
         if (xzip.isValid(pPdStruct)) {
@@ -2614,8 +2611,8 @@ void NFD_Binary::handle_Archives(QIODevice *pDevice, XScanEngine::SCAN_OPTIONS *
         }
     }
     // RAR
-    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_RAR)) &&
-             (binary.read_array(0, 4) == "RE~^") && (pBinaryInfo->basic_info.id.nSize >= 7)) {
+    else if ((pBinaryInfo->basic_info.mapHeaderDetects.contains(XScanEngine::RECORD_NAME_RAR)) && (binary.read_array(0, 4) == "RE~^") &&
+             (pBinaryInfo->basic_info.id.nSize >= 7)) {
         XRar xrar(pDevice);
 
         if (xrar.isValid(pPdStruct)) {

@@ -14,10 +14,21 @@ const quint32 kMaxRecords = 4096;
 
 class Reader {
 public:
-    Reader(QIODevice *device, XBinary::PDSTRUCT *pd) : d(device), p(pd), saved(device->pos()), size(quint64(device->size())) {}
-    ~Reader() { if (saved >= 0) d->seek(saved); }
-    bool active() const { return XBinary::isPdStructNotCanceled(p); }
-    bool range(quint64 off, quint64 len) const { return off <= size && len <= size - off; }
+    Reader(QIODevice *device, XBinary::PDSTRUCT *pd) : d(device), p(pd), saved(device->pos()), size(quint64(device->size()))
+    {
+    }
+    ~Reader()
+    {
+        if (saved >= 0) d->seek(saved);
+    }
+    bool active() const
+    {
+        return XBinary::isPdStructNotCanceled(p);
+    }
+    bool range(quint64 off, quint64 len) const
+    {
+        return off <= size && len <= size - off;
+    }
     QByteArray read(quint64 off, quint64 len)
     {
         if (!active() || !range(off, len) || len > kMaxRead || len > kReadBudget - used || ++reads > 16384) return {};
@@ -32,8 +43,10 @@ public:
             quint64 n = qMin(len, quint64(4096));
             QByteArray b = read(off, n);
             if (quint64(b.size()) != n) return false;
-            for (char c : b) if (c) return false;
-            off += n; len -= n;
+            for (char c : b)
+                if (c) return false;
+            off += n;
+            len -= n;
         }
         return true;
     }
@@ -50,12 +63,30 @@ quint64 number(const QByteArray &b, int off, int bytes, bool big = false)
     for (int i = 0; i < bytes; ++i) n = (n << 8) | quint8(b.at(off + (big ? i : bytes - 1 - i)));
     return n;
 }
-quint32 u32(const QByteArray &b, int o, bool be = false) { return quint32(number(b, o, 4, be)); }
-quint16 u16(const QByteArray &b, int o, bool be = false) { return quint16(number(b, o, 2, be)); }
-quint64 u64(const QByteArray &b, int o, bool be = false) { return number(b, o, 8, be); }
-bool power2(quint64 n) { return n && !(n & (n - 1)); }
-bool span(quint64 off, quint64 len, quint64 end) { return off <= end && len <= end - off; }
-bool sectors(Reader &r, quint64 off, quint64 len) { return off <= r.size / 512 && len <= r.size / 512 - off; }
+quint32 u32(const QByteArray &b, int o, bool be = false)
+{
+    return quint32(number(b, o, 4, be));
+}
+quint16 u16(const QByteArray &b, int o, bool be = false)
+{
+    return quint16(number(b, o, 2, be));
+}
+quint64 u64(const QByteArray &b, int o, bool be = false)
+{
+    return number(b, o, 8, be);
+}
+bool power2(quint64 n)
+{
+    return n && !(n & (n - 1));
+}
+bool span(quint64 off, quint64 len, quint64 end)
+{
+    return off <= end && len <= end - off;
+}
+bool sectors(Reader &r, quint64 off, quint64 len)
+{
+    return off <= r.size / 512 && len <= r.size / 512 - off;
+}
 
 bool asciiNumber(const QByteArray &b, int off, int len, int base, quint64 *out, bool padded = false)
 {
@@ -76,7 +107,8 @@ bool asciiNumber(const QByteArray &b, int off, int len, int base, quint64 *out, 
 bool sumValid(const QByteArray &b, int checksum)
 {
     quint32 sum = 0;
-    for (int i = 0; i < b.size(); ++i) if (i < checksum || i >= checksum + 4) sum += quint8(b.at(i));
+    for (int i = 0; i < b.size(); ++i)
+        if (i < checksum || i >= checksum + 4) sum += quint8(b.at(i));
     return ~sum == u32(b, checksum, true);
 }
 bool crc32cValid(const QByteArray &b)
@@ -173,11 +205,19 @@ bool vhdxMetadata(Reader &r, const QByteArray &t, Result &out)
         int p = 16 + int(i) * 32;
         quint64 off = u64(t, p + 16), len = u32(t, p + 24);
         if (off < 1048576 || off % 1048576 || !len || len % 1048576 || !r.range(off, len) || u32(t, p + 28) > 1) return false;
-        for (const QPair<quint64, quint64> &s : spans) if (off < s.first + s.second && s.first < off + len) return false;
+        for (const QPair<quint64, quint64> &s : spans)
+            if (off < s.first + s.second && s.first < off + len) return false;
         spans.append(qMakePair(off, len));
         QByteArray id = t.mid(p, 16);
-        if (id == batGuid) { if (bat) return false; bat = true; }
-        if (id == metaGuid) { if (meta) return false; meta = off; metaSize = len; }
+        if (id == batGuid) {
+            if (bat) return false;
+            bat = true;
+        }
+        if (id == metaGuid) {
+            if (meta) return false;
+            meta = off;
+            metaSize = len;
+        }
     }
     if (!bat || !meta) return false;
     QByteArray m = r.read(meta, 65536);
@@ -199,12 +239,19 @@ bool vhdxMetadata(Reader &r, const QByteArray &t, Result &out)
         if (len != (id == sectorGuid ? 4 : 8)) return false;
         QByteArray v = r.read(meta + off, len);
         if (quint64(v.size()) != len) return false;
-        if (id == sizeGuid) { if (disk) return false; disk = u64(v, 0); }
+        if (id == sizeGuid) {
+            if (disk) return false;
+            disk = u64(v, 0);
+        }
         if (id == paramGuid) {
             if (parameters || !power2(u32(v, 0)) || u32(v, 0) < 1048576 || u32(v, 0) > 256 * 1048576) return false;
-            parameters = true; flags = u32(v, 4);
+            parameters = true;
+            flags = u32(v, 4);
         }
-        if (id == sectorGuid) { if (sector) return false; sector = u32(v, 0); }
+        if (id == sectorGuid) {
+            if (sector) return false;
+            sector = u32(v, 0);
+        }
     }
     if (!disk || !parameters || (sector != 512 && sector != 4096) || disk % sector) return false;
     out = {QStringLiteral("VHDX"), QStringLiteral("1"), (flags & 2) ? QStringLiteral("differencing") : (flags & 1) ? QStringLiteral("fixed") : QStringLiteral("dynamic")};
@@ -236,7 +283,9 @@ bool qcow(Reader &r, const QByteArray &h, Result &out)
     quint64 cluster = quint64(1) << bits, l1 = u64(h, 40, true), refs = u64(h, 48, true);
     quint64 entries = u32(h, 36, true), refClusters = u32(h, 56, true), backing = u64(h, 8, true);
     quint32 backingLen = u32(h, 16, true);
-    if (!entries || !refClusters || l1 < cluster || refs < cluster || l1 % cluster || refs % cluster || !r.range(l1, entries * 8) || !r.range(refs, refClusters * cluster)) return false;
+    if (!entries || !refClusters || l1 < cluster || refs < cluster || l1 % cluster || refs % cluster || !r.range(l1, entries * 8) ||
+        !r.range(refs, refClusters * cluster))
+        return false;
     if (backing && (backingLen > 1023 || !backingLen || !span(backing, backingLen, cluster) || !r.range(backing, backingLen))) return false;
     quint64 features = version == 3 ? u64(h, 72, true) : 0;
     quint32 headerSize = version == 3 ? u32(h, 100, true) : 72;
@@ -266,7 +315,10 @@ bool vdi(Reader &r, const QByteArray &h, Result &out)
     // The product can exceed 64 bits even though both counts are 32-bit.
     if (data > r.size || allocated > (r.size - data) / (quint64(block) + extra)) return false;
     if (type == 2 && allocated != blocks) return false;
-    out = {QStringLiteral("VirtualBox Disk Image (VDI)"), QStringLiteral("1.1"), type == 1 ? QStringLiteral("dynamic") : type == 2 ? QStringLiteral("fixed") : QStringLiteral("differencing")};
+    out = {QStringLiteral("VirtualBox Disk Image (VDI)"), QStringLiteral("1.1"),
+           type == 1   ? QStringLiteral("dynamic")
+           : type == 2 ? QStringLiteral("fixed")
+                       : QStringLiteral("differencing")};
     return true;
 }
 
@@ -276,8 +328,10 @@ bool vmdk(Reader &r, const QByteArray &h, Result &out)
     if (u64(h, 0) == 0xcafebabeULL) {
         // SESparse uses virtual grains_size; only allocated data need exist.
         if (u64(h, 8) != 0x200000001ULL || !u64(h, 16) || u64(h, 24) != 8 || u64(h, 32) != 64 || u64(h, 40)) return false;
-        for (int p = 48; p < 80; p += 8) if (u64(h, p)) return false;
-        for (int p = 80; p < 192; p += 16) if (!u64(h, p + 8) || !sectors(r, u64(h, p), u64(h, p + 8))) return false;
+        for (int p = 48; p < 80; p += 8)
+            if (u64(h, p)) return false;
+        for (int p = 80; p < 192; p += 16)
+            if (!u64(h, p + 8) || !sectors(r, u64(h, p), u64(h, p + 8))) return false;
         if (u64(h, 88) != 1 || !sectors(r, u64(h, 192), 0) || u64(h, 200) < u64(h, 16)) return false;
         QByteArray v = r.read(u64(h, 80) * 512, 512);
         if (v.size() != 512 || u64(v, 0) != 0xcafecafeULL) return false;
@@ -287,7 +341,8 @@ bool vmdk(Reader &r, const QByteArray &h, Result &out)
     if (!h.startsWith("KDMV")) return false;
     quint32 version = u32(h, 4), flags = u32(h, 8), entries = u32(h, 44);
     quint64 capacity = u64(h, 12), grain = u64(h, 20), descriptor = u64(h, 28), descriptorSize = u64(h, 36), directory = u64(h, 56), overhead = u64(h, 64);
-    if (version < 1 || version > 3 || !capacity || !power2(grain) || grain < 8 || !power2(entries) || entries > 65536 || !overhead || !sectors(r, 0, overhead)) return false;
+    if (version < 1 || version > 3 || !capacity || !power2(grain) || grain < 8 || !power2(entries) || entries > 65536 || !overhead || !sectors(r, 0, overhead))
+        return false;
     if (descriptorSize && (!descriptor || !sectors(r, descriptor, descriptorSize))) return false;
     if ((flags & 1) && h.mid(73, 4) != QByteArray::fromHex("0a200d0a")) return false;
     if (u16(h, 77) > 1) return false;
@@ -318,18 +373,27 @@ bool cpio(Reader &r, const QByteArray &head, Result &out)
         if (newc) {
             if (h.left(6) != magic) return false;
             quint64 fields[13] = {};
-            for (int i = 0; i < 13; ++i) if (!asciiNumber(h, 6 + i * 8, 8, 16, &fields[i])) return false;
-            mode = fields[1]; links = fields[4]; fileSize = fields[6]; nameSize = fields[11]; checksum = fields[12];
+            for (int i = 0; i < 13; ++i)
+                if (!asciiNumber(h, 6 + i * 8, 8, 16, &fields[i])) return false;
+            mode = fields[1];
+            links = fields[4];
+            fileSize = fields[6];
+            nameSize = fields[11];
+            checksum = fields[12];
             if (!crc && checksum) return false;
         } else if (odc) {
             if (h.left(6) != magic) return false;
             quint64 dummy;
-            for (int i = 0; i < 7; ++i) if (!asciiNumber(h, 6 + i * 6, 6, 8, &dummy)) return false;
-            if (!asciiNumber(h, 48, 11, 8, &dummy) || !asciiNumber(h, 59, 6, 8, &nameSize) || !asciiNumber(h, 65, 11, 8, &fileSize) ||
-                !asciiNumber(h, 18, 6, 8, &mode) || !asciiNumber(h, 36, 6, 8, &links)) return false;
+            for (int i = 0; i < 7; ++i)
+                if (!asciiNumber(h, 6 + i * 6, 6, 8, &dummy)) return false;
+            if (!asciiNumber(h, 48, 11, 8, &dummy) || !asciiNumber(h, 59, 6, 8, &nameSize) || !asciiNumber(h, 65, 11, 8, &fileSize) || !asciiNumber(h, 18, 6, 8, &mode) ||
+                !asciiNumber(h, 36, 6, 8, &links))
+                return false;
         } else {
             if (u16(h, 0, be) != 070707) return false;
-            mode = u16(h, 6, be); links = u16(h, 12, be); nameSize = u16(h, 20, be);
+            mode = u16(h, 6, be);
+            links = u16(h, 12, be);
+            nameSize = u16(h, 20, be);
             fileSize = (quint64(u16(h, 22, be)) << 16) | u16(h, 24, be);
         }
         if (!nameSize || nameSize > 4096 || !r.range(off + headerSize, nameSize)) return false;
@@ -341,8 +405,14 @@ bool cpio(Reader &r, const QByteArray &head, Result &out)
         if (!r.range(data, fileSize)) return false;
         if (name == QByteArray("TRAILER!!!\0", 11)) {
             if (fileSize) return false;
-            out = {QStringLiteral("CPIO"), newc ? QString::fromLatin1(magic) : odc ? QStringLiteral("070707") : QStringLiteral("binary 070707"),
-                   newc ? (crc ? QStringLiteral("new ASCII; additive checksum") : QStringLiteral("new ASCII")) : odc ? QStringLiteral("old ASCII") : be ? QStringLiteral("big-endian") : QStringLiteral("little-endian")};
+            out = {QStringLiteral("CPIO"),
+                   newc  ? QString::fromLatin1(magic)
+                   : odc ? QStringLiteral("070707")
+                         : QStringLiteral("binary 070707"),
+                   newc  ? (crc ? QStringLiteral("new ASCII; additive checksum") : QStringLiteral("new ASCII"))
+                   : odc ? QStringLiteral("old ASCII")
+                   : be  ? QStringLiteral("big-endian")
+                         : QStringLiteral("little-endian")};
             return true;
         }
         quint64 kind = mode & 0170000;
@@ -438,7 +508,9 @@ bool rpmHeader(Reader &r, quint64 off, quint64 *end)
 
 bool rpm(Reader &r, const QByteArray &h, Result &out)
 {
-    if (h.size() < 96 || h.left(4) != QByteArray::fromHex("edabeedb") || quint8(h.at(4)) != 3 || h.at(5) || u16(h, 6, true) > 1 || u16(h, 78, true) != 5 || !h.mid(10, 66).contains('\0')) return false;
+    if (h.size() < 96 || h.left(4) != QByteArray::fromHex("edabeedb") || quint8(h.at(4)) != 3 || h.at(5) || u16(h, 6, true) > 1 || u16(h, 78, true) != 5 ||
+        !h.mid(10, 66).contains('\0'))
+        return false;
     quint64 sig = 0, main = 0;
     if (!rpmHeader(r, 96, &sig)) return false;
     quint64 aligned = (sig + 7) & ~quint64(7);
@@ -455,8 +527,10 @@ bool git(Reader &r, const QByteArray &h, Result &out)
     QByteArray compressed = r.read(0, r.size), decoded(65536, '\0');
     if (quint64(compressed.size()) != r.size || !r.active()) return false;
     z_stream stream = {};
-    stream.next_in = reinterpret_cast<Bytef *>(compressed.data()); stream.avail_in = uInt(compressed.size());
-    stream.next_out = reinterpret_cast<Bytef *>(decoded.data()); stream.avail_out = uInt(decoded.size());
+    stream.next_in = reinterpret_cast<Bytef *>(compressed.data());
+    stream.avail_in = uInt(compressed.size());
+    stream.next_out = reinterpret_cast<Bytef *>(decoded.data());
+    stream.avail_out = uInt(decoded.size());
     if (inflateInit(&stream) != Z_OK) return false;
     int status = inflate(&stream, Z_FINISH);
     bool complete = status == Z_STREAM_END && stream.total_in == r.size && stream.total_out <= 65536;
@@ -469,7 +543,8 @@ bool git(Reader &r, const QByteArray &h, Result &out)
     QByteArray kind = decoded.left(space);
     if (kind != "blob" && kind != "tree" && kind != "commit" && kind != "tag") return false;
     quint64 length = 0;
-    if (!asciiNumber(decoded, space + 1, zero - space - 1, 10, &length) || length != quint64(size - zero - 1) || (zero > space + 2 && decoded.at(space + 1) == '0')) return false;
+    if (!asciiNumber(decoded, space + 1, zero - space - 1, 10, &length) || length != quint64(size - zero - 1) || (zero > space + 2 && decoded.at(space + 1) == '0'))
+        return false;
     out = {QStringLiteral("Git loose object"), QString(), QString::fromLatin1(kind) + QStringLiteral("; %1 payload bytes").arg(length)};
     return true;
 }
@@ -477,17 +552,21 @@ bool git(Reader &r, const QByteArray &h, Result &out)
 bool sqlite(Reader &r, const QByteArray &h, Result &out)
 {
     if (h.size() < 108 || h.left(16) != QByteArray("SQLite format 3\0", 16)) return false;
-    quint32 page = u16(h, 16, true); if (page == 1) page = 65536;
-    if (!power2(page) || page < 512 || page > 65536 || r.size % page || r.size < page || quint8(h.at(20)) > page - 480 || h.mid(21, 3) != QByteArray::fromHex("402020")) return false;
+    quint32 page = u16(h, 16, true);
+    if (page == 1) page = 65536;
+    if (!power2(page) || page < 512 || page > 65536 || r.size % page || r.size < page || quint8(h.at(20)) > page - 480 || h.mid(21, 3) != QByteArray::fromHex("402020"))
+        return false;
     quint8 write = quint8(h.at(18)), read = quint8(h.at(19));
     quint32 schema = u32(h, 44, true), encoding = u32(h, 56, true);
     if (write < 1 || write > 2 || read < 1 || read > 2 || schema > 4 || encoding > 3 || (schema && !encoding)) return false;
-    for (int i = 72; i < 92; ++i) if (h.at(i)) return false;
+    for (int i = 72; i < 92; ++i)
+        if (h.at(i)) return false;
     quint32 declared = u32(h, 28, true);
     if (declared && u32(h, 24, true) == u32(h, 92, true) && quint64(declared) > r.size / page) return false;
     quint8 type = quint8(h.at(100));
     if (type != 5 && type != 13) return false;
-    quint32 cells = u16(h, 103, true), content = u16(h, 105, true); if (!content) content = 65536;
+    quint32 cells = u16(h, 103, true), content = u16(h, 105, true);
+    if (!content) content = 65536;
     quint32 header = type == 5 ? 112 : 108;
     if (header + cells * 2 > page || content < header + cells * 2 || content > page - quint8(h.at(20)) || quint8(h.at(107)) > 60) return false;
     if (!schema && (type != 13 || cells)) return false;  // empty sqlite_schema
@@ -507,7 +586,8 @@ bool wim(Reader &r, const QByteArray &h, Result &out)
         if ((!size && off) || (size && off < 208) || !r.range(off, size)) return false;
     }
     if (!(u64(h, 72) & 0x00ffffffffffffffULL)) return false;
-    out = {QStringLiteral("WIM"), QStringLiteral("0x%1").arg(version, 8, 16, QLatin1Char('0')), QStringLiteral("%1 image(s); part %2/%3").arg(u32(h, 44)).arg(u16(h, 40)).arg(u16(h, 42))};
+    out = {QStringLiteral("WIM"), QStringLiteral("0x%1").arg(version, 8, 16, QLatin1Char('0')),
+           QStringLiteral("%1 image(s); part %2/%3").arg(u32(h, 44)).arg(u16(h, 40)).arg(u16(h, 42))};
     return true;
 }
 
@@ -522,16 +602,20 @@ bool NFDContainers::detect(QIODevice *pDevice, NFD_Binary::BINARYINFO_STRUCT *pB
     Result result = {};
     // Footer recognition precedes short compression signatures, especially a
     // UDIF data fork that happens to start with a zlib stream.
-    bool found = dmg(reader, result) || vhd(reader, result) || vhdx(reader, h, result) || qcow(reader, h, result) || vdi(reader, h, result) ||
-                 vmdk(reader, h, result) || cpio(reader, h, result) || ar(reader, h, result) || rpm(reader, h, result) ||
-                 sqlite(reader, h, result) || wim(reader, h, result) || git(reader, h, result);
+    bool found = dmg(reader, result) || vhd(reader, result) || vhdx(reader, h, result) || qcow(reader, h, result) || vdi(reader, h, result) || vmdk(reader, h, result) ||
+                 cpio(reader, h, result) || ar(reader, h, result) || rpm(reader, h, result) || sqlite(reader, h, result) || wim(reader, h, result) ||
+                 git(reader, h, result);
     if (!found || !reader.active()) return false;
     NFD_Binary::BASIC_INFO &basic = pBinaryInfo->basic_info;
     basic.id.fileType = result.database ? XBinary::FT_BINARY : XBinary::FT_ARCHIVE;
     NFD_Binary::SCAN_STRUCT record = {};
-    record.id = basic.id; record.parentId = basic.parentId;
-    record.type = result.database ? XScanEngine::RECORD_TYPE_DATABASE : XScanEngine::RECORD_TYPE_FORMAT; record.name = result.key;
-    record.sName = result.name; record.sVersion = result.version; record.sInfo = result.info;
+    record.id = basic.id;
+    record.parentId = basic.parentId;
+    record.type = result.database ? XScanEngine::RECORD_TYPE_DATABASE : XScanEngine::RECORD_TYPE_FORMAT;
+    record.name = result.key;
+    record.sName = result.name;
+    record.sVersion = result.version;
+    record.sInfo = result.info;
     if (result.database) basic.mapResultDatabases.insert(result.key, record);
     else basic.mapResultArchives.insert(result.key, record);
     return true;
